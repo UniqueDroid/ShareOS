@@ -16,6 +16,7 @@ years of work goes to the Alt-F project — see [LICENSE](LICENSE) and
 > **[docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)** ([Deutsch](docs/ENTWICKLUNG.md)).
 >
 > Testing and installing: [docs/TESTING.md](docs/TESTING.md) ([Deutsch](docs/TESTEN.md)).
+> **First sign-in:** `http://<box-IP>/`, user **root**, password **shareos** – the box asks you to set your own password right away (also for SSH).
 > Translating the web interface: [docs/TRANSLATING.md](docs/TRANSLATING.md).
 
 ![ShareOS web interface](docs/images/gui-uebersicht.png)
