@@ -13,3 +13,5 @@ LIBWEBSOCKETS_CONF_OPTS += -DLWS_WITH_HTTP2=OFF -DLWS_WITH_SECURE_STREAMS=OFF -D
 # whose 4.5 MB of libraries post-build.sh then removes (nothing else uses them)
 LIBWEBSOCKETS_DEPENDENCIES += mbedtls
 LIBWEBSOCKETS_CONF_OPTS += -DLWS_WITH_SSL=ON -DLWS_WITH_MBEDTLS=ON
+# libevent (libevent_core for NFS' fsidd) without its OpenSSL part
+LIBEVENT_CONF_OPTS += --disable-openssl

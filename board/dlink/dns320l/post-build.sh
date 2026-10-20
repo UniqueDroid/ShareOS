@@ -98,10 +98,12 @@ rm_t usr/bin/gapplication usr/bin/gdbus usr/bin/gio usr/bin/gio-querymodules usr
 	usr/lib/libgio-2.0.so* usr/lib/libgobject-2.0.so* usr/lib/libgmodule-2.0.so* usr/lib/libgthread-2.0.so* \
 	usr/lib/libgirepository-2.0.so* usr/lib/libffi.so* usr/lib/gio usr/lib/girepository-1.0 usr/share/glib-2.0
 rm_t usr/bin/pcre2test usr/bin/pcre2grep usr/lib/libpcre2-posix.so*
-# event loops of libwebsockets other than libuv (ttyd), avahi bindings
+# event loops of libwebsockets other than libuv (ttyd), avahi bindings,
+# libevent beyond libevent_core (in a clean build it also links OpenSSL)
 rm_t usr/lib/libwebsockets-evlib_glib.so usr/lib/libwebsockets-evlib_event.so \
 	usr/lib/libavahi-glib.so* usr/lib/libavahi-libevent.so* \
-	usr/lib/libevent-2.1.so* usr/lib/libevent.so usr/lib/libevent_extra* usr/lib/libevent_pthreads*
+	usr/lib/libevent-2.1.so* usr/lib/libevent.so usr/lib/libevent_extra* usr/lib/libevent_pthreads* \
+	usr/lib/libevent_openssl*
 # libnl parts ksmbd does not use; C++ binding of libgpiod; e2fsprogs' libss
 rm_t usr/lib/libnl-idiag-3.so* usr/lib/libnl-nf-3.so* usr/lib/libnl-xfrm-3.so* usr/lib/libnl-route-3.so* \
 	usr/lib/libgpiodcxx.so* usr/lib/libss.so* usr/share/ss
