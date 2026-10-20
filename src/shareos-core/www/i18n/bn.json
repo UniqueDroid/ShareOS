@@ -1009,7 +1009,8 @@
 		"Programm für die Kommandozeile der Box (System → Terminal oder SSH). Es läuft mit den Rechten dessen, der es startet – im Terminal als root.": "বক্সের কমান্ড লাইনের জন্য প্রোগ্রাম (সিস্টেম → টার্মিনাল বা SSH)। যিনি এটি চালু করেন তাঁর অধিকারে চলে – টার্মিনালে root হিসেবে।",
 		"Terminal": "টার্মিনাল",
 		"noch ungetestet": "এখনও পরীক্ষিত নয়",
-		"ShareOS wurde auf diesem Modell noch nicht auf echter Hardware getestet.": "ShareOS এই মডেলের আসল হার্ডওয়্যারে এখনও পরীক্ষা করা হয়নি।"
+		"ShareOS wurde auf diesem Modell noch nicht auf echter Hardware getestet.": "ShareOS এই মডেলের আসল হার্ডওয়্যারে এখনও পরীক্ষা করা হয়নি।",
+		"Erste Anmeldung: Benutzer root, Passwort shareos – danach ein eigenes Passwort setzen.": "প্রথম লগইন: ব্যবহারকারী root, পাসওয়ার্ড shareos – তারপর নিজের পাসওয়ার্ড সেট করুন।"
 	},
 	"patterns": [
 		[

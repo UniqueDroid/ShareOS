@@ -1009,7 +1009,8 @@
 		"Programm für die Kommandozeile der Box (System → Terminal oder SSH). Es läuft mit den Rechten dessen, der es startet – im Terminal als root.": "用于设备命令行的程序（系统 → 终端或 SSH）。它以启动者的权限运行——在终端中为 root。",
 		"Terminal": "终端",
 		"noch ungetestet": "尚未测试",
-		"ShareOS wurde auf diesem Modell noch nicht auf echter Hardware getestet.": "ShareOS 尚未在此型号的真实硬件上测试。"
+		"ShareOS wurde auf diesem Modell noch nicht auf echter Hardware getestet.": "ShareOS 尚未在此型号的真实硬件上测试。",
+		"Erste Anmeldung: Benutzer root, Passwort shareos – danach ein eigenes Passwort setzen.": "首次登录：用户 root，密码 shareos – 之后请设置自己的密码。"
 	},
 	"patterns": [
 		[
