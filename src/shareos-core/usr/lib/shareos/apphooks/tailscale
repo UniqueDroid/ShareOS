@@ -1,0 +1,5 @@
+#!/bin/sh
+# system app "tailscale" is removed: stop the daemon (its state stays, a new install signs in again by itself)
+[ "$1" = remove ] || exit 0
+/usr/sbin/shareos-tailscale stop-all >/dev/null 2>&1
+exit 0

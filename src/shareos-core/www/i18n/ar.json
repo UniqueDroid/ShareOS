@@ -1106,7 +1106,12 @@
 		"Darf die Box als VPN-Client verbinden und trennen und VPN-Profile verwalten (OpenVPN) – das betrifft das Netzwerk der ganzen Box, deshalb nur für Administratoren.": "يمكنه توصيل الجهاز وفصله كعميل VPN وإدارة ملفات VPN (OpenVPN) – يؤثر ذلك في شبكة الجهاز كله، لذا للمسؤولين فقط.",
 		"Darf oben in der Kopfzeile der ShareOS-Oberfläche einen kurzen Zustand anzeigen (z. B. „verbunden“) – nur für den Benutzer, der die App geöffnet hat; er verschwindet nach höchstens 10 Minuten von selbst.": "يمكنه عرض حالة قصيرة أعلى واجهة ShareOS (مثل «متصل») – للمستخدم الذي فتح التطبيق فقط؛ وتختفي تلقائيًا خلال 10 دقائق على الأكثر.",
 		"VPN-SERVER": "خادم VPN",
-		"1 Gerät": "جهاز واحد"
+		"1 Gerät": "جهاز واحد",
+		"TAILSCALE": "TAILSCALE",
+		"Anmeldung nötig": "يلزم تسجيل الدخول",
+		"getrennt": "غير متصل",
+		"Fernzugriff (Tailscale)": "الوصول عن بُعد (Tailscale)",
+		"Darf die Box mit Tailscale verbinden, an- und abmelden und die Geräte des Tailnets sehen – das betrifft das Netzwerk der ganzen Box, deshalb nur für Administratoren.": "يمكنه ربط الجهاز بـ Tailscale وتسجيل الدخول والخروج ورؤية أجهزة الـ tailnet – يؤثر ذلك على شبكة الجهاز بأكمله، لذا للمسؤولين فقط."
 	},
 	"patterns": [
 		[

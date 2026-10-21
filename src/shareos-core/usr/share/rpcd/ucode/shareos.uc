@@ -1455,6 +1455,7 @@ function same_token(a, b) {
 /* ---------- VPN client (OpenVPN system app, shareos-vpn) and status chips ---------- */
 
 const VPN = '/usr/sbin/shareos-vpn';
+const TAILSCALE = '/usr/sbin/shareos-tailscale';
 const APPSTATUS = '/tmp/shareos-appstatus';
 const CHIP_STATES = { ok: 1, warn: 1, err: 1, info: 1 };
 
@@ -1474,11 +1475,27 @@ function vpn_tool(args, input) {
 	return type(j) == 'object' ? j : { error: 'failed' };
 }
 
-// grant of an app with the permission p (and "files"); vpn: admin accounts only
+// shareos-tailscale <args> (JSON on stdin for up)
+function ts_tool(args, input) {
+	let cmd = TAILSCALE + ' ' + join(' ', map(args, shq));
+	let f = null;
+	if (input != null) {
+		f = '/tmp/.shareos-ts-in.' + substr(new_token(), 0, 12);
+		system('umask 077; : > ' + shq(f));
+		writefile(f, sprintf('%J', input));
+		cmd += ' < ' + shq(f);
+	}
+	let r = sh(cmd);
+	if (f) unlink(f);
+	let j = json(trim(r.out) || 'null');
+	return type(j) == 'object' ? j : { error: trim(r.out) || 'failed' };
+}
+
+// grant of an app with the permission p (and "files"); vpn, tailscale: admin accounts only
 function app_grant_perm(grant, p) {
 	let g = app_grant_user(grant);
 	if (!g || index(g.app.permissions ?? [], p) < 0) return null;
-	if (p == 'vpn' && acc_role(g.u) != 'admin') return null;
+	if ((p == 'vpn' || p == 'tailscale') && acc_role(g.u) != 'admin') return null;
 	return g;
 }
 
@@ -1502,6 +1519,12 @@ function status_chips(u) {
 		for (let l in split(readfile('/tmp/shareos-vpn-server/status') ?? '', '\n')) if (substr(l, 0, 12) == 'CLIENT_LIST,') n++;
 		push(chips, { id: 'svc:vpnserver', label: 'VPN-SERVER', detail: n == 1 ? '1 Gerät' : n + ' Geräte', state: 'ok',
 			app: ids.nettunnel ? 'nettunnel' : null });
+	}
+	if (admin && stat('/opt/shareos/bin/tailscaled') && pid_alive('/tmp/shareos-tailscale/pid', 'tailscaled')) {
+		let st = ts_tool([ 'status' ]);
+		let on = st.state == 'Running';
+		push(chips, { id: 'svc:tailscale', label: 'TAILSCALE', detail: on ? (st.self?.ips?.[0] ?? 'verbunden') : st.state == 'NeedsLogin' ? 'Anmeldung nötig' : 'getrennt',
+			state: on ? 'ok' : 'warn', app: ids.tailscale ? 'tailscale' : null });
 	}
 	if (stat('/tmp/shareos-transmission/' + u + '/pid') && pid_alive('/tmp/shareos-transmission/' + u + '/pid', 'transmission'))
 		push(chips, { id: 'svc:torrent', label: 'TORRENT', detail: 'läuft', state: 'ok', app: ids.transmission ? 'transmission' : null });
@@ -2774,6 +2797,24 @@ return {
 
 	// called only by /_shareos/cgi/vpn on the apps web server (as root, with
 	// the grant of an app with the permission "vpn"; admin accounts only)
+	// called only by /_shareos/cgi/tailscale on the apps web server (grant of an
+	// app with the permission "tailscale"; admin accounts only)
+	'shareos.apptailscale': {
+		status: { args: { grant: '' }, call: function(req) { return app_grant_perm(req.args.grant, 'tailscale') ? ts_tool([ 'status' ]) : { error: 'no access' }; } },
+		log: { args: { grant: '' }, call: function(req) { return app_grant_perm(req.args.grant, 'tailscale') ? ts_tool([ 'log' ]) : { error: 'no access' }; } },
+		up: {
+			args: { grant: '', authkey: '' },
+			call: function(req) {
+				if (!app_grant_perm(req.args.grant, 'tailscale')) return { error: 'no access' };
+				return ts_tool([ 'up' ], { authkey: req.args.authkey ?? '' });
+			}
+		},
+		login: { args: { grant: '' }, call: function(req) { return app_grant_perm(req.args.grant, 'tailscale') ? ts_tool([ 'login' ]) : { error: 'no access' }; } },
+		down: { args: { grant: '' }, call: function(req) { return app_grant_perm(req.args.grant, 'tailscale') ? ts_tool([ 'down' ]) : { error: 'no access' }; } },
+		logout: { args: { grant: '' }, call: function(req) { return app_grant_perm(req.args.grant, 'tailscale') ? ts_tool([ 'logout' ]) : { error: 'no access' }; } },
+		ping: { args: { grant: '', ip: '' }, call: function(req) { return app_grant_perm(req.args.grant, 'tailscale') ? ts_tool([ 'ping', req.args.ip ?? '' ]) : { error: 'no access' }; } }
+	},
+
 	'shareos.appvpn': {
 		list: { args: { grant: '' }, call: function(req) { return app_grant_perm(req.args.grant, 'vpn') ? vpn_tool([ 'list' ]) : { error: 'no access' }; } },
 		status: { args: { grant: '' }, call: function(req) { return app_grant_perm(req.args.grant, 'vpn') ? vpn_tool([ 'status' ]) : { error: 'no access' }; } },

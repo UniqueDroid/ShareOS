@@ -1106,7 +1106,12 @@
 		"Darf die Box als VPN-Client verbinden und trennen und VPN-Profile verwalten (OpenVPN) – das betrifft das Netzwerk der ganzen Box, deshalb nur für Administratoren.": "बॉक्स को VPN क्लाइंट के रूप में जोड़ और अलग कर सकता है और VPN प्रोफ़ाइल संभाल सकता है (OpenVPN) – इससे पूरे बॉक्स का नेटवर्क प्रभावित होता है, इसलिए केवल व्यवस्थापक।",
 		"Darf oben in der Kopfzeile der ShareOS-Oberfläche einen kurzen Zustand anzeigen (z. B. „verbunden“) – nur für den Benutzer, der die App geöffnet hat; er verschwindet nach höchstens 10 Minuten von selbst.": "ShareOS इंटरफ़ेस के ऊपर छोटी स्थिति दिखा सकता है (जैसे “जुड़ा”) – केवल उस उपयोगकर्ता को जिसने ऐप खोला; यह अधिकतम 10 मिनट में अपने-आप हट जाती है।",
 		"VPN-SERVER": "VPN सर्वर",
-		"1 Gerät": "1 डिवाइस"
+		"1 Gerät": "1 डिवाइस",
+		"TAILSCALE": "TAILSCALE",
+		"Anmeldung nötig": "साइन-इन आवश्यक",
+		"getrennt": "डिस्कनेक्ट",
+		"Fernzugriff (Tailscale)": "रिमोट एक्सेस (Tailscale)",
+		"Darf die Box mit Tailscale verbinden, an- und abmelden und die Geräte des Tailnets sehen – das betrifft das Netzwerk der ganzen Box, deshalb nur für Administratoren.": "बॉक्स को Tailscale से जोड़ सकता है, साइन इन/आउट कर सकता है और tailnet के डिवाइस देख सकता है – इससे पूरे बॉक्स का नेटवर्क प्रभावित होता है, इसलिए केवल व्यवस्थापकों के लिए।"
 	},
 	"patterns": [
 		[

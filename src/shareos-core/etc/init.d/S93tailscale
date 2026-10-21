@@ -1,0 +1,19 @@
+#!/bin/sh
+# Tailscale: starts the daemon when the system app "tailscale" is installed and
+# the box was connected (it signs in again by itself); in the background, after the network.
+case "$1" in
+	start)
+		[ -x /opt/shareos/bin/tailscaled ] || exit 0
+		(sleep 5; /usr/sbin/shareos-tailscale boot 2>&1 | logger -t shareos-tailscale) >/dev/null 2>&1 &
+		;;
+	stop)
+		/usr/sbin/shareos-tailscale stop-all >/dev/null 2>&1
+		;;
+	restart)
+		"$0" stop; "$0" start
+		;;
+	*)
+		echo "Usage: $0 {start|stop|restart}"; exit 1
+		;;
+esac
+exit 0

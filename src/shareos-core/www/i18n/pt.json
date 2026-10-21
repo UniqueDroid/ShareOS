@@ -1106,7 +1106,12 @@
 		"Darf die Box als VPN-Client verbinden und trennen und VPN-Profile verwalten (OpenVPN) – das betrifft das Netzwerk der ganzen Box, deshalb nur für Administratoren.": "Pode conectar e desconectar a caixa como cliente VPN e gerenciar perfis VPN (OpenVPN) – isso afeta a rede de toda a caixa, por isso só para administradores.",
 		"Darf oben in der Kopfzeile der ShareOS-Oberfläche einen kurzen Zustand anzeigen (z. B. „verbunden“) – nur für den Benutzer, der die App geöffnet hat; er verschwindet nach höchstens 10 Minuten von selbst.": "Pode mostrar um estado curto no topo da interface do ShareOS (p. ex. “conectado”) – só para o usuário que abriu o app; some sozinho após no máximo 10 minutos.",
 		"VPN-SERVER": "SERVIDOR VPN",
-		"1 Gerät": "1 dispositivo"
+		"1 Gerät": "1 dispositivo",
+		"TAILSCALE": "TAILSCALE",
+		"Anmeldung nötig": "login necessário",
+		"getrennt": "desconectado",
+		"Fernzugriff (Tailscale)": "Acesso remoto (Tailscale)",
+		"Darf die Box mit Tailscale verbinden, an- und abmelden und die Geräte des Tailnets sehen – das betrifft das Netzwerk der ganzen Box, deshalb nur für Administratoren.": "Pode conectar a caixa ao Tailscale, entrar e sair e ver os dispositivos da tailnet – isso afeta a rede de toda a caixa, por isso só para administradores."
 	},
 	"patterns": [
 		[

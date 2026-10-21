@@ -38,6 +38,14 @@ itself, so only reviewed daemons run on the box. The media server
 `minidlna` works the same way (`shareos-dlna`, `S96dlna`, settings in the
 interface under Services → Media server), and so does `openvpn` (`shareos-vpn`,
 `S94vpn`, app NetTunnel with the permission `vpn`).
+`tailscale` too (`shareos-tailscale`, `S93tailscale`, app permission
+`tailscale`); its package is `package/shareos-tailscale` (newer than
+buildroot's, one binary with the CLI built in – `TS_BE_CLI=1 tailscaled …`).
+
+**Where they live:** system apps over 2 MB go to the apps drive
+(`/mnt/<drive>/.shareos/sysapps/<id>`, linked from `/opt/shareos/sysapps/<id>`),
+small ones stay on the flash.
+
 Programs that apps drive work the same way: `ffmpeg` runs only as jobs of
 the firmware's worker `shareos-media`, from fixed choices the box checks
 (rpcd `shareos.appmedia`, app permission `media`).

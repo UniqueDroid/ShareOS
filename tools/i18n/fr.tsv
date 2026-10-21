@@ -1412,3 +1412,8 @@ E1101	Peut afficher un court état en haut de l'interface ShareOS (p. ex. « con
 E1102	SERVEUR VPN
 E1103	1 appareil
 P267	$1 appareils
+E1104	TAILSCALE
+E1105	connexion requise
+E1106	déconnecté
+E1107	Accès à distance (Tailscale)
+E1108	Peut connecter la box avec Tailscale, se connecter et se déconnecter et voir les appareils du tailnet – cela concerne le réseau de toute la box, donc réservé aux administrateurs.

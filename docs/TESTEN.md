@@ -386,6 +386,19 @@ Braucht ein OpenVPN-Profil (`.ovpn`, z. B. vom Router im Büro oder von einem VP
 14. *Auch das Heimnetz erreichbar machen* + im Router die statische Route 10.8.0.0/24 → IP der Box: am Handy ist der Router (z. B. `http://192.168.1.1`) erreichbar.
 15. Gerät *Entfernen*: die Verbindung am Handy bricht ab und kommt nicht wieder. Box neu starten: der Server läuft wieder von selbst.
 
+## 14n. Tailscale und große System-Apps auf dem Laufwerk (0.2.0-beta.7)
+
+Braucht ein Tailscale-Konto (kostenlos), ein Handy oder einen Rechner mit Tailscale und die Datei `tailscale-1.98.8.sapp` (Release der Firmware) sowie eine App mit der Berechtigung `tailscale` (ShareOS-Apps).
+
+1. Vor dem Update im Terminal `df -h /` merken. Nach dem Update (Neustart) zieht die Box große System-Apps (FFmpeg, Transmission, MiniDLNA, OpenVPN) aufs Laufwerk: `ls -l /opt/shareos/sysapps` zeigt bei ihnen `-> /mnt/<laufwerk>/.shareos/sysapps/…`, nano/htop/bash bleiben Ordner. `df -h /` zeigt mehr frei. Transmission, Medienserver und VPN laufen wie vorher.
+2. Apps → Store → System-Apps → **tailscale** installieren: `ls -l /opt/shareos/sysapps/tailscale` ist ein Link aufs Laufwerk, `df -h /` ändert sich kaum.
+3. Die Tailscale-App öffnen → *Verbinden*: Es erscheint ein Anmelde-Link (bzw. QR-Code). Am Handy öffnen, mit dem Tailscale-Konto bestätigen. Nach ein paar Sekunden „verbunden“, im Kopf **TAILSCALE · 100.x.y.z**.
+4. Am Handy (mobile Daten, WLAN aus, Tailscale an): `http://100.x.y.z` → die ShareOS-Oberfläche; Freigaben per SMB über `\\100.x.y.z`.
+5. Im Terminal: `ip addr show tailscale0`; `TS_BE_CLI=1 tailscaled --socket=/tmp/shareos-tailscale/tailscaled.sock status` listet die Geräte. `ps` zeigt `tailscaled`, `cat /proc/$(cat /tmp/shareos-tailscale/pid)/status | grep VmRSS` – unter etwa 60 MB.
+6. Box neu starten: nach etwa einer Minute ist sie von selbst wieder im Tailnet.
+7. In der App *Trennen*: der Chip zeigt „getrennt“; *Abmelden*: die Box verschwindet aus dem Tailnet (Admin-Konsole von Tailscale).
+8. Apps → Installiert → tailscale → *Entfernen*: der Dienst hält an, der Ordner auf dem Laufwerk ist weg.
+
 ## 15. Tasten
 
 - **Reset-Taste** (Loch hinten), gedrückt halten und loslassen:

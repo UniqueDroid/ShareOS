@@ -41,6 +41,9 @@ BR2_PACKAGE_NANO=y
 BR2_PACKAGE_BASH=y
 # OpenVPN (system app "openvpn", NetTunnel)
 BR2_PACKAGE_OPENVPN=y
+# Tailscale (system app "tailscale"): one binary, see package/shareos-tailscale
+BR2_PACKAGE_HOST_GO_BIN=y
+BR2_PACKAGE_SHAREOS_TAILSCALE=y
 BR2_PACKAGE_HTOP=y
 BR2_PACKAGE_STRACE=y
 BR2_PACKAGE_IPERF3=y

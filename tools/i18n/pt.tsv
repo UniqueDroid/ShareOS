@@ -1412,3 +1412,8 @@ E1101	Pode mostrar um estado curto no topo da interface do ShareOS (p. ex. “co
 E1102	SERVIDOR VPN
 E1103	1 dispositivo
 P267	$1 dispositivos
+E1104	TAILSCALE
+E1105	login necessário
+E1106	desconectado
+E1107	Acesso remoto (Tailscale)
+E1108	Pode conectar a caixa ao Tailscale, entrar e sair e ver os dispositivos da tailnet – isso afeta a rede de toda a caixa, por isso só para administradores.
