@@ -1109,7 +1109,8 @@
 		"1 Gerät": "1 dispositivo",
 		"Weder ein persönlicher Ordner noch eine Freigabe für dich.": "Ni una carpeta personal ni una carpeta compartida para ti.",
 		"Dateien: persönlicher Ordner und Freigaben (nach Rechten) im Dateibrowser und in Apps": "Archivos: carpeta personal y carpetas compartidas (según permisos) en el explorador y en las apps",
-		" (nur lesen)": " (solo lectura)"
+		" (nur lesen)": " (solo lectura)",
+		"(nur lesen)": "(solo lectura)"
 	},
 	"patterns": [
 		[

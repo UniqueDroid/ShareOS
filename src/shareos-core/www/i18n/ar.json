@@ -1109,7 +1109,8 @@
 		"1 Gerät": "جهاز واحد",
 		"Weder ein persönlicher Ordner noch eine Freigabe für dich.": "لا يوجد مجلد شخصي ولا مشاركة لك.",
 		"Dateien: persönlicher Ordner und Freigaben (nach Rechten) im Dateibrowser und in Apps": "الملفات: المجلد الشخصي والمشاركات (حسب الصلاحيات) في متصفح الملفات والتطبيقات",
-		" (nur lesen)": " (للقراءة فقط)"
+		" (nur lesen)": " (للقراءة فقط)",
+		"(nur lesen)": "(للقراءة فقط)"
 	},
 	"patterns": [
 		[

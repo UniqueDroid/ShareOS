@@ -1109,7 +1109,8 @@
 		"1 Gerät": "1 устройство",
 		"Weder ein persönlicher Ordner noch eine Freigabe für dich.": "Нет ни личной папки, ни общих папок для вас.",
 		"Dateien: persönlicher Ordner und Freigaben (nach Rechten) im Dateibrowser und in Apps": "Файлы: личная папка и общие папки (по правам) в файловом менеджере и приложениях",
-		" (nur lesen)": " (только чтение)"
+		" (nur lesen)": " (только чтение)",
+		"(nur lesen)": "(только чтение)"
 	},
 	"patterns": [
 		[

@@ -1109,7 +1109,8 @@
 		"1 Gerät": "1 dispositivo",
 		"Weder ein persönlicher Ordner noch eine Freigabe für dich.": "Nem uma pasta pessoal nem um compartilhamento para você.",
 		"Dateien: persönlicher Ordner und Freigaben (nach Rechten) im Dateibrowser und in Apps": "Arquivos: pasta pessoal e compartilhamentos (conforme permissões) no navegador de arquivos e nos apps",
-		" (nur lesen)": " (somente leitura)"
+		" (nur lesen)": " (somente leitura)",
+		"(nur lesen)": "(somente leitura)"
 	},
 	"patterns": [
 		[

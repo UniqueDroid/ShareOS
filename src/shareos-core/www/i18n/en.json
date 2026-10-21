@@ -1109,7 +1109,8 @@
 		"1 Gerät": "1 device",
 		"Weder ein persönlicher Ordner noch eine Freigabe für dich.": "Neither a personal folder nor a share for you.",
 		"Dateien: persönlicher Ordner und Freigaben (nach Rechten) im Dateibrowser und in Apps": "Files: personal folder and shares (by permissions) in the file browser and in apps",
-		" (nur lesen)": " (read only)"
+		" (nur lesen)": " (read only)",
+		"(nur lesen)": "(read only)"
 	},
 	"patterns": [
 		[
