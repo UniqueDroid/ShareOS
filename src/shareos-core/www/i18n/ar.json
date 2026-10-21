@@ -1010,7 +1010,9 @@
 		"Terminal": "الطرفية",
 		"noch ungetestet": "لم يُختبر بعد",
 		"ShareOS wurde auf diesem Modell noch nicht auf echter Hardware getestet.": "لم يُختبر ShareOS بعد على جهاز حقيقي من هذا الطراز.",
-		"Erste Anmeldung: Benutzer root, Passwort shareos – danach ein eigenes Passwort setzen.": "أول تسجيل دخول: المستخدم root، كلمة المرور shareos – ثم عيّن كلمة مرور خاصة بك."
+		"Erste Anmeldung: Benutzer root, Passwort shareos – danach ein eigenes Passwort setzen.": "أول تسجيل دخول: المستخدم root، كلمة المرور shareos – ثم عيّن كلمة مرور خاصة بك.",
+		"Eigene Torrents (Transmission)": "التورنت الخاصة (Transmission)",
+		"Darf den eigenen Transmission-Dienst des Benutzers steuern: Torrents hinzufügen, anhalten und löschen. Jeder Benutzer hat seinen eigenen Dienst; Downloads landen nur in seinen Ordnern.": "يمكنه التحكم في خدمة Transmission الخاصة بالمستخدم: إضافة التورنت وإيقافه مؤقتًا وحذفه. لكل مستخدم خدمته الخاصة؛ وتُحفظ التنزيلات في مجلداته فقط."
 	},
 	"patterns": [
 		[
@@ -1988,6 +1990,22 @@
 		[
 			"^– (.+)\\. Box nicht ausschalten\\.$",
 			"– $1. لا تطفئ الجهاز."
+		],
+		[
+			"^Dazu wird installiert: (.+)\\.$",
+			"سيُثبَّت أيضًا: $1."
+		],
+		[
+			"^Gebraucht von: (.+) – diese Apps funktionieren danach nicht mehr\\.$",
+			"تحتاجه: $1 – لن تعمل هذه التطبيقات بعد ذلك."
+		],
+		[
+			"^(\\S+) (\\S+) installiert, dazu: (.+)\\.$",
+			"تم تثبيت $1 $2، وأيضًا: $3."
+		],
+		[
+			"^Hinweis: (.+)$",
+			"ملاحظة: $1"
 		]
 	],
 	"words": [

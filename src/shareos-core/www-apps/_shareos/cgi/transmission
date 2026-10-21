@@ -1,0 +1,163 @@
+#!/usr/bin/ucode -S
+// ShareOS app platform: the account's own Transmission daemon, for apps with
+// the permissions "files" and "torrent"
+//   POST /_shareos/cgi/transmission?g=<grant>
+//   body: {"method": "torrent-get", "arguments": {…}, "tag": …}  (Transmission RPC)
+// The grant (from the admin interface, one app, one account, 8 hours) names
+// the account; rpcd (shareos.apptorrent) checks it, starts the account's
+// daemon when needed (shareos-transmission) and names its Unix socket.
+// Only methods and arguments a remote control needs pass – nothing that sets
+// scripts, the RPC itself or reads other places. Folders are exchanged as
+// "<root>/<path>" like ShareOS.fs (root = a name from ShareOS.fs.roots()); the
+// daemon gets absolute paths inside the account's folders only.
+import { stdin, stdout, readfile, writefile, unlink, popen } from 'fs';
+import * as ubus from 'ubus';
+
+const MAX_BODY = 16 * 1048576;     // .torrent files go in base64
+const CURL_MAX = 32 * 1048576;
+
+function reply(status, obj) {
+	stdout.write(sprintf('Status: %s\r\nContent-Type: application/json\r\nCache-Control: no-store\r\nX-Content-Type-Options: nosniff\r\n\r\n%J\n', status, obj));
+	exit(0);
+}
+function fail(status, msg) { reply(status, { result: msg }); }
+function shq(s) { return "'" + replace(s, "'", "'\\''") + "'"; }
+
+// --- what may pass -------------------------------------------------------------
+const IDS = [ 'ids' ];
+const PATHS = { 'download-dir': 1, 'incomplete-dir': 1, 'location': 1, 'path': 1 };
+const METHODS = {
+	'session-get': [ 'fields' ],
+	'session-stats': [],
+	'session-set': [ 'alt-speed-down', 'alt-speed-enabled', 'alt-speed-time-begin', 'alt-speed-time-day', 'alt-speed-time-enabled',
+		'alt-speed-time-end', 'alt-speed-up', 'speed-limit-down', 'speed-limit-down-enabled', 'speed-limit-up', 'speed-limit-up-enabled',
+		'download-dir', 'incomplete-dir', 'incomplete-dir-enabled', 'download-queue-enabled', 'download-queue-size',
+		'seed-queue-enabled', 'seed-queue-size', 'queue-stalled-enabled', 'queue-stalled-minutes', 'seedRatioLimit', 'seedRatioLimited',
+		'idle-seeding-limit', 'idle-seeding-limit-enabled', 'start-added-torrents', 'rename-partial-files', 'encryption',
+		'dht-enabled', 'pex-enabled', 'lpd-enabled', 'utp-enabled', 'peer-limit-global', 'peer-limit-per-torrent', 'port-forwarding-enabled' ],
+	'free-space': [ 'path' ],
+	'port-test': [ 'ipProtocol' ],
+	'torrent-get': [ 'ids', 'fields', 'format' ],
+	'torrent-add': [ 'metainfo', 'filename', 'paused', 'download-dir', 'labels', 'bandwidthPriority', 'files-wanted', 'files-unwanted',
+		'priority-high', 'priority-low', 'priority-normal', 'peer-limit', 'sequential_download' ],
+	'torrent-start': IDS, 'torrent-start-now': IDS, 'torrent-stop': IDS, 'torrent-verify': IDS, 'torrent-reannounce': IDS,
+	'torrent-remove': [ 'ids', 'delete-local-data' ],
+	'torrent-set': [ 'ids', 'bandwidthPriority', 'downloadLimit', 'downloadLimited', 'uploadLimit', 'uploadLimited', 'files-wanted',
+		'files-unwanted', 'priority-high', 'priority-low', 'priority-normal', 'honorsSessionLimits', 'seedRatioLimit', 'seedRatioMode',
+		'seedIdleLimit', 'seedIdleMode', 'peer-limit', 'labels', 'queuePosition', 'sequentialDownload', 'trackerList', 'group' ],
+	'torrent-set-location': [ 'ids', 'location', 'move' ],
+	'torrent-rename-path': [ 'ids', 'path', 'name' ],
+	'queue-move-top': IDS, 'queue-move-up': IDS, 'queue-move-down': IDS, 'queue-move-bottom': IDS
+};
+// paths in answers become "<root>/<path>"; these never leave the box
+const HIDE = { 'config-dir': 1, 'rpc-bind-address': 1, 'script-torrent-done-filename': 1, 'script-torrent-added-filename': 1,
+	'script-torrent-done-seeding-filename': 1, 'blocklist-url': 1 };
+
+// --- request ----------------------------------------------------------------------
+let g = match(getenv('QUERY_STRING') ?? '', /(^|&)g=([0-9a-f]{32})(&|$)/);
+if (!g) fail('403 Forbidden', 'no access');
+if (getenv('REQUEST_METHOD') != 'POST') fail('405 Method Not Allowed', 'method not allowed');
+let len = +(getenv('CONTENT_LENGTH') ?? 0);
+if (!(len > 0) || len > MAX_BODY) fail('413 Payload Too Large', 'invalid request');
+let body = '';
+while (length(body) < len) {
+	let chunk = stdin.read(len - length(body));
+	if (chunk == null || chunk == '') break;
+	body += chunk;
+}
+let req = json(body);
+if (type(req) != 'object' || type(req.method) != 'string' || !exists(METHODS, req.method))
+	fail('403 Forbidden', 'method not allowed');
+let a = req.arguments ?? {};
+if (type(a) != 'object') fail('400 Bad Request', 'invalid request');
+
+let conn = ubus.connect();
+if (!conn) fail('503 Service Unavailable', 'not ready');
+let s = conn.call('shareos.apptorrent', 'session', { grant: g[2] });
+if (s == null) fail('500 Internal Server Error', 'failed');
+if (s.error == 'no access') fail('403 Forbidden', 'no access');
+if (s.error) fail('503 Service Unavailable', s.error);
+
+// "<root>/<path>" or an absolute path inside a root -> absolute path (checked by rpcd)
+function to_abs(v) {
+	if (type(v) != 'string' || v == '') return null;
+	let root = null, rel = '';
+	if (substr(v, 0, 1) == '/') {
+		for (let r in s.roots)
+			if (v == r.path || index(v, r.path + '/') == 0) { root = r.name; rel = substr(v, length(r.path) + 1); break; }
+	} else {
+		let i = index(v, '/');
+		root = i < 0 ? v : substr(v, 0, i);
+		rel = i < 0 ? '' : substr(v, i + 1);
+	}
+	if (root == null) return null;
+	let r = conn.call('shareos.apptorrent', 'path', { grant: g[2], root, path: rel });
+	return r?.path ?? null;
+}
+function to_box(v) {
+	if (type(v) != 'string') return v;
+	for (let r in s.roots)
+		if (v == r.path || index(v, r.path + '/') == 0) return r.name + substr(v, length(r.path));
+	return '';      // outside the account's folders: not shown
+}
+
+let args = {};
+for (let k in METHODS[req.method]) {
+	if (a[k] == null) continue;
+	if (PATHS[k] && !(req.method == 'torrent-rename-path' && k == 'path')) {
+		let p = to_abs(a[k]);
+		if (!p) fail('403 Forbidden', 'folder not allowed: ' + a[k]);
+		args[k] = p;
+	} else args[k] = a[k];
+}
+// a torrent comes as file content or as a magnet/http link – no local paths
+if (req.method == 'torrent-add') {
+	if (args.filename != null && (type(args.filename) != 'string' || !match(args.filename, /^(magnet:\?|https?:\/\/)/)))
+		fail('403 Forbidden', 'only magnet or http(s) links');
+	if (args.metainfo == null && args.filename == null) fail('400 Bad Request', 'no torrent');
+}
+// free-space without a path: the default download folder
+if (req.method == 'free-space' && args.path == null) fail('400 Bad Request', 'path missing');
+
+// --- to the daemon (Unix socket, CSRF token of Transmission kept per account) ---------
+const TOKEN = '/tmp/shareos-transmission/' + s.user + '/token';
+let payload = sprintf('%J', { method: req.method, arguments: args, tag: req.tag });
+let rnd = readfile('/dev/urandom', 8) ?? '', id = '';
+for (let i = 0; i < length(rnd); i++) id += sprintf('%02x', ord(rnd, i));
+let tmp = '/tmp/shareos-transmission/' + s.user + '/req.' + id;
+writefile(tmp, payload);
+
+function call() {
+	let tok = trim(readfile(TOKEN) ?? '');
+	let p = popen(sprintf("curl -s -S --max-filesize %d -m 120 -D - --unix-socket %s -H %s -H 'Content-Type: application/json' --data-binary @%s http://localhost/transmission/rpc",
+		CURL_MAX, shq(s.socket), shq('X-Transmission-Session-Id: ' + tok), shq(tmp)), 'r');
+	if (!p) return null;
+	let o = p.read('all') ?? '';
+	p.close();
+	let i = index(o, '\r\n\r\n');
+	if (i < 0) return null;
+	let head = substr(o, 0, i), code = +(match(head, /^HTTP\/[0-9.]+ ([0-9]{3})/)?.[1] ?? 0);
+	let t = match(head, /\nX-Transmission-Session-Id: *([^\r\n]+)/i);
+	return { code, token: t?.[1], body: substr(o, i + 4) };
+}
+let r = call();
+if (r && r.code == 409 && r.token) { writefile(TOKEN, r.token); r = call(); }
+unlink(tmp);
+if (!r) fail('502 Bad Gateway', 'Transmission does not answer');
+if (r.code != 200) fail('502 Bad Gateway', 'Transmission: HTTP ' + r.code);
+
+let res = json(r.body);
+if (type(res) != 'object') fail('502 Bad Gateway', 'Transmission: invalid answer');
+
+// absolute paths -> "<root>/<path>", internal settings out
+function scrub(o) {
+	if (type(o) == 'array') return map(o, scrub);
+	if (type(o) != 'object') return o;
+	let n = {};
+	for (let k, v in o) {
+		if (HIDE[k]) continue;
+		n[k] = (k == 'downloadDir' || k == 'download-dir' || k == 'incomplete-dir' || (k == 'path' && req.method == 'free-space')) ? to_box(v) : scrub(v);
+	}
+	return n;
+}
+reply('200 OK', scrub(res));

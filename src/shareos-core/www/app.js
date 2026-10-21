@@ -3718,7 +3718,8 @@ async function pollAppJob() {
 		S.apps.job = j;
 		if (['downloading', 'verifying', 'installing'].includes(j.state)) { S.appTimer = setTimeout(pollAppJob, 1000); }
 		else {
-			if (j.state === 'done') toast(`${j.id} ${j.version} installiert.`);
+			if (j.state === 'done') toast((j.also || []).length ? `${j.id} ${j.version} installiert, dazu: ${j.also.join(', ')}.` : `${j.id} ${j.version} installiert.`);
+			if (j.state === 'done' && j.warning) toast('Hinweis: ' + j.warning, true);
 			else if (j.state === 'error') toast('Installieren: ' + (j.error || 'fehlgeschlagen'), true);
 			S.apps.job = null;
 			await loadApps(['installed', 'catalog']);
@@ -3785,7 +3786,7 @@ function appActions(a, upd) {
 }
 
 // permissions an app can ask for (app.json "permissions")
-const PERM_TAG = { cron: 'Zeitgesteuerte Aufgaben', embed: 'In ShareOS anzeigen', files: 'Zugriff auf Dateien', internet: 'Nutzt das Internet', system: 'System-App · Terminal' };
+const PERM_TAG = { cron: 'Zeitgesteuerte Aufgaben', embed: 'In ShareOS anzeigen', files: 'Zugriff auf Dateien', torrent: 'Eigene Torrents (Transmission)', internet: 'Nutzt das Internet', system: 'System-App · Terminal' };
 // permissions plus "internet" (manifest field: the app loads data from the internet – not a restriction, shown for transparency)
 // and "system" for system apps (programs for the terminal)
 const appPerms = (x) => [...(x?.type === 'system' ? ['system'] : []), ...(x?.permissions || []), ...(x?.internet ? ['internet'] : [])];
@@ -3793,6 +3794,7 @@ const permTags = (perms) => (perms.length ? html`<div class="desc" style="margin
 const PERM_TXT = { cron: 'Darf zeitgesteuerte Aufgaben auf der Box ausführen – als eigener eingeschränkter Benutzer, nur in ihrem Datenordner, mit Zeitlimit.',
 	embed: 'Darf als Seite in der ShareOS-Oberfläche angezeigt werden (statt in einem eigenen Fenster).',
 	files: 'Darf die Dateien lesen, ändern und löschen, die der angemeldete Benutzer im Dateibrowser erreicht – mit seinen Rechten, solange die App offen ist.',
+	torrent: 'Darf den eigenen Transmission-Dienst des Benutzers steuern: Torrents hinzufügen, anhalten und löschen. Jeder Benutzer hat seinen eigenen Dienst; Downloads landen nur in seinen Ordnern.',
 	internet: 'Lädt Daten aus dem Internet (z. B. Online-Dienste, Streams, Karten). Ohne Internetverbindung funktionieren diese Teile der App nicht.',
 	system: 'Programm für die Kommandozeile der Box (System → Terminal oder SSH). Es läuft mit den Rechten dessen, der es startet – im Terminal als root.' };
 
@@ -3938,7 +3940,12 @@ Object.assign(ACTIONS, {
 		const c = (S.apps.catalog?.apps || []).find((x) => x.id === el.dataset.id);
 		const v = c?.versions.find((x) => x.version === el.dataset.v) || c?.versions[0];
 		const perms = appPerms(v);
-		if (perms.length && !await confirmDlg(`${c.name}: Berechtigungen`, perms.map((p) => PERM_TXT[p] || p).join(' '), 'Erlauben & installieren')) return;
+		// apps it needs and that are not installed yet come along from the store
+		const have = new Set((S.apps.installed?.apps || []).map((x) => x.id));
+		const need = (v?.requires || c?.requires || []).filter((r) => !have.has(r));
+		// one text node per sentence, so each is translated
+		const parts = [...perms.map((p) => PERM_TXT[p] || p), ...(need.length ? [`Dazu wird installiert: ${need.join(', ')}.`] : [])];
+		if (parts.length && !await confirmDlg(`${c.name}: Berechtigungen`, raw(html`${parts.map((t) => html`<span>${t}</span> `)}`.s), 'Erlauben & installieren')) return;
 		try {
 			await rpc('shareos.apps', 'install', { id: el.dataset.id, version: el.dataset.v });
 			S.apps.job = { state: 'downloading', id: el.dataset.id };
@@ -3948,8 +3955,11 @@ Object.assign(ACTIONS, {
 	},
 	async 'app-remove'(el) {
 		const a = (S.apps.installed.apps || []).find((x) => x.id === el.dataset.id);
-		if (!await confirmDlg(`${a?.name || el.dataset.id} entfernen?`, (a?.jobs || []).length ? 'Die App wird gelöscht, mit ihren Aufgaben und ihren Daten auf der Box.' : 'Die App wird gelöscht. Daten, die sie im Browser gespeichert hat, bleiben dort.', 'Entfernen', true)) return;
-		try { await rpc('shareos.apps', 'remove', { id: el.dataset.id }); toast('Entfernt.'); loadApps(['installed', 'catalog']); }
+		const users = (S.apps.installed.apps || []).filter((x) => x.id !== el.dataset.id && (x.requires || []).includes(el.dataset.id)).map((x) => x.name);
+		const parts = [(a?.jobs || []).length ? 'Die App wird gelöscht, mit ihren Aufgaben und ihren Daten auf der Box.' : 'Die App wird gelöscht. Daten, die sie im Browser gespeichert hat, bleiben dort.',
+			...(users.length ? [`Gebraucht von: ${users.join(', ')} – diese Apps funktionieren danach nicht mehr.`] : [])];
+		if (!await confirmDlg(`${a?.name || el.dataset.id} entfernen?`, raw(html`${parts.map((t) => html`<span>${t}</span> `)}`.s), 'Entfernen', true)) return;
+		try { await rpc('shareos.apps', 'remove', { id: el.dataset.id, force: users.length > 0 }); toast('Entfernt.'); loadApps(['installed', 'catalog']); }
 		catch (e) { toast('Entfernen: ' + e.message, true); }
 	},
 	'app-users'(el) { S.apps.edit = el.dataset.id; if (!S.acc) rpc('shareos.accounts', 'list').then((a) => { S.acc = a; renderMain(); }).catch(() => {}); renderMain(); window.scrollTo(0, 0); },

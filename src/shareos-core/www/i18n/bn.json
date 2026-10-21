@@ -1010,7 +1010,9 @@
 		"Terminal": "টার্মিনাল",
 		"noch ungetestet": "এখনও পরীক্ষিত নয়",
 		"ShareOS wurde auf diesem Modell noch nicht auf echter Hardware getestet.": "ShareOS এই মডেলের আসল হার্ডওয়্যারে এখনও পরীক্ষা করা হয়নি।",
-		"Erste Anmeldung: Benutzer root, Passwort shareos – danach ein eigenes Passwort setzen.": "প্রথম লগইন: ব্যবহারকারী root, পাসওয়ার্ড shareos – তারপর নিজের পাসওয়ার্ড সেট করুন।"
+		"Erste Anmeldung: Benutzer root, Passwort shareos – danach ein eigenes Passwort setzen.": "প্রথম লগইন: ব্যবহারকারী root, পাসওয়ার্ড shareos – তারপর নিজের পাসওয়ার্ড সেট করুন।",
+		"Eigene Torrents (Transmission)": "নিজের টরেন্ট (Transmission)",
+		"Darf den eigenen Transmission-Dienst des Benutzers steuern: Torrents hinzufügen, anhalten und löschen. Jeder Benutzer hat seinen eigenen Dienst; Downloads landen nur in seinen Ordnern.": "ব্যবহারকারীর নিজের Transmission সেবা নিয়ন্ত্রণ করতে পারে: টরেন্ট যোগ, বিরতি ও মুছে ফেলা। প্রত্যেক ব্যবহারকারীর নিজস্ব সেবা আছে; ডাউনলোড কেবল তার ফোল্ডারে যায়।"
 	},
 	"patterns": [
 		[
@@ -1988,6 +1990,22 @@
 		[
 			"^– (.+)\\. Box nicht ausschalten\\.$",
 			"– $1। বক্স বন্ধ করবেন না।"
+		],
+		[
+			"^Dazu wird installiert: (.+)\\.$",
+			"সাথে ইনস্টল হবে: $1।"
+		],
+		[
+			"^Gebraucht von: (.+) – diese Apps funktionieren danach nicht mehr\\.$",
+			"যাদের লাগে: $1 – এই অ্যাপগুলো আর কাজ করবে না।"
+		],
+		[
+			"^(\\S+) (\\S+) installiert, dazu: (.+)\\.$",
+			"$1 $2 ইনস্টল হয়েছে, সাথে: $3।"
+		],
+		[
+			"^Hinweis: (.+)$",
+			"নোট: $1"
 		]
 	],
 	"words": [

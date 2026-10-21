@@ -1,0 +1,7 @@
+#!/bin/sh
+# system app "transmission-daemon" is removed: stop the daemons of all accounts
+# (their torrents and downloads stay on the drives; installed again, they go on)
+[ "$1" = remove ] || exit 0
+/usr/sbin/shareos-transmission stop-all >/dev/null 2>&1
+rm -rf /tmp/shareos-transmission
+exit 0

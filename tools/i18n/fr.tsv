@@ -1292,3 +1292,9 @@ E1004	Terminal
 E1005	pas encore testé
 E1006	ShareOS n’a pas encore été testé sur du matériel réel de ce modèle.
 E1007	Première connexion : utilisateur root, mot de passe shareos – définissez ensuite votre propre mot de passe.
+E1008	Torrents personnels (Transmission)
+E1009	Peut piloter le service Transmission propre à l'utilisateur : ajouter, suspendre et supprimer des torrents. Chaque utilisateur a son propre service ; les téléchargements vont uniquement dans ses dossiers.
+P244	Sera aussi installé : $1.
+P245	Utilisé par : $1 – ces apps ne fonctionneront plus.
+P246	$1 $2 installé, en plus : $3.
+P247	Remarque : $1

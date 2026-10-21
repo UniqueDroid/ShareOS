@@ -1,0 +1,28 @@
+From: ShareOS <noreply@github.com>
+Subject: [PATCH] http: no abort for clients on a Unix socket
+
+name_from_addr() ends the program with event_errx() when getnameinfo()
+fails. musl's getnameinfo() does not know AF_UNIX, so the first request
+to an evhttp server bound to a Unix socket (Transmission's
+rpc-bind-address "unix:...") killed the server. Name such peers
+"unix" port "0" instead (libevent 2.2 handles AF_UNIX the same way).
+
+--- a/http.c	2026-10-21 08:22:49.050462739 +0200
++++ b/http.c	2026-10-21 08:22:49.069224468 +0200
+@@ -4360,6 +4360,16 @@
+ 	char strport[NI_MAXSERV];
+ 	int ni_result;
+ 
++#ifdef AF_UNIX
++	/* a peer on a Unix socket has no host or port; getnameinfo() of musl
++	 * refuses AF_UNIX, and the error below would end the whole program */
++	if (sa->sa_family == AF_UNIX) {
++		*phost = mm_strdup("unix");
++		*pport = mm_strdup("0");
++		return;
++	}
++#endif
++
+ #ifdef EVENT__HAVE_GETNAMEINFO
+ 	ni_result = getnameinfo(sa, salen,
+ 		ntop, sizeof(ntop), strport, sizeof(strport),
