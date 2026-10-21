@@ -150,7 +150,7 @@ sample data via `tests/mock-ubus.py`.
 ## Roadmap
 
 - Hardware tests of the current betas, then a public beta
-- More native apps in the same store: system apps for the terminal (0.2.0-beta.1), Transmission (0.2.0-beta.4) FFmpeg (0.2.0-beta.5) and the media server MiniDLNA (0.2.0-beta.6) are there; next Syncthing …
+- More native apps in the same store: system apps for the terminal (0.2.0-beta.1), Transmission (0.2.0-beta.4), FFmpeg (0.2.0-beta.5) and the media server MiniDLNA (0.2.0-beta.6) are there; next Syncthing …
 - More of the app platform: "open with" defaults per file type
 - Storage: **LVM2**; RAID 5 only makes sense with three or more disks (the DNS-320L has two bays)
 - More devices (DNS-320/325/327L)
