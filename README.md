@@ -67,6 +67,7 @@ Version in brackets = first release with the feature.
 **Storage**
 - Setup wizard: one disk, two separate disks, a mirror (RAID 1), RAID 0 or JBOD (mdadm; RAID 0/JBOD from beta.9), optional swap partition per disk
 - File system per volume: **ext4** (recommended: owners, storage limit per user, personal folders, apps), **Btrfs**, **exFAT**, **NTFS** (beta.7), **ext3**, **ext2**, **FAT32** (beta.9)
+- **Snapshots:** dated states of shares, personal folders or whole drives on another drive (hourly to weekly, hard links like rsnapshot, keep the last N plus days/weeks/months), restore with the file browser (0.2.0-beta.6)
 - SMART values and health, disk standby, RAID status with sync progress, repair a mirror with a new disk (beta.9), mount/unmount/remove volumes
 - **USB sticks and disks:** mounted at `/mnt/usb-<name>` when plugged in (FAT32, exFAT, NTFS, ext4, Btrfs), **Safely remove**, **Format** with exFAT, FAT32, NTFS or ext4 (beta.7)
 

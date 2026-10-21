@@ -1014,7 +1014,53 @@
 		"Eigene Torrents (Transmission)": "Torrents propios (Transmission)",
 		"Darf den eigenen Transmission-Dienst des Benutzers steuern: Torrents hinzufügen, anhalten und löschen. Jeder Benutzer hat seinen eigenen Dienst; Downloads landen nur in seinen Ordnern.": "Puede controlar el servicio Transmission propio del usuario: añadir, pausar y eliminar torrents. Cada usuario tiene su propio servicio; las descargas van solo a sus carpetas.",
 		"Medien umwandeln (FFmpeg)": "Convertir medios (FFmpeg)",
-		"Darf auf der Box Audio und Video des Benutzers umwandeln lassen (FFmpeg) – mit seinen Rechten, nur in seinen Ordnern, aus festen Auswahlen (kein beliebiger Befehl).": "Puede convertir el audio y vídeo del usuario en la caja (FFmpeg): con sus permisos, solo en sus carpetas y con opciones fijas (ningún comando libre)."
+		"Darf auf der Box Audio und Video des Benutzers umwandeln lassen (FFmpeg) – mit seinen Rechten, nur in seinen Ordnern, aus festen Auswahlen (kein beliebiger Befehl).": "Puede convertir el audio y vídeo del usuario en la caja (FFmpeg): con sus permisos, solo en sus carpetas y con opciones fijas (ningún comando libre).",
+		"Ein Snapshot hält den Stand eines Ordners fest – stündlich, täglich oder wöchentlich.": "Una instantánea guarda el estado de una carpeta: cada hora, cada día o cada semana.",
+		"Jeder Stand sieht aus wie eine vollständige Kopie; unveränderte Dateien belegen aber keinen zusätzlichen Platz.": "Cada estado parece una copia completa, pero los archivos sin cambios no ocupan espacio adicional.",
+		"So holst du eine gelöschte oder überschriebene Datei von gestern oder letzter Woche zurück: im Dateibrowser aus dem Snapshot zurückkopieren.": "Para recuperar un archivo borrado o sobrescrito ayer o la semana pasada, cópialo de vuelta desde la instantánea en el explorador de archivos.",
+		"Neuer Snapshot-Auftrag": "Nueva tarea de instantáneas",
+		"NEUER SNAPSHOT-AUFTRAG": "NUEVA TAREA DE INSTANTÁNEAS",
+		"Am besten auf ein anderes Laufwerk sichern (zweite Platte oder USB-Festplatte): dann schützen Snapshots auch bei einem Plattendefekt.": "Lo mejor es guardar en otra unidad (segundo disco o disco USB): así las instantáneas también protegen ante un fallo del disco.",
+		"Ein Spiegel (RAID 1) ersetzt keine Snapshots – er spiegelt auch jedes Löschen sofort.": "Un espejo (RAID 1) no sustituye a las instantáneas: también replica cada borrado al instante.",
+		"Die Snapshots liegen im Ordner": "Las instantáneas están en la carpeta",
+		"des Ziel-Laufwerks und sind nur für Administratoren sichtbar.": "de la unidad de destino y solo los ven los administradores.",
+		"Für eine Kopie außer Haus kann ein Cloud-Auftrag den Snapshot-Ordner hochladen.": "Para una copia fuera de casa, una tarea en la nube puede subir la carpeta de instantáneas.",
+		"neuester": "más reciente",
+		"Jetzt sichern": "Guardar ahora",
+		"QUELLE → ZIEL": "ORIGEN → DESTINO",
+		"ZEITPLAN · BEHALTEN": "HORARIO · CONSERVAR",
+		"STAND": "ESTADO",
+		"Im Dateibrowser öffnen": "Abrir en el explorador de archivos",
+		"Zum Wiederherstellen im Dateibrowser die Datei oder den Ordner aus dem Snapshot an den alten Platz kopieren. Dateien im Snapshot nicht ändern: unveränderte Dateien teilen sich den Platz mit den anderen Snapshots.": "Para restaurar, copia el archivo o la carpeta de la instantánea a su lugar original en el explorador de archivos. No modifiques archivos dentro de una instantánea: los archivos sin cambios comparten espacio con las demás.",
+		"WAS SICHERN": "QUÉ GUARDAR",
+		"ZIEL-LAUFWERK": "UNIDAD DE DESTINO",
+		"WIE OFT": "CON QUÉ FRECUENCIA",
+		"Stündlich": "Cada hora",
+		"Alle 6 Stunden": "Cada 6 horas",
+		"Täglich": "Diario",
+		"Wöchentlich (Sonntag)": "Semanal (domingo)",
+		"UHRZEIT": "HORA",
+		"AB UHRZEIT": "DESDE LAS",
+		"MINUTE (HH:MM, NUR DIE MINUTE ZÄHLT)": "MINUTO (HH:MM, SOLO CUENTA EL MINUTO)",
+		"BEHALTEN": "CONSERVAR",
+		"DIE LETZTEN": "LOS ÚLTIMOS",
+		"TAGE (JE EINER)": "DÍAS (UNO POR DÍA)",
+		"WOCHEN (JE EINER)": "SEMANAS (UNO POR SEMANA)",
+		"MONATE (JE EINER)": "MESES (UNO POR MES)",
+		"Die letzten N Snapshots bleiben immer (auch die von Hand); dazu je der neueste eines Tages, einer Woche, eines Monats. Beispiel täglich: 7 Tage · 4 Wochen · 6 Monate ≈ ein halbes Jahr zurück mit 17 Ständen.": "Las últimas N instantáneas se conservan siempre (también las manuales); además, la más reciente de cada día, semana y mes. Ejemplo diario: 7 días · 4 semanas · 6 meses ≈ medio año atrás con 17 estados.",
+		"AUSNAHMEN (EINE PRO ZEILE, Z. B. *.tmp ODER /Downloads/)": "EXCLUSIONES (UNA POR LÍNEA, P. EJ. *.tmp O /Downloads/)",
+		"Quelle und Ziel liegen auf demselben Laufwerk: das schützt vor versehentlichem Löschen, aber nicht vor einem Plattendefekt.": "Origen y destino están en la misma unidad: protege contra borrados accidentales, no contra un fallo del disco.",
+		"Es werden keine neuen Snapshots mehr angelegt.": "No se crearán más instantáneas.",
+		"Snapshot löschen?": "¿Eliminar la instantánea?",
+		"Snapshots auch löschen?": "¿Eliminar también las instantáneas?",
+		"Snapshots löschen": "Eliminar instantáneas",
+		"Snapshot gelöscht.": "Instantánea eliminada.",
+		"abgebrochen": "detenido",
+		"Lade Snapshots …": "Cargando instantáneas …",
+		"Noch kein Snapshot-Auftrag. Ein Auftrag sichert eine Freigabe, die persönlichen Ordner oder ein ganzes Laufwerk nach Zeitplan.": "Aún no hay tareas de instantáneas. Una tarea guarda un recurso compartido, las carpetas personales o una unidad entera según un horario.",
+		"Noch kein Snapshot – „Jetzt sichern“ legt den ersten an.": "Aún no hay instantáneas: «Guardar ahora» crea la primera.",
+		"rsync fehlt in dieser Firmware.": "Falta rsync en este firmware.",
+		"Kein geeignetes Ziel: Snapshots brauchen ein Laufwerk mit ext4 oder Btrfs (FAT32/exFAT kennen keine Hardlinks).": "No hay destino adecuado: las instantáneas necesitan una unidad ext4 o Btrfs (FAT32/exFAT no tienen enlaces duros)."
 	},
 	"patterns": [
 		[
@@ -2008,6 +2054,78 @@
 		[
 			"^Hinweis: (.+)$",
 			"Nota: $1"
+		],
+		[
+			"^(\\d+) Aufträge$",
+			"$1 tareas"
+		],
+		[
+			"^Täglich (\\d\\d:\\d\\d)$",
+			"Diario a las $1"
+		],
+		[
+			"^Wöchentlich \\(Sonntag\\) (\\d\\d:\\d\\d)$",
+			"Semanal (domingo) a las $1"
+		],
+		[
+			"^die letzten (\\d+)$",
+			"los últimos $1"
+		],
+		[
+			"^(\\d+) Tage$",
+			"$1 días"
+		],
+		[
+			"^(\\d+) Wochen$",
+			"$1 semanas"
+		],
+		[
+			"^(\\d+) Monate$",
+			"$1 meses"
+		],
+		[
+			"^(\\d+) Dateien$",
+			"$1 archivos"
+		],
+		[
+			"^(\\d+) geändert$",
+			"$1 cambiados"
+		],
+		[
+			"^(\\d+) alte entfernt$",
+			"$1 antiguas eliminadas"
+		],
+		[
+			"^Persönliche Ordner \\((.+)\\)$",
+			"Carpetas personales ($1)"
+		],
+		[
+			"^Ganzes Laufwerk (.+)$",
+			"Unidad entera $1"
+		],
+		[
+			"^(.+) – keine Hardlinks$",
+			"$1 – sin enlaces duros"
+		],
+		[
+			"^Den Stand vom (.+) löschen\\? Die anderen Snapshots bleiben vollständig\\.$",
+			"¿Eliminar el estado del $1? Las demás instantáneas quedan completas."
+		],
+		[
+			"^Die (\\d+) vorhandenen Snapshots in (.+) ebenfalls löschen\\? Sonst bleiben sie dort liegen\\.$",
+			"¿Eliminar también las $1 instantáneas de $2? Si no, se quedan allí."
+		],
+		[
+			"^Snapshot „(.+)“ läuft\\.$",
+			"Instantánea «$1» en curso."
+		],
+		[
+			"^Das Ziel-Laufwerk (.+) ist nicht eingebunden\\.$",
+			"La unidad de destino $1 no está montada."
+		],
+		[
+			"^AUFTRAG (.+)$",
+			"TAREA $1"
 		]
 	],
 	"words": [

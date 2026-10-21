@@ -330,6 +330,20 @@ Needs a drive, some media on it (a video, e.g. `.mkv` or `.mp4`, and a music fil
 8. In the terminal during a job: `ps | grep ffmpeg` – runs with `nice` 19; `ls /tmp/shareos-media/jobs/`.
 9. Apps → Installed → ffmpeg → *Remove* (asks, because MediaTranscoder needs it): running jobs stop, the app shows "FFmpeg fehlt".
 
+## 14j. Snapshots (0.2.0-beta.6)
+
+Needs two drives with ext4 or Btrfs (e.g. the disk and a USB disk) and a share with some files.
+
+1. Storage → **Snapshots** → *Neuer Snapshot-Auftrag*: name `fotos`, *Was sichern* = the share, *Ziel-Laufwerk* = the other drive, *Täglich* 03:15, keep 3 · 7 · 4 · 6, exclusion `*.tmp` → *Speichern*. A FAT32/exFAT drive is greyed out as a target.
+2. *Jetzt sichern*: "läuft", then "OK" with the number of files and the size. The first snapshot copies everything – with many GB that takes a while (disk to disk about as long as copying).
+3. In the share change a file, delete one, add one; *Jetzt sichern*: "N geändert" is small, the second snapshot is quick.
+4. *Snapshots (2)* → on the older one *Im Dateibrowser öffnen*: the deleted file is there, with the old content of the changed one. Copy the file back into the share.
+5. In the terminal: `du -sh /mnt/<target>/Snapshots/fotos/*` – the second snapshot takes almost nothing (hard links); `ls -ld /mnt/<target>/Snapshots` → `drwx------ root`.
+6. Save a big folder, after a few seconds *Stopp*: "abgebrochen"; the next *Jetzt sichern* continues.
+7. *Protokoll* on the job: the rsync summary. Unplug the target USB disk, *Jetzt sichern*: "Fehler" and a message (bell, e-mail/push if set up).
+8. `cat /etc/crontabs/root`: a line `15 3 * * * /usr/sbin/shareos-snapshot run fotos`. The next morning the snapshot of 3:15 is there.
+9. *Entfernen* → "Snapshots auch löschen?" → *Snapshots löschen*: job and folder are gone.
+
 ## 15. Buttons
 
 - **Reset button** (pin hole at the back), hold and let go:

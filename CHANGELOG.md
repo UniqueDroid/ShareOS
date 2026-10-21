@@ -4,6 +4,12 @@ Changes per release (newest first). The section of a version is added to its
 GitHub release automatically when the release is built. Test versions are
 pre-releases for test devices only.
 
+## 0.2.0-beta.6
+
+- **Snapshots (Storage → Snapshots):** dated states of a share, of the personal folders or of a whole drive on another drive – hourly, every 6 hours, daily or weekly. Every snapshot looks like a full copy; files that did not change are hard links to the snapshot before and take no space twice (rsync `--link-dest`, the way rsnapshot works, without Perl). What to keep: the last N in any case (also those taken by hand) plus the newest of each day, week and month (e.g. 3 · 7 days · 4 weeks · 6 months). Exclusions (`*.tmp`, `/Downloads/`), *Back up now*, stop (the next run continues the half snapshot), list of the snapshots, open one in the file browser to restore, delete one, log, message when a snapshot fails. The snapshots are in `/mnt/<drive>/Snapshots/<job>/<YYYY-MM-DD_HHMMSS>` (root only, 0700); the target needs hard links (ext4, Btrfs – not FAT32/exFAT). A drive saved into itself leaves its `Snapshots` folder out.
+- App SDK: `ShareOS.lang` – the language of the ShareOS interface, for apps with their own translations (e.g. Transmission 1.2).
+- rsync 3.4 in the firmware (without OpenSSL, 0.2 MB) and `ionice`: snapshots run at the lowest CPU and disk priority.
+
 ## 0.2.0-beta.5
 
 - **Media jobs on the box – FFmpeg as a system app:** `ffmpeg` (FFmpeg 6.1.5 with `ffprobe`, LAME and Opus, about 2.6 MB, in the release as `.sapp`) converts audio and puts videos into another container. The box runs the jobs itself, in the background, one after another, at the lowest priority and with the account's rights (admins: root, like their file browser): files belong to the account, storage limits apply. Videos are not re-encoded – the box's ARM CPU has no FPU, that would take many times the length of the film. The app MediaTranscoder (ShareOS-Apps) uses it.

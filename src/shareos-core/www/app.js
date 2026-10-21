@@ -157,6 +157,7 @@ const TABS = [
 const SYS_SUBS = [['firmware', 'FIRMWARE'], ['notifications', 'MELDUNGEN'], ['general', 'ALLGEMEIN'], ['time', 'ZEIT'], ['network', 'NETZWERK'], ['power', 'ENERGIE & RESET'], ['logs', 'PROTOKOLLE'], ['terminal', 'TERMINAL'], ['appearance', 'DARSTELLUNG'], ['about', 'ÜBER']];
 const SVC_SUBS = [['status', 'STATUS'], ['autostart', 'AUTOSTART']];
 const SHR_SUBS = [['shares', 'FREIGABEN'], ['files', 'DATEIEN'], ['users', 'BENUTZER'], ['groups', 'GRUPPEN']];
+const STO_SUBS = [['volumes', 'LAUFWERKE'], ['snapshots', 'SNAPSHOTS']];
 const ROLE_TXT = { admin: 'Administrator', user: 'Benutzer', share: 'Nur Freigaben' };
 // pages that moved: old link -> new place
 const SUB_MOVED = { hardware: 'power', https: 'network' };
@@ -515,6 +516,7 @@ function parseRoute() {
 	if (S.route.tab === 'system' && !SYS_SUBS.some((x) => x[0] === S.route.sub)) S.route.sub = 'firmware';
 	if (S.route.tab === 'services' && !SVC_SUBS.some((x) => x[0] === S.route.sub)) S.route.sub = 'status';
 	if (S.route.tab === 'shares' && !SHR_SUBS.some((x) => x[0] === S.route.sub)) S.route.sub = 'shares';
+	if (S.route.tab === 'storage' && !STO_SUBS.some((x) => x[0] === S.route.sub)) S.route.sub = 'volumes';
 	if (S.route.tab === 'apps' && !APP_SUBS.some((x) => x[0] === S.route.sub)) S.route.sub = 'installed';
 }
 
@@ -626,7 +628,12 @@ const VIEWS = {
 		</section>`;
 	},
 
-	storage: () => storageView(),
+	storage() {
+		const sub = S.route.sub;
+		return html`
+		<nav class="subtabs" aria-label="Speicher">${STO_SUBS.map(([id, label]) => html`<a class="st${sub === id ? ' on' : ''}" href="#/storage/${id}">${label}</a>`)}</nav>
+		${sub === 'snapshots' ? snapshotsView() : storageView()}`;
+	},
 
 	shares() {
 		const sub = S.route.sub;
@@ -1214,6 +1221,158 @@ function cloudAfter(scope) {
 			? 'Beim Spiegeln von der Cloud werden auf dem NAS Dateien gelöscht, die in der Cloud fehlen.' : 'Beim Spiegeln zur Cloud werden in der Cloud Dateien gelöscht, die auf dem NAS fehlen.', 'Verstanden', true)) return;
 		try { await CLOUD_API[scope].saveJob(args); S.cloud.jobEdit = null; toast(`Auftrag „${args.name}“ gespeichert.`); loadCloud(scope); }
 		catch (err) { toast('Auftrag: ' + err.message, true); }
+	});
+}
+
+/* ---------- snapshots (Storage -> Snapshots) ------------------------------------ */
+
+const SNAP_EVERY = { hour: 'Stündlich', '6h': 'Alle 6 Stunden', day: 'Täglich', week: 'Wöchentlich (Sonntag)' };
+const SNAP_KEEP = [['keep_last', 'DIE LETZTEN'], ['keep_daily', 'TAGE (JE EINER)'], ['keep_weekly', 'WOCHEN (JE EINER)'], ['keep_monthly', 'MONATE (JE EINER)']];
+
+async function loadSnapshots() {
+	clearTimeout(S.snapTimer);
+	S.snap = S.snap || {};
+	try { S.snap.data = await rpc('shareos.snapshots', 'status'); }
+	catch (e) { toast('Snapshots: ' + e.message, true); }
+	if (S.route.tab === 'storage' && S.route.sub === 'snapshots') {
+		if (!document.activeElement?.matches('input,select,textarea')) renderMain();
+		if (S.snap.data?.jobs?.some((j) => j.running)) S.snapTimer = setTimeout(loadSnapshots, 3000);
+	}
+}
+
+function snapSourceTxt(d, id) {
+	const x = (d.sources || []).find((s) => s.id === id);
+	if (!x) return id || '–';
+	return x.kind === 'share' ? `Freigabe ${x.name}` : x.kind === 'homes' ? `Persönliche Ordner (${x.name})` : `Ganzes Laufwerk ${x.name}`;
+}
+const snapSrcVol = (d, id) => { const x = (d.sources || []).find((s) => s.id === id); return x ? (x.volume || x.name) : null; };
+const snapEveryTxt = (j) => (SNAP_EVERY[j.every] || j.every) + (j.every === 'day' || j.every === 'week' ? ' ' + j.time : '');
+function snapKeepTxt(j) {
+	const p = [];
+	if (j.keep_last) p.push(`die letzten ${j.keep_last}`);
+	if (j.keep_daily) p.push(`${j.keep_daily} Tage`);
+	if (j.keep_weekly) p.push(`${j.keep_weekly} Wochen`);
+	if (j.keep_monthly) p.push(`${j.keep_monthly} Monate`);
+	// one span each: the translation sees the parts
+	return p.map((x, i) => html`${i ? ' · ' : ''}<span>${x}</span>`);
+}
+function snapState(j) {
+	const l = j.last;
+	if (j.running) return html`<span class="tag">läuft</span>`;
+	if (!l) return html`<span class="mut">noch nie</span>`;
+	if (l.state === 'ok') return html`<span class="tag ok">OK</span> <span class="mut">${fmtTime(l.ended)}</span>`;
+	if (l.state === 'stopped') return html`<span class="tag warn">abgebrochen</span> <span class="mut">${fmtTime(l.ended)}</span>`;
+	return html`<span class="tag err">Fehler</span> <span class="mut">${fmtTime(l.ended)}</span>`;
+}
+function snapSummary(j) {
+	const l = j.last;
+	if (!l || j.running) return '';
+	if (l.state === 'error') return html`<div class="desc" style="margin-top:4px;font-size:12px;color:var(--red)">${l.error || ''}</div>`;
+	if (l.state !== 'ok') return '';
+	return html`<div class="desc mut" style="margin-top:4px;font-size:12px"><span>${l.files} Dateien</span> · <span>${l.changed} geändert</span> (${fmtBytes(l.bytes)})${l.removed ? html` · <span>${l.removed} alte entfernt</span>` : ''}</div>`;
+}
+function snapActions(j) {
+	return html`${j.running ? html`<button class="btn sm danger" type="button" data-act="sn-stop" data-name="${j.name}">Stopp</button>`
+		: html`<button class="btn sm primary" type="button" data-act="sn-run" data-name="${j.name}">Jetzt sichern</button>`}
+		<button class="btn sm" type="button" data-act="sn-list" data-name="${j.name}">Snapshots (${j.snapshots.length})</button>
+		<button class="btn sm" type="button" data-act="sn-edit" data-name="${j.name}">Bearbeiten</button>
+		<button class="btn sm" type="button" data-act="sn-log" data-name="${j.name}">Protokoll</button>
+		<button class="btn sm ghost" type="button" data-act="sn-del" data-name="${j.name}">Entfernen</button>`;
+}
+
+function snapshotsView() {
+	const sn = S.snap || {}, d = sn.data;
+	if (!d) return html`<div class="panel"><div class="empty"><div class="spin" style="margin:0"></div><span>Lade Snapshots …</span></div></div>`;
+	const ed = sn.edit, open = sn.open && d.jobs.find((j) => j.name === sn.open);
+	const targets = d.volumes.filter((v) => v.links);
+	return html`
+	<section class="sec">
+		<div class="g2">
+			<div class="panel">
+				<div class="ph"><span class="pt">SNAPSHOTS</span><span class="tag ml">${d.jobs.length ? d.jobs.length + ' Aufträge' : 'noch keine'}</span></div>
+				<p class="mut" style="margin:0;font-size:13px;line-height:1.6"><span>Ein Snapshot hält den Stand eines Ordners fest – stündlich, täglich oder wöchentlich.</span> <span>Jeder Stand sieht aus wie eine vollständige Kopie; unveränderte Dateien belegen aber keinen zusätzlichen Platz.</span> <span>So holst du eine gelöschte oder überschriebene Datei von gestern oder letzter Woche zurück: im Dateibrowser aus dem Snapshot zurückkopieren.</span></p>
+				${!d.rsync ? html`<p class="note" style="color:var(--amber)">rsync fehlt in dieser Firmware.</p>` : ''}
+				${!targets.length ? html`<p class="note" style="color:var(--amber)">Kein geeignetes Ziel: Snapshots brauchen ein Laufwerk mit ext4 oder Btrfs (FAT32/exFAT kennen keine Hardlinks). <a href="#/storage/volumes">Speicher einrichten</a></p>` : ''}
+				${ed || !targets.length || !d.sources.length ? '' : html`<div class="acts" style="margin-top:12px"><button class="btn primary" type="button" data-act="sn-new">Neuer Snapshot-Auftrag</button></div>`}
+			</div>
+			<div class="panel">
+				<div class="ph"><span class="pt">HINWEISE</span></div>
+				<p class="mut" style="margin:0;font-size:13px;line-height:1.6"><span>Am besten auf ein anderes Laufwerk sichern (zweite Platte oder USB-Festplatte): dann schützen Snapshots auch bei einem Plattendefekt.</span> <span>Ein Spiegel (RAID 1) ersetzt keine Snapshots – er spiegelt auch jedes Löschen sofort.</span> <span>Die Snapshots liegen im Ordner</span> <code>Snapshots</code> <span>des Ziel-Laufwerks und sind nur für Administratoren sichtbar.</span> <span>Für eine Kopie außer Haus kann ein Cloud-Auftrag den Snapshot-Ordner hochladen.</span></p>
+			</div>
+		</div>
+	</section>
+	${ed ? snapEditor(d, ed) : ''}
+	<section class="sec">
+		${secHead('snapjobs', 'AUFTRÄGE', d.jobs.length ? d.jobs.length + ' eingerichtet' : 'noch keine')}
+		${!d.jobs.length ? html`<div class="panel"><div class="empty">${svg(I.disk)}<span>Noch kein Snapshot-Auftrag. Ein Auftrag sichert eine Freigabe, die persönlichen Ordner oder ein ganzes Laufwerk nach Zeitplan.</span></div></div>`
+			: isTable('snapjobs') ? html`<div class="tw"><table class="t" style="min-width:900px"><thead><tr><th>AUFTRAG</th><th>QUELLE → ZIEL</th><th>ZEITPLAN · BEHALTEN</th><th>ZULETZT</th><th></th></tr></thead>
+				<tbody>${d.jobs.map((j) => html`<tr><td><b>${j.name}</b><div class="mut" style="font-size:12px">${j.snapshots.length} Snapshots</div></td>
+					<td style="font-size:12px">${snapSourceTxt(d, j.source)} → ${j.target}</td>
+					<td style="font-size:12px">${snapEveryTxt(j)}${j.enabled ? '' : ' · aus'}<div class="mut">${snapKeepTxt(j)}</div></td>
+					<td>${snapState(j)}${snapSummary(j)}</td><td><div class="acts">${snapActions(j)}</div></td></tr>`)}</tbody></table></div>`
+			: html`<div class="grid">${d.jobs.map((j) => html`<div class="card${j.enabled ? '' : ' off'}">
+				<div class="icon">${svg(I.disk)}<span class="dot ${j.last?.state === 'error' ? 'down' : j.running ? 'warn' : 'up'}"></span></div>
+				<div class="info"><div class="name">${j.name}</div>
+					<div class="desc" style="font-size:12px">${snapSourceTxt(d, j.source)} → ${j.target}</div>
+					<div class="desc" style="margin-top:6px">${snapEveryTxt(j)}${j.enabled ? '' : html` · <span>aus</span>`}</div>
+					<div class="desc mut" style="font-size:12px">${snapKeepTxt(j)}</div>
+					<div class="desc" style="margin-top:6px">${snapState(j)}</div>${snapSummary(j)}
+					<div class="desc mut" style="margin-top:4px;font-size:12px"><span>${j.snapshots.length} Snapshots</span>${j.snapshots[0] ? html` · <span>neuester</span> ${fmtTime(j.snapshots[0].time)}` : ''}</div>
+					<div class="acts" style="margin-top:12px">${snapActions(j)}</div></div></div>`)}</div>`}
+	</section>
+	${open ? html`<section class="sec"><div class="panel"><div class="ph"><span class="pt">SNAPSHOTS · ${open.name}</span><button class="btn sm ghost ml" type="button" data-act="sn-listclose">Schließen</button></div>
+		${!open.mounted ? html`<p class="note" style="color:var(--amber)">Das Ziel-Laufwerk ${open.target} ist nicht eingebunden.</p>` : ''}
+		${open.snapshots.length ? html`<div class="tw"><table class="t"><thead><tr><th>STAND</th><th>ORDNER</th><th></th></tr></thead><tbody>
+			${open.snapshots.map((x) => html`<tr><td><b>${fmtTime(x.time)}</b></td><td class="mut" style="font-size:12px">${open.target}/Snapshots/${open.name}/${x.name}</td>
+				<td><div class="acts"><button class="btn sm" type="button" data-act="sn-browse" data-name="${open.name}" data-snap="${x.name}">Im Dateibrowser öffnen</button>
+				<button class="btn sm ghost" type="button" data-act="sn-rm" data-name="${open.name}" data-snap="${x.name}">Löschen</button></div></td></tr>`)}</tbody></table></div>`
+			: html`<p class="mut" style="margin:0;font-size:13px">Noch kein Snapshot – „Jetzt sichern“ legt den ersten an.</p>`}
+		<p class="note">Zum Wiederherstellen im Dateibrowser die Datei oder den Ordner aus dem Snapshot an den alten Platz kopieren. Dateien im Snapshot nicht ändern: unveränderte Dateien teilen sich den Platz mit den anderen Snapshots.</p>
+	</div></section>` : ''}
+	${sn.log ? html`<section class="sec"><div class="panel"><div class="ph"><span class="pt">PROTOKOLL · ${sn.log.name}</span><button class="btn sm ghost ml" type="button" data-act="sn-logclose">Schließen</button></div>
+		<pre class="logbox" style="max-height:360px">${sn.log.text || '(leer)'}</pre></div></section>` : ''}`;
+}
+
+function snapEditor(d, ed) {
+	const x = ed.data, srcVol = snapSrcVol(d, x.source);
+	const label = (s) => s.kind === 'share' ? `Freigabe ${s.name}` : s.kind === 'homes' ? `Persönliche Ordner (${s.name})` : `Ganzes Laufwerk ${s.name}`;
+	return html`<section class="sec"><form class="panel" id="f-snap" style="border-color:var(--dim);box-shadow:var(--glow)">
+		<div class="ph"><span class="pt">${ed.mode === 'new' ? 'NEUER SNAPSHOT-AUFTRAG' : 'AUFTRAG ' + x.name.toUpperCase()}</span><button class="btn sm ghost ml" type="button" data-act="sn-cancel">Abbrechen</button></div>
+		<div class="fields">
+			<label class="f"><span>NAME</span><input name="name" value="${x.name}" maxlength="32" pattern="[a-z][a-z0-9_]{0,31}" required placeholder="fotos"${ed.mode === 'new' ? '' : raw(' readonly')}></label>
+			<label class="f"><span>WAS SICHERN</span><select name="source" id="snap-src">${d.sources.map((s) => html`<option value="${s.id}"${x.source === s.id ? raw(' selected') : ''}>${label(s)}</option>`)}</select></label>
+			<label class="f"><span>ZIEL-LAUFWERK</span><select name="target" id="snap-tgt">${d.volumes.map((v) => html`<option value="${v.name}"${x.target === v.name ? raw(' selected') : ''}${v.links ? '' : raw(' disabled')}>${v.name} (${v.fstype})${v.links ? '' : ' – keine Hardlinks'}</option>`)}</select></label>
+			<label class="f"><span>WIE OFT</span><select name="every" id="snap-every">${Object.entries(SNAP_EVERY).map(([k, t]) => html`<option value="${k}"${x.every === k ? raw(' selected') : ''}>${t}</option>`)}</select></label>
+			<label class="f"><span>${x.every === 'hour' ? 'MINUTE (HH:MM, NUR DIE MINUTE ZÄHLT)' : x.every === '6h' ? 'AB UHRZEIT' : 'UHRZEIT'}</span><input name="time" type="time" value="${x.time}" required></label>
+		</div>
+		${srcVol && srcVol === x.target ? html`<p class="note" style="color:var(--amber)">Quelle und Ziel liegen auf demselben Laufwerk: das schützt vor versehentlichem Löschen, aber nicht vor einem Plattendefekt.</p>` : ''}
+		<div class="pt" style="margin:16px 0 8px">BEHALTEN</div>
+		<div class="fields">${SNAP_KEEP.map(([k, t]) => html`<label class="f"><span>${t}</span><input name="${k}" type="number" min="0" max="999" value="${x[k]}"></label>`)}</div>
+		<p class="note">Die letzten N Snapshots bleiben immer (auch die von Hand); dazu je der neueste eines Tages, einer Woche, eines Monats. Beispiel täglich: 7 Tage · 4 Wochen · 6 Monate ≈ ein halbes Jahr zurück mit 17 Ständen.</p>
+		<label class="f" style="margin-top:12px"><span>AUSNAHMEN (EINE PRO ZEILE, Z. B. *.tmp ODER /Downloads/)</span>
+			<textarea name="exclude" rows="3" spellcheck="false" data-i18n-skip style="width:100%;font:inherit;font-size:12px;color:var(--text);background:var(--bg);border:1px solid var(--line);border-radius:7px;padding:8px">${(x.exclude || []).join('\n')}</textarea></label>
+		<label class="chk" style="margin-top:12px"><input type="checkbox" name="enabled"${x.enabled !== false ? raw(' checked') : ''}>Zeitplan aktiv</label>
+		<div class="acts" style="margin-top:14px"><button class="btn primary" type="submit">Speichern</button></div>
+	</form></section>`;
+}
+
+function snapForm() {
+	const f = $('#f-snap');
+	const keep = {};
+	SNAP_KEEP.forEach(([k]) => { keep[k] = +f[k].value || 0; });
+	return { name: f.name.value.trim(), source: f.source.value, target: f.target.value, every: f.every.value, time: f.time.value || '03:15',
+		...keep, exclude: f.exclude.value.split('\n').map((l) => l.trim()).filter(Boolean), enabled: f.enabled.checked };
+}
+
+function snapAfter() {
+	if (!S.snap?.data) { loadSnapshots(); return; }
+	// source, target, interval change the hints: keep what was typed
+	['#snap-src', '#snap-tgt', '#snap-every'].forEach((id) => $(id)?.addEventListener('change', () => { S.snap.edit.data = { ...S.snap.edit.data, ...snapForm() }; renderMain(); }));
+	$('#f-snap')?.addEventListener('submit', async (e) => {
+		e.preventDefault();
+		const a = { ...snapForm(), new: S.snap.edit.mode === 'new' };
+		try { S.snap.data.jobs = (await rpc('shareos.snapshots', 'job_set', a)).jobs; S.snap.edit = null; toast(`Auftrag „${a.name}“ gespeichert.`); loadSnapshots(); }
+		catch (err) { toast('Snapshots: ' + err.message, true); }
 	});
 }
 
@@ -2460,6 +2619,7 @@ const VIEWS_AFTER = {
 		}
 	},
 	storage() {
+		if (S.route.sub === 'snapshots') { snapAfter(); return; }
 		if (!S.stActive) loadStorage();
 		$('#spindown')?.addEventListener('change', async (e) => {
 			try { await rpc('shareos.storage', 'spindown', { minutes: +e.target.value }); toast('Ruhezustand gespeichert.'); }
@@ -3037,6 +3197,47 @@ const ACTIONS = {
 		if (!await confirmDlg(`Auftrag „${n}“ entfernen?`, 'Der Auftrag läuft nicht mehr. Dateien auf dem NAS und in der Cloud bleiben, wie sie sind.', 'Entfernen')) return;
 		try { await CLOUD_API[el.dataset.scope].delJob(n); toast(`Auftrag „${n}“ entfernt.`); loadCloud(el.dataset.scope); } catch (e) { toast(e.message, true); }
 	},
+	'sn-new'() {
+		const d = S.snap.data, t = d.volumes.find((v) => v.links), src = d.sources.find((x) => x.kind === 'share') || d.sources[0];
+		S.snap.edit = { mode: 'new', data: { name: '', source: src?.id || '', target: (d.volumes.find((v) => v.links && v.name !== (src?.volume || src?.name)) || t)?.name || '',
+			every: 'day', time: '03:15', keep_last: 3, keep_daily: 7, keep_weekly: 4, keep_monthly: 6, exclude: [], enabled: true } };
+		renderMain(); window.scrollTo(0, 0);
+	},
+	'sn-edit'(el) { S.snap.edit = { mode: 'edit', data: structuredClone(S.snap.data.jobs.find((j) => j.name === el.dataset.name)) }; renderMain(); window.scrollTo(0, 0); },
+	'sn-cancel'() { S.snap.edit = null; renderMain(); },
+	async 'sn-run'(el) {
+		el.disabled = true;
+		try { await rpc('shareos.snapshots', 'run', { name: el.dataset.name }); toast(`Snapshot „${el.dataset.name}“ läuft.`); } catch (e) { toast(e.message, true); }
+		loadSnapshots();
+	},
+	async 'sn-stop'(el) {
+		el.disabled = true;
+		try { await rpc('shareos.snapshots', 'stop', { name: el.dataset.name }); } catch (e) { toast(e.message, true); }
+		setTimeout(loadSnapshots, 1500);
+	},
+	'sn-list'(el) { S.snap.open = S.snap.open === el.dataset.name ? null : el.dataset.name; renderMain(); },
+	'sn-listclose'() { S.snap.open = null; renderMain(); },
+	async 'sn-log'(el) {
+		try { S.snap.log = { name: el.dataset.name, text: (await rpc('shareos.snapshots', 'log', { name: el.dataset.name })).log }; renderMain(); } catch (e) { toast(e.message, true); }
+	},
+	'sn-logclose'() { S.snap.log = null; renderMain(); },
+	async 'sn-rm'(el) {
+		const n = el.dataset.name, x = el.dataset.snap, j = S.snap.data.jobs.find((y) => y.name === n), sn = j?.snapshots.find((y) => y.name === x);
+		if (!await confirmDlg('Snapshot löschen?', `Den Stand vom ${fmtTime(sn?.time)} löschen? Die anderen Snapshots bleiben vollständig.`, 'Löschen', true)) return;
+		try { S.snap.data.jobs = (await rpc('shareos.snapshots', 'remove', { name: n, snapshot: x })).jobs; toast('Snapshot gelöscht.'); renderMain(); } catch (e) { toast(e.message, true); }
+	},
+	'sn-browse'(el) {
+		const j = S.snap.data.jobs.find((y) => y.name === el.dataset.name);
+		const f = fbInit();
+		f.root = j.target; f.path = `Snapshots/${j.name}/${el.dataset.snap}`; f.data = null; f.sel = new Set();
+		location.hash = '#/shares/files';
+	},
+	async 'sn-del'(el) {
+		const n = el.dataset.name, j = S.snap.data.jobs.find((y) => y.name === n);
+		if (!await confirmDlg(`Auftrag „${n}“ entfernen?`, 'Es werden keine neuen Snapshots mehr angelegt.', 'Entfernen')) return;
+		const data = j.snapshots.length > 0 && await confirmDlg('Snapshots auch löschen?', `Die ${j.snapshots.length} vorhandenen Snapshots in ${j.target}/Snapshots/${n} ebenfalls löschen? Sonst bleiben sie dort liegen.`, 'Snapshots löschen', true);
+		try { S.snap.data.jobs = (await rpc('shareos.snapshots', 'job_del', { name: n, data })).jobs; toast(`Auftrag „${n}“ entfernt.`); renderMain(); } catch (e) { toast(e.message, true); }
+	},
 	'sh-new'() {
 		S.shEdit = { mode: 'new', data: { name: '', volume: S.vols[0]?.name || '', path: '', comment: '', smb: true, guest: false, nfs: false, nfs_rw: false, nfs_hosts: [], rw: [], ro: [] } };
 		renderMain(); window.scrollTo(0, 0);
@@ -3308,6 +3509,7 @@ window.addEventListener('hashchange', () => {
 	}
 	parseRoute();
 	if (S.route.tab !== 'storage') { clearTimeout(S.stTimer); S.stTimer = null; S.stActive = false; }
+	if (S.route.tab !== 'storage' || S.route.sub !== 'snapshots') { clearTimeout(S.snapTimer); if (S.snap) { S.snap.edit = null; S.snap.log = null; } }
 	if (S.route.tab !== 'shares') { S.shEdit = null; S.uEdit = null; }
 	if (S.fb && S.route.sub === 'files') S.fb.roots = null;   // volumes may have changed
 	if (S.route.tab !== 'paperless') { S.plEdit = null; S.plLog = null; } else if (S.pl) loadPaperless();

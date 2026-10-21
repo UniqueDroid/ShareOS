@@ -1014,7 +1014,53 @@
 		"Eigene Torrents (Transmission)": "Own torrents (Transmission)",
 		"Darf den eigenen Transmission-Dienst des Benutzers steuern: Torrents hinzufügen, anhalten und löschen. Jeder Benutzer hat seinen eigenen Dienst; Downloads landen nur in seinen Ordnern.": "May control the user's own Transmission service: add, pause and remove torrents. Every user has their own service; downloads go only into their folders.",
 		"Medien umwandeln (FFmpeg)": "Convert media (FFmpeg)",
-		"Darf auf der Box Audio und Video des Benutzers umwandeln lassen (FFmpeg) – mit seinen Rechten, nur in seinen Ordnern, aus festen Auswahlen (kein beliebiger Befehl).": "May have the user's audio and video converted on the box (FFmpeg) – with their rights, only in their folders, from fixed choices (no arbitrary command)."
+		"Darf auf der Box Audio und Video des Benutzers umwandeln lassen (FFmpeg) – mit seinen Rechten, nur in seinen Ordnern, aus festen Auswahlen (kein beliebiger Befehl).": "May have the user's audio and video converted on the box (FFmpeg) – with their rights, only in their folders, from fixed choices (no arbitrary command).",
+		"Ein Snapshot hält den Stand eines Ordners fest – stündlich, täglich oder wöchentlich.": "A snapshot keeps the state of a folder – hourly, daily or weekly.",
+		"Jeder Stand sieht aus wie eine vollständige Kopie; unveränderte Dateien belegen aber keinen zusätzlichen Platz.": "Each state looks like a full copy, but unchanged files take no extra space.",
+		"So holst du eine gelöschte oder überschriebene Datei von gestern oder letzter Woche zurück: im Dateibrowser aus dem Snapshot zurückkopieren.": "To get back a file deleted or overwritten yesterday or last week, copy it back from the snapshot in the file browser.",
+		"Neuer Snapshot-Auftrag": "New snapshot job",
+		"NEUER SNAPSHOT-AUFTRAG": "NEW SNAPSHOT JOB",
+		"Am besten auf ein anderes Laufwerk sichern (zweite Platte oder USB-Festplatte): dann schützen Snapshots auch bei einem Plattendefekt.": "Best save to another drive (second disk or USB disk): then snapshots also protect against a failing disk.",
+		"Ein Spiegel (RAID 1) ersetzt keine Snapshots – er spiegelt auch jedes Löschen sofort.": "A mirror (RAID 1) does not replace snapshots – it mirrors every deletion at once.",
+		"Die Snapshots liegen im Ordner": "The snapshots are in the folder",
+		"des Ziel-Laufwerks und sind nur für Administratoren sichtbar.": "of the target drive and are visible to administrators only.",
+		"Für eine Kopie außer Haus kann ein Cloud-Auftrag den Snapshot-Ordner hochladen.": "For an off-site copy, a cloud job can upload the snapshot folder.",
+		"neuester": "newest",
+		"Jetzt sichern": "Back up now",
+		"QUELLE → ZIEL": "SOURCE → TARGET",
+		"ZEITPLAN · BEHALTEN": "SCHEDULE · KEEP",
+		"STAND": "STATE",
+		"Im Dateibrowser öffnen": "Open in the file browser",
+		"Zum Wiederherstellen im Dateibrowser die Datei oder den Ordner aus dem Snapshot an den alten Platz kopieren. Dateien im Snapshot nicht ändern: unveränderte Dateien teilen sich den Platz mit den anderen Snapshots.": "To restore, copy the file or folder from the snapshot back to its old place in the file browser. Do not change files inside a snapshot: unchanged files share their space with the other snapshots.",
+		"WAS SICHERN": "WHAT TO SAVE",
+		"ZIEL-LAUFWERK": "TARGET DRIVE",
+		"WIE OFT": "HOW OFTEN",
+		"Stündlich": "Hourly",
+		"Alle 6 Stunden": "Every 6 hours",
+		"Täglich": "Daily",
+		"Wöchentlich (Sonntag)": "Weekly (Sunday)",
+		"UHRZEIT": "TIME",
+		"AB UHRZEIT": "FROM",
+		"MINUTE (HH:MM, NUR DIE MINUTE ZÄHLT)": "MINUTE (HH:MM, ONLY THE MINUTE COUNTS)",
+		"BEHALTEN": "KEEP",
+		"DIE LETZTEN": "THE LAST",
+		"TAGE (JE EINER)": "DAYS (ONE EACH)",
+		"WOCHEN (JE EINER)": "WEEKS (ONE EACH)",
+		"MONATE (JE EINER)": "MONTHS (ONE EACH)",
+		"Die letzten N Snapshots bleiben immer (auch die von Hand); dazu je der neueste eines Tages, einer Woche, eines Monats. Beispiel täglich: 7 Tage · 4 Wochen · 6 Monate ≈ ein halbes Jahr zurück mit 17 Ständen.": "The last N snapshots always stay (also those taken by hand); plus the newest of each day, week and month. Example daily: 7 days · 4 weeks · 6 months ≈ half a year back with 17 states.",
+		"AUSNAHMEN (EINE PRO ZEILE, Z. B. *.tmp ODER /Downloads/)": "EXCLUSIONS (ONE PER LINE, E.G. *.tmp OR /Downloads/)",
+		"Quelle und Ziel liegen auf demselben Laufwerk: das schützt vor versehentlichem Löschen, aber nicht vor einem Plattendefekt.": "Source and target are on the same drive: this protects against accidental deletion, not against a failing disk.",
+		"Es werden keine neuen Snapshots mehr angelegt.": "No new snapshots will be taken.",
+		"Snapshot löschen?": "Delete snapshot?",
+		"Snapshots auch löschen?": "Delete the snapshots too?",
+		"Snapshots löschen": "Delete snapshots",
+		"Snapshot gelöscht.": "Snapshot deleted.",
+		"abgebrochen": "stopped",
+		"Lade Snapshots …": "Loading snapshots …",
+		"Noch kein Snapshot-Auftrag. Ein Auftrag sichert eine Freigabe, die persönlichen Ordner oder ein ganzes Laufwerk nach Zeitplan.": "No snapshot job yet. A job saves a share, the personal folders or a whole drive on a schedule.",
+		"Noch kein Snapshot – „Jetzt sichern“ legt den ersten an.": "No snapshot yet – “Back up now” takes the first one.",
+		"rsync fehlt in dieser Firmware.": "rsync is missing in this firmware.",
+		"Kein geeignetes Ziel: Snapshots brauchen ein Laufwerk mit ext4 oder Btrfs (FAT32/exFAT kennen keine Hardlinks).": "No suitable target: snapshots need a drive with ext4 or Btrfs (FAT32/exFAT have no hard links)."
 	},
 	"patterns": [
 		[
@@ -2008,6 +2054,78 @@
 		[
 			"^Hinweis: (.+)$",
 			"Note: $1"
+		],
+		[
+			"^(\\d+) Aufträge$",
+			"$1 jobs"
+		],
+		[
+			"^Täglich (\\d\\d:\\d\\d)$",
+			"Daily $1"
+		],
+		[
+			"^Wöchentlich \\(Sonntag\\) (\\d\\d:\\d\\d)$",
+			"Weekly (Sunday) $1"
+		],
+		[
+			"^die letzten (\\d+)$",
+			"the last $1"
+		],
+		[
+			"^(\\d+) Tage$",
+			"$1 days"
+		],
+		[
+			"^(\\d+) Wochen$",
+			"$1 weeks"
+		],
+		[
+			"^(\\d+) Monate$",
+			"$1 months"
+		],
+		[
+			"^(\\d+) Dateien$",
+			"$1 files"
+		],
+		[
+			"^(\\d+) geändert$",
+			"$1 changed"
+		],
+		[
+			"^(\\d+) alte entfernt$",
+			"$1 old ones removed"
+		],
+		[
+			"^Persönliche Ordner \\((.+)\\)$",
+			"Personal folders ($1)"
+		],
+		[
+			"^Ganzes Laufwerk (.+)$",
+			"Whole drive $1"
+		],
+		[
+			"^(.+) – keine Hardlinks$",
+			"$1 – no hard links"
+		],
+		[
+			"^Den Stand vom (.+) löschen\\? Die anderen Snapshots bleiben vollständig\\.$",
+			"Delete the state of $1? The other snapshots stay complete."
+		],
+		[
+			"^Die (\\d+) vorhandenen Snapshots in (.+) ebenfalls löschen\\? Sonst bleiben sie dort liegen\\.$",
+			"Also delete the $1 snapshots in $2? Otherwise they stay there."
+		],
+		[
+			"^Snapshot „(.+)“ läuft\\.$",
+			"Snapshot “$1” is running."
+		],
+		[
+			"^Das Ziel-Laufwerk (.+) ist nicht eingebunden\\.$",
+			"The target drive $1 is not mounted."
+		],
+		[
+			"^AUFTRAG (.+)$",
+			"JOB $1"
 		]
 	],
 	"words": [

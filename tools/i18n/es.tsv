@@ -1300,3 +1300,67 @@ P246	$1 $2 instalado, además: $3.
 P247	Nota: $1
 E1010	Convertir medios (FFmpeg)
 E1011	Puede convertir el audio y vídeo del usuario en la caja (FFmpeg): con sus permisos, solo en sus carpetas y con opciones fijas (ningún comando libre).
+E1012	Una instantánea guarda el estado de una carpeta: cada hora, cada día o cada semana.
+E1013	Cada estado parece una copia completa, pero los archivos sin cambios no ocupan espacio adicional.
+E1014	Para recuperar un archivo borrado o sobrescrito ayer o la semana pasada, cópialo de vuelta desde la instantánea en el explorador de archivos.
+E1015	Nueva tarea de instantáneas
+E1016	NUEVA TAREA DE INSTANTÁNEAS
+E1017	Lo mejor es guardar en otra unidad (segundo disco o disco USB): así las instantáneas también protegen ante un fallo del disco.
+E1018	Un espejo (RAID 1) no sustituye a las instantáneas: también replica cada borrado al instante.
+E1019	Las instantáneas están en la carpeta
+E1020	de la unidad de destino y solo los ven los administradores.
+E1021	Para una copia fuera de casa, una tarea en la nube puede subir la carpeta de instantáneas.
+E1022	más reciente
+E1023	Guardar ahora
+E1024	ORIGEN → DESTINO
+E1025	HORARIO · CONSERVAR
+E1026	ESTADO
+E1027	Abrir en el explorador de archivos
+E1028	Para restaurar, copia el archivo o la carpeta de la instantánea a su lugar original en el explorador de archivos. No modifiques archivos dentro de una instantánea: los archivos sin cambios comparten espacio con las demás.
+E1029	QUÉ GUARDAR
+E1030	UNIDAD DE DESTINO
+E1031	CON QUÉ FRECUENCIA
+E1032	Cada hora
+E1033	Cada 6 horas
+E1034	Diario
+E1035	Semanal (domingo)
+E1036	HORA
+E1037	DESDE LAS
+E1038	MINUTO (HH:MM, SOLO CUENTA EL MINUTO)
+E1039	CONSERVAR
+E1040	LOS ÚLTIMOS
+E1041	DÍAS (UNO POR DÍA)
+E1042	SEMANAS (UNO POR SEMANA)
+E1043	MESES (UNO POR MES)
+E1044	Las últimas N instantáneas se conservan siempre (también las manuales); además, la más reciente de cada día, semana y mes. Ejemplo diario: 7 días · 4 semanas · 6 meses ≈ medio año atrás con 17 estados.
+E1045	EXCLUSIONES (UNA POR LÍNEA, P. EJ. *.tmp O /Downloads/)
+E1046	Origen y destino están en la misma unidad: protege contra borrados accidentales, no contra un fallo del disco.
+E1047	No se crearán más instantáneas.
+E1048	¿Eliminar la instantánea?
+E1049	¿Eliminar también las instantáneas?
+E1050	Eliminar instantáneas
+E1051	Instantánea eliminada.
+E1052	detenido
+E1053	Cargando instantáneas …
+E1054	Aún no hay tareas de instantáneas. Una tarea guarda un recurso compartido, las carpetas personales o una unidad entera según un horario.
+E1055	Aún no hay instantáneas: «Guardar ahora» crea la primera.
+E1056	Falta rsync en este firmware.
+E1057	No hay destino adecuado: las instantáneas necesitan una unidad ext4 o Btrfs (FAT32/exFAT no tienen enlaces duros).
+P248	$1 tareas
+P249	Diario a las $1
+P250	Semanal (domingo) a las $1
+P251	los últimos $1
+P252	$1 días
+P253	$1 semanas
+P254	$1 meses
+P255	$1 archivos
+P256	$1 cambiados
+P257	$1 antiguas eliminadas
+P258	Carpetas personales ($1)
+P259	Unidad entera $1
+P260	$1 – sin enlaces duros
+P261	¿Eliminar el estado del $1? Las demás instantáneas quedan completas.
+P262	¿Eliminar también las $1 instantáneas de $2? Si no, se quedan allí.
+P263	Instantánea «$1» en curso.
+P264	La unidad de destino $1 no está montada.
+P265	TAREA $1

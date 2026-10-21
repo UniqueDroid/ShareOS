@@ -1014,7 +1014,53 @@
 		"Eigene Torrents (Transmission)": "Свои торренты (Transmission)",
 		"Darf den eigenen Transmission-Dienst des Benutzers steuern: Torrents hinzufügen, anhalten und löschen. Jeder Benutzer hat seinen eigenen Dienst; Downloads landen nur in seinen Ordnern.": "Может управлять собственной службой Transmission пользователя: добавлять, приостанавливать и удалять торренты. У каждого пользователя своя служба; загрузки попадают только в его папки.",
 		"Medien umwandeln (FFmpeg)": "Преобразование медиа (FFmpeg)",
-		"Darf auf der Box Audio und Video des Benutzers umwandeln lassen (FFmpeg) – mit seinen Rechten, nur in seinen Ordnern, aus festen Auswahlen (kein beliebiger Befehl).": "Может преобразовывать аудио и видео пользователя на устройстве (FFmpeg) – с его правами, только в его папках, из фиксированных вариантов (никаких произвольных команд)."
+		"Darf auf der Box Audio und Video des Benutzers umwandeln lassen (FFmpeg) – mit seinen Rechten, nur in seinen Ordnern, aus festen Auswahlen (kein beliebiger Befehl).": "Может преобразовывать аудио и видео пользователя на устройстве (FFmpeg) – с его правами, только в его папках, из фиксированных вариантов (никаких произвольных команд).",
+		"Ein Snapshot hält den Stand eines Ordners fest – stündlich, täglich oder wöchentlich.": "Снимок сохраняет состояние папки — ежечасно, ежедневно или еженедельно.",
+		"Jeder Stand sieht aus wie eine vollständige Kopie; unveränderte Dateien belegen aber keinen zusätzlichen Platz.": "Каждое состояние выглядит как полная копия, но неизменённые файлы не занимают дополнительного места.",
+		"So holst du eine gelöschte oder überschriebene Datei von gestern oder letzter Woche zurück: im Dateibrowser aus dem Snapshot zurückkopieren.": "Чтобы вернуть файл, удалённый или перезаписанный вчера или на прошлой неделе, скопируйте его обратно из снимка в файловом браузере.",
+		"Neuer Snapshot-Auftrag": "Новое задание снимков",
+		"NEUER SNAPSHOT-AUFTRAG": "НОВОЕ ЗАДАНИЕ СНИМКОВ",
+		"Am besten auf ein anderes Laufwerk sichern (zweite Platte oder USB-Festplatte): dann schützen Snapshots auch bei einem Plattendefekt.": "Лучше сохранять на другой диск (второй диск или USB-диск): тогда снимки защищают и от отказа диска.",
+		"Ein Spiegel (RAID 1) ersetzt keine Snapshots – er spiegelt auch jedes Löschen sofort.": "Зеркало (RAID 1) не заменяет снимки — оно сразу повторяет и каждое удаление.",
+		"Die Snapshots liegen im Ordner": "Снимки лежат в папке",
+		"des Ziel-Laufwerks und sind nur für Administratoren sichtbar.": "целевого диска и видны только администраторам.",
+		"Für eine Kopie außer Haus kann ein Cloud-Auftrag den Snapshot-Ordner hochladen.": "Для копии вне дома облачное задание может загружать папку снимков.",
+		"neuester": "последний",
+		"Jetzt sichern": "Сохранить сейчас",
+		"QUELLE → ZIEL": "ИСТОЧНИК → ЦЕЛЬ",
+		"ZEITPLAN · BEHALTEN": "РАСПИСАНИЕ · ХРАНИТЬ",
+		"STAND": "СОСТОЯНИЕ",
+		"Im Dateibrowser öffnen": "Открыть в файловом браузере",
+		"Zum Wiederherstellen im Dateibrowser die Datei oder den Ordner aus dem Snapshot an den alten Platz kopieren. Dateien im Snapshot nicht ändern: unveränderte Dateien teilen sich den Platz mit den anderen Snapshots.": "Для восстановления скопируйте файл или папку из снимка на прежнее место в файловом браузере. Не изменяйте файлы внутри снимка: неизменённые файлы делят место с другими снимками.",
+		"WAS SICHERN": "ЧТО СОХРАНЯТЬ",
+		"ZIEL-LAUFWERK": "ЦЕЛЕВОЙ ДИСК",
+		"WIE OFT": "КАК ЧАСТО",
+		"Stündlich": "Ежечасно",
+		"Alle 6 Stunden": "Каждые 6 часов",
+		"Täglich": "Ежедневно",
+		"Wöchentlich (Sonntag)": "Еженедельно (воскресенье)",
+		"UHRZEIT": "ВРЕМЯ",
+		"AB UHRZEIT": "НАЧИНАЯ С",
+		"MINUTE (HH:MM, NUR DIE MINUTE ZÄHLT)": "МИНУТА (ЧЧ:ММ, ВАЖНА ТОЛЬКО МИНУТА)",
+		"BEHALTEN": "ХРАНИТЬ",
+		"DIE LETZTEN": "ПОСЛЕДНИЕ",
+		"TAGE (JE EINER)": "ДНЕЙ (ПО ОДНОМУ)",
+		"WOCHEN (JE EINER)": "НЕДЕЛЬ (ПО ОДНОМУ)",
+		"MONATE (JE EINER)": "МЕСЯЦЕВ (ПО ОДНОМУ)",
+		"Die letzten N Snapshots bleiben immer (auch die von Hand); dazu je der neueste eines Tages, einer Woche, eines Monats. Beispiel täglich: 7 Tage · 4 Wochen · 6 Monate ≈ ein halbes Jahr zurück mit 17 Ständen.": "Последние N снимков сохраняются всегда (и сделанные вручную); плюс самый новый за каждый день, неделю и месяц. Пример ежедневно: 7 дней · 4 недели · 6 месяцев ≈ полгода назад, 17 состояний.",
+		"AUSNAHMEN (EINE PRO ZEILE, Z. B. *.tmp ODER /Downloads/)": "ИСКЛЮЧЕНИЯ (ПО ОДНОМУ В СТРОКЕ, НАПР. *.tmp ИЛИ /Downloads/)",
+		"Quelle und Ziel liegen auf demselben Laufwerk: das schützt vor versehentlichem Löschen, aber nicht vor einem Plattendefekt.": "Источник и цель на одном диске: это защищает от случайного удаления, но не от отказа диска.",
+		"Es werden keine neuen Snapshots mehr angelegt.": "Новые снимки больше создаваться не будут.",
+		"Snapshot löschen?": "Удалить снимок?",
+		"Snapshots auch löschen?": "Удалить и снимки?",
+		"Snapshots löschen": "Удалить снимки",
+		"Snapshot gelöscht.": "Снимок удалён.",
+		"abgebrochen": "прервано",
+		"Lade Snapshots …": "Загрузка снимков …",
+		"Noch kein Snapshot-Auftrag. Ein Auftrag sichert eine Freigabe, die persönlichen Ordner oder ein ganzes Laufwerk nach Zeitplan.": "Заданий снимков пока нет. Задание по расписанию сохраняет общую папку, личные папки или целый диск.",
+		"Noch kein Snapshot – „Jetzt sichern“ legt den ersten an.": "Снимков пока нет — «Сохранить сейчас» создаст первый.",
+		"rsync fehlt in dieser Firmware.": "В этой прошивке нет rsync.",
+		"Kein geeignetes Ziel: Snapshots brauchen ein Laufwerk mit ext4 oder Btrfs (FAT32/exFAT kennen keine Hardlinks).": "Нет подходящей цели: снимкам нужен диск с ext4 или Btrfs (в FAT32/exFAT нет жёстких ссылок)."
 	},
 	"patterns": [
 		[
@@ -2008,6 +2054,78 @@
 		[
 			"^Hinweis: (.+)$",
 			"Примечание: $1"
+		],
+		[
+			"^(\\d+) Aufträge$",
+			"Заданий: $1"
+		],
+		[
+			"^Täglich (\\d\\d:\\d\\d)$",
+			"Ежедневно в $1"
+		],
+		[
+			"^Wöchentlich \\(Sonntag\\) (\\d\\d:\\d\\d)$",
+			"Еженедельно (воскресенье) в $1"
+		],
+		[
+			"^die letzten (\\d+)$",
+			"последние $1"
+		],
+		[
+			"^(\\d+) Tage$",
+			"дней: $1"
+		],
+		[
+			"^(\\d+) Wochen$",
+			"недель: $1"
+		],
+		[
+			"^(\\d+) Monate$",
+			"месяцев: $1"
+		],
+		[
+			"^(\\d+) Dateien$",
+			"файлов: $1"
+		],
+		[
+			"^(\\d+) geändert$",
+			"изменено: $1"
+		],
+		[
+			"^(\\d+) alte entfernt$",
+			"удалено старых: $1"
+		],
+		[
+			"^Persönliche Ordner \\((.+)\\)$",
+			"Личные папки ($1)"
+		],
+		[
+			"^Ganzes Laufwerk (.+)$",
+			"Весь диск $1"
+		],
+		[
+			"^(.+) – keine Hardlinks$",
+			"$1 — нет жёстких ссылок"
+		],
+		[
+			"^Den Stand vom (.+) löschen\\? Die anderen Snapshots bleiben vollständig\\.$",
+			"Удалить состояние от $1? Остальные снимки останутся полными."
+		],
+		[
+			"^Die (\\d+) vorhandenen Snapshots in (.+) ebenfalls löschen\\? Sonst bleiben sie dort liegen\\.$",
+			"Удалить и $1 снимков в $2? Иначе они останутся там."
+		],
+		[
+			"^Snapshot „(.+)“ läuft\\.$",
+			"Снимок «$1» выполняется."
+		],
+		[
+			"^Das Ziel-Laufwerk (.+) ist nicht eingebunden\\.$",
+			"Целевой диск $1 не подключён."
+		],
+		[
+			"^AUFTRAG (.+)$",
+			"ЗАДАНИЕ $1"
 		]
 	],
 	"words": [
