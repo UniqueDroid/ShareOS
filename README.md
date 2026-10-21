@@ -35,6 +35,31 @@ ShareOS updates itself from there.
 ShareOS is built on a current, maintainable base while keeping what made
 Alt-F easy to use: the stock U-Boot and the stock flash layout.
 
+## Install – from Alt-F or the D-Link firmware
+
+No serial console, no soldering; the data on the disks is not touched.
+Details and troubleshooting: [docs/SWITCHING.md](docs/SWITCHING.md) ([Deutsch](docs/UMSTIEG.md)).
+
+1. From the [latest release](https://github.com/UniqueDroid/ShareOS/releases) download the two files with **your model's name** (DNS-320L: `DNS-320L-rev-Ax`; other models: [docs/DEVICES.md](docs/DEVICES.md)):
+   `ShareOS-<version>-<model>.bin` and `ShareOS-<version>-<model>.sysupgrade.tar`.
+2. Keep the `.bin` of your current firmware (e.g. Alt-F) for the way back.
+3. Copy the `.sysupgrade.tar` to a USB stick (FAT32, exFAT or ext4) and plug it into the box.
+   Without a stick the box downloads it from GitHub (network cable, DHCP).
+4. Flash the ShareOS `.bin` on the **firmware page of Alt-F or of the D-Link interface**. Do not cut the power.
+5. The box restarts and installs the system from the stick (**orange USB LED blinks fast**, a few minutes), then restarts once more into ShareOS.
+6. Open `http://<box-IP>/` (or `http://<device-name>.local/`), sign in as **root** / **shareos** and follow the setup wizard; add your disks under **Storage** – the data stays.
+
+Updates afterwards: **System → Firmware** (from GitHub, or the `.sysupgrade.tar` as a file).
+
+## Back to Alt-F (or the D-Link firmware)
+
+1. In ShareOS: **System → Firmware → Install firmware file** → choose the Alt-F `.bin` → **Install**. ShareOS checks the file (format, checksums, device) and reads it back after writing.
+2. **Restart**: Alt-F starts, at the same IP address.
+3. Flash the same Alt-F `.bin` once more on Alt-F's firmware page to get its add-on packages back.
+4. To the D-Link firmware: from Alt-F, as with Alt-F itself ([docs/SWITCHING.md](docs/SWITCHING.md)).
+
+If ShareOS does not start, U-Boot starts the D-Link rescue system ("mini firmware"), from which Alt-F can be flashed.
+
 ## Features
 
 Version in brackets = first release with the feature.
