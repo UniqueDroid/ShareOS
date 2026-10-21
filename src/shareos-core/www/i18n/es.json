@@ -1106,7 +1106,9 @@
 		"Darf die Box als VPN-Client verbinden und trennen und VPN-Profile verwalten (OpenVPN) – das betrifft das Netzwerk der ganzen Box, deshalb nur für Administratoren.": "Puede conectar y desconectar la caja como cliente VPN y gestionar perfiles VPN (OpenVPN): afecta a la red de toda la caja, por eso solo para administradores.",
 		"Darf oben in der Kopfzeile der ShareOS-Oberfläche einen kurzen Zustand anzeigen (z. B. „verbunden“) – nur für den Benutzer, der die App geöffnet hat; er verschwindet nach höchstens 10 Minuten von selbst.": "Puede mostrar un estado breve arriba en la interfaz de ShareOS (p. ej. «conectado»), solo al usuario que abrió la app; desaparece solo tras 10 minutos como máximo.",
 		"VPN-SERVER": "SERVIDOR VPN",
-		"1 Gerät": "1 dispositivo"
+		"1 Gerät": "1 dispositivo",
+		"Weder ein persönlicher Ordner noch eine Freigabe für dich.": "Ni una carpeta personal ni una carpeta compartida para ti.",
+		"Dateien: persönlicher Ordner und Freigaben (nach Rechten) im Dateibrowser und in Apps": "Archivos: carpeta personal y carpetas compartidas (según permisos) en el explorador y en las apps"
 	},
 	"patterns": [
 		[
@@ -2180,6 +2182,10 @@
 		[
 			"^(\\d+) Geräte$",
 			"$1 dispositivos"
+		],
+		[
+			"^(.+) \\(nur lesen\\)$",
+			"$1 (solo lectura)"
 		]
 	],
 	"words": [

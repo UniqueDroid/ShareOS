@@ -1106,7 +1106,9 @@
 		"Darf die Box als VPN-Client verbinden und trennen und VPN-Profile verwalten (OpenVPN) – das betrifft das Netzwerk der ganzen Box, deshalb nur für Administratoren.": "可将设备作为 VPN 客户端连接和断开，并管理 VPN 配置（OpenVPN）——这会影响整台设备的网络，因此仅限管理员。",
 		"Darf oben in der Kopfzeile der ShareOS-Oberfläche einen kurzen Zustand anzeigen (z. B. „verbunden“) – nur für den Benutzer, der die App geöffnet hat; er verschwindet nach höchstens 10 Minuten von selbst.": "可在 ShareOS 界面顶部显示简短状态（例如“已连接”）——仅对打开该应用的用户可见；最多 10 分钟后自动消失。",
 		"VPN-SERVER": "VPN 服务器",
-		"1 Gerät": "1 台设备"
+		"1 Gerät": "1 台设备",
+		"Weder ein persönlicher Ordner noch eine Freigabe für dich.": "没有为你提供的个人文件夹或共享。",
+		"Dateien: persönlicher Ordner und Freigaben (nach Rechten) im Dateibrowser und in Apps": "文件：文件浏览器和应用中的个人文件夹和共享（按权限）"
 	},
 	"patterns": [
 		[
@@ -2180,6 +2182,10 @@
 		[
 			"^(\\d+) Geräte$",
 			"$1 台设备"
+		],
+		[
+			"^(.+) \\(nur lesen\\)$",
+			"$1（只读）"
 		]
 	],
 	"words": [

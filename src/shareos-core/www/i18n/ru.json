@@ -1106,7 +1106,9 @@
 		"Darf die Box als VPN-Client verbinden und trennen und VPN-Profile verwalten (OpenVPN) – das betrifft das Netzwerk der ganzen Box, deshalb nur für Administratoren.": "Может подключать и отключать устройство как VPN-клиент и управлять профилями VPN (OpenVPN) — это влияет на сеть всего устройства, поэтому только для администраторов.",
 		"Darf oben in der Kopfzeile der ShareOS-Oberfläche einen kurzen Zustand anzeigen (z. B. „verbunden“) – nur für den Benutzer, der die App geöffnet hat; er verschwindet nach höchstens 10 Minuten von selbst.": "Может показывать краткое состояние вверху интерфейса ShareOS (например, «подключено») — только пользователю, открывшему приложение; исчезает само не позже чем через 10 минут.",
 		"VPN-SERVER": "VPN-СЕРВЕР",
-		"1 Gerät": "1 устройство"
+		"1 Gerät": "1 устройство",
+		"Weder ein persönlicher Ordner noch eine Freigabe für dich.": "Нет ни личной папки, ни общих папок для вас.",
+		"Dateien: persönlicher Ordner und Freigaben (nach Rechten) im Dateibrowser und in Apps": "Файлы: личная папка и общие папки (по правам) в файловом менеджере и приложениях"
 	},
 	"patterns": [
 		[
@@ -2180,6 +2182,10 @@
 		[
 			"^(\\d+) Geräte$",
 			"Устройств: $1"
+		],
+		[
+			"^(.+) \\(nur lesen\\)$",
+			"$1 (только чтение)"
 		]
 	],
 	"words": [

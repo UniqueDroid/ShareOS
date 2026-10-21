@@ -1106,7 +1106,9 @@
 		"Darf die Box als VPN-Client verbinden und trennen und VPN-Profile verwalten (OpenVPN) – das betrifft das Netzwerk der ganzen Box, deshalb nur für Administratoren.": "يمكنه توصيل الجهاز وفصله كعميل VPN وإدارة ملفات VPN (OpenVPN) – يؤثر ذلك في شبكة الجهاز كله، لذا للمسؤولين فقط.",
 		"Darf oben in der Kopfzeile der ShareOS-Oberfläche einen kurzen Zustand anzeigen (z. B. „verbunden“) – nur für den Benutzer, der die App geöffnet hat; er verschwindet nach höchstens 10 Minuten von selbst.": "يمكنه عرض حالة قصيرة أعلى واجهة ShareOS (مثل «متصل») – للمستخدم الذي فتح التطبيق فقط؛ وتختفي تلقائيًا خلال 10 دقائق على الأكثر.",
 		"VPN-SERVER": "خادم VPN",
-		"1 Gerät": "جهاز واحد"
+		"1 Gerät": "جهاز واحد",
+		"Weder ein persönlicher Ordner noch eine Freigabe für dich.": "لا يوجد مجلد شخصي ولا مشاركة لك.",
+		"Dateien: persönlicher Ordner und Freigaben (nach Rechten) im Dateibrowser und in Apps": "الملفات: المجلد الشخصي والمشاركات (حسب الصلاحيات) في متصفح الملفات والتطبيقات"
 	},
 	"patterns": [
 		[
@@ -2180,6 +2182,10 @@
 		[
 			"^(\\d+) Geräte$",
 			"$1 أجهزة"
+		],
+		[
+			"^(.+) \\(nur lesen\\)$",
+			"$1 (للقراءة فقط)"
 		]
 	],
 	"words": [

@@ -1412,3 +1412,6 @@ E1101	Puede mostrar un estado breve arriba en la interfaz de ShareOS (p. ej. «c
 E1102	SERVIDOR VPN
 E1103	1 dispositivo
 P267	$1 dispositivos
+E1104	Ni una carpeta personal ni una carpeta compartida para ti.
+E1105	Archivos: carpeta personal y carpetas compartidas (según permisos) en el explorador y en las apps
+P268	$1 (solo lectura)

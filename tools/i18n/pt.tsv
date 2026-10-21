@@ -1412,3 +1412,6 @@ E1101	Pode mostrar um estado curto no topo da interface do ShareOS (p. ex. “co
 E1102	SERVIDOR VPN
 E1103	1 dispositivo
 P267	$1 dispositivos
+E1104	Nem uma pasta pessoal nem um compartilhamento para você.
+E1105	Arquivos: pasta pessoal e compartilhamentos (conforme permissões) no navegador de arquivos e nos apps
+P268	$1 (somente leitura)

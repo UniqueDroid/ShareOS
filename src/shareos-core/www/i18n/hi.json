@@ -1106,7 +1106,9 @@
 		"Darf die Box als VPN-Client verbinden und trennen und VPN-Profile verwalten (OpenVPN) – das betrifft das Netzwerk der ganzen Box, deshalb nur für Administratoren.": "बॉक्स को VPN क्लाइंट के रूप में जोड़ और अलग कर सकता है और VPN प्रोफ़ाइल संभाल सकता है (OpenVPN) – इससे पूरे बॉक्स का नेटवर्क प्रभावित होता है, इसलिए केवल व्यवस्थापक।",
 		"Darf oben in der Kopfzeile der ShareOS-Oberfläche einen kurzen Zustand anzeigen (z. B. „verbunden“) – nur für den Benutzer, der die App geöffnet hat; er verschwindet nach höchstens 10 Minuten von selbst.": "ShareOS इंटरफ़ेस के ऊपर छोटी स्थिति दिखा सकता है (जैसे “जुड़ा”) – केवल उस उपयोगकर्ता को जिसने ऐप खोला; यह अधिकतम 10 मिनट में अपने-आप हट जाती है।",
 		"VPN-SERVER": "VPN सर्वर",
-		"1 Gerät": "1 डिवाइस"
+		"1 Gerät": "1 डिवाइस",
+		"Weder ein persönlicher Ordner noch eine Freigabe für dich.": "आपके लिए न कोई निजी फ़ोल्डर है, न कोई शेयर।",
+		"Dateien: persönlicher Ordner und Freigaben (nach Rechten) im Dateibrowser und in Apps": "फ़ाइलें: फ़ाइल ब्राउज़र और ऐप्स में निजी फ़ोल्डर और शेयर (अधिकारों के अनुसार)"
 	},
 	"patterns": [
 		[
@@ -2180,6 +2182,10 @@
 		[
 			"^(\\d+) Geräte$",
 			"$1 डिवाइस"
+		],
+		[
+			"^(.+) \\(nur lesen\\)$",
+			"$1 (केवल पढ़ने के लिए)"
 		]
 	],
 	"words": [

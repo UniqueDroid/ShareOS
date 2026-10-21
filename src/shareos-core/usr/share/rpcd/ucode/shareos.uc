@@ -1275,6 +1275,7 @@ function files_roots(u) {
 		c.foreach('shares', 'share', (x) => {
 			let n = x['.name'], v = x.volume ?? '', rel = x.path ?? n, acc = share_access(u, x, gs);
 			if (!acc || n == 'home' || !match(n, /^[A-Za-z0-9_-]+$/) || !v || substr(rel, 0, 1) == '/' || index(rel, '..') >= 0) return;
+			if (match(rel, /^(home|\.shareos)(\/|$)/)) return;    // never other people's folders or the apps area
 			if (c.get('storage', v) != 'volume' || index(mounts, ' /mnt/' + v + ' ') < 0) return;
 			let sp = '/mnt/' + v + '/' + rel;
 			if (stat(sp)?.type == 'directory') push(shares, { name: n, path: sp, home: false, share: true, ro: acc == 'ro' });

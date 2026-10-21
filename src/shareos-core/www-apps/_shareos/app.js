@@ -30,7 +30,8 @@
  * ShareOS.embedded            true when shown inside the ShareOS interface
  * ShareOS.fs                  folders of the user, for apps with the permission
  *                             "files" (null otherwise); all calls return promises:
- *   .roots()                       [{name, home, usb}]
+ *   .roots()                       [{name, home, usb, ro}] – users: personal folder
+ *                                  ("home") and their shares, ro = read only
  *   .list(root, path, hidden)      {entries: [{name, type, size, mtime}], free, size}
  *   .mkdir(root, path, name)   .rename(root, path, name, to)
  *   .copy(root, path, names, destRoot, dest)   .move(…same…)
