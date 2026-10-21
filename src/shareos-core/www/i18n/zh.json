@@ -1108,7 +1108,8 @@
 		"VPN-SERVER": "VPN 服务器",
 		"1 Gerät": "1 台设备",
 		"Weder ein persönlicher Ordner noch eine Freigabe für dich.": "没有为你提供的个人文件夹或共享。",
-		"Dateien: persönlicher Ordner und Freigaben (nach Rechten) im Dateibrowser und in Apps": "文件：文件浏览器和应用中的个人文件夹和共享（按权限）"
+		"Dateien: persönlicher Ordner und Freigaben (nach Rechten) im Dateibrowser und in Apps": "文件：文件浏览器和应用中的个人文件夹和共享（按权限）",
+		" (nur lesen)": "（只读）"
 	},
 	"patterns": [
 		[

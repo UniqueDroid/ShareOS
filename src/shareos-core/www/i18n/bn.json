@@ -1108,7 +1108,8 @@
 		"VPN-SERVER": "VPN সার্ভার",
 		"1 Gerät": "১টি ডিভাইস",
 		"Weder ein persönlicher Ordner noch eine Freigabe für dich.": "আপনার জন্য কোনো ব্যক্তিগত ফোল্ডার বা শেয়ার নেই।",
-		"Dateien: persönlicher Ordner und Freigaben (nach Rechten) im Dateibrowser und in Apps": "ফাইল: ফাইল ব্রাউজার ও অ্যাপে ব্যক্তিগত ফোল্ডার ও শেয়ার (অধিকার অনুযায়ী)"
+		"Dateien: persönlicher Ordner und Freigaben (nach Rechten) im Dateibrowser und in Apps": "ফাইল: ফাইল ব্রাউজার ও অ্যাপে ব্যক্তিগত ফোল্ডার ও শেয়ার (অধিকার অনুযায়ী)",
+		" (nur lesen)": " (শুধু পড়া)"
 	},
 	"patterns": [
 		[

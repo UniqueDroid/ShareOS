@@ -1108,7 +1108,8 @@
 		"VPN-SERVER": "SERVEUR VPN",
 		"1 Gerät": "1 appareil",
 		"Weder ein persönlicher Ordner noch eine Freigabe für dich.": "Ni dossier personnel ni partage pour vous.",
-		"Dateien: persönlicher Ordner und Freigaben (nach Rechten) im Dateibrowser und in Apps": "Fichiers : dossier personnel et partages (selon les droits) dans le navigateur de fichiers et les applications"
+		"Dateien: persönlicher Ordner und Freigaben (nach Rechten) im Dateibrowser und in Apps": "Fichiers : dossier personnel et partages (selon les droits) dans le navigateur de fichiers et les applications",
+		" (nur lesen)": " (lecture seule)"
 	},
 	"patterns": [
 		[
