@@ -154,12 +154,12 @@ const TABS = [
 	['overview', 'ÜBERSICHT'], ['storage', 'SPEICHER'], ['shares', 'FREIGABEN'], ['services', 'DIENSTE'],
 	['apps', 'APPS', true], ['cloud', 'CLOUD', true], ['paperless', 'PAPERLESS', true], ['system', 'SYSTEM']
 ];
-const SYS_SUBS = [['firmware', 'FIRMWARE'], ['notifications', 'MELDUNGEN'], ['general', 'ALLGEMEIN'], ['time', 'ZEIT'], ['network', 'NETZWERK'], ['power', 'ENERGIE & RESET'], ['logs', 'PROTOKOLLE'], ['terminal', 'TERMINAL'], ['appearance', 'DARSTELLUNG'], ['about', 'ÜBER']];
+const SYS_SUBS = [['general', 'ALLGEMEIN'], ['appearance', 'DARSTELLUNG'], ['network', 'NETZWERK'], ['notifications', 'MELDUNGEN'], ['logs', 'PROTOKOLLE'], ['terminal', 'TERMINAL'], ['time', 'ZEIT'], ['power', 'ENERGIE & RESET'], ['firmware', 'FIRMWARE']];
 const SVC_SUBS = [['status', 'STATUS'], ['autostart', 'AUTOSTART']];
 const SHR_SUBS = [['shares', 'FREIGABEN'], ['files', 'DATEIEN'], ['users', 'BENUTZER'], ['groups', 'GRUPPEN']];
 const ROLE_TXT = { admin: 'Administrator', user: 'Benutzer', share: 'Nur Freigaben' };
 // pages that moved: old link -> new place
-const SUB_MOVED = { hardware: 'power', https: 'network' };
+const SUB_MOVED = { hardware: 'power', https: 'network', about: 'general' };
 // German page names of versions before 0.1.0-beta.8 (bookmarks, installed app shortcuts)
 const OLD_ROUTE = { uebersicht: 'overview', speicher: 'storage', freigaben: 'shares', dienste: 'services', allgemein: 'general',
 	zeit: 'time', netzwerk: 'network', energie: 'power', protokolle: 'logs', darstellung: 'appearance', ueber: 'about',
@@ -512,7 +512,7 @@ function renderTabs() {
 function parseRoute() {
 	const [tab, sub] = routeParts();
 	S.route = { tab: TABS.some((t) => t[0] === tab) && tabOn(tab) ? tab : 'overview', sub: SUB_MOVED[sub] || sub || '' };
-	if (S.route.tab === 'system' && !SYS_SUBS.some((x) => x[0] === S.route.sub)) S.route.sub = 'firmware';
+	if (S.route.tab === 'system' && !SYS_SUBS.some((x) => x[0] === S.route.sub)) S.route.sub = 'general';
 	if (S.route.tab === 'services' && !SVC_SUBS.some((x) => x[0] === S.route.sub)) S.route.sub = 'status';
 	if (S.route.tab === 'shares' && !SHR_SUBS.some((x) => x[0] === S.route.sub)) S.route.sub = 'shares';
 	if (S.route.tab === 'apps' && !APP_SUBS.some((x) => x[0] === S.route.sub)) S.route.sub = 'installed';
@@ -651,7 +651,7 @@ const VIEWS = {
 		const sub = S.route.sub;
 		return html`
 		<nav class="subtabs" aria-label="System">${SYS_SUBS.map(([id, label]) => html`<a class="st${sub === id ? ' on' : ''}" href="#/system/${id}">${label}</a>`)}</nav>
-		${(SYS[sub] || SYS.firmware)()}`;
+		${(SYS[sub] || SYS.general)()}`;
 	}
 };
 
@@ -1858,7 +1858,9 @@ const SYS = {
 			</form>
 		</div>
 		<h2 class="gh" style="margin-top:22px">APP & WIDGETS</h2>
-		<div class="g2">${appPanel()}${widgetPanel()}</div>`;
+		<div class="g2">${appPanel()}${widgetPanel()}</div>
+		<h2 class="gh" style="margin-top:22px">ÜBER</h2>
+		${SYS.about()}`;
 	},
 
 	notifications() {

@@ -4,6 +4,10 @@ Changes per release (newest first). The section of a version is added to its
 GitHub release automatically when the release is built. Test versions are
 pre-releases for test devices only.
 
+## 0.2.0-beta.6
+
+- **System menu in a new order:** General, Appearance, Network, Messages, Logs, Terminal, Time, Power & reset, Firmware; *System* opens on General. *About* is now at the end of General (the old address `#/system/about` leads there).
+
 ## 0.2.0-beta.5
 
 - **Media jobs on the box – FFmpeg as a system app:** `ffmpeg` (FFmpeg 6.1.5 with `ffprobe`, LAME and Opus, about 2.6 MB, in the release as `.sapp`) converts audio and puts videos into another container. The box runs the jobs itself, in the background, one after another, at the lowest priority and with the account's rights (admins: root, like their file browser): files belong to the account, storage limits apply. Videos are not re-encoded – the box's ARM CPU has no FPU, that would take many times the length of the film. The app MediaTranscoder (ShareOS-Apps) uses it.
