@@ -1017,7 +1017,15 @@
 		"Darf auf der Box Audio und Video des Benutzers umwandeln lassen (FFmpeg) – mit seinen Rechten, nur in seinen Ordnern, aus festen Auswahlen (kein beliebiger Befehl).": "يمكنه تحويل صوت وفيديو المستخدم على الجهاز (FFmpeg) – بصلاحياته، وفي مجلداته فقط، ومن خيارات ثابتة (بلا أوامر حرة).",
 		"Alle": "الكل",
 		"Sonstige": "أخرى",
-		"Suchen …": "بحث …"
+		"Suchen …": "بحث …",
+		"ANZEIGEN IM KOPF": "مؤشرات الترويسة",
+		"Anzeige im Kopf": "مؤشر في الترويسة",
+		"VPN der Box (OpenVPN)": "VPN الجهاز (OpenVPN)",
+		"verbindet …": "جارٍ الاتصال …",
+		"Gerade zeigt kein Dienst und keine App etwas an.": "لا تعرض أي خدمة أو تطبيق شيئًا الآن.",
+		"Dienste (VPN, Torrents, Medienserver) und Apps mit der Berechtigung „Anzeige im Kopf“ zeigen hier ihren Zustand; ein Klick öffnet die App.": "تعرض الخدمات (VPN والتورنت وخادم الوسائط) والتطبيقات ذات إذن «مؤشر في الترويسة» حالتها هنا؛ والنقر يفتح التطبيق.",
+		"Darf die Box als VPN-Client verbinden und trennen und VPN-Profile verwalten (OpenVPN) – das betrifft das Netzwerk der ganzen Box, deshalb nur für Administratoren.": "يمكنه توصيل الجهاز وفصله كعميل VPN وإدارة ملفات VPN (OpenVPN) – يؤثر ذلك في شبكة الجهاز كله، لذا للمسؤولين فقط.",
+		"Darf oben in der Kopfzeile der ShareOS-Oberfläche einen kurzen Zustand anzeigen (z. B. „verbunden“) – nur für den Benutzer, der die App geöffnet hat; er verschwindet nach höchstens 10 Minuten von selbst.": "يمكنه عرض حالة قصيرة أعلى واجهة ShareOS (مثل «متصل») – للمستخدم الذي فتح التطبيق فقط؛ وتختفي تلقائيًا خلال 10 دقائق على الأكثر."
 	},
 	"patterns": [
 		[

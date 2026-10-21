@@ -34,7 +34,8 @@ installs it along.
 `transmission-daemon`), the firmware starts and stops it (here
 `shareos-transmission`, `S95transmission`, the removal hook
 `/usr/lib/shareos/apphooks/<id>`) – a package never starts a service by
-itself, so only reviewed daemons run on the box.
+itself, so only reviewed daemons run on the box. `openvpn` works
+the same way (`shareos-vpn`, `S94vpn`, app NetTunnel with the permission `vpn`).
 Programs that apps drive work the same way: `ffmpeg` runs only as jobs of
 the firmware's worker `shareos-media`, from fixed choices the box checks
 (rpcd `shareos.appmedia`, app permission `media`).

@@ -336,6 +336,20 @@ Braucht ein Laufwerk, ein paar Medien darauf (ein Video, z. B. `.mkv` oder `.mp4
 
 **Store-Rubriken und Bash (0.2.0-beta.5):** Apps → Store: unter „Verfügbare Apps“ die Rubriken (Medien, Netzwerk, Werkzeuge, System …) mit Anzahl; ein Klick zeigt nur diese Rubrik, *Alle* wieder alles; „Suchen …“ filtert beim Tippen. Bash aus dem Store (Rubrik Werkzeuge) installieren, im Terminal `bash`, dann `echo $BASH_VERSION` → `5.2.37…`, `exit`.
 
+## 14l. VPN mit NetTunnel und Anzeigen im Kopf (0.2.0-beta.6)
+
+Braucht ein OpenVPN-Profil (`.ovpn`, z. B. vom Router im Büro oder von einem VPN-Anbieter) mit eingebetteten Zertifikaten, die Datei `openvpn-2.6.20.sapp` (Release der Firmware) und NetTunnel (Store oder `nettunnel-1.0.0.sapp`).
+
+1. Als **root**: Apps → Store → NetTunnel installieren (holt `openvpn` mit). NetTunnel öffnet sich in der Oberfläche.
+2. *Vom Computer …* → das `.ovpn`: Name übernehmen; fragt das Profil nach Anmeldung, Benutzername/Passwort eintragen → *Einspielen*. Stand im Profil z. B. ein `up`-Skript, meldet NetTunnel „Entfernt: up“.
+3. *Verbinden*: nach ein paar Sekunden „VPN verbunden“ mit Tunnel-Adresse; oben im Kopf der ShareOS-Oberfläche der Chip **VPN · 10.x.x.x**, ein Klick öffnet NetTunnel.
+4. Im Terminal: `ip addr show tun0`, `ip route` – mit „Gesamten Verkehr der Box durch den Tunnel“ zwei Routen `0.0.0.0/1` und `128.0.0.0/1` über tun0; ohne nur die Netze des VPN. Ein Rechner im VPN-Netz ist per `ping` erreichbar.
+5. *Bearbeiten* → *Beim Start der Box verbinden* → Box neu starten: die Verbindung steht nach etwa einer halben Minute von selbst.
+6. Ein Profil mit `ca /pfad/ca.crt` statt `<ca>…</ca>`: „Das Profil verweist auf Dateien …“. Ein Server-Profil: abgelehnt.
+7. Als **Benutzer** (kein Admin): NetTunnel ist nicht sichtbar bzw. meldet „nur für Administratoren“.
+8. Transmission eines Benutzers läuft → im Kopf **TORRENT · läuft** (Admin: der eigene Dienst; Benutzer: in „Mein ShareOS“). System → Darstellung → *Anzeigen im Kopf*: Häkchen weg → der Chip verschwindet (nur in diesem Browser).
+9. Apps → Installiert → openvpn → *Entfernen*: die Verbindung endet, der Chip geht.
+
 ## 15. Tasten
 
 - **Reset-Taste** (Loch hinten), gedrückt halten und loslassen:

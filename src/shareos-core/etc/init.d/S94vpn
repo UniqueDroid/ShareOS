@@ -1,0 +1,19 @@
+#!/bin/sh
+# VPN client: connects the profile marked "autostart" (app NetTunnel) when the
+# system app "openvpn" is installed; in the background, after the network.
+case "$1" in
+	start)
+		[ -x /opt/shareos/bin/openvpn ] || exit 0
+		(sleep 8; /usr/sbin/shareos-vpn boot 2>&1 | logger -t shareos-vpn) >/dev/null 2>&1 &
+		;;
+	stop)
+		[ -f /tmp/shareos-vpn/pid ] && /usr/sbin/shareos-vpn disconnect >/dev/null 2>&1
+		;;
+	restart)
+		"$0" stop; "$0" start
+		;;
+	*)
+		echo "Usage: $0 {start|stop|restart}"; exit 1
+		;;
+esac
+exit 0

@@ -1,0 +1,12 @@
+# VPN client (OpenVPN, system app "openvpn") – managed by shareos-vpn (app
+# NetTunnel). Profiles in /etc/shareos/vpn (root only).
+#
+# config profile 'p_buero'
+#	option name 'Büro'
+#	option remote 'vpn.example.org:1194'
+#	option full '1'          # all traffic of the box through the tunnel
+#	option autostart '0'     # connect when the box starts
+#	option needs_auth '1'    # user name and password in <name>.auth
+
+config vpn 'global'
+	option active ''

@@ -86,7 +86,7 @@ const MAX_PKG = 64 * 1048576;       // download / upload
 const MAX_FILES = 40 * 1048576;     // unpacked
 const ID_RE = /^[a-z][a-z0-9-]{1,31}$/;
 const JOB_RE = /^[a-z][a-z0-9-]{0,23}$/;
-const PERMISSIONS = { cron: 1, embed: 1, files: 1, torrent: 1, media: 1 };
+const PERMISSIONS = { cron: 1, embed: 1, files: 1, torrent: 1, media: 1, vpn: 1, status: 1 };
 const MAX_JOBS = 5;
 const MAX_REQUIRES = 5;
 const MAX_LOG = 65536;
@@ -226,6 +226,9 @@ function check_jobs(a, dir) {
 	// "torrent": the account's own Transmission daemon (the proxy checks the grant of "files")
 	if (index(perms, 'torrent') >= 0 && index(perms, 'files') < 0) return 'the permission "torrent" needs "files"';
 	if (index(perms, 'media') >= 0 && index(perms, 'files') < 0) return 'the permission "media" needs "files"';
+	// "vpn": the box as a VPN client (admins only, checked when used); "status": a chip in the header
+	if (index(perms, 'vpn') >= 0 && index(perms, 'files') < 0) return 'the permission "vpn" needs "files"';
+	if (index(perms, 'status') >= 0 && index(perms, 'files') < 0) return 'the permission "status" needs "files"';
 	if (a.jobs == null) return null;
 	if (type(a.jobs) != 'array' || length(a.jobs) > MAX_JOBS) return 'invalid jobs (at most ' + MAX_JOBS + ')';
 	if (length(a.jobs) && index(perms, 'cron') < 0) return 'jobs need the permission "cron"';

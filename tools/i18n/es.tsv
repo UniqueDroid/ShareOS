@@ -1303,3 +1303,11 @@ E1011	Puede convertir el audio y vídeo del usuario en la caja (FFmpeg): con sus
 E1012	Todas
 E1013	Otras
 E1014	Buscar …
+E1015	INDICADORES DE LA CABECERA
+E1016	Indicador en la cabecera
+E1017	VPN de la caja (OpenVPN)
+E1018	conectando …
+E1019	Ahora ningún servicio ni app muestra nada.
+E1020	Los servicios (VPN, torrents, servidor multimedia) y las apps con el permiso «Indicador en la cabecera» muestran aquí su estado; un clic abre la app.
+E1021	Puede conectar y desconectar la caja como cliente VPN y gestionar perfiles VPN (OpenVPN): afecta a la red de toda la caja, por eso solo para administradores.
+E1022	Puede mostrar un estado breve arriba en la interfaz de ShareOS (p. ej. «conectado»), solo al usuario que abrió la app; desaparece solo tras 10 minutos como máximo.

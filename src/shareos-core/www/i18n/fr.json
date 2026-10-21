@@ -1017,7 +1017,15 @@
 		"Darf auf der Box Audio und Video des Benutzers umwandeln lassen (FFmpeg) – mit seinen Rechten, nur in seinen Ordnern, aus festen Auswahlen (kein beliebiger Befehl).": "Peut faire convertir l'audio et la vidéo de l'utilisateur sur la box (FFmpeg) – avec ses droits, uniquement dans ses dossiers, à partir de choix fixes (aucune commande libre).",
 		"Alle": "Toutes",
 		"Sonstige": "Autres",
-		"Suchen …": "Rechercher …"
+		"Suchen …": "Rechercher …",
+		"ANZEIGEN IM KOPF": "INDICATEURS DE L’EN-TÊTE",
+		"Anzeige im Kopf": "Indicateur dans l’en-tête",
+		"VPN der Box (OpenVPN)": "VPN de la box (OpenVPN)",
+		"verbindet …": "connexion …",
+		"Gerade zeigt kein Dienst und keine App etwas an.": "Aucun service ni aucune app n'affiche quoi que ce soit pour le moment.",
+		"Dienste (VPN, Torrents, Medienserver) und Apps mit der Berechtigung „Anzeige im Kopf“ zeigen hier ihren Zustand; ein Klick öffnet die App.": "Les services (VPN, torrents, serveur multimédia) et les apps disposant de l'autorisation « Indicateur dans l’en-tête » y affichent leur état ; un clic ouvre l'app.",
+		"Darf die Box als VPN-Client verbinden und trennen und VPN-Profile verwalten (OpenVPN) – das betrifft das Netzwerk der ganzen Box, deshalb nur für Administratoren.": "Peut connecter et déconnecter la box en tant que client VPN et gérer les profils VPN (OpenVPN) – cela concerne le réseau de toute la box, donc réservé aux administrateurs.",
+		"Darf oben in der Kopfzeile der ShareOS-Oberfläche einen kurzen Zustand anzeigen (z. B. „verbunden“) – nur für den Benutzer, der die App geöffnet hat; er verschwindet nach höchstens 10 Minuten von selbst.": "Peut afficher un court état en haut de l'interface ShareOS (p. ex. « connecté ») – uniquement pour l'utilisateur qui a ouvert l'app ; il disparaît de lui-même au bout de 10 minutes au plus."
 	},
 	"patterns": [
 		[

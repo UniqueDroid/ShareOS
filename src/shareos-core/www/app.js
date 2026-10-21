@@ -391,6 +391,7 @@ function startPolling() {
 	refreshUpdateStatus();
 	loadNotes();
 	S.noteTimer = setInterval(loadNotes, 60000);
+	startChips();
 }
 function stopPolling() {
 	clearInterval(S.timer); S.timer = null;
@@ -473,6 +474,44 @@ function renderShell() {
 	netAutoConfirm();
 }
 
+/* ---------- status chips of services and apps (header) --------------------------- */
+
+const chipHidden = () => { try { return JSON.parse(store.get('chips.hidden') || '[]'); } catch (e) { return []; } };
+async function loadChips() {
+	try { S.chips = (await rpc('shareos.status', 'chips')).chips || []; } catch (e) { return; }
+	if (S.me && S.me.role !== 'admin') renderUserHeader(); else renderHeader();
+}
+function startChips() {
+	if (S.chipTimer) return;
+	loadChips();
+	S.chipTimer = setInterval(loadChips, 15000);
+}
+function chipsHtml() {
+	const hidden = chipHidden();
+	return (S.chips || []).filter((c) => !hidden.includes(c.id)).map((c) => {
+		const cls = c.state === 'warn' ? ' warn' : c.state === 'err' ? ' err' : c.state === 'info' ? ' info' : '';
+		const inner = c.id.startsWith('app:')
+			? html`<i></i>${(c.name || c.app || '').toUpperCase()} <small>${c.label}</small>`
+			: html`<i></i>${c.label}${c.detail ? html` <small>${c.detail}</small>` : ''}`;
+		return c.href ? html`<a class="chip${cls}" href="${c.href}">${inner}</a>`
+			: c.app ? html`<a class="chip${cls}" href="#" data-act="chip-open" data-app="${c.app}">${inner}</a>`
+			: html`<span class="chip${cls}">${inner}</span>`;
+	});
+}
+
+// which chips this browser shows (Appearance)
+function chipsPanel() {
+	const hidden = chipHidden(), list = S.chips || [];
+	return html`<div class="panel" style="max-width:560px;margin-top:16px">
+		<div class="ph"><span class="pt">ANZEIGEN IM KOPF</span><span class="tag ml">nur in diesem Browser</span></div>
+		${list.length || hidden.length ? html`<div style="display:grid;gap:6px">${[...list.map((c) => [c.id, c.id.startsWith('app:') ? (c.name || c.app) : c.label]),
+			...hidden.filter((h) => !list.some((c) => c.id === h)).map((h) => [h, h.replace(/^(app|svc):/, '')])].map(([id, t]) =>
+			html`<label class="chk"><input type="checkbox" class="chip-show" data-id="${id}"${hidden.includes(id) ? '' : raw(' checked')}>${t}</label>`)}</div>`
+			: html`<p class="mut" style="margin:0;font-size:13px">Gerade zeigt kein Dienst und keine App etwas an.</p>`}
+		<p class="note">Dienste (VPN, Torrents, Medienserver) und Apps mit der Berechtigung „Anzeige im Kopf“ zeigen hier ihren Zustand; ein Klick öffnet die App.</p>
+	</div>`;
+}
+
 function renderHeader(offline = false) {
 	const hd = $('#hd');
 	if (!hd) return;
@@ -489,6 +528,7 @@ function renderHeader(offline = false) {
 			<div class="row">
 				${S.notes?.unread ? html`<a class="chip ${S.notes.items.some((x) => !x.read && !x.resolved && x.level === 'error') ? 'err' : 'warn'}" href="#/system/notifications"><i></i>${S.notes.unread === 1 ? '1 MELDUNG' : S.notes.unread + ' MELDUNGEN'}</a>` : ''}
 				${upd ? html`<a class="chip warn" href="#/system/firmware"><i></i>UPDATE ${upd.replace(/^v/, '')} <small>verfügbar</small></a>` : ''}
+				${chipsHtml()}
 				${offline ? html`<span class="chip warn"><i></i>OFFLINE</span>`
 					: html`<span class="chip"><i></i>ONLINE <small>seit ${fmtUptime(i.uptime)}</small></span>`}
 				<button class="ib" type="button" data-act="theme" aria-label="Hell/Dunkel umschalten" title="Hell/Dunkel umschalten">${svg(I.moon)}</button>
@@ -1243,6 +1283,7 @@ function renderUserShell() {
 	renderUserHeader();
 	renderUserTabs();
 	renderUserMain();
+	startChips();
 }
 
 function userLookView() {
@@ -1273,6 +1314,7 @@ function renderUserHeader() {
 		<div>${brand()}<div class="sub"><b>${m.fullname || m.name}</b> · ${m.host || location.hostname}</div></div>
 		<div class="side">
 			<div class="row">
+				${chipsHtml()}
 				<button class="ib" type="button" data-act="theme" aria-label="Hell/Dunkel umschalten" title="Hell/Dunkel umschalten">${svg(I.moon)}</button>
 				<button class="ib" type="button" data-act="logout" aria-label="Abmelden" title="Abmelden">${svg(I.power)}</button>
 			</div>
@@ -2148,6 +2190,7 @@ const SYS = {
 				<label class="chk"><input type="checkbox" id="opt-scan"${S.scan ? raw(' checked') : ''}>Scanlines (nur in diesem Browser)</label>
 			</div>
 		</div>
+		${chipsPanel()}
 		<div class="panel" style="max-width:560px;margin-top:16px">
 			<div class="ph"><span class="pt">SPRACHE</span><span class="tag ml">gilt für alle</span></div>
 			<div class="fields" style="grid-template-columns:1fr"><label class="f"><span>SPRACHE DER OBERFLÄCHE</span><select id="opt-lang" data-i18n-skip>
@@ -2441,6 +2484,12 @@ const VIEWS_AFTER = {
 				} catch (err) { e.target.checked = !on; toast('Logo: ' + err.message, true); }
 			});
 			$('#opt-scan').addEventListener('change', (e) => { S.scan = e.target.checked; store.set('scan', S.scan ? '1' : '0'); applyTheme(); });
+			document.querySelectorAll('.chip-show').forEach((c) => c.addEventListener('change', () => {
+				const h = new Set(chipHidden());
+				if (c.checked) h.delete(c.dataset.id); else h.add(c.dataset.id);
+				store.set('chips.hidden', JSON.stringify([...h]));
+				renderHeader();
+			}));
 			document.querySelectorAll('.opt-area').forEach((cb) => cb.addEventListener('change', async (e) => {
 				const k = e.target.dataset.area, on = e.target.checked;
 				try {
@@ -3548,6 +3597,11 @@ Object.assign(ACTIONS, {
 	},
 	'fb-app'(el) { fbOpenIn(el.dataset.app, el.dataset.name); },
 	'app-launch'(el) { const a = findApp(el.dataset.id); if (a) launchApp(a); },
+	async 'chip-open'(el) {
+		if (!findApp(el.dataset.app) && !(S.me && S.me.role !== 'admin')) await loadApps(['installed']);
+		const a = findApp(el.dataset.app);
+		if (a) launchApp(a); else location.hash = S.me && S.me.role !== 'admin' ? '#/me' : '#/apps/installed';
+	},
 	'embed-close'() { closeEmbed(); },
 	async 'fb-mkdir'() {
 		const name = await promptDlg('Neuer Ordner', 'Name des neuen Ordners:', '', 'Anlegen', 'text', 255);
@@ -3787,7 +3841,7 @@ function appActions(a, upd) {
 }
 
 // permissions an app can ask for (app.json "permissions")
-const PERM_TAG = { cron: 'Zeitgesteuerte Aufgaben', embed: 'In ShareOS anzeigen', files: 'Zugriff auf Dateien', torrent: 'Eigene Torrents (Transmission)', media: 'Medien umwandeln (FFmpeg)', internet: 'Nutzt das Internet', system: 'System-App · Terminal' };
+const PERM_TAG = { cron: 'Zeitgesteuerte Aufgaben', embed: 'In ShareOS anzeigen', files: 'Zugriff auf Dateien', torrent: 'Eigene Torrents (Transmission)', media: 'Medien umwandeln (FFmpeg)', vpn: 'VPN der Box (OpenVPN)', status: 'Anzeige im Kopf', internet: 'Nutzt das Internet', system: 'System-App · Terminal' };
 // permissions plus "internet" (manifest field: the app loads data from the internet – not a restriction, shown for transparency)
 // and "system" for system apps (programs for the terminal)
 const appPerms = (x) => [...(x?.type === 'system' ? ['system'] : []), ...(x?.permissions || []), ...(x?.internet ? ['internet'] : [])];
@@ -3797,6 +3851,8 @@ const PERM_TXT = { cron: 'Darf zeitgesteuerte Aufgaben auf der Box ausführen �
 	files: 'Darf die Dateien lesen, ändern und löschen, die der angemeldete Benutzer im Dateibrowser erreicht – mit seinen Rechten, solange die App offen ist.',
 	torrent: 'Darf den eigenen Transmission-Dienst des Benutzers steuern: Torrents hinzufügen, anhalten und löschen. Jeder Benutzer hat seinen eigenen Dienst; Downloads landen nur in seinen Ordnern.',
 	media: 'Darf auf der Box Audio und Video des Benutzers umwandeln lassen (FFmpeg) – mit seinen Rechten, nur in seinen Ordnern, aus festen Auswahlen (kein beliebiger Befehl).',
+	vpn: 'Darf die Box als VPN-Client verbinden und trennen und VPN-Profile verwalten (OpenVPN) – das betrifft das Netzwerk der ganzen Box, deshalb nur für Administratoren.',
+	status: 'Darf oben in der Kopfzeile der ShareOS-Oberfläche einen kurzen Zustand anzeigen (z. B. „verbunden“) – nur für den Benutzer, der die App geöffnet hat; er verschwindet nach höchstens 10 Minuten von selbst.',
 	internet: 'Lädt Daten aus dem Internet (z. B. Online-Dienste, Streams, Karten). Ohne Internetverbindung funktionieren diese Teile der App nicht.',
 	system: 'Programm für die Kommandozeile der Box (System → Terminal oder SSH). Es läuft mit den Rechten dessen, der es startet – im Terminal als root.' };
 

@@ -1,0 +1,5 @@
+#!/bin/sh
+# system app "openvpn" is removed: end the connection (the profiles stay)
+[ "$1" = remove ] || exit 0
+/usr/sbin/shareos-vpn disconnect >/dev/null 2>&1
+exit 0

@@ -460,6 +460,10 @@ def call(obj, method, args):
         if method == 'log':
             return {'entries': pl_inbox(args['inbox'])['recent']}
         return {'started': True}
+    if obj == 'shareos.status':
+        return {'chips': [{'id': 'svc:vpn', 'label': 'VPN', 'detail': '10.8.0.6', 'state': 'ok', 'app': 'nettunnel'},
+                          {'id': 'svc:torrent', 'label': 'TORRENT', 'detail': 'läuft', 'state': 'ok', 'app': 'transmission'},
+                          {'id': 'app:webpad', 'label': '2 ungespeichert', 'state': 'warn', 'app': 'webpad', 'name': 'Webpad'}]}
     if obj == 'shareos.cloud':
         c = STATE['cloud']
         if method == 'status':

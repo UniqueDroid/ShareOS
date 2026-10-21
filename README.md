@@ -87,6 +87,7 @@ Version in brackets = first release with the feature.
 - Cloud sync with rclone (Nextcloud/WebDAV, S3, SFTP, Google Drive …) for the device and per user, with schedule and bandwidth limit (beta.4)
 - Paperless-ngx: inbox folders per user or shared (e.g. for a scanner), upload through the Paperless API (beta.4)
 - Installable as an app (PWA), status address for widget apps (beta.4)
+- VPN client for the box (OpenVPN as a system app, app NetTunnel, cleaned profiles, admins only); status chips of services and apps in the header (0.2.0-beta.6)
 - Transmission with own torrents per user: system app `transmission-daemon`, app permission `torrent`; apps bring the system apps they need (`"requires"`) (0.2.0-beta.4)
 - Media jobs: FFmpeg as a system app, app permission `media` – convert audio, change the container of videos, cut, in the background with the user's rights (MediaTranscoder) (0.2.0-beta.5)
 
@@ -124,7 +125,7 @@ Version in brackets = first release with the feature.
 | RAID | own metadata format ¹ | mdadm (RAID 0/1/5, JBOD), LVM | mdadm RAID 1 (mirror), RAID 0, JBOD |
 | USB drives | mounted ¹ | mounted on plug-in | mounted on plug-in, safely remove, format (4 file systems) |
 | Users and rights | users, groups, quota ¹ | users, groups, quota | users, groups, rights per share, storage limit per user, users with their own web area |
-| Extensions | add-ons (discontinued) | ipkg packages with a web page | app store (ShareOS-Apps): web apps on their own port, system apps (nano, htop, strace, iperf3, bash, Transmission, FFmpeg) |
+| Extensions | add-ons (discontinued) | ipkg packages with a web page | app store (ShareOS-Apps): web apps on their own port, system apps (nano, htop, strace, iperf3, bash, Transmission, FFmpeg, OpenVPN) |
 | Cloud / documents | – | – (single packages) | rclone cloud sync, Paperless-ngx inbox |
 | HTTPS | ¹ | self-signed or Let's Encrypt | self-signed (follows name/IP) or own certificate |
 | Security | unpatched remote code execution (CVE-2024-3273, CVE-2024-3274); D-Link advises to retire the devices | last release 2017; old kernel and Samba | current kernel and libraries, updates via GitHub |

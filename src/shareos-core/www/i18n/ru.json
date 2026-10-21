@@ -1017,7 +1017,15 @@
 		"Darf auf der Box Audio und Video des Benutzers umwandeln lassen (FFmpeg) – mit seinen Rechten, nur in seinen Ordnern, aus festen Auswahlen (kein beliebiger Befehl).": "Может преобразовывать аудио и видео пользователя на устройстве (FFmpeg) – с его правами, только в его папках, из фиксированных вариантов (никаких произвольных команд).",
 		"Alle": "Все",
 		"Sonstige": "Прочие",
-		"Suchen …": "Поиск …"
+		"Suchen …": "Поиск …",
+		"ANZEIGEN IM KOPF": "ИНДИКАТОРЫ В ЗАГОЛОВКЕ",
+		"Anzeige im Kopf": "Индикатор в заголовке",
+		"VPN der Box (OpenVPN)": "VPN устройства (OpenVPN)",
+		"verbindet …": "подключение …",
+		"Gerade zeigt kein Dienst und keine App etwas an.": "Сейчас ни служба, ни приложение ничего не показывают.",
+		"Dienste (VPN, Torrents, Medienserver) und Apps mit der Berechtigung „Anzeige im Kopf“ zeigen hier ihren Zustand; ein Klick öffnet die App.": "Службы (VPN, торренты, медиасервер) и приложения с разрешением «Индикатор в заголовке» показывают здесь своё состояние; щелчок открывает приложение.",
+		"Darf die Box als VPN-Client verbinden und trennen und VPN-Profile verwalten (OpenVPN) – das betrifft das Netzwerk der ganzen Box, deshalb nur für Administratoren.": "Может подключать и отключать устройство как VPN-клиент и управлять профилями VPN (OpenVPN) — это влияет на сеть всего устройства, поэтому только для администраторов.",
+		"Darf oben in der Kopfzeile der ShareOS-Oberfläche einen kurzen Zustand anzeigen (z. B. „verbunden“) – nur für den Benutzer, der die App geöffnet hat; er verschwindet nach höchstens 10 Minuten von selbst.": "Может показывать краткое состояние вверху интерфейса ShareOS (например, «подключено») — только пользователю, открывшему приложение; исчезает само не позже чем через 10 минут."
 	},
 	"patterns": [
 		[

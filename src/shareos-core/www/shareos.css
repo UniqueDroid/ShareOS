@@ -289,3 +289,6 @@ a.card.applink:hover{border-color:var(--dim);box-shadow:var(--glow)}
 /* app store: sections */
 .t.store tr.grp td{padding-top:16px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);background:transparent;border-bottom:1px solid var(--dim)}
 .t.store tr.grp:first-child td{padding-top:8px}
+
+/* status chips: info (no colour of its own) */
+.chip.info,.sos a.chip.info{color:var(--muted)}

@@ -4,6 +4,12 @@ Changes per release (newest first). The section of a version is added to its
 GitHub release automatically when the release is built. Test versions are
 pre-releases for test devices only.
 
+## 0.2.0-beta.6
+
+- **VPN client (OpenVPN) for the box:** the system app `openvpn` (OpenVPN 2.6.20, 2.4 MB, in the release as `.sapp`) and the app NetTunnel (ShareOS-Apps) connect the box to a VPN – e.g. to the office or a VPN provider. The kernel now has tunnel support (`CONFIG_TUN`). Profiles (`.ovpn`) are cleaned on import: nothing that runs programs (`up`/`down` scripts, plugins, `script-security` …), no settings of the box itself (log, status, user, chroot, management …), keys and certificates only inline; server profiles are refused. OpenVPN always runs with `--script-security 1`. User name and password for `auth-user-pass` are kept beside the profile (root only, `/etc/shareos/vpn`). Per profile: all traffic of the box through the tunnel, or only the VPN networks (the pushed default route is ignored); one profile can connect when the box starts (`S94vpn`). Removing the system app ends the connection.
+- **Permission `vpn`** for apps (needs `files`): `ShareOS.vpn` – list, status, log, importProfile, set, remove, connect, disconnect – through `/_shareos/cgi/vpn`; admin accounts only (a VPN changes the network of the whole box).
+- **Status in the header:** next to *Online*, chips show what is running – the VPN (connected, address), the user's Transmission service, the media server (when installed) – and a click opens the app. **Permission `status`** (needs `files`): an app may show one short state of its own (`ShareOS.status.set({ text, state, ttl })`, max. 24 characters, ok/warn/err/info); it disappears by itself after at most 10 minutes unless the app sets it again, and only the account that opened the app sees it. Users see their chips in "My ShareOS". System → Appearance: which chips this browser shows.
+
 ## 0.2.0-beta.5
 
 - **Media jobs on the box – FFmpeg as a system app:** `ffmpeg` (FFmpeg 6.1.5 with `ffprobe`, LAME and Opus, about 2.6 MB, in the release as `.sapp`) converts audio and puts videos into another container. The box runs the jobs itself, in the background, one after another, at the lowest priority and with the account's rights (admins: root, like their file browser): files belong to the account, storage limits apply. Videos are not re-encoded – the box's ARM CPU has no FPU, that would take many times the length of the film. The app MediaTranscoder (ShareOS-Apps) uses it.
