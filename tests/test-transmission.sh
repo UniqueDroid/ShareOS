@@ -58,7 +58,11 @@ o=$(run "shareos-transmission start anna")
 check "not installed: start says so" "echo '$o' | js \"'not installed' in d['error']\""
 
 cp "$SAPP" "$R/tmp/td.sapp"
-o=$(run "shareos-apps install-file /tmp/td.sapp")
+# installed the way rpcd does it (umask 077): still usable for every account
+o=$(run "umask 077; shareos-apps install-file /tmp/td.sapp")
+check "system apps folder readable for every account" "[ \"\$(stat -c %a $R/opt/shareos) \$(stat -c %a $R/opt/shareos/sysapps) \$(stat -c %a $R/opt/shareos/bin)\" = '755 755 755' ]"
+run "chmod 700 /opt/shareos" >/dev/null; run "shareos-apps fix-perms" >/dev/null
+check "root-only folder of older versions is repaired at boot" "[ \"\$(stat -c %a $R/opt/shareos)\" = 755 ]"
 check "system app transmission-daemon installs" "echo '$o' | js \"d.get('id')=='transmission-daemon'\""
 check "starter in /opt/shareos/bin" "[ -x $R/opt/shareos/bin/transmission-daemon ]"
 
