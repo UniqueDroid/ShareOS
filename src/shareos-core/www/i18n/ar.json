@@ -1009,7 +1009,8 @@
 		"Programm für die Kommandozeile der Box (System → Terminal oder SSH). Es läuft mit den Rechten dessen, der es startet – im Terminal als root.": "برنامج لسطر أوامر الجهاز (النظام ← الطرفية أو SSH). يعمل بصلاحيات من يشغّله – في الطرفية كمستخدم root.",
 		"Terminal": "الطرفية",
 		"noch ungetestet": "لم يُختبر بعد",
-		"ShareOS wurde auf diesem Modell noch nicht auf echter Hardware getestet.": "لم يُختبر ShareOS بعد على جهاز حقيقي من هذا الطراز."
+		"ShareOS wurde auf diesem Modell noch nicht auf echter Hardware getestet.": "لم يُختبر ShareOS بعد على جهاز حقيقي من هذا الطراز.",
+		"Erste Anmeldung: Benutzer root, Passwort shareos – danach ein eigenes Passwort setzen.": "أول تسجيل دخول: المستخدم root، كلمة المرور shareos – ثم عيّن كلمة مرور خاصة بك."
 	},
 	"patterns": [
 		[

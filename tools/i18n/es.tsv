@@ -1291,3 +1291,4 @@ E1003	Programa para la línea de comandos de la caja (Sistema → Terminal o SSH
 E1004	Terminal
 E1005	aún sin probar
 E1006	ShareOS aún no se ha probado en hardware real de este modelo.
+E1007	Primer inicio de sesión: usuario root, contraseña shareos – después establece tu propia contraseña.

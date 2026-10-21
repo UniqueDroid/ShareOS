@@ -524,7 +524,7 @@ def call(obj, method, args):
             for k, v in (args.get('areas') or {}).items():
                 STATE.setdefault('areas', {'apps': True, 'cloud': True, 'paperless': True})[k] = bool(v)
         return {'lang': STATE['lang'], 'logo': STATE['logo'], 'theme': STATE['theme'], 'accent': STATE['accent'],
-                'areas': STATE.get('areas', {'apps': True, 'cloud': True, 'paperless': True})}
+                'areas': STATE.get('areas', {'apps': True, 'cloud': True, 'paperless': True}), 'default_password': True}
     if obj == 'shareos.net':
         if method == 'set':
             STATE['net'] = {k: args.get(k, STATE['net'][k]) for k in STATE['net']}

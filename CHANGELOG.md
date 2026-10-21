@@ -4,6 +4,10 @@ Changes per release (newest first). The section of a version is added to its
 GitHub release automatically when the release is built. Test versions are
 pre-releases for test devices only.
 
+## 0.2.0-beta.4
+
+- **Login page shows the first sign-in** (user `root`, password `shareos`) as long as root still has the factory password; it disappears once an own password is set and comes back after an access reset. The password is public anyway, so the hint gives nothing away (asked in #28).
+
 ## 0.2.0-beta.3
 
 - **More models: DNS-320 rev B, DNS-325 rev A, DNS-320 rev A** (not tested on hardware yet – testers wanted, see [DEVICES.md](docs/DEVICES.md)). One kernel, initramfs and system for all Kirkwood boxes; a `.bin` and a `.sysupgrade.tar` per model with its D-Link signature (`ShareOS-<ver>-<model>.*`). The DNS-320L works as before.

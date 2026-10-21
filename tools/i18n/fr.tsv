@@ -1291,3 +1291,4 @@ E1003	Programme pour la ligne de commande de la box (Système → Terminal ou SS
 E1004	Terminal
 E1005	pas encore testé
 E1006	ShareOS n’a pas encore été testé sur du matériel réel de ce modèle.
+E1007	Première connexion : utilisateur root, mot de passe shareos – définissez ensuite votre propre mot de passe.

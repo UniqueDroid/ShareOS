@@ -1009,7 +1009,8 @@
 		"Programm für die Kommandozeile der Box (System → Terminal oder SSH). Es läuft mit den Rechten dessen, der es startet – im Terminal als root.": "Programme pour la ligne de commande de la box (Système → Terminal ou SSH). Il s’exécute avec les droits de celui qui le lance – dans le terminal en tant que root.",
 		"Terminal": "Terminal",
 		"noch ungetestet": "pas encore testé",
-		"ShareOS wurde auf diesem Modell noch nicht auf echter Hardware getestet.": "ShareOS n’a pas encore été testé sur du matériel réel de ce modèle."
+		"ShareOS wurde auf diesem Modell noch nicht auf echter Hardware getestet.": "ShareOS n’a pas encore été testé sur du matériel réel de ce modèle.",
+		"Erste Anmeldung: Benutzer root, Passwort shareos – danach ein eigenes Passwort setzen.": "Première connexion : utilisateur root, mot de passe shareos – définissez ensuite votre propre mot de passe."
 	},
 	"patterns": [
 		[

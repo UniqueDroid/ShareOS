@@ -410,6 +410,7 @@ async function loadUiSettings() {
 		const r = await rpc('shareos.ui', 'get', {}, ZERO_SID);
 		if (r.logo !== S.logo) { S.logo = r.logo; store.set('logo', r.logo ? '1' : '0'); }
 		if (r.areas) S.areas = r.areas;
+		S.defaultPw = !!r.default_password;
 		if (r.theme) { S.theme = r.theme; store.set('theme', r.theme); }
 		if (r.accent) { S.accent = r.accent; store.set('accent', r.accent); }
 		S.sysLook = { theme: r.theme || S.theme, accent: r.accent || S.accent };
@@ -430,8 +431,15 @@ function renderLogin(msg = '') {
 			<label class="chk"><input name="keep" type="checkbox">Angemeldet bleiben (7 Tage)</label>
 			<p class="err" id="login-err">${msg}</p>
 			<button class="btn primary" type="submit" style="min-height:44px">Anmelden</button>
+			<p class="note" id="login-hint"${S.defaultPw ? '' : raw(' hidden')}>Erste Anmeldung: Benutzer root, Passwort shareos – danach ein eigenes Passwort setzen.</p>
 		</form>
 	</div>`.s;
+	// the hint only while root still has the factory password
+	rpc('shareos.ui', 'get', {}, ZERO_SID).then((r) => {
+		S.defaultPw = !!r.default_password;
+		const h = $('#login-hint');
+		if (h) h.hidden = !S.defaultPw;
+	}).catch(() => { });
 	$('#login-form').addEventListener('submit', async (e) => {
 		e.preventDefault();
 		const f = e.target;

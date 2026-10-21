@@ -725,6 +725,15 @@ function password_ok(user, pass) {
 	return trim(r.out) == hash;
 }
 
+// root still has the factory password "shareos" (public in the docs; the login
+// page shows it then – anyone could simply try it). Checked again only when
+// root's hash changes (the hash itself is the stamp: two changes within one
+// second leave size and time of /etc/shadow alike).
+function default_password() {
+	let line = filter(split(readfile('/etc/shadow') ?? '', '\n'), (l) => index(l, 'root:') == 0)[0] ?? '';
+	return memo('default_password', split(line, ':')[1] ?? '', 0, () => password_ok('root', 'shareos'));
+}
+
 
 /* ---------- settings backup ---------- */
 
@@ -1329,7 +1338,7 @@ return {
 	'shareos.ui': {
 		// public (also before login): language and logo for the login page
 		get: {
-			call: function() { return ui_settings(); }
+			call: function() { return { ...ui_settings(), default_password: default_password() }; }
 		},
 
 		set: {

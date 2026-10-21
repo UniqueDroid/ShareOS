@@ -82,6 +82,11 @@ if [ "$CHECK" = "--check" ]; then
 	t "short password rejected" "$(rpc $SID shareos.system set_password '{"password":"abc"}')" "'too short' in d['result'][1]['error']"
 	t "anonymous service list denied" "$(rpc $ZERO shareos.service list)" "d['error']['code']==-32002"
 	t "public: language/logo readable before login" "$(rpc $ZERO shareos.ui get)" "d['result'][1]['lang']=='en' and d['result'][1]['logo']==True"
+	t "public: login page knows the factory password is still set" "$(rpc $ZERO shareos.ui get)" "d['result'][1]['default_password']==True"
+	chroot "$R" /bin/sh -c 'echo root:another-pass | chpasswd -c sha512' >/dev/null 2>&1
+	t "public: hint gone after the password was changed" "$(rpc $ZERO shareos.ui get)" "d['result'][1]['default_password']==False"
+	chroot "$R" /bin/sh -c 'echo root:shareos | chpasswd -c sha512' >/dev/null 2>&1
+	t "public: hint back with the factory password" "$(rpc $ZERO shareos.ui get)" "d['result'][1]['default_password']==True"
 	t "public: nothing else readable before login" "$(rpc $ZERO shareos.web get)" "d['error']['code']==-32002"
 	t "self-signed certificate created on start" "$(rpc $SID shareos.web get)" "d['result'][1]['https'] and d['result'][1]['cert']['selfsigned'] and d['result'][1]['cert']['subject'].startswith('CN=')"
 	t "HTTPS answers with that certificate" "$(curl -sk -o /dev/null -w '{"c":%{http_code}}' https://127.0.0.1:$((PORT+363))/)" "d['c']==200"
