@@ -1025,7 +1025,9 @@
 		"Gerade zeigt kein Dienst und keine App etwas an.": "Ahora ningún servicio ni app muestra nada.",
 		"Dienste (VPN, Torrents, Medienserver) und Apps mit der Berechtigung „Anzeige im Kopf“ zeigen hier ihren Zustand; ein Klick öffnet die App.": "Los servicios (VPN, torrents, servidor multimedia) y las apps con el permiso «Indicador en la cabecera» muestran aquí su estado; un clic abre la app.",
 		"Darf die Box als VPN-Client verbinden und trennen und VPN-Profile verwalten (OpenVPN) – das betrifft das Netzwerk der ganzen Box, deshalb nur für Administratoren.": "Puede conectar y desconectar la caja como cliente VPN y gestionar perfiles VPN (OpenVPN): afecta a la red de toda la caja, por eso solo para administradores.",
-		"Darf oben in der Kopfzeile der ShareOS-Oberfläche einen kurzen Zustand anzeigen (z. B. „verbunden“) – nur für den Benutzer, der die App geöffnet hat; er verschwindet nach höchstens 10 Minuten von selbst.": "Puede mostrar un estado breve arriba en la interfaz de ShareOS (p. ej. «conectado»), solo al usuario que abrió la app; desaparece solo tras 10 minutos como máximo."
+		"Darf oben in der Kopfzeile der ShareOS-Oberfläche einen kurzen Zustand anzeigen (z. B. „verbunden“) – nur für den Benutzer, der die App geöffnet hat; er verschwindet nach höchstens 10 Minuten von selbst.": "Puede mostrar un estado breve arriba en la interfaz de ShareOS (p. ej. «conectado»), solo al usuario que abrió la app; desaparece solo tras 10 minutos como máximo.",
+		"VPN-SERVER": "SERVIDOR VPN",
+		"1 Gerät": "1 dispositivo"
 	},
 	"patterns": [
 		[
@@ -2019,6 +2021,10 @@
 		[
 			"^Hinweis: (.+)$",
 			"Nota: $1"
+		],
+		[
+			"^(\\d+) Geräte$",
+			"$1 dispositivos"
 		]
 	],
 	"words": [

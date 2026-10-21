@@ -336,7 +336,7 @@ Braucht ein Laufwerk, ein paar Medien darauf (ein Video, z. B. `.mkv` oder `.mp4
 
 **Store-Rubriken und Bash (0.2.0-beta.5):** Apps → Store: unter „Verfügbare Apps“ die Rubriken (Medien, Netzwerk, Werkzeuge, System …) mit Anzahl; ein Klick zeigt nur diese Rubrik, *Alle* wieder alles; „Suchen …“ filtert beim Tippen. Bash aus dem Store (Rubrik Werkzeuge) installieren, im Terminal `bash`, dann `echo $BASH_VERSION` → `5.2.37…`, `exit`.
 
-## 14l. VPN mit NetTunnel und Anzeigen im Kopf (0.2.0-beta.6)
+## 14l. VPN mit NetTunnel (Client und Server) und Anzeigen im Kopf (0.2.0-beta.6)
 
 Braucht ein OpenVPN-Profil (`.ovpn`, z. B. vom Router im Büro oder von einem VPN-Anbieter) mit eingebetteten Zertifikaten, die Datei `openvpn-2.6.20.sapp` (Release der Firmware) und NetTunnel (Store oder `nettunnel-1.0.0.sapp`).
 
@@ -349,6 +349,15 @@ Braucht ein OpenVPN-Profil (`.ovpn`, z. B. vom Router im Büro oder von einem VP
 7. Als **Benutzer** (kein Admin): NetTunnel ist nicht sichtbar bzw. meldet „nur für Administratoren“.
 8. Transmission eines Benutzers läuft → im Kopf **TORRENT · läuft** (Admin: der eigene Dienst; Benutzer: in „Mein ShareOS“). System → Darstellung → *Anzeigen im Kopf*: Häkchen weg → der Chip verschwindet (nur in diesem Browser).
 9. Apps → Installiert → openvpn → *Entfernen*: die Verbindung endet, der Chip geht.
+
+**Server-Modus** (von unterwegs ins Heimnetz; braucht ein Handy mit der App „OpenVPN Connect“ und mobile Daten statt WLAN):
+
+10. openvpn wieder installieren, NetTunnel → *Box als Server*. Adresse im Internet (DynDNS-Name des Routers), Port 1194, UDP, VPN-Netz 10.8.0.0, *Server eingeschaltet* → *Speichern*: beim ersten Mal dauert es etwas (Zertifikate), dann „läuft“; im Kopf **VPN-SERVER · 0 Geräte**. VPN-Netz = Heimnetz (z. B. 192.168.1.0): abgelehnt.
+11. Im Router die Portfreigabe aus dem Hinweis einrichten (UDP 1194 → IP der Box).
+12. Name `handy-test` → *Gerät hinzufügen*: `ShareOS-handy-test.ovpn` wird heruntergeladen. Aufs Handy bringen (oder *Auf der Box speichern* und am Handy aus der Freigabe holen), in OpenVPN Connect importieren, WLAN aus, verbinden.
+13. In NetTunnel steht das Gerät als „verbunden“ mit VPN-Adresse 10.8.0.2 und Datenmenge; der Chip zeigt **1 Gerät**. Am Handy im Browser `http://10.8.0.1` → die ShareOS-Oberfläche.
+14. *Auch das Heimnetz erreichbar machen* + im Router die statische Route 10.8.0.0/24 → IP der Box: am Handy ist der Router (z. B. `http://192.168.1.1`) erreichbar.
+15. Gerät *Entfernen*: die Verbindung am Handy bricht ab und kommt nicht wieder. Box neu starten: der Server läuft wieder von selbst.
 
 ## 15. Tasten
 

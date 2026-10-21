@@ -1311,3 +1311,6 @@ E1019	Aucun service ni aucune app n'affiche quoi que ce soit pour le moment.
 E1020	Les services (VPN, torrents, serveur multimédia) et les apps disposant de l'autorisation « Indicateur dans l’en-tête » y affichent leur état ; un clic ouvre l'app.
 E1021	Peut connecter et déconnecter la box en tant que client VPN et gérer les profils VPN (OpenVPN) – cela concerne le réseau de toute la box, donc réservé aux administrateurs.
 E1022	Peut afficher un court état en haut de l'interface ShareOS (p. ex. « connecté ») – uniquement pour l'utilisateur qui a ouvert l'app ; il disparaît de lui-même au bout de 10 minutes au plus.
+E1023	SERVEUR VPN
+E1024	1 appareil
+P248	$1 appareils

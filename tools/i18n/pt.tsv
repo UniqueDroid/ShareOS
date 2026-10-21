@@ -1311,3 +1311,6 @@ E1019	No momento nenhum serviço nem app mostra algo.
 E1020	Serviços (VPN, torrents, servidor de mídia) e apps com a permissão “Indicador no cabeçalho” mostram aqui o seu estado; um clique abre o app.
 E1021	Pode conectar e desconectar a caixa como cliente VPN e gerenciar perfis VPN (OpenVPN) – isso afeta a rede de toda a caixa, por isso só para administradores.
 E1022	Pode mostrar um estado curto no topo da interface do ShareOS (p. ex. “conectado”) – só para o usuário que abriu o app; some sozinho após no máximo 10 minutos.
+E1023	SERVIDOR VPN
+E1024	1 dispositivo
+P248	$1 dispositivos

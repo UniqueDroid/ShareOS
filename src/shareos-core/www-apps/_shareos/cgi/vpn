@@ -4,7 +4,9 @@
 // changes the network of the whole box)
 //   POST /_shareos/cgi/vpn?g=<grant>   body: {"op": "list", …}
 // ops: list, status, log, import {name, text, user, pass, full}, set {name,
-// autostart, full, user, pass}, remove {name}, connect {name}, disconnect.
+// autostart, full, user, pass}, remove {name}, connect {name}, disconnect;
+// server: server_status, server_log, server_set {enabled, port, proto, net,
+// host, lan}, device_add / device_profile / device_remove {name}.
 // The grant comes from the admin interface (one app, one account, 8 hours);
 // everything is checked and done by the rpcd object shareos.appvpn.
 import { stdin, stdout } from 'fs';
@@ -15,7 +17,10 @@ const OPS = {
 	import: [ 'name', 'text', 'user', 'pass', 'full' ],
 	set: [ 'name', 'autostart', 'full', 'user', 'pass' ],
 	remove: [ 'name' ],
-	connect: [ 'name' ]
+	connect: [ 'name' ],
+	server_status: [], server_log: [],
+	server_set: [ 'enabled', 'port', 'proto', 'net', 'host', 'lan' ],
+	device_add: [ 'name' ], device_profile: [ 'name' ], device_remove: [ 'name' ]
 };
 
 function reply(status, obj) {

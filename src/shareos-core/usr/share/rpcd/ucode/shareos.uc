@@ -1400,6 +1400,12 @@ function status_chips(u) {
 		push(chips, { id: 'svc:vpn', label: 'VPN', detail: ok ? (st.ip ?? 'verbunden') : 'verbindet …', state: ok ? 'ok' : 'warn',
 			app: ids.nettunnel ? 'nettunnel' : null });
 	}
+	if (admin && stat('/opt/shareos/bin/openvpn') && pid_alive('/tmp/shareos-vpn-server/pid', 'openvpn')) {
+		let n = 0;
+		for (let l in split(readfile('/tmp/shareos-vpn-server/status') ?? '', '\n')) if (substr(l, 0, 12) == 'CLIENT_LIST,') n++;
+		push(chips, { id: 'svc:vpnserver', label: 'VPN-SERVER', detail: n == 1 ? '1 Gerät' : n + ' Geräte', state: 'ok',
+			app: ids.nettunnel ? 'nettunnel' : null });
+	}
 	if (stat('/tmp/shareos-transmission/' + u + '/pid') && pid_alive('/tmp/shareos-transmission/' + u + '/pid', 'transmission'))
 		push(chips, { id: 'svc:torrent', label: 'TORRENT', detail: 'läuft', state: 'ok', app: ids.transmission ? 'transmission' : null });
 	if (admin && pid_alive('/tmp/shareos-dlna/minidlna.pid', 'minidlna'))
@@ -2694,7 +2700,22 @@ return {
 			}
 		},
 		remove: { args: { grant: '', name: '' }, call: function(req) { return app_grant_perm(req.args.grant, 'vpn') ? vpn_tool([ 'remove', req.args.name ?? '' ]) : { error: 'no access' }; } },
-		connect: { args: { grant: '', name: '' }, call: function(req) { return app_grant_perm(req.args.grant, 'vpn') ? vpn_tool([ 'connect', req.args.name ?? '' ]) : { error: 'no access' }; } }
+		connect: { args: { grant: '', name: '' }, call: function(req) { return app_grant_perm(req.args.grant, 'vpn') ? vpn_tool([ 'connect', req.args.name ?? '' ]) : { error: 'no access' }; } },
+		// server: devices connect to the box
+		server_status: { args: { grant: '' }, call: function(req) { return app_grant_perm(req.args.grant, 'vpn') ? vpn_tool([ 'server-status' ]) : { error: 'no access' }; } },
+		server_log: { args: { grant: '' }, call: function(req) { return app_grant_perm(req.args.grant, 'vpn') ? vpn_tool([ 'server-log' ]) : { error: 'no access' }; } },
+		server_set: {
+			args: { grant: '', enabled: false, port: 0, proto: '', net: '', host: '', lan: false },
+			call: function(req) {
+				let a = req.args, i = {};
+				if (!app_grant_perm(a.grant, 'vpn')) return { error: 'no access' };
+				for (let k in [ 'enabled', 'port', 'proto', 'net', 'host', 'lan' ]) if (a[k] != null) i[k] = a[k];
+				return vpn_tool([ 'server-set' ], i);
+			}
+		},
+		device_add: { args: { grant: '', name: '' }, call: function(req) { return app_grant_perm(req.args.grant, 'vpn') ? vpn_tool([ 'device-add', req.args.name ?? '' ]) : { error: 'no access' }; } },
+		device_profile: { args: { grant: '', name: '' }, call: function(req) { return app_grant_perm(req.args.grant, 'vpn') ? vpn_tool([ 'device-profile', req.args.name ?? '' ]) : { error: 'no access' }; } },
+		device_remove: { args: { grant: '', name: '' }, call: function(req) { return app_grant_perm(req.args.grant, 'vpn') ? vpn_tool([ 'device-remove', req.args.name ?? '' ]) : { error: 'no access' }; } }
 	},
 
 	// called only by /_shareos/cgi/status (apps with the permission "status")

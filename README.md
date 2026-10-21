@@ -87,7 +87,7 @@ Version in brackets = first release with the feature.
 - Cloud sync with rclone (Nextcloud/WebDAV, S3, SFTP, Google Drive …) for the device and per user, with schedule and bandwidth limit (beta.4)
 - Paperless-ngx: inbox folders per user or shared (e.g. for a scanner), upload through the Paperless API (beta.4)
 - Installable as an app (PWA), status address for widget apps (beta.4)
-- VPN client for the box (OpenVPN as a system app, app NetTunnel, cleaned profiles, admins only); status chips of services and apps in the header (0.2.0-beta.6)
+- VPN for the box in both directions (OpenVPN as a system app, app NetTunnel, admins only): as client with cleaned profiles, as server with its own CA and a ready-made profile per device; status chips of services and apps in the header (0.2.0-beta.6)
 - Transmission with own torrents per user: system app `transmission-daemon`, app permission `torrent`; apps bring the system apps they need (`"requires"`) (0.2.0-beta.4)
 - Media jobs: FFmpeg as a system app, app permission `media` – convert audio, change the container of videos, cut, in the background with the user's rights (MediaTranscoder) (0.2.0-beta.5)
 

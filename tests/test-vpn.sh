@@ -132,8 +132,33 @@ check "settings: full tunnel and autostart" "v set '{\"name\":\"Test\",\"full\":
 run 'shareos-vpn boot' >/dev/null
 i=0; while ! v status | js "d['state']=='CONNECTED'" && [ $i -lt 40 ]; do sleep 1; i=$((i + 1)); done
 check "boot: the autostart profile connects; full tunnel takes the pushed default route" "v status | js \"d['state']=='CONNECTED'\" && run 'ip route' | grep -q '^0.0.0.0/1'"
+# --- server: a device connects to the box ---
+sv() { v "$1" "${2:-{\}}"; }
+check "server: wrong VPN network refused" "sv server_set '{\"net\":\"8.8.8.0\"}' | js \"'invalid VPN network' in d.get('error','')\""
+o=$(sv server_set '{"enabled":true,"port":11195,"proto":"udp","net":"10.77.0.0","host":"127.0.0.1","lan":false}')
+check "server: switched on, own certificates made" "echo '$o' | js \"d['running'] and d['ready'] and d['port']==11195\" && [ -f $R/etc/shareos/vpn/server/ca.crt ] && [ \$(stat -c %a $R/etc/shareos/vpn/server/ca.key) = 600 ]"
+o=$(sv device_add '{"name":"handy"}')
+check "server: device added, profile with everything inline" "echo '$o' | js \"d.get('ok') and 'remote 127.0.0.1 11195' in d['profile'] and '<tls-crypt>' in d['profile'] and '<key>' in d['profile'] and 'verify-x509-name' in d['profile']\""
+echo "$o" | python3 -c "import json,sys; open(sys.argv[1],'w').write(json.load(sys.stdin)['profile'])" $R/tmp/handy.ovpn
+check "server: same device name refused" "sv device_add '{\"name\":\"handy\"}' | js \"'exists' in d.get('error','')\""
+check "server: invalid device name refused" "sv device_add '{\"name\":\"../x\"}' | js \"'invalid device name' in d.get('error','')\""
+run "/opt/shareos/bin/openvpn --config /tmp/handy.ovpn --daemon --log /tmp/handy.log --writepid /tmp/handy.pid" >/dev/null
+i=0; while ! grep -q 'Initialization Sequence Completed' $R/tmp/handy.log 2>/dev/null && [ $i -lt 40 ]; do sleep 1; i=$((i + 1)); done
+check "the device connects with the generated profile" "grep -q 'Initialization Sequence Completed' $R/tmp/handy.log"
+check "the device reaches the box through the tunnel" "run 'ping -c 2 -W 2 10.77.0.1' | grep -q ' 0% packet loss'"
+i=0; while ! sv server_status | js "d['online']==1" && [ $i -lt 40 ]; do sleep 1; i=$((i + 1)); done
+check "server status: the device is online with its tunnel address" "sv server_status | js \"[x for x in d['devices'] if x['name']=='handy'][0]['online'] and [x for x in d['devices'] if x['name']=='handy'][0]['ip'].startswith('10.77.0.')\""
+sleep 31
+check "header chip: VPN server with one device" "chips | js \"[c for c in d['chips'] if c['id']=='svc:vpnserver'][0]['detail']=='1 Gerät'\""
+check "server: profile can be fetched again" "sv device_profile '{\"name\":\"handy\"}' | js \"'BEGIN' in d['profile']\""
+sv device_remove '{"name":"handy"}' >/dev/null
+run "kill \$(cat /tmp/handy.pid)" >/dev/null 2>&1; sleep 1; : > $R/tmp/handy.log
+run "/opt/shareos/bin/openvpn --config /tmp/handy.ovpn --daemon --log /tmp/handy.log --writepid /tmp/handy.pid" >/dev/null
+sleep 8
+check "removed device is locked out" "! grep -q 'Initialization Sequence Completed' $R/tmp/handy.log && sv server_status | js \"d['devices']==[]\""
+run "kill \$(cat /tmp/handy.pid)" >/dev/null 2>&1
 run "shareos-apps remove openvpn" >/dev/null
-check "removing the system app ends the connection" "v status | js \"not d['running']\" && ! pgrep -f '[r]un.ovpn' >/dev/null"
+check "removing the system app ends the connection and stops the server" "v status | js \"not d['running']\" && ! pgrep -f '[r]un.ovpn' >/dev/null && sv server_status | js \"not d['running']\""
 check "remove a profile" "v remove '{\"name\":\"Auth\"}' | js \"[p['name'] for p in d['profiles']]==['Test']\" && [ ! -e $R/etc/shareos/vpn/Auth.ovpn ]"
 run "kill \$(cat /tmp/srv/pid)" >/dev/null 2>&1
 

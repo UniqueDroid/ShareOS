@@ -61,6 +61,9 @@
  *   .importProfile(name, text, {user, pass, full})   {removed: [options]}
  *   .set(name, {autostart, full, user, pass})   .remove(name)
  *   .connect(name)   .disconnect()   .log()  {log}
+ *   .server.status()   .server.set({enabled, port, proto, net, host, lan})
+ *   .server.addDevice(name) {profile}   .server.profile(name)   .server.removeDevice(name)
+ *   .server.log()                  devices connecting to the box (own CA)
  * ShareOS.status              a chip in the header of the ShareOS interface,
  *                             for apps with the permissions "files" and
  *                             "status" (ShareOS 0.2.0-beta.6+, null otherwise):
@@ -376,7 +379,15 @@
 		set: function (name, o) { var a = { name: name }; for (var k in (o || {})) a[k] = o[k]; return cgiCall('vpn', 'set', a); },
 		remove: function (name) { return cgiCall('vpn', 'remove', { name: name }); },
 		connect: function (name) { return cgiCall('vpn', 'connect', { name: name }); },
-		disconnect: function () { return cgiCall('vpn', 'disconnect'); }
+		disconnect: function () { return cgiCall('vpn', 'disconnect'); },
+		server: {
+			status: function () { return cgiCall('vpn', 'server_status'); },
+			log: function () { return cgiCall('vpn', 'server_log'); },
+			set: function (o) { return cgiCall('vpn', 'server_set', o || {}); },
+			addDevice: function (name) { return cgiCall('vpn', 'device_add', { name: name }); },
+			profile: function (name) { return cgiCall('vpn', 'device_profile', { name: name }); },
+			removeDevice: function (name) { return cgiCall('vpn', 'device_remove', { name: name }); }
+		}
 	} : null;
 	/* a chip in the header of the ShareOS interface (permissions "files" + "status") */
 	var status = fs ? {
