@@ -1300,52 +1300,57 @@ P246	$1 $2 installé, en plus : $3.
 P247	Remarque : $1
 E1010	Convertir des médias (FFmpeg)
 E1011	Peut faire convertir l'audio et la vidéo de l'utilisateur sur la box (FFmpeg) – avec ses droits, uniquement dans ses dossiers, à partir de choix fixes (aucune commande libre).
-E1012	Un instantané conserve l'état d'un dossier – toutes les heures, chaque jour ou chaque semaine.
-E1013	Chaque état ressemble à une copie complète, mais les fichiers inchangés n'occupent pas d'espace supplémentaire.
-E1014	Pour récupérer un fichier supprimé ou écrasé hier ou la semaine dernière, recopiez-le depuis l'instantané dans le navigateur de fichiers.
-E1015	Nouvelle tâche d’instantané
-E1016	NOUVELLE TÂCHE D’INSTANTANÉ
-E1017	Idéalement, sauvegardez sur un autre lecteur (second disque ou disque USB) : les instantanés protègent alors aussi d'une panne de disque.
-E1018	Un miroir (RAID 1) ne remplace pas les instantanés – il reproduit aussi immédiatement chaque suppression.
-E1019	Les instantanés se trouvent dans le dossier
-E1020	du lecteur cible et ne sont visibles que par les administrateurs.
-E1021	Pour une copie hors site, une tâche cloud peut envoyer le dossier d'instantanés.
-E1022	plus récent
-E1023	Sauvegarder maintenant
-E1024	SOURCE → CIBLE
-E1025	PLANIFICATION · CONSERVER
-E1026	ÉTAT
-E1027	Ouvrir dans le navigateur de fichiers
-E1028	Pour restaurer, copiez le fichier ou le dossier de l'instantané à son ancien emplacement dans le navigateur de fichiers. Ne modifiez pas les fichiers d'un instantané : les fichiers inchangés partagent leur espace avec les autres instantanés.
-E1029	QUOI SAUVEGARDER
-E1030	LECTEUR CIBLE
-E1031	FRÉQUENCE
-E1032	Toutes les heures
-E1033	Toutes les 6 heures
-E1034	Chaque jour
-E1035	Chaque semaine (dimanche)
-E1036	HEURE
-E1037	À PARTIR DE
-E1038	MINUTE (HH:MM, SEULE LA MINUTE COMPTE)
-E1039	CONSERVER
-E1040	LES DERNIERS
-E1041	JOURS (UN PAR JOUR)
-E1042	SEMAINES (UN PAR SEMAINE)
-E1043	MOIS (UN PAR MOIS)
-E1044	Les N derniers instantanés restent toujours (y compris ceux faits à la main) ; en plus, le plus récent de chaque jour, semaine et mois. Exemple quotidien : 7 jours · 4 semaines · 6 mois ≈ six mois en arrière avec 17 états.
-E1045	EXCLUSIONS (UNE PAR LIGNE, P. EX. *.tmp OU /Downloads/)
-E1046	La source et la cible sont sur le même lecteur : cela protège d'une suppression accidentelle, pas d'une panne de disque.
-E1047	Plus aucun nouvel instantané ne sera créé.
-E1048	Supprimer l'instantané ?
-E1049	Supprimer aussi les instantanés ?
-E1050	Supprimer les instantanés
-E1051	Instantané supprimé.
-E1052	interrompu
-E1053	Chargement des instantanés …
-E1054	Aucune tâche d'instantané. Une tâche sauvegarde un partage, les dossiers personnels ou un lecteur entier selon un planning.
-E1055	Aucun instantané – « Sauvegarder maintenant » crée le premier.
-E1056	rsync manque dans ce firmware.
-E1057	Aucune cible adaptée : les instantanés exigent un lecteur ext4 ou Btrfs (FAT32/exFAT n'ont pas de liens physiques).
+E1012	Toutes
+E1013	Autres
+E1014	Rechercher …
+E1015	Un instantané conserve l'état d'un dossier – toutes les heures, chaque jour ou chaque semaine.
+E1016	Chaque état ressemble à une copie complète, mais les fichiers inchangés n'occupent pas d'espace supplémentaire.
+E1017	Pour récupérer un fichier supprimé ou écrasé hier ou la semaine dernière, recopiez-le depuis l'instantané dans le navigateur de fichiers.
+E1018	Nouvelle tâche d’instantané
+E1019	NOUVELLE TÂCHE D’INSTANTANÉ
+E1020	Idéalement, sauvegardez sur un autre lecteur (second disque ou disque USB) : les instantanés protègent alors aussi d'une panne de disque.
+E1021	Un miroir (RAID 1) ne remplace pas les instantanés – il reproduit aussi immédiatement chaque suppression.
+E1022	Les instantanés se trouvent dans le dossier
+E1023	du lecteur cible et ne sont visibles que par les administrateurs.
+E1024	Pour une copie hors site, une tâche cloud peut envoyer le dossier d'instantanés.
+E1025	plus récent
+E1026	Sauvegarder maintenant
+E1027	SOURCE → CIBLE
+E1028	PLANIFICATION · CONSERVER
+E1029	ÉTAT
+E1030	Ouvrir dans le navigateur de fichiers
+E1031	Pour restaurer, copiez le fichier ou le dossier de l'instantané à son ancien emplacement dans le navigateur de fichiers. Ne modifiez pas les fichiers d'un instantané : les fichiers inchangés partagent leur espace avec les autres instantanés.
+E1032	QUOI SAUVEGARDER
+E1033	LECTEUR CIBLE
+E1034	FRÉQUENCE
+E1035	Toutes les heures
+E1036	Toutes les 6 heures
+E1037	Chaque jour
+E1038	Chaque semaine (dimanche)
+E1039	HEURE
+E1040	À PARTIR DE
+E1041	MINUTE (HH:MM, SEULE LA MINUTE COMPTE)
+E1042	CONSERVER
+E1043	LES DERNIERS
+E1044	JOURS (UN PAR JOUR)
+E1045	SEMAINES (UN PAR SEMAINE)
+E1046	MOIS (UN PAR MOIS)
+E1047	Les N derniers instantanés restent toujours (y compris ceux faits à la main) ; en plus, le plus récent de chaque jour, semaine et mois. Exemple quotidien : 7 jours · 4 semaines · 6 mois ≈ six mois en arrière avec 17 états.
+E1048	EXCLUSIONS (UNE PAR LIGNE, P. EX. *.tmp OU /Downloads/)
+E1049	La source et la cible sont sur le même lecteur : cela protège d'une suppression accidentelle, pas d'une panne de disque.
+E1050	Plus aucun nouvel instantané ne sera créé.
+E1051	Supprimer l'instantané ?
+E1052	Supprimer aussi les instantanés ?
+E1053	Supprimer les instantanés
+E1054	Instantané supprimé.
+E1055	interrompu
+E1056	Chargement des instantanés …
+E1057	Aucune tâche d'instantané. Une tâche sauvegarde un partage, les dossiers personnels ou un lecteur entier selon un planning.
+E1058	Aucun instantané – « Sauvegarder maintenant » crée le premier.
+E1059	rsync manque dans ce firmware.
+E1060	Aucune cible adaptée : les instantanés exigent un lecteur ext4 ou Btrfs (FAT32/exFAT n'ont pas de liens physiques).
+E1061	tâches
+E1062	– pas de liens physiques
 P248	$1 tâches
 P249	Chaque jour à $1
 P250	Chaque semaine (dimanche) à $1
@@ -1364,5 +1369,3 @@ P262	Supprimer aussi les $1 instantanés dans $2 ? Sinon, ils y restent.
 P263	Instantané « $1 » en cours.
 P264	Le lecteur cible $1 n'est pas monté.
 P265	TÂCHE $1
-E1058	tâches
-E1059	– pas de liens physiques

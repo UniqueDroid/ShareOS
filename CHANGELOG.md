@@ -14,6 +14,8 @@ pre-releases for test devices only.
 
 - **Media jobs on the box – FFmpeg as a system app:** `ffmpeg` (FFmpeg 6.1.5 with `ffprobe`, LAME and Opus, about 2.6 MB, in the release as `.sapp`) converts audio and puts videos into another container. The box runs the jobs itself, in the background, one after another, at the lowest priority and with the account's rights (admins: root, like their file browser): files belong to the account, storage limits apply. Videos are not re-encoded – the box's ARM CPU has no FPU, that would take many times the length of the film. The app MediaTranscoder (ShareOS-Apps) uses it.
 - **Permission `media`** for apps (needs `files`): `ShareOS.media` – `probe` (format, length, tracks of a file), `start` (a job from fixed choices: `audio` to MP3, M4A/AAC, Opus, FLAC, WAV or the track as it is; `remux` to MP4, MKV, MOV, TS, WebM; cut with start and length), `jobs` (state and progress), `cancel`, `remove` – through `/_shareos/cgi/media`. No ffmpeg command line from an app reaches the box: the box builds the arguments, reads and writes only inside the account's folders, never overwrites a file (the result appears under its name when it is complete), only local files (no network protocols in this FFmpeg), at most 10 waiting jobs per account. Removing the system app cancels running jobs.
+- **App store in sections:** the available apps are grouped by category (Media, Office, Network, Tools, System …) with a filter per section and a search field.
+- **Bash** as a system app (GNU bash 5.2, 0.7 MB): `bash` in the terminal; the box's default shell stays ash.
 
 ## 0.2.0-beta.4
 

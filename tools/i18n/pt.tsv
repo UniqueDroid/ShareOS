@@ -1300,52 +1300,57 @@ P246	$1 $2 instalado, e também: $3.
 P247	Observação: $1
 E1010	Converter mídia (FFmpeg)
 E1011	Pode converter áudio e vídeo do usuário na caixa (FFmpeg) – com os direitos dele, apenas nas pastas dele, a partir de opções fixas (nenhum comando livre).
-E1012	Um snapshot guarda o estado de uma pasta – a cada hora, diariamente ou semanalmente.
-E1013	Cada estado parece uma cópia completa, mas os arquivos inalterados não ocupam espaço extra.
-E1014	Para recuperar um arquivo apagado ou sobrescrito ontem ou na semana passada, copie-o de volta do snapshot no navegador de arquivos.
-E1015	Nova tarefa de snapshot
-E1016	NOVA TAREFA DE SNAPSHOT
-E1017	O ideal é salvar em outra unidade (segundo disco ou disco USB): assim os snapshots também protegem contra falha do disco.
-E1018	Um espelho (RAID 1) não substitui snapshots – ele também espelha cada exclusão na hora.
-E1019	Os snapshots ficam na pasta
-E1020	da unidade de destino e só os administradores os veem.
-E1021	Para uma cópia fora de casa, uma tarefa de nuvem pode enviar a pasta de snapshots.
-E1022	mais recente
-E1023	Salvar agora
-E1024	ORIGEM → DESTINO
-E1025	AGENDA · MANTER
-E1026	ESTADO
-E1027	Abrir no navegador de arquivos
-E1028	Para restaurar, copie o arquivo ou a pasta do snapshot de volta ao lugar original no navegador de arquivos. Não altere arquivos dentro de um snapshot: arquivos inalterados compartilham o espaço com os outros snapshots.
-E1029	O QUE SALVAR
-E1030	UNIDADE DE DESTINO
-E1031	COM QUE FREQUÊNCIA
-E1032	A cada hora
-E1033	A cada 6 horas
-E1034	Diário
-E1035	Semanal (domingo)
-E1036	HORÁRIO
-E1037	A PARTIR DE
-E1038	MINUTO (HH:MM, SÓ O MINUTO CONTA)
-E1039	MANTER
-E1040	OS ÚLTIMOS
-E1041	DIAS (UM POR DIA)
-E1042	SEMANAS (UM POR SEMANA)
-E1043	MESES (UM POR MÊS)
-E1044	Os últimos N snapshots ficam sempre (inclusive os manuais); além disso, o mais recente de cada dia, semana e mês. Exemplo diário: 7 dias · 4 semanas · 6 meses ≈ meio ano para trás com 17 estados.
-E1045	EXCLUSÕES (UMA POR LINHA, EX. *.tmp OU /Downloads/)
-E1046	Origem e destino estão na mesma unidade: protege contra exclusão acidental, não contra falha do disco.
-E1047	Nenhum snapshot novo será criado.
-E1048	Excluir o snapshot?
-E1049	Excluir também os snapshots?
-E1050	Excluir snapshots
-E1051	Snapshot excluído.
-E1052	interrompido
-E1053	Carregando snapshots …
-E1054	Ainda não há tarefa de snapshot. Uma tarefa salva um compartilhamento, as pastas pessoais ou uma unidade inteira conforme a agenda.
-E1055	Nenhum snapshot ainda – “Salvar agora” cria o primeiro.
-E1056	O rsync não está neste firmware.
-E1057	Nenhum destino adequado: snapshots precisam de uma unidade ext4 ou Btrfs (FAT32/exFAT não têm hard links).
+E1012	Todas
+E1013	Outras
+E1014	Pesquisar …
+E1015	Um snapshot guarda o estado de uma pasta – a cada hora, diariamente ou semanalmente.
+E1016	Cada estado parece uma cópia completa, mas os arquivos inalterados não ocupam espaço extra.
+E1017	Para recuperar um arquivo apagado ou sobrescrito ontem ou na semana passada, copie-o de volta do snapshot no navegador de arquivos.
+E1018	Nova tarefa de snapshot
+E1019	NOVA TAREFA DE SNAPSHOT
+E1020	O ideal é salvar em outra unidade (segundo disco ou disco USB): assim os snapshots também protegem contra falha do disco.
+E1021	Um espelho (RAID 1) não substitui snapshots – ele também espelha cada exclusão na hora.
+E1022	Os snapshots ficam na pasta
+E1023	da unidade de destino e só os administradores os veem.
+E1024	Para uma cópia fora de casa, uma tarefa de nuvem pode enviar a pasta de snapshots.
+E1025	mais recente
+E1026	Salvar agora
+E1027	ORIGEM → DESTINO
+E1028	AGENDA · MANTER
+E1029	ESTADO
+E1030	Abrir no navegador de arquivos
+E1031	Para restaurar, copie o arquivo ou a pasta do snapshot de volta ao lugar original no navegador de arquivos. Não altere arquivos dentro de um snapshot: arquivos inalterados compartilham o espaço com os outros snapshots.
+E1032	O QUE SALVAR
+E1033	UNIDADE DE DESTINO
+E1034	COM QUE FREQUÊNCIA
+E1035	A cada hora
+E1036	A cada 6 horas
+E1037	Diário
+E1038	Semanal (domingo)
+E1039	HORÁRIO
+E1040	A PARTIR DE
+E1041	MINUTO (HH:MM, SÓ O MINUTO CONTA)
+E1042	MANTER
+E1043	OS ÚLTIMOS
+E1044	DIAS (UM POR DIA)
+E1045	SEMANAS (UM POR SEMANA)
+E1046	MESES (UM POR MÊS)
+E1047	Os últimos N snapshots ficam sempre (inclusive os manuais); além disso, o mais recente de cada dia, semana e mês. Exemplo diário: 7 dias · 4 semanas · 6 meses ≈ meio ano para trás com 17 estados.
+E1048	EXCLUSÕES (UMA POR LINHA, EX. *.tmp OU /Downloads/)
+E1049	Origem e destino estão na mesma unidade: protege contra exclusão acidental, não contra falha do disco.
+E1050	Nenhum snapshot novo será criado.
+E1051	Excluir o snapshot?
+E1052	Excluir também os snapshots?
+E1053	Excluir snapshots
+E1054	Snapshot excluído.
+E1055	interrompido
+E1056	Carregando snapshots …
+E1057	Ainda não há tarefa de snapshot. Uma tarefa salva um compartilhamento, as pastas pessoais ou uma unidade inteira conforme a agenda.
+E1058	Nenhum snapshot ainda – “Salvar agora” cria o primeiro.
+E1059	O rsync não está neste firmware.
+E1060	Nenhum destino adequado: snapshots precisam de uma unidade ext4 ou Btrfs (FAT32/exFAT não têm hard links).
+E1061	tarefas
+E1062	– sem hard links
 P248	$1 tarefas
 P249	Diário às $1
 P250	Semanal (domingo) às $1
@@ -1364,5 +1369,3 @@ P262	Excluir também os $1 snapshots em $2? Caso contrário, eles ficam lá.
 P263	Snapshot “$1” em andamento.
 P264	A unidade de destino $1 não está montada.
 P265	TAREFA $1
-E1058	tarefas
-E1059	– sem hard links
