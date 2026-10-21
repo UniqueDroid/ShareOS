@@ -3669,6 +3669,7 @@ for (const ev of ['dragover', 'dragleave', 'drop']) {
 
 const APP_SUBS = [['installed', 'INSTALLIERT'], ['store', 'STORE'], ['sources', 'QUELLEN']];
 const APP_CAT = { tools: 'Werkzeuge', media: 'Medien', office: 'Büro', network: 'Netzwerk', system: 'System', download: 'Download', sync: 'Sync' };
+const APP_CAT_ORDER = ['media', 'office', 'network', 'download', 'sync', 'tools', 'system', 'other'];
 const txtOf = (d) => (d && typeof d === 'object' ? d[LANG] || d.de || d.en || '' : d || '');
 
 // apps open under the box's name (set by hand, or the name of the installed
@@ -3917,10 +3918,17 @@ function appUsersEditor(id) {
 function appStore() {
 	const A = S.apps, c = A.catalog || { apps: [] }, ch = A.store?.channel || 'stable';
 	const busy = !!(A.job && JOB_TXT[A.job.state]);
+	// sections (Rubriken): the categories of the catalog, a filter above the list
+	const apps = c.apps || [], catOf = (a) => APP_CAT[a.category] ? a.category : 'other';
+	const cats = APP_CAT_ORDER.filter((k) => apps.some((a) => catOf(a) === k));
+	const cat = cats.includes(A.cat) ? A.cat : 'all';
 	const rows = [];
-	for (const a of c.apps || []) {
+	for (const k of cat === 'all' ? cats : [cat]) {
+		const list = apps.filter((a) => catOf(a) === k);
+		rows.push(html`<tr class="grp" data-cat="${k}"><td colspan="7">${APP_CAT[k] || 'Sonstige'} <span class="mut">${list.length}</span></td></tr>`);
+	for (const a of list) {
 		const v = a.versions[0];
-		rows.push(html`<tr><td style="width:44px">${appIcon(a)}</td>
+		rows.push(html`<tr data-cat="${k}" data-q="${(a.name + ' ' + a.id + ' ' + txtOf(a.description) + ' ' + (a.publisher || '')).toLowerCase()}"><td style="width:44px">${appIcon(a)}</td>
 			<td><b>${a.name}</b>${a.category ? html` <span class="tag">${APP_CAT[a.category] || a.category}</span>` : ''}<div class="mut" style="font-size:12px;max-width:420px">${txtOf(a.description)}</div>${permTags(appPerms({ ...v, type: a.type }))}</td>
 			<td><b>${v.version}</b>${v.prerelease ? html` <span class="tag">BETA</span>` : ''}</td>
 			<td class="mut">${a.publisher}</td><td class="mut">${fmtDate(v.date)}</td><td class="mut">${fmtBytes(v.size)}</td>
@@ -3929,6 +3937,8 @@ function appStore() {
 				: html`<button class="btn sm${a.installed ? ' primary' : ''}" type="button" data-act="app-install" data-id="${a.id}" data-v="${v.version}" ${busy ? 'disabled' : ''}>${svg(I.dl)}${a.installed ? 'Aktualisieren' : 'Installieren'}</button>`}
 				${v.notes_url ? html`<a class="btn sm ghost" href="${v.notes_url}" target="_blank" rel="noopener">Notes ↗</a>` : ''}</td></tr>`);
 	}
+	}
+	const catBtn = (k, label, n) => html`<button class="btn sm${cat === k ? ' primary' : ' ghost'}" type="button" data-act="app-cat" data-cat="${k}">${label} <span class="${cat === k ? '' : 'mut'}">${n}</span></button>`;
 	return html`<section class="sec">
 		<div class="g2">
 			<div class="panel">
@@ -3946,8 +3956,10 @@ function appStore() {
 				<div class="acts" style="margin-top:12px"><button class="btn" type="submit" ${busy ? 'disabled' : ''}>${svg(I.ul)}Hochladen & installieren</button></div>
 			</form>
 		</div>
-		<h2 class="gh" style="margin-top:22px">VERFÜGBARE APPS <span>${(c.apps || []).length}</span></h2>
-		${rows.length ? html`<div class="tw"><table class="t" style="min-width:820px"><thead><tr><th></th><th>APP</th><th>VERSION</th><th>HERAUSGEBER</th><th>DATUM</th><th>GRÖSSE</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>`
+		<h2 class="gh" style="margin-top:22px">VERFÜGBARE APPS <span>${apps.length}</span></h2>
+		${apps.length ? html`<div class="acts store-cats" style="margin-bottom:12px">${catBtn('all', 'Alle', apps.length)}${cats.map((k) => catBtn(k, APP_CAT[k] || 'Sonstige', apps.filter((a) => catOf(a) === k).length))}
+			<input id="app-search" type="search" placeholder="Suchen …" autocomplete="off" spellcheck="false" value="${A.q || ''}" style="margin-left:auto;min-height:32px;min-width:180px;font:inherit;font-size:12px;color:var(--text);background:var(--bg);border:1px solid var(--line);border-radius:7px;padding:0 10px"></div>` : ''}
+		${rows.length ? html`<div class="tw"><table class="t store" style="min-width:820px"><thead><tr><th></th><th>APP</th><th>VERSION</th><th>HERAUSGEBER</th><th>DATUM</th><th>GRÖSSE</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>`
 			: html`<div class="panel"><div class="empty">${svg(I.cloud)}<span>${A.busy ? 'Lade den Katalog …' : 'Keine Apps gefunden – Internetverbindung und Quellen prüfen.'}</span></div></div>`}
 	</section>`;
 }
@@ -3966,6 +3978,17 @@ function appSources() {
 function appsAfter() {
 	if (!S.apps?.installed) { loadApps(); return; }
 	if (S.route.sub === 'installed' && !S.acc) rpc('shareos.accounts', 'list').then((a) => { S.acc = a; }).catch(() => {});
+	// search filters the rows in place (no new render: the field keeps the focus)
+	const search = () => {
+		const q = (S.apps.q || '').trim().toLowerCase(), shown = {};
+		document.querySelectorAll('table.store tr[data-q]').forEach((tr) => {
+			const on = !q || tr.dataset.q.includes(q);
+			tr.hidden = !on; if (on) shown[tr.dataset.cat] = 1;
+		});
+		document.querySelectorAll('table.store tr.grp').forEach((tr) => { tr.hidden = !shown[tr.dataset.cat]; });
+	};
+	$('#app-search')?.addEventListener('input', (e) => { S.apps.q = e.target.value; search(); });
+	search();
 	$('#app-channel')?.addEventListener('change', async (e) => {
 		try { await rpc('shareos.apps', 'store_set', { channel: e.target.value }); S.apps.store.channel = e.target.value; refreshCatalog(true); }
 		catch (err) { toast('Store: ' + err.message, true); }
@@ -4011,6 +4034,7 @@ function appsAfter() {
 
 Object.assign(ACTIONS, {
 	'app-refresh'() { refreshCatalog(); },
+	'app-cat'(el) { S.apps.cat = el.dataset.cat; renderMain(); },
 	async 'app-install'(el) {
 		const c = (S.apps.catalog?.apps || []).find((x) => x.id === el.dataset.id);
 		const v = c?.versions.find((x) => x.version === el.dataset.v) || c?.versions[0];

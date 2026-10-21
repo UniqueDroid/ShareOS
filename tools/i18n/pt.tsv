@@ -1300,35 +1300,38 @@ P246	$1 $2 instalado, e também: $3.
 P247	Observação: $1
 E1010	Converter mídia (FFmpeg)
 E1011	Pode converter áudio e vídeo do usuário na caixa (FFmpeg) – com os direitos dele, apenas nas pastas dele, a partir de opções fixas (nenhum comando livre).
-E1012	SERVIDOR DE MÍDIA
-E1013	Servidor de mídia (DLNA)
-E1014	não compartilhar
-E1015	música, vídeos e imagens
-E1016	só música
-E1017	só vídeos
-E1018	só imagens
-E1019	FAIXAS
-E1020	DISPOSITIVOS
-E1021	Na rede como
-E1022	lendo pastas …
-E1023	Carregando servidor de mídia …
-E1024	Ler tudo de novo
-E1025	Instalar pela loja (MiniDLNA)
-E1026	O servidor de mídia (MiniDLNA) é um app de sistema: TVs, receptores, consoles e apps como o VLC encontram a caixa na rede e reproduzem músicas, vídeos e imagens dos compartilhamentos.
-E1027	O servidor de mídia está desligado. Escolha pastas abaixo e ligue-o.
-E1028	Dispositivos na mesma rede encontram o servidor sozinhos (DLNA/UPnP AV), p. ex. em “Servidor de mídia” ou “Fontes” na TV.
-E1029	Arquivos novos aparecem sozinhos depois de pouco tempo; após grandes mudanças, “Ler tudo de novo” ajuda.
-E1030	O servidor só lê – e mostra tudo dos compartilhamentos escolhidos a qualquer dispositivo da rede, sem login.
-E1031	Os vídeos não são convertidos: o dispositivo precisa reproduzir o formato sozinho.
-E1032	Servidor de mídia ligado (inicia também após reiniciar)
-E1033	NOME NA REDE
-E1034	MOSTRAR COMO
-E1035	“Música”, “Vídeos”, “Imagens”: mostrar só esse tipo de arquivo do compartilhamento. “Tudo”: música, vídeos e imagens.
-E1036	Escolha pelo menos um compartilhamento.
-E1037	Servidor de mídia salvo.
-E1038	O servidor de mídia está lendo todas as pastas de novo.
-E1039	Nenhum compartilhamento ainda – crie em
-E1040	.
+E1012	Todas
+E1013	Outras
+E1014	Pesquisar …
+E1015	SERVIDOR DE MÍDIA
+E1016	Servidor de mídia (DLNA)
+E1017	não compartilhar
+E1018	música, vídeos e imagens
+E1019	só música
+E1020	só vídeos
+E1021	só imagens
+E1022	FAIXAS
+E1023	DISPOSITIVOS
+E1024	Na rede como
+E1025	lendo pastas …
+E1026	Carregando servidor de mídia …
+E1027	Ler tudo de novo
+E1028	Instalar pela loja (MiniDLNA)
+E1029	O servidor de mídia (MiniDLNA) é um app de sistema: TVs, receptores, consoles e apps como o VLC encontram a caixa na rede e reproduzem músicas, vídeos e imagens dos compartilhamentos.
+E1030	O servidor de mídia está desligado. Escolha pastas abaixo e ligue-o.
+E1031	Dispositivos na mesma rede encontram o servidor sozinhos (DLNA/UPnP AV), p. ex. em “Servidor de mídia” ou “Fontes” na TV.
+E1032	Arquivos novos aparecem sozinhos depois de pouco tempo; após grandes mudanças, “Ler tudo de novo” ajuda.
+E1033	O servidor só lê – e mostra tudo dos compartilhamentos escolhidos a qualquer dispositivo da rede, sem login.
+E1034	Os vídeos não são convertidos: o dispositivo precisa reproduzir o formato sozinho.
+E1035	Servidor de mídia ligado (inicia também após reiniciar)
+E1036	NOME NA REDE
+E1037	MOSTRAR COMO
+E1038	“Música”, “Vídeos”, “Imagens”: mostrar só esse tipo de arquivo do compartilhamento. “Tudo”: música, vídeos e imagens.
+E1039	Escolha pelo menos um compartilhamento.
+E1040	Servidor de mídia salvo.
+E1041	O servidor de mídia está lendo todas as pastas de novo.
+E1042	Nenhum compartilhamento ainda – crie em
+E1043	.
+E1044	VÍDEOS
+E1045	IMAGENS
 P248	Servidor de mídia: $1
-E1041	VÍDEOS
-E1042	IMAGENS

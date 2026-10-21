@@ -148,7 +148,7 @@ if ls $SYSDIR/nano-*.sapp $SYSDIR/htop-*.sapp >/dev/null 2>&1; then
 	check "nano (real package) installs and runs" "run 'shareos-apps install-file /tmp/pkg/nano.sapp' | js \"d['ok']\" && run '. /etc/profile; nano --version' | grep -q 'GNU nano'"
 	check "htop (real package) installs and runs" "run 'shareos-apps install-file /tmp/pkg/htop.sapp' | js \"d['ok']\" && run '. /etc/profile; htop --version' | grep -q '^htop 3'"
 	check "htop draws its screen in a terminal (ncurses, terminfo)" "python3 $TOP/tests/pty-run.py 25 q chroot $R /bin/sh -c '. /etc/profile; TERM=xterm-256color htop' | grep -q 'Load average'"
-	for x in strace:'strace -- version' iperf3:'iperf 3'; do
+	for x in strace:'strace -- version' iperf3:'iperf 3' bash:'GNU bash, version 5'; do
 		id=${x%%:*}; want=${x#*:}
 		ls $SYSDIR/$id-*.sapp >/dev/null 2>&1 || continue
 		cp $SYSDIR/$id-*.sapp $P/$id.sapp

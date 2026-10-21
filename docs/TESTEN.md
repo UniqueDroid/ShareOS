@@ -334,6 +334,8 @@ Braucht ein Laufwerk, ein paar Medien darauf (ein Video, z. B. `.mkv` oder `.mp4
 8. Im Terminal während eines Auftrags: `ps | grep ffmpeg` – läuft mit `nice` 19; `ls /tmp/shareos-media/jobs/`.
 9. Apps → Installiert → ffmpeg → *Entfernen* (fragt, weil MediaTranscoder sie braucht): laufende Aufträge brechen ab, die App meldet „FFmpeg fehlt“.
 
+**Store-Rubriken und Bash (0.2.0-beta.5):** Apps → Store: unter „Verfügbare Apps“ die Rubriken (Medien, Netzwerk, Werkzeuge, System …) mit Anzahl; ein Klick zeigt nur diese Rubrik, *Alle* wieder alles; „Suchen …“ filtert beim Tippen. Bash aus dem Store (Rubrik Werkzeuge) installieren, im Terminal `bash`, dann `echo $BASH_VERSION` → `5.2.37…`, `exit`.
+
 ## 14k. Medienserver (0.2.0-beta.6)
 
 Braucht ein Laufwerk mit einer Freigabe mit Musik (MP3/FLAC) und einer mit Videos (MP4/MKV) und die Datei `minidlna-1.3.3.sapp` (Release der Firmware; oder MiniDLNA aus dem Store). Dazu ein Fernseher oder VLC im selben Netzwerk.
