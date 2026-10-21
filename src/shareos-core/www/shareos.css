@@ -285,3 +285,7 @@ a.card.applink:hover{border-color:var(--dim);box-shadow:var(--glow)}
 .note-item.read{opacity:.65}
 .note-item .ph{flex-wrap:wrap}
 .termframe{display:block;width:100%;height:min(70vh,640px);border:1px solid var(--line);border-radius:8px;background:var(--bg)}
+
+/* app store: sections */
+.t.store tr.grp td{padding-top:16px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);background:transparent;border-bottom:1px solid var(--dim)}
+.t.store tr.grp:first-child td{padding-top:8px}

@@ -1300,3 +1300,6 @@ P246	$1 $2 instalado, además: $3.
 P247	Nota: $1
 E1010	Convertir medios (FFmpeg)
 E1011	Puede convertir el audio y vídeo del usuario en la caja (FFmpeg): con sus permisos, solo en sus carpetas y con opciones fijas (ningún comando libre).
+E1012	Todas
+E1013	Otras
+E1014	Buscar …
