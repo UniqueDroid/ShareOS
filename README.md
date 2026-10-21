@@ -81,7 +81,7 @@ Version in brackets = first release with the feature.
 - App permissions: scheduled tasks (`cron`) as a restricted app user, schedule editable in the interface (beta.7)
 - Open files from the file browser in apps (e.g. Webpad), save back; app SDK and ShareOS look for apps (`/_shareos/theme.css`, `/_shareos/app.js`), apps inside the interface (permission `embed`) (beta.9)
 - App permission `files`: apps work with the folders of the box with the user's rights – ShareCommander (two-pane file manager), Webpad saves on the box; music and videos stream with seeking (beta.11)
-- System apps: native programs for the terminal from the store – nano, htop (0.2.0-beta.1); strace, iperf3 (0.2.0-beta.2)
+- System apps: native programs for the terminal from the store – nano, htop (0.2.0-beta.1); strace, iperf3 (0.2.0-beta.2); bash (0.2.0-beta.5); store in sections with search (0.2.0-beta.5)
 - Feature lock 0.2.0-beta.2: faster interface (results kept between requests, store refresh in the background), smaller system without OpenSSL, GIO and unused tools
 - App data per account in the browser, file dialog of the box for apps (WinWeb Player plays music from the box) (0.2.0-beta.1)
 - Cloud sync with rclone (Nextcloud/WebDAV, S3, SFTP, Google Drive …) for the device and per user, with schedule and bandwidth limit (beta.4)
@@ -124,7 +124,7 @@ Version in brackets = first release with the feature.
 | RAID | own metadata format ¹ | mdadm (RAID 0/1/5, JBOD), LVM | mdadm RAID 1 (mirror), RAID 0, JBOD |
 | USB drives | mounted ¹ | mounted on plug-in | mounted on plug-in, safely remove, format (4 file systems) |
 | Users and rights | users, groups, quota ¹ | users, groups, quota | users, groups, rights per share, storage limit per user, users with their own web area |
-| Extensions | add-ons (discontinued) | ipkg packages with a web page | app store (ShareOS-Apps): web apps on their own port, system apps (nano, htop, strace, iperf3, Transmission, FFmpeg) |
+| Extensions | add-ons (discontinued) | ipkg packages with a web page | app store (ShareOS-Apps): web apps on their own port, system apps (nano, htop, strace, iperf3, bash, Transmission, FFmpeg) |
 | Cloud / documents | – | – (single packages) | rclone cloud sync, Paperless-ngx inbox |
 | HTTPS | ¹ | self-signed or Let's Encrypt | self-signed (follows name/IP) or own certificate |
 | Security | unpatched remote code execution (CVE-2024-3273, CVE-2024-3274); D-Link advises to retire the devices | last release 2017; old kernel and Samba | current kernel and libraries, updates via GitHub |

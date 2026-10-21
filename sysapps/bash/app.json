@@ -1,0 +1,17 @@
+{
+	"id": "bash",
+	"name": "Bash",
+	"version": "5.2.37",
+	"publisher": "UniqueDroid",
+	"description": {
+		"de": "Die GNU-Shell für das Terminal (System → Terminal oder SSH): „bash“ startet sie, mit Verlauf, Tab-Ergänzung und Bash-Skripten. Die Standard-Shell der Box bleibt ash.",
+		"en": "The GNU shell for the terminal (System → Terminal or SSH): “bash” starts it, with history, tab completion and bash scripts. The box's default shell stays ash."
+	},
+	"type": "system",
+	"commands": [ "bash" ],
+	"icon": "icon.svg",
+	"category": "tools",
+	"license": "GPL-3.0-or-later",
+	"homepage": "https://www.gnu.org/software/bash/",
+	"min_shareos": "0.2.0-beta.1"
+}

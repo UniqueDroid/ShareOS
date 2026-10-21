@@ -1014,7 +1014,10 @@
 		"Eigene Torrents (Transmission)": "Own torrents (Transmission)",
 		"Darf den eigenen Transmission-Dienst des Benutzers steuern: Torrents hinzufügen, anhalten und löschen. Jeder Benutzer hat seinen eigenen Dienst; Downloads landen nur in seinen Ordnern.": "May control the user's own Transmission service: add, pause and remove torrents. Every user has their own service; downloads go only into their folders.",
 		"Medien umwandeln (FFmpeg)": "Convert media (FFmpeg)",
-		"Darf auf der Box Audio und Video des Benutzers umwandeln lassen (FFmpeg) – mit seinen Rechten, nur in seinen Ordnern, aus festen Auswahlen (kein beliebiger Befehl).": "May have the user's audio and video converted on the box (FFmpeg) – with their rights, only in their folders, from fixed choices (no arbitrary command)."
+		"Darf auf der Box Audio und Video des Benutzers umwandeln lassen (FFmpeg) – mit seinen Rechten, nur in seinen Ordnern, aus festen Auswahlen (kein beliebiger Befehl).": "May have the user's audio and video converted on the box (FFmpeg) – with their rights, only in their folders, from fixed choices (no arbitrary command).",
+		"Alle": "All",
+		"Sonstige": "Other",
+		"Suchen …": "Search …"
 	},
 	"patterns": [
 		[

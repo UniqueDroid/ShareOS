@@ -330,6 +330,8 @@ Needs a drive, some media on it (a video, e.g. `.mkv` or `.mp4`, and a music fil
 8. In the terminal during a job: `ps | grep ffmpeg` – runs with `nice` 19; `ls /tmp/shareos-media/jobs/`.
 9. Apps → Installed → ffmpeg → *Remove* (asks, because MediaTranscoder needs it): running jobs stop, the app shows "FFmpeg fehlt".
 
+**Store sections and Bash (0.2.0-beta.5):** Apps → Store: under "Available apps" the sections (Media, Network, Tools, System …) with counts; a click shows only that section, *All* everything again; "Search …" filters while typing. Install Bash from the store (section Tools), in the terminal `bash`, then `echo $BASH_VERSION` → `5.2.37…`, `exit`.
+
 ## 15. Buttons
 
 - **Reset button** (pin hole at the back), hold and let go:

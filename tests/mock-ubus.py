@@ -260,7 +260,14 @@ CATALOG = [
 
 def apps_catalog():
     out = []
-    for a in CATALOG:
+    # SHAREOS_MOCK_CATALOG=<index.json>: a real catalog (e.g. the release asset of ShareOS-Apps)
+    cat = CATALOG
+    if os.environ.get('SHAREOS_MOCK_CATALOG'):
+        cat = json.load(open(os.environ['SHAREOS_MOCK_CATALOG'], encoding='utf-8'))['apps']
+        for a in cat:
+            for v in a['versions']:
+                v.setdefault('prerelease', False)
+    for a in cat:
         vs = [v for v in a['versions'] if APPS['channel'] == 'beta' or not v['prerelease']]
         if not vs:
             continue
