@@ -9,6 +9,8 @@ PID=/var/run/shareos-uhttpd-apps.pid
 DIR=/www-apps
 
 start() {
+	# system apps readable for every account (older versions made them root-only)
+	/usr/sbin/shareos-apps fix-perms >/dev/null 2>&1
 	# area "Apps" switched off under System -> Appearance
 	[ "$(uci -q get shareos.ui.area_apps)" = 0 ] && return 0
 	mkdir -p $DIR

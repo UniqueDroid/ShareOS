@@ -441,10 +441,17 @@ function drop_starters(id, keep) {
 		if (!keep?.[c] && starter_owner(c) == id) unlink(SYSBIN + '/' + c);
 }
 
+// /opt/shareos, its sysapps and bin: readable for every account – rpcd runs
+// with umask 077, so folders made from the web interface were root-only and
+// programs of users (Transmission, FFmpeg) could not start
+function opt_dirs() {
+	capture(sprintf('mkdir -p %s %s && chmod 755 %s %s %s', shq(SYS), shq(SYSBIN), shq(ROOT + '/opt/shareos'), shq(SYS), shq(SYSBIN)));
+}
+
 // a starter per command; old starters of the app go
 function write_starters(a) {
 	let id = a.id, d = '/opt/shareos/sysapps/' + id, keep = {};
-	mkdir(ROOT + '/opt/shareos'); mkdir(SYSBIN);
+	opt_dirs();
 	for (let c in a.commands) {
 		keep[c] = true;
 		writefile(SYSBIN + '/' + c, sprintf('#!/bin/sh
@@ -509,7 +516,8 @@ function install_file(file, verified, source) {
 	let base = sys ? SYS : APPS, dst = base + '/' + a.id;
 	if (sys) {
 		// unpacked on the flash next to the web apps, then moved to /opt
-		capture(sprintf('mkdir -p %s; chmod 755 %s/bin/* %s/lib/* 2>/dev/null', shq(SYS), shq(tmp), shq(tmp)));
+		opt_dirs();
+		capture(sprintf('chmod 755 %s/bin/* %s/lib/* 2>/dev/null', shq(tmp), shq(tmp)));
 		let t2 = SYS + '/.new-' + time();
 		let r2 = capture(sprintf('rm -rf %s; mv %s %s', shq(t2), shq(tmp), shq(t2)));
 		if (r2.rc != 0) { capture('rm -rf ' + shq(tmp) + ' ' + shq(t2)); return { error: 'installing failed: ' + trim(r2.out) }; }
@@ -690,6 +698,7 @@ switch (ARGV[0]) {
 case 'catalog': cmd_catalog(); break;
 case 'cached': cmd_cached(); break;
 case 'list': out({ apps: installed() }); break;
+case 'fix-perms': if (stat(ROOT + '/opt/shareos')) opt_dirs(); out({ ok: true }); break;
 case 'install': cmd_install(ARGV[1], ARGV[2]); break;
 case 'install-file': cmd_install_file(ARGV[1]); break;
 case 'remove': cmd_remove(ARGV[1], ARGV[2]); break;

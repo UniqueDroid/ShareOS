@@ -15,6 +15,7 @@ pre-releases for test devices only.
 - **Permission `vpn`** for apps (needs `files`): `ShareOS.vpn` – list, status, log, importProfile, set, remove, connect, disconnect, and `ShareOS.vpn.server` – status, set, log, addDevice, profile, removeDevice – through `/_shareos/cgi/vpn`; admin accounts only (a VPN changes the network of the whole box).
 - **Status in the header:** next to *Online*, chips show what is running – the VPN (connected, address), the user's Transmission service, the media server (when installed) – and a click opens the app. **Permission `status`** (needs `files`): an app may show one short state of its own (`ShareOS.status.set({ text, state, ttl })`, max. 24 characters, ok/warn/err/info); it disappears by itself after at most 10 minutes unless the app sets it again, and only the account that opened the app sees it. Users see their chips in "My ShareOS". System → Appearance: which chips this browser shows.
 - **System menu in a new order:** General, Appearance, Network, Messages, Logs, Terminal, Time, Power & reset, Firmware; *System* opens on General. *About* is now at the end of General (the old address `#/system/about` leads there).
+- Fix: Transmission (and FFmpeg) did not start for users, only for admins – system apps installed from the web interface were in a folder only root could read (rpcd works with umask 077). `/opt/shareos` is now always readable for every account and repaired at boot; Transmission names the cause if an account cannot run it.
 
 ## 0.2.0-beta.5
 

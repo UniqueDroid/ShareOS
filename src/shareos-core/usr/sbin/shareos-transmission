@@ -122,6 +122,8 @@ function start(u) {
 	let pl = places(u);
 	if (!pl) die(role(u) == 'admin' ? 'no drive set up' : 'no personal folder on a drive');
 	let ug = pl.run_as == 'root' ? 'root:root' : pl.run_as;
+	if (pl.run_as != 'root' && sh(sprintf('su -s /bin/sh %s -c %s', shq(pl.run_as), shq('test -x ' + shq(BIN)))).rc != 0)
+		die('the account cannot run Transmission (/opt/shareos is not readable for it – restart the box once)');
 	let run = dir_of(u);
 	sh('mkdir -p ' + shq(RUN) + ' && chmod 711 ' + shq(RUN) + ' && rm -rf ' + shq(run) + ' && mkdir -m 700 ' + shq(run) + ' && chown ' + shq(ug) + ' ' + shq(run));
 	let mk = sprintf('mkdir -p %s %s', shq(ROOT + pl.state), shq(ROOT + pl.download));
