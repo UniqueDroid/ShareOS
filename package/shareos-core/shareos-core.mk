@@ -52,6 +52,8 @@ define SHAREOS_CORE_INSTALL_TARGET_CMDS
 	$(INSTALL) -D -m 0755 $(@D)/www-apps/_shareos/cgi/transmission $(TARGET_DIR)/www-apps/_shareos/cgi/transmission
 	$(INSTALL) -D -m 0755 $(@D)/www-apps/_shareos/cgi/media $(TARGET_DIR)/www-apps/_shareos/cgi/media
 	$(INSTALL) -D -m 0755 $(@D)/usr/sbin/shareos-media $(TARGET_DIR)/usr/sbin/shareos-media
+	$(INSTALL) -D -m 0755 $(@D)/usr/sbin/shareos-snapshot $(TARGET_DIR)/usr/sbin/shareos-snapshot
+	$(INSTALL) -D -m 0644 $(@D)/etc/config/snapshots $(TARGET_DIR)/etc/config/snapshots
 	$(INSTALL) -D -m 0755 $(@D)/usr/lib/shareos/apphooks/ffmpeg $(TARGET_DIR)/usr/lib/shareos/apphooks/ffmpeg
 	$(INSTALL) -D -m 0755 $(@D)/usr/sbin/shareos-transmission $(TARGET_DIR)/usr/sbin/shareos-transmission
 	$(INSTALL) -D -m 0755 $(@D)/etc/init.d/S95transmission $(TARGET_DIR)/etc/init.d/S95transmission

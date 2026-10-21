@@ -15,3 +15,8 @@ LIBWEBSOCKETS_DEPENDENCIES += mbedtls
 LIBWEBSOCKETS_CONF_OPTS += -DLWS_WITH_SSL=ON -DLWS_WITH_MBEDTLS=ON
 # libevent (libevent_core for NFS' fsidd) without its OpenSSL part
 LIBEVENT_CONF_OPTS += --disable-openssl
+
+# rsync (snapshots) without OpenSSL: the libraries are removed from the target
+# (post-build.sh); rsync only uses them for faster checksums
+RSYNC_CONF_OPTS += --disable-openssl
+RSYNC_DEPENDENCIES := $(filter-out openssl,$(RSYNC_DEPENDENCIES))

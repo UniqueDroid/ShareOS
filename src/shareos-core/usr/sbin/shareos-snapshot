@@ -1,0 +1,270 @@
+#!/usr/bin/ucode -S
+//
+// shareos-snapshot – snapshots of folders on a drive (rsync with hard links,
+// like rsnapshot)
+//
+//   shareos-snapshot run <job>              take a snapshot now (cron, button)
+//   shareos-snapshot stop <job>             stop a running snapshot
+//   shareos-snapshot list <job>             JSON: the snapshots, newest first
+//   shareos-snapshot delete <job> <name>    remove one snapshot
+//   shareos-snapshot purge <job>            remove all snapshots of a job
+//   shareos-snapshot sources                JSON: what can be saved, where to
+//
+// Jobs are UCI sections snapshots.<job> (type "job"):
+//   source   share:<name> | homes:<volume> (personal folders) | volume:<volume>
+//   target   the volume the snapshots go to: /mnt/<target>/Snapshots/<job>/
+//   every    hour | 6h | day | week     time  HH:MM (day, week)
+//   keep_last      the newest N in any case
+//   keep_daily / keep_weekly / keep_monthly   newest per day/week/month, how many
+//   list exclude  rsync patterns (e.g. *.tmp, /Downloads/)
+//   enabled  0 = no schedule (by hand only)
+//
+// Every snapshot is a folder <YYYY-MM-DD_HHMMSS> that looks like a full copy;
+// files that did not change are hard links to the snapshot before, so they
+// take no space twice (rsync --link-dest). A snapshot is written into
+// ".incomplete" and renamed when rsync is done; an interrupted one is
+// continued by the next run. After a run the snapshots that no rule keeps go
+// (the newest N, the newest per day/week/month, as many as set). /mnt/<target>/Snapshots
+// is root only (0700): users cannot reach it, admins restore with the file
+// browser. The drive needs hard links (not FAT32/exFAT).
+//
+import { readfile, writefile, rename, lsdir, stat, unlink, popen, mkdir } from 'fs';
+import { cursor } from 'uci';
+
+const ST = '/tmp/shareos-snapshots';
+const NAME_RE = /^[0-9]{4}-[0-9]{2}-[0-9]{2}_[0-9]{6}$/;
+const JOB_RE = /^[a-z][a-z0-9_]{0,31}$/;
+const NO_LINKS = { vfat: 1, msdos: 1, exfat: 1, fuseblk: 1 };
+
+function shq(s) { return "'" + replace(s, "'", "'\\''") + "'"; }
+function sh(cmd) {
+	let p = popen(cmd + ' 2>&1', 'r');
+	if (!p) return { rc: -1, out: '' };
+	let o = p.read('all') ?? '';
+	return { rc: p.close(), out: o };
+}
+function out(o) { print(sprintf('%J\n', o)); }
+function die(msg) { out({ error: msg }); exit(1); }
+function now() { return time(); }
+function stamp(t) {
+	let l = localtime(t);
+	return sprintf('%04d-%02d-%02d_%02d%02d%02d', l.year, l.mon, l.mday, l.hour, l.min, l.sec);
+}
+
+function mount_of(mp) {
+	for (let l in split(readfile('/proc/mounts') ?? '', '\n')) {
+		let f = split(l, ' ');
+		if (f[1] == mp) return { dev: f[0], fstype: f[2] };
+	}
+	return null;
+}
+
+function job_of(j) {
+	if (!match(j ?? '', JOB_RE)) die('invalid job');
+	let x = cursor().get_all('snapshots', j);
+	if (!x || x['.type'] != 'job') die('unknown job ' + j);
+	return x;
+}
+
+// source of a job -> { path, volume }; null when its drive is missing
+function source_of(src) {
+	let c = cursor(), m;
+	if ((m = match(src ?? '', /^share:([a-z0-9_-]+)$/))) {
+		let s = c.get_all('shares', m[1]);
+		if (!s || s['.type'] != 'share' || !s.volume) return null;
+		return { path: '/mnt/' + s.volume + '/' + (s.path ?? m[1]), volume: s.volume };
+	}
+	if ((m = match(src ?? '', /^homes:([a-z0-9_-]+)$/))) return { path: '/mnt/' + m[1] + '/home', volume: m[1] };
+	if ((m = match(src ?? '', /^volume:([a-z0-9_-]+)$/))) return { path: '/mnt/' + m[1], volume: m[1] };
+	return null;
+}
+
+function dest_of(job, x) { return '/mnt/' + x.target + '/Snapshots/' + job; }
+
+function snapshots(dest) {
+	return sort(filter(lsdir(dest) ?? [], (n) => match(n, NAME_RE) && stat(dest + '/' + n)?.type == 'directory'));
+}
+
+// --- what to keep: the newest N, newest per day/week/month, as many as set -----
+function buckets(n) {
+	let m = match(n, /^([0-9]{4})-([0-9]{2})-([0-9]{2})_([0-9]{2})/);
+	let days = int(timegm({ year: +m[1], mon: +m[2], mday: +m[3], hour: 0, min: 0, sec: 0 }) / 86400);
+	return { daily: substr(n, 0, 10), weekly: '' + int((days + 3) / 7), monthly: substr(n, 0, 7) };
+}
+function to_keep(names, x) {
+	let keep = {}, newest_first = reverse(names);
+	// the newest ones in any case (also those taken by hand)
+	let last = +(x.keep_last ?? 0);
+	for (let i = 0; i < length(newest_first) && i < (last > 0 ? last : 1); i++) keep[newest_first[i]] = 1;
+	for (let k in [ 'daily', 'weekly', 'monthly' ]) {
+		let want = +(x['keep_' + k] ?? 0), seen = {}, n = 0;
+		for (let s in newest_first) {
+			if (n >= want) break;
+			let b = buckets(s)[k];
+			if (seen[b]) continue;
+			seen[b] = 1; keep[s] = 1; n++;
+		}
+	}
+	return keep;
+}
+
+// a snapshot goes: renamed first (gone from the list at once), then removed
+function remove_dir(dest, name) {
+	let gone = dest + '/.deleting-' + name;
+	if (!rename(dest + '/' + name, gone)) return false;
+	sh('chmod -R u+w ' + shq(gone) + ' 2>/dev/null; rm -rf ' + shq(gone));
+	return true;
+}
+
+// --- state -------------------------------------------------------------------------
+function state_file(job) { return ST + '/' + job + '.state'; }
+function save_state(job, x, s) {
+	sh('mkdir -p ' + ST);
+	writefile(state_file(job), sprintf('%J\n', s));
+	let d = dest_of(job, x);
+	if (stat(d)?.type == 'directory') writefile(d + '/.state.json', sprintf('%J\n', s));
+}
+function running_pid(job) {
+	let p = +trim(readfile(ST + '/' + job + '.pid') ?? '0');
+	if (!(p > 1)) return null;
+	return index(readfile('/proc/' + p + '/cmdline') ?? '', 'shareos-snapshot') >= 0 ? p : null;
+}
+
+function log_append(dest, text) {
+	let f = dest + '/.log', old = readfile(f) ?? '';
+	if (length(old) > 131072) old = substr(old, length(old) - 65536);
+	writefile(f, old + text);
+}
+
+function cmd_run(job) {
+	let x = job_of(job);
+	if (running_pid(job)) die('snapshot ' + job + ' is already running');
+	sh('mkdir -p ' + ST);
+	writefile(ST + '/' + job + '.pid', split(readfile('/proc/self/stat') ?? '0', ' ')[0] + '\n');
+	unlink(ST + '/' + job + '.stop');
+	let started = now();
+	let fail = (msg) => {
+		save_state(job, x, { state: 'error', started, ended: now(), error: msg });
+		sh(sprintf('shareos-notify send warn storage %s %s %s %s %s', shq('snapshot-' + job),
+			shq('Snapshot „' + job + '“ fehlgeschlagen'), shq('Snapshot “' + job + '” failed'), shq(msg), shq(msg)));
+		unlink(ST + '/' + job + '.pid');
+		die(msg);
+	};
+	let src = source_of(x.source);
+	if (!src || !mount_of('/mnt/' + src.volume)) fail('source drive is not there (' + (x.source ?? '?') + ')');
+	if (stat(src.path)?.type != 'directory') fail('source folder missing: ' + src.path);
+	let tm = mount_of('/mnt/' + x.target);
+	if (!x.target || !tm) fail('target drive is not there (' + (x.target ?? '?') + ')');
+	if (NO_LINKS[tm.fstype]) fail('the target drive (' + tm.fstype + ') has no hard links – use ext4 or Btrfs');
+	let root = '/mnt/' + x.target + '/Snapshots', dest = root + '/' + job;
+	sh(sprintf('mkdir -p %s && chmod 700 %s && chown root:root %s', shq(dest), shq(root), shq(root)));
+	// leftovers of an interrupted delete
+	for (let n in lsdir(dest) ?? []) if (substr(n, 0, 10) == '.deleting-') sh('rm -rf ' + shq(dest + '/' + n));
+	save_state(job, x, { state: 'running', started });
+	let have = snapshots(dest), latest = length(have) ? have[length(have) - 1] : null;
+	let work = dest + '/.incomplete';
+	let args = [ 'rsync', '-aH', '--numeric-ids', '--delete', '--delete-excluded', '--stats', '--no-inc-recursive' ];
+	if (latest) push(args, '--link-dest=' + dest + '/' + latest);
+	// never into itself: the snapshots of a drive saved as a whole stay out
+	if (src.volume == x.target) push(args, '--exclude=/Snapshots/');
+	if (match(x.source, /^volume:/)) push(args, '--exclude=/lost+found/');
+	for (let e in (type(x.exclude) == 'array' ? x.exclude : (x.exclude ? [ x.exclude ] : [])))
+		if (length(e) && length(e) < 200) push(args, '--exclude=' + e);
+	push(args, src.path + '/', work + '/');
+	let ion = stat('/usr/bin/ionice') || stat('/bin/ionice') ? 'ionice -c3 ' : '';
+	let r = sh(ion + 'nice -n 19 ' + join(' ', map(args, shq)));
+	let ended = now();
+	let o = r.out, num = (re) => +replace(match(o, re)?.[1] ?? '0', ',', '');
+	let total = num(/Number of files: ([0-9,]+)/), files = num(/Number of regular files transferred: ([0-9,]+)/);
+	let bytes = num(/Total transferred file size: ([0-9,]+)/);
+	log_append(dest, sprintf('=== %s %s, rsync %d\n%s\n', stamp(started), x.source, r.rc, trim(o)));
+	if (stat(ST + '/' + job + '.stop')) {
+		unlink(ST + '/' + job + '.stop');
+		save_state(job, x, { state: 'stopped', started, ended });
+		unlink(ST + '/' + job + '.pid');
+		out({ stopped: true });
+		return;
+	}
+	// 24: files vanished while copying (normal on a live share)
+	if (r.rc != 0 && r.rc != 24) {
+		let errs = filter(split(o, '\n'), (l) => match(l, /^rsync( error)?:|failed:/));
+		fail(length(errs) ? substr(errs[length(errs) - 1], 0, 200) : 'rsync failed (' + r.rc + ')');
+	}
+	let name = stamp(ended);
+	if (!rename(work, dest + '/' + name)) fail('cannot rename the snapshot');
+	sh('touch ' + shq(dest + '/' + name));
+	// what no rule keeps goes
+	let all = snapshots(dest), keep = to_keep(all, x), removed = 0;
+	for (let n in all) if (!keep[n] && remove_dir(dest, n)) removed++;
+	let summary = { files: total, changed: files, bytes, removed, warning: r.rc == 24 ? 'some files vanished while copying' : null };
+	save_state(job, x, { state: 'ok', started, ended, name, ...summary });
+	sh('shareos-notify clear ' + shq('snapshot-' + job));
+	unlink(ST + '/' + job + '.pid');
+	out({ ok: true, name, ...summary });
+}
+
+function cmd_stop(job) {
+	let x = job_of(job), p = running_pid(job);
+	if (!p) die('snapshot ' + job + ' is not running');
+	writefile(ST + '/' + job + '.stop', '');
+	// the rsync of this job writes into <dest>/.incomplete ("[r]" keeps the
+	// pattern from matching the shell that runs pkill)
+	sh(sprintf("pkill -f '[r]sync .*/Snapshots/%s/\\.incomplete/'", job));
+	out({ ok: true });
+}
+
+function cmd_list(job) {
+	let x = job_of(job), dest = dest_of(job, x);
+	let list = map(reverse(snapshots(dest)), (n) => {
+		let m = match(n, /^([0-9]{4})-([0-9]{2})-([0-9]{2})_([0-9]{2})([0-9]{2})([0-9]{2})$/);
+		return { name: n, time: timelocal({ year: +m[1], mon: +m[2], mday: +m[3], hour: +m[4], min: +m[5], sec: +m[6] }) };
+	});
+	out({ path: dest, mounted: !!mount_of('/mnt/' + x.target), snapshots: list });
+}
+
+function cmd_delete(job, name) {
+	let x = job_of(job), dest = dest_of(job, x);
+	if (!match(name ?? '', NAME_RE)) die('invalid snapshot');
+	if (stat(dest + '/' + name)?.type != 'directory') die('unknown snapshot');
+	if (!remove_dir(dest, name)) die('cannot remove ' + name);
+	out({ ok: true });
+}
+
+function cmd_purge(job) {
+	let x = job_of(job), dest = dest_of(job, x);
+	if (running_pid(job)) die('snapshot ' + job + ' is running');
+	if (stat(dest)?.type == 'directory') {
+		let gone = '/mnt/' + x.target + '/Snapshots/.deleting-' + job;
+		rename(dest, gone);
+		sh('rm -rf ' + shq(gone));
+	}
+	unlink(state_file(job));
+	sh('shareos-notify clear ' + shq('snapshot-' + job));
+	out({ ok: true });
+}
+
+// what can be saved (shares, personal folders, whole drives) and where to
+function cmd_sources() {
+	let c = cursor(), vols = [], sources = [];
+	c.foreach('storage', 'volume', (v) => {
+		let n = v['.name'], m = mount_of('/mnt/' + n);
+		if (!m) return;
+		push(vols, { name: n, fstype: m.fstype, links: !NO_LINKS[m.fstype] });
+		push(sources, { id: 'volume:' + n, kind: 'volume', name: n });
+		if (stat('/mnt/' + n + '/home')?.type == 'directory') push(sources, { id: 'homes:' + n, kind: 'homes', name: n });
+	});
+	c.foreach('shares', 'share', (s) => { if (s.volume) push(sources, { id: 'share:' + s['.name'], kind: 'share', name: s['.name'], volume: s.volume }); });
+	out({ volumes: vols, sources });
+}
+
+switch (ARGV[0]) {
+case 'run': cmd_run(ARGV[1]); break;
+case 'stop': cmd_stop(ARGV[1]); break;
+case 'list': cmd_list(ARGV[1]); break;
+case 'delete': cmd_delete(ARGV[1], ARGV[2]); break;
+case 'purge': cmd_purge(ARGV[1]); break;
+case 'sources': cmd_sources(); break;
+default:
+	print('usage: shareos-snapshot run|stop|list|purge <job> | delete <job> <name> | sources\n');
+	exit(1);
+}
