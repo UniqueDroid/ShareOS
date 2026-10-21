@@ -10,6 +10,7 @@ pre-releases for test devices only.
 - App SDK: `ShareOS.lang` – the language of the ShareOS interface, for apps with their own translations (e.g. Transmission 1.2).
 - rsync 3.4 in the firmware (without OpenSSL, 0.2 MB) and `ionice`: snapshots run at the lowest CPU and disk priority.
 - **Media server (Services → Media server):** MiniDLNA 1.3.3 (ReadyMedia) as the system app `minidlna` (2.8 MB, in the release as `.sapp`): TVs, receivers, game consoles and apps like VLC find the box in the network (DLNA/UPnP AV) and play music, videos and pictures from the chosen shares – per share everything or only music, videos or pictures, with its own name in the network. New files show up by themselves (inotify); *Read everything again* rebuilds the library. The library is kept on the drive of the apps area, so a restart does not read everything again. The page shows the number of tracks, videos and pictures and the players that were connected. The firmware starts and stops the server (`shareos-dlna`, `S96dlna`); removing the system app stops it. It only reads the folders and shows the chosen shares to every device in the network, without sign-in.
+- **System menu in a new order:** General, Appearance, Network, Messages, Logs, Terminal, Time, Power & reset, Firmware; *System* opens on General. *About* is now at the end of General (the old address `#/system/about` leads there).
 
 ## 0.2.0-beta.5
 
