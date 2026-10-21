@@ -102,7 +102,10 @@ check "rpc: unknown group rejected" "rpc shareos.accounts set '{\"name\":\"max\"
 # --- shares -------------------------------------------------------------------
 S1=$(rpc shareos.shares set '{"name":"fotos","volume":"daten","path":"Fotos","comment":"Familienfotos","smb":true,"rw":["jan"],"ro":["@familie"]}')
 check "share created" "echo '$S1' | js \"d['shares'][0]['name']=='fotos' and d['shares'][0]['mounted']\""
-check "share folder created (root:users 2775)" "[ \"\$(stat -c '%U:%G %a' $R/mnt/daten/Fotos)\" = 'root:users 2775' ]"
+aclwait() { local i=0; until run "getfacl -p $1 2>/dev/null" | grep -q "$2" || [ $i -ge 40 ]; do sleep 0.25; i=$((i + 1)); done; }
+aclwait /mnt/daten/Fotos 'group:familie:r-x'
+check "share folder created (owner root)" "[ \"\$(stat -c '%U' $R/mnt/daten/Fotos)\" = root ] && [ -d $R/mnt/daten/Fotos ]"
+check "share folder: rights as ACL (jan rwx, @familie r-x, others nothing)" "run 'getfacl -p /mnt/daten/Fotos' | grep -qx 'user:jan:rwx' && run 'getfacl -p /mnt/daten/Fotos' | grep -qx 'group:familie:r-x' && run 'getfacl -p /mnt/daten/Fotos' | grep -qx 'other::---' && run 'getfacl -p /mnt/daten/Fotos' | grep -qx 'group::---' && run 'getfacl -p /mnt/daten/Fotos' | grep -qx 'default:user:jan:rwx'"
 check "ksmbd share section" "grep -q '^\[fotos\]' $R/etc/ksmbd/ksmbd.conf && grep -q 'path = /mnt/daten/Fotos' $R/etc/ksmbd/ksmbd.conf"
 check "ksmbd access lists" "grep -q 'valid users = jan @familie' $R/etc/ksmbd/ksmbd.conf && grep -q 'write list = jan' $R/etc/ksmbd/ksmbd.conf && grep -q 'read list = @familie' $R/etc/ksmbd/ksmbd.conf"
 check "ksmbd home folders" "grep -q '^\[homes\]' $R/etc/ksmbd/ksmbd.conf"
@@ -123,7 +126,7 @@ fs() { rpc shareos.files "$1" "{\"ubus_rpc_session\":\"$SL\"${2:+,$2}}"; }
 check "files: users get the file browser in their ACL" "echo '$L2' | js \"'shareos.files' in d['acls']['ubus'] and 'ticket' in d['acls']['ubus']['shareos.files']\""
 check "files: allowed user sees the flag" "rpc shareos.me get '{\"ubus_rpc_session\":\"$SL\"}' | js \"d['files'] and d['ui']=={'theme':None,'accent':None}\""
 check "files: user without the right is refused" "rpc shareos.files roots '{\"ubus_rpc_session\":\"$SID\"}' | grep -q 'not allowed'"
-check "files: user root is the personal folder only" "fs roots '' | js \"d['roots']==[{'name':'home','home':True}]\""
+check "files: user without shares: the personal folder only" "fs roots '' | js \"d['roots']==[{'name':'home','home':True,'ro':False}]\""
 check "files: user cannot pick a volume" "fs list '\"root\":\"daten\",\"path\":\"\"' | grep -q 'unknown folder'"
 check "files: mkdir as the user" "fs mkdir '\"root\":\"home\",\"path\":\"\",\"name\":\"Docs\"' | js \"d['ok']\" && [ \"\$(run 'stat -c %U /mnt/daten/home/lisa/Docs')\" = lisa ]"
 check "files: .. is rejected" "fs list '\"root\":\"home\",\"path\":\"../jan\"' | grep -q 'invalid path'"
@@ -150,6 +153,27 @@ LJ=$(rpc session login '{"username":"jan","password":"geheim1"}')
 SJ=$(echo "$LJ" | python3 -c 'import json,sys; print(json.load(sys.stdin)["ubus_rpc_session"])' 2>/dev/null)
 rpc shareos.me bind "{\"username\":\"jan\",\"password\":\"geheim1\",\"ubus_rpc_session\":\"$SJ\"}" >/dev/null
 check "files: admins see whole volumes" "rpc shareos.files list '{\"ubus_rpc_session\":\"$SJ\",\"root\":\"daten\",\"path\":\"\"}' | js \"'home' in [e['name'] for e in d['entries']] and d['free']>0\""
+# --- shares in the file browser and in apps: by rights, enforced by Linux too ---
+run "shareos-users set anna --files=1" >/dev/null
+fa() { rpc shareos.files "$1" "{\"ubus_rpc_session\":\"$SID\"${2:+,$2}}"; }
+check "shares: anna (no personal folder) sees fotos read-only" "fa roots '' | js \"d['roots']==[{'name':'fotos','home':False,'ro':True}]\""
+printf 'bild\n' > $R/mnt/daten/Fotos/urlaub.txt; run 'chown jan /mnt/daten/Fotos/urlaub.txt'
+run 'shareos-shares apply' >/dev/null; sleep 1
+check "shares: anna lists fotos" "fa list '\"root\":\"fotos\",\"path\":\"\"' | js \"'urlaub.txt' in [e['name'] for e in d['entries']]\""
+check "shares: read-only refuses mkdir, rename, delete, upload" "fa mkdir '\"root\":\"fotos\",\"path\":\"\",\"name\":\"neu\"' | grep -q 'read only' && fa rename '\"root\":\"fotos\",\"path\":\"\",\"name\":\"urlaub.txt\",\"to\":\"x.txt\"' | grep -q 'read only' && fa delete '\"root\":\"fotos\",\"path\":\"\",\"names\":[\"urlaub.txt\"]' | grep -q 'read only' && fa ticket '\"root\":\"fotos\",\"path\":\"\",\"name\":\"up.txt\",\"mode\":\"put\"' | grep -q 'read only'"
+check "shares: read-only allows download" "fa ticket '\"root\":\"fotos\",\"path\":\"\",\"name\":\"urlaub.txt\",\"mode\":\"get\"' | grep -q url"
+check "Linux: anna can read but not write in fotos" "run 'su -s /bin/sh anna -c \"cat /mnt/daten/Fotos/urlaub.txt\"' | grep -qx bild && ! run 'su -s /bin/sh anna -c \"touch /mnt/daten/Fotos/hack\"' >/dev/null && [ ! -e $R/mnt/daten/Fotos/hack ]"
+check "Linux: lisa (no rights) cannot even list fotos" "! run 'su -s /bin/sh lisa -c \"ls /mnt/daten/Fotos\"' >/dev/null"
+check "shares: lisa does not see fotos" "! fs roots '' | grep -q fotos"
+rpc shareos.shares set '{"name":"fotos","volume":"daten","path":"Fotos","comment":"Familienfotos","smb":true,"rw":["jan","lisa"],"ro":["@familie"]}' >/dev/null
+aclwait /mnt/daten/Fotos/urlaub.txt 'user:lisa:rw-'
+check "shares: lisa with write rights sees fotos writable" "fs roots '' | js \"{'name':'fotos','home':False,'ro':False} in d['roots']\""
+check "shares: lisa creates a folder, owned by her" "fs mkdir '\"root\":\"fotos\",\"path\":\"\",\"name\":\"Neu\"' | js \"d['ok']\" && [ \"\$(run 'stat -c %U /mnt/daten/Fotos/Neu')\" = lisa ]"
+check "Linux: the new folder inherits the rights (anna reads, cannot write)" "run 'getfacl -p /mnt/daten/Fotos/Neu' | grep -qx 'group:familie:r-x' && run 'su -s /bin/sh anna -c \"ls /mnt/daten/Fotos/Neu\"' >/dev/null && ! run 'su -s /bin/sh anna -c \"touch /mnt/daten/Fotos/Neu/x\"' >/dev/null"
+check "Linux: existing files got the new right" "run 'su -s /bin/sh lisa -c \"echo mehr >> /mnt/daten/Fotos/urlaub.txt\"' >/dev/null && grep -qx mehr $R/mnt/daten/Fotos/urlaub.txt"
+rpc shareos.shares set '{"name":"fotos","volume":"daten","path":"Fotos","comment":"Familienfotos","smb":true,"rw":["jan"],"ro":["@familie"]}' >/dev/null
+aclwait /mnt/daten/Fotos/Neu 'group:familie:r-x'; sleep 1
+check "Linux: a right taken away is gone everywhere" "! run 'getfacl -p -R /mnt/daten/Fotos' | grep -q 'user:lisa' && ! run 'su -s /bin/sh lisa -c \"ls /mnt/daten/Fotos\"' >/dev/null"
 check "files: right can be withdrawn" "run 'shareos-users set lisa --files=0' >/dev/null; fs roots '' | grep -q 'not allowed'"
 check "look: own theme and accent" "rpc shareos.me ui_set '{\"ubus_rpc_session\":\"$SL\",\"theme\":\"light\",\"accent\":\"green\"}' | js \"d=={'theme':'light','accent':'green'}\" && rpc shareos.me get '{\"ubus_rpc_session\":\"$SL\"}' | js \"d['ui']['theme']=='light'\""
 check "look: invalid accent rejected" "rpc shareos.me ui_set '{\"ubus_rpc_session\":\"$SL\",\"accent\":\"pink\"}' | grep -q 'invalid accent'"

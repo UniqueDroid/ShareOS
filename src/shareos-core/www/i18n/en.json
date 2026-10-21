@@ -1107,6 +1107,10 @@
 		"Darf oben in der Kopfzeile der ShareOS-Oberfläche einen kurzen Zustand anzeigen (z. B. „verbunden“) – nur für den Benutzer, der die App geöffnet hat; er verschwindet nach höchstens 10 Minuten von selbst.": "May show a short state at the top of the ShareOS interface (e.g. “connected”) – only to the user who opened the app; it disappears by itself after at most 10 minutes.",
 		"VPN-SERVER": "VPN SERVER",
 		"1 Gerät": "1 device",
+		"Weder ein persönlicher Ordner noch eine Freigabe für dich.": "Neither a personal folder nor a share for you.",
+		"Dateien: persönlicher Ordner und Freigaben (nach Rechten) im Dateibrowser und in Apps": "Files: personal folder and shares (by permissions) in the file browser and in apps",
+		" (nur lesen)": " (read only)",
+		"(nur lesen)": "(read only)",
 		"TAILSCALE": "TAILSCALE",
 		"Anmeldung nötig": "sign-in needed",
 		"getrennt": "disconnected",
@@ -2185,6 +2189,10 @@
 		[
 			"^(\\d+) Geräte$",
 			"$1 devices"
+		],
+		[
+			"^(.+) \\(nur lesen\\)$",
+			"$1 (read only)"
 		]
 	],
 	"words": [

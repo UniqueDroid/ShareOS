@@ -197,7 +197,7 @@ their permissions.
 ## 11. File browser and own look
 
 - **Admins:** Shares → **Files** shows every mounted drive: create folders, upload (also by dragging), download, rename, move, copy, delete.
-- **Users:** enable "File browser for the personal folder" in the user account. "My ShareOS" then has a **Files** tab, only for the own folder and with the user's own rights.
+- **Users:** enable "Dateien" in the user account. "My ShareOS" then has a **Files** tab with the own folder and the shares the user has rights to (from 0.2.0-beta.6, see 14m).
 - **Look:** users with web access set light/dark and the accent colour for themselves under **Appearance**. "Same as for everyone" goes back to the admin's choice.
 - Test idea: upload a large file (e.g. 1 GB) and download it again. It must not stop after 60 s.
 
@@ -382,6 +382,19 @@ Needs an OpenVPN profile (`.ovpn`, e.g. from the office router or a VPN provider
 14. *Auch das Heimnetz erreichbar machen* + static route 10.8.0.0/24 → IP of the box in the router: the phone reaches the router (e.g. `http://192.168.1.1`).
 15. *Entfernen* the device: the connection on the phone drops and does not come back. Restart the box: the server runs again by itself.
 
+## 14m. Shares by rights – for apps and Linux too (0.2.0-beta.6)
+
+Needs a drive with ext4 or Btrfs, the users **anna** and **lisa** (role user, "Dateien" switched on) and ShareCommander 1.3 (store).
+
+1. Shares → new share `fotos`: anna *read & write*, lisa *read only*, copy a few files into it.
+2. Sign in as **anna** → *My ShareOS* → **Files**: choice "Persönlicher Ordner" and "fotos". Create a folder in `fotos`: works.
+3. As **lisa**: "fotos (nur lesen)"; *Neuer Ordner*, *Hochladen*, *Umbenennen*, *Löschen* are greyed out, downloading works.
+4. lisa opens **ShareCommander**: left the personal folder, right "🔒 fotos (nur lesen)". **F7** in fotos: "nur lesen – hier darfst du nichts ändern". No `/etc` in the browser storage any more.
+5. A user without rights on `fotos` does not see the share anywhere.
+6. A user without "Dateien": ShareCommander shows the hint "Kein Zugriff auf die Ordner der Box …" instead of silently showing only the browser storage.
+7. Linux level in the terminal (as root): `getfacl /mnt/<drive>/<fotos folder>` shows `user:anna:rwx`, `user:lisa:r-x`, `other::---`. `su -s /bin/sh lisa -c 'touch /mnt/<drive>/<fotos folder>/x'` → "Permission denied".
+8. Over SMB from a computer: lisa can read, not write; anna both; lisa can open new files of anna.
+9. Change the rights (remove lisa) → after a short while (longer with many files, it runs in the background) lisa has no access any more, not even to subfolders.
 ## 14n. Tailscale and large system apps on the drive (0.2.0-beta.7)
 
 Needs a Tailscale account (free), a phone or computer with Tailscale, the file `tailscale-1.98.8.sapp` (release of the firmware) and an app with the permission `tailscale` (ShareOS-Apps).

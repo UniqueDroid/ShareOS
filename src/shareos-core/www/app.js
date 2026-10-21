@@ -924,7 +924,7 @@ function userEditor(e) {
 		</div>
 		<label class="chk" style="margin-top:12px" id="u-web-row"${u.role === 'user' ? '' : raw(' hidden')}><input type="checkbox" name="web"${u.web ? raw(' checked') : ''}>Darf sich an der Weboberfläche anmelden („Mein ShareOS“)</label>
 		<label class="chk" style="margin-top:6px"><input type="checkbox" name="cloud"${u.cloud ? raw(' checked') : ''}>Darf eigene Cloud-Sync-Aufträge anlegen (braucht persönlichen Ordner)</label>
-		<label class="chk" style="margin-top:6px"><input type="checkbox" name="files"${u.files ? raw(' checked') : ''}>Dateibrowser für den persönlichen Ordner in der Weboberfläche</label>
+		<label class="chk" style="margin-top:6px"><input type="checkbox" name="files"${u.files ? raw(' checked') : ''}>Dateien: persönlicher Ordner und Freigaben (nach Rechten) im Dateibrowser und in Apps</label>
 		${S.acc.groups.length ? html`<div class="pt" style="margin:16px 0 8px">GRUPPEN</div><div style="display:flex;flex-wrap:wrap;gap:6px 18px">${S.acc.groups.map((g) => html`
 			<label class="chk"><input type="checkbox" class="u-group" value="${g.name}"${u.groups.includes(g.name) ? raw(' checked') : ''}>${g.name}</label>`)}</div>` : ''}
 		<p class="note">Benutzername: Kleinbuchstaben, Ziffern und _, beginnt mit einem Buchstaben. Das Speicherlimit gilt je Laufwerk, 0 = unbegrenzt. Das Passwort gilt für Freigaben und – je nach Rolle – für die Weboberfläche.</p>
@@ -3652,7 +3652,7 @@ setInterval(() => {
 	if (c) c.textContent = new Date().toLocaleTimeString(LOC, { hour: '2-digit', minute: '2-digit' });
 }, 10000);
 
-/* ---------- file browser (admins: all volumes, users: personal folder) ------- */
+/* ---------- file browser (admins: all volumes, users: personal folder + shares by rights) */
 
 function fbInit() {
 	if (!S.fb) S.fb = { roots: null, root: '', path: '', data: null, sel: new Set(), hidden: false, uploads: [], err: null };
@@ -3660,7 +3660,7 @@ function fbInit() {
 	return S.fb;
 }
 
-const fbRootLabel = (r) => (r.home ? 'Persönlicher Ordner' : r.name);
+const fbRootLabel = (r) => (r.home ? 'Persönlicher Ordner' : r.ro ? r.name + ' (nur lesen)' : r.name);
 const fbJoin = (a, b) => (a ? a + '/' + b : b);
 
 async function fbLoad(path) {
@@ -3696,9 +3696,9 @@ function fbInner() {
 	const f = S.fb, d = f.data;
 	if (f.err && !d) return html`<div class="panel"><div class="empty">${svg(I.warn)}<span>${f.err}</span></div></div>`;
 	if (!f.roots) return html`<div class="panel"><div class="empty"><div class="spin" style="margin:0"></div><span>Lade …</span></div></div>`;
-	if (!f.roots.length) return html`<div class="panel"><div class="empty">${svg(I.info)}<span>${S.me?.role === 'admin' || !S.me ? 'Kein Laufwerk eingehängt – zuerst unter SPEICHER einrichten.' : 'Kein persönlicher Ordner vorhanden.'}</span></div></div>`;
+	if (!f.roots.length) return html`<div class="panel"><div class="empty">${svg(I.info)}<span>${S.me?.role === 'admin' || !S.me ? 'Kein Laufwerk eingehängt – zuerst unter SPEICHER einrichten.' : 'Weder ein persönlicher Ordner noch eine Freigabe für dich.'}</span></div></div>`;
 	if (!d) return html`<div class="panel"><div class="empty"><div class="spin" style="margin:0"></div><span>Lade …</span></div></div>`;
-	const root = f.roots.find((r) => r.name === f.root) || f.roots[0];
+	const root = f.roots.find((r) => r.name === f.root) || f.roots[0], ro = !!root.ro;
 	const parts = f.path ? f.path.split('/') : [];
 	const n = f.sel.size, all = d.entries.length && n === d.entries.length;
 	const busy = f.uploads.some((u) => u.pct != null && u.pct < 100 && !u.err);
@@ -3712,13 +3712,13 @@ function fbInner() {
 		</div>
 		<div class="acts fbtools">
 			<button class="btn sm ghost" type="button" data-act="fb-up" ${parts.length ? '' : 'disabled'} title="Ordner nach oben" aria-label="Ordner nach oben">${svg(I.up)}</button>
-			<button class="btn sm" type="button" data-act="fb-mkdir">${svg(I.plus)}Neuer Ordner</button>
-			<label class="btn sm${busy ? ' dis' : ''}">${svg(I.ul)}Hochladen<input type="file" id="fb-file" multiple hidden ${busy ? 'disabled' : ''}></label>
+			<button class="btn sm" type="button" data-act="fb-mkdir" ${ro ? 'disabled' : ''}>${svg(I.plus)}Neuer Ordner</button>
+			<label class="btn sm${busy || ro ? ' dis' : ''}">${svg(I.ul)}Hochladen<input type="file" id="fb-file" multiple hidden ${busy || ro ? 'disabled' : ''}></label>
 			<span class="sep"></span>
-			<button class="btn sm ghost" type="button" data-act="fb-rename" ${n === 1 ? '' : 'disabled'}>${svg(I.pen)}Umbenennen</button>
-			<button class="btn sm ghost" type="button" data-act="fb-move" ${n ? '' : 'disabled'}>${svg(I.move)}Verschieben</button>
-			<button class="btn sm ghost" type="button" data-act="fb-copy" ${n ? '' : 'disabled'}>${svg(I.copy)}Kopieren</button>
-			<button class="btn sm danger" type="button" data-act="fb-del" ${n ? '' : 'disabled'}>${svg(I.trash)}Löschen</button>
+			<button class="btn sm ghost" type="button" data-act="fb-rename" ${n === 1 && !ro ? '' : 'disabled'}>${svg(I.pen)}Umbenennen</button>
+			<button class="btn sm ghost" type="button" data-act="fb-move" ${n && !ro ? '' : 'disabled'}>${svg(I.move)}Verschieben</button>
+			<button class="btn sm ghost" type="button" data-act="fb-copy" ${n && !ro ? '' : 'disabled'}>${svg(I.copy)}Kopieren</button>
+			<button class="btn sm danger" type="button" data-act="fb-del" ${n && !ro ? '' : 'disabled'}>${svg(I.trash)}Löschen</button>
 			<label class="chk ml"><input type="checkbox" id="fb-hidden"${f.hidden ? raw(' checked') : ''}>Versteckte</label>
 		</div>
 		${f.uploads.length ? html`<div class="fbup">${f.uploads.map((u) => html`<div class="fbuprow"><span class="nm">${u.name}</span>

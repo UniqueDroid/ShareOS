@@ -1412,8 +1412,13 @@ E1101	Puede mostrar un estado breve arriba en la interfaz de ShareOS (p. ej. «c
 E1102	SERVIDOR VPN
 E1103	1 dispositivo
 P267	$1 dispositivos
-E1104	TAILSCALE
-E1105	inicio de sesión necesario
-E1106	desconectado
-E1107	Acceso remoto (Tailscale)
-E1108	Puede conectar la caja con Tailscale, iniciar y cerrar sesión y ver los dispositivos de la tailnet; afecta a la red de toda la caja, por eso solo para administradores.
+E1104	Ni una carpeta personal ni una carpeta compartida para ti.
+E1105	Archivos: carpeta personal y carpetas compartidas (según permisos) en el explorador y en las apps
+P268	$1 (solo lectura)
+E1106	 (solo lectura)
+E1107	(solo lectura)
+E1108	TAILSCALE
+E1109	inicio de sesión necesario
+E1110	desconectado
+E1111	Acceso remoto (Tailscale)
+E1112	Puede conectar la caja con Tailscale, iniciar y cerrar sesión y ver los dispositivos de la tailnet; afecta a la red de toda la caja, por eso solo para administradores.

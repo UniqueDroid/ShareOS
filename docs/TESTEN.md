@@ -201,7 +201,7 @@ persönlichen Ordner). Ihre Aufträge laufen mit ihren Rechten.
 ## 11. Dateibrowser und eigene Darstellung
 
 - **Admins:** Freigaben → **Dateien** zeigt alle eingehängten Laufwerke: Ordner anlegen, hochladen (auch per Ziehen), herunterladen, umbenennen, verschieben, kopieren, löschen.
-- **Benutzer:** Im Benutzerkonto „Dateibrowser für den persönlichen Ordner“ einschalten. Dann gibt es in „Mein ShareOS“ den Reiter **Dateien**, nur für den eigenen Ordner und mit den eigenen Rechten.
+- **Benutzer:** Im Benutzerkonto „Dateien“ einschalten. Dann gibt es in „Mein ShareOS“ den Reiter **Dateien** mit dem eigenen Ordner und den Freigaben, für die der Benutzer Rechte hat (ab 0.2.0-beta.6, siehe 14m).
 - **Darstellung:** Benutzer mit Web-Zugang stellen unter **Darstellung** Hell/Dunkel und Akzentfarbe für sich ein. „Wie für alle“ nimmt wieder die Vorgabe des Admins.
 - Testidee: eine große Datei (z. B. 1 GB) hochladen und wieder herunterladen. Das darf nicht nach 60 s abbrechen.
 
@@ -386,6 +386,19 @@ Braucht ein OpenVPN-Profil (`.ovpn`, z. B. vom Router im Büro oder von einem VP
 14. *Auch das Heimnetz erreichbar machen* + im Router die statische Route 10.8.0.0/24 → IP der Box: am Handy ist der Router (z. B. `http://192.168.1.1`) erreichbar.
 15. Gerät *Entfernen*: die Verbindung am Handy bricht ab und kommt nicht wieder. Box neu starten: der Server läuft wieder von selbst.
 
+## 14m. Freigaben nach Rechten – auch für Apps und Linux (0.2.0-beta.6)
+
+Braucht ein Laufwerk mit ext4 oder Btrfs, die Benutzer **anna** und **lisa** (Rolle Benutzer, „Dateien“ eingeschaltet) und ShareCommander 1.3 (Store).
+
+1. Freigaben → neue Freigabe `fotos`: anna *lesen & schreiben*, lisa *nur lesen*, ein paar Dateien hineinkopieren.
+2. Als **anna** anmelden → *Mein ShareOS* → **Dateien**: Auswahl „Persönlicher Ordner“ und „fotos“. In `fotos` einen Ordner anlegen: klappt.
+3. Als **lisa**: „fotos (nur lesen)“; *Neuer Ordner*, *Hochladen*, *Umbenennen*, *Löschen* sind ausgegraut, herunterladen geht.
+4. lisa öffnet **ShareCommander**: links der persönliche Ordner, rechts „🔒 fotos (nur lesen)“. **F7** in fotos: „nur lesen – hier darfst du nichts ändern“. Kein `/etc` mehr im Browser-Speicher.
+5. Ein Benutzer ohne Recht an `fotos` sieht die Freigabe nirgends.
+6. Ein Benutzer ohne „Dateien“: ShareCommander zeigt den Hinweis „Kein Zugriff auf die Ordner der Box …“ statt stillschweigend nur den Browser-Speicher.
+7. Linux-Ebene im Terminal (als root): `getfacl /mnt/<laufwerk>/<fotos-ordner>` zeigt `user:anna:rwx`, `user:lisa:r-x`, `other::---`. `su -s /bin/sh lisa -c 'touch /mnt/<laufwerk>/<fotos-ordner>/x'` → „Permission denied“.
+8. Per SMB vom Rechner: lisa kann lesen, nicht schreiben; anna beides; neue Dateien von anna kann lisa öffnen.
+9. Rechte ändern (lisa entfernen) → nach kurzer Zeit (bei vielen Dateien etwas länger, es läuft im Hintergrund) hat lisa keinen Zugriff mehr, auch nicht auf Unterordner.
 ## 14n. Tailscale und große System-Apps auf dem Laufwerk (0.2.0-beta.7)
 
 Braucht ein Tailscale-Konto (kostenlos), ein Handy oder einen Rechner mit Tailscale und die Datei `tailscale-1.98.8.sapp` (Release der Firmware) sowie eine App mit der Berechtigung `tailscale` (ShareOS-Apps).
