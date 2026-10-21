@@ -1014,7 +1014,38 @@
 		"Eigene Torrents (Transmission)": "अपने टॉरेंट (Transmission)",
 		"Darf den eigenen Transmission-Dienst des Benutzers steuern: Torrents hinzufügen, anhalten und löschen. Jeder Benutzer hat seinen eigenen Dienst; Downloads landen nur in seinen Ordnern.": "उपयोगकर्ता की अपनी Transmission सेवा को नियंत्रित कर सकता है: टॉरेंट जोड़ना, रोकना और हटाना। हर उपयोगकर्ता की अपनी सेवा है; डाउनलोड केवल उसके फ़ोल्डरों में जाते हैं।",
 		"Medien umwandeln (FFmpeg)": "मीडिया बदलना (FFmpeg)",
-		"Darf auf der Box Audio und Video des Benutzers umwandeln lassen (FFmpeg) – mit seinen Rechten, nur in seinen Ordnern, aus festen Auswahlen (kein beliebiger Befehl).": "बॉक्स पर उपयोगकर्ता का ऑडियो और वीडियो बदलवा सकता है (FFmpeg) – उसके अधिकारों से, केवल उसके फ़ोल्डरों में, तय विकल्पों से (कोई मनमाना कमांड नहीं)।"
+		"Darf auf der Box Audio und Video des Benutzers umwandeln lassen (FFmpeg) – mit seinen Rechten, nur in seinen Ordnern, aus festen Auswahlen (kein beliebiger Befehl).": "बॉक्स पर उपयोगकर्ता का ऑडियो और वीडियो बदलवा सकता है (FFmpeg) – उसके अधिकारों से, केवल उसके फ़ोल्डरों में, तय विकल्पों से (कोई मनमाना कमांड नहीं)।",
+		"MEDIENSERVER": "मीडिया सर्वर",
+		"Medienserver (DLNA)": "मीडिया सर्वर (DLNA)",
+		"nicht freigeben": "साझा न करें",
+		"Musik, Videos und Bilder": "संगीत, वीडियो और चित्र",
+		"nur Musik": "केवल संगीत",
+		"nur Videos": "केवल वीडियो",
+		"nur Bilder": "केवल चित्र",
+		"MUSIKSTÜCKE": "ट्रैक",
+		"GERÄTE": "डिवाइस",
+		"Im Netzwerk als": "नेटवर्क में नाम",
+		"liest Ordner ein …": "फ़ोल्डर पढ़े जा रहे हैं …",
+		"Lade Medienserver …": "मीडिया सर्वर लोड हो रहा है …",
+		"Alles neu einlesen": "सब फिर से पढ़ें",
+		"Im Store installieren (MiniDLNA)": "स्टोर से इंस्टॉल करें (MiniDLNA)",
+		"Der Medienserver (MiniDLNA) ist eine System-App: Fernseher, Receiver, Spielkonsolen und Apps wie VLC finden die Box dann im Netzwerk und spielen Musik, Videos und Bilder aus den Freigaben ab.": "मीडिया सर्वर (MiniDLNA) एक सिस्टम ऐप है: टीवी, रिसीवर, गेम कंसोल और VLC जैसे ऐप नेटवर्क में बॉक्स ढूँढकर शेयर से संगीत, वीडियो और चित्र चलाते हैं।",
+		"Der Medienserver ist ausgeschaltet. Unten Ordner wählen und einschalten.": "मीडिया सर्वर बंद है। नीचे फ़ोल्डर चुनें और चालू करें।",
+		"Geräte im selben Netzwerk finden den Server von selbst (DLNA/UPnP AV), z. B. unter „Medienserver“ oder „Quellen“ am Fernseher.": "उसी नेटवर्क के डिवाइस सर्वर अपने-आप ढूँढ लेते हैं (DLNA/UPnP AV), जैसे टीवी पर “मीडिया सर्वर” या “स्रोत” में।",
+		"Neue Dateien erscheinen nach kurzer Zeit von selbst; nach großen Änderungen hilft „Alles neu einlesen“.": "नई फ़ाइलें थोड़ी देर में अपने-आप दिखती हैं; बड़े बदलावों के बाद “सब फिर से पढ़ें” मदद करता है।",
+		"Der Server liest nur – und zeigt alles in den gewählten Freigaben jedem Gerät im Netzwerk, ohne Anmeldung.": "सर्वर केवल पढ़ता है – और चुने गए शेयर की हर चीज़ नेटवर्क के हर डिवाइस को बिना लॉगिन दिखाता है।",
+		"Videos werden nicht umgewandelt: das Gerät muss das Format selbst abspielen können.": "वीडियो बदले नहीं जाते: डिवाइस को फ़ॉर्मेट ख़ुद चलाना आना चाहिए।",
+		"Medienserver eingeschaltet (startet auch nach einem Neustart)": "मीडिया सर्वर चालू (रीस्टार्ट के बाद भी शुरू होता है)",
+		"NAME IM NETZWERK": "नेटवर्क में नाम",
+		"ZEIGEN ALS": "इस रूप में दिखाएँ",
+		"„Musik“, „Videos“, „Bilder“: aus der Freigabe nur diese Art von Dateien zeigen. „Alles“: Musik, Videos und Bilder.": "“संगीत”, “वीडियो”, “चित्र”: शेयर से केवल इस तरह की फ़ाइलें दिखाएँ। “सब कुछ”: संगीत, वीडियो और चित्र।",
+		"Mindestens eine Freigabe wählen.": "कम से कम एक शेयर चुनें।",
+		"Medienserver gespeichert.": "मीडिया सर्वर सहेजा गया।",
+		"Medienserver liest alle Ordner neu ein.": "मीडिया सर्वर सभी फ़ोल्डर फिर से पढ़ रहा है।",
+		"Noch keine Freigabe – unter": "अभी कोई शेयर नहीं – यहाँ बनाएँ:",
+		"anlegen.": ".",
+		"VIDEOS": "वीडियो",
+		"BILDER": "चित्र"
 	},
 	"patterns": [
 		[
@@ -2008,6 +2039,10 @@
 		[
 			"^Hinweis: (.+)$",
 			"सूचना: $1"
+		],
+		[
+			"^Medienserver: (.*)$",
+			"मीडिया सर्वर: $1"
 		]
 	],
 	"words": [

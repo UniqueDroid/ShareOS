@@ -334,6 +334,19 @@ Braucht ein Laufwerk, ein paar Medien darauf (ein Video, z. B. `.mkv` oder `.mp4
 8. Im Terminal während eines Auftrags: `ps | grep ffmpeg` – läuft mit `nice` 19; `ls /tmp/shareos-media/jobs/`.
 9. Apps → Installiert → ffmpeg → *Entfernen* (fragt, weil MediaTranscoder sie braucht): laufende Aufträge brechen ab, die App meldet „FFmpeg fehlt“.
 
+## 14k. Medienserver (0.2.0-beta.6)
+
+Braucht ein Laufwerk mit einer Freigabe mit Musik (MP3/FLAC) und einer mit Videos (MP4/MKV) und die Datei `minidlna-1.3.3.sapp` (Release der Firmware; oder MiniDLNA aus dem Store). Dazu ein Fernseher oder VLC im selben Netzwerk.
+
+1. Dienste → **Medienserver**: ohne System-App der Hinweis mit *Im Store installieren*. MiniDLNA installieren (Store oder *Paket installieren*).
+2. *Einstellungen*: Musik-Freigabe → „nur Musik“, Video-Freigabe → „nur Videos“, Name z. B. „Wohnzimmer“, *Medienserver eingeschaltet* → *Speichern*: „läuft“, „liest Ordner ein …“, die Zahlen steigen.
+3. VLC (Ansicht → Wiedergabeliste → Lokales Netzwerk → Universal Plug'n'Play) oder der Fernseher (Quellen/Medienserver): „Wohnzimmer“ erscheint, Musik und Videos spielen, im Video spulen.
+4. Neue Datei in die Musik-Freigabe kopieren: nach kurzer Zeit zählt „Musikstücke“ eins mehr, ohne Neustart.
+5. Dienste → Status: „Medienserver (DLNA)“ läuft; Box neu starten: der Server startet von selbst und liest nicht alles neu (die Bibliothek liegt in `/mnt/<laufwerk>/.shareos/minidlna`).
+6. *Alles neu einlesen*: „liest Ordner ein …“, danach dieselben Zahlen.
+7. Ausschalten → *Speichern*: Fernseher/VLC sehen den Server nicht mehr (nach einigen Minuten).
+8. Apps → Installiert → minidlna → *Entfernen*: der Server hält an, die Seite zeigt wieder den Hinweis.
+
 ## 15. Tasten
 
 - **Reset-Taste** (Loch hinten), gedrückt halten und loslassen:

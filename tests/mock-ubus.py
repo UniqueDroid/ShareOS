@@ -453,6 +453,16 @@ def call(obj, method, args):
         if method == 'log':
             return {'entries': pl_inbox(args['inbox'])['recent']}
         return {'started': True}
+    if obj == 'shareos.dlna':
+        d = STATE.setdefault('dlna', {'installed': True, 'enabled': True, 'running': True, 'scanning': False, 'audio': 4218, 'video': 312, 'image': 15873,
+                                      'db': '/mnt/daten/.shareos/minidlna', 'clients': [{'type': 'Samsung Series [CDEFJ]', 'ip': '10.241.1.40'}, {'type': 'Generic DLNA 1.5', 'ip': '10.241.1.52'}],
+                                      'name': '', 'hostname': 'skynet-nas', 'media': [{'type': 'A', 'share': 'musik'}, {'type': 'V', 'share': 'filme'}],
+                                      'shares': ['backup', 'filme', 'fotos', 'musik']})
+        if method == 'set':
+            d.update(enabled=args['enabled'], running=args['enabled'], name=args['name'], media=args['media'])
+        if method == 'rescan':
+            d['scanning'] = True
+        return d
     if obj == 'shareos.cloud':
         c = STATE['cloud']
         if method == 'status':

@@ -1014,7 +1014,38 @@
 		"Eigene Torrents (Transmission)": "التورنت الخاصة (Transmission)",
 		"Darf den eigenen Transmission-Dienst des Benutzers steuern: Torrents hinzufügen, anhalten und löschen. Jeder Benutzer hat seinen eigenen Dienst; Downloads landen nur in seinen Ordnern.": "يمكنه التحكم في خدمة Transmission الخاصة بالمستخدم: إضافة التورنت وإيقافه مؤقتًا وحذفه. لكل مستخدم خدمته الخاصة؛ وتُحفظ التنزيلات في مجلداته فقط.",
 		"Medien umwandeln (FFmpeg)": "تحويل الوسائط (FFmpeg)",
-		"Darf auf der Box Audio und Video des Benutzers umwandeln lassen (FFmpeg) – mit seinen Rechten, nur in seinen Ordnern, aus festen Auswahlen (kein beliebiger Befehl).": "يمكنه تحويل صوت وفيديو المستخدم على الجهاز (FFmpeg) – بصلاحياته، وفي مجلداته فقط، ومن خيارات ثابتة (بلا أوامر حرة)."
+		"Darf auf der Box Audio und Video des Benutzers umwandeln lassen (FFmpeg) – mit seinen Rechten, nur in seinen Ordnern, aus festen Auswahlen (kein beliebiger Befehl).": "يمكنه تحويل صوت وفيديو المستخدم على الجهاز (FFmpeg) – بصلاحياته، وفي مجلداته فقط، ومن خيارات ثابتة (بلا أوامر حرة).",
+		"MEDIENSERVER": "خادم الوسائط",
+		"Medienserver (DLNA)": "خادم الوسائط (DLNA)",
+		"nicht freigeben": "عدم المشاركة",
+		"Musik, Videos und Bilder": "موسيقى وفيديو وصور",
+		"nur Musik": "موسيقى فقط",
+		"nur Videos": "فيديو فقط",
+		"nur Bilder": "صور فقط",
+		"MUSIKSTÜCKE": "مقاطع",
+		"GERÄTE": "الأجهزة",
+		"Im Netzwerk als": "في الشبكة باسم",
+		"liest Ordner ein …": "جارٍ قراءة المجلدات …",
+		"Lade Medienserver …": "جارٍ تحميل خادم الوسائط …",
+		"Alles neu einlesen": "قراءة الكل من جديد",
+		"Im Store installieren (MiniDLNA)": "التثبيت من المتجر (MiniDLNA)",
+		"Der Medienserver (MiniDLNA) ist eine System-App: Fernseher, Receiver, Spielkonsolen und Apps wie VLC finden die Box dann im Netzwerk und spielen Musik, Videos und Bilder aus den Freigaben ab.": "خادم الوسائط (MiniDLNA) تطبيق نظام: تجد أجهزة التلفاز والمستقبلات وأجهزة الألعاب وتطبيقات مثل VLC الجهاز في الشبكة وتشغّل الموسيقى والفيديو والصور من المشاركات.",
+		"Der Medienserver ist ausgeschaltet. Unten Ordner wählen und einschalten.": "خادم الوسائط متوقف. اختر المجلدات أدناه وشغّله.",
+		"Geräte im selben Netzwerk finden den Server von selbst (DLNA/UPnP AV), z. B. unter „Medienserver“ oder „Quellen“ am Fernseher.": "تجد الأجهزة في الشبكة نفسها الخادم تلقائيًا (DLNA/UPnP AV)، مثلًا ضمن «خادم الوسائط» أو «المصادر» في التلفاز.",
+		"Neue Dateien erscheinen nach kurzer Zeit von selbst; nach großen Änderungen hilft „Alles neu einlesen“.": "تظهر الملفات الجديدة تلقائيًا بعد قليل؛ بعد التغييرات الكبيرة يفيد «قراءة الكل من جديد».",
+		"Der Server liest nur – und zeigt alles in den gewählten Freigaben jedem Gerät im Netzwerk, ohne Anmeldung.": "الخادم يقرأ فقط – ويعرض كل ما في المشاركات المختارة لأي جهاز في الشبكة دون تسجيل دخول.",
+		"Videos werden nicht umgewandelt: das Gerät muss das Format selbst abspielen können.": "لا تُحوَّل مقاطع الفيديو: يجب أن يشغّل الجهاز الصيغة بنفسه.",
+		"Medienserver eingeschaltet (startet auch nach einem Neustart)": "خادم الوسائط مُشغَّل (يبدأ أيضًا بعد إعادة التشغيل)",
+		"NAME IM NETZWERK": "الاسم في الشبكة",
+		"ZEIGEN ALS": "العرض كـ",
+		"„Musik“, „Videos“, „Bilder“: aus der Freigabe nur diese Art von Dateien zeigen. „Alles“: Musik, Videos und Bilder.": "«موسيقى» و«فيديو» و«صور»: عرض هذا النوع فقط من ملفات المشاركة. «الكل»: موسيقى وفيديو وصور.",
+		"Mindestens eine Freigabe wählen.": "اختر مشاركة واحدة على الأقل.",
+		"Medienserver gespeichert.": "حُفظ خادم الوسائط.",
+		"Medienserver liest alle Ordner neu ein.": "يعيد خادم الوسائط قراءة كل المجلدات.",
+		"Noch keine Freigabe – unter": "لا توجد مشاركة بعد – أنشئها في",
+		"anlegen.": ".",
+		"VIDEOS": "فيديو",
+		"BILDER": "صور"
 	},
 	"patterns": [
 		[
@@ -2008,6 +2039,10 @@
 		[
 			"^Hinweis: (.+)$",
 			"ملاحظة: $1"
+		],
+		[
+			"^Medienserver: (.*)$",
+			"خادم الوسائط: $1"
 		]
 	],
 	"words": [

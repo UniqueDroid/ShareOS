@@ -1300,3 +1300,35 @@ P246	$1 $2 installé, en plus : $3.
 P247	Remarque : $1
 E1010	Convertir des médias (FFmpeg)
 E1011	Peut faire convertir l'audio et la vidéo de l'utilisateur sur la box (FFmpeg) – avec ses droits, uniquement dans ses dossiers, à partir de choix fixes (aucune commande libre).
+E1012	SERVEUR MULTIMÉDIA
+E1013	Serveur multimédia (DLNA)
+E1014	ne pas partager
+E1015	musique, vidéos et images
+E1016	musique seulement
+E1017	vidéos seulement
+E1018	images seulement
+E1019	MORCEAUX
+E1020	APPAREILS
+E1021	Dans le réseau sous le nom
+E1022	lecture des dossiers …
+E1023	Chargement du serveur multimédia …
+E1024	Tout relire
+E1025	Installer depuis le store (MiniDLNA)
+E1026	Le serveur multimédia (MiniDLNA) est une app système : téléviseurs, récepteurs, consoles et apps comme VLC trouvent alors la box sur le réseau et lisent la musique, les vidéos et les images des partages.
+E1027	Le serveur multimédia est désactivé. Choisissez des dossiers ci-dessous et activez-le.
+E1028	Les appareils du même réseau trouvent le serveur d'eux-mêmes (DLNA/UPnP AV), p. ex. sous « Serveur multimédia » ou « Sources » sur le téléviseur.
+E1029	Les nouveaux fichiers apparaissent d'eux-mêmes peu après ; après de gros changements, « Tout relire » aide.
+E1030	Le serveur ne fait que lire – et montre tout le contenu des partages choisis à chaque appareil du réseau, sans connexion.
+E1031	Les vidéos ne sont pas converties : l'appareil doit pouvoir lire le format lui-même.
+E1032	Serveur multimédia activé (démarre aussi après un redémarrage)
+E1033	NOM SUR LE RÉSEAU
+E1034	AFFICHER COMME
+E1035	« Musique », « Vidéos », « Images » : n'afficher que ce type de fichiers du partage. « Tout » : musique, vidéos et images.
+E1036	Choisissez au moins un partage.
+E1037	Serveur multimédia enregistré.
+E1038	Le serveur multimédia relit tous les dossiers.
+E1039	Aucun partage – à créer sous
+E1040	.
+P248	Serveur multimédia : $1
+E1041	VIDÉOS
+E1042	IMAGES

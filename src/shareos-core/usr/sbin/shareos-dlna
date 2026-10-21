@@ -1,0 +1,118 @@
+#!/bin/sh
+#
+# shareos-dlna – the media server (MiniDLNA, system app "minidlna")
+#
+#   shareos-dlna start | stop | restart
+#   shareos-dlna rescan      read all folders again (rebuilds the library)
+#   shareos-dlna status      key=value lines for the web interface
+#   shareos-dlna boot        start at boot when it is switched on
+#
+# Settings: UCI dlna.main – enabled, name (shown on TVs; default: the box's
+# name) and list media '<A|V|P|->,share:<name>' (audio, video, pictures or
+# everything of a share). The library (SQLite, cover pictures) is kept on the
+# drive of the apps area (/mnt/<volume>/.shareos/minidlna), so it is not read
+# again after every restart; without a drive in /tmp. MiniDLNA serves on port
+# 8200 and announces itself in the local network (SSDP, UDP 1900); it only
+# reads the folders. New files show up by themselves (inotify).
+#
+PATH=/usr/sbin:/usr/bin:/sbin:/bin
+BIN=/opt/shareos/bin/minidlnad
+RUN=/tmp/shareos-dlna
+CONF=$RUN/minidlna.conf
+PID=$RUN/minidlna.pid
+
+die() { echo "error: $*"; exit 1; }
+
+db_dir() {
+	a=$(uci -q get storage.global.apps)
+	if [ -n "$a" ] && grep -q " /mnt/$a " /proc/mounts; then echo "/mnt/$a/.shareos/minidlna"; else echo "$RUN/db"; fi
+}
+
+pid_of() {
+	p=$(cat $PID 2>/dev/null)
+	[ -n "$p" ] && grep -q minidlna /proc/$p/cmdline 2>/dev/null && echo "$p"
+}
+
+write_conf() {
+	mkdir -p $RUN
+	name=$(uci -q get dlna.main.name); [ -n "$name" ] || name=$(cat /proc/sys/kernel/hostname)
+	db=$(db_dir); mkdir -p "$db"
+	mac=$(cat /sys/class/net/eth0/address 2>/dev/null | tr -d ':')
+	{
+		echo "port=8200"
+		echo "network_interface=eth0"
+		echo "friendly_name=$name"
+		echo "model_name=ShareOS"
+		echo "serial=${mac:-0}"
+		echo "db_dir=$db"
+		echo "log_dir=$RUN"
+		echo "log_level=general,artwork,database,inotify,scanner,metadata,http,ssdp,tivo=warn"
+		echo "inotify=yes"
+		echo "notify_interval=300"
+		echo "strict_dlna=no"
+		echo "enable_tivo=no"
+		echo "wide_links=no"
+		echo "max_connections=10"
+		echo "album_art_names=Cover.jpg/cover.jpg/AlbumArtSmall.jpg/albumartsmall.jpg/AlbumArt.jpg/albumart.jpg/Album.jpg/album.jpg/Folder.jpg/folder.jpg/Thumb.jpg/thumb.jpg"
+		n=0
+		for m in $(uci -q get dlna.main.media); do
+			t=${m%%,*}; s=${m#*,}
+			case "$s" in share:*) ;; *) continue ;; esac
+			sh=${s#share:}
+			echo "$sh" | grep -qE '^[a-z0-9_-]+$' || continue
+			v=$(uci -q get shares."$sh".volume); p=$(uci -q get shares."$sh".path); p=${p:-$sh}
+			[ -n "$v" ] && [ -d "/mnt/$v/$p" ] || continue
+			case "$t" in A|V|P) echo "media_dir=$t,/mnt/$v/$p" ;; *) echo "media_dir=/mnt/$v/$p" ;; esac
+			n=$((n + 1))
+		done
+		[ $n -gt 0 ] || echo "media_dir=$RUN/empty"
+	} > $CONF.new
+	mkdir -p $RUN/empty
+	mv $CONF.new $CONF
+}
+
+cmd_start() {
+	[ -x $BIN ] || die "MiniDLNA is not installed (system app \"minidlna\" in the store)"
+	[ -n "$(pid_of)" ] && return 0
+	write_conf
+	$BIN -f $CONF -P $PID $1 >$RUN/start.log 2>&1 || die "MiniDLNA did not start: $(tail -n1 $RUN/start.log)"
+	i=0; while [ $i -lt 30 ] && [ -z "$(pid_of)" ]; do sleep 0.2; i=$((i + 1)); done
+	[ -n "$(pid_of)" ] || die "MiniDLNA did not start: $(tail -n2 $RUN/minidlna.log 2>/dev/null | head -c 200)"
+}
+
+cmd_stop() {
+	p=$(pid_of)
+	[ -n "$p" ] || return 0
+	kill "$p"
+	i=0; while [ $i -lt 50 ] && kill -0 "$p" 2>/dev/null; do sleep 0.2; i=$((i + 1)); done
+	kill -9 "$p" 2>/dev/null
+	rm -f $PID
+	return 0
+}
+
+cmd_status() {
+	echo "installed=$([ -x $BIN ] && echo 1 || echo 0)"
+	echo "enabled=$([ "$(uci -q get dlna.main.enabled)" = 1 ] && echo 1 || echo 0)"
+	p=$(pid_of)
+	echo "running=$([ -n "$p" ] && echo 1 || echo 0)"
+	echo "db=$(db_dir)"
+	[ -n "$p" ] || return 0
+	page=$(curl -s -m 5 http://127.0.0.1:8200/ 2>/dev/null)
+	echo "audio=$(echo "$page" | sed -n 's/.*Audio files<\/td><td>\([0-9]*\).*/\1/p')"
+	echo "video=$(echo "$page" | sed -n 's/.*Video files<\/td><td>\([0-9]*\).*/\1/p')"
+	echo "image=$(echo "$page" | sed -n 's/.*Image files<\/td><td>\([0-9]*\).*/\1/p')"
+	echo "scanning=$(echo "$page" | grep -q 'scan in progress' && echo 1 || echo 0)"
+	# connected players: type and address
+	echo "$page" | grep -o '<tr><td>[0-9]*</td><td>[^<]*</td><td>[0-9.]*</td>' | sed 's#<tr><td>[0-9]*</td><td>\([^<]*\)</td><td>\([0-9.]*\)</td>#client=\1|\2#'
+}
+
+case "$1" in
+	start) cmd_start ;;
+	stop) cmd_stop ;;
+	restart) cmd_stop; cmd_start ;;
+	rescan) cmd_stop; cmd_start -R ;;
+	status) cmd_status ;;
+	boot) [ "$(uci -q get dlna.main.enabled)" = 1 ] && [ -x $BIN ] && cmd_start ;;
+	*) sed -n '3,16s/^# \{0,1\}//p' "$0"; exit 2 ;;
+esac
+exit 0

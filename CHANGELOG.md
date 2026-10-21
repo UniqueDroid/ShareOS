@@ -4,6 +4,10 @@ Changes per release (newest first). The section of a version is added to its
 GitHub release automatically when the release is built. Test versions are
 pre-releases for test devices only.
 
+## 0.2.0-beta.6
+
+- **Media server (Services → Media server):** MiniDLNA 1.3.3 (ReadyMedia) as the system app `minidlna` (2.8 MB, in the release as `.sapp`): TVs, receivers, game consoles and apps like VLC find the box in the network (DLNA/UPnP AV) and play music, videos and pictures from the chosen shares – per share everything or only music, videos or pictures, with its own name in the network. New files show up by themselves (inotify); *Read everything again* rebuilds the library. The library is kept on the drive of the apps area, so a restart does not read everything again. The page shows the number of tracks, videos and pictures and the players that were connected. The firmware starts and stops the server (`shareos-dlna`, `S96dlna`); removing the system app stops it. It only reads the folders and shows the chosen shares to every device in the network, without sign-in.
+
 ## 0.2.0-beta.5
 
 - **Media jobs on the box – FFmpeg as a system app:** `ffmpeg` (FFmpeg 6.1.5 with `ffprobe`, LAME and Opus, about 2.6 MB, in the release as `.sapp`) converts audio and puts videos into another container. The box runs the jobs itself, in the background, one after another, at the lowest priority and with the account's rights (admins: root, like their file browser): files belong to the account, storage limits apply. Videos are not re-encoded – the box's ARM CPU has no FPU, that would take many times the length of the film. The app MediaTranscoder (ShareOS-Apps) uses it.

@@ -330,6 +330,19 @@ Needs a drive, some media on it (a video, e.g. `.mkv` or `.mp4`, and a music fil
 8. In the terminal during a job: `ps | grep ffmpeg` – runs with `nice` 19; `ls /tmp/shareos-media/jobs/`.
 9. Apps → Installed → ffmpeg → *Remove* (asks, because MediaTranscoder needs it): running jobs stop, the app shows "FFmpeg fehlt".
 
+## 14k. Media server (0.2.0-beta.6)
+
+Needs a drive with a share with music (MP3/FLAC) and one with videos (MP4/MKV) and the file `minidlna-1.3.3.sapp` (release of the firmware; or MiniDLNA from the store). Plus a TV or VLC in the same network.
+
+1. Services → **Medienserver**: without the system app a hint with *Im Store installieren*. Install MiniDLNA (store or *Install package*).
+2. *Einstellungen*: music share → "nur Musik", video share → "nur Videos", name e.g. "Wohnzimmer", *Medienserver eingeschaltet* → *Speichern*: "läuft", "liest Ordner ein …", the numbers go up.
+3. VLC (View → Playlist → Local Network → Universal Plug'n'Play) or the TV (sources/media server): "Wohnzimmer" shows up, music and videos play, seek in a video.
+4. Copy a new file into the music share: after a short while "Musikstücke" counts one more, without a restart.
+5. Services → Status: "Medienserver (DLNA)" runs; restart the box: the server starts by itself and does not read everything again (the library is in `/mnt/<drive>/.shareos/minidlna`).
+6. *Alles neu einlesen*: "liest Ordner ein …", afterwards the same numbers.
+7. Switch it off → *Speichern*: TV/VLC no longer see the server (after a few minutes).
+8. Apps → Installed → minidlna → *Remove*: the server stops, the page shows the hint again.
+
 ## 15. Buttons
 
 - **Reset button** (pin hole at the back), hold and let go:

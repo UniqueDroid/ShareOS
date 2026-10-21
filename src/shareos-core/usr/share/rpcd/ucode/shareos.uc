@@ -42,7 +42,9 @@ const SERVICES = {
 	ubus:     { proc: 'ubusd',    label: 'Systembus (ubus)', desc: 'Nachrichten zwischen den Diensten' },
 	syslogd:  { proc: 'syslogd',  label: 'Systemprotokoll', desc: 'syslogd, im RAM' },
 	'avahi-daemon': { proc: 'avahi-daemon', label: 'Netzwerkname (mDNS)', desc: 'macht die Box als <name>.local erreichbar' },
-	board:    { proc: 'dns320l-daemon', label: 'Gerätesteuerung', desc: 'Lüfter, Temperatur, Taster, MCU-Uhr' }
+	board:    { proc: 'dns320l-daemon', label: 'Gerätesteuerung', desc: 'Lüfter, Temperatur, Taster, MCU-Uhr' },
+	// only listed with the system app installed
+	dlna:     { proc: 'minidlnad', label: 'Medienserver (DLNA)', desc: 'MiniDLNA, Port 8200', needs: '/opt/shareos/bin/minidlnad' }
 };
 // services that must not be stopped from the UI (it would cut itself off)
 const ESSENTIAL = { uhttpd: true, rpcd: true, ubus: true, board: true };
@@ -738,7 +740,7 @@ function default_password() {
 /* ---------- settings backup ---------- */
 
 const CRYPT = '/usr/sbin/shareos-crypt';
-const BACKUP_CONFIGS = [ 'shareos', 'storage', 'network', 'accounts', 'shares', 'paperless', 'cloud', 'apps' ];
+const BACKUP_CONFIGS = [ 'shareos', 'storage', 'network', 'accounts', 'shares', 'paperless', 'cloud', 'apps', 'dlna' ];
 const BACKUP_FILES = [ '/etc/ksmbd/ksmbdpwd.db', '/etc/ssl/shareos/server.crt', '/etc/ssl/shareos/server.key', '/etc/hostname', '/etc/timezone' ];
 
 function lines_of(path) { return filter(split(readfile(path) ?? '', '\n'), (l) => l != ''); }
@@ -1038,6 +1040,30 @@ function cloud_log(c, name, n) {
 }
 
 function me_cloud_allowed(u) { return u != 'root' && cursor().get('accounts', u, 'cloud') == '1' && !!cursor().get('accounts', u, 'home'); }
+
+/* ---------- media server (MiniDLNA, shareos-dlna) ---------- */
+
+const DLNA = '/usr/sbin/shareos-dlna';
+const DLNA_TYPES = { A: 1, V: 1, P: 1, '-': 1 };
+
+function dlna_status() {
+	let st = {}, clients = [];
+	for (let l in split(sh(DLNA + ' status').out, '\n')) {
+		let m = match(l, /^([a-z]+)=(.*)$/);
+		if (!m) continue;
+		if (m[1] == 'client') { let f = split(m[2], '|'); push(clients, { type: f[0], ip: f[1] }); }
+		else st[m[1]] = m[2];
+	}
+	let c = cursor(), media = [];
+	for (let x in list_of(c.get('dlna', 'main', 'media'))) {
+		let m = match(x, /^([AVP-]),share:([a-z0-9_-]+)$/);
+		if (m) push(media, { type: m[1], share: m[2] });
+	}
+	return { installed: st.installed == '1', enabled: st.enabled == '1', running: st.running == '1', scanning: st.scanning == '1',
+		audio: +(st.audio || 0), video: +(st.video || 0), image: +(st.image || 0), db: st.db ?? null, clients,
+		name: c.get('dlna', 'main', 'name') ?? '', hostname: trim(readfile('/proc/sys/kernel/hostname') ?? ''), media,
+		shares: map(filter(share_list().shares, (x) => x.volume), (x) => x.name) };
+}
 
 /* ---------- apps ---------- */
 
@@ -1627,7 +1653,7 @@ return {
 				let list = [], names = proc_names(), off = autostart_off();
 				for (let name in sort(keys(SERVICES))) {
 					let s = SERVICES[name];
-					if (!init_script(name))
+					if (!init_script(name) || (s.needs && !stat(s.needs)))
 						continue;
 					// the board service is the MCU daemon only on boxes with that MCU
 					let proc = name == 'board' && board().control && board().control != 'mcu' ? 'shareos-board' : s.proc;
@@ -2604,6 +2630,46 @@ return {
 				let c = cursor();
 				if (c.get('cloud', req.args.name) != 'job') return { error: 'unknown job' };
 				return { lines: cloud_log(c, req.args.name, 80) };
+			}
+		}
+	},
+
+	'shareos.dlna': {
+		status: { call: function() { return dlna_status(); } },
+
+		// enabled, name, media: [{share, type: A|V|P|-}]
+		set: {
+			args: { enabled: false, name: '', media: [] },
+			call: function(req) {
+				let a = req.args, c = cursor();
+				let name = trim(a.name ?? '');
+				if (length(name) > 48 || match(name, /[\n\r=]/)) return { error: 'invalid name' };
+				let shares = map(share_list().shares, (x) => x.name), list = [], seen = {};
+				for (let m in (type(a.media) == 'array' ? a.media : [])) {
+					if (type(m) != 'object' || !(m.type in DLNA_TYPES) || index(shares, m.share) < 0) return { error: 'invalid folder' };
+					if (seen[m.share]) continue;
+					seen[m.share] = 1;
+					push(list, m.type + ',share:' + m.share);
+				}
+				c.set('dlna', 'main', 'dlna');
+				c.set('dlna', 'main', 'enabled', a.enabled === true ? '1' : '0');
+				c.set('dlna', 'main', 'name', name);
+				c.delete('dlna', 'main', 'media');
+				if (length(list)) c.set('dlna', 'main', 'media', list);
+				c.commit('dlna');
+				let r = sh(DLNA + (a.enabled === true ? ' restart' : ' stop'));
+				let m = match(r.out, /error: ([^\n]*)/);
+				if (m || r.rc != 0) return { error: m ? m[1] : (trim(r.out) || 'failed') };
+				return dlna_status();
+			}
+		},
+
+		rescan: {
+			call: function() {
+				if (cursor().get('dlna', 'main', 'enabled') != '1') return { error: 'the media server is switched off' };
+				let r = sh(DLNA + ' rescan');
+				let m = match(r.out, /error: ([^\n]*)/);
+				return m ? { error: m[1] } : dlna_status();
 			}
 		}
 	},

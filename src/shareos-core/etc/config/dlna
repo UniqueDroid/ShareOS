@@ -1,0 +1,8 @@
+# Media server (MiniDLNA, system app "minidlna") – managed by shareos-dlna
+# (web interface: Services -> Media server).
+#
+#	list media 'V,share:filme'   # A audio | V video | P pictures | - everything
+
+config dlna 'main'
+	option enabled '0'
+	option name ''

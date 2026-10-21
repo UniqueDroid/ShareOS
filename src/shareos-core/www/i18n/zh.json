@@ -1014,7 +1014,38 @@
 		"Eigene Torrents (Transmission)": "自己的种子（Transmission）",
 		"Darf den eigenen Transmission-Dienst des Benutzers steuern: Torrents hinzufügen, anhalten und löschen. Jeder Benutzer hat seinen eigenen Dienst; Downloads landen nur in seinen Ordnern.": "可以控制该用户自己的 Transmission 服务：添加、暂停和删除种子。每个用户都有自己的服务；下载只保存到其文件夹中。",
 		"Medien umwandeln (FFmpeg)": "转换媒体（FFmpeg）",
-		"Darf auf der Box Audio und Video des Benutzers umwandeln lassen (FFmpeg) – mit seinen Rechten, nur in seinen Ordnern, aus festen Auswahlen (kein beliebiger Befehl).": "可以在设备上转换该用户的音频和视频（FFmpeg）——以其权限，仅在其文件夹中，使用固定选项（不允许任意命令）。"
+		"Darf auf der Box Audio und Video des Benutzers umwandeln lassen (FFmpeg) – mit seinen Rechten, nur in seinen Ordnern, aus festen Auswahlen (kein beliebiger Befehl).": "可以在设备上转换该用户的音频和视频（FFmpeg）——以其权限，仅在其文件夹中，使用固定选项（不允许任意命令）。",
+		"MEDIENSERVER": "媒体服务器",
+		"Medienserver (DLNA)": "媒体服务器（DLNA）",
+		"nicht freigeben": "不共享",
+		"Musik, Videos und Bilder": "音乐、视频和图片",
+		"nur Musik": "仅音乐",
+		"nur Videos": "仅视频",
+		"nur Bilder": "仅图片",
+		"MUSIKSTÜCKE": "曲目",
+		"GERÄTE": "设备",
+		"Im Netzwerk als": "网络中的名称",
+		"liest Ordner ein …": "正在读取文件夹 …",
+		"Lade Medienserver …": "正在加载媒体服务器 …",
+		"Alles neu einlesen": "全部重新读取",
+		"Im Store installieren (MiniDLNA)": "从商店安装（MiniDLNA）",
+		"Der Medienserver (MiniDLNA) ist eine System-App: Fernseher, Receiver, Spielkonsolen und Apps wie VLC finden die Box dann im Netzwerk und spielen Musik, Videos und Bilder aus den Freigaben ab.": "媒体服务器（MiniDLNA）是系统应用：电视、接收器、游戏机和 VLC 等应用会在网络中找到本设备，并播放共享中的音乐、视频和图片。",
+		"Der Medienserver ist ausgeschaltet. Unten Ordner wählen und einschalten.": "媒体服务器已关闭。请在下方选择文件夹并开启。",
+		"Geräte im selben Netzwerk finden den Server von selbst (DLNA/UPnP AV), z. B. unter „Medienserver“ oder „Quellen“ am Fernseher.": "同一网络中的设备会自动找到服务器（DLNA/UPnP AV），例如在电视的“媒体服务器”或“信号源”中。",
+		"Neue Dateien erscheinen nach kurzer Zeit von selbst; nach großen Änderungen hilft „Alles neu einlesen“.": "新文件会在短时间后自动出现；大量更改后可使用“全部重新读取”。",
+		"Der Server liest nur – und zeigt alles in den gewählten Freigaben jedem Gerät im Netzwerk, ohne Anmeldung.": "服务器只读取——并向网络中的每台设备显示所选共享中的全部内容，无需登录。",
+		"Videos werden nicht umgewandelt: das Gerät muss das Format selbst abspielen können.": "视频不会被转换：设备必须能直接播放该格式。",
+		"Medienserver eingeschaltet (startet auch nach einem Neustart)": "媒体服务器已开启（重启后也会启动）",
+		"NAME IM NETZWERK": "网络中的名称",
+		"ZEIGEN ALS": "显示为",
+		"„Musik“, „Videos“, „Bilder“: aus der Freigabe nur diese Art von Dateien zeigen. „Alles“: Musik, Videos und Bilder.": "“音乐”“视频”“图片”：只显示该共享中的此类文件。“全部”：音乐、视频和图片。",
+		"Mindestens eine Freigabe wählen.": "请至少选择一个共享。",
+		"Medienserver gespeichert.": "媒体服务器已保存。",
+		"Medienserver liest alle Ordner neu ein.": "媒体服务器正在重新读取所有文件夹。",
+		"Noch keine Freigabe – unter": "还没有共享——请在",
+		"anlegen.": "中创建。",
+		"VIDEOS": "视频",
+		"BILDER": "图片"
 	},
 	"patterns": [
 		[
@@ -2008,6 +2039,10 @@
 		[
 			"^Hinweis: (.+)$",
 			"提示：$1"
+		],
+		[
+			"^Medienserver: (.*)$",
+			"媒体服务器：$1"
 		]
 	],
 	"words": [
