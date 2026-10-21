@@ -1065,7 +1065,38 @@
 		"rsync fehlt in dieser Firmware.": "rsync manque dans ce firmware.",
 		"Kein geeignetes Ziel: Snapshots brauchen ein Laufwerk mit ext4 oder Btrfs (FAT32/exFAT kennen keine Hardlinks).": "Aucune cible adaptée : les instantanés exigent un lecteur ext4 ou Btrfs (FAT32/exFAT n'ont pas de liens physiques).",
 		"Aufträge": "tâches",
-		"– keine Hardlinks": "– pas de liens physiques"
+		"– keine Hardlinks": "– pas de liens physiques",
+		"MEDIENSERVER": "SERVEUR MULTIMÉDIA",
+		"Medienserver (DLNA)": "Serveur multimédia (DLNA)",
+		"nicht freigeben": "ne pas partager",
+		"Musik, Videos und Bilder": "musique, vidéos et images",
+		"nur Musik": "musique seulement",
+		"nur Videos": "vidéos seulement",
+		"nur Bilder": "images seulement",
+		"MUSIKSTÜCKE": "MORCEAUX",
+		"GERÄTE": "APPAREILS",
+		"Im Netzwerk als": "Dans le réseau sous le nom",
+		"liest Ordner ein …": "lecture des dossiers …",
+		"Lade Medienserver …": "Chargement du serveur multimédia …",
+		"Alles neu einlesen": "Tout relire",
+		"Im Store installieren (MiniDLNA)": "Installer depuis le store (MiniDLNA)",
+		"Der Medienserver (MiniDLNA) ist eine System-App: Fernseher, Receiver, Spielkonsolen und Apps wie VLC finden die Box dann im Netzwerk und spielen Musik, Videos und Bilder aus den Freigaben ab.": "Le serveur multimédia (MiniDLNA) est une app système : téléviseurs, récepteurs, consoles et apps comme VLC trouvent alors la box sur le réseau et lisent la musique, les vidéos et les images des partages.",
+		"Der Medienserver ist ausgeschaltet. Unten Ordner wählen und einschalten.": "Le serveur multimédia est désactivé. Choisissez des dossiers ci-dessous et activez-le.",
+		"Geräte im selben Netzwerk finden den Server von selbst (DLNA/UPnP AV), z. B. unter „Medienserver“ oder „Quellen“ am Fernseher.": "Les appareils du même réseau trouvent le serveur d'eux-mêmes (DLNA/UPnP AV), p. ex. sous « Serveur multimédia » ou « Sources » sur le téléviseur.",
+		"Neue Dateien erscheinen nach kurzer Zeit von selbst; nach großen Änderungen hilft „Alles neu einlesen“.": "Les nouveaux fichiers apparaissent d'eux-mêmes peu après ; après de gros changements, « Tout relire » aide.",
+		"Der Server liest nur – und zeigt alles in den gewählten Freigaben jedem Gerät im Netzwerk, ohne Anmeldung.": "Le serveur ne fait que lire – et montre tout le contenu des partages choisis à chaque appareil du réseau, sans connexion.",
+		"Videos werden nicht umgewandelt: das Gerät muss das Format selbst abspielen können.": "Les vidéos ne sont pas converties : l'appareil doit pouvoir lire le format lui-même.",
+		"Medienserver eingeschaltet (startet auch nach einem Neustart)": "Serveur multimédia activé (démarre aussi après un redémarrage)",
+		"NAME IM NETZWERK": "NOM SUR LE RÉSEAU",
+		"ZEIGEN ALS": "AFFICHER COMME",
+		"„Musik“, „Videos“, „Bilder“: aus der Freigabe nur diese Art von Dateien zeigen. „Alles“: Musik, Videos und Bilder.": "« Musique », « Vidéos », « Images » : n'afficher que ce type de fichiers du partage. « Tout » : musique, vidéos et images.",
+		"Mindestens eine Freigabe wählen.": "Choisissez au moins un partage.",
+		"Medienserver gespeichert.": "Serveur multimédia enregistré.",
+		"Medienserver liest alle Ordner neu ein.": "Le serveur multimédia relit tous les dossiers.",
+		"Noch keine Freigabe – unter": "Aucun partage – à créer sous",
+		"anlegen.": ".",
+		"VIDEOS": "VIDÉOS",
+		"BILDER": "IMAGES"
 	},
 	"patterns": [
 		[
@@ -2131,6 +2162,10 @@
 		[
 			"^AUFTRAG (.+)$",
 			"TÂCHE $1"
+		],
+		[
+			"^Medienserver: (.*)$",
+			"Serveur multimédia : $1"
 		]
 	],
 	"words": [

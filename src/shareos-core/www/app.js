@@ -155,7 +155,7 @@ const TABS = [
 	['apps', 'APPS', true], ['cloud', 'CLOUD', true], ['paperless', 'PAPERLESS', true], ['system', 'SYSTEM']
 ];
 const SYS_SUBS = [['firmware', 'FIRMWARE'], ['notifications', 'MELDUNGEN'], ['general', 'ALLGEMEIN'], ['time', 'ZEIT'], ['network', 'NETZWERK'], ['power', 'ENERGIE & RESET'], ['logs', 'PROTOKOLLE'], ['terminal', 'TERMINAL'], ['appearance', 'DARSTELLUNG'], ['about', 'ÜBER']];
-const SVC_SUBS = [['status', 'STATUS'], ['autostart', 'AUTOSTART']];
+const SVC_SUBS = [['status', 'STATUS'], ['autostart', 'AUTOSTART'], ['dlna', 'MEDIENSERVER']];
 const SHR_SUBS = [['shares', 'FREIGABEN'], ['files', 'DATEIEN'], ['users', 'BENUTZER'], ['groups', 'GRUPPEN']];
 const STO_SUBS = [['volumes', 'LAUFWERKE'], ['snapshots', 'SNAPSHOTS']];
 const ROLE_TXT = { admin: 'Administrator', user: 'Benutzer', share: 'Nur Freigaben' };
@@ -650,7 +650,7 @@ const VIEWS = {
 		const sub = S.route.sub;
 		return html`
 		<nav class="subtabs" aria-label="Dienste">${SVC_SUBS.map(([id, label]) => html`<a class="st${sub === id ? ' on' : ''}" href="#/services/${id}">${label}</a>`)}</nav>
-		${sub === 'autostart' ? autostartView()
+		${sub === 'dlna' ? dlnaView() : sub === 'autostart' ? autostartView()
 			: html`<section class="sec">${secHead('services', 'DIENSTE', 'Start, Stopp, Neustart')}${serviceCards(true, isTable('services'))}</section>`}`;
 	},
 
@@ -1224,6 +1224,59 @@ function cloudAfter(scope) {
 	});
 }
 
+/* ---------- media server (Services -> Media server, MiniDLNA) ------------------- */
+
+const DLNA_TYPES = [['', 'nicht freigeben'], ['-', 'Musik, Videos und Bilder'], ['A', 'nur Musik'], ['V', 'nur Videos'], ['P', 'nur Bilder']];
+
+async function loadDlna() {
+	clearTimeout(S.dlnaTimer);
+	try { S.dlna = await rpc('shareos.dlna', 'status'); } catch (e) { toast('Medienserver: ' + e.message, true); }
+	if (S.route.tab === 'services' && S.route.sub === 'dlna') {
+		if (!document.activeElement?.matches('input,select')) renderMain();
+		if (S.dlna?.running) S.dlnaTimer = setTimeout(loadDlna, S.dlna.scanning ? 4000 : 15000);
+	}
+}
+
+function dlnaView() {
+	const d = S.dlna;
+	if (!d) return html`<div class="panel"><div class="empty"><div class="spin" style="margin:0"></div><span>Lade Medienserver …</span></div></div>`;
+	if (!d.installed) return html`<section class="sec"><div class="panel"><div class="empty">${svg(I.info)}<div>
+		<span>Der Medienserver (MiniDLNA) ist eine System-App: Fernseher, Receiver, Spielkonsolen und Apps wie VLC finden die Box dann im Netzwerk und spielen Musik, Videos und Bilder aus den Freigaben ab.</span>
+		<div class="acts" style="margin-top:12px"><a class="btn primary" href="#/apps/store">Im Store installieren (MiniDLNA)</a></div></div></div></div></section>`;
+	const media = {};
+	d.media.forEach((m) => { media[m.share] = m.type; });
+	const host = location.hostname;
+	return html`<section class="sec">
+		<div class="g2">
+			<div class="panel">
+				<div class="ph"><span class="pt">MEDIENSERVER</span>${d.running ? html`<span class="tag ok ml">läuft</span>` : html`<span class="tag ml">aus</span>`}${d.scanning ? html` <span class="tag">liest Ordner ein …</span>` : ''}</div>
+				${d.running ? html`<div class="tiles" style="margin:0">
+					<div class="tile"><div class="k">MUSIKSTÜCKE</div><div class="v">${d.audio}</div></div>
+					<div class="tile"><div class="k">VIDEOS</div><div class="v">${d.video}</div></div>
+					<div class="tile"><div class="k">BILDER</div><div class="v">${d.image}</div></div></div>
+					<p class="note"><span>Im Netzwerk als</span> <b>${d.name || d.hostname}</b> · <code>http://${host}:8200/</code></p>
+					${d.clients.length ? html`<div class="pt" style="margin:12px 0 6px">GERÄTE</div><div style="display:grid;gap:4px;font-size:13px">${d.clients.map((c) => html`<div>${c.type} <span class="mut">· ${c.ip}</span></div>`)}</div>` : ''}
+					<div class="acts" style="margin-top:12px"><button class="btn" type="button" data-act="dlna-rescan" ${d.scanning ? 'disabled' : ''}>Alles neu einlesen</button></div>`
+				: html`<p class="mut" style="margin:0;font-size:13px">Der Medienserver ist ausgeschaltet. Unten Ordner wählen und einschalten.</p>`}
+			</div>
+			<div class="panel">
+				<div class="ph"><span class="pt">HINWEISE</span></div>
+				<p class="mut" style="margin:0;font-size:13px;line-height:1.6"><span>Geräte im selben Netzwerk finden den Server von selbst (DLNA/UPnP AV), z. B. unter „Medienserver“ oder „Quellen“ am Fernseher.</span> <span>Neue Dateien erscheinen nach kurzer Zeit von selbst; nach großen Änderungen hilft „Alles neu einlesen“.</span> <span>Der Server liest nur – und zeigt alles in den gewählten Freigaben jedem Gerät im Netzwerk, ohne Anmeldung.</span> <span>Videos werden nicht umgewandelt: das Gerät muss das Format selbst abspielen können.</span></p>
+			</div>
+		</div>
+	</section>
+	<section class="sec"><form class="panel" id="f-dlna" style="max-width:820px">
+		<div class="ph"><span class="pt">EINSTELLUNGEN</span></div>
+		<label class="chk"><input type="checkbox" name="enabled"${d.enabled ? raw(' checked') : ''}>Medienserver eingeschaltet (startet auch nach einem Neustart)</label>
+		<div class="fields" style="margin-top:12px"><label class="f"><span>NAME IM NETZWERK</span><input name="name" value="${d.name}" maxlength="48" placeholder="${d.hostname}"></label></div>
+		<div class="pt" style="margin:16px 0 8px">FREIGABEN</div>
+		${d.shares.length ? html`<div class="tw"><table class="t"><thead><tr><th>FREIGABE</th><th>ZEIGEN ALS</th></tr></thead><tbody>
+			${d.shares.map((n) => html`<tr><td><b>${n}</b></td><td><select class="dlna-type" data-share="${n}">${DLNA_TYPES.map(([v, t]) => html`<option value="${v}"${(media[n] || '') === v ? raw(' selected') : ''}>${t}</option>`)}</select></td></tr>`)}</tbody></table></div>`
+			: html`<p class="note">Noch keine Freigabe – unter <a href="#/shares/shares">Freigaben</a> anlegen.</p>`}
+		<div class="acts" style="margin-top:14px"><button class="btn primary" type="submit">Speichern</button></div>
+	</form></section>`;
+}
+
 /* ---------- snapshots (Storage -> Snapshots) ------------------------------------ */
 
 const SNAP_EVERY = { hour: 'Stündlich', '6h': 'Alle 6 Stunden', day: 'Täglich', week: 'Wöchentlich (Sonntag)' };
@@ -1354,6 +1407,20 @@ function snapEditor(d, ed) {
 		<label class="chk" style="margin-top:12px"><input type="checkbox" name="enabled"${x.enabled !== false ? raw(' checked') : ''}>Zeitplan aktiv</label>
 		<div class="acts" style="margin-top:14px"><button class="btn primary" type="submit">Speichern</button></div>
 	</form></section>`;
+}
+
+function dlnaAfter() {
+	if (!S.dlna) { loadDlna(); return; }
+	$('#f-dlna')?.addEventListener('submit', async (e) => {
+		e.preventDefault();
+		const f = e.target, media = [];
+		document.querySelectorAll('.dlna-type').forEach((x) => { if (x.value) media.push({ share: x.dataset.share, type: x.value }); });
+		if (f.enabled.checked && !media.length) { toast('Mindestens eine Freigabe wählen.', true); return; }
+		const b = $('button[type=submit]', f); b.disabled = true;
+		try { S.dlna = await rpc('shareos.dlna', 'set', { enabled: f.enabled.checked, name: f.name.value.trim(), media }); toast('Medienserver gespeichert.'); }
+		catch (err) { toast('Medienserver: ' + err.message, true); }
+		loadDlna();
+	});
 }
 
 function snapForm() {
@@ -2686,6 +2753,7 @@ const VIEWS_AFTER = {
 		});
 	},
 	services() {
+		if (S.route.sub === 'dlna') { dlnaAfter(); return; }
 		if (!S.services) loadServices();
 		document.querySelectorAll('.as-toggle').forEach((c) => c.addEventListener('change', async () => {
 			c.disabled = true;
@@ -3197,6 +3265,11 @@ const ACTIONS = {
 		if (!await confirmDlg(`Auftrag „${n}“ entfernen?`, 'Der Auftrag läuft nicht mehr. Dateien auf dem NAS und in der Cloud bleiben, wie sie sind.', 'Entfernen')) return;
 		try { await CLOUD_API[el.dataset.scope].delJob(n); toast(`Auftrag „${n}“ entfernt.`); loadCloud(el.dataset.scope); } catch (e) { toast(e.message, true); }
 	},
+	async 'dlna-rescan'(el) {
+		el.disabled = true;
+		try { S.dlna = await rpc('shareos.dlna', 'rescan'); toast('Medienserver liest alle Ordner neu ein.'); } catch (e) { toast(e.message, true); }
+		loadDlna();
+	},
 	'sn-new'() {
 		const d = S.snap.data, t = d.volumes.find((v) => v.links), src = d.sources.find((x) => x.kind === 'share') || d.sources[0];
 		S.snap.edit = { mode: 'new', data: { name: '', source: src?.id || '', target: (d.volumes.find((v) => v.links && v.name !== (src?.volume || src?.name)) || t)?.name || '',
@@ -3511,6 +3584,7 @@ window.addEventListener('hashchange', () => {
 	if (S.route.tab !== 'storage') { clearTimeout(S.stTimer); S.stTimer = null; S.stActive = false; }
 	if (S.route.tab !== 'storage' || S.route.sub !== 'snapshots') { clearTimeout(S.snapTimer); if (S.snap) { S.snap.edit = null; S.snap.log = null; } }
 	if (S.route.tab !== 'shares') { S.shEdit = null; S.uEdit = null; }
+	if (S.route.tab !== 'services' || S.route.sub !== 'dlna') clearTimeout(S.dlnaTimer);
 	if (S.fb && S.route.sub === 'files') S.fb.roots = null;   // volumes may have changed
 	if (S.route.tab !== 'paperless') { S.plEdit = null; S.plLog = null; } else if (S.pl) loadPaperless();
 	if (S.route.tab !== 'cloud') { clearTimeout(S.cloudTimer); if (S.cloud?.scope === 'admin') { S.cloud.remoteEdit = null; S.cloud.jobEdit = null; S.cloud.log = null; } }

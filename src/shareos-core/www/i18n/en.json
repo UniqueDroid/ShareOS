@@ -1065,7 +1065,38 @@
 		"rsync fehlt in dieser Firmware.": "rsync is missing in this firmware.",
 		"Kein geeignetes Ziel: Snapshots brauchen ein Laufwerk mit ext4 oder Btrfs (FAT32/exFAT kennen keine Hardlinks).": "No suitable target: snapshots need a drive with ext4 or Btrfs (FAT32/exFAT have no hard links).",
 		"Aufträge": "jobs",
-		"– keine Hardlinks": "– no hard links"
+		"– keine Hardlinks": "– no hard links",
+		"MEDIENSERVER": "MEDIA SERVER",
+		"Medienserver (DLNA)": "Media server (DLNA)",
+		"nicht freigeben": "do not share",
+		"Musik, Videos und Bilder": "music, videos and pictures",
+		"nur Musik": "music only",
+		"nur Videos": "videos only",
+		"nur Bilder": "pictures only",
+		"MUSIKSTÜCKE": "TRACKS",
+		"GERÄTE": "DEVICES",
+		"Im Netzwerk als": "In the network as",
+		"liest Ordner ein …": "reading folders …",
+		"Lade Medienserver …": "Loading media server …",
+		"Alles neu einlesen": "Read everything again",
+		"Im Store installieren (MiniDLNA)": "Install from the store (MiniDLNA)",
+		"Der Medienserver (MiniDLNA) ist eine System-App: Fernseher, Receiver, Spielkonsolen und Apps wie VLC finden die Box dann im Netzwerk und spielen Musik, Videos und Bilder aus den Freigaben ab.": "The media server (MiniDLNA) is a system app: TVs, receivers, game consoles and apps like VLC then find the box in the network and play music, videos and pictures from the shares.",
+		"Der Medienserver ist ausgeschaltet. Unten Ordner wählen und einschalten.": "The media server is switched off. Choose folders below and switch it on.",
+		"Geräte im selben Netzwerk finden den Server von selbst (DLNA/UPnP AV), z. B. unter „Medienserver“ oder „Quellen“ am Fernseher.": "Devices in the same network find the server by themselves (DLNA/UPnP AV), e.g. under “Media server” or “Sources” on the TV.",
+		"Neue Dateien erscheinen nach kurzer Zeit von selbst; nach großen Änderungen hilft „Alles neu einlesen“.": "New files show up by themselves after a short while; after big changes “Read everything again” helps.",
+		"Der Server liest nur – und zeigt alles in den gewählten Freigaben jedem Gerät im Netzwerk, ohne Anmeldung.": "The server only reads – and shows everything in the chosen shares to every device in the network, without sign-in.",
+		"Videos werden nicht umgewandelt: das Gerät muss das Format selbst abspielen können.": "Videos are not converted: the device must be able to play the format itself.",
+		"Medienserver eingeschaltet (startet auch nach einem Neustart)": "Media server switched on (also starts after a restart)",
+		"NAME IM NETZWERK": "NAME IN THE NETWORK",
+		"ZEIGEN ALS": "SHOW AS",
+		"„Musik“, „Videos“, „Bilder“: aus der Freigabe nur diese Art von Dateien zeigen. „Alles“: Musik, Videos und Bilder.": "“Music”, “Videos”, “Pictures”: show only this kind of files from the share. “Everything”: music, videos and pictures.",
+		"Mindestens eine Freigabe wählen.": "Choose at least one share.",
+		"Medienserver gespeichert.": "Media server saved.",
+		"Medienserver liest alle Ordner neu ein.": "Media server reads all folders again.",
+		"Noch keine Freigabe – unter": "No share yet – create one under",
+		"anlegen.": ".",
+		"VIDEOS": "VIDEOS",
+		"BILDER": "PICTURES"
 	},
 	"patterns": [
 		[
@@ -2131,6 +2162,10 @@
 		[
 			"^AUFTRAG (.+)$",
 			"JOB $1"
+		],
+		[
+			"^Medienserver: (.*)$",
+			"Media server: $1"
 		]
 	],
 	"words": [

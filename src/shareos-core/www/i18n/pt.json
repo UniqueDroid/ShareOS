@@ -1065,7 +1065,38 @@
 		"rsync fehlt in dieser Firmware.": "O rsync não está neste firmware.",
 		"Kein geeignetes Ziel: Snapshots brauchen ein Laufwerk mit ext4 oder Btrfs (FAT32/exFAT kennen keine Hardlinks).": "Nenhum destino adequado: snapshots precisam de uma unidade ext4 ou Btrfs (FAT32/exFAT não têm hard links).",
 		"Aufträge": "tarefas",
-		"– keine Hardlinks": "– sem hard links"
+		"– keine Hardlinks": "– sem hard links",
+		"MEDIENSERVER": "SERVIDOR DE MÍDIA",
+		"Medienserver (DLNA)": "Servidor de mídia (DLNA)",
+		"nicht freigeben": "não compartilhar",
+		"Musik, Videos und Bilder": "música, vídeos e imagens",
+		"nur Musik": "só música",
+		"nur Videos": "só vídeos",
+		"nur Bilder": "só imagens",
+		"MUSIKSTÜCKE": "FAIXAS",
+		"GERÄTE": "DISPOSITIVOS",
+		"Im Netzwerk als": "Na rede como",
+		"liest Ordner ein …": "lendo pastas …",
+		"Lade Medienserver …": "Carregando servidor de mídia …",
+		"Alles neu einlesen": "Ler tudo de novo",
+		"Im Store installieren (MiniDLNA)": "Instalar pela loja (MiniDLNA)",
+		"Der Medienserver (MiniDLNA) ist eine System-App: Fernseher, Receiver, Spielkonsolen und Apps wie VLC finden die Box dann im Netzwerk und spielen Musik, Videos und Bilder aus den Freigaben ab.": "O servidor de mídia (MiniDLNA) é um app de sistema: TVs, receptores, consoles e apps como o VLC encontram a caixa na rede e reproduzem músicas, vídeos e imagens dos compartilhamentos.",
+		"Der Medienserver ist ausgeschaltet. Unten Ordner wählen und einschalten.": "O servidor de mídia está desligado. Escolha pastas abaixo e ligue-o.",
+		"Geräte im selben Netzwerk finden den Server von selbst (DLNA/UPnP AV), z. B. unter „Medienserver“ oder „Quellen“ am Fernseher.": "Dispositivos na mesma rede encontram o servidor sozinhos (DLNA/UPnP AV), p. ex. em “Servidor de mídia” ou “Fontes” na TV.",
+		"Neue Dateien erscheinen nach kurzer Zeit von selbst; nach großen Änderungen hilft „Alles neu einlesen“.": "Arquivos novos aparecem sozinhos depois de pouco tempo; após grandes mudanças, “Ler tudo de novo” ajuda.",
+		"Der Server liest nur – und zeigt alles in den gewählten Freigaben jedem Gerät im Netzwerk, ohne Anmeldung.": "O servidor só lê – e mostra tudo dos compartilhamentos escolhidos a qualquer dispositivo da rede, sem login.",
+		"Videos werden nicht umgewandelt: das Gerät muss das Format selbst abspielen können.": "Os vídeos não são convertidos: o dispositivo precisa reproduzir o formato sozinho.",
+		"Medienserver eingeschaltet (startet auch nach einem Neustart)": "Servidor de mídia ligado (inicia também após reiniciar)",
+		"NAME IM NETZWERK": "NOME NA REDE",
+		"ZEIGEN ALS": "MOSTRAR COMO",
+		"„Musik“, „Videos“, „Bilder“: aus der Freigabe nur diese Art von Dateien zeigen. „Alles“: Musik, Videos und Bilder.": "“Música”, “Vídeos”, “Imagens”: mostrar só esse tipo de arquivo do compartilhamento. “Tudo”: música, vídeos e imagens.",
+		"Mindestens eine Freigabe wählen.": "Escolha pelo menos um compartilhamento.",
+		"Medienserver gespeichert.": "Servidor de mídia salvo.",
+		"Medienserver liest alle Ordner neu ein.": "O servidor de mídia está lendo todas as pastas de novo.",
+		"Noch keine Freigabe – unter": "Nenhum compartilhamento ainda – crie em",
+		"anlegen.": ".",
+		"VIDEOS": "VÍDEOS",
+		"BILDER": "IMAGENS"
 	},
 	"patterns": [
 		[
@@ -2131,6 +2162,10 @@
 		[
 			"^AUFTRAG (.+)$",
 			"TAREFA $1"
+		],
+		[
+			"^Medienserver: (.*)$",
+			"Servidor de mídia: $1"
 		]
 	],
 	"words": [

@@ -70,6 +70,9 @@
 					"tags",
 					"log"
 				],
+				"shareos.dlna": [
+					"status"
+				],
 				"shareos.snapshots": [
 					"status",
 					"log"
@@ -213,6 +216,10 @@
 					"inbox_set",
 					"inbox_del",
 					"run"
+				],
+				"shareos.dlna": [
+					"set",
+					"rescan"
 				],
 				"shareos.snapshots": [
 					"job_set",

@@ -1369,3 +1369,35 @@ P262	Supprimer aussi les $1 instantanés dans $2 ? Sinon, ils y restent.
 P263	Instantané « $1 » en cours.
 P264	Le lecteur cible $1 n'est pas monté.
 P265	TÂCHE $1
+E1063	SERVEUR MULTIMÉDIA
+E1064	Serveur multimédia (DLNA)
+E1065	ne pas partager
+E1066	musique, vidéos et images
+E1067	musique seulement
+E1068	vidéos seulement
+E1069	images seulement
+E1070	MORCEAUX
+E1071	APPAREILS
+E1072	Dans le réseau sous le nom
+E1073	lecture des dossiers …
+E1074	Chargement du serveur multimédia …
+E1075	Tout relire
+E1076	Installer depuis le store (MiniDLNA)
+E1077	Le serveur multimédia (MiniDLNA) est une app système : téléviseurs, récepteurs, consoles et apps comme VLC trouvent alors la box sur le réseau et lisent la musique, les vidéos et les images des partages.
+E1078	Le serveur multimédia est désactivé. Choisissez des dossiers ci-dessous et activez-le.
+E1079	Les appareils du même réseau trouvent le serveur d'eux-mêmes (DLNA/UPnP AV), p. ex. sous « Serveur multimédia » ou « Sources » sur le téléviseur.
+E1080	Les nouveaux fichiers apparaissent d'eux-mêmes peu après ; après de gros changements, « Tout relire » aide.
+E1081	Le serveur ne fait que lire – et montre tout le contenu des partages choisis à chaque appareil du réseau, sans connexion.
+E1082	Les vidéos ne sont pas converties : l'appareil doit pouvoir lire le format lui-même.
+E1083	Serveur multimédia activé (démarre aussi après un redémarrage)
+E1084	NOM SUR LE RÉSEAU
+E1085	AFFICHER COMME
+E1086	« Musique », « Vidéos », « Images » : n'afficher que ce type de fichiers du partage. « Tout » : musique, vidéos et images.
+E1087	Choisissez au moins un partage.
+E1088	Serveur multimédia enregistré.
+E1089	Le serveur multimédia relit tous les dossiers.
+E1090	Aucun partage – à créer sous
+E1091	.
+E1092	VIDÉOS
+E1093	IMAGES
+P266	Serveur multimédia : $1

@@ -1,0 +1,17 @@
+{
+	"id": "minidlna",
+	"name": "MiniDLNA",
+	"version": "1.3.3",
+	"publisher": "UniqueDroid",
+	"description": {
+		"de": "Medienserver (DLNA/UPnP AV, ReadyMedia): Fernseher, Receiver, Spielkonsolen und Apps wie VLC finden die Box im Netzwerk und spielen Musik, Videos und Bilder aus den gewählten Freigaben ab. Einstellungen unter Dienste → Medienserver.",
+		"en": "Media server (DLNA/UPnP AV, ReadyMedia): TVs, receivers, game consoles and apps like VLC find the box in the network and play music, videos and pictures from the chosen shares. Settings under Services → Media server."
+	},
+	"type": "system",
+	"commands": [ "minidlnad" ],
+	"icon": "icon.svg",
+	"category": "media",
+	"license": "GPL-2.0-only, BSD-3-Clause",
+	"homepage": "https://sourceforge.net/projects/minidlna/",
+	"min_shareos": "0.2.0-beta.6"
+}

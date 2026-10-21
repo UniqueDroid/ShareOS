@@ -1369,3 +1369,35 @@ P262	¿Eliminar también las $1 instantáneas de $2? Si no, se quedan allí.
 P263	Instantánea «$1» en curso.
 P264	La unidad de destino $1 no está montada.
 P265	TAREA $1
+E1063	SERVIDOR MULTIMEDIA
+E1064	Servidor multimedia (DLNA)
+E1065	no compartir
+E1066	música, vídeos e imágenes
+E1067	solo música
+E1068	solo vídeos
+E1069	solo imágenes
+E1070	PISTAS
+E1071	DISPOSITIVOS
+E1072	En la red como
+E1073	leyendo carpetas …
+E1074	Cargando servidor multimedia …
+E1075	Volver a leer todo
+E1076	Instalar desde la tienda (MiniDLNA)
+E1077	El servidor multimedia (MiniDLNA) es una app del sistema: televisores, receptores, consolas y apps como VLC encuentran la caja en la red y reproducen música, vídeos e imágenes de los recursos compartidos.
+E1078	El servidor multimedia está apagado. Elige carpetas abajo y enciéndelo.
+E1079	Los dispositivos de la misma red encuentran el servidor solos (DLNA/UPnP AV), p. ej. en «Servidor multimedia» o «Fuentes» del televisor.
+E1080	Los archivos nuevos aparecen solos al poco tiempo; tras cambios grandes ayuda «Volver a leer todo».
+E1081	El servidor solo lee, y muestra todo lo de los recursos elegidos a cualquier dispositivo de la red, sin iniciar sesión.
+E1082	Los vídeos no se convierten: el dispositivo debe poder reproducir el formato por sí mismo.
+E1083	Servidor multimedia encendido (arranca también tras reiniciar)
+E1084	NOMBRE EN LA RED
+E1085	MOSTRAR COMO
+E1086	«Música», «Vídeos», «Imágenes»: mostrar solo ese tipo de archivos del recurso. «Todo»: música, vídeos e imágenes.
+E1087	Elige al menos un recurso compartido.
+E1088	Servidor multimedia guardado.
+E1089	El servidor multimedia vuelve a leer todas las carpetas.
+E1090	Aún no hay recursos compartidos: créalos en
+E1091	.
+E1092	VÍDEOS
+E1093	IMÁGENES
+P266	Servidor multimedia: $1

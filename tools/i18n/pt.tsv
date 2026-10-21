@@ -1369,3 +1369,35 @@ P262	Excluir também os $1 snapshots em $2? Caso contrário, eles ficam lá.
 P263	Snapshot “$1” em andamento.
 P264	A unidade de destino $1 não está montada.
 P265	TAREFA $1
+E1063	SERVIDOR DE MÍDIA
+E1064	Servidor de mídia (DLNA)
+E1065	não compartilhar
+E1066	música, vídeos e imagens
+E1067	só música
+E1068	só vídeos
+E1069	só imagens
+E1070	FAIXAS
+E1071	DISPOSITIVOS
+E1072	Na rede como
+E1073	lendo pastas …
+E1074	Carregando servidor de mídia …
+E1075	Ler tudo de novo
+E1076	Instalar pela loja (MiniDLNA)
+E1077	O servidor de mídia (MiniDLNA) é um app de sistema: TVs, receptores, consoles e apps como o VLC encontram a caixa na rede e reproduzem músicas, vídeos e imagens dos compartilhamentos.
+E1078	O servidor de mídia está desligado. Escolha pastas abaixo e ligue-o.
+E1079	Dispositivos na mesma rede encontram o servidor sozinhos (DLNA/UPnP AV), p. ex. em “Servidor de mídia” ou “Fontes” na TV.
+E1080	Arquivos novos aparecem sozinhos depois de pouco tempo; após grandes mudanças, “Ler tudo de novo” ajuda.
+E1081	O servidor só lê – e mostra tudo dos compartilhamentos escolhidos a qualquer dispositivo da rede, sem login.
+E1082	Os vídeos não são convertidos: o dispositivo precisa reproduzir o formato sozinho.
+E1083	Servidor de mídia ligado (inicia também após reiniciar)
+E1084	NOME NA REDE
+E1085	MOSTRAR COMO
+E1086	“Música”, “Vídeos”, “Imagens”: mostrar só esse tipo de arquivo do compartilhamento. “Tudo”: música, vídeos e imagens.
+E1087	Escolha pelo menos um compartilhamento.
+E1088	Servidor de mídia salvo.
+E1089	O servidor de mídia está lendo todas as pastas de novo.
+E1090	Nenhum compartilhamento ainda – crie em
+E1091	.
+E1092	VÍDEOS
+E1093	IMAGENS
+P266	Servidor de mídia: $1
