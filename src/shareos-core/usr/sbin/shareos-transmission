@@ -24,7 +24,7 @@
 //   - peer port 51413 for root, 51413 + (uid - 999) for the others.
 // Every JSON line printed is the result; exit code 1 on errors.
 //
-import { readfile, writefile, mkdir, stat, lsdir, unlink, realpath, popen } from 'fs';
+import { readfile, writefile, stat, lsdir, popen } from 'fs';
 import { cursor } from 'uci';
 
 const ROOT = getenv('SHAREOS_ROOT') ?? '';
@@ -133,7 +133,7 @@ function start(u) {
 		shq(run + '/pid'), shq(ug), shq(BIN), shq(pl.state), shq(run + '/log')));
 	if (r.rc != 0) die('cannot start: ' + trim(r.out));
 	// remember the account for the next start of the box
-	mkdir(ENABLED);
+	sh('mkdir -p ' + shq(ENABLED));
 	writefile(ENABLED + '/' + u, pl.state + '\n');
 	// the socket appears when the daemon is ready
 	for (let i = 0; i < 50 && !stat(sock_of(u)); i++) sh('sleep 0.2');

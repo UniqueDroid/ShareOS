@@ -308,6 +308,18 @@ Auf dem DNS-320L muss alles wie vorher funktionieren:
 
 Andere Modelle: [GERAETE.md](GERAETE.md) (Anleitung für Tester).
 
+## 14h. Transmission je Benutzer (0.2.0-beta.4)
+
+Braucht ein Laufwerk (Speicher) und die Dateien `transmission-daemon-4.1.0.sapp` (Release der Firmware) und `transmission-1.1.0.sapp` (App-Store oder Release von ShareOS-Apps).
+
+1. Apps → Store → *Paket installieren*: `transmission-daemon-4.1.0.sapp`, danach `transmission-1.1.0.sapp` (oder Transmission aus dem Store). Der Installationsdialog zeigt „Eigene Torrents (Transmission)“.
+2. Als **root**: Transmission öffnen. Nach ein paar Sekunden „● Verbunden“; *Einstellungen* zeigt den Download-Ordner `daten/Downloads` (dein Laufwerk) und den Peer-Port 51413.
+3. *+ Torrent* → Link: ein Magnet-Link (z. B. einer Linux-ISO), *Durchsuchen* → Ordner wählen, *Hinzufügen*: der Download landet in diesem Ordner.
+4. Als **Benutzer** mit Weboberfläche und Dateibrowser anmelden, Transmission unter *Mein ShareOS* öffnen: leere Liste (die Torrents von root sind nicht da), Download-Ordner „Mein Ordner/Downloads“. Einen Torrent hinzufügen: die Dateien gehören dem Benutzer (Dateibrowser).
+5. Im Terminal: `ps | grep transmission-daemon` – ein Dienst je Konto (root und der Benutzer); `ls /tmp/shareos-transmission/`.
+6. Box neu starten: die Torrents laufen von selbst weiter, ohne die App zu öffnen.
+7. Apps → Installiert → transmission-daemon → *Entfernen*: die Dienste halten an, die App meldet „Der Transmission-Dienst ist nicht installiert“. Die Downloads bleiben.
+
 ## 15. Tasten
 
 - **Reset-Taste** (Loch hinten), gedrückt halten und loslassen:

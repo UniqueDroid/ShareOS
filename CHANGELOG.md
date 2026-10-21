@@ -6,6 +6,10 @@ pre-releases for test devices only.
 
 ## 0.2.0-beta.4
 
+- **Transmission – every user their own torrents:** the system app `transmission-daemon` (Transmission 4.1.0, in the release as `.sapp`) gives every account its own daemon. It runs with the account's rights (admins: root, like their file browser), keeps its state on the account's drive (not in the flash), downloads into the account's folders and starts again after a restart of the box. The app Transmission (ShareOS-Apps, by @SamuelSilvaG) controls it.
+- **Permission `torrent`** for apps (needs `files`): `ShareOS.torrent.rpc(method, args)` reaches the account's daemon through `/_shareos/cgi/transmission`. The daemon has no TCP port for its remote control (Unix socket only); the proxy passes only what a remote control needs – no scripts, no RPC settings, no torrents from local files – and folders only inside the account's own (`<root>/<path>` like `ShareOS.fs`).
+- `ShareOS.fs.pick({ folder: true })`: the file dialog of the box chooses a folder.
+- libevent: a request on a Unix socket no longer ends the program (musl's `getnameinfo` does not know `AF_UNIX`).
 - **Login page shows the first sign-in** (user `root`, password `shareos`) as long as root still has the factory password; it disappears once an own password is set and comes back after an access reset. The password is public anyway, so the hint gives nothing away (asked in #28).
 
 ## 0.2.0-beta.3

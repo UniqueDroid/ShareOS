@@ -304,6 +304,18 @@ On the DNS-320L everything must work as before:
 
 Other models: [DEVICES.md](DEVICES.md) (tester guide).
 
+## 14h. Transmission per account (0.2.0-beta.4)
+
+Needs a drive (Storage) and the files `transmission-daemon-4.1.0.sapp` (release of the firmware) and `transmission-1.1.0.sapp` (app store, or from the ShareOS-Apps release).
+
+1. Apps → Store → *Install package*: `transmission-daemon-4.1.0.sapp`, then `transmission-1.1.0.sapp` (or Transmission from the store). The install dialog shows "Own torrents (Transmission)".
+2. As **root**: open Transmission. After a few seconds "● Verbunden"; *Einstellungen* shows the download folder `daten/Downloads` (your volume) and the peer port 51413.
+3. *+ Torrent* → link tab: a magnet link (e.g. of a Linux ISO), *Durchsuchen* → choose a folder, *Hinzufügen*: it downloads into that folder.
+4. Sign in as a **user** with web access and file browser, open Transmission from *My ShareOS*: an empty list (root's torrents are not there), download folder "Mein Ordner/Downloads". Add a torrent: the files belong to the user (file browser).
+5. In the terminal: `ps | grep transmission-daemon` – one daemon per account (root and the user); `ls /tmp/shareos-transmission/`.
+6. Restart the box: the torrents go on by themselves, without opening the app.
+7. Apps → Installed → transmission-daemon → *Remove*: the daemons stop, the app shows "Der Transmission-Dienst ist nicht installiert". Downloads stay.
+
 ## 15. Buttons
 
 - **Reset button** (pin hole at the back), hold and let go:

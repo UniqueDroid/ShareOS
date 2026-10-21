@@ -76,7 +76,7 @@ mkapp fileonly '["files"]'
 mkdir -p $T/bad/files; echo x > $T/bad/files/index.html; echo '<svg/>' > $T/bad/files/icon.svg
 python3 -c "import json; json.dump({'id':'bad','name':'b','version':'1.0.0','publisher':'T','type':'webapp','entry':'index.html','icon':'icon.svg','description':{'de':'x','en':'x'},'permissions':['torrent']}, open('$T/bad/app.json','w'))"
 (cd $T/bad && tar -czf $R/tmp/bad.sapp app.json -C files .)
-check "torrent without files is refused" "run 'shareos-apps install-file /tmp/bad.sapp' | grep -q 'needs \"files\"'"
+check "torrent without files is refused" "run 'shareos-apps install-file /tmp/bad.sapp' | grep -q 'torrent.*needs'"
 run "uci set apps.tclient.users='*'; uci set apps.fileonly.users='*'; uci commit apps" >/dev/null 2>&1
 run "uci show apps | grep -q users" >/dev/null || true
 
@@ -94,8 +94,8 @@ check "app without torrent permission: 403" "[ \$(code $GF '{\"method\":\"sessio
 o=$(tr $GA '{"method":"session-get"}')
 check "first call starts anna's daemon, session-get works" "echo '$o' | js \"d['result']=='success' and d['arguments']['download-dir']=='home/Downloads'\""
 check "internal settings hidden (config dir, RPC socket, scripts)" "echo '$o' | js \"'config-dir' not in d['arguments'] and 'rpc-bind-address' not in d['arguments'] and not any(k.startswith('script-') and k.endswith('filename') for k in d['arguments'])\""
-check "anna's daemon runs as anna" "[ \"\$(stat -c %U /proc/\$(cat $R/tmp/shareos-transmission/anna/pid))\" = anna ]"
-check "state in anna's home, not in the flash" "[ -f $R/mnt/daten/home/anna/.config/transmission-daemon/settings.json ] && [ \"\$(stat -c %U $R/mnt/daten/home/anna/.config/transmission-daemon/settings.json)\" = anna ]"
+check "anna's daemon runs as anna" "[ \"\$(run 'stat -c %U /proc/\$(cat /tmp/shareos-transmission/anna/pid)')\" = anna ]"
+check "state in anna's home, not in the flash" "[ -f $R/mnt/daten/home/anna/.config/transmission-daemon/settings.json ] && [ \"\$(run 'stat -c %U /mnt/daten/home/anna/.config/transmission-daemon/settings.json')\" = anna ]"
 check "RPC only on a Unix socket (no TCP port 9091)" "[ -S $R/tmp/shareos-transmission/anna/rpc.sock ] && ! (exec 3<>/dev/tcp/127.0.0.1/9091) 2>/dev/null"
 
 MAG='magnet:?xt=urn:btih:0123456789abcdef0123456789abcdef01234567&dn=ShareOS-Test'
@@ -121,7 +121,7 @@ check "session-set: allowed keys pass (speed limit)" "echo '$o' | js \"d['argume
 check "rpcd object not reachable for web sessions" "! grep -q apptorrent $R/usr/share/rpcd/acl.d/shareos.json"
 
 o=$(tr $GR '{"method":"session-get"}')
-check "admin: own daemon as root, downloads on the volume" "echo '$o' | js \"d['arguments']['download-dir']=='daten/Downloads'\" && [ \"\$(stat -c %U /proc/\$(cat $R/tmp/shareos-transmission/root/pid))\" = root ]"
+check "admin: own daemon as root, downloads on the volume" "echo '$o' | js \"d['arguments']['download-dir']=='daten/Downloads'\" && [ \"\$(run 'stat -c %U /proc/\$(cat /tmp/shareos-transmission/root/pid)')\" = root ]"
 
 run "shareos-transmission stop anna" >/dev/null
 check "scripts and RPC address never reached the daemon" "grep -q '\"script-torrent-done-enabled\": false' $R/mnt/daten/home/anna/.config/transmission-daemon/settings.json && ! grep -q '/bin/sh' $R/mnt/daten/home/anna/.config/transmission-daemon/settings.json && grep -q '\"rpc-bind-address\": \"unix:' $R/mnt/daten/home/anna/.config/transmission-daemon/settings.json"
