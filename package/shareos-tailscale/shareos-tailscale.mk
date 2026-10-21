@@ -11,6 +11,9 @@ SHAREOS_TAILSCALE_SITE_METHOD = git
 SHAREOS_TAILSCALE_LICENSE = BSD-3-Clause
 SHAREOS_TAILSCALE_LICENSE_FILES = LICENSE
 SHAREOS_TAILSCALE_GOMOD = tailscale.com
+# modules through the Go module proxy (buildroot fetches each from its own
+# repository, which fails behind restricted proxies)
+SHAREOS_TAILSCALE_GO_ENV = GOPROXY=https://proxy.golang.org,direct
 SHAREOS_TAILSCALE_BUILD_TARGETS = cmd/tailscaled
 # "tailscale" is the same binary (ts_include_cli); left out: what a NAS in a
 # home does not use, so it fits the flash and the 256 MB
