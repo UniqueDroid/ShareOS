@@ -316,6 +316,20 @@ Needs a drive (Storage) and the files `transmission-daemon-4.1.0.sapp` (release 
 6. Restart the box: the torrents go on by themselves, without opening the app.
 7. Apps → Installed → transmission-daemon → *Remove*: the daemons stop, the app shows "Der Transmission-Dienst ist nicht installiert". Downloads stay.
 
+## 14i. Converting media with FFmpeg (0.2.0-beta.5)
+
+Needs a drive, some media on it (a video, e.g. `.mkv` or `.mp4`, and a music file) and the files `ffmpeg-6.1.5.sapp` (release of the firmware) and `mediatranscoder-1.0.0.sapp` (app store, or from the ShareOS-Apps release).
+
+1. Apps → Store: install MediaTranscoder (brings the system app `ffmpeg` along) – or *Install package* with `ffmpeg-6.1.5.sapp`, then `mediatranscoder-1.0.0.sapp`. The install dialog shows the permission "Convert media (FFmpeg)".
+2. As **root** open MediaTranscoder: "FFmpeg bereit" at the top right.
+3. *Datei wählen …* → a video: length, size, video and audio tracks appear; preset is *Container wechseln* to MP4 (MKV for an MP4 file). *Umwandeln starten*: the job runs with progress, the new file is in the same folder and plays in WinWeb Player (*Im WinWeb Player abspielen*).
+4. *Audio umwandeln / herausholen*, format MP3, 192 kbit/s, *Ausschnitt* from `00:01:00`, length `30`, change the target folder: a 30 s MP3 in the chosen folder. On the box this takes about as long as the piece itself or less.
+5. Start a long job and *Abbrechen*: state "abgebrochen", no (half) file in the folder (no hidden `.name.<id>.mp3` either).
+6. The same file name again: "Eine Datei mit diesem Namen gibt es im Zielordner schon." – nothing is overwritten.
+7. As a **user** with web access and file browser: MediaTranscoder in *My ShareOS*, only the own folder can be chosen, root's jobs are not shown; the result belongs to the user (file browser).
+8. In the terminal during a job: `ps | grep ffmpeg` – runs with `nice` 19; `ls /tmp/shareos-media/jobs/`.
+9. Apps → Installed → ffmpeg → *Remove* (asks, because MediaTranscoder needs it): running jobs stop, the app shows "FFmpeg fehlt".
+
 ## 15. Buttons
 
 - **Reset button** (pin hole at the back), hold and let go:

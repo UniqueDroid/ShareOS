@@ -1298,3 +1298,5 @@ P244	Sera aussi installé : $1.
 P245	Utilisé par : $1 – ces apps ne fonctionneront plus.
 P246	$1 $2 installé, en plus : $3.
 P247	Remarque : $1
+E1010	Convertir des médias (FFmpeg)
+E1011	Peut faire convertir l'audio et la vidéo de l'utilisateur sur la box (FFmpeg) – avec ses droits, uniquement dans ses dossiers, à partir de choix fixes (aucune commande libre).

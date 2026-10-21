@@ -1298,3 +1298,5 @@ P244	Também será instalado: $1.
 P245	Necessário para: $1 – esses apps deixarão de funcionar.
 P246	$1 $2 instalado, e também: $3.
 P247	Observação: $1
+E1010	Converter mídia (FFmpeg)
+E1011	Pode converter áudio e vídeo do usuário na caixa (FFmpeg) – com os direitos dele, apenas nas pastas dele, a partir de opções fixas (nenhum comando livre).

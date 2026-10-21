@@ -1012,7 +1012,9 @@
 		"ShareOS wurde auf diesem Modell noch nicht auf echter Hardware getestet.": "ShareOS का इस मॉडल के असली हार्डवेयर पर अभी परीक्षण नहीं हुआ है।",
 		"Erste Anmeldung: Benutzer root, Passwort shareos – danach ein eigenes Passwort setzen.": "पहला लॉगिन: उपयोगकर्ता root, पासवर्ड shareos – फिर अपना पासवर्ड सेट करें।",
 		"Eigene Torrents (Transmission)": "अपने टॉरेंट (Transmission)",
-		"Darf den eigenen Transmission-Dienst des Benutzers steuern: Torrents hinzufügen, anhalten und löschen. Jeder Benutzer hat seinen eigenen Dienst; Downloads landen nur in seinen Ordnern.": "उपयोगकर्ता की अपनी Transmission सेवा को नियंत्रित कर सकता है: टॉरेंट जोड़ना, रोकना और हटाना। हर उपयोगकर्ता की अपनी सेवा है; डाउनलोड केवल उसके फ़ोल्डरों में जाते हैं।"
+		"Darf den eigenen Transmission-Dienst des Benutzers steuern: Torrents hinzufügen, anhalten und löschen. Jeder Benutzer hat seinen eigenen Dienst; Downloads landen nur in seinen Ordnern.": "उपयोगकर्ता की अपनी Transmission सेवा को नियंत्रित कर सकता है: टॉरेंट जोड़ना, रोकना और हटाना। हर उपयोगकर्ता की अपनी सेवा है; डाउनलोड केवल उसके फ़ोल्डरों में जाते हैं।",
+		"Medien umwandeln (FFmpeg)": "मीडिया बदलना (FFmpeg)",
+		"Darf auf der Box Audio und Video des Benutzers umwandeln lassen (FFmpeg) – mit seinen Rechten, nur in seinen Ordnern, aus festen Auswahlen (kein beliebiger Befehl).": "बॉक्स पर उपयोगकर्ता का ऑडियो और वीडियो बदलवा सकता है (FFmpeg) – उसके अधिकारों से, केवल उसके फ़ोल्डरों में, तय विकल्पों से (कोई मनमाना कमांड नहीं)।"
 	},
 	"patterns": [
 		[
