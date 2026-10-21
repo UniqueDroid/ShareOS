@@ -1017,7 +1017,86 @@
 		"Darf auf der Box Audio und Video des Benutzers umwandeln lassen (FFmpeg) – mit seinen Rechten, nur in seinen Ordnern, aus festen Auswahlen (kein beliebiger Befehl).": "可以在设备上转换该用户的音频和视频（FFmpeg）——以其权限，仅在其文件夹中，使用固定选项（不允许任意命令）。",
 		"Alle": "全部",
 		"Sonstige": "其他",
-		"Suchen …": "搜索 …"
+		"Suchen …": "搜索 …",
+		"Ein Snapshot hält den Stand eines Ordners fest – stündlich, täglich oder wöchentlich.": "快照保存文件夹的状态——每小时、每天或每周。",
+		"Jeder Stand sieht aus wie eine vollständige Kopie; unveränderte Dateien belegen aber keinen zusätzlichen Platz.": "每个状态看起来都是完整副本，但未更改的文件不占用额外空间。",
+		"So holst du eine gelöschte oder überschriebene Datei von gestern oder letzter Woche zurück: im Dateibrowser aus dem Snapshot zurückkopieren.": "要找回昨天或上周删除或覆盖的文件，请在文件浏览器中从快照复制回来。",
+		"Neuer Snapshot-Auftrag": "新建快照任务",
+		"NEUER SNAPSHOT-AUFTRAG": "新建快照任务",
+		"Am besten auf ein anderes Laufwerk sichern (zweite Platte oder USB-Festplatte): dann schützen Snapshots auch bei einem Plattendefekt.": "最好保存到另一个驱动器（第二块硬盘或 USB 硬盘）：这样快照也能防止硬盘故障。",
+		"Ein Spiegel (RAID 1) ersetzt keine Snapshots – er spiegelt auch jedes Löschen sofort.": "镜像（RAID 1）不能替代快照——它也会立即镜像每次删除。",
+		"Die Snapshots liegen im Ordner": "快照位于以下文件夹",
+		"des Ziel-Laufwerks und sind nur für Administratoren sichtbar.": "（位于目标驱动器上），仅管理员可见。",
+		"Für eine Kopie außer Haus kann ein Cloud-Auftrag den Snapshot-Ordner hochladen.": "如需异地副本，可用云任务上传快照文件夹。",
+		"neuester": "最新",
+		"Jetzt sichern": "立即备份",
+		"QUELLE → ZIEL": "来源 → 目标",
+		"ZEITPLAN · BEHALTEN": "计划 · 保留",
+		"STAND": "状态",
+		"Im Dateibrowser öffnen": "在文件浏览器中打开",
+		"Zum Wiederherstellen im Dateibrowser die Datei oder den Ordner aus dem Snapshot an den alten Platz kopieren. Dateien im Snapshot nicht ändern: unveränderte Dateien teilen sich den Platz mit den anderen Snapshots.": "恢复时，在文件浏览器中把快照里的文件或文件夹复制回原位置。不要修改快照中的文件：未更改的文件与其他快照共享空间。",
+		"WAS SICHERN": "备份内容",
+		"ZIEL-LAUFWERK": "目标驱动器",
+		"WIE OFT": "频率",
+		"Stündlich": "每小时",
+		"Alle 6 Stunden": "每 6 小时",
+		"Täglich": "每天",
+		"Wöchentlich (Sonntag)": "每周（周日）",
+		"UHRZEIT": "时间",
+		"AB UHRZEIT": "起始时间",
+		"MINUTE (HH:MM, NUR DIE MINUTE ZÄHLT)": "分钟（HH:MM，只看分钟）",
+		"BEHALTEN": "保留",
+		"DIE LETZTEN": "最近",
+		"TAGE (JE EINER)": "天（每天一个）",
+		"WOCHEN (JE EINER)": "周（每周一个）",
+		"MONATE (JE EINER)": "月（每月一个）",
+		"Die letzten N Snapshots bleiben immer (auch die von Hand); dazu je der neueste eines Tages, einer Woche, eines Monats. Beispiel täglich: 7 Tage · 4 Wochen · 6 Monate ≈ ein halbes Jahr zurück mit 17 Ständen.": "最近 N 个快照始终保留（包括手动创建的）；另外保留每天、每周、每月最新的一个。每日示例：7 天 · 4 周 · 6 个月 ≈ 回溯半年，共 17 个状态。",
+		"AUSNAHMEN (EINE PRO ZEILE, Z. B. *.tmp ODER /Downloads/)": "排除项（每行一个，例如 *.tmp 或 /Downloads/）",
+		"Quelle und Ziel liegen auf demselben Laufwerk: das schützt vor versehentlichem Löschen, aber nicht vor einem Plattendefekt.": "来源和目标在同一驱动器上：可防止误删，但不能防止硬盘故障。",
+		"Es werden keine neuen Snapshots mehr angelegt.": "将不再创建新的快照。",
+		"Snapshot löschen?": "删除快照？",
+		"Snapshots auch löschen?": "同时删除快照？",
+		"Snapshots löschen": "删除快照",
+		"Snapshot gelöscht.": "快照已删除。",
+		"abgebrochen": "已中止",
+		"Lade Snapshots …": "正在加载快照 …",
+		"Noch kein Snapshot-Auftrag. Ein Auftrag sichert eine Freigabe, die persönlichen Ordner oder ein ganzes Laufwerk nach Zeitplan.": "还没有快照任务。任务会按计划备份一个共享、个人文件夹或整个驱动器。",
+		"Noch kein Snapshot – „Jetzt sichern“ legt den ersten an.": "还没有快照——“立即备份”会创建第一个。",
+		"rsync fehlt in dieser Firmware.": "此固件缺少 rsync。",
+		"Kein geeignetes Ziel: Snapshots brauchen ein Laufwerk mit ext4 oder Btrfs (FAT32/exFAT kennen keine Hardlinks).": "没有合适的目标：快照需要 ext4 或 Btrfs 驱动器（FAT32/exFAT 不支持硬链接）。",
+		"Aufträge": "个任务",
+		"– keine Hardlinks": "– 不支持硬链接",
+		"MEDIENSERVER": "媒体服务器",
+		"Medienserver (DLNA)": "媒体服务器（DLNA）",
+		"nicht freigeben": "不共享",
+		"Musik, Videos und Bilder": "音乐、视频和图片",
+		"nur Musik": "仅音乐",
+		"nur Videos": "仅视频",
+		"nur Bilder": "仅图片",
+		"MUSIKSTÜCKE": "曲目",
+		"GERÄTE": "设备",
+		"Im Netzwerk als": "网络中的名称",
+		"liest Ordner ein …": "正在读取文件夹 …",
+		"Lade Medienserver …": "正在加载媒体服务器 …",
+		"Alles neu einlesen": "全部重新读取",
+		"Im Store installieren (MiniDLNA)": "从商店安装（MiniDLNA）",
+		"Der Medienserver (MiniDLNA) ist eine System-App: Fernseher, Receiver, Spielkonsolen und Apps wie VLC finden die Box dann im Netzwerk und spielen Musik, Videos und Bilder aus den Freigaben ab.": "媒体服务器（MiniDLNA）是系统应用：电视、接收器、游戏机和 VLC 等应用会在网络中找到本设备，并播放共享中的音乐、视频和图片。",
+		"Der Medienserver ist ausgeschaltet. Unten Ordner wählen und einschalten.": "媒体服务器已关闭。请在下方选择文件夹并开启。",
+		"Geräte im selben Netzwerk finden den Server von selbst (DLNA/UPnP AV), z. B. unter „Medienserver“ oder „Quellen“ am Fernseher.": "同一网络中的设备会自动找到服务器（DLNA/UPnP AV），例如在电视的“媒体服务器”或“信号源”中。",
+		"Neue Dateien erscheinen nach kurzer Zeit von selbst; nach großen Änderungen hilft „Alles neu einlesen“.": "新文件会在短时间后自动出现；大量更改后可使用“全部重新读取”。",
+		"Der Server liest nur – und zeigt alles in den gewählten Freigaben jedem Gerät im Netzwerk, ohne Anmeldung.": "服务器只读取——并向网络中的每台设备显示所选共享中的全部内容，无需登录。",
+		"Videos werden nicht umgewandelt: das Gerät muss das Format selbst abspielen können.": "视频不会被转换：设备必须能直接播放该格式。",
+		"Medienserver eingeschaltet (startet auch nach einem Neustart)": "媒体服务器已开启（重启后也会启动）",
+		"NAME IM NETZWERK": "网络中的名称",
+		"ZEIGEN ALS": "显示为",
+		"„Musik“, „Videos“, „Bilder“: aus der Freigabe nur diese Art von Dateien zeigen. „Alles“: Musik, Videos und Bilder.": "“音乐”“视频”“图片”：只显示该共享中的此类文件。“全部”：音乐、视频和图片。",
+		"Mindestens eine Freigabe wählen.": "请至少选择一个共享。",
+		"Medienserver gespeichert.": "媒体服务器已保存。",
+		"Medienserver liest alle Ordner neu ein.": "媒体服务器正在重新读取所有文件夹。",
+		"Noch keine Freigabe – unter": "还没有共享——请在",
+		"anlegen.": "中创建。",
+		"VIDEOS": "视频",
+		"BILDER": "图片"
 	},
 	"patterns": [
 		[
@@ -2011,6 +2090,82 @@
 		[
 			"^Hinweis: (.+)$",
 			"提示：$1"
+		],
+		[
+			"^(\\d+) Aufträge$",
+			"$1 个任务"
+		],
+		[
+			"^Täglich (\\d\\d:\\d\\d)$",
+			"每天 $1"
+		],
+		[
+			"^Wöchentlich \\(Sonntag\\) (\\d\\d:\\d\\d)$",
+			"每周（周日）$1"
+		],
+		[
+			"^die letzten (\\d+)$",
+			"最近 $1 个"
+		],
+		[
+			"^(\\d+) Tage$",
+			"$1 天"
+		],
+		[
+			"^(\\d+) Wochen$",
+			"$1 周"
+		],
+		[
+			"^(\\d+) Monate$",
+			"$1 个月"
+		],
+		[
+			"^(\\d+) Dateien$",
+			"$1 个文件"
+		],
+		[
+			"^(\\d+) geändert$",
+			"$1 个已更改"
+		],
+		[
+			"^(\\d+) alte entfernt$",
+			"已删除 $1 个旧快照"
+		],
+		[
+			"^Persönliche Ordner \\((.+)\\)$",
+			"个人文件夹（$1）"
+		],
+		[
+			"^Ganzes Laufwerk (.+)$",
+			"整个驱动器 $1"
+		],
+		[
+			"^(.+) – keine Hardlinks$",
+			"$1 – 不支持硬链接"
+		],
+		[
+			"^Den Stand vom (.+) löschen\\? Die anderen Snapshots bleiben vollständig\\.$",
+			"删除 $1 的状态？其他快照保持完整。"
+		],
+		[
+			"^Die (\\d+) vorhandenen Snapshots in (.+) ebenfalls löschen\\? Sonst bleiben sie dort liegen\\.$",
+			"同时删除 $2 中的 $1 个快照？否则它们会保留在那里。"
+		],
+		[
+			"^Snapshot „(.+)“ läuft\\.$",
+			"快照“$1”正在运行。"
+		],
+		[
+			"^Das Ziel-Laufwerk (.+) ist nicht eingebunden\\.$",
+			"目标驱动器 $1 未挂载。"
+		],
+		[
+			"^AUFTRAG (.+)$",
+			"任务 $1"
+		],
+		[
+			"^Medienserver: (.*)$",
+			"媒体服务器：$1"
 		]
 	],
 	"words": [

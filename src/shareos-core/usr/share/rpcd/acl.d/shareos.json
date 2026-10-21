@@ -70,6 +70,13 @@
 					"tags",
 					"log"
 				],
+				"shareos.dlna": [
+					"status"
+				],
+				"shareos.snapshots": [
+					"status",
+					"log"
+				],
 				"shareos.cloud": [
 					"status",
 					"remotes",
@@ -209,6 +216,17 @@
 					"inbox_set",
 					"inbox_del",
 					"run"
+				],
+				"shareos.dlna": [
+					"set",
+					"rescan"
+				],
+				"shareos.snapshots": [
+					"job_set",
+					"job_del",
+					"run",
+					"stop",
+					"remove"
 				],
 				"shareos.cloud": [
 					"install",

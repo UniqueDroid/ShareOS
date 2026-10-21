@@ -22,6 +22,9 @@
  * ShareOS.on(type, fn) / ShareOS.emit(type, data)
  *                             messages between the apps (BroadcastChannel
  *                             'shareos'; every app hears them – no secrets)
+ * ShareOS.lang                language of the ShareOS interface ('de', 'en', 'pt' …;
+ *                             '' when opened without ShareOS) – for apps with
+ *                             their own translations (0.2.0-beta.6+)
  * ShareOS.user                the account the app was opened by ('guest' when
  *                             opened without ShareOS)
  * ShareOS.embedded            true when shown inside the ShareOS interface
@@ -422,6 +425,7 @@
 		app: appId,
 		openApp: openApp,
 		user: user,
+		lang: (q.get('lang') || '').toLowerCase().replace(/[^a-z-]/g, '').slice(0, 8),
 		embedded: embedded,
 		theme: null,
 		onTheme: function (fn) { themeFns.push(fn); if (api.theme) fn(api.theme); },

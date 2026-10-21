@@ -1017,7 +1017,86 @@
 		"Darf auf der Box Audio und Video des Benutzers umwandeln lassen (FFmpeg) – mit seinen Rechten, nur in seinen Ordnern, aus festen Auswahlen (kein beliebiger Befehl).": "Peut faire convertir l'audio et la vidéo de l'utilisateur sur la box (FFmpeg) – avec ses droits, uniquement dans ses dossiers, à partir de choix fixes (aucune commande libre).",
 		"Alle": "Toutes",
 		"Sonstige": "Autres",
-		"Suchen …": "Rechercher …"
+		"Suchen …": "Rechercher …",
+		"Ein Snapshot hält den Stand eines Ordners fest – stündlich, täglich oder wöchentlich.": "Un instantané conserve l'état d'un dossier – toutes les heures, chaque jour ou chaque semaine.",
+		"Jeder Stand sieht aus wie eine vollständige Kopie; unveränderte Dateien belegen aber keinen zusätzlichen Platz.": "Chaque état ressemble à une copie complète, mais les fichiers inchangés n'occupent pas d'espace supplémentaire.",
+		"So holst du eine gelöschte oder überschriebene Datei von gestern oder letzter Woche zurück: im Dateibrowser aus dem Snapshot zurückkopieren.": "Pour récupérer un fichier supprimé ou écrasé hier ou la semaine dernière, recopiez-le depuis l'instantané dans le navigateur de fichiers.",
+		"Neuer Snapshot-Auftrag": "Nouvelle tâche d’instantané",
+		"NEUER SNAPSHOT-AUFTRAG": "NOUVELLE TÂCHE D’INSTANTANÉ",
+		"Am besten auf ein anderes Laufwerk sichern (zweite Platte oder USB-Festplatte): dann schützen Snapshots auch bei einem Plattendefekt.": "Idéalement, sauvegardez sur un autre lecteur (second disque ou disque USB) : les instantanés protègent alors aussi d'une panne de disque.",
+		"Ein Spiegel (RAID 1) ersetzt keine Snapshots – er spiegelt auch jedes Löschen sofort.": "Un miroir (RAID 1) ne remplace pas les instantanés – il reproduit aussi immédiatement chaque suppression.",
+		"Die Snapshots liegen im Ordner": "Les instantanés se trouvent dans le dossier",
+		"des Ziel-Laufwerks und sind nur für Administratoren sichtbar.": "du lecteur cible et ne sont visibles que par les administrateurs.",
+		"Für eine Kopie außer Haus kann ein Cloud-Auftrag den Snapshot-Ordner hochladen.": "Pour une copie hors site, une tâche cloud peut envoyer le dossier d'instantanés.",
+		"neuester": "plus récent",
+		"Jetzt sichern": "Sauvegarder maintenant",
+		"QUELLE → ZIEL": "SOURCE → CIBLE",
+		"ZEITPLAN · BEHALTEN": "PLANIFICATION · CONSERVER",
+		"STAND": "ÉTAT",
+		"Im Dateibrowser öffnen": "Ouvrir dans le navigateur de fichiers",
+		"Zum Wiederherstellen im Dateibrowser die Datei oder den Ordner aus dem Snapshot an den alten Platz kopieren. Dateien im Snapshot nicht ändern: unveränderte Dateien teilen sich den Platz mit den anderen Snapshots.": "Pour restaurer, copiez le fichier ou le dossier de l'instantané à son ancien emplacement dans le navigateur de fichiers. Ne modifiez pas les fichiers d'un instantané : les fichiers inchangés partagent leur espace avec les autres instantanés.",
+		"WAS SICHERN": "QUOI SAUVEGARDER",
+		"ZIEL-LAUFWERK": "LECTEUR CIBLE",
+		"WIE OFT": "FRÉQUENCE",
+		"Stündlich": "Toutes les heures",
+		"Alle 6 Stunden": "Toutes les 6 heures",
+		"Täglich": "Chaque jour",
+		"Wöchentlich (Sonntag)": "Chaque semaine (dimanche)",
+		"UHRZEIT": "HEURE",
+		"AB UHRZEIT": "À PARTIR DE",
+		"MINUTE (HH:MM, NUR DIE MINUTE ZÄHLT)": "MINUTE (HH:MM, SEULE LA MINUTE COMPTE)",
+		"BEHALTEN": "CONSERVER",
+		"DIE LETZTEN": "LES DERNIERS",
+		"TAGE (JE EINER)": "JOURS (UN PAR JOUR)",
+		"WOCHEN (JE EINER)": "SEMAINES (UN PAR SEMAINE)",
+		"MONATE (JE EINER)": "MOIS (UN PAR MOIS)",
+		"Die letzten N Snapshots bleiben immer (auch die von Hand); dazu je der neueste eines Tages, einer Woche, eines Monats. Beispiel täglich: 7 Tage · 4 Wochen · 6 Monate ≈ ein halbes Jahr zurück mit 17 Ständen.": "Les N derniers instantanés restent toujours (y compris ceux faits à la main) ; en plus, le plus récent de chaque jour, semaine et mois. Exemple quotidien : 7 jours · 4 semaines · 6 mois ≈ six mois en arrière avec 17 états.",
+		"AUSNAHMEN (EINE PRO ZEILE, Z. B. *.tmp ODER /Downloads/)": "EXCLUSIONS (UNE PAR LIGNE, P. EX. *.tmp OU /Downloads/)",
+		"Quelle und Ziel liegen auf demselben Laufwerk: das schützt vor versehentlichem Löschen, aber nicht vor einem Plattendefekt.": "La source et la cible sont sur le même lecteur : cela protège d'une suppression accidentelle, pas d'une panne de disque.",
+		"Es werden keine neuen Snapshots mehr angelegt.": "Plus aucun nouvel instantané ne sera créé.",
+		"Snapshot löschen?": "Supprimer l'instantané ?",
+		"Snapshots auch löschen?": "Supprimer aussi les instantanés ?",
+		"Snapshots löschen": "Supprimer les instantanés",
+		"Snapshot gelöscht.": "Instantané supprimé.",
+		"abgebrochen": "interrompu",
+		"Lade Snapshots …": "Chargement des instantanés …",
+		"Noch kein Snapshot-Auftrag. Ein Auftrag sichert eine Freigabe, die persönlichen Ordner oder ein ganzes Laufwerk nach Zeitplan.": "Aucune tâche d'instantané. Une tâche sauvegarde un partage, les dossiers personnels ou un lecteur entier selon un planning.",
+		"Noch kein Snapshot – „Jetzt sichern“ legt den ersten an.": "Aucun instantané – « Sauvegarder maintenant » crée le premier.",
+		"rsync fehlt in dieser Firmware.": "rsync manque dans ce firmware.",
+		"Kein geeignetes Ziel: Snapshots brauchen ein Laufwerk mit ext4 oder Btrfs (FAT32/exFAT kennen keine Hardlinks).": "Aucune cible adaptée : les instantanés exigent un lecteur ext4 ou Btrfs (FAT32/exFAT n'ont pas de liens physiques).",
+		"Aufträge": "tâches",
+		"– keine Hardlinks": "– pas de liens physiques",
+		"MEDIENSERVER": "SERVEUR MULTIMÉDIA",
+		"Medienserver (DLNA)": "Serveur multimédia (DLNA)",
+		"nicht freigeben": "ne pas partager",
+		"Musik, Videos und Bilder": "musique, vidéos et images",
+		"nur Musik": "musique seulement",
+		"nur Videos": "vidéos seulement",
+		"nur Bilder": "images seulement",
+		"MUSIKSTÜCKE": "MORCEAUX",
+		"GERÄTE": "APPAREILS",
+		"Im Netzwerk als": "Dans le réseau sous le nom",
+		"liest Ordner ein …": "lecture des dossiers …",
+		"Lade Medienserver …": "Chargement du serveur multimédia …",
+		"Alles neu einlesen": "Tout relire",
+		"Im Store installieren (MiniDLNA)": "Installer depuis le store (MiniDLNA)",
+		"Der Medienserver (MiniDLNA) ist eine System-App: Fernseher, Receiver, Spielkonsolen und Apps wie VLC finden die Box dann im Netzwerk und spielen Musik, Videos und Bilder aus den Freigaben ab.": "Le serveur multimédia (MiniDLNA) est une app système : téléviseurs, récepteurs, consoles et apps comme VLC trouvent alors la box sur le réseau et lisent la musique, les vidéos et les images des partages.",
+		"Der Medienserver ist ausgeschaltet. Unten Ordner wählen und einschalten.": "Le serveur multimédia est désactivé. Choisissez des dossiers ci-dessous et activez-le.",
+		"Geräte im selben Netzwerk finden den Server von selbst (DLNA/UPnP AV), z. B. unter „Medienserver“ oder „Quellen“ am Fernseher.": "Les appareils du même réseau trouvent le serveur d'eux-mêmes (DLNA/UPnP AV), p. ex. sous « Serveur multimédia » ou « Sources » sur le téléviseur.",
+		"Neue Dateien erscheinen nach kurzer Zeit von selbst; nach großen Änderungen hilft „Alles neu einlesen“.": "Les nouveaux fichiers apparaissent d'eux-mêmes peu après ; après de gros changements, « Tout relire » aide.",
+		"Der Server liest nur – und zeigt alles in den gewählten Freigaben jedem Gerät im Netzwerk, ohne Anmeldung.": "Le serveur ne fait que lire – et montre tout le contenu des partages choisis à chaque appareil du réseau, sans connexion.",
+		"Videos werden nicht umgewandelt: das Gerät muss das Format selbst abspielen können.": "Les vidéos ne sont pas converties : l'appareil doit pouvoir lire le format lui-même.",
+		"Medienserver eingeschaltet (startet auch nach einem Neustart)": "Serveur multimédia activé (démarre aussi après un redémarrage)",
+		"NAME IM NETZWERK": "NOM SUR LE RÉSEAU",
+		"ZEIGEN ALS": "AFFICHER COMME",
+		"„Musik“, „Videos“, „Bilder“: aus der Freigabe nur diese Art von Dateien zeigen. „Alles“: Musik, Videos und Bilder.": "« Musique », « Vidéos », « Images » : n'afficher que ce type de fichiers du partage. « Tout » : musique, vidéos et images.",
+		"Mindestens eine Freigabe wählen.": "Choisissez au moins un partage.",
+		"Medienserver gespeichert.": "Serveur multimédia enregistré.",
+		"Medienserver liest alle Ordner neu ein.": "Le serveur multimédia relit tous les dossiers.",
+		"Noch keine Freigabe – unter": "Aucun partage – à créer sous",
+		"anlegen.": ".",
+		"VIDEOS": "VIDÉOS",
+		"BILDER": "IMAGES"
 	},
 	"patterns": [
 		[
@@ -2011,6 +2090,82 @@
 		[
 			"^Hinweis: (.+)$",
 			"Remarque : $1"
+		],
+		[
+			"^(\\d+) Aufträge$",
+			"$1 tâches"
+		],
+		[
+			"^Täglich (\\d\\d:\\d\\d)$",
+			"Chaque jour à $1"
+		],
+		[
+			"^Wöchentlich \\(Sonntag\\) (\\d\\d:\\d\\d)$",
+			"Chaque semaine (dimanche) à $1"
+		],
+		[
+			"^die letzten (\\d+)$",
+			"les $1 derniers"
+		],
+		[
+			"^(\\d+) Tage$",
+			"$1 jours"
+		],
+		[
+			"^(\\d+) Wochen$",
+			"$1 semaines"
+		],
+		[
+			"^(\\d+) Monate$",
+			"$1 mois"
+		],
+		[
+			"^(\\d+) Dateien$",
+			"$1 fichiers"
+		],
+		[
+			"^(\\d+) geändert$",
+			"$1 modifiés"
+		],
+		[
+			"^(\\d+) alte entfernt$",
+			"$1 anciens supprimés"
+		],
+		[
+			"^Persönliche Ordner \\((.+)\\)$",
+			"Dossiers personnels ($1)"
+		],
+		[
+			"^Ganzes Laufwerk (.+)$",
+			"Lecteur entier $1"
+		],
+		[
+			"^(.+) – keine Hardlinks$",
+			"$1 – pas de liens physiques"
+		],
+		[
+			"^Den Stand vom (.+) löschen\\? Die anderen Snapshots bleiben vollständig\\.$",
+			"Supprimer l'état du $1 ? Les autres instantanés restent complets."
+		],
+		[
+			"^Die (\\d+) vorhandenen Snapshots in (.+) ebenfalls löschen\\? Sonst bleiben sie dort liegen\\.$",
+			"Supprimer aussi les $1 instantanés dans $2 ? Sinon, ils y restent."
+		],
+		[
+			"^Snapshot „(.+)“ läuft\\.$",
+			"Instantané « $1 » en cours."
+		],
+		[
+			"^Das Ziel-Laufwerk (.+) ist nicht eingebunden\\.$",
+			"Le lecteur cible $1 n'est pas monté."
+		],
+		[
+			"^AUFTRAG (.+)$",
+			"TÂCHE $1"
+		],
+		[
+			"^Medienserver: (.*)$",
+			"Serveur multimédia : $1"
 		]
 	],
 	"words": [

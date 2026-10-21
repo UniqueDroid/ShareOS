@@ -1017,7 +1017,86 @@
 		"Darf auf der Box Audio und Video des Benutzers umwandeln lassen (FFmpeg) – mit seinen Rechten, nur in seinen Ordnern, aus festen Auswahlen (kein beliebiger Befehl).": "Puede convertir el audio y vídeo del usuario en la caja (FFmpeg): con sus permisos, solo en sus carpetas y con opciones fijas (ningún comando libre).",
 		"Alle": "Todas",
 		"Sonstige": "Otras",
-		"Suchen …": "Buscar …"
+		"Suchen …": "Buscar …",
+		"Ein Snapshot hält den Stand eines Ordners fest – stündlich, täglich oder wöchentlich.": "Una instantánea guarda el estado de una carpeta: cada hora, cada día o cada semana.",
+		"Jeder Stand sieht aus wie eine vollständige Kopie; unveränderte Dateien belegen aber keinen zusätzlichen Platz.": "Cada estado parece una copia completa, pero los archivos sin cambios no ocupan espacio adicional.",
+		"So holst du eine gelöschte oder überschriebene Datei von gestern oder letzter Woche zurück: im Dateibrowser aus dem Snapshot zurückkopieren.": "Para recuperar un archivo borrado o sobrescrito ayer o la semana pasada, cópialo de vuelta desde la instantánea en el explorador de archivos.",
+		"Neuer Snapshot-Auftrag": "Nueva tarea de instantáneas",
+		"NEUER SNAPSHOT-AUFTRAG": "NUEVA TAREA DE INSTANTÁNEAS",
+		"Am besten auf ein anderes Laufwerk sichern (zweite Platte oder USB-Festplatte): dann schützen Snapshots auch bei einem Plattendefekt.": "Lo mejor es guardar en otra unidad (segundo disco o disco USB): así las instantáneas también protegen ante un fallo del disco.",
+		"Ein Spiegel (RAID 1) ersetzt keine Snapshots – er spiegelt auch jedes Löschen sofort.": "Un espejo (RAID 1) no sustituye a las instantáneas: también replica cada borrado al instante.",
+		"Die Snapshots liegen im Ordner": "Las instantáneas están en la carpeta",
+		"des Ziel-Laufwerks und sind nur für Administratoren sichtbar.": "de la unidad de destino y solo los ven los administradores.",
+		"Für eine Kopie außer Haus kann ein Cloud-Auftrag den Snapshot-Ordner hochladen.": "Para una copia fuera de casa, una tarea en la nube puede subir la carpeta de instantáneas.",
+		"neuester": "más reciente",
+		"Jetzt sichern": "Guardar ahora",
+		"QUELLE → ZIEL": "ORIGEN → DESTINO",
+		"ZEITPLAN · BEHALTEN": "HORARIO · CONSERVAR",
+		"STAND": "ESTADO",
+		"Im Dateibrowser öffnen": "Abrir en el explorador de archivos",
+		"Zum Wiederherstellen im Dateibrowser die Datei oder den Ordner aus dem Snapshot an den alten Platz kopieren. Dateien im Snapshot nicht ändern: unveränderte Dateien teilen sich den Platz mit den anderen Snapshots.": "Para restaurar, copia el archivo o la carpeta de la instantánea a su lugar original en el explorador de archivos. No modifiques archivos dentro de una instantánea: los archivos sin cambios comparten espacio con las demás.",
+		"WAS SICHERN": "QUÉ GUARDAR",
+		"ZIEL-LAUFWERK": "UNIDAD DE DESTINO",
+		"WIE OFT": "CON QUÉ FRECUENCIA",
+		"Stündlich": "Cada hora",
+		"Alle 6 Stunden": "Cada 6 horas",
+		"Täglich": "Diario",
+		"Wöchentlich (Sonntag)": "Semanal (domingo)",
+		"UHRZEIT": "HORA",
+		"AB UHRZEIT": "DESDE LAS",
+		"MINUTE (HH:MM, NUR DIE MINUTE ZÄHLT)": "MINUTO (HH:MM, SOLO CUENTA EL MINUTO)",
+		"BEHALTEN": "CONSERVAR",
+		"DIE LETZTEN": "LOS ÚLTIMOS",
+		"TAGE (JE EINER)": "DÍAS (UNO POR DÍA)",
+		"WOCHEN (JE EINER)": "SEMANAS (UNO POR SEMANA)",
+		"MONATE (JE EINER)": "MESES (UNO POR MES)",
+		"Die letzten N Snapshots bleiben immer (auch die von Hand); dazu je der neueste eines Tages, einer Woche, eines Monats. Beispiel täglich: 7 Tage · 4 Wochen · 6 Monate ≈ ein halbes Jahr zurück mit 17 Ständen.": "Las últimas N instantáneas se conservan siempre (también las manuales); además, la más reciente de cada día, semana y mes. Ejemplo diario: 7 días · 4 semanas · 6 meses ≈ medio año atrás con 17 estados.",
+		"AUSNAHMEN (EINE PRO ZEILE, Z. B. *.tmp ODER /Downloads/)": "EXCLUSIONES (UNA POR LÍNEA, P. EJ. *.tmp O /Downloads/)",
+		"Quelle und Ziel liegen auf demselben Laufwerk: das schützt vor versehentlichem Löschen, aber nicht vor einem Plattendefekt.": "Origen y destino están en la misma unidad: protege contra borrados accidentales, no contra un fallo del disco.",
+		"Es werden keine neuen Snapshots mehr angelegt.": "No se crearán más instantáneas.",
+		"Snapshot löschen?": "¿Eliminar la instantánea?",
+		"Snapshots auch löschen?": "¿Eliminar también las instantáneas?",
+		"Snapshots löschen": "Eliminar instantáneas",
+		"Snapshot gelöscht.": "Instantánea eliminada.",
+		"abgebrochen": "detenido",
+		"Lade Snapshots …": "Cargando instantáneas …",
+		"Noch kein Snapshot-Auftrag. Ein Auftrag sichert eine Freigabe, die persönlichen Ordner oder ein ganzes Laufwerk nach Zeitplan.": "Aún no hay tareas de instantáneas. Una tarea guarda un recurso compartido, las carpetas personales o una unidad entera según un horario.",
+		"Noch kein Snapshot – „Jetzt sichern“ legt den ersten an.": "Aún no hay instantáneas: «Guardar ahora» crea la primera.",
+		"rsync fehlt in dieser Firmware.": "Falta rsync en este firmware.",
+		"Kein geeignetes Ziel: Snapshots brauchen ein Laufwerk mit ext4 oder Btrfs (FAT32/exFAT kennen keine Hardlinks).": "No hay destino adecuado: las instantáneas necesitan una unidad ext4 o Btrfs (FAT32/exFAT no tienen enlaces duros).",
+		"Aufträge": "tareas",
+		"– keine Hardlinks": "– sin enlaces duros",
+		"MEDIENSERVER": "SERVIDOR MULTIMEDIA",
+		"Medienserver (DLNA)": "Servidor multimedia (DLNA)",
+		"nicht freigeben": "no compartir",
+		"Musik, Videos und Bilder": "música, vídeos e imágenes",
+		"nur Musik": "solo música",
+		"nur Videos": "solo vídeos",
+		"nur Bilder": "solo imágenes",
+		"MUSIKSTÜCKE": "PISTAS",
+		"GERÄTE": "DISPOSITIVOS",
+		"Im Netzwerk als": "En la red como",
+		"liest Ordner ein …": "leyendo carpetas …",
+		"Lade Medienserver …": "Cargando servidor multimedia …",
+		"Alles neu einlesen": "Volver a leer todo",
+		"Im Store installieren (MiniDLNA)": "Instalar desde la tienda (MiniDLNA)",
+		"Der Medienserver (MiniDLNA) ist eine System-App: Fernseher, Receiver, Spielkonsolen und Apps wie VLC finden die Box dann im Netzwerk und spielen Musik, Videos und Bilder aus den Freigaben ab.": "El servidor multimedia (MiniDLNA) es una app del sistema: televisores, receptores, consolas y apps como VLC encuentran la caja en la red y reproducen música, vídeos e imágenes de los recursos compartidos.",
+		"Der Medienserver ist ausgeschaltet. Unten Ordner wählen und einschalten.": "El servidor multimedia está apagado. Elige carpetas abajo y enciéndelo.",
+		"Geräte im selben Netzwerk finden den Server von selbst (DLNA/UPnP AV), z. B. unter „Medienserver“ oder „Quellen“ am Fernseher.": "Los dispositivos de la misma red encuentran el servidor solos (DLNA/UPnP AV), p. ej. en «Servidor multimedia» o «Fuentes» del televisor.",
+		"Neue Dateien erscheinen nach kurzer Zeit von selbst; nach großen Änderungen hilft „Alles neu einlesen“.": "Los archivos nuevos aparecen solos al poco tiempo; tras cambios grandes ayuda «Volver a leer todo».",
+		"Der Server liest nur – und zeigt alles in den gewählten Freigaben jedem Gerät im Netzwerk, ohne Anmeldung.": "El servidor solo lee, y muestra todo lo de los recursos elegidos a cualquier dispositivo de la red, sin iniciar sesión.",
+		"Videos werden nicht umgewandelt: das Gerät muss das Format selbst abspielen können.": "Los vídeos no se convierten: el dispositivo debe poder reproducir el formato por sí mismo.",
+		"Medienserver eingeschaltet (startet auch nach einem Neustart)": "Servidor multimedia encendido (arranca también tras reiniciar)",
+		"NAME IM NETZWERK": "NOMBRE EN LA RED",
+		"ZEIGEN ALS": "MOSTRAR COMO",
+		"„Musik“, „Videos“, „Bilder“: aus der Freigabe nur diese Art von Dateien zeigen. „Alles“: Musik, Videos und Bilder.": "«Música», «Vídeos», «Imágenes»: mostrar solo ese tipo de archivos del recurso. «Todo»: música, vídeos e imágenes.",
+		"Mindestens eine Freigabe wählen.": "Elige al menos un recurso compartido.",
+		"Medienserver gespeichert.": "Servidor multimedia guardado.",
+		"Medienserver liest alle Ordner neu ein.": "El servidor multimedia vuelve a leer todas las carpetas.",
+		"Noch keine Freigabe – unter": "Aún no hay recursos compartidos: créalos en",
+		"anlegen.": ".",
+		"VIDEOS": "VÍDEOS",
+		"BILDER": "IMÁGENES"
 	},
 	"patterns": [
 		[
@@ -2011,6 +2090,82 @@
 		[
 			"^Hinweis: (.+)$",
 			"Nota: $1"
+		],
+		[
+			"^(\\d+) Aufträge$",
+			"$1 tareas"
+		],
+		[
+			"^Täglich (\\d\\d:\\d\\d)$",
+			"Diario a las $1"
+		],
+		[
+			"^Wöchentlich \\(Sonntag\\) (\\d\\d:\\d\\d)$",
+			"Semanal (domingo) a las $1"
+		],
+		[
+			"^die letzten (\\d+)$",
+			"los últimos $1"
+		],
+		[
+			"^(\\d+) Tage$",
+			"$1 días"
+		],
+		[
+			"^(\\d+) Wochen$",
+			"$1 semanas"
+		],
+		[
+			"^(\\d+) Monate$",
+			"$1 meses"
+		],
+		[
+			"^(\\d+) Dateien$",
+			"$1 archivos"
+		],
+		[
+			"^(\\d+) geändert$",
+			"$1 cambiados"
+		],
+		[
+			"^(\\d+) alte entfernt$",
+			"$1 antiguas eliminadas"
+		],
+		[
+			"^Persönliche Ordner \\((.+)\\)$",
+			"Carpetas personales ($1)"
+		],
+		[
+			"^Ganzes Laufwerk (.+)$",
+			"Unidad entera $1"
+		],
+		[
+			"^(.+) – keine Hardlinks$",
+			"$1 – sin enlaces duros"
+		],
+		[
+			"^Den Stand vom (.+) löschen\\? Die anderen Snapshots bleiben vollständig\\.$",
+			"¿Eliminar el estado del $1? Las demás instantáneas quedan completas."
+		],
+		[
+			"^Die (\\d+) vorhandenen Snapshots in (.+) ebenfalls löschen\\? Sonst bleiben sie dort liegen\\.$",
+			"¿Eliminar también las $1 instantáneas de $2? Si no, se quedan allí."
+		],
+		[
+			"^Snapshot „(.+)“ läuft\\.$",
+			"Instantánea «$1» en curso."
+		],
+		[
+			"^Das Ziel-Laufwerk (.+) ist nicht eingebunden\\.$",
+			"La unidad de destino $1 no está montada."
+		],
+		[
+			"^AUFTRAG (.+)$",
+			"TAREA $1"
+		],
+		[
+			"^Medienserver: (.*)$",
+			"Servidor multimedia: $1"
 		]
 	],
 	"words": [

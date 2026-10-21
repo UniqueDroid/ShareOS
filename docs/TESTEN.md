@@ -336,6 +336,33 @@ Braucht ein Laufwerk, ein paar Medien darauf (ein Video, z. B. `.mkv` oder `.mp4
 
 **Store-Rubriken und Bash (0.2.0-beta.5):** Apps → Store: unter „Verfügbare Apps“ die Rubriken (Medien, Netzwerk, Werkzeuge, System …) mit Anzahl; ein Klick zeigt nur diese Rubrik, *Alle* wieder alles; „Suchen …“ filtert beim Tippen. Bash aus dem Store (Rubrik Werkzeuge) installieren, im Terminal `bash`, dann `echo $BASH_VERSION` → `5.2.37…`, `exit`.
 
+## 14j. Snapshots (0.2.0-beta.6)
+
+Braucht zwei Laufwerke mit ext4 oder Btrfs (z. B. die Platte und eine USB-Festplatte) und eine Freigabe mit ein paar Dateien.
+
+1. Speicher → **Snapshots** → *Neuer Snapshot-Auftrag*: Name `fotos`, *Was sichern* = die Freigabe, *Ziel-Laufwerk* = das andere Laufwerk, *Täglich* 03:15, Behalten 3 · 7 · 4 · 6, Ausnahme `*.tmp` → *Speichern*. Ein Laufwerk mit FAT32/exFAT ist als Ziel ausgegraut.
+2. *Jetzt sichern*: „läuft“, danach „OK“ mit Anzahl der Dateien und der Größe. Der erste Snapshot kopiert alles – bei vielen GB dauert das (Platte → Platte etwa so lange wie Kopieren).
+3. In der Freigabe eine Datei ändern, eine löschen, eine neue anlegen; *Jetzt sichern*: „N geändert“ ist klein, der zweite Snapshot geht schnell.
+4. *Snapshots (2)* → beim älteren *Im Dateibrowser öffnen*: die gelöschte Datei ist dort, mit dem alten Inhalt der geänderten. Datei zurück in die Freigabe kopieren.
+5. Im Terminal: `du -sh /mnt/<ziel>/Snapshots/fotos/*` – der zweite Snapshot belegt fast nichts (Hardlinks); `ls -ld /mnt/<ziel>/Snapshots` → `drwx------ root`.
+6. Einen großen Ordner sichern, nach ein paar Sekunden *Stopp*: „abgebrochen“; das nächste *Jetzt sichern* macht weiter.
+7. *Protokoll* am Auftrag: die rsync-Zusammenfassung. Ziel-USB-Platte abziehen, *Jetzt sichern*: „Fehler“ und eine Meldung (Glocke, E-Mail/Push falls eingerichtet).
+8. `cat /etc/crontabs/root`: eine Zeile `15 3 * * * /usr/sbin/shareos-snapshot run fotos`. Am nächsten Morgen ist der Snapshot von 3:15 da.
+9. *Entfernen* → „Snapshots auch löschen?“ → *Snapshots löschen*: Auftrag und Ordner sind weg.
+
+## 14k. Medienserver (0.2.0-beta.6)
+
+Braucht ein Laufwerk mit einer Freigabe mit Musik (MP3/FLAC) und einer mit Videos (MP4/MKV) und die Datei `minidlna-1.3.3.sapp` (Release der Firmware; oder MiniDLNA aus dem Store). Dazu ein Fernseher oder VLC im selben Netzwerk.
+
+1. Dienste → **Medienserver**: ohne System-App der Hinweis mit *Im Store installieren*. MiniDLNA installieren (Store oder *Paket installieren*).
+2. *Einstellungen*: Musik-Freigabe → „nur Musik“, Video-Freigabe → „nur Videos“, Name z. B. „Wohnzimmer“, *Medienserver eingeschaltet* → *Speichern*: „läuft“, „liest Ordner ein …“, die Zahlen steigen.
+3. VLC (Ansicht → Wiedergabeliste → Lokales Netzwerk → Universal Plug'n'Play) oder der Fernseher (Quellen/Medienserver): „Wohnzimmer“ erscheint, Musik und Videos spielen, im Video spulen.
+4. Neue Datei in die Musik-Freigabe kopieren: nach kurzer Zeit zählt „Musikstücke“ eins mehr, ohne Neustart.
+5. Dienste → Status: „Medienserver (DLNA)“ läuft; Box neu starten: der Server startet von selbst und liest nicht alles neu (die Bibliothek liegt in `/mnt/<laufwerk>/.shareos/minidlna`).
+6. *Alles neu einlesen*: „liest Ordner ein …“, danach dieselben Zahlen.
+7. Ausschalten → *Speichern*: Fernseher/VLC sehen den Server nicht mehr (nach einigen Minuten).
+8. Apps → Installiert → minidlna → *Entfernen*: der Server hält an, die Seite zeigt wieder den Hinweis.
+
 ## 15. Tasten
 
 - **Reset-Taste** (Loch hinten), gedrückt halten und loslassen:

@@ -1303,3 +1303,101 @@ E1011	Pode converter áudio e vídeo do usuário na caixa (FFmpeg) – com os di
 E1012	Todas
 E1013	Outras
 E1014	Pesquisar …
+E1015	Um snapshot guarda o estado de uma pasta – a cada hora, diariamente ou semanalmente.
+E1016	Cada estado parece uma cópia completa, mas os arquivos inalterados não ocupam espaço extra.
+E1017	Para recuperar um arquivo apagado ou sobrescrito ontem ou na semana passada, copie-o de volta do snapshot no navegador de arquivos.
+E1018	Nova tarefa de snapshot
+E1019	NOVA TAREFA DE SNAPSHOT
+E1020	O ideal é salvar em outra unidade (segundo disco ou disco USB): assim os snapshots também protegem contra falha do disco.
+E1021	Um espelho (RAID 1) não substitui snapshots – ele também espelha cada exclusão na hora.
+E1022	Os snapshots ficam na pasta
+E1023	da unidade de destino e só os administradores os veem.
+E1024	Para uma cópia fora de casa, uma tarefa de nuvem pode enviar a pasta de snapshots.
+E1025	mais recente
+E1026	Salvar agora
+E1027	ORIGEM → DESTINO
+E1028	AGENDA · MANTER
+E1029	ESTADO
+E1030	Abrir no navegador de arquivos
+E1031	Para restaurar, copie o arquivo ou a pasta do snapshot de volta ao lugar original no navegador de arquivos. Não altere arquivos dentro de um snapshot: arquivos inalterados compartilham o espaço com os outros snapshots.
+E1032	O QUE SALVAR
+E1033	UNIDADE DE DESTINO
+E1034	COM QUE FREQUÊNCIA
+E1035	A cada hora
+E1036	A cada 6 horas
+E1037	Diário
+E1038	Semanal (domingo)
+E1039	HORÁRIO
+E1040	A PARTIR DE
+E1041	MINUTO (HH:MM, SÓ O MINUTO CONTA)
+E1042	MANTER
+E1043	OS ÚLTIMOS
+E1044	DIAS (UM POR DIA)
+E1045	SEMANAS (UM POR SEMANA)
+E1046	MESES (UM POR MÊS)
+E1047	Os últimos N snapshots ficam sempre (inclusive os manuais); além disso, o mais recente de cada dia, semana e mês. Exemplo diário: 7 dias · 4 semanas · 6 meses ≈ meio ano para trás com 17 estados.
+E1048	EXCLUSÕES (UMA POR LINHA, EX. *.tmp OU /Downloads/)
+E1049	Origem e destino estão na mesma unidade: protege contra exclusão acidental, não contra falha do disco.
+E1050	Nenhum snapshot novo será criado.
+E1051	Excluir o snapshot?
+E1052	Excluir também os snapshots?
+E1053	Excluir snapshots
+E1054	Snapshot excluído.
+E1055	interrompido
+E1056	Carregando snapshots …
+E1057	Ainda não há tarefa de snapshot. Uma tarefa salva um compartilhamento, as pastas pessoais ou uma unidade inteira conforme a agenda.
+E1058	Nenhum snapshot ainda – “Salvar agora” cria o primeiro.
+E1059	O rsync não está neste firmware.
+E1060	Nenhum destino adequado: snapshots precisam de uma unidade ext4 ou Btrfs (FAT32/exFAT não têm hard links).
+E1061	tarefas
+E1062	– sem hard links
+P248	$1 tarefas
+P249	Diário às $1
+P250	Semanal (domingo) às $1
+P251	os últimos $1
+P252	$1 dias
+P253	$1 semanas
+P254	$1 meses
+P255	$1 arquivos
+P256	$1 alterados
+P257	$1 antigos removidos
+P258	Pastas pessoais ($1)
+P259	Unidade inteira $1
+P260	$1 – sem hard links
+P261	Excluir o estado de $1? Os outros snapshots continuam completos.
+P262	Excluir também os $1 snapshots em $2? Caso contrário, eles ficam lá.
+P263	Snapshot “$1” em andamento.
+P264	A unidade de destino $1 não está montada.
+P265	TAREFA $1
+E1063	SERVIDOR DE MÍDIA
+E1064	Servidor de mídia (DLNA)
+E1065	não compartilhar
+E1066	música, vídeos e imagens
+E1067	só música
+E1068	só vídeos
+E1069	só imagens
+E1070	FAIXAS
+E1071	DISPOSITIVOS
+E1072	Na rede como
+E1073	lendo pastas …
+E1074	Carregando servidor de mídia …
+E1075	Ler tudo de novo
+E1076	Instalar pela loja (MiniDLNA)
+E1077	O servidor de mídia (MiniDLNA) é um app de sistema: TVs, receptores, consoles e apps como o VLC encontram a caixa na rede e reproduzem músicas, vídeos e imagens dos compartilhamentos.
+E1078	O servidor de mídia está desligado. Escolha pastas abaixo e ligue-o.
+E1079	Dispositivos na mesma rede encontram o servidor sozinhos (DLNA/UPnP AV), p. ex. em “Servidor de mídia” ou “Fontes” na TV.
+E1080	Arquivos novos aparecem sozinhos depois de pouco tempo; após grandes mudanças, “Ler tudo de novo” ajuda.
+E1081	O servidor só lê – e mostra tudo dos compartilhamentos escolhidos a qualquer dispositivo da rede, sem login.
+E1082	Os vídeos não são convertidos: o dispositivo precisa reproduzir o formato sozinho.
+E1083	Servidor de mídia ligado (inicia também após reiniciar)
+E1084	NOME NA REDE
+E1085	MOSTRAR COMO
+E1086	“Música”, “Vídeos”, “Imagens”: mostrar só esse tipo de arquivo do compartilhamento. “Tudo”: música, vídeos e imagens.
+E1087	Escolha pelo menos um compartilhamento.
+E1088	Servidor de mídia salvo.
+E1089	O servidor de mídia está lendo todas as pastas de novo.
+E1090	Nenhum compartilhamento ainda – crie em
+E1091	.
+E1092	VÍDEOS
+E1093	IMAGENS
+P266	Servidor de mídia: $1

@@ -9,7 +9,8 @@
 # on; the minute differs per box so not all ask GitHub at once), Paperless
 # inboxes (every paperless.global.interval minutes) and cloud jobs with a
 # schedule (cloud.<job>.schedule, a 5-field cron time) and scheduled tasks of
-# apps (apps.<job>=appjob, see shareos-apps); every 10 minutes the checks of
+# apps (apps.<job>=appjob, see shareos-apps), snapshots (snapshots.<job>:
+# every hour/6h/day/week at its time); every 10 minutes the checks of
 # shareos-notify. Areas switched off under System -> Appearance
 # (shareos.ui.area_apps/area_cloud/area_paperless = 0) get no entries.
 #
@@ -38,6 +39,20 @@ entries() {
 		s=$(uci -q get cloud."$j".schedule)
 		echo "$s" | grep -qE '^[0-9*/,-]+( [0-9*/,-]+){4}$' || continue
 		echo "$s /usr/sbin/shareos-cloud run $j >/dev/null 2>&1"
+	done
+	# snapshots: every hour / 6 hours / day / week (Sunday) at the job's time
+	for j in $(uci -q show snapshots | sed -n "s/^snapshots\.\([^.=]*\)=job$/\1/p"); do
+		[ "$(uci -q get snapshots."$j".enabled)" = 0 ] && continue
+		echo "$j" | grep -qE '^[a-z][a-z0-9_]{0,31}$' || continue
+		t=$(uci -q get snapshots."$j".time); echo "$t" | grep -qE '^([01][0-9]|2[0-3]):[0-5][0-9]$' || t=03:15
+		h=${t%:*}; h=${h#0}; m=${t#*:}; m=${m#0}
+		case "$(uci -q get snapshots."$j".every)" in
+			hour) s="$m * * * *" ;;
+			6h) s="$m $((h % 6))-23/6 * * *" ;;
+			week) s="$m $h * * 0" ;;
+			*) s="$m $h * * *" ;;
+		esac
+		echo "$s /usr/sbin/shareos-snapshot run $j >/dev/null 2>&1"
 	done
 	# scheduled tasks of apps (permission "cron"); shareos-apps run-job checks the rest
 	area_on apps && for j in $(uci -q show apps | sed -n "s/^apps\.\([^.=]*\)=appjob$/\1/p"); do
@@ -68,5 +83,5 @@ cmd_sync() {
 
 case "$1" in
 	sync) cmd_sync ;;
-	*) sed -n '3,13s/^# \{0,1\}//p' "$0"; exit 2 ;;
+	*) sed -n '3,14s/^# \{0,1\}//p' "$0"; exit 2 ;;
 esac
