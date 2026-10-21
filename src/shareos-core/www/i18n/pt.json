@@ -1990,6 +1990,22 @@
 		[
 			"^– (.+)\\. Box nicht ausschalten\\.$",
 			"– $1. Não desligue a caixa."
+		],
+		[
+			"^Dazu wird installiert: (.+)\\.$",
+			"Também será instalado: $1."
+		],
+		[
+			"^Gebraucht von: (.+) – diese Apps funktionieren danach nicht mehr\\.$",
+			"Necessário para: $1 – esses apps deixarão de funcionar."
+		],
+		[
+			"^(\\S+) (\\S+) installiert, dazu: (.+)\\.$",
+			"$1 $2 instalado, e também: $3."
+		],
+		[
+			"^Hinweis: (.+)$",
+			"Observação: $1"
 		]
 	],
 	"words": [

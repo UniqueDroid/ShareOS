@@ -23,3 +23,15 @@ and writes a starter for every entry of `"commands"` to `/opt/shareos/bin`
 
 A new program: enable its buildroot package in the defconfig, add
 `sysapps/<id>/`, `make sysapps-pack`.
+
+**In the store:** CI attaches the `.sapp` files to every ShareOS release;
+the catalog of [ShareOS-Apps](https://github.com/UniqueDroid/ShareOS-Apps)
+lists them from there (metadata from `sysapps/<id>/app.json` at the release
+tag). A web app that needs one names it in `"requires"`, and the store
+installs it along.
+
+**Services:** a system app only brings the program. If it is a daemon (e.g.
+`transmission-daemon`), the firmware starts and stops it (here
+`shareos-transmission`, `S95transmission`, the removal hook
+`/usr/lib/shareos/apphooks/<id>`) – a package never starts a service by
+itself, so only reviewed daemons run on the box.

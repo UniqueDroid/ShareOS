@@ -1990,6 +1990,22 @@
 		[
 			"^– (.+)\\. Box nicht ausschalten\\.$",
 			"– $1. لا تطفئ الجهاز."
+		],
+		[
+			"^Dazu wird installiert: (.+)\\.$",
+			"سيُثبَّت أيضًا: $1."
+		],
+		[
+			"^Gebraucht von: (.+) – diese Apps funktionieren danach nicht mehr\\.$",
+			"تحتاجه: $1 – لن تعمل هذه التطبيقات بعد ذلك."
+		],
+		[
+			"^(\\S+) (\\S+) installiert, dazu: (.+)\\.$",
+			"تم تثبيت $1 $2، وأيضًا: $3."
+		],
+		[
+			"^Hinweis: (.+)$",
+			"ملاحظة: $1"
 		]
 	],
 	"words": [

@@ -7,7 +7,7 @@
 //   shareos-apps list               installed apps (JSON)
 //   shareos-apps install <id> [ver] download from the catalog, verify, install
 //   shareos-apps install-file <f>   install an uploaded package (not verified)
-//   shareos-apps remove <id>
+//   shareos-apps remove <id> [--force]   (--force: also when another app needs it)
 //   shareos-apps status             state of the last install job (JSON)
 //   shareos-apps run-job <id> <job> run a scheduled task of an app now (cron)
 //   shareos-apps job-log <id> <job> output of the last run
@@ -32,6 +32,11 @@
 //          browser (his personal folder; admins: all volumes and USB drives),
 //          with his rights, through /_shareos/cgi/fs (SDK: ShareOS.fs) –
 //          for file managers and editors that save on the box.
+// Apps it needs (optional): "requires": [ "transmission-daemon" ] – installed
+// from the store first (also for an uploaded package); an app another one
+// needs is removed only with --force. Services (daemons) come only with the
+// firmware: a system app runs when someone starts it, its daemon is started
+// by a firmware hook (e.g. shareos-transmission), never by the package.
 // Not a permission: "internet": true says the app loads data from the
 // internet (online services, streams, maps …); shown in the store. Web apps
 // and jobs may always use the network.
@@ -83,6 +88,7 @@ const ID_RE = /^[a-z][a-z0-9-]{1,31}$/;
 const JOB_RE = /^[a-z][a-z0-9-]{0,23}$/;
 const PERMISSIONS = { cron: 1, embed: 1, files: 1, torrent: 1 };
 const MAX_JOBS = 5;
+const MAX_REQUIRES = 5;
 const MAX_LOG = 65536;
 // the test suite serves catalogs and packages from files
 const URL_RE = getenv('SHAREOS_APPS_ALLOW_FILE') ? /^(https|file):\/\// : /^https:\/\//;
@@ -304,7 +310,7 @@ function installed() {
 			icon: a.icon ?? null, icon_data: icon_data(base, id, a.icon), category: a.category ?? '', homepage: a.homepage ?? '', license: a.license ?? '',
 			permissions: a.permissions ?? [], internet: a.internet === true, jobs: jobs_of(id, a, c),
 			window: type(a.window) == 'object' ? { width: a.window.width ?? null, height: a.window.height ?? null } : null,
-			opens: opens_of(a), commands: base == SYS ? (a.commands ?? []) : [],
+			opens: opens_of(a), commands: base == SYS ? (a.commands ?? []) : [], requires: a.requires ?? [],
 			verified: c.get('apps', s, 'verified') == '1', source: c.get('apps', s, 'source') ?? '',
 			installed: +(c.get('apps', s, 'installed') ?? 0),
 			users: type(users) == 'array' ? users : (users ? [ users ] : []) });
@@ -338,7 +344,7 @@ function merge(catalogs, channel) {
 			let i = inst[a.id];
 			push(apps, { id: a.id, name: a.name ?? a.id, publisher: a.publisher ?? '', description: a.description ?? '',
 				category: a.category ?? '', icon_url: a.icon_url ?? null, homepage: a.homepage ?? '',
-				type: a.type ?? 'webapp', source: cat.url, versions: vs, latest: vs[0].version,
+				type: a.type ?? 'webapp', source: cat.url, versions: vs, latest: vs[0].version, requires: vs[0].requires ?? [],
 				installed: i?.version ?? null,
 				update_available: !!i && vcmp(vs[0].version, i.version) > 0,
 				compatible: !too_old(vs[0].min_shareos) });
@@ -450,10 +456,20 @@ D=%s
 	drop_starters(id, keep);
 }
 
+function check_requires(a) {
+	if (a.requires == null) return null;
+	if (type(a.requires) != 'array' || length(a.requires) > MAX_REQUIRES) return 'requires: a list of at most ' + MAX_REQUIRES + ' app ids';
+	for (let r in a.requires)
+		if (type(r) != 'string' || !match(r, ID_RE) || r == a.id) return 'requires: invalid app id ' + r;
+	return null;
+}
+
 function check_app(dir) {
 	let a = json(readfile(dir + '/app.json') ?? 'null');
 	if (type(a) != 'object') return { error: 'app.json is not valid JSON' };
 	if (!match(a.id ?? '', ID_RE)) return { error: 'invalid app id (a-z, 0-9 and -)' };
+	let re = check_requires(a);
+	if (re) return { error: re };
 	if (!vparse(a.version)) return { error: 'invalid version' };
 	if (type(a.name) != 'string' || !length(a.name) || length(a.name) > 64) return { error: 'invalid name' };
 	let t = a.type ?? 'webapp';
@@ -514,31 +530,62 @@ function install_file(file, verified, source) {
 	setup_jobs(a, c);
 	c.commit('apps');
 	cron_sync();
-	return { ok: true, id: a.id, version: a.version, verified };
+	return { ok: true, id: a.id, version: a.version, verified, requires: a.requires ?? [] };
 }
 
-function cmd_install(id, version) {
-	if (!match(id ?? '', ID_RE)) die('invalid app id');
+// install_catalog and ensure_requires call each other (no hoisting in ucode)
+let ensure_requires;
+
+// from the catalog: download, verify, install – apps it needs first
+function install_catalog(id, version, depth) {
+	if (!match(id ?? '', ID_RE)) return { error: 'invalid app id' };
 	let cats = json(readfile(ST + '/catalogs.json') ?? '[]') ?? [];
 	let channel = conf().channel;
 	let app = filter(merge(cats, 'beta'), (a) => a.id == id)[0];
-	if (!app) die('unknown app – refresh the store first');
+	if (!app) return { error: depth ? id + ' is not in the store' : 'unknown app – refresh the store first' };
 	let v = version ? filter(app.versions, (x) => x.version == version)[0] : filter(app.versions, (x) => channel == 'beta' || !x.prerelease)[0];
-	if (!v) die('unknown version');
+	if (!v) return { error: 'unknown version' };
+	let need = ensure_requires(v.requires, depth);
+	if (need.error) return need;
 	job({ state: 'downloading', id, version: v.version });
 	mkdir(ST);
 	let f = ST + '/dl-' + id + '.sapp';
 	let r = capture(join(' ', map([ ...CURL, '--max-time', '600', '--max-filesize', '' + MAX_PKG, '-o', f, v.url ], shq)));
-	if (r.rc != 0) { unlink(f); job({ state: 'error', id, error: 'download failed' }); die('download failed: ' + trim(r.out)); }
+	if (r.rc != 0) { unlink(f); return { error: 'download failed: ' + trim(r.out) }; }
 	job({ state: 'verifying', id, version: v.version });
 	let sum = split(trim(capture('sha256sum ' + shq(f)).out), ' ')[0];
-	if (sum != v.sha256) { unlink(f); job({ state: 'error', id, error: 'checksum mismatch' }); die('checksum mismatch – package not installed'); }
+	if (sum != v.sha256) { unlink(f); return { error: 'checksum mismatch – package not installed' }; }
 	job({ state: 'installing', id, version: v.version });
 	let res = install_file(f, true, app.source);
 	unlink(f);
+	if (res.error) return res;
+	if (res.id != id) return { error: 'package contains another app (' + res.id + ')' };
+	// the package may name more than the catalog did
+	let more = ensure_requires(res.requires, depth);
+	if (more.error) res.warning = more.error;
+	if (length(need.installed) || length(more.installed)) res.also = [ ...need.installed, ...(more.installed ?? []) ];
+	return res;
+}
+
+// apps an app needs: install the missing ones from the store
+ensure_requires = function(reqs, depth) {
+	let done = [];
+	if (type(reqs) != 'array') return { installed: done };
+	if (depth > 2) return { error: 'requires: too deep' };
+	for (let r in reqs) {
+		if (type(r) != 'string' || !match(r, ID_RE) || app_dir(r)) continue;
+		let res = install_catalog(r, null, depth + 1);
+		if (res.error) return { error: 'needs ' + r + ': ' + res.error, installed: done };
+		push(done, r);
+	}
+	return { installed: done };
+};
+
+function cmd_install(id, version) {
+	if (!match(id ?? '', ID_RE)) die('invalid app id');
+	let res = install_catalog(id, version, 0);
 	if (res.error) { job({ state: 'error', id, error: res.error }); die(res.error); }
-	if (res.id != id) { job({ state: 'error', id, error: 'package contains another app' }); die('package contains another app (' + res.id + ')'); }
-	job({ state: 'done', id, version: res.version });
+	job({ state: 'done', id, version: res.version, also: res.also, warning: res.warning });
 	return out(res);
 }
 
@@ -549,13 +596,19 @@ function cmd_install_file(f) {
 	job({ state: 'installing', id: '', version: '' });
 	let res = install_file(f, false, 'upload');
 	if (res.error) { job({ state: 'error', error: res.error }); die(res.error); }
-	job({ state: 'done', id: res.id, version: res.version });
+	// apps it needs, from the store (the uploaded app stays even if that fails)
+	let need = ensure_requires(res.requires, 0);
+	if (need.error) res.warning = need.error;
+	if (length(need.installed ?? [])) res.also = need.installed;
+	job({ state: 'done', id: res.id, version: res.version, also: res.also, warning: res.warning });
 	return out(res);
 }
 
-function cmd_remove(id) {
+function cmd_remove(id, force) {
 	let dir = match(id ?? '', ID_RE) ? app_dir(id) : null;
 	if (!dir) die('unknown app');
+	let users = map(filter(installed(), (a) => a.id != id && index(a.requires, id) >= 0), (a) => a.name);
+	if (length(users) && force != '--force') die('needed by ' + join(', ', users));
 	// a firmware hook for system apps that run services (e.g. stop the Transmission daemons)
 	let hook = ROOT + '/usr/lib/shareos/apphooks/' + id;
 	if (stat(hook)?.type == 'file') capture(shq(hook) + ' remove');
@@ -635,7 +688,7 @@ case 'cached': cmd_cached(); break;
 case 'list': out({ apps: installed() }); break;
 case 'install': cmd_install(ARGV[1], ARGV[2]); break;
 case 'install-file': cmd_install_file(ARGV[1]); break;
-case 'remove': cmd_remove(ARGV[1]); break;
+case 'remove': cmd_remove(ARGV[1], ARGV[2]); break;
 case 'status': out(json(readfile(ST + '/job.json') ?? 'null') ?? { state: 'idle' }); break;
 case 'run-job': cmd_run_job(ARGV[1], ARGV[2]); break;
 case 'job-log': cmd_job_log(ARGV[1], ARGV[2]); break;

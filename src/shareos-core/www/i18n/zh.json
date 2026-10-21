@@ -1990,6 +1990,22 @@
 		[
 			"^– (.+)\\. Box nicht ausschalten\\.$",
 			"– $1。请勿关闭设备。"
+		],
+		[
+			"^Dazu wird installiert: (.+)\\.$",
+			"同时安装：$1。"
+		],
+		[
+			"^Gebraucht von: (.+) – diese Apps funktionieren danach nicht mehr\\.$",
+			"被以下应用使用：$1 – 这些应用将无法再工作。"
+		],
+		[
+			"^(\\S+) (\\S+) installiert, dazu: (.+)\\.$",
+			"$1 $2 已安装，另外：$3。"
+		],
+		[
+			"^Hinweis: (.+)$",
+			"提示：$1"
 		]
 	],
 	"words": [

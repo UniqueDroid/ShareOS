@@ -2899,10 +2899,11 @@ return {
 		},
 
 		remove: {
-			args: { id: '' },
+			// force: also when another installed app needs it ("requires")
+			args: { id: '', force: false },
 			call: function(req) {
 				if (!match(req.args.id ?? '', /^[a-z][a-z0-9-]{1,31}$/)) return { error: 'invalid app id' };
-				return apps_json([ 'remove', req.args.id ]);
+				return apps_json(req.args.force === true ? [ 'remove', req.args.id, '--force' ] : [ 'remove', req.args.id ]);
 			}
 		},
 

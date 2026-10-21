@@ -1990,6 +1990,22 @@
 		[
 			"^– (.+)\\. Box nicht ausschalten\\.$",
 			"– $1. No apagues el equipo."
+		],
+		[
+			"^Dazu wird installiert: (.+)\\.$",
+			"También se instalará: $1."
+		],
+		[
+			"^Gebraucht von: (.+) – diese Apps funktionieren danach nicht mehr\\.$",
+			"Lo necesita: $1 – estas apps dejarán de funcionar."
+		],
+		[
+			"^(\\S+) (\\S+) installiert, dazu: (.+)\\.$",
+			"$1 $2 instalado, además: $3."
+		],
+		[
+			"^Hinweis: (.+)$",
+			"Nota: $1"
 		]
 	],
 	"words": [

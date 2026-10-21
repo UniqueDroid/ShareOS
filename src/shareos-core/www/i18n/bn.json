@@ -1990,6 +1990,22 @@
 		[
 			"^– (.+)\\. Box nicht ausschalten\\.$",
 			"– $1। বক্স বন্ধ করবেন না।"
+		],
+		[
+			"^Dazu wird installiert: (.+)\\.$",
+			"সাথে ইনস্টল হবে: $1।"
+		],
+		[
+			"^Gebraucht von: (.+) – diese Apps funktionieren danach nicht mehr\\.$",
+			"যাদের লাগে: $1 – এই অ্যাপগুলো আর কাজ করবে না।"
+		],
+		[
+			"^(\\S+) (\\S+) installiert, dazu: (.+)\\.$",
+			"$1 $2 ইনস্টল হয়েছে, সাথে: $3।"
+		],
+		[
+			"^Hinweis: (.+)$",
+			"নোট: $1"
 		]
 	],
 	"words": [

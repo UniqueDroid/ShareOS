@@ -1990,6 +1990,22 @@
 		[
 			"^– (.+)\\. Box nicht ausschalten\\.$",
 			"– $1. Ne pas éteindre le boîtier."
+		],
+		[
+			"^Dazu wird installiert: (.+)\\.$",
+			"Sera aussi installé : $1."
+		],
+		[
+			"^Gebraucht von: (.+) – diese Apps funktionieren danach nicht mehr\\.$",
+			"Utilisé par : $1 – ces apps ne fonctionneront plus."
+		],
+		[
+			"^(\\S+) (\\S+) installiert, dazu: (.+)\\.$",
+			"$1 $2 installé, en plus : $3."
+		],
+		[
+			"^Hinweis: (.+)$",
+			"Remarque : $1"
 		]
 	],
 	"words": [

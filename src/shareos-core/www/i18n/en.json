@@ -1990,6 +1990,22 @@
 		[
 			"^– (.+)\\. Box nicht ausschalten\\.$",
 			"– $1. Do not switch the box off."
+		],
+		[
+			"^Dazu wird installiert: (.+)\\.$",
+			"Also installed: $1."
+		],
+		[
+			"^Gebraucht von: (.+) – diese Apps funktionieren danach nicht mehr\\.$",
+			"Needed by: $1 – these apps will no longer work."
+		],
+		[
+			"^(\\S+) (\\S+) installiert, dazu: (.+)\\.$",
+			"$1 $2 installed, also: $3."
+		],
+		[
+			"^Hinweis: (.+)$",
+			"Note: $1"
 		]
 	],
 	"words": [

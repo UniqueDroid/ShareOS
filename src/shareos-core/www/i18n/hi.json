@@ -1990,6 +1990,22 @@
 		[
 			"^– (.+)\\. Box nicht ausschalten\\.$",
 			"– $1। बॉक्स बंद न करें।"
+		],
+		[
+			"^Dazu wird installiert: (.+)\\.$",
+			"साथ में इंस्टॉल होगा: $1।"
+		],
+		[
+			"^Gebraucht von: (.+) – diese Apps funktionieren danach nicht mehr\\.$",
+			"इनको चाहिए: $1 – ये ऐप्स फिर काम नहीं करेंगे।"
+		],
+		[
+			"^(\\S+) (\\S+) installiert, dazu: (.+)\\.$",
+			"$1 $2 इंस्टॉल हुआ, साथ में: $3।"
+		],
+		[
+			"^Hinweis: (.+)$",
+			"सूचना: $1"
 		]
 	],
 	"words": [

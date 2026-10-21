@@ -66,21 +66,27 @@ mkapp $T/a3 evil 1.0.0; (cd $T/a3 && tar -czf $P/evil-dots.sapp app.json --trans
 mkapp $T/a4 linky 1.0.0; ln -s /etc/shadow $T/a4/files/shadow; pack $T/a4 $P/linky.sapp
 mkapp $T/a5 native 1.0.0; python3 -c "import json; f='$T/a5/app.json'; d=json.load(open(f)); d['type']='native'; json.dump(d,open(f,'w'))"; pack $T/a5 $P/native.sapp
 mkapp $T/a6 noentry 1.0.0; rm $T/a6/files/index.html; echo x > $T/a6/files/other.html; pack $T/a6 $P/noentry.sapp
+mkapp $T/a7 helper 1.0.0; pack $T/a7 $P/helper-1.0.0.sapp
+mkapp $T/a8 needy 1.0.0; python3 -c "import json; f='$T/a8/app.json'; d=json.load(open(f)); d['requires']=['helper']; json.dump(d,open(f,'w'))"; pack $T/a8 $P/needy-1.0.0.sapp
+mkapp $T/a9 orphan 1.0.0; python3 -c "import json; f='$T/a9/app.json'; d=json.load(open(f)); d['requires']=['nothere']; json.dump(d,open(f,'w'))"; pack $T/a9 $P/orphan-1.0.0.sapp
+mkapp $T/a10 selfish 1.0.0; python3 -c "import json; f='$T/a10/app.json'; d=json.load(open(f)); d['requires']=['selfish']; json.dump(d,open(f,'w'))"; pack $T/a10 $P/selfish-1.0.0.sapp
 [ -n "${2:-}" ] && [ -f "$2" ] && cp "$2" $P/webpad.sapp
 sha() { sha256sum "$1" | cut -d' ' -f1; }
-python3 - "$P" "$(sha $P/hello-1.0.0.sapp)" "$(sha $P/hello-1.1.0.sapp)" <<'PY' > $P/index.json
+python3 - "$P" "$(sha $P/hello-1.0.0.sapp)" "$(sha $P/hello-1.1.0.sapp)" "$(sha $P/helper-1.0.0.sapp)" "$(sha $P/needy-1.0.0.sapp)" <<'PY' > $P/index.json
 import json, sys
-p, s1, s2 = sys.argv[1:4]
+p, s1, s2, s3, s4 = sys.argv[1:6]
 v = lambda ver, f, s, pre=False: {"version": ver, "date": "2026-10-18T10:00:00Z", "prerelease": pre, "url": "file:///tmp/pkg/" + f, "sha256": s, "size": 100, "min_shareos": "0.0"}
 print(json.dumps({"schema": 1, "apps": [
   {"id": "hello", "name": "Hello", "publisher": "Test", "type": "webapp", "versions": [v("1.0.0", "hello-1.0.0.sapp", s1), v("1.1.0", "hello-1.1.0.sapp", s2, True)]},
+  {"id": "helper", "name": "Helper", "publisher": "Test", "type": "webapp", "versions": [v("1.0.0", "helper-1.0.0.sapp", s3)]},
+  {"id": "needy", "name": "Needy", "publisher": "Test", "type": "webapp", "versions": [dict(v("1.0.0", "needy-1.0.0.sapp", s4), requires=["helper"])]},
   {"id": "broken", "name": "Broken", "publisher": "Test", "type": "webapp", "versions": [v("1.0.0", "hello-1.0.0.sapp", "0" * 64)]},
   {"id": "insecure", "name": "Insecure", "publisher": "Test", "versions": [dict(v("1.0.0", "x", s1), url="http://example.com/x.sapp")]}]}))
 PY
 run "uci -q delete apps.store.source; uci add_list apps.store.source=file:///tmp/pkg/index.json; uci set apps.store.port=$PORT; uci set apps.store.https_port=$((PORT+1)); uci set shareos.web.https=0; uci commit apps; uci commit shareos" >/dev/null
 
 C=$(run "shareos-apps catalog")
-check "catalog: stable channel shows release versions only" "echo '$C' | js \"[(a['id'],a['latest']) for a in d['apps']]==[('broken','1.0.0'),('hello','1.0.0')]\""
+check "catalog: stable channel shows release versions only" "echo '$C' | js \"[(a['id'],a['latest']) for a in d['apps']]==[('broken','1.0.0'),('hello','1.0.0'),('helper','1.0.0'),('needy','1.0.0')]\""
 check "catalog: plain http package URLs are ignored" "! echo '$C' | grep -q insecure"
 run "uci set apps.store.channel=beta; uci commit apps" >/dev/null
 check "catalog: beta channel offers the pre-release" "run 'shareos-apps cached' | js \"[a['latest'] for a in d['apps'] if a['id']=='hello']==['1.1.0']\""
@@ -95,6 +101,15 @@ check "package with ../ paths rejected" "run 'shareos-apps install-file /tmp/pkg
 check "package with a symlink rejected" "run 'shareos-apps install-file /tmp/pkg/linky.sapp' | grep -q 'links' && [ ! -e $R/www-apps/linky ]"
 check "native apps are refused (not supported yet)" "run 'shareos-apps install-file /tmp/pkg/native.sapp' | grep -q 'not supported'"
 check "missing entry file rejected" "run 'shareos-apps install-file /tmp/pkg/noentry.sapp' | grep -q 'entry file' && [ ! -e $R/www-apps/noentry ]"
+check "requires: listed in the catalog" "run 'shareos-apps cached' | js \"[a['requires'] for a in d['apps'] if a['id']=='needy']==[['helper']]\""
+check "requires: the app it needs comes first from the store" "run 'shareos-apps install needy' | js \"d['ok'] and d.get('also')==['helper']\" && [ -f $R/www-apps/helper/app.json ] && [ -f $R/www-apps/needy/app.json ]"
+check "requires: shown in the installed list" "run 'shareos-apps list' | js \"[a['requires'] for a in d['apps'] if a['id']=='needy']==[['helper']]\""
+check "requires: an app another one needs is not removed" "run 'shareos-apps remove helper' | grep -q 'needed by Test needy' && [ -d $R/www-apps/helper ]"
+check "requires: removed with --force" "run 'shareos-apps remove helper --force' | js \"d['ok']\" && [ ! -d $R/www-apps/helper ]"
+check "requires: upload installs the missing app from the store" "run 'shareos-apps remove needy >/dev/null; shareos-apps install-file /tmp/pkg/needy-1.0.0.sapp' | js \"d['ok'] and d.get('also')==['helper']\" && [ -d $R/www-apps/helper ]"
+check "requires: not in the store – app installed with a note" "run 'shareos-apps install-file /tmp/pkg/orphan-1.0.0.sapp' | js \"d['ok'] and 'needs nothere' in d.get('warning','')\""
+check "requires: an app cannot need itself" "run 'shareos-apps install-file /tmp/pkg/selfish-1.0.0.sapp' | grep -q 'requires: invalid'"
+run 'shareos-apps remove needy; shareos-apps remove helper; shareos-apps remove orphan' >/dev/null
 check "no leftovers from failed installs" "[ -z \"\$(ls -A $R/www-apps | grep '^\.new')\" ]"
 
 # --- system apps (type "system"): programs for the terminal
