@@ -1,0 +1,10 @@
+config BR2_PACKAGE_SHAREOS_TAILSCALE
+	bool "shareos-tailscale"
+	depends on BR2_PACKAGE_HOST_GO_TARGET_ARCH_SUPPORTS
+	select BR2_PACKAGE_HOST_GO
+	help
+	  Tailscale for the system app "tailscale": one small binary
+	  (tailscaled with the CLI built in), features a NAS does not need
+	  left out.
+
+	  https://github.com/tailscale/tailscale
