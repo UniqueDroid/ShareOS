@@ -1060,7 +1060,9 @@
 		"Noch kein Snapshot-Auftrag. Ein Auftrag sichert eine Freigabe, die persönlichen Ordner oder ein ganzes Laufwerk nach Zeitplan.": "Aucune tâche d'instantané. Une tâche sauvegarde un partage, les dossiers personnels ou un lecteur entier selon un planning.",
 		"Noch kein Snapshot – „Jetzt sichern“ legt den ersten an.": "Aucun instantané – « Sauvegarder maintenant » crée le premier.",
 		"rsync fehlt in dieser Firmware.": "rsync manque dans ce firmware.",
-		"Kein geeignetes Ziel: Snapshots brauchen ein Laufwerk mit ext4 oder Btrfs (FAT32/exFAT kennen keine Hardlinks).": "Aucune cible adaptée : les instantanés exigent un lecteur ext4 ou Btrfs (FAT32/exFAT n'ont pas de liens physiques)."
+		"Kein geeignetes Ziel: Snapshots brauchen ein Laufwerk mit ext4 oder Btrfs (FAT32/exFAT kennen keine Hardlinks).": "Aucune cible adaptée : les instantanés exigent un lecteur ext4 ou Btrfs (FAT32/exFAT n'ont pas de liens physiques).",
+		"Aufträge": "tâches",
+		"– keine Hardlinks": "– pas de liens physiques"
 	},
 	"patterns": [
 		[

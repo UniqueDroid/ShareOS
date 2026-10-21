@@ -1060,7 +1060,9 @@
 		"Noch kein Snapshot-Auftrag. Ein Auftrag sichert eine Freigabe, die persönlichen Ordner oder ein ganzes Laufwerk nach Zeitplan.": "এখনো কোনো স্ন্যাপশট কাজ নেই। একটি কাজ সময়সূচি অনুযায়ী শেয়ার, ব্যক্তিগত ফোল্ডার বা পুরো ড্রাইভ সংরক্ষণ করে।",
 		"Noch kein Snapshot – „Jetzt sichern“ legt den ersten an.": "এখনো কোনো স্ন্যাপশট নেই – “এখনই সংরক্ষণ” প্রথমটি তৈরি করে।",
 		"rsync fehlt in dieser Firmware.": "এই ফার্মওয়্যারে rsync নেই।",
-		"Kein geeignetes Ziel: Snapshots brauchen ein Laufwerk mit ext4 oder Btrfs (FAT32/exFAT kennen keine Hardlinks).": "উপযুক্ত লক্ষ্য নেই: স্ন্যাপশটের জন্য ext4 বা Btrfs ড্রাইভ দরকার (FAT32/exFAT-এ হার্ড লিংক নেই)।"
+		"Kein geeignetes Ziel: Snapshots brauchen ein Laufwerk mit ext4 oder Btrfs (FAT32/exFAT kennen keine Hardlinks).": "উপযুক্ত লক্ষ্য নেই: স্ন্যাপশটের জন্য ext4 বা Btrfs ড্রাইভ দরকার (FAT32/exFAT-এ হার্ড লিংক নেই)।",
+		"Aufträge": "কাজ",
+		"– keine Hardlinks": "– হার্ড লিংক নেই"
 	},
 	"patterns": [
 		[

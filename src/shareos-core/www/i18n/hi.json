@@ -1060,7 +1060,9 @@
 		"Noch kein Snapshot-Auftrag. Ein Auftrag sichert eine Freigabe, die persönlichen Ordner oder ein ganzes Laufwerk nach Zeitplan.": "अभी कोई स्नैपशॉट कार्य नहीं। कार्य समय-सारणी के अनुसार शेयर, निजी फ़ोल्डर या पूरी ड्राइव सहेजता है।",
 		"Noch kein Snapshot – „Jetzt sichern“ legt den ersten an.": "अभी कोई स्नैपशॉट नहीं – “अभी सहेजें” पहला बनाता है।",
 		"rsync fehlt in dieser Firmware.": "इस फ़र्मवेयर में rsync नहीं है।",
-		"Kein geeignetes Ziel: Snapshots brauchen ein Laufwerk mit ext4 oder Btrfs (FAT32/exFAT kennen keine Hardlinks).": "कोई उपयुक्त लक्ष्य नहीं: स्नैपशॉट को ext4 या Btrfs ड्राइव चाहिए (FAT32/exFAT में हार्ड लिंक नहीं होते)।"
+		"Kein geeignetes Ziel: Snapshots brauchen ein Laufwerk mit ext4 oder Btrfs (FAT32/exFAT kennen keine Hardlinks).": "कोई उपयुक्त लक्ष्य नहीं: स्नैपशॉट को ext4 या Btrfs ड्राइव चाहिए (FAT32/exFAT में हार्ड लिंक नहीं होते)।",
+		"Aufträge": "कार्य",
+		"– keine Hardlinks": "– हार्ड लिंक नहीं"
 	},
 	"patterns": [
 		[

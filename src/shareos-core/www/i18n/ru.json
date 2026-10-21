@@ -1060,7 +1060,9 @@
 		"Noch kein Snapshot-Auftrag. Ein Auftrag sichert eine Freigabe, die persönlichen Ordner oder ein ganzes Laufwerk nach Zeitplan.": "Заданий снимков пока нет. Задание по расписанию сохраняет общую папку, личные папки или целый диск.",
 		"Noch kein Snapshot – „Jetzt sichern“ legt den ersten an.": "Снимков пока нет — «Сохранить сейчас» создаст первый.",
 		"rsync fehlt in dieser Firmware.": "В этой прошивке нет rsync.",
-		"Kein geeignetes Ziel: Snapshots brauchen ein Laufwerk mit ext4 oder Btrfs (FAT32/exFAT kennen keine Hardlinks).": "Нет подходящей цели: снимкам нужен диск с ext4 или Btrfs (в FAT32/exFAT нет жёстких ссылок)."
+		"Kein geeignetes Ziel: Snapshots brauchen ein Laufwerk mit ext4 oder Btrfs (FAT32/exFAT kennen keine Hardlinks).": "Нет подходящей цели: снимкам нужен диск с ext4 или Btrfs (в FAT32/exFAT нет жёстких ссылок).",
+		"Aufträge": "заданий",
+		"– keine Hardlinks": "— нет жёстких ссылок"
 	},
 	"patterns": [
 		[

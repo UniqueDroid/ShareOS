@@ -1060,7 +1060,9 @@
 		"Noch kein Snapshot-Auftrag. Ein Auftrag sichert eine Freigabe, die persönlichen Ordner oder ein ganzes Laufwerk nach Zeitplan.": "لا توجد مهمة لقطات بعد. تحفظ المهمة مشاركة أو المجلدات الشخصية أو محركًا كاملًا وفق جدول.",
 		"Noch kein Snapshot – „Jetzt sichern“ legt den ersten an.": "لا توجد لقطة بعد – «احفظ الآن» تُنشئ الأولى.",
 		"rsync fehlt in dieser Firmware.": "rsync غير موجود في هذا البرنامج الثابت.",
-		"Kein geeignetes Ziel: Snapshots brauchen ein Laufwerk mit ext4 oder Btrfs (FAT32/exFAT kennen keine Hardlinks).": "لا يوجد هدف مناسب: تحتاج اللقطات إلى محرك ext4 أو Btrfs (لا تدعم FAT32/exFAT الروابط الصلبة)."
+		"Kein geeignetes Ziel: Snapshots brauchen ein Laufwerk mit ext4 oder Btrfs (FAT32/exFAT kennen keine Hardlinks).": "لا يوجد هدف مناسب: تحتاج اللقطات إلى محرك ext4 أو Btrfs (لا تدعم FAT32/exFAT الروابط الصلبة).",
+		"Aufträge": "مهام",
+		"– keine Hardlinks": "– لا روابط صلبة"
 	},
 	"patterns": [
 		[

@@ -1060,7 +1060,9 @@
 		"Noch kein Snapshot-Auftrag. Ein Auftrag sichert eine Freigabe, die persönlichen Ordner oder ein ganzes Laufwerk nach Zeitplan.": "还没有快照任务。任务会按计划备份一个共享、个人文件夹或整个驱动器。",
 		"Noch kein Snapshot – „Jetzt sichern“ legt den ersten an.": "还没有快照——“立即备份”会创建第一个。",
 		"rsync fehlt in dieser Firmware.": "此固件缺少 rsync。",
-		"Kein geeignetes Ziel: Snapshots brauchen ein Laufwerk mit ext4 oder Btrfs (FAT32/exFAT kennen keine Hardlinks).": "没有合适的目标：快照需要 ext4 或 Btrfs 驱动器（FAT32/exFAT 不支持硬链接）。"
+		"Kein geeignetes Ziel: Snapshots brauchen ein Laufwerk mit ext4 oder Btrfs (FAT32/exFAT kennen keine Hardlinks).": "没有合适的目标：快照需要 ext4 或 Btrfs 驱动器（FAT32/exFAT 不支持硬链接）。",
+		"Aufträge": "个任务",
+		"– keine Hardlinks": "– 不支持硬链接"
 	},
 	"patterns": [
 		[

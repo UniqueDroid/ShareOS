@@ -1364,3 +1364,5 @@ P262	Excluir também os $1 snapshots em $2? Caso contrário, eles ficam lá.
 P263	Snapshot “$1” em andamento.
 P264	A unidade de destino $1 não está montada.
 P265	TAREFA $1
+E1058	tarefas
+E1059	– sem hard links

@@ -1364,3 +1364,5 @@ P262	Supprimer aussi les $1 instantanés dans $2 ? Sinon, ils y restent.
 P263	Instantané « $1 » en cours.
 P264	Le lecteur cible $1 n'est pas monté.
 P265	TÂCHE $1
+E1058	tâches
+E1059	– pas de liens physiques

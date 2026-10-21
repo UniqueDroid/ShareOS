@@ -1060,7 +1060,9 @@
 		"Noch kein Snapshot-Auftrag. Ein Auftrag sichert eine Freigabe, die persönlichen Ordner oder ein ganzes Laufwerk nach Zeitplan.": "Ainda não há tarefa de snapshot. Uma tarefa salva um compartilhamento, as pastas pessoais ou uma unidade inteira conforme a agenda.",
 		"Noch kein Snapshot – „Jetzt sichern“ legt den ersten an.": "Nenhum snapshot ainda – “Salvar agora” cria o primeiro.",
 		"rsync fehlt in dieser Firmware.": "O rsync não está neste firmware.",
-		"Kein geeignetes Ziel: Snapshots brauchen ein Laufwerk mit ext4 oder Btrfs (FAT32/exFAT kennen keine Hardlinks).": "Nenhum destino adequado: snapshots precisam de uma unidade ext4 ou Btrfs (FAT32/exFAT não têm hard links)."
+		"Kein geeignetes Ziel: Snapshots brauchen ein Laufwerk mit ext4 oder Btrfs (FAT32/exFAT kennen keine Hardlinks).": "Nenhum destino adequado: snapshots precisam de uma unidade ext4 ou Btrfs (FAT32/exFAT não têm hard links).",
+		"Aufträge": "tarefas",
+		"– keine Hardlinks": "– sem hard links"
 	},
 	"patterns": [
 		[

@@ -1364,3 +1364,5 @@ P262	¿Eliminar también las $1 instantáneas de $2? Si no, se quedan allí.
 P263	Instantánea «$1» en curso.
 P264	La unidad de destino $1 no está montada.
 P265	TAREA $1
+E1058	tareas
+E1059	– sin enlaces duros
