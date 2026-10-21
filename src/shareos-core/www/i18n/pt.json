@@ -1018,6 +1018,85 @@
 		"Alle": "Todas",
 		"Sonstige": "Outras",
 		"Suchen …": "Pesquisar …",
+		"Ein Snapshot hält den Stand eines Ordners fest – stündlich, täglich oder wöchentlich.": "Um snapshot guarda o estado de uma pasta – a cada hora, diariamente ou semanalmente.",
+		"Jeder Stand sieht aus wie eine vollständige Kopie; unveränderte Dateien belegen aber keinen zusätzlichen Platz.": "Cada estado parece uma cópia completa, mas os arquivos inalterados não ocupam espaço extra.",
+		"So holst du eine gelöschte oder überschriebene Datei von gestern oder letzter Woche zurück: im Dateibrowser aus dem Snapshot zurückkopieren.": "Para recuperar um arquivo apagado ou sobrescrito ontem ou na semana passada, copie-o de volta do snapshot no navegador de arquivos.",
+		"Neuer Snapshot-Auftrag": "Nova tarefa de snapshot",
+		"NEUER SNAPSHOT-AUFTRAG": "NOVA TAREFA DE SNAPSHOT",
+		"Am besten auf ein anderes Laufwerk sichern (zweite Platte oder USB-Festplatte): dann schützen Snapshots auch bei einem Plattendefekt.": "O ideal é salvar em outra unidade (segundo disco ou disco USB): assim os snapshots também protegem contra falha do disco.",
+		"Ein Spiegel (RAID 1) ersetzt keine Snapshots – er spiegelt auch jedes Löschen sofort.": "Um espelho (RAID 1) não substitui snapshots – ele também espelha cada exclusão na hora.",
+		"Die Snapshots liegen im Ordner": "Os snapshots ficam na pasta",
+		"des Ziel-Laufwerks und sind nur für Administratoren sichtbar.": "da unidade de destino e só os administradores os veem.",
+		"Für eine Kopie außer Haus kann ein Cloud-Auftrag den Snapshot-Ordner hochladen.": "Para uma cópia fora de casa, uma tarefa de nuvem pode enviar a pasta de snapshots.",
+		"neuester": "mais recente",
+		"Jetzt sichern": "Salvar agora",
+		"QUELLE → ZIEL": "ORIGEM → DESTINO",
+		"ZEITPLAN · BEHALTEN": "AGENDA · MANTER",
+		"STAND": "ESTADO",
+		"Im Dateibrowser öffnen": "Abrir no navegador de arquivos",
+		"Zum Wiederherstellen im Dateibrowser die Datei oder den Ordner aus dem Snapshot an den alten Platz kopieren. Dateien im Snapshot nicht ändern: unveränderte Dateien teilen sich den Platz mit den anderen Snapshots.": "Para restaurar, copie o arquivo ou a pasta do snapshot de volta ao lugar original no navegador de arquivos. Não altere arquivos dentro de um snapshot: arquivos inalterados compartilham o espaço com os outros snapshots.",
+		"WAS SICHERN": "O QUE SALVAR",
+		"ZIEL-LAUFWERK": "UNIDADE DE DESTINO",
+		"WIE OFT": "COM QUE FREQUÊNCIA",
+		"Stündlich": "A cada hora",
+		"Alle 6 Stunden": "A cada 6 horas",
+		"Täglich": "Diário",
+		"Wöchentlich (Sonntag)": "Semanal (domingo)",
+		"UHRZEIT": "HORÁRIO",
+		"AB UHRZEIT": "A PARTIR DE",
+		"MINUTE (HH:MM, NUR DIE MINUTE ZÄHLT)": "MINUTO (HH:MM, SÓ O MINUTO CONTA)",
+		"BEHALTEN": "MANTER",
+		"DIE LETZTEN": "OS ÚLTIMOS",
+		"TAGE (JE EINER)": "DIAS (UM POR DIA)",
+		"WOCHEN (JE EINER)": "SEMANAS (UM POR SEMANA)",
+		"MONATE (JE EINER)": "MESES (UM POR MÊS)",
+		"Die letzten N Snapshots bleiben immer (auch die von Hand); dazu je der neueste eines Tages, einer Woche, eines Monats. Beispiel täglich: 7 Tage · 4 Wochen · 6 Monate ≈ ein halbes Jahr zurück mit 17 Ständen.": "Os últimos N snapshots ficam sempre (inclusive os manuais); além disso, o mais recente de cada dia, semana e mês. Exemplo diário: 7 dias · 4 semanas · 6 meses ≈ meio ano para trás com 17 estados.",
+		"AUSNAHMEN (EINE PRO ZEILE, Z. B. *.tmp ODER /Downloads/)": "EXCLUSÕES (UMA POR LINHA, EX. *.tmp OU /Downloads/)",
+		"Quelle und Ziel liegen auf demselben Laufwerk: das schützt vor versehentlichem Löschen, aber nicht vor einem Plattendefekt.": "Origem e destino estão na mesma unidade: protege contra exclusão acidental, não contra falha do disco.",
+		"Es werden keine neuen Snapshots mehr angelegt.": "Nenhum snapshot novo será criado.",
+		"Snapshot löschen?": "Excluir o snapshot?",
+		"Snapshots auch löschen?": "Excluir também os snapshots?",
+		"Snapshots löschen": "Excluir snapshots",
+		"Snapshot gelöscht.": "Snapshot excluído.",
+		"abgebrochen": "interrompido",
+		"Lade Snapshots …": "Carregando snapshots …",
+		"Noch kein Snapshot-Auftrag. Ein Auftrag sichert eine Freigabe, die persönlichen Ordner oder ein ganzes Laufwerk nach Zeitplan.": "Ainda não há tarefa de snapshot. Uma tarefa salva um compartilhamento, as pastas pessoais ou uma unidade inteira conforme a agenda.",
+		"Noch kein Snapshot – „Jetzt sichern“ legt den ersten an.": "Nenhum snapshot ainda – “Salvar agora” cria o primeiro.",
+		"rsync fehlt in dieser Firmware.": "O rsync não está neste firmware.",
+		"Kein geeignetes Ziel: Snapshots brauchen ein Laufwerk mit ext4 oder Btrfs (FAT32/exFAT kennen keine Hardlinks).": "Nenhum destino adequado: snapshots precisam de uma unidade ext4 ou Btrfs (FAT32/exFAT não têm hard links).",
+		"Aufträge": "tarefas",
+		"– keine Hardlinks": "– sem hard links",
+		"MEDIENSERVER": "SERVIDOR DE MÍDIA",
+		"Medienserver (DLNA)": "Servidor de mídia (DLNA)",
+		"nicht freigeben": "não compartilhar",
+		"Musik, Videos und Bilder": "música, vídeos e imagens",
+		"nur Musik": "só música",
+		"nur Videos": "só vídeos",
+		"nur Bilder": "só imagens",
+		"MUSIKSTÜCKE": "FAIXAS",
+		"GERÄTE": "DISPOSITIVOS",
+		"Im Netzwerk als": "Na rede como",
+		"liest Ordner ein …": "lendo pastas …",
+		"Lade Medienserver …": "Carregando servidor de mídia …",
+		"Alles neu einlesen": "Ler tudo de novo",
+		"Im Store installieren (MiniDLNA)": "Instalar pela loja (MiniDLNA)",
+		"Der Medienserver (MiniDLNA) ist eine System-App: Fernseher, Receiver, Spielkonsolen und Apps wie VLC finden die Box dann im Netzwerk und spielen Musik, Videos und Bilder aus den Freigaben ab.": "O servidor de mídia (MiniDLNA) é um app de sistema: TVs, receptores, consoles e apps como o VLC encontram a caixa na rede e reproduzem músicas, vídeos e imagens dos compartilhamentos.",
+		"Der Medienserver ist ausgeschaltet. Unten Ordner wählen und einschalten.": "O servidor de mídia está desligado. Escolha pastas abaixo e ligue-o.",
+		"Geräte im selben Netzwerk finden den Server von selbst (DLNA/UPnP AV), z. B. unter „Medienserver“ oder „Quellen“ am Fernseher.": "Dispositivos na mesma rede encontram o servidor sozinhos (DLNA/UPnP AV), p. ex. em “Servidor de mídia” ou “Fontes” na TV.",
+		"Neue Dateien erscheinen nach kurzer Zeit von selbst; nach großen Änderungen hilft „Alles neu einlesen“.": "Arquivos novos aparecem sozinhos depois de pouco tempo; após grandes mudanças, “Ler tudo de novo” ajuda.",
+		"Der Server liest nur – und zeigt alles in den gewählten Freigaben jedem Gerät im Netzwerk, ohne Anmeldung.": "O servidor só lê – e mostra tudo dos compartilhamentos escolhidos a qualquer dispositivo da rede, sem login.",
+		"Videos werden nicht umgewandelt: das Gerät muss das Format selbst abspielen können.": "Os vídeos não são convertidos: o dispositivo precisa reproduzir o formato sozinho.",
+		"Medienserver eingeschaltet (startet auch nach einem Neustart)": "Servidor de mídia ligado (inicia também após reiniciar)",
+		"NAME IM NETZWERK": "NOME NA REDE",
+		"ZEIGEN ALS": "MOSTRAR COMO",
+		"„Musik“, „Videos“, „Bilder“: aus der Freigabe nur diese Art von Dateien zeigen. „Alles“: Musik, Videos und Bilder.": "“Música”, “Vídeos”, “Imagens”: mostrar só esse tipo de arquivo do compartilhamento. “Tudo”: música, vídeos e imagens.",
+		"Mindestens eine Freigabe wählen.": "Escolha pelo menos um compartilhamento.",
+		"Medienserver gespeichert.": "Servidor de mídia salvo.",
+		"Medienserver liest alle Ordner neu ein.": "O servidor de mídia está lendo todas as pastas de novo.",
+		"Noch keine Freigabe – unter": "Nenhum compartilhamento ainda – crie em",
+		"anlegen.": ".",
+		"VIDEOS": "VÍDEOS",
+		"BILDER": "IMAGENS",
 		"ANZEIGEN IM KOPF": "INDICADORES DO CABEÇALHO",
 		"Anzeige im Kopf": "Indicador no cabeçalho",
 		"VPN der Box (OpenVPN)": "VPN da caixa (OpenVPN)",
@@ -2021,6 +2100,82 @@
 		[
 			"^Hinweis: (.+)$",
 			"Observação: $1"
+		],
+		[
+			"^(\\d+) Aufträge$",
+			"$1 tarefas"
+		],
+		[
+			"^Täglich (\\d\\d:\\d\\d)$",
+			"Diário às $1"
+		],
+		[
+			"^Wöchentlich \\(Sonntag\\) (\\d\\d:\\d\\d)$",
+			"Semanal (domingo) às $1"
+		],
+		[
+			"^die letzten (\\d+)$",
+			"os últimos $1"
+		],
+		[
+			"^(\\d+) Tage$",
+			"$1 dias"
+		],
+		[
+			"^(\\d+) Wochen$",
+			"$1 semanas"
+		],
+		[
+			"^(\\d+) Monate$",
+			"$1 meses"
+		],
+		[
+			"^(\\d+) Dateien$",
+			"$1 arquivos"
+		],
+		[
+			"^(\\d+) geändert$",
+			"$1 alterados"
+		],
+		[
+			"^(\\d+) alte entfernt$",
+			"$1 antigos removidos"
+		],
+		[
+			"^Persönliche Ordner \\((.+)\\)$",
+			"Pastas pessoais ($1)"
+		],
+		[
+			"^Ganzes Laufwerk (.+)$",
+			"Unidade inteira $1"
+		],
+		[
+			"^(.+) – keine Hardlinks$",
+			"$1 – sem hard links"
+		],
+		[
+			"^Den Stand vom (.+) löschen\\? Die anderen Snapshots bleiben vollständig\\.$",
+			"Excluir o estado de $1? Os outros snapshots continuam completos."
+		],
+		[
+			"^Die (\\d+) vorhandenen Snapshots in (.+) ebenfalls löschen\\? Sonst bleiben sie dort liegen\\.$",
+			"Excluir também os $1 snapshots em $2? Caso contrário, eles ficam lá."
+		],
+		[
+			"^Snapshot „(.+)“ läuft\\.$",
+			"Snapshot “$1” em andamento."
+		],
+		[
+			"^Das Ziel-Laufwerk (.+) ist nicht eingebunden\\.$",
+			"A unidade de destino $1 não está montada."
+		],
+		[
+			"^AUFTRAG (.+)$",
+			"TAREFA $1"
+		],
+		[
+			"^Medienserver: (.*)$",
+			"Servidor de mídia: $1"
 		],
 		[
 			"^(\\d+) Geräte$",

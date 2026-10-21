@@ -1303,14 +1303,112 @@ E1011	Puede convertir el audio y vídeo del usuario en la caja (FFmpeg): con sus
 E1012	Todas
 E1013	Otras
 E1014	Buscar …
-E1015	INDICADORES DE LA CABECERA
-E1016	Indicador en la cabecera
-E1017	VPN de la caja (OpenVPN)
-E1018	conectando …
-E1019	Ahora ningún servicio ni app muestra nada.
-E1020	Los servicios (VPN, torrents, servidor multimedia) y las apps con el permiso «Indicador en la cabecera» muestran aquí su estado; un clic abre la app.
-E1021	Puede conectar y desconectar la caja como cliente VPN y gestionar perfiles VPN (OpenVPN): afecta a la red de toda la caja, por eso solo para administradores.
-E1022	Puede mostrar un estado breve arriba en la interfaz de ShareOS (p. ej. «conectado»), solo al usuario que abrió la app; desaparece solo tras 10 minutos como máximo.
-E1023	SERVIDOR VPN
-E1024	1 dispositivo
-P248	$1 dispositivos
+E1015	Una instantánea guarda el estado de una carpeta: cada hora, cada día o cada semana.
+E1016	Cada estado parece una copia completa, pero los archivos sin cambios no ocupan espacio adicional.
+E1017	Para recuperar un archivo borrado o sobrescrito ayer o la semana pasada, cópialo de vuelta desde la instantánea en el explorador de archivos.
+E1018	Nueva tarea de instantáneas
+E1019	NUEVA TAREA DE INSTANTÁNEAS
+E1020	Lo mejor es guardar en otra unidad (segundo disco o disco USB): así las instantáneas también protegen ante un fallo del disco.
+E1021	Un espejo (RAID 1) no sustituye a las instantáneas: también replica cada borrado al instante.
+E1022	Las instantáneas están en la carpeta
+E1023	de la unidad de destino y solo los ven los administradores.
+E1024	Para una copia fuera de casa, una tarea en la nube puede subir la carpeta de instantáneas.
+E1025	más reciente
+E1026	Guardar ahora
+E1027	ORIGEN → DESTINO
+E1028	HORARIO · CONSERVAR
+E1029	ESTADO
+E1030	Abrir en el explorador de archivos
+E1031	Para restaurar, copia el archivo o la carpeta de la instantánea a su lugar original en el explorador de archivos. No modifiques archivos dentro de una instantánea: los archivos sin cambios comparten espacio con las demás.
+E1032	QUÉ GUARDAR
+E1033	UNIDAD DE DESTINO
+E1034	CON QUÉ FRECUENCIA
+E1035	Cada hora
+E1036	Cada 6 horas
+E1037	Diario
+E1038	Semanal (domingo)
+E1039	HORA
+E1040	DESDE LAS
+E1041	MINUTO (HH:MM, SOLO CUENTA EL MINUTO)
+E1042	CONSERVAR
+E1043	LOS ÚLTIMOS
+E1044	DÍAS (UNO POR DÍA)
+E1045	SEMANAS (UNO POR SEMANA)
+E1046	MESES (UNO POR MES)
+E1047	Las últimas N instantáneas se conservan siempre (también las manuales); además, la más reciente de cada día, semana y mes. Ejemplo diario: 7 días · 4 semanas · 6 meses ≈ medio año atrás con 17 estados.
+E1048	EXCLUSIONES (UNA POR LÍNEA, P. EJ. *.tmp O /Downloads/)
+E1049	Origen y destino están en la misma unidad: protege contra borrados accidentales, no contra un fallo del disco.
+E1050	No se crearán más instantáneas.
+E1051	¿Eliminar la instantánea?
+E1052	¿Eliminar también las instantáneas?
+E1053	Eliminar instantáneas
+E1054	Instantánea eliminada.
+E1055	detenido
+E1056	Cargando instantáneas …
+E1057	Aún no hay tareas de instantáneas. Una tarea guarda un recurso compartido, las carpetas personales o una unidad entera según un horario.
+E1058	Aún no hay instantáneas: «Guardar ahora» crea la primera.
+E1059	Falta rsync en este firmware.
+E1060	No hay destino adecuado: las instantáneas necesitan una unidad ext4 o Btrfs (FAT32/exFAT no tienen enlaces duros).
+E1061	tareas
+E1062	– sin enlaces duros
+P248	$1 tareas
+P249	Diario a las $1
+P250	Semanal (domingo) a las $1
+P251	los últimos $1
+P252	$1 días
+P253	$1 semanas
+P254	$1 meses
+P255	$1 archivos
+P256	$1 cambiados
+P257	$1 antiguas eliminadas
+P258	Carpetas personales ($1)
+P259	Unidad entera $1
+P260	$1 – sin enlaces duros
+P261	¿Eliminar el estado del $1? Las demás instantáneas quedan completas.
+P262	¿Eliminar también las $1 instantáneas de $2? Si no, se quedan allí.
+P263	Instantánea «$1» en curso.
+P264	La unidad de destino $1 no está montada.
+P265	TAREA $1
+E1063	SERVIDOR MULTIMEDIA
+E1064	Servidor multimedia (DLNA)
+E1065	no compartir
+E1066	música, vídeos e imágenes
+E1067	solo música
+E1068	solo vídeos
+E1069	solo imágenes
+E1070	PISTAS
+E1071	DISPOSITIVOS
+E1072	En la red como
+E1073	leyendo carpetas …
+E1074	Cargando servidor multimedia …
+E1075	Volver a leer todo
+E1076	Instalar desde la tienda (MiniDLNA)
+E1077	El servidor multimedia (MiniDLNA) es una app del sistema: televisores, receptores, consolas y apps como VLC encuentran la caja en la red y reproducen música, vídeos e imágenes de los recursos compartidos.
+E1078	El servidor multimedia está apagado. Elige carpetas abajo y enciéndelo.
+E1079	Los dispositivos de la misma red encuentran el servidor solos (DLNA/UPnP AV), p. ej. en «Servidor multimedia» o «Fuentes» del televisor.
+E1080	Los archivos nuevos aparecen solos al poco tiempo; tras cambios grandes ayuda «Volver a leer todo».
+E1081	El servidor solo lee, y muestra todo lo de los recursos elegidos a cualquier dispositivo de la red, sin iniciar sesión.
+E1082	Los vídeos no se convierten: el dispositivo debe poder reproducir el formato por sí mismo.
+E1083	Servidor multimedia encendido (arranca también tras reiniciar)
+E1084	NOMBRE EN LA RED
+E1085	MOSTRAR COMO
+E1086	«Música», «Vídeos», «Imágenes»: mostrar solo ese tipo de archivos del recurso. «Todo»: música, vídeos e imágenes.
+E1087	Elige al menos un recurso compartido.
+E1088	Servidor multimedia guardado.
+E1089	El servidor multimedia vuelve a leer todas las carpetas.
+E1090	Aún no hay recursos compartidos: créalos en
+E1091	.
+E1092	VÍDEOS
+E1093	IMÁGENES
+P266	Servidor multimedia: $1
+E1094	INDICADORES DE LA CABECERA
+E1095	Indicador en la cabecera
+E1096	VPN de la caja (OpenVPN)
+E1097	conectando …
+E1098	Ahora ningún servicio ni app muestra nada.
+E1099	Los servicios (VPN, torrents, servidor multimedia) y las apps con el permiso «Indicador en la cabecera» muestran aquí su estado; un clic abre la app.
+E1100	Puede conectar y desconectar la caja como cliente VPN y gestionar perfiles VPN (OpenVPN): afecta a la red de toda la caja, por eso solo para administradores.
+E1101	Puede mostrar un estado breve arriba en la interfaz de ShareOS (p. ej. «conectado»), solo al usuario que abrió la app; desaparece solo tras 10 minutos como máximo.
+E1102	SERVIDOR VPN
+E1103	1 dispositivo
+P267	$1 dispositivos

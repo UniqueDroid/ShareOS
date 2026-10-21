@@ -464,6 +464,47 @@ def call(obj, method, args):
         return {'chips': [{'id': 'svc:vpn', 'label': 'VPN', 'detail': '10.8.0.6', 'state': 'ok', 'app': 'nettunnel'},
                           {'id': 'svc:torrent', 'label': 'TORRENT', 'detail': 'läuft', 'state': 'ok', 'app': 'transmission'},
                           {'id': 'app:webpad', 'label': '2 ungespeichert', 'state': 'warn', 'app': 'webpad', 'name': 'Webpad'}]}
+    if obj == 'shareos.dlna':
+        d = STATE.setdefault('dlna', {'installed': True, 'enabled': True, 'running': True, 'scanning': False, 'audio': 4218, 'video': 312, 'image': 15873,
+                                      'db': '/mnt/daten/.shareos/minidlna', 'clients': [{'type': 'Samsung Series [CDEFJ]', 'ip': '10.241.1.40'}, {'type': 'Generic DLNA 1.5', 'ip': '10.241.1.52'}],
+                                      'name': '', 'hostname': 'skynet-nas', 'media': [{'type': 'A', 'share': 'musik'}, {'type': 'V', 'share': 'filme'}],
+                                      'shares': ['backup', 'filme', 'fotos', 'musik']})
+        if method == 'set':
+            d.update(enabled=args['enabled'], running=args['enabled'], name=args['name'], media=args['media'])
+        if method == 'rescan':
+            d['scanning'] = True
+        return d
+    if obj == 'shareos.snapshots':
+        sn = STATE.setdefault('snap', {'fotos': {
+            'name': 'fotos', 'source': 'share:fotos', 'target': 'usb', 'every': 'day', 'time': '03:15', 'exclude': ['*.tmp'], 'enabled': True,
+            'keep_last': 3, 'keep_daily': 7, 'keep_weekly': 4, 'keep_monthly': 6, 'running': False, 'mounted': True, 'path': '/mnt/usb/Snapshots/fotos',
+            'last': {'state': 'ok', 'started': int(T0) - 3700, 'ended': int(T0) - 3600, 'files': 18342, 'changed': 27, 'bytes': 81234567, 'removed': 1},
+            'snapshots': [{'name': 'snap%d' % k, 'time': int(T0) - 3600 - k * 86400} for k in range(9)]}})
+        vols = [{'name': 'daten', 'fstype': 'ext4', 'links': True}, {'name': 'usb', 'fstype': 'ext4', 'links': True}, {'name': 'stick', 'fstype': 'vfat', 'links': False}]
+        srcs = [{'id': 'share:fotos', 'kind': 'share', 'name': 'fotos', 'volume': 'daten'}, {'id': 'share:musik', 'kind': 'share', 'name': 'musik', 'volume': 'daten'},
+                {'id': 'homes:daten', 'kind': 'homes', 'name': 'daten'}, {'id': 'volume:daten', 'kind': 'volume', 'name': 'daten'}]
+        jobs = lambda: sorted(sn.values(), key=lambda j: j['name'])
+        if method == 'status':
+            return {'jobs': jobs(), 'volumes': vols, 'sources': srcs, 'rsync': True}
+        if method == 'job_set':
+            j = sn.get(args['name'], {'running': False, 'mounted': True, 'last': None, 'snapshots': []})
+            j.update({k: args[k] for k in ('name', 'source', 'target', 'every', 'time', 'exclude', 'enabled', 'keep_last', 'keep_daily', 'keep_weekly', 'keep_monthly')})
+            sn[args['name']] = j
+            return {'ok': True, 'jobs': jobs()}
+        if method == 'job_del':
+            sn.pop(args['name'], None)
+            return {'ok': True, 'jobs': jobs()}
+        if method == 'run':
+            sn[args['name']]['running'] = True
+            return {'started': True}
+        if method == 'stop':
+            sn[args['name']]['running'] = False
+            return {'ok': True}
+        if method == 'remove':
+            j = sn[args['name']]; j['snapshots'] = [x for x in j['snapshots'] if x['name'] != args['snapshot']]
+            return {'ok': True, 'jobs': jobs()}
+        if method == 'log':
+            return {'log': '=== 2026-10-21_031500 share:fotos, rsync 0\nNumber of files: 18,342\nNumber of regular files transferred: 27\n'}
     if obj == 'shareos.cloud':
         c = STATE['cloud']
         if method == 'status':

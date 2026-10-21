@@ -332,6 +332,33 @@ Needs a drive, some media on it (a video, e.g. `.mkv` or `.mp4`, and a music fil
 
 **Store sections and Bash (0.2.0-beta.5):** Apps → Store: under "Available apps" the sections (Media, Network, Tools, System …) with counts; a click shows only that section, *All* everything again; "Search …" filters while typing. Install Bash from the store (section Tools), in the terminal `bash`, then `echo $BASH_VERSION` → `5.2.37…`, `exit`.
 
+## 14j. Snapshots (0.2.0-beta.6)
+
+Needs two drives with ext4 or Btrfs (e.g. the disk and a USB disk) and a share with some files.
+
+1. Storage → **Snapshots** → *Neuer Snapshot-Auftrag*: name `fotos`, *Was sichern* = the share, *Ziel-Laufwerk* = the other drive, *Täglich* 03:15, keep 3 · 7 · 4 · 6, exclusion `*.tmp` → *Speichern*. A FAT32/exFAT drive is greyed out as a target.
+2. *Jetzt sichern*: "läuft", then "OK" with the number of files and the size. The first snapshot copies everything – with many GB that takes a while (disk to disk about as long as copying).
+3. In the share change a file, delete one, add one; *Jetzt sichern*: "N geändert" is small, the second snapshot is quick.
+4. *Snapshots (2)* → on the older one *Im Dateibrowser öffnen*: the deleted file is there, with the old content of the changed one. Copy the file back into the share.
+5. In the terminal: `du -sh /mnt/<target>/Snapshots/fotos/*` – the second snapshot takes almost nothing (hard links); `ls -ld /mnt/<target>/Snapshots` → `drwx------ root`.
+6. Save a big folder, after a few seconds *Stopp*: "abgebrochen"; the next *Jetzt sichern* continues.
+7. *Protokoll* on the job: the rsync summary. Unplug the target USB disk, *Jetzt sichern*: "Fehler" and a message (bell, e-mail/push if set up).
+8. `cat /etc/crontabs/root`: a line `15 3 * * * /usr/sbin/shareos-snapshot run fotos`. The next morning the snapshot of 3:15 is there.
+9. *Entfernen* → "Snapshots auch löschen?" → *Snapshots löschen*: job and folder are gone.
+
+## 14k. Media server (0.2.0-beta.6)
+
+Needs a drive with a share with music (MP3/FLAC) and one with videos (MP4/MKV) and the file `minidlna-1.3.3.sapp` (release of the firmware; or MiniDLNA from the store). Plus a TV or VLC in the same network.
+
+1. Services → **Medienserver**: without the system app a hint with *Im Store installieren*. Install MiniDLNA (store or *Install package*).
+2. *Einstellungen*: music share → "nur Musik", video share → "nur Videos", name e.g. "Wohnzimmer", *Medienserver eingeschaltet* → *Speichern*: "läuft", "liest Ordner ein …", the numbers go up.
+3. VLC (View → Playlist → Local Network → Universal Plug'n'Play) or the TV (sources/media server): "Wohnzimmer" shows up, music and videos play, seek in a video.
+4. Copy a new file into the music share: after a short while "Musikstücke" counts one more, without a restart.
+5. Services → Status: "Medienserver (DLNA)" runs; restart the box: the server starts by itself and does not read everything again (the library is in `/mnt/<drive>/.shareos/minidlna`).
+6. *Alles neu einlesen*: "liest Ordner ein …", afterwards the same numbers.
+7. Switch it off → *Speichern*: TV/VLC no longer see the server (after a few minutes).
+8. Apps → Installed → minidlna → *Remove*: the server stops, the page shows the hint again.
+
 ## 14l. VPN with NetTunnel (client and server) and header indicators (0.2.0-beta.6)
 
 Needs an OpenVPN profile (`.ovpn`, e.g. from the office router or a VPN provider) with embedded certificates, the file `openvpn-2.6.20.sapp` (release of the firmware) and NetTunnel (store or `nettunnel-1.0.0.sapp`).

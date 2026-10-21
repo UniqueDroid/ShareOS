@@ -1018,6 +1018,85 @@
 		"Alle": "Все",
 		"Sonstige": "Прочие",
 		"Suchen …": "Поиск …",
+		"Ein Snapshot hält den Stand eines Ordners fest – stündlich, täglich oder wöchentlich.": "Снимок сохраняет состояние папки — ежечасно, ежедневно или еженедельно.",
+		"Jeder Stand sieht aus wie eine vollständige Kopie; unveränderte Dateien belegen aber keinen zusätzlichen Platz.": "Каждое состояние выглядит как полная копия, но неизменённые файлы не занимают дополнительного места.",
+		"So holst du eine gelöschte oder überschriebene Datei von gestern oder letzter Woche zurück: im Dateibrowser aus dem Snapshot zurückkopieren.": "Чтобы вернуть файл, удалённый или перезаписанный вчера или на прошлой неделе, скопируйте его обратно из снимка в файловом браузере.",
+		"Neuer Snapshot-Auftrag": "Новое задание снимков",
+		"NEUER SNAPSHOT-AUFTRAG": "НОВОЕ ЗАДАНИЕ СНИМКОВ",
+		"Am besten auf ein anderes Laufwerk sichern (zweite Platte oder USB-Festplatte): dann schützen Snapshots auch bei einem Plattendefekt.": "Лучше сохранять на другой диск (второй диск или USB-диск): тогда снимки защищают и от отказа диска.",
+		"Ein Spiegel (RAID 1) ersetzt keine Snapshots – er spiegelt auch jedes Löschen sofort.": "Зеркало (RAID 1) не заменяет снимки — оно сразу повторяет и каждое удаление.",
+		"Die Snapshots liegen im Ordner": "Снимки лежат в папке",
+		"des Ziel-Laufwerks und sind nur für Administratoren sichtbar.": "целевого диска и видны только администраторам.",
+		"Für eine Kopie außer Haus kann ein Cloud-Auftrag den Snapshot-Ordner hochladen.": "Для копии вне дома облачное задание может загружать папку снимков.",
+		"neuester": "последний",
+		"Jetzt sichern": "Сохранить сейчас",
+		"QUELLE → ZIEL": "ИСТОЧНИК → ЦЕЛЬ",
+		"ZEITPLAN · BEHALTEN": "РАСПИСАНИЕ · ХРАНИТЬ",
+		"STAND": "СОСТОЯНИЕ",
+		"Im Dateibrowser öffnen": "Открыть в файловом браузере",
+		"Zum Wiederherstellen im Dateibrowser die Datei oder den Ordner aus dem Snapshot an den alten Platz kopieren. Dateien im Snapshot nicht ändern: unveränderte Dateien teilen sich den Platz mit den anderen Snapshots.": "Для восстановления скопируйте файл или папку из снимка на прежнее место в файловом браузере. Не изменяйте файлы внутри снимка: неизменённые файлы делят место с другими снимками.",
+		"WAS SICHERN": "ЧТО СОХРАНЯТЬ",
+		"ZIEL-LAUFWERK": "ЦЕЛЕВОЙ ДИСК",
+		"WIE OFT": "КАК ЧАСТО",
+		"Stündlich": "Ежечасно",
+		"Alle 6 Stunden": "Каждые 6 часов",
+		"Täglich": "Ежедневно",
+		"Wöchentlich (Sonntag)": "Еженедельно (воскресенье)",
+		"UHRZEIT": "ВРЕМЯ",
+		"AB UHRZEIT": "НАЧИНАЯ С",
+		"MINUTE (HH:MM, NUR DIE MINUTE ZÄHLT)": "МИНУТА (ЧЧ:ММ, ВАЖНА ТОЛЬКО МИНУТА)",
+		"BEHALTEN": "ХРАНИТЬ",
+		"DIE LETZTEN": "ПОСЛЕДНИЕ",
+		"TAGE (JE EINER)": "ДНЕЙ (ПО ОДНОМУ)",
+		"WOCHEN (JE EINER)": "НЕДЕЛЬ (ПО ОДНОМУ)",
+		"MONATE (JE EINER)": "МЕСЯЦЕВ (ПО ОДНОМУ)",
+		"Die letzten N Snapshots bleiben immer (auch die von Hand); dazu je der neueste eines Tages, einer Woche, eines Monats. Beispiel täglich: 7 Tage · 4 Wochen · 6 Monate ≈ ein halbes Jahr zurück mit 17 Ständen.": "Последние N снимков сохраняются всегда (и сделанные вручную); плюс самый новый за каждый день, неделю и месяц. Пример ежедневно: 7 дней · 4 недели · 6 месяцев ≈ полгода назад, 17 состояний.",
+		"AUSNAHMEN (EINE PRO ZEILE, Z. B. *.tmp ODER /Downloads/)": "ИСКЛЮЧЕНИЯ (ПО ОДНОМУ В СТРОКЕ, НАПР. *.tmp ИЛИ /Downloads/)",
+		"Quelle und Ziel liegen auf demselben Laufwerk: das schützt vor versehentlichem Löschen, aber nicht vor einem Plattendefekt.": "Источник и цель на одном диске: это защищает от случайного удаления, но не от отказа диска.",
+		"Es werden keine neuen Snapshots mehr angelegt.": "Новые снимки больше создаваться не будут.",
+		"Snapshot löschen?": "Удалить снимок?",
+		"Snapshots auch löschen?": "Удалить и снимки?",
+		"Snapshots löschen": "Удалить снимки",
+		"Snapshot gelöscht.": "Снимок удалён.",
+		"abgebrochen": "прервано",
+		"Lade Snapshots …": "Загрузка снимков …",
+		"Noch kein Snapshot-Auftrag. Ein Auftrag sichert eine Freigabe, die persönlichen Ordner oder ein ganzes Laufwerk nach Zeitplan.": "Заданий снимков пока нет. Задание по расписанию сохраняет общую папку, личные папки или целый диск.",
+		"Noch kein Snapshot – „Jetzt sichern“ legt den ersten an.": "Снимков пока нет — «Сохранить сейчас» создаст первый.",
+		"rsync fehlt in dieser Firmware.": "В этой прошивке нет rsync.",
+		"Kein geeignetes Ziel: Snapshots brauchen ein Laufwerk mit ext4 oder Btrfs (FAT32/exFAT kennen keine Hardlinks).": "Нет подходящей цели: снимкам нужен диск с ext4 или Btrfs (в FAT32/exFAT нет жёстких ссылок).",
+		"Aufträge": "заданий",
+		"– keine Hardlinks": "— нет жёстких ссылок",
+		"MEDIENSERVER": "МЕДИАСЕРВЕР",
+		"Medienserver (DLNA)": "Медиасервер (DLNA)",
+		"nicht freigeben": "не показывать",
+		"Musik, Videos und Bilder": "музыка, видео и изображения",
+		"nur Musik": "только музыка",
+		"nur Videos": "только видео",
+		"nur Bilder": "только изображения",
+		"MUSIKSTÜCKE": "ТРЕКИ",
+		"GERÄTE": "УСТРОЙСТВА",
+		"Im Netzwerk als": "В сети как",
+		"liest Ordner ein …": "чтение папок …",
+		"Lade Medienserver …": "Загрузка медиасервера …",
+		"Alles neu einlesen": "Перечитать всё",
+		"Im Store installieren (MiniDLNA)": "Установить из магазина (MiniDLNA)",
+		"Der Medienserver (MiniDLNA) ist eine System-App: Fernseher, Receiver, Spielkonsolen und Apps wie VLC finden die Box dann im Netzwerk und spielen Musik, Videos und Bilder aus den Freigaben ab.": "Медиасервер (MiniDLNA) — системное приложение: телевизоры, ресиверы, приставки и программы вроде VLC находят устройство в сети и воспроизводят музыку, видео и изображения из общих папок.",
+		"Der Medienserver ist ausgeschaltet. Unten Ordner wählen und einschalten.": "Медиасервер выключен. Выберите папки ниже и включите его.",
+		"Geräte im selben Netzwerk finden den Server von selbst (DLNA/UPnP AV), z. B. unter „Medienserver“ oder „Quellen“ am Fernseher.": "Устройства в той же сети находят сервер сами (DLNA/UPnP AV), например в разделе «Медиасервер» или «Источники» на телевизоре.",
+		"Neue Dateien erscheinen nach kurzer Zeit von selbst; nach großen Änderungen hilft „Alles neu einlesen“.": "Новые файлы появляются сами через короткое время; после больших изменений поможет «Перечитать всё».",
+		"Der Server liest nur – und zeigt alles in den gewählten Freigaben jedem Gerät im Netzwerk, ohne Anmeldung.": "Сервер только читает — и показывает всё из выбранных общих папок любому устройству в сети без входа.",
+		"Videos werden nicht umgewandelt: das Gerät muss das Format selbst abspielen können.": "Видео не перекодируются: устройство должно само воспроизводить формат.",
+		"Medienserver eingeschaltet (startet auch nach einem Neustart)": "Медиасервер включён (запускается и после перезагрузки)",
+		"NAME IM NETZWERK": "ИМЯ В СЕТИ",
+		"ZEIGEN ALS": "ПОКАЗЫВАТЬ КАК",
+		"„Musik“, „Videos“, „Bilder“: aus der Freigabe nur diese Art von Dateien zeigen. „Alles“: Musik, Videos und Bilder.": "«Музыка», «Видео», «Изображения»: показывать из папки только такие файлы. «Всё»: музыка, видео и изображения.",
+		"Mindestens eine Freigabe wählen.": "Выберите хотя бы одну общую папку.",
+		"Medienserver gespeichert.": "Медиасервер сохранён.",
+		"Medienserver liest alle Ordner neu ein.": "Медиасервер перечитывает все папки.",
+		"Noch keine Freigabe – unter": "Общих папок пока нет — создайте в разделе",
+		"anlegen.": ".",
+		"VIDEOS": "ВИДЕО",
+		"BILDER": "ИЗОБРАЖЕНИЯ",
 		"ANZEIGEN IM KOPF": "ИНДИКАТОРЫ В ЗАГОЛОВКЕ",
 		"Anzeige im Kopf": "Индикатор в заголовке",
 		"VPN der Box (OpenVPN)": "VPN устройства (OpenVPN)",
@@ -2021,6 +2100,82 @@
 		[
 			"^Hinweis: (.+)$",
 			"Примечание: $1"
+		],
+		[
+			"^(\\d+) Aufträge$",
+			"Заданий: $1"
+		],
+		[
+			"^Täglich (\\d\\d:\\d\\d)$",
+			"Ежедневно в $1"
+		],
+		[
+			"^Wöchentlich \\(Sonntag\\) (\\d\\d:\\d\\d)$",
+			"Еженедельно (воскресенье) в $1"
+		],
+		[
+			"^die letzten (\\d+)$",
+			"последние $1"
+		],
+		[
+			"^(\\d+) Tage$",
+			"дней: $1"
+		],
+		[
+			"^(\\d+) Wochen$",
+			"недель: $1"
+		],
+		[
+			"^(\\d+) Monate$",
+			"месяцев: $1"
+		],
+		[
+			"^(\\d+) Dateien$",
+			"файлов: $1"
+		],
+		[
+			"^(\\d+) geändert$",
+			"изменено: $1"
+		],
+		[
+			"^(\\d+) alte entfernt$",
+			"удалено старых: $1"
+		],
+		[
+			"^Persönliche Ordner \\((.+)\\)$",
+			"Личные папки ($1)"
+		],
+		[
+			"^Ganzes Laufwerk (.+)$",
+			"Весь диск $1"
+		],
+		[
+			"^(.+) – keine Hardlinks$",
+			"$1 — нет жёстких ссылок"
+		],
+		[
+			"^Den Stand vom (.+) löschen\\? Die anderen Snapshots bleiben vollständig\\.$",
+			"Удалить состояние от $1? Остальные снимки останутся полными."
+		],
+		[
+			"^Die (\\d+) vorhandenen Snapshots in (.+) ebenfalls löschen\\? Sonst bleiben sie dort liegen\\.$",
+			"Удалить и $1 снимков в $2? Иначе они останутся там."
+		],
+		[
+			"^Snapshot „(.+)“ läuft\\.$",
+			"Снимок «$1» выполняется."
+		],
+		[
+			"^Das Ziel-Laufwerk (.+) ist nicht eingebunden\\.$",
+			"Целевой диск $1 не подключён."
+		],
+		[
+			"^AUFTRAG (.+)$",
+			"ЗАДАНИЕ $1"
+		],
+		[
+			"^Medienserver: (.*)$",
+			"Медиасервер: $1"
 		],
 		[
 			"^(\\d+) Geräte$",

@@ -1,0 +1,20 @@
+#!/bin/sh
+# Media server (MiniDLNA) – only when the system app "minidlna" is installed
+# and the server is switched on (Services -> Media server); started in the
+# background so the box is up before the drives are read.
+case "$1" in
+	start)
+		[ -x /opt/shareos/bin/minidlnad ] || exit 0
+		(sleep 5; /usr/sbin/shareos-dlna boot 2>&1 | logger -t shareos-dlna) >/dev/null 2>&1 &
+		;;
+	stop)
+		/usr/sbin/shareos-dlna stop >/dev/null 2>&1
+		;;
+	restart)
+		/usr/sbin/shareos-dlna restart
+		;;
+	*)
+		echo "Usage: $0 {start|stop|restart}"; exit 1
+		;;
+esac
+exit 0

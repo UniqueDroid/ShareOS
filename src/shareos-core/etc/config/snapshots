@@ -1,0 +1,14 @@
+# Snapshots of folders on a drive – managed by shareos-snapshot (web interface:
+# Storage -> Snapshots). The snapshots go to /mnt/<target>/Snapshots/<job>/.
+#
+# config job 'fotos'
+#	option source 'share:fotos'   # share:<name> | homes:<volume> | volume:<volume>
+#	option target 'backup'        # volume (ext4/Btrfs; another disk is best)
+#	option every 'day'            # hour | 6h | day | week
+#	option time '03:15'           # day, week (week: Sunday)
+#	option keep_last '24'
+#	option keep_daily '7'
+#	option keep_weekly '4'
+#	option keep_monthly '6'
+#	list exclude '*.tmp'
+#	option enabled '1'

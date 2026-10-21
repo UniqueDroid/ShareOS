@@ -67,6 +67,7 @@ Version in brackets = first release with the feature.
 **Storage**
 - Setup wizard: one disk, two separate disks, a mirror (RAID 1), RAID 0 or JBOD (mdadm; RAID 0/JBOD from beta.9), optional swap partition per disk
 - File system per volume: **ext4** (recommended: owners, storage limit per user, personal folders, apps), **Btrfs**, **exFAT**, **NTFS** (beta.7), **ext3**, **ext2**, **FAT32** (beta.9)
+- **Snapshots:** dated states of shares, personal folders or whole drives on another drive (hourly to weekly, hard links like rsnapshot, keep the last N plus days/weeks/months), restore with the file browser (0.2.0-beta.6)
 - SMART values and health, disk standby, RAID status with sync progress, repair a mirror with a new disk (beta.9), mount/unmount/remove volumes
 - **USB sticks and disks:** mounted at `/mnt/usb-<name>` when plugged in (FAT32, exFAT, NTFS, ext4, Btrfs), **Safely remove**, **Format** with exFAT, FAT32, NTFS or ext4 (beta.7)
 
@@ -87,6 +88,7 @@ Version in brackets = first release with the feature.
 - Cloud sync with rclone (Nextcloud/WebDAV, S3, SFTP, Google Drive …) for the device and per user, with schedule and bandwidth limit (beta.4)
 - Paperless-ngx: inbox folders per user or shared (e.g. for a scanner), upload through the Paperless API (beta.4)
 - Installable as an app (PWA), status address for widget apps (beta.4)
+- Media server (DLNA/UPnP AV, MiniDLNA as a system app): TVs and players play music, videos and pictures from chosen shares (0.2.0-beta.6)
 - VPN for the box in both directions (OpenVPN as a system app, app NetTunnel, admins only): as client with cleaned profiles, as server with its own CA and a ready-made profile per device; status chips of services and apps in the header (0.2.0-beta.6)
 - Transmission with own torrents per user: system app `transmission-daemon`, app permission `torrent`; apps bring the system apps they need (`"requires"`) (0.2.0-beta.4)
 - Media jobs: FFmpeg as a system app, app permission `media` – convert audio, change the container of videos, cut, in the background with the user's rights (MediaTranscoder) (0.2.0-beta.5)
@@ -125,7 +127,7 @@ Version in brackets = first release with the feature.
 | RAID | own metadata format ¹ | mdadm (RAID 0/1/5, JBOD), LVM | mdadm RAID 1 (mirror), RAID 0, JBOD |
 | USB drives | mounted ¹ | mounted on plug-in | mounted on plug-in, safely remove, format (4 file systems) |
 | Users and rights | users, groups, quota ¹ | users, groups, quota | users, groups, rights per share, storage limit per user, users with their own web area |
-| Extensions | add-ons (discontinued) | ipkg packages with a web page | app store (ShareOS-Apps): web apps on their own port, system apps (nano, htop, strace, iperf3, bash, Transmission, FFmpeg, OpenVPN) |
+| Extensions | add-ons (discontinued) | ipkg packages with a web page | app store (ShareOS-Apps): web apps on their own port, system apps (nano, htop, strace, iperf3, bash, Transmission, FFmpeg, MiniDLNA, OpenVPN) |
 | Cloud / documents | – | – (single packages) | rclone cloud sync, Paperless-ngx inbox |
 | HTTPS | ¹ | self-signed or Let's Encrypt | self-signed (follows name/IP) or own certificate |
 | Security | unpatched remote code execution (CVE-2024-3273, CVE-2024-3274); D-Link advises to retire the devices | last release 2017; old kernel and Samba | current kernel and libraries, updates via GitHub |
@@ -150,7 +152,7 @@ sample data via `tests/mock-ubus.py`.
 ## Roadmap
 
 - Hardware tests of the current betas, then a public beta
-- More native apps in the same store: system apps for the terminal (0.2.0-beta.1), Transmission (0.2.0-beta.4) and FFmpeg (0.2.0-beta.5) are there; next services with a start script (MiniDLNA, Syncthing …)
+- More native apps in the same store: system apps for the terminal (0.2.0-beta.1), Transmission (0.2.0-beta.4), FFmpeg (0.2.0-beta.5) and the media server MiniDLNA (0.2.0-beta.6) are there; next Syncthing …
 - More of the app platform: "open with" defaults per file type
 - Storage: **LVM2**; RAID 5 only makes sense with three or more disks (the DNS-320L has two bays)
 - More devices (DNS-320/325/327L)
