@@ -134,6 +134,20 @@ the box for why the web server was not running.
 | 16:12 | Jan: "Feature lock – clean up, optimize." Claude measures first: in the emulator every page load waited 1.1 s on requests, a store refresh blocked the interface for 8 s (rpcd answers one request at a time), the 5-second status started three programs each time. Results of expensive steps are now kept between calls, the store refreshes in the background. The system loses OpenSSL (ttyd on mbedtls), unused GLib/libevent/libnl parts and tools – 16.2 → 11.6 MB; strace and iperf3 become system apps. |
 
 | 18:48 | Jan: "first the device control per model, then the common Kirkwood build" – and he looks for testers. Claude replaces the DNS-320L wiring with model descriptions (`board.sh`: MCU or kernel sensors, polled or interrupt buttons, LED names, power-off, RTC, firmware name/signature) and builds one kernel with four device trees: a `.bin` and a bundle each for DNS-320L, DNS-320 rev B, DNS-320 rev A and DNS-325. Tester guide: DEVICES.md. |
+| 22:47 | `v0.2.0-beta.3` with the common Kirkwood build: the same firmware for DNS-320L, DNS-320 rev A/B and DNS-325. |
+
+### Wednesday, 21.10.2026 – services of the box
+
+| Time | What happened |
+|---|---|
+| 10:13 | **Transmission** as a system app with its own daemon per user; the app controls it through the permission `torrent` (`v0.2.0-beta.4`). |
+| 12:38 | **FFmpeg** as a system app and the permission `media`: conversion jobs run in the background on the box; with the app MediaTranscoder. |
+| 14:48 | Jan asks for sections in the app store and for bash, rsnapshot and a DLNA server. Store with sections and search, Bash as a system app; at 14:56 Jan publishes `v0.2.0-beta.5`. |
+| 15:24 | Jan sends a draft of NetTunnel and asks for the new **system menu** and for services and apps to show their state in the header. Claude makes the box an OpenVPN client (profiles are cleaned on import, admins only) and builds the permission `status` for chips next to *Online*. |
+| 15:59 | Jan: NetTunnel should be a **server** too. The box makes its own small certificate authority and a ready-made `.ovpn` per device; a removed device is locked out at once. Tested in the emulator with a real OpenVPN server and client. |
+| 16:30 | Instead of rsnapshot Claude builds **snapshots** right into ShareOS (rsync with hard links like rsnapshot, without OpenSSL) and the **media server** (MiniDLNA as a system app, settings under Services). |
+| 18:26 | An outside Tailscale PR (ShareOS-Apps #16) only shows demo data, because there is no Tailscale on the box. Jan and Claude reply: the system app and an API in the firmware will come from ShareOS. |
+| 19:37 | #37–#40 are merged, everything for `v0.2.0-beta.6` is on `main`. |
 
 ## Notable problems solved
 

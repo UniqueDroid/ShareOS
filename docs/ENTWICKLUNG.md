@@ -135,6 +135,20 @@ direkt auf der Box nachgesehen, warum der Webserver nicht lief.
 | 16:12 | Jan: „Feature Lock – aufräumen, optimieren.“ Claude misst zuerst: Im Emulator wartete jeder Seitenaufruf 1,1 s auf Anfragen, ein Store-Aktualisieren blockierte die Oberfläche 8 s (rpcd beantwortet eine Anfrage nach der anderen), der 5-Sekunden-Status startete jedes Mal drei Programme. Ergebnisse teurer Schritte werden jetzt zwischen den Aufrufen behalten, der Store aktualisiert im Hintergrund. Das System verliert OpenSSL (ttyd auf mbedtls), ungenutzte Teile von GLib/libevent/libnl und Werkzeuge – 16,2 → 11,6 MB; strace und iperf3 werden System-Apps. |
 
 | 18:48 | Jan: „Erst die Gerätesteuerung pro Modell, dann der gemeinsame Kirkwood-Build“ – und er sucht Tester. Claude ersetzt die feste DNS-320L-Verdrahtung durch Modellbeschreibungen (`board.sh`: MCU oder Kernel-Sensoren, abgefragte oder Interrupt-Taster, LED-Namen, Ausschalten, Uhr, Firmware-Name/Signatur) und baut einen Kernel mit vier Device-Trees: je eine `.bin` und ein Bundle für DNS-320L, DNS-320 rev B, DNS-320 rev A und DNS-325. Anleitung für Tester: GERAETE.md. |
+| 22:47 | `v0.2.0-beta.3` mit dem gemeinsamen Kirkwood-Build: dieselbe Firmware für DNS-320L, DNS-320 rev A/B und DNS-325. |
+
+### Mittwoch, 21.10.2026 – Dienste der Box
+
+| Zeit | Was passiert ist |
+|---|---|
+| 10:13 | **Transmission** als System-App mit eigenem Dienst je Benutzer; die App steuert ihn über die Berechtigung `torrent` (`v0.2.0-beta.4`). |
+| 12:38 | **FFmpeg** als System-App und die Berechtigung `media`: Aufträge zum Umwandeln laufen im Hintergrund auf der Box; dazu die App MediaTranscoder. |
+| 14:48 | Jan wünscht sich Rubriken im App-Store sowie bash, rsnapshot und einen DLNA-Server. Store mit Rubriken und Suche, Bash als System-App; um 14:56 veröffentlicht Jan `v0.2.0-beta.5`. |
+| 15:24 | Jan schickt einen Entwurf von NetTunnel und wünscht sich das neue **Systemmenü** sowie Anzeigen von Diensten und Apps im Kopf. Claude macht die Box zum OpenVPN-Client (Profile werden beim Einspielen bereinigt, nur für Admins) und baut die Berechtigung `status` für Chips neben *Online*. |
+| 15:59 | Jan: NetTunnel soll auch **Server** sein. Die Box erstellt ihre eigene kleine Zertifizierungsstelle und ein fertiges `.ovpn` je Gerät; ein entferntes Gerät ist sofort ausgesperrt. Getestet im Emulator mit echtem OpenVPN-Server und -Client. |
+| 16:30 | Statt rsnapshot baut Claude **Snapshots** direkt in ShareOS (rsync mit Hardlinks wie rsnapshot, ohne OpenSSL) und den **Medienserver** (MiniDLNA als System-App, Einstellungen unter Dienste). |
+| 18:26 | Ein Tailscale-PR von außen (ShareOS-Apps #16) zeigt nur Demo-Daten, weil es auf der Box kein Tailscale gibt. Jan und Claude antworten: Die System-App und eine Schnittstelle in der Firmware kommen von ShareOS. |
+| 19:37 | #37–#40 sind gemergt, alles für `v0.2.0-beta.6` steht auf `main`. |
 
 ## Bemerkenswerte Problemlösungen
 
