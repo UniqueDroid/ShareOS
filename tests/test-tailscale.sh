@@ -64,9 +64,9 @@ o=$(run "umask 077; shareos-apps install-file /tmp/ts.sapp")
 check "tailscale installs" "echo '$o' | js \"d.get('id')=='tailscale'\""
 check "large system app on the drive, a link in /opt" "[ -L $R/opt/shareos/sysapps/tailscale ] && [ \"\$(readlink $R/opt/shareos/sysapps/tailscale)\" = /mnt/daten/.shareos/sysapps/tailscale ] && [ -x $R/mnt/daten/.shareos/sysapps/tailscale/bin/tailscaled ]"
 check "nothing of it left on the flash" "[ -z \"\$(ls -A $R/www-apps | grep '^\.new')\" ] && [ \"\$(du -sk $R/opt/shareos | cut -f1)\" -lt 15000 ]"
-check "the command runs through the link" "run 'TS_BE_CLI=1 tailscaled version' | grep -q '^1\.'"
+check "the command runs through the link" "run 'TS_BE_CLI=1 /opt/shareos/bin/tailscaled version' | grep -q '^1\.'"
 o=$(run "shareos-apps fix-perms")
-check "boot: a large system app of an older version moves to the drive" "echo '$o' | js \"d['moved']==['ffmpeg']\" && [ -L $R/opt/shareos/sysapps/ffmpeg ] && run 'ffmpeg -version' | grep -q 'ffmpeg version'"
+check "boot: a large system app of an older version moves to the drive" "echo '$o' | js \"d['moved']==['ffmpeg']\" && [ -L $R/opt/shareos/sysapps/ffmpeg ] && run '/opt/shareos/bin/ffmpeg -version' | grep -q 'ffmpeg version'"
 o=$(run "umask 077; shareos-apps install-file /tmp/ts.sapp")
 check "update of a large system app keeps it on the drive" "[ -L $R/opt/shareos/sysapps/tailscale ] && [ -x $R/mnt/daten/.shareos/sysapps/tailscale/bin/tailscaled ] && ! ls -d $R/mnt/daten/.shareos/sysapps/tailscale.old 2>/dev/null"
 

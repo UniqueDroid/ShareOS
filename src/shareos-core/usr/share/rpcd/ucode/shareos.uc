@@ -1521,10 +1521,10 @@ function status_chips(u) {
 			app: ids.nettunnel ? 'nettunnel' : null });
 	}
 	if (admin && stat('/opt/shareos/bin/tailscaled') && pid_alive('/tmp/shareos-tailscale/pid', 'tailscaled')) {
-		let st = ts_tool([ 'status' ]);
-		let on = st.state == 'Running';
-		push(chips, { id: 'svc:tailscale', label: 'TAILSCALE', detail: on ? (st.self?.ips?.[0] ?? 'verbunden') : st.state == 'NeedsLogin' ? 'Anmeldung nötig' : 'getrennt',
-			state: on ? 'ok' : 'warn', app: ids.tailscale ? 'tailscale' : null });
+		// cheap (every 15 s): the address of tailscale0 instead of asking the daemon
+		let m = match(sh('ip -4 -o addr show dev tailscale0').out, /inet (100\.[0-9.]+)\//);
+		push(chips, { id: 'svc:tailscale', label: 'TAILSCALE', detail: m ? m[1] : 'getrennt',
+			state: m ? 'ok' : 'warn', app: ids.tailscale ? 'tailscale' : null });
 	}
 	if (stat('/tmp/shareos-transmission/' + u + '/pid') && pid_alive('/tmp/shareos-transmission/' + u + '/pid', 'transmission'))
 		push(chips, { id: 'svc:torrent', label: 'TORRENT', detail: 'läuft', state: 'ok', app: ids.transmission ? 'transmission' : null });

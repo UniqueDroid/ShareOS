@@ -120,11 +120,13 @@ function up(reauth) {
 	if (reauth) push(args, '--force-reauth');
 	let cmd = 'TS_BE_CLI=1 ' + shq(BIN) + ' --socket=' + shq(SOCK) + ' ' + join(' ', map(args, shq));
 	sh('(timeout 600 sh -c ' + shq(cmd) + ' >>' + shq(LOG) + ' 2>&1 &) </dev/null >/dev/null 2>&1');
-	let st = null;
-	for (let i = 0; i < 60; i++) {
-		sh('sleep 0.5');
+	// at most about 15 s (the web interface waits for the answer): the app polls
+	// status afterwards until the link or the connection is there
+	let st = null, until = time() + 15;
+	while (true) {
+		sh('sleep 1');
 		st = status();
-		if (st.state == 'Running' || (st.auth_url && !reauth) || (reauth && st.auth_url)) break;
+		if (time() >= until || st.state == 'Running' || st.auth_url) break;
 	}
 	out(st);
 }
