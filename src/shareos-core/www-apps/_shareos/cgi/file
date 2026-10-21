@@ -85,7 +85,8 @@ case "$REQUEST_METHOD" in
 		[ "$len" -le $MAX ] || reply '413 Payload Too Large' '{"error":"file too large"}'
 		part=$(q "${path%/*}/.${path##*/}.part")
 		# write next to the file first, then copy over it: owner and rights stay
-		if head -c "$len" | as_user "umask 077; cat > $part"; then
+		um=002; case "$path" in /mnt/*/home/"$user"/*) um=077 ;; esac
+		if head -c "$len" | as_user "umask $um; cat > $part"; then
 			got=$(as_user "stat -c %s -- $part" 2>/dev/null)
 			if [ "$got" = "$len" ] && as_user "cat -- $part > $P && rm -f -- $part"; then
 				reply '200 OK' "{\"ok\":true,\"size\":$len}"
