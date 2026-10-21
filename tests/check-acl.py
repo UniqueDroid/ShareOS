@@ -11,7 +11,7 @@ import sys
 UC = sys.argv[1] if len(sys.argv) > 1 else 'src/shareos-core/usr/share/rpcd/ucode/shareos.uc'
 ACL = sys.argv[2] if len(sys.argv) > 2 else 'src/shareos-core/usr/share/rpcd/acl.d/shareos.json'
 # called only as root (CGIs, CLI), never from a web session
-INTERNAL = {('shareos.widget', 'status')} | {('shareos.appfs', m) for m in ('roots', 'list', 'mkdir', 'rename', 'move', 'delete', 'open')}
+INTERNAL = {('shareos.widget', 'status')} | {('shareos.appfs', m) for m in ('roots', 'list', 'mkdir', 'rename', 'move', 'delete', 'open')} | {('shareos.apptorrent', m) for m in ('session', 'path')}
 
 objs, cur = {}, None
 for line in open(UC, encoding='utf-8'):

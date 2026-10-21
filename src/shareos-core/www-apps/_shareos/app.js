@@ -33,10 +33,16 @@
  *   .copy(root, path, names, destRoot, dest)   .move(…same…)
  *   .remove(root, path, names)
  *   .open(root, path, name, {write, create})   a file like ShareOS.file
- *   .pick({ title, ext: ['.mp3', …], multiple, save, name })
+ *   .pick({ title, ext: ['.mp3', …], multiple, save, name, folder })
  *                                  file dialog of the box: resolves to
  *                                  [{ root, path, name }] (save: the chosen
- *                                  folder and file name) or null (cancelled)
+ *                                  folder and file name; folder: [{ root,
+ *                                  path }] of the chosen folder) or null
+ * ShareOS.torrent             the account's own Transmission daemon, for apps
+ *                             with the permissions "files" and "torrent"
+ *                             (ShareOS 0.2.0-beta.4+, null otherwise):
+ *   .rpc(method, args)             Transmission RPC, resolves to its "arguments";
+ *                                  folders as "<root>/<path>" (ShareOS.fs roots)
  *
  * Storage per account: the apps share one web origin, so ShareOS keeps the
  * browser storage of the accounts apart – localStorage and IndexedDB of an
@@ -213,9 +219,9 @@
 
 	/* file dialog of the box (ShareOS.fs.pick) */
 	var T = de ? { open: 'Öffnen', save: 'Speichern', cancel: 'Abbrechen', name: 'Dateiname', empty: 'Keine passenden Dateien',
-			up: 'Übergeordneter Ordner', title: 'Datei von der Box', titleSave: 'Auf der Box speichern', exists: 'überschreiben?', all: 'Alle markieren' }
+			up: 'Übergeordneter Ordner', title: 'Datei von der Box', titleSave: 'Auf der Box speichern', exists: 'überschreiben?', all: 'Alle markieren', folder: 'Ordner wählen', titleFolder: 'Ordner auf der Box' }
 		: { open: 'Open', save: 'Save', cancel: 'Cancel', name: 'File name', empty: 'No matching files',
-			up: 'Parent folder', title: 'File from the box', titleSave: 'Save to the box', exists: 'overwrite?', all: 'Select all' };
+			up: 'Parent folder', title: 'File from the box', titleSave: 'Save to the box', exists: 'overwrite?', all: 'Select all', folder: 'Choose folder', titleFolder: 'Folder on the box' };
 	var PICK_CSS = '.sos-pick{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.5);font:13px var(--sos-font,system-ui,sans-serif)}'
 		+ '.sos-pick>div{width:min(640px,94vw);max-height:84vh;display:flex;flex-direction:column;gap:10px;padding:16px 18px;border:1px solid var(--sos-line,#15253b);border-radius:12px;background:var(--sos-panel,#0b111a);color:var(--sos-text,#c6dff5);box-shadow:0 16px 48px rgba(0,0,0,.45)}'
 		+ '.sos-pick h2{margin:0;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--sos-accent,#3da5ff)}'
@@ -237,16 +243,16 @@
 		return new Promise(function (resolve) {
 			var wrap = el('div', 'sos-pick'), box = el('div');
 			wrap.setAttribute('role', 'dialog'); wrap.setAttribute('aria-modal', 'true');
-			var h = el('h2', null, o.title || (o.save ? T.titleSave : T.title));
+			var h = el('h2', null, o.title || (o.folder ? T.titleFolder : o.save ? T.titleSave : T.title));
 			var top = el('div', 'row'), rootSel = el('select'), upB = el('button', null, '↑'), pathEl = el('span', 'path');
 			upB.type = 'button'; upB.title = T.up; rootSel.setAttribute('aria-label', 'Volume');
 			top.appendChild(rootSel); top.appendChild(upB); top.appendChild(pathEl);
 			var list = el('ul'), msg = el('div', 'err');
 			var bottom = el('div', 'row'), nameIn = el('input');
 			nameIn.placeholder = T.name; nameIn.value = o.name || '';
-			var cancelB = el('button', null, T.cancel), okB = el('button', 'primary', o.save ? T.save : T.open);
+			var cancelB = el('button', null, T.cancel), okB = el('button', 'primary', o.folder ? T.folder : o.save ? T.save : T.open);
 			cancelB.type = okB.type = 'button';
-			if (o.save) bottom.appendChild(nameIn); else bottom.appendChild(el('span', 'path'));
+			if (o.save && !o.folder) bottom.appendChild(nameIn); else bottom.appendChild(el('span', 'path'));
 			bottom.appendChild(cancelB); bottom.appendChild(okB);
 			[h, top, list, msg, bottom].forEach(function (x) { box.appendChild(x); });
 			wrap.appendChild(box); document.body.appendChild(wrap);
@@ -256,7 +262,7 @@
 			document.addEventListener('keydown', onKey, true);
 			function chosen() { return Object.keys(sel).map(function (n) { return { root: cur.root, path: cur.path, name: n }; }); }
 			function update() {
-				okB.disabled = o.save ? !nameIn.value.trim() || /[\/]/.test(nameIn.value) : !Object.keys(sel).length;
+				okB.disabled = o.folder ? !cur.root : o.save ? !nameIn.value.trim() || /[\/]/.test(nameIn.value) : !Object.keys(sel).length;
 				[].forEach.call(list.children, function (li) { li.classList.toggle('sel', !!sel[li.dataset.name] && li.dataset.type === 'file'); });
 			}
 			function load() {
@@ -265,7 +271,7 @@
 				fs.list(cur.root, cur.path).then(function (r) {
 					entries = (r.entries || []).filter(function (e) {
 						if (e.type === 'dir' || e.type === 'dirlink') return true;
-						if (e.type !== 'file') return false;
+						if (e.type !== 'file' || o.folder) return false;
 						if (!exts.length) return true;
 						var n = e.name.toLowerCase();
 						return exts.some(function (x) { return n.slice(-x.length) === x; });
@@ -298,6 +304,7 @@
 			cancelB.addEventListener('click', function () { done(null); });
 			wrap.addEventListener('click', function (ev) { if (ev.target === wrap) done(null); });
 			okB.addEventListener('click', function () {
+				if (o.folder) { done([{ root: cur.root, path: cur.path }]); return; }
 				if (!o.save) { done(chosen()); return; }
 				var n = nameIn.value.trim();
 				var hit = entries.some(function (e) { return e.name === n && e.type === 'file'; });
@@ -318,6 +325,16 @@
 		});
 	}
 	if (fs) fs.pick = pick;
+
+	/* the account's own Transmission daemon (permissions "files" + "torrent") */
+	var torrent = fs ? {
+		rpc: function (method, args) {
+			return fetch('/_shareos/cgi/transmission?g=' + grant, { method: 'POST', cache: 'no-store',
+				body: JSON.stringify({ method: method, arguments: args || {} }) })
+				.then(function (r) { return r.json().catch(function () { return { result: 'HTTP ' + r.status }; }); })
+				.then(function (j) { if (j.result !== 'success') throw new Error(j.result || 'failed'); return j.arguments || {}; });
+		}
+	} : null;
 
 	/* classic menu bar */
 	function keyOf(ev) {
@@ -386,6 +403,7 @@
 		onTheme: function (fn) { themeFns.push(fn); if (api.theme) fn(api.theme); },
 		file: file,
 		fs: fs,
+		torrent: torrent,
 		menu: menu,
 		on: function (type, fn) { (handlers[type] = handlers[type] || []).push(fn); },
 		emit: function (type, data) { if (chan) chan.postMessage({ type: type, data: data, from: appId }); },

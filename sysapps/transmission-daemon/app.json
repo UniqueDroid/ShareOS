@@ -1,0 +1,17 @@
+{
+	"id": "transmission-daemon",
+	"name": "transmission-daemon",
+	"version": "4.1.0",
+	"publisher": "UniqueDroid",
+	"description": {
+		"de": "BitTorrent-Dienst für die App „Transmission“: jeder Benutzer bekommt seinen eigenen Dienst mit eigenen Torrents, Downloads landen mit seinen Rechten in seinen Ordnern. Er startet, wenn der Benutzer die App öffnet, und nach einem Neustart der Box von selbst.",
+		"en": "BitTorrent service for the “Transmission” app: every user gets their own service with their own torrents, downloads go into their folders with their rights. It starts when the user opens the app, and again by itself after a restart of the box."
+	},
+	"type": "system",
+	"commands": [ "transmission-daemon" ],
+	"icon": "icon.svg",
+	"category": "network",
+	"license": "GPL-2.0-or-later",
+	"homepage": "https://transmissionbt.com/",
+	"min_shareos": "0.2.0-beta.4"
+}

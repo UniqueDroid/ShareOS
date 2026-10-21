@@ -81,7 +81,7 @@ const MAX_PKG = 64 * 1048576;       // download / upload
 const MAX_FILES = 40 * 1048576;     // unpacked
 const ID_RE = /^[a-z][a-z0-9-]{1,31}$/;
 const JOB_RE = /^[a-z][a-z0-9-]{0,23}$/;
-const PERMISSIONS = { cron: 1, embed: 1, files: 1 };
+const PERMISSIONS = { cron: 1, embed: 1, files: 1, torrent: 1 };
 const MAX_JOBS = 5;
 const MAX_LOG = 65536;
 // the test suite serves catalogs and packages from files
@@ -217,6 +217,8 @@ function check_jobs(a, dir) {
 	if (type(perms) != 'array') return 'invalid permissions';
 	for (let p in perms)
 		if (!PERMISSIONS[p]) return 'permission "' + p + '" is not known to this ShareOS version – update ShareOS first';
+	// "torrent": the account's own Transmission daemon (the proxy checks the grant of "files")
+	if (index(perms, 'torrent') >= 0 && index(perms, 'files') < 0) return 'the permission "torrent" needs "files"';
 	if (a.jobs == null) return null;
 	if (type(a.jobs) != 'array' || length(a.jobs) > MAX_JOBS) return 'invalid jobs (at most ' + MAX_JOBS + ')';
 	if (length(a.jobs) && index(perms, 'cron') < 0) return 'jobs need the permission "cron"';
@@ -554,6 +556,9 @@ function cmd_install_file(f) {
 function cmd_remove(id) {
 	let dir = match(id ?? '', ID_RE) ? app_dir(id) : null;
 	if (!dir) die('unknown app');
+	// a firmware hook for system apps that run services (e.g. stop the Transmission daemons)
+	let hook = ROOT + '/usr/lib/shareos/apphooks/' + id;
+	if (stat(hook)?.type == 'file') capture(shq(hook) + ' remove');
 	capture('rm -rf ' + shq(dir));
 	drop_starters(id);
 	let c = conf().c;

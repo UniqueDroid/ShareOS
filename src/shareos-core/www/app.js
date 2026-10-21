@@ -3785,7 +3785,7 @@ function appActions(a, upd) {
 }
 
 // permissions an app can ask for (app.json "permissions")
-const PERM_TAG = { cron: 'Zeitgesteuerte Aufgaben', embed: 'In ShareOS anzeigen', files: 'Zugriff auf Dateien', internet: 'Nutzt das Internet', system: 'System-App · Terminal' };
+const PERM_TAG = { cron: 'Zeitgesteuerte Aufgaben', embed: 'In ShareOS anzeigen', files: 'Zugriff auf Dateien', torrent: 'Eigene Torrents (Transmission)', internet: 'Nutzt das Internet', system: 'System-App · Terminal' };
 // permissions plus "internet" (manifest field: the app loads data from the internet – not a restriction, shown for transparency)
 // and "system" for system apps (programs for the terminal)
 const appPerms = (x) => [...(x?.type === 'system' ? ['system'] : []), ...(x?.permissions || []), ...(x?.internet ? ['internet'] : [])];
@@ -3793,6 +3793,7 @@ const permTags = (perms) => (perms.length ? html`<div class="desc" style="margin
 const PERM_TXT = { cron: 'Darf zeitgesteuerte Aufgaben auf der Box ausführen – als eigener eingeschränkter Benutzer, nur in ihrem Datenordner, mit Zeitlimit.',
 	embed: 'Darf als Seite in der ShareOS-Oberfläche angezeigt werden (statt in einem eigenen Fenster).',
 	files: 'Darf die Dateien lesen, ändern und löschen, die der angemeldete Benutzer im Dateibrowser erreicht – mit seinen Rechten, solange die App offen ist.',
+	torrent: 'Darf den eigenen Transmission-Dienst des Benutzers steuern: Torrents hinzufügen, anhalten und löschen. Jeder Benutzer hat seinen eigenen Dienst; Downloads landen nur in seinen Ordnern.',
 	internet: 'Lädt Daten aus dem Internet (z. B. Online-Dienste, Streams, Karten). Ohne Internetverbindung funktionieren diese Teile der App nicht.',
 	system: 'Programm für die Kommandozeile der Box (System → Terminal oder SSH). Es läuft mit den Rechten dessen, der es startet – im Terminal als root.' };
 

@@ -1292,3 +1292,5 @@ E1004	Terminal
 E1005	ainda não testado
 E1006	O ShareOS ainda não foi testado em hardware real deste modelo.
 E1007	Primeiro acesso: usuário root, senha shareos – depois defina sua própria senha.
+E1008	Torrents próprios (Transmission)
+E1009	Pode controlar o serviço Transmission próprio do usuário: adicionar, pausar e remover torrents. Cada usuário tem seu próprio serviço; os downloads vão apenas para as pastas dele.

@@ -1,0 +1,178 @@
+#!/usr/bin/ucode -S
+//
+// shareos-transmission – one Transmission daemon per account
+//
+//   shareos-transmission start <account>   start (or confirm) the account's daemon
+//   shareos-transmission stop <account>
+//   shareos-transmission status <account>
+//   shareos-transmission boot              start the daemons of all accounts that used it
+//   shareos-transmission stop-all          stop all (system app removed, shutdown)
+//
+// The daemon comes from the system app "transmission-daemon" (the store).
+// Every account gets its own daemon, with its own torrents:
+//   - it runs with the account's rights (admins: root, like their file browser),
+//     so files belong to the account and storage limits apply;
+//   - state (settings, resume files, .torrent files) on the account's drive:
+//     users  /mnt/<home volume>/home/<account>/.config/transmission-daemon
+//     admins /mnt/<first volume>/.shareos/transmission/<account>
+//     (not in the flash: the daemon writes them often);
+//   - default download folder: <personal folder>/Downloads, admins
+//     /mnt/<volume>/Downloads;
+//   - remote control only through a Unix socket in /tmp/shareos-transmission/
+//     <account>/ (0700), reached by the apps web server's proxy
+//     /_shareos/cgi/transmission – no TCP port for the RPC;
+//   - peer port 51413 for root, 51413 + (uid - 999) for the others.
+// Every JSON line printed is the result; exit code 1 on errors.
+//
+import { readfile, writefile, mkdir, stat, lsdir, unlink, realpath, popen } from 'fs';
+import { cursor } from 'uci';
+
+const ROOT = getenv('SHAREOS_ROOT') ?? '';
+const BIN = ROOT + '/opt/shareos/bin/transmission-daemon';
+const ENABLED = ROOT + '/etc/shareos/transmission';     // <account> -> state dir (persists)
+const RUN = ROOT + '/tmp/shareos-transmission';
+const NAME_RE = /^[a-z_][a-z0-9_-]{0,31}$/;
+
+function out(o) { print(sprintf('%J\n', o)); }
+function die(msg) { out({ error: msg }); exit(1); }
+function shq(s) { return "'" + replace(s, "'", "'\\''") + "'"; }
+function sh(cmd) {
+	let p = popen(cmd + ' 2>&1', 'r');
+	if (!p) return { rc: -1, out: '' };
+	let o = p.read('all') ?? '';
+	return { rc: p.close(), out: o };
+}
+
+function mounted(mp) { return index(readfile(ROOT + '/proc/mounts') ?? '', ' ' + mp + ' ') >= 0; }
+function role(u) { return u == 'root' ? 'admin' : (cursor().get('accounts', u, 'role') ?? null); }
+function uid_of(u) {
+	for (let l in split(readfile(ROOT + '/etc/passwd') ?? '', '\n')) {
+		let f = split(l, ':');
+		if (f[0] == u) return +f[2];
+	}
+	return null;
+}
+function small_ram() { return match(readfile(ROOT + '/tmp/sys/board.env') ?? '', /BOARD_RAM_SMALL="?1/) != null; }
+
+// where the account keeps state and downloads; null when no drive is there
+function places(u) {
+	let c = cursor(), r = role(u);
+	if (r == 'admin') {
+		let vol = null;
+		c.foreach('storage', 'volume', (x) => { if (!vol && mounted('/mnt/' + x['.name'])) vol = x['.name']; });
+		if (!vol) return null;
+		return { state: '/mnt/' + vol + '/.shareos/transmission/' + u, download: '/mnt/' + vol + '/Downloads', run_as: 'root' };
+	}
+	if (r != 'user') return null;
+	let v = c.get('accounts', u, 'home'), home = '/mnt/' + v + '/home/' + u;
+	if (!v || !mounted('/mnt/' + v) || stat(ROOT + home)?.type != 'directory') return null;
+	return { state: home + '/.config/transmission-daemon', download: home + '/Downloads', run_as: u };
+}
+
+function dir_of(u) { return RUN + '/' + u; }
+function pid_of(u) {
+	let p = +trim(readfile(dir_of(u) + '/pid') ?? '0');
+	if (!(p > 1)) return null;
+	let cmd = readfile(ROOT + '/proc/' + p + '/cmdline') ?? '';
+	return index(cmd, 'transmission-daemon') >= 0 ? p : null;
+}
+function sock_of(u) { return dir_of(u) + '/rpc.sock'; }
+
+function status(u) {
+	let p = pid_of(u);
+	return { account: u, installed: stat(BIN)?.type == 'file', running: !!p, pid: p, socket: p ? sock_of(u) : null,
+		enabled: stat(ENABLED + '/' + u)?.type == 'file' };
+}
+
+// settings the box decides; the rest (speed limits …) stays as the user set it
+function settings(u, pl) {
+	let file = ROOT + pl.state + '/settings.json';
+	let s = json(readfile(file) ?? '{}') ?? {};
+	if (type(s) != 'object') s = {};
+	let uid = pl.run_as == 'root' ? 0 : (uid_of(pl.run_as) ?? 1000);
+	let small = small_ram();
+	s['rpc-enabled'] = true;
+	s['rpc-bind-address'] = 'unix:' + sock_of(u);
+	s['rpc-socket-mode'] = '0700';
+	s['rpc-authentication-required'] = false;
+	s['rpc-whitelist-enabled'] = false;
+	s['rpc-host-whitelist-enabled'] = false;
+	s['peer-port'] = uid == 0 ? 51413 : 51413 + ((uid - 999) % 1000);
+	s['peer-port-random-on-start'] = false;
+	// nothing the remote control could use to run programs
+	s['script-torrent-done-enabled'] = false;
+	s['script-torrent-added-enabled'] = false;
+	s['script-torrent-done-seeding-enabled'] = false;
+	s['watch-dir-enabled'] = false;
+	s['umask'] = pl.run_as == 'root' ? '002' : '077';
+	if (s['download-dir'] == null) s['download-dir'] = pl.download;
+	if (s['incomplete-dir-enabled'] == null) s['incomplete-dir-enabled'] = false;
+	// a small NAS: little cache, few connections (128 MB boxes even fewer)
+	if (s['cache-size-mb'] == null) s['cache-size-mb'] = small ? 2 : 4;
+	if (s['peer-limit-global'] == null) s['peer-limit-global'] = small ? 40 : 80;
+	if (s['peer-limit-per-torrent'] == null) s['peer-limit-per-torrent'] = small ? 20 : 40;
+	if (s['download-queue-size'] == null) s['download-queue-size'] = 3;
+	writefile(file, sprintf('%.J\n', s));
+}
+
+function start(u) {
+	if (!match(u ?? '', NAME_RE)) die('invalid account');
+	if (stat(BIN)?.type != 'file') die('Transmission is not installed (system app "transmission-daemon" in the store)');
+	if (pid_of(u)) return out(status(u));
+	let pl = places(u);
+	if (!pl) die(role(u) == 'admin' ? 'no drive set up' : 'no personal folder on a drive');
+	let ug = pl.run_as == 'root' ? 'root:root' : pl.run_as;
+	let run = dir_of(u);
+	sh('mkdir -p ' + shq(RUN) + ' && chmod 711 ' + shq(RUN) + ' && rm -rf ' + shq(run) + ' && mkdir -m 700 ' + shq(run) + ' && chown ' + shq(ug) + ' ' + shq(run));
+	let mk = sprintf('mkdir -p %s %s', shq(ROOT + pl.state), shq(ROOT + pl.download));
+	let r = pl.run_as == 'root' ? sh(mk) : sh(sprintf('su -s /bin/sh %s -c %s', shq(pl.run_as), shq(mk)));
+	if (r.rc != 0) die('cannot create the folders: ' + trim(r.out));
+	settings(u, pl);
+	if (pl.run_as != 'root') sh(sprintf('chown %s %s', shq(pl.run_as), shq(ROOT + pl.state + '/settings.json')));
+	r = sh(sprintf('start-stop-daemon -S -b -m -p %s -c %s -x %s -- -f -g %s --logfile %s',
+		shq(run + '/pid'), shq(ug), shq(BIN), shq(pl.state), shq(run + '/log')));
+	if (r.rc != 0) die('cannot start: ' + trim(r.out));
+	// remember the account for the next start of the box
+	mkdir(ENABLED);
+	writefile(ENABLED + '/' + u, pl.state + '\n');
+	// the socket appears when the daemon is ready
+	for (let i = 0; i < 50 && !stat(sock_of(u)); i++) sh('sleep 0.2');
+	let st = status(u);
+	if (!st.running || !stat(sock_of(u))) die('Transmission did not start: ' + trim(sh('tail -n 3 ' + shq(run + '/log')).out));
+	out(st);
+}
+
+function stop(u, quiet) {
+	if (!match(u ?? '', NAME_RE)) die('invalid account');
+	let p = pid_of(u);
+	if (p) {
+		sh('kill ' + p);
+		// it saves its state on the way out
+		for (let i = 0; i < 50 && pid_of(u); i++) sh('sleep 0.2');
+		if (pid_of(u)) sh('kill -9 ' + p);
+	}
+	if (!quiet) out(status(u));
+}
+
+let cmd = ARGV[0], u = ARGV[1];
+switch (cmd) {
+case 'start': start(u); break;
+case 'stop': stop(u); break;
+case 'status': if (!match(u ?? '', NAME_RE)) die('invalid account'); out(status(u)); break;
+case 'boot':
+	if (stat(BIN)?.type != 'file') { out({ started: [] }); break; }
+	let started = [];
+	for (let a in lsdir(ENABLED) ?? []) {
+		if (!match(a, NAME_RE) || !role(a)) continue;
+		let r = sh('/usr/sbin/shareos-transmission start ' + shq(a));
+		if (r.rc == 0) push(started, a);
+	}
+	out({ started });
+	break;
+case 'stop-all':
+	for (let a in lsdir(RUN) ?? []) if (match(a, NAME_RE)) stop(a, true);
+	out({ ok: true });
+	break;
+default:
+	die('usage: shareos-transmission start|stop|status <account> | boot | stop-all');
+}

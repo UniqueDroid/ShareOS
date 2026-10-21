@@ -2699,6 +2699,39 @@ return {
 		}
 	},
 
+	// called only by /_shareos/cgi/transmission on the apps web server (as root,
+	// over the local ubus socket); no web session has this object in its ACL.
+	// The account's own Transmission daemon, for apps with "files" + "torrent".
+	'shareos.apptorrent': {
+		session: {
+			args: { grant: '' },
+			call: function(req) {
+				let g = app_grant_user(req.args.grant);
+				if (!g || index(g.app.permissions ?? [], 'torrent') < 0) return { error: 'no access' };
+				let st = json(sh('/usr/sbin/shareos-transmission status ' + shq(g.u)).out ?? '') ?? {};
+				if (!st.running) {
+					let r = sh('/usr/sbin/shareos-transmission start ' + shq(g.u));
+					st = json(r.out ?? '') ?? { error: trim(r.out) || 'cannot start' };
+					if (st.error) return { error: st.error, installed: st.installed };
+				}
+				return { user: g.u, socket: st.socket,
+					roots: map(files_roots(g.u), (r) => ({ name: r.name, path: realpath(r.path) ?? r.path, home: !!r.home })) };
+			}
+		},
+
+		// a folder of the account (root + relative path) -> absolute path for the daemon
+		path: {
+			args: { grant: '', root: '', path: '' },
+			call: function(req) {
+				let g = app_grant_user(req.args.grant);
+				if (!g || index(g.app.permissions ?? [], 'torrent') < 0) return { error: 'no access' };
+				let p = files_path(g.u, req.args.root, req.args.path, 'dir');
+				if (p.error) return p;
+				return { path: realpath(p.abs) };
+			}
+		}
+	},
+
 	// called only by /_shareos/cgi/fs on the apps web server (as root, over the
 	// local ubus socket); no web session has this object in its ACL
 	'shareos.appfs': {

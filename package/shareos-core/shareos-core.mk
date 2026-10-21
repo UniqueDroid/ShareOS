@@ -49,6 +49,10 @@ define SHAREOS_CORE_INSTALL_TARGET_CMDS
 	$(INSTALL) -D -m 0644 $(@D)/www-apps/_shareos/app.js $(TARGET_DIR)/www-apps/_shareos/app.js
 	$(INSTALL) -D -m 0755 $(@D)/www-apps/_shareos/cgi/file $(TARGET_DIR)/www-apps/_shareos/cgi/file
 	$(INSTALL) -D -m 0755 $(@D)/www-apps/_shareos/cgi/fs $(TARGET_DIR)/www-apps/_shareos/cgi/fs
+	$(INSTALL) -D -m 0755 $(@D)/www-apps/_shareos/cgi/transmission $(TARGET_DIR)/www-apps/_shareos/cgi/transmission
+	$(INSTALL) -D -m 0755 $(@D)/usr/sbin/shareos-transmission $(TARGET_DIR)/usr/sbin/shareos-transmission
+	$(INSTALL) -D -m 0755 $(@D)/etc/init.d/S95transmission $(TARGET_DIR)/etc/init.d/S95transmission
+	$(INSTALL) -D -m 0755 $(@D)/usr/lib/shareos/apphooks/transmission-daemon $(TARGET_DIR)/usr/lib/shareos/apphooks/transmission-daemon
 	$(INSTALL) -D -m 0755 $(@D)/usr/sbin/shareos-reset-access $(TARGET_DIR)/usr/sbin/shareos-reset-access
 	$(INSTALL) -D -m 0755 $(@D)/usr/sbin/shareos-terminal $(TARGET_DIR)/usr/sbin/shareos-terminal
 	$(INSTALL) -D -m 0755 $(@D)/usr/sbin/shareos-buttons $(TARGET_DIR)/usr/sbin/shareos-buttons
