@@ -1229,11 +1229,33 @@ const FILES_MAX = 2000;            // entries listed per folder
 
 function acc_role(u) { return u == 'root' ? 'admin' : (cursor().get('accounts', u, 'role') ?? 'share'); }
 
-// admins: every mounted volume; users: their personal folder, if allowed
+// admins: every mounted volume; users: their personal folder and the shares
+// they have rights to (read only where they may only read), if allowed
 function files_allowed(u) {
 	if (acc_role(u) == 'admin') return true;
 	let c = cursor();
-	return acc_role(u) == 'user' && c.get('accounts', u, 'files') == '1' && c.get('accounts', u, 'web') != '0' && !!c.get('accounts', u, 'home');
+	return acc_role(u) == 'user' && c.get('accounts', u, 'files') == '1' && c.get('accounts', u, 'web') != '0';
+}
+
+// groups of an account: supplementary (/etc/group) and primary (/etc/passwd)
+function acc_groups(u) {
+	let gs = {}, gid = null;
+	for (let l in split(readfile('/etc/passwd') ?? '', '\n')) { let f = split(l, ':'); if (f[0] == u) gid = f[3]; }
+	for (let l in split(readfile('/etc/group') ?? '', '\n')) {
+		let f = split(l, ':');
+		if (length(f) < 4) continue;
+		if (f[2] == gid || index(split(f[3], ','), u) >= 0) gs[f[0]] = true;
+	}
+	return gs;
+}
+
+// 'rw', 'ro' or null: what an account may do in a share (like ksmbd: write
+// list, read list, guest = everyone may read)
+function share_access(u, x, gs) {
+	let has = (l) => { for (let e in list_of(l)) if (e == u || (substr(e, 0, 1) == '@' && gs[substr(e, 1)])) return true; return false; };
+	if (has(x.rw)) return 'rw';
+	if (has(x.ro) || x.guest == '1') return 'ro';
+	return null;
 }
 
 function files_roots(u) {
@@ -1248,7 +1270,16 @@ function files_roots(u) {
 		for (let m in usb_mounts()) push(roots, { name: substr(m.path, 5), path: m.path, home: false, usb: true });
 	} else {
 		let v = c.get('accounts', u, 'home'), p = '/mnt/' + v + '/home/' + u;
-		if (index(mounts, ' /mnt/' + v + ' ') >= 0 && stat(p)?.type == 'directory') push(roots, { name: 'home', path: p, home: true });
+		if (v && index(mounts, ' /mnt/' + v + ' ') >= 0 && stat(p)?.type == 'directory') push(roots, { name: 'home', path: p, home: true });
+		let gs = acc_groups(u), shares = [];
+		c.foreach('shares', 'share', (x) => {
+			let n = x['.name'], v = x.volume ?? '', rel = x.path ?? n, acc = share_access(u, x, gs);
+			if (!acc || n == 'home' || !match(n, /^[A-Za-z0-9_-]+$/) || !v || substr(rel, 0, 1) == '/' || index(rel, '..') >= 0) return;
+			if (c.get('storage', v) != 'volume' || index(mounts, ' /mnt/' + v + ' ') < 0) return;
+			let sp = '/mnt/' + v + '/' + rel;
+			if (stat(sp)?.type == 'directory') push(shares, { name: n, path: sp, home: false, share: true, ro: acc == 'ro' });
+		});
+		push(roots, ...sort(shares, (a, b) => a.name < b.name ? -1 : 1));
 	}
 	return roots;
 }
@@ -1275,10 +1306,17 @@ function files_path(u, root, rel, want) {
 	return { root: r, abs, rel: join('/', parts), admin: acc_role(u) == 'admin' };
 }
 
-// run a command with the rights of the account (admins: root)
-function files_sh(u, cmd) {
+// the same for writing: refused in a share the account may only read
+function files_wpath(u, root, rel, want) {
+	let p = files_path(u, root, rel, want);
+	return !p.error && p.root.ro ? { error: 'read only' } : p;
+}
+
+// run a command with the rights of the account (admins: root); in shares the
+// files stay readable for the group "users" (like SMB: create mask 0664)
+function files_sh(u, cmd, shared) {
 	if (acc_role(u) == 'admin') return sh('umask 002; ' + cmd);
-	return sh(sprintf('su -s /bin/sh %s -c %s', shq(u), shq('umask 077; ' + cmd)));
+	return sh(sprintf('su -s /bin/sh %s -c %s', shq(u), shq((shared ? 'umask 002; ' : 'umask 077; ') + cmd)));
 }
 
 function files_err(r) {
@@ -2976,7 +3014,7 @@ return {
 			call: function(req) {
 				let u = session_user(req);
 				if (!u || !files_allowed(u)) return { error: 'not allowed' };
-				return { roots: map(files_roots(u), (r) => ({ name: r.name, home: r.home })) };
+				return { roots: map(files_roots(u), (r) => ({ name: r.name, home: r.home, ro: !!r.ro })) };
 			}
 		},
 
@@ -2995,9 +3033,9 @@ return {
 				let u = session_user(req), a = req.args;
 				if (!u || !files_allowed(u)) return { error: 'not allowed' };
 				if (!name_ok(a.name)) return { error: 'invalid name' };
-				let p = files_path(u, a.root, a.path, 'dir');
+				let p = files_wpath(u, a.root, a.path, 'dir');
 				if (p.error) return p;
-				let r = files_sh(u, 'mkdir -- ' + shq(p.abs + '/' + a.name));
+				let r = files_sh(u, 'mkdir -- ' + shq(p.abs + '/' + a.name), p.root.share);
 				return r.rc == 0 ? { ok: true } : { error: files_err(r) };
 			}
 		},
@@ -3008,10 +3046,10 @@ return {
 				let u = session_user(req), a = req.args;
 				if (!u || !files_allowed(u)) return { error: 'not allowed' };
 				if (!name_ok(a.name) || !name_ok(a.to)) return { error: 'invalid name' };
-				let p = files_path(u, a.root, a.path, 'dir');
+				let p = files_wpath(u, a.root, a.path, 'dir');
 				if (p.error) return p;
 				if (lstat(p.abs + '/' + a.to)) return { error: 'already exists' };
-				let r = files_sh(u, sprintf('mv -- %s %s', shq(p.abs + '/' + a.name), shq(p.abs + '/' + a.to)));
+				let r = files_sh(u, sprintf('mv -- %s %s', shq(p.abs + '/' + a.name), shq(p.abs + '/' + a.to)), p.root.share);
 				return r.rc == 0 ? { ok: true } : { error: files_err(r) };
 			}
 		},
@@ -3024,7 +3062,7 @@ return {
 				if (!u || !files_allowed(u)) return { error: 'not allowed' };
 				if (type(a.names) != 'array' || !length(a.names)) return { error: 'nothing selected' };
 				for (let n in a.names) if (!name_ok(n)) return { error: 'invalid name' };
-				let p = files_path(u, a.root, a.path, 'dir'), d = files_path(u, a.root, a.dest, 'dir');
+				let p = a.copy ? files_path(u, a.root, a.path, 'dir') : files_wpath(u, a.root, a.path, 'dir'), d = files_wpath(u, a.root, a.dest, 'dir');
 				if (p.error) return p;
 				if (d.error) return d;
 				for (let n in a.names) {
@@ -3032,7 +3070,7 @@ return {
 					if (d.rel == src || index(d.rel + '/', src + '/') == 0) return { error: 'a folder cannot be moved into itself' };
 					if (lstat(d.abs + '/' + n)) return { error: 'already exists: ' + n };
 				}
-				let r = files_sh(u, sprintf('%s -- %s %s', a.copy ? 'cp -a' : 'mv', join(' ', map(a.names, (n) => shq(p.abs + '/' + n))), shq(d.abs + '/')));
+				let r = files_sh(u, sprintf('%s -- %s %s', a.copy ? 'cp -a' : 'mv', join(' ', map(a.names, (n) => shq(p.abs + '/' + n))), shq(d.abs + '/')), d.root.share);
 				return r.rc == 0 ? { ok: true } : { error: files_err(r) };
 			}
 		},
@@ -3044,9 +3082,9 @@ return {
 				if (!u || !files_allowed(u)) return { error: 'not allowed' };
 				if (type(a.names) != 'array' || !length(a.names)) return { error: 'nothing selected' };
 				for (let n in a.names) if (!name_ok(n)) return { error: 'invalid name' };
-				let p = files_path(u, a.root, a.path, 'dir');
+				let p = files_wpath(u, a.root, a.path, 'dir');
 				if (p.error) return p;
-				let r = files_sh(u, 'rm -rf -- ' + join(' ', map(a.names, (n) => shq(p.abs + '/' + n))));
+				let r = files_sh(u, 'rm -rf -- ' + join(' ', map(a.names, (n) => shq(p.abs + '/' + n))), p.root.share);
 				return r.rc == 0 ? { ok: true } : { error: files_err(r) };
 			}
 		},
@@ -3059,7 +3097,7 @@ return {
 				let u = session_user(req), a = req.args;
 				if (!u || !files_allowed(u)) return { error: 'not allowed' };
 				if (!name_ok(a.name)) return { error: 'invalid name' };
-				let p = files_path(u, a.root, a.path, 'dir');
+				let p = a.mode == 'put' ? files_wpath(u, a.root, a.path, 'dir') : files_path(u, a.root, a.path, 'dir');
 				if (p.error) return p;
 				let target = p.abs + '/' + a.name, st = lstat(target);
 				if (a.mode == 'get') { if (st?.type != 'file') return { error: 'not a file' }; }
@@ -3101,6 +3139,7 @@ return {
 				if (p.error) return p;
 				let target = p.abs + '/' + a.name;
 				if (lstat(target)?.type != 'file') return { error: 'not a file' };
+				if (p.root.ro) mode = 'view';
 				system('mkdir -p ' + APP_TICKETS + ' && chmod 700 ' + APP_TICKETS);
 				system('find ' + APP_TICKETS + ' -type f -mmin +480 -delete 2>/dev/null');
 				let t = new_token();
@@ -3185,7 +3224,7 @@ return {
 				let o = a.output ?? {};
 				let base = replace(o.name ?? '', /\.[A-Za-z0-9]{1,5}$/, '');
 				if (!name_ok(base + '.' + ext) || substr(base, 0, 1) == '.') return { error: 'invalid name' };
-				let od = files_path(g.u, o.root, o.path, 'dir');
+				let od = files_wpath(g.u, o.root, o.path, 'dir');
 				if (od.error) return od;
 				let dir = realpath(od.abs), name = base + '.' + ext;
 				if (lstat(dir + '/' + name)) return { error: 'output file exists' };
@@ -3275,7 +3314,7 @@ return {
 			call: function(req) {
 				let g = app_grant_user(req.args.grant);
 				if (!g || index(g.app.permissions ?? [], 'torrent') < 0) return { error: 'no access' };
-				let p = files_path(g.u, req.args.root, req.args.path, 'dir');
+				let p = files_wpath(g.u, req.args.root, req.args.path, 'dir');
 				if (p.error) return p;
 				return { path: realpath(p.abs) };
 			}
@@ -3290,7 +3329,7 @@ return {
 			call: function(req) {
 				let g = app_grant_user(req.args.grant);
 				if (!g) return { error: 'no access' };
-				return { roots: map(files_roots(g.u), (r) => ({ name: r.name, home: r.home, usb: !!r.usb })), user: g.u };
+				return { roots: map(files_roots(g.u), (r) => ({ name: r.name, home: r.home, usb: !!r.usb, ro: !!r.ro })), user: g.u };
 			}
 		},
 
@@ -3309,9 +3348,9 @@ return {
 				let g = app_grant_user(req.args.grant), a = req.args;
 				if (!g) return { error: 'no access' };
 				if (!name_ok(a.name)) return { error: 'invalid name' };
-				let p = files_path(g.u, a.root, a.path, 'dir');
+				let p = files_wpath(g.u, a.root, a.path, 'dir');
 				if (p.error) return p;
-				let r = files_sh(g.u, 'mkdir -- ' + shq(p.abs + '/' + a.name));
+				let r = files_sh(g.u, 'mkdir -- ' + shq(p.abs + '/' + a.name), p.root.share);
 				return r.rc == 0 ? { ok: true } : { error: files_err(r) };
 			}
 		},
@@ -3322,11 +3361,11 @@ return {
 				let g = app_grant_user(req.args.grant), a = req.args;
 				if (!g) return { error: 'no access' };
 				if (!name_ok(a.name) || !name_ok(a.to)) return { error: 'invalid name' };
-				let p = files_path(g.u, a.root, a.path, 'dir');
+				let p = files_wpath(g.u, a.root, a.path, 'dir');
 				if (p.error) return p;
 				if (!lstat(p.abs + '/' + a.name)) return { error: 'not found' };
 				if (lstat(p.abs + '/' + a.to)) return { error: 'already exists' };
-				let r = files_sh(g.u, sprintf('mv -- %s %s', shq(p.abs + '/' + a.name), shq(p.abs + '/' + a.to)));
+				let r = files_sh(g.u, sprintf('mv -- %s %s', shq(p.abs + '/' + a.name), shq(p.abs + '/' + a.to)), p.root.share);
 				return r.rc == 0 ? { ok: true } : { error: files_err(r) };
 			}
 		},
@@ -3340,7 +3379,7 @@ return {
 				if (type(a.names) != 'array' || !length(a.names) || length(a.names) > 1000) return { error: 'nothing selected' };
 				for (let n in a.names) if (!name_ok(n)) return { error: 'invalid name' };
 				let droot = a.dest_root || a.root;
-				let p = files_path(g.u, a.root, a.path, 'dir'), d = files_path(g.u, droot, a.dest, 'dir');
+				let p = a.copy ? files_path(g.u, a.root, a.path, 'dir') : files_wpath(g.u, a.root, a.path, 'dir'), d = files_wpath(g.u, droot, a.dest, 'dir');
 				if (p.error) return p;
 				if (d.error) return d;
 				for (let n in a.names) {
@@ -3349,7 +3388,7 @@ return {
 					if (droot == a.root && (d.rel == src || index(d.rel + '/', src + '/') == 0)) return { error: 'a folder cannot be moved into itself' };
 					if (lstat(d.abs + '/' + n)) return { error: 'already exists: ' + n };
 				}
-				let r = files_sh(g.u, sprintf('%s -- %s %s', a.copy ? 'cp -a' : 'mv', join(' ', map(a.names, (n) => shq(p.abs + '/' + n))), shq(d.abs + '/')));
+				let r = files_sh(g.u, sprintf('%s -- %s %s', a.copy ? 'cp -a' : 'mv', join(' ', map(a.names, (n) => shq(p.abs + '/' + n))), shq(d.abs + '/')), d.root.share);
 				return r.rc == 0 ? { ok: true } : { error: files_err(r) };
 			}
 		},
@@ -3361,9 +3400,9 @@ return {
 				if (!g) return { error: 'no access' };
 				if (type(a.names) != 'array' || !length(a.names) || length(a.names) > 1000) return { error: 'nothing selected' };
 				for (let n in a.names) if (!name_ok(n)) return { error: 'invalid name' };
-				let p = files_path(g.u, a.root, a.path, 'dir');
+				let p = files_wpath(g.u, a.root, a.path, 'dir');
 				if (p.error) return p;
-				let r = files_sh(g.u, 'rm -rf -- ' + join(' ', map(a.names, (n) => shq(p.abs + '/' + n))));
+				let r = files_sh(g.u, 'rm -rf -- ' + join(' ', map(a.names, (n) => shq(p.abs + '/' + n))), p.root.share);
 				return r.rc == 0 ? { ok: true } : { error: files_err(r) };
 			}
 		},
@@ -3375,7 +3414,7 @@ return {
 				let g = app_grant_user(req.args.grant), a = req.args;
 				if (!g) return { error: 'no access' };
 				if (!name_ok(a.name)) return { error: 'invalid name' };
-				let p = files_path(g.u, a.root, a.path, 'dir');
+				let p = a.write ? files_wpath(g.u, a.root, a.path, 'dir') : files_path(g.u, a.root, a.path, 'dir');
 				if (p.error) return p;
 				let target = p.abs + '/' + a.name, st = lstat(target);
 				if (st ? st.type != 'file' : !(a.write && a.create)) return { error: st ? 'not a file' : 'not found' };
