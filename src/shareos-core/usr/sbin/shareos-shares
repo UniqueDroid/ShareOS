@@ -7,13 +7,17 @@
 #   shareos-shares start | stop
 #   shareos-shares status    key=value lines for the web interface
 #
-# Access: SMB checks users and groups per share (valid/read/write lists);
-# folders are owned by root:users with mode 2775 so files stay usable for
-# every user the share admits. NFS has no accounts: clients are listed by
-# address/network, everything is written as nobody:users.
+# Access: SMB checks users and groups per share (valid/read/write lists).
+# The same rights are set as POSIX ACLs on the folder and everything in it
+# (rwX for write, r-X for read, nothing for everybody else; default ACLs for
+# new files), so every program of a user – SMB, apps, Transmission, cloud
+# jobs – is held to them by Linux. Drives without Linux rights (exFAT, NTFS,
+# FAT) only have the checks of SMB and the web interface. NFS has no
+# accounts: clients are listed by address/network and act as nobody.
 #
 PATH=/usr/sbin:/usr/bin:/sbin:/bin
 SMBCONF=/etc/ksmbd/ksmbd.conf
+ACLSTATE=/etc/shareos/share-acl
 EXPORTS=/etc/exports
 AVAHI_SMB=/etc/avahi/services/smb.service
 
@@ -36,6 +40,45 @@ volume_mounted() { grep -q " /mnt/$1 " /proc/mounts; }
 ensure_folder() {   # path
 	[ -d "$1" ] && return 0
 	mkdir -p "$1" && chown root:users "$1" && chmod 2775 "$1"
+}
+
+# ACL of a share: owner (creator) full, owning group and others nothing,
+# named entries from the rights; nobody for guest reading and NFS
+acl_spec() {   # share
+	spec='u::rwX,g::---,o::---' nob=
+	for x in $(get "$1" rw); do acl_entry "$x" rwX; done
+	for x in $(get "$1" ro); do acl_entry "$x" r-X; done
+	on "$1" guest && nob=r-X
+	if on "$1" nfs && [ -n "$(get "$1" nfs_hosts)" ]; then on "$1" nfs_rw && nob=rwX || nob=${nob:-r-X}; fi
+	[ -n "$nob" ] && spec="$spec,u:nobody:$nob"
+	echo "$spec,m::rwX"
+}
+acl_entry() {   # user|@group perms
+	case "$1" in
+		@*) grep -q "^${1#@}:" /etc/group && spec="$spec,g:${1#@}:$2" ;;
+		*) id -u "$1" >/dev/null 2>&1 && spec="$spec,u:$1:$2" ;;
+	esac
+}
+# set the ACL on a share folder (in the background: big folders take long);
+# only when the rights changed since the last time
+apply_acl() {   # share path
+	command -v setfacl >/dev/null || return 0
+	# never over the personal folders, the apps area or the snapshots
+	case "$2" in /mnt/*/home|/mnt/*/home/*|/mnt/*/.shareos*|/mnt/*/Snapshots|/mnt/*/Snapshots/*)
+		log "share $1: folder $2 keeps its own rights (no ACL)"; return 0 ;; esac
+	spec=$(acl_spec "$1")
+	[ "$(cat "$ACLSTATE/$1" 2>/dev/null)" = "$spec $2" ] && return 0
+	mkdir -p "$ACLSTATE"
+	# a drive without Linux rights: nothing to do (and nothing to remember)
+	setfacl --set "$spec" "$2" 2>/dev/null || { log "share $1: no ACLs on this drive (only SMB and the web interface check the rights)"; return 0; }
+	(
+		# --set replaces the whole ACL: rights taken away are gone everywhere
+		nice -n 19 setfacl -R --set "$spec" "$2" 2>/dev/null
+		find "$2" -type d -exec nice -n 19 setfacl -d --set "$(echo "$spec" | tr X x)" {} + 2>/dev/null
+		echo "$spec $2" > "$ACLSTATE/$1"
+	) </dev/null >/dev/null 2>&1 &
+	[ "${SHAREOS_ACL_WAIT:-0}" = 1 ] && wait
+	return 0
 }
 
 # list of users/@groups for ksmbd (space separated)
@@ -165,7 +208,7 @@ cmd_apply() {
 	[ -f /etc/config/shares ] || : > /etc/config/shares
 	for s in $(shares); do
 		p=$(share_path "$s") || continue
-		volume_mounted "$(get "$s" volume)" && ensure_folder "$p"
+		volume_mounted "$(get "$s" volume)" && ensure_folder "$p" && apply_acl "$s" "$p"
 	done
 	write_smb
 	write_nfs

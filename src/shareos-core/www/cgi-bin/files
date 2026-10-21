@@ -42,7 +42,8 @@ case "$mode:$REQUEST_METHOD" in
 		len=${CONTENT_LENGTH:-0}
 		case "$len" in *[!0-9]*|'') reply '411 Length Required' '{"error":"length required"}' ;; esac
 		part=$(q "${path%/*}/.${path##*/}.part")
-		um=077; [ "$user" = root ] && um=002
+		# personal folder private; in shares readable for the group (like SMB)
+		um=002; [ "$user" != root ] && case "$path" in /mnt/*/home/"$user"/*) um=077 ;; esac
 		if head -c "$len" | as_user "umask $um; cat > $part"; then
 			got=$(as_user "stat -c %s -- $part" 2>/dev/null)
 			if [ "$got" = "$len" ] && as_user "mv -f -- $part $P"; then
