@@ -1012,7 +1012,9 @@
 		"ShareOS wurde auf diesem Modell noch nicht auf echter Hardware getestet.": "ShareOS ещё не проверялся на реальном устройстве этой модели.",
 		"Erste Anmeldung: Benutzer root, Passwort shareos – danach ein eigenes Passwort setzen.": "Первый вход: пользователь root, пароль shareos – затем задайте свой пароль.",
 		"Eigene Torrents (Transmission)": "Свои торренты (Transmission)",
-		"Darf den eigenen Transmission-Dienst des Benutzers steuern: Torrents hinzufügen, anhalten und löschen. Jeder Benutzer hat seinen eigenen Dienst; Downloads landen nur in seinen Ordnern.": "Может управлять собственной службой Transmission пользователя: добавлять, приостанавливать и удалять торренты. У каждого пользователя своя служба; загрузки попадают только в его папки."
+		"Darf den eigenen Transmission-Dienst des Benutzers steuern: Torrents hinzufügen, anhalten und löschen. Jeder Benutzer hat seinen eigenen Dienst; Downloads landen nur in seinen Ordnern.": "Может управлять собственной службой Transmission пользователя: добавлять, приостанавливать и удалять торренты. У каждого пользователя своя служба; загрузки попадают только в его папки.",
+		"Medien umwandeln (FFmpeg)": "Преобразование медиа (FFmpeg)",
+		"Darf auf der Box Audio und Video des Benutzers umwandeln lassen (FFmpeg) – mit seinen Rechten, nur in seinen Ordnern, aus festen Auswahlen (kein beliebiger Befehl).": "Может преобразовывать аудио и видео пользователя на устройстве (FFmpeg) – с его правами, только в его папках, из фиксированных вариантов (никаких произвольных команд)."
 	},
 	"patterns": [
 		[

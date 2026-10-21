@@ -320,6 +320,20 @@ Braucht ein Laufwerk (Speicher) und die Dateien `transmission-daemon-4.1.0.sapp`
 6. Box neu starten: die Torrents laufen von selbst weiter, ohne die App zu öffnen.
 7. Apps → Installiert → transmission-daemon → *Entfernen*: die Dienste halten an, die App meldet „Der Transmission-Dienst ist nicht installiert“. Die Downloads bleiben.
 
+## 14i. Medien umwandeln mit FFmpeg (0.2.0-beta.5)
+
+Braucht ein Laufwerk, ein paar Medien darauf (ein Video, z. B. `.mkv` oder `.mp4`, und ein Musikstück) und die Dateien `ffmpeg-6.1.5.sapp` (Release der Firmware) und `mediatranscoder-1.0.0.sapp` (App-Store oder Release von ShareOS-Apps).
+
+1. Apps → Store: MediaTranscoder installieren (holt die System-App `ffmpeg` mit) – oder per *Paket installieren* erst `ffmpeg-6.1.5.sapp`, dann `mediatranscoder-1.0.0.sapp`. Der Installationsdialog zeigt die Berechtigung „Medien umwandeln (FFmpeg)“.
+2. Als **root** MediaTranscoder öffnen: oben rechts „FFmpeg bereit“.
+3. *Datei wählen …* → ein Video: Länge, Größe, Video- und Tonspuren erscheinen; voreingestellt ist *Container wechseln* nach MP4 (bei einer MP4-Datei MKV). *Umwandeln starten*: der Auftrag läuft mit Fortschritt, die neue Datei liegt im selben Ordner und spielt im WinWeb Player (*Im WinWeb Player abspielen*).
+4. *Audio umwandeln / herausholen*, Format MP3, 192 kbit/s, *Ausschnitt* ab `00:01:00`, Länge `30`, Zielordner ändern: eine 30 s lange MP3-Datei im gewählten Ordner. Dauert auf der Box etwa so lange wie das Stück selbst oder weniger.
+5. Einen langen Auftrag starten und *Abbrechen*: Status „abgebrochen“, keine (halbe) Datei im Ordner (auch keine versteckte `.name.<id>.mp3`).
+6. Denselben Dateinamen noch einmal: Meldung „Eine Datei mit diesem Namen gibt es im Zielordner schon.“ – nichts wird überschrieben.
+7. Als **Benutzer** mit Weboberfläche und Dateibrowser: MediaTranscoder unter *Mein ShareOS*, nur der eigene Ordner ist wählbar, die Aufträge von root sind nicht zu sehen; das Ergebnis gehört dem Benutzer (Dateibrowser).
+8. Im Terminal während eines Auftrags: `ps | grep ffmpeg` – läuft mit `nice` 19; `ls /tmp/shareos-media/jobs/`.
+9. Apps → Installiert → ffmpeg → *Entfernen* (fragt, weil MediaTranscoder sie braucht): laufende Aufträge brechen ab, die App meldet „FFmpeg fehlt“.
+
 ## 15. Tasten
 
 - **Reset-Taste** (Loch hinten), gedrückt halten und loslassen:

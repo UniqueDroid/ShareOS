@@ -127,11 +127,11 @@ run "shareos-transmission stop anna" >/dev/null
 check "scripts and RPC address never reached the daemon" "grep -q '\"script-torrent-done-enabled\": false' $R/mnt/daten/home/anna/.config/transmission-daemon/settings.json && ! grep -q '/bin/sh' $R/mnt/daten/home/anna/.config/transmission-daemon/settings.json && grep -q '\"rpc-bind-address\": \"unix:' $R/mnt/daten/home/anna/.config/transmission-daemon/settings.json"
 check "accounts remembered for the next start" "[ -f $R/etc/shareos/transmission/anna ] && [ -f $R/etc/shareos/transmission/bernd ]"
 run "shareos-transmission stop-all" >/dev/null
-check "stop-all ends the daemons" "! run 'pgrep -f transmission-daemon' | grep -q ."
+check "stop-all ends the daemons" "! run \"pgrep -f '[/]bin/transmission-daemon '\" | grep -q ."
 o=$(run "shareos-transmission boot")
 check "boot starts them again, torrents kept" "echo '$o' | js \"sorted(d['started'])==['anna','bernd','root']\" && tr $GA '{\"method\":\"torrent-get\",\"arguments\":{\"fields\":[\"name\"]}}' | js \"[t['name'] for t in d['arguments']['torrents']]==['ShareOS-Test']\""
 run "shareos-apps remove transmission-daemon" >/dev/null
-check "removing the system app stops the daemons" "! run 'pgrep -f transmission-daemon' | grep -q . && [ ! -e $R/opt/shareos/bin/transmission-daemon ]"
+check "removing the system app stops the daemons" "! run \"pgrep -f '[/]bin/transmission-daemon '\" | grep -q . && [ ! -e $R/opt/shareos/bin/transmission-daemon ]"
 check "downloads and state stay on the drive" "[ -f $R/mnt/daten/home/anna/.config/transmission-daemon/settings.json ]"
 
 echo

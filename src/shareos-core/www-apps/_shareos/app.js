@@ -43,6 +43,14 @@
  *                             (ShareOS 0.2.0-beta.4+, null otherwise):
  *   .rpc(method, args)             Transmission RPC, resolves to its "arguments";
  *                                  folders as "<root>/<path>" (ShareOS.fs roots)
+ * ShareOS.media               media jobs of the account on the box (ffmpeg system
+ *                             app), for apps with the permissions "files" and
+ *                             "media" (ShareOS 0.2.0-beta.5+, null otherwise):
+ *   .probe(root, path, name)       {format, duration, size, streams: [{type, codec, …}]}
+ *   .start({ input: {root, path, name}, output: {root, path, name},
+ *            action: 'remux'|'audio', format, bitrate, stream, start, duration })
+ *                                  {id, output}; runs in the background
+ *   .jobs()   .cancel(id)   .remove(id)
  *
  * Storage per account: the apps share one web origin, so ShareOS keeps the
  * browser storage of the accounts apart – localStorage and IndexedDB of an
@@ -326,6 +334,22 @@
 	}
 	if (fs) fs.pick = pick;
 
+	/* media jobs of the account (permissions "files" + "media") */
+	function mediaCall(op, args) {
+		var body = { op: op };
+		for (var k in (args || {})) if (k !== 'op') body[k] = args[k];
+		return fetch('/_shareos/cgi/media?g=' + grant, { method: 'POST', body: JSON.stringify(body), cache: 'no-store' })
+			.then(function (r) { return r.json().catch(function () { return { error: 'HTTP ' + r.status }; }); })
+			.then(function (j) { if (j.error) throw new Error(j.error); return j; });
+	}
+	var media = fs ? {
+		probe: function (root, path, name) { return mediaCall('probe', { root: root, path: path || '', name: name }); },
+		start: function (o) { return mediaCall('start', o || {}); },
+		jobs: function () { return mediaCall('jobs'); },
+		cancel: function (id) { return mediaCall('cancel', { id: id }); },
+		remove: function (id) { return mediaCall('remove', { id: id }); }
+	} : null;
+
 	/* the account's own Transmission daemon (permissions "files" + "torrent") */
 	var torrent = fs ? {
 		rpc: function (method, args) {
@@ -404,6 +428,7 @@
 		file: file,
 		fs: fs,
 		torrent: torrent,
+		media: media,
 		menu: menu,
 		on: function (type, fn) { (handlers[type] = handlers[type] || []).push(fn); },
 		emit: function (type, data) { if (chan) chan.postMessage({ type: type, data: data, from: appId }); },

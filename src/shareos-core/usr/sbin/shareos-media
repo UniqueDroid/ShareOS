@@ -1,0 +1,140 @@
+#!/usr/bin/ucode -S
+//
+// shareos-media – runs the media jobs of the accounts (ffmpeg, system app)
+//
+//   shareos-media run        the worker: runs queued jobs one after another
+//   shareos-media stop-all   cancel running and queued jobs (system app removed)
+//
+// Jobs are written by rpcd (shareos.appmedia, for apps with the permission
+// "media") to /tmp/shareos-media/jobs/<id>.json: account, input and output
+// (absolute paths inside the account's folders, checked by rpcd) and the
+// ffmpeg arguments rpcd built from a fixed set of choices – no command line
+// from an app reaches ffmpeg. The worker runs ffmpeg with the account's
+// rights (admins: root, like their file browser), nice 19, one job at a time,
+// never overwriting a file (-n), local files only (protocol whitelist), and
+// writes the progress back into the job. ffmpeg writes to a hidden file
+// <folder>/.<name>.<job id>.<ext> that becomes the output when it is
+// complete (cancel: rpcd leaves <id>.stop and kills the ffmpeg with the job
+// id in its arguments; the worker removes the half file, then the job is
+// "cancelled").
+//
+import { readfile, writefile, rename, lsdir, stat, unlink, popen } from 'fs';
+
+const DIR = '/tmp/shareos-media';
+const JOBS = DIR + '/jobs';
+const FFMPEG = '/opt/shareos/bin/ffmpeg';
+const PIDFILE = DIR + '/worker.pid';
+
+function shq(s) { return "'" + replace(s, "'", "'\\''") + "'"; }
+function sh(cmd) {
+	let p = popen(cmd + ' 2>&1', 'r');
+	if (!p) return { rc: -1, out: '' };
+	let o = p.read('all') ?? '';
+	return { rc: p.close(), out: o };
+}
+function load(id) { let j = json(readfile(JOBS + '/' + id + '.json') ?? 'null'); return type(j) == 'object' ? j : null; }
+function save(j) {
+	let tmp = JOBS + '/.' + j.id + '.tmp';
+	writefile(tmp, sprintf('%J\n', j));
+	rename(tmp, JOBS + '/' + j.id + '.json');
+}
+// the ffmpeg of a job (the wrapper and the real binary): its output file name
+// holds the job id ("[/]" keeps the pattern from matching the shell that
+// runs pkill)
+function kill_job(id) { sh("pkill -f '[/]bin/ffmpeg .*\\." + id + "\\.'"); }
+function stop_asked(id) { return stat(JOBS + '/' + id + '.stop') != null; }
+function alive(pid) { return pid > 1 && stat('/proc/' + pid) != null; }
+function now() { return time(); }
+
+function next_job() {
+	let best = null;
+	for (let f in lsdir(JOBS) ?? []) {
+		let m = match(f, /^([0-9a-f]{16})\.json$/);
+		if (!m) continue;
+		let j = load(m[1]);
+		if (j && j.state == 'queued' && (!best || j.created < best.created)) best = j;
+	}
+	return best;
+}
+
+function run_job(j) {
+	if (stop_asked(j.id)) { j.state = 'cancelled'; j.finished = now(); save(j); return; }
+	j.state = 'running'; j.started = now(); j.progress = 0;
+	save(j);
+	let args = [ FFMPEG, '-hide_banner', '-nostdin', '-n', '-loglevel', 'error', '-protocol_whitelist', 'file,pipe',
+		'-progress', 'pipe:1', '-stats_period', '1', ...j.args ];
+	let cmd = 'nice -n 19 ' + join(' ', map(args, shq));
+	let full = j.run_as == 'root' ? cmd : sprintf('su -s /bin/sh %s -c %s', shq(j.run_as), shq(cmd));
+	// errors go to the job's log (opened here: the account cannot write there),
+	// progress lines to us
+	full += ' 2>' + shq(JOBS + '/' + j.id + '.log');
+	let p = popen(full, 'r');
+	if (!p) { j.state = 'error'; j.error = 'cannot start ffmpeg'; j.finished = now(); save(j); return; }
+	let last = 0, line;
+	while ((line = p.read('line')) != null && line != '') {
+		let m = match(line, /^out_time_us=([0-9]+)/);
+		if (m && j.duration > 0) {
+			let t = time();
+			if (t != last) {
+				if (stop_asked(j.id)) break;
+				j.progress = (+m[1] / 1000000) / j.duration;
+				if (j.progress > 1) j.progress = 1;
+				save(j);
+				last = t;
+			}
+		}
+	}
+	if (line) kill_job(j.id);      // cancelled while running
+	let rc = p.close();
+	j.finished = now();
+	let as_user = (c) => sh(j.run_as == 'root' ? c : sprintf('su -s /bin/sh %s -c %s', shq(j.run_as), shq(c)));
+	if (stop_asked(j.id)) {
+		j.state = 'cancelled';
+		as_user('rm -f -- ' + shq(j.tmp));
+	} else if (rc == 0 && as_user(sprintf('[ ! -e %s ] && mv -- %s %s', shq(j.output), shq(j.tmp), shq(j.output))).rc == 0) {
+		j.state = 'done'; j.progress = 1;
+		j.size = stat(j.output)?.size ?? 0;
+	} else {
+		as_user('rm -f -- ' + shq(j.tmp));
+		j.state = 'error';
+		let log = trim(readfile(JOBS + '/' + j.id + '.log') ?? '');
+		let l = split(log, '\n');
+		j.error = rc == 0 ? 'output file exists' : (length(l) && l[0] != '' ? substr(l[length(l) - 1], 0, 300) : 'ffmpeg failed (' + rc + ')');
+	}
+	save(j);
+}
+
+function cmd_run() {
+	// one worker at a time
+	let other = +trim(readfile(PIDFILE) ?? '0');
+	if (other && alive(other) && index(readfile('/proc/' + other + '/cmdline') ?? '', 'shareos-media') >= 0) return;
+	writefile(PIDFILE, split(readfile('/proc/self/stat') ?? '0', ' ')[0] + '\n');
+	sh('mkdir -p ' + shq(JOBS));
+	let j;
+	while ((j = next_job()) != null) {
+		if (stat(FFMPEG)?.type != 'file') { j.state = 'error'; j.error = 'ffmpeg is not installed'; save(j); continue; }
+		run_job(j);
+	}
+	unlink(PIDFILE);
+}
+
+function cmd_stop_all() {
+	for (let f in lsdir(JOBS) ?? []) {
+		let m = match(f, /^([0-9a-f]{16})\.json$/);
+		if (!m) continue;
+		let j = load(m[1]);
+		if (!j || (j.state != 'queued' && j.state != 'running')) continue;
+		writefile(JOBS + '/' + j.id + '.stop', '');
+		if (j.state == 'queued') { j.state = 'cancelled'; j.finished = now(); }
+		else j.state = 'stopping';
+		save(j);
+		kill_job(j.id);
+	}
+	print('{ "ok": true }\n');
+}
+
+switch (ARGV[0]) {
+case 'run': cmd_run(); break;
+case 'stop-all': cmd_stop_all(); break;
+default: print('usage: shareos-media run | stop-all\n'); exit(1);
+}

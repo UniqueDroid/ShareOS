@@ -1,0 +1,17 @@
+{
+	"id": "ffmpeg",
+	"name": "ffmpeg",
+	"version": "6.1.5",
+	"publisher": "UniqueDroid",
+	"description": {
+		"de": "FFmpeg und ffprobe für die Medien-Umwandlung auf der Box (App „MediaTranscoder“): Container wechseln und schneiden ohne Neukodieren, Tonspuren holen, Audio nach MP3, AAC, Opus, FLAC und WAV. Im Terminal auch direkt nutzbar. Ohne Video-Encoder – dafür ist die Box zu langsam.",
+		"en": "FFmpeg and ffprobe for media conversion on the box (app “MediaTranscoder”): change containers and trim without re-encoding, extract audio tracks, audio to MP3, AAC, Opus, FLAC and WAV. Also usable in the terminal. No video encoders – the box is too slow for that."
+	},
+	"type": "system",
+	"commands": [ "ffmpeg", "ffprobe" ],
+	"icon": "icon.svg",
+	"category": "media",
+	"license": "LGPL-2.1-or-later (FFmpeg), LGPL (LAME), BSD (Opus)",
+	"homepage": "https://ffmpeg.org/",
+	"min_shareos": "0.2.0-beta.1"
+}

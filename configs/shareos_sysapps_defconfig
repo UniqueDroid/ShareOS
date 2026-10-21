@@ -43,3 +43,23 @@ BR2_PACKAGE_STRACE=y
 BR2_PACKAGE_IPERF3=y
 BR2_PACKAGE_TRANSMISSION=y
 BR2_PACKAGE_TRANSMISSION_DAEMON=y
+# ffmpeg for media conversion (ShareOS media service): remux, trim, audio;
+# no video encoders (an ARMv5 without FPU is far too slow for that)
+BR2_PACKAGE_LAME=y
+BR2_PACKAGE_OPUS=y
+BR2_PACKAGE_OPUS_FIXED_POINT=y
+BR2_PACKAGE_FFMPEG=y
+BR2_PACKAGE_FFMPEG_FFMPEG=y
+BR2_PACKAGE_FFMPEG_FFPROBE=y
+# BR2_PACKAGE_FFMPEG_SWSCALE is not set
+# BR2_PACKAGE_FFMPEG_INDEVS is not set
+# BR2_PACKAGE_FFMPEG_OUTDEVS is not set
+BR2_PACKAGE_FFMPEG_ENCODERS="libmp3lame aac flac pcm_s16le libopus"
+BR2_PACKAGE_FFMPEG_DECODERS="aac aac_fixed mp3 mp3float mp2 flac vorbis opus alac ac3 ac3_fixed eac3 wmav1 wmav2 pcm_s16le pcm_s16be pcm_s24le pcm_s32le pcm_f32le pcm_u8"
+BR2_PACKAGE_FFMPEG_MUXERS="mp4 mov ipod matroska webm mp3 flac ogg opus wav adts mpegts avi"
+BR2_PACKAGE_FFMPEG_DEMUXERS="mov matroska avi mpegts mp3 flac ogg wav aac ac3 eac3 asf mpegps"
+BR2_PACKAGE_FFMPEG_PARSERS="aac ac3 flac h264 hevc mpeg4video mpegvideo mpegaudio opus vorbis vp8 vp9 av1"
+BR2_PACKAGE_FFMPEG_BSFS="aac_adtstoasc h264_mp4toannexb hevc_mp4toannexb extract_extradata vp9_superframe"
+BR2_PACKAGE_FFMPEG_PROTOCOLS="file pipe"
+BR2_PACKAGE_FFMPEG_FILTERS="aresample aformat anull null abuffer abuffersink buffer buffersink"
+BR2_PACKAGE_FFMPEG_EXTRACONF="--disable-network --disable-openssl --disable-autodetect --enable-zlib --enable-libmp3lame --enable-libopus"
