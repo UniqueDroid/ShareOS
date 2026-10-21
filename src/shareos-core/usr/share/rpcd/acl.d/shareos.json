@@ -73,6 +73,10 @@
 				"shareos.dlna": [
 					"status"
 				],
+				"shareos.snapshots": [
+					"status",
+					"log"
+				],
 				"shareos.cloud": [
 					"status",
 					"remotes",
@@ -216,6 +220,13 @@
 				"shareos.dlna": [
 					"set",
 					"rescan"
+				],
+				"shareos.snapshots": [
+					"job_set",
+					"job_del",
+					"run",
+					"stop",
+					"remove"
 				],
 				"shareos.cloud": [
 					"install",

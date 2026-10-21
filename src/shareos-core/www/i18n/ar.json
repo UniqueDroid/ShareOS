@@ -1018,6 +1018,54 @@
 		"Alle": "الكل",
 		"Sonstige": "أخرى",
 		"Suchen …": "بحث …",
+		"Ein Snapshot hält den Stand eines Ordners fest – stündlich, täglich oder wöchentlich.": "تحفظ اللقطة حالة مجلد – كل ساعة أو يوميًا أو أسبوعيًا.",
+		"Jeder Stand sieht aus wie eine vollständige Kopie; unveränderte Dateien belegen aber keinen zusätzlichen Platz.": "تبدو كل حالة كنسخة كاملة، لكن الملفات غير المتغيرة لا تشغل مساحة إضافية.",
+		"So holst du eine gelöschte oder überschriebene Datei von gestern oder letzter Woche zurück: im Dateibrowser aus dem Snapshot zurückkopieren.": "لاستعادة ملف حُذف أو استُبدل أمس أو الأسبوع الماضي، انسخه من اللقطة في مستعرض الملفات.",
+		"Neuer Snapshot-Auftrag": "مهمة لقطات جديدة",
+		"NEUER SNAPSHOT-AUFTRAG": "مهمة لقطات جديدة",
+		"Am besten auf ein anderes Laufwerk sichern (zweite Platte oder USB-Festplatte): dann schützen Snapshots auch bei einem Plattendefekt.": "الأفضل الحفظ على محرك آخر (قرص ثانٍ أو قرص USB): عندها تحمي اللقطات أيضًا من تعطل القرص.",
+		"Ein Spiegel (RAID 1) ersetzt keine Snapshots – er spiegelt auch jedes Löschen sofort.": "المرآة (RAID 1) لا تغني عن اللقطات – فهي تعكس كل حذف فورًا.",
+		"Die Snapshots liegen im Ordner": "توجد اللقطات في المجلد",
+		"des Ziel-Laufwerks und sind nur für Administratoren sichtbar.": "على محرك الهدف ولا يراها إلا المسؤولون.",
+		"Für eine Kopie außer Haus kann ein Cloud-Auftrag den Snapshot-Ordner hochladen.": "للحصول على نسخة خارج المنزل، يمكن لمهمة سحابية رفع مجلد اللقطات.",
+		"neuester": "الأحدث",
+		"Jetzt sichern": "احفظ الآن",
+		"QUELLE → ZIEL": "المصدر ← الهدف",
+		"ZEITPLAN · BEHALTEN": "الجدول · الاحتفاظ",
+		"STAND": "الحالة",
+		"Im Dateibrowser öffnen": "فتح في مستعرض الملفات",
+		"Zum Wiederherstellen im Dateibrowser die Datei oder den Ordner aus dem Snapshot an den alten Platz kopieren. Dateien im Snapshot nicht ändern: unveränderte Dateien teilen sich den Platz mit den anderen Snapshots.": "للاستعادة، انسخ الملف أو المجلد من اللقطة إلى مكانه القديم في مستعرض الملفات. لا تعدّل الملفات داخل اللقطة: الملفات غير المتغيرة تتشارك المساحة مع اللقطات الأخرى.",
+		"WAS SICHERN": "ما الذي يُحفظ",
+		"ZIEL-LAUFWERK": "محرك الهدف",
+		"WIE OFT": "كم مرة",
+		"Stündlich": "كل ساعة",
+		"Alle 6 Stunden": "كل 6 ساعات",
+		"Täglich": "يوميًا",
+		"Wöchentlich (Sonntag)": "أسبوعيًا (الأحد)",
+		"UHRZEIT": "الوقت",
+		"AB UHRZEIT": "ابتداءً من",
+		"MINUTE (HH:MM, NUR DIE MINUTE ZÄHLT)": "الدقيقة (HH:MM، تُحتسب الدقيقة فقط)",
+		"BEHALTEN": "الاحتفاظ",
+		"DIE LETZTEN": "الأخيرة",
+		"TAGE (JE EINER)": "أيام (واحدة لكل يوم)",
+		"WOCHEN (JE EINER)": "أسابيع (واحدة لكل أسبوع)",
+		"MONATE (JE EINER)": "أشهر (واحدة لكل شهر)",
+		"Die letzten N Snapshots bleiben immer (auch die von Hand); dazu je der neueste eines Tages, einer Woche, eines Monats. Beispiel täglich: 7 Tage · 4 Wochen · 6 Monate ≈ ein halbes Jahr zurück mit 17 Ständen.": "تبقى آخر N لقطات دائمًا (ومنها اليدوية)؛ إضافةً إلى الأحدث لكل يوم وأسبوع وشهر. مثال يومي: 7 أيام · 4 أسابيع · 6 أشهر ≈ نصف سنة إلى الوراء بـ17 حالة.",
+		"AUSNAHMEN (EINE PRO ZEILE, Z. B. *.tmp ODER /Downloads/)": "الاستثناءات (واحد في كل سطر، مثل *.tmp أو /Downloads/)",
+		"Quelle und Ziel liegen auf demselben Laufwerk: das schützt vor versehentlichem Löschen, aber nicht vor einem Plattendefekt.": "المصدر والهدف على المحرك نفسه: يحمي هذا من الحذف العرضي، لا من تعطل القرص.",
+		"Es werden keine neuen Snapshots mehr angelegt.": "لن تُنشأ لقطات جديدة بعد الآن.",
+		"Snapshot löschen?": "حذف اللقطة؟",
+		"Snapshots auch löschen?": "حذف اللقطات أيضًا؟",
+		"Snapshots löschen": "حذف اللقطات",
+		"Snapshot gelöscht.": "حُذفت اللقطة.",
+		"abgebrochen": "أُوقف",
+		"Lade Snapshots …": "جارٍ تحميل اللقطات …",
+		"Noch kein Snapshot-Auftrag. Ein Auftrag sichert eine Freigabe, die persönlichen Ordner oder ein ganzes Laufwerk nach Zeitplan.": "لا توجد مهمة لقطات بعد. تحفظ المهمة مشاركة أو المجلدات الشخصية أو محركًا كاملًا وفق جدول.",
+		"Noch kein Snapshot – „Jetzt sichern“ legt den ersten an.": "لا توجد لقطة بعد – «احفظ الآن» تُنشئ الأولى.",
+		"rsync fehlt in dieser Firmware.": "rsync غير موجود في هذا البرنامج الثابت.",
+		"Kein geeignetes Ziel: Snapshots brauchen ein Laufwerk mit ext4 oder Btrfs (FAT32/exFAT kennen keine Hardlinks).": "لا يوجد هدف مناسب: تحتاج اللقطات إلى محرك ext4 أو Btrfs (لا تدعم FAT32/exFAT الروابط الصلبة).",
+		"Aufträge": "مهام",
+		"– keine Hardlinks": "– لا روابط صلبة",
 		"MEDIENSERVER": "خادم الوسائط",
 		"Medienserver (DLNA)": "خادم الوسائط (DLNA)",
 		"nicht freigeben": "عدم المشاركة",
@@ -2042,6 +2090,78 @@
 		[
 			"^Hinweis: (.+)$",
 			"ملاحظة: $1"
+		],
+		[
+			"^(\\d+) Aufträge$",
+			"$1 مهام"
+		],
+		[
+			"^Täglich (\\d\\d:\\d\\d)$",
+			"يوميًا $1"
+		],
+		[
+			"^Wöchentlich \\(Sonntag\\) (\\d\\d:\\d\\d)$",
+			"أسبوعيًا (الأحد) $1"
+		],
+		[
+			"^die letzten (\\d+)$",
+			"آخر $1"
+		],
+		[
+			"^(\\d+) Tage$",
+			"$1 أيام"
+		],
+		[
+			"^(\\d+) Wochen$",
+			"$1 أسابيع"
+		],
+		[
+			"^(\\d+) Monate$",
+			"$1 أشهر"
+		],
+		[
+			"^(\\d+) Dateien$",
+			"$1 ملفات"
+		],
+		[
+			"^(\\d+) geändert$",
+			"$1 تغيّرت"
+		],
+		[
+			"^(\\d+) alte entfernt$",
+			"أُزيلت $1 قديمة"
+		],
+		[
+			"^Persönliche Ordner \\((.+)\\)$",
+			"المجلدات الشخصية ($1)"
+		],
+		[
+			"^Ganzes Laufwerk (.+)$",
+			"المحرك كاملًا $1"
+		],
+		[
+			"^(.+) – keine Hardlinks$",
+			"$1 – لا روابط صلبة"
+		],
+		[
+			"^Den Stand vom (.+) löschen\\? Die anderen Snapshots bleiben vollständig\\.$",
+			"حذف حالة $1؟ تبقى اللقطات الأخرى كاملة."
+		],
+		[
+			"^Die (\\d+) vorhandenen Snapshots in (.+) ebenfalls löschen\\? Sonst bleiben sie dort liegen\\.$",
+			"حذف اللقطات الـ$1 في $2 أيضًا؟ وإلا تبقى هناك."
+		],
+		[
+			"^Snapshot „(.+)“ läuft\\.$",
+			"اللقطة «$1» قيد التشغيل."
+		],
+		[
+			"^Das Ziel-Laufwerk (.+) ist nicht eingebunden\\.$",
+			"محرك الهدف $1 غير مُركَّب."
+		],
+		[
+			"^AUFTRAG (.+)$",
+			"المهمة $1"
 		],
 		[
 			"^Medienserver: (.*)$",

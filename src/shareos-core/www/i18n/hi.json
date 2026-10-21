@@ -1018,6 +1018,54 @@
 		"Alle": "सभी",
 		"Sonstige": "अन्य",
 		"Suchen …": "खोजें …",
+		"Ein Snapshot hält den Stand eines Ordners fest – stündlich, täglich oder wöchentlich.": "स्नैपशॉट किसी फ़ोल्डर की स्थिति सहेजता है – हर घंटे, रोज़ या हर सप्ताह।",
+		"Jeder Stand sieht aus wie eine vollständige Kopie; unveränderte Dateien belegen aber keinen zusätzlichen Platz.": "हर स्थिति पूरी कॉपी जैसी दिखती है, लेकिन न बदली फ़ाइलें अतिरिक्त जगह नहीं लेतीं।",
+		"So holst du eine gelöschte oder überschriebene Datei von gestern oder letzter Woche zurück: im Dateibrowser aus dem Snapshot zurückkopieren.": "कल या पिछले सप्ताह हटाई या बदली गई फ़ाइल वापस पाने के लिए उसे फ़ाइल ब्राउज़र में स्नैपशॉट से वापस कॉपी करें।",
+		"Neuer Snapshot-Auftrag": "नया स्नैपशॉट कार्य",
+		"NEUER SNAPSHOT-AUFTRAG": "नया स्नैपशॉट कार्य",
+		"Am besten auf ein anderes Laufwerk sichern (zweite Platte oder USB-Festplatte): dann schützen Snapshots auch bei einem Plattendefekt.": "सबसे अच्छा किसी दूसरी ड्राइव (दूसरी डिस्क या USB डिस्क) पर सहेजें: तब स्नैपशॉट डिस्क ख़राब होने पर भी बचाते हैं।",
+		"Ein Spiegel (RAID 1) ersetzt keine Snapshots – er spiegelt auch jedes Löschen sofort.": "मिरर (RAID 1) स्नैपशॉट की जगह नहीं लेता – वह हर डिलीट को भी तुरंत मिरर करता है।",
+		"Die Snapshots liegen im Ordner": "स्नैपशॉट इस फ़ोल्डर में हैं",
+		"des Ziel-Laufwerks und sind nur für Administratoren sichtbar.": "(लक्ष्य ड्राइव पर) और केवल व्यवस्थापकों को दिखते हैं।",
+		"Für eine Kopie außer Haus kann ein Cloud-Auftrag den Snapshot-Ordner hochladen.": "घर से बाहर कॉपी के लिए कोई क्लाउड कार्य स्नैपशॉट फ़ोल्डर अपलोड कर सकता है।",
+		"neuester": "नवीनतम",
+		"Jetzt sichern": "अभी सहेजें",
+		"QUELLE → ZIEL": "स्रोत → लक्ष्य",
+		"ZEITPLAN · BEHALTEN": "समय-सारणी · रखें",
+		"STAND": "स्थिति",
+		"Im Dateibrowser öffnen": "फ़ाइल ब्राउज़र में खोलें",
+		"Zum Wiederherstellen im Dateibrowser die Datei oder den Ordner aus dem Snapshot an den alten Platz kopieren. Dateien im Snapshot nicht ändern: unveränderte Dateien teilen sich den Platz mit den anderen Snapshots.": "पुनर्स्थापित करने के लिए फ़ाइल ब्राउज़र में स्नैपशॉट से फ़ाइल या फ़ोल्डर पुरानी जगह पर कॉपी करें। स्नैपशॉट के अंदर फ़ाइलें न बदलें: न बदली फ़ाइलें दूसरे स्नैपशॉट के साथ जगह साझा करती हैं।",
+		"WAS SICHERN": "क्या सहेजें",
+		"ZIEL-LAUFWERK": "लक्ष्य ड्राइव",
+		"WIE OFT": "कितनी बार",
+		"Stündlich": "हर घंटे",
+		"Alle 6 Stunden": "हर 6 घंटे",
+		"Täglich": "रोज़",
+		"Wöchentlich (Sonntag)": "साप्ताहिक (रविवार)",
+		"UHRZEIT": "समय",
+		"AB UHRZEIT": "से",
+		"MINUTE (HH:MM, NUR DIE MINUTE ZÄHLT)": "मिनट (HH:MM, केवल मिनट मायने रखता है)",
+		"BEHALTEN": "रखें",
+		"DIE LETZTEN": "अंतिम",
+		"TAGE (JE EINER)": "दिन (हर एक का एक)",
+		"WOCHEN (JE EINER)": "सप्ताह (हर एक का एक)",
+		"MONATE (JE EINER)": "महीने (हर एक का एक)",
+		"Die letzten N Snapshots bleiben immer (auch die von Hand); dazu je der neueste eines Tages, einer Woche, eines Monats. Beispiel täglich: 7 Tage · 4 Wochen · 6 Monate ≈ ein halbes Jahr zurück mit 17 Ständen.": "अंतिम N स्नैपशॉट हमेशा रहते हैं (हाथ से बनाए भी); साथ में हर दिन, सप्ताह और महीने का नवीनतम। उदाहरण रोज़: 7 दिन · 4 सप्ताह · 6 महीने ≈ आधा साल पीछे, 17 स्थितियाँ।",
+		"AUSNAHMEN (EINE PRO ZEILE, Z. B. *.tmp ODER /Downloads/)": "अपवाद (हर पंक्ति में एक, जैसे *.tmp या /Downloads/)",
+		"Quelle und Ziel liegen auf demselben Laufwerk: das schützt vor versehentlichem Löschen, aber nicht vor einem Plattendefekt.": "स्रोत और लक्ष्य एक ही ड्राइव पर हैं: यह गलती से हटाने से बचाता है, डिस्क ख़राब होने से नहीं।",
+		"Es werden keine neuen Snapshots mehr angelegt.": "अब कोई नया स्नैपशॉट नहीं बनेगा।",
+		"Snapshot löschen?": "स्नैपशॉट हटाएँ?",
+		"Snapshots auch löschen?": "स्नैपशॉट भी हटाएँ?",
+		"Snapshots löschen": "स्नैपशॉट हटाएँ",
+		"Snapshot gelöscht.": "स्नैपशॉट हटाया गया।",
+		"abgebrochen": "रोका गया",
+		"Lade Snapshots …": "स्नैपशॉट लोड हो रहे हैं …",
+		"Noch kein Snapshot-Auftrag. Ein Auftrag sichert eine Freigabe, die persönlichen Ordner oder ein ganzes Laufwerk nach Zeitplan.": "अभी कोई स्नैपशॉट कार्य नहीं। कार्य समय-सारणी के अनुसार शेयर, निजी फ़ोल्डर या पूरी ड्राइव सहेजता है।",
+		"Noch kein Snapshot – „Jetzt sichern“ legt den ersten an.": "अभी कोई स्नैपशॉट नहीं – “अभी सहेजें” पहला बनाता है।",
+		"rsync fehlt in dieser Firmware.": "इस फ़र्मवेयर में rsync नहीं है।",
+		"Kein geeignetes Ziel: Snapshots brauchen ein Laufwerk mit ext4 oder Btrfs (FAT32/exFAT kennen keine Hardlinks).": "कोई उपयुक्त लक्ष्य नहीं: स्नैपशॉट को ext4 या Btrfs ड्राइव चाहिए (FAT32/exFAT में हार्ड लिंक नहीं होते)।",
+		"Aufträge": "कार्य",
+		"– keine Hardlinks": "– हार्ड लिंक नहीं",
 		"MEDIENSERVER": "मीडिया सर्वर",
 		"Medienserver (DLNA)": "मीडिया सर्वर (DLNA)",
 		"nicht freigeben": "साझा न करें",
@@ -2042,6 +2090,78 @@
 		[
 			"^Hinweis: (.+)$",
 			"सूचना: $1"
+		],
+		[
+			"^(\\d+) Aufträge$",
+			"$1 कार्य"
+		],
+		[
+			"^Täglich (\\d\\d:\\d\\d)$",
+			"रोज़ $1"
+		],
+		[
+			"^Wöchentlich \\(Sonntag\\) (\\d\\d:\\d\\d)$",
+			"साप्ताहिक (रविवार) $1"
+		],
+		[
+			"^die letzten (\\d+)$",
+			"अंतिम $1"
+		],
+		[
+			"^(\\d+) Tage$",
+			"$1 दिन"
+		],
+		[
+			"^(\\d+) Wochen$",
+			"$1 सप्ताह"
+		],
+		[
+			"^(\\d+) Monate$",
+			"$1 महीने"
+		],
+		[
+			"^(\\d+) Dateien$",
+			"$1 फ़ाइलें"
+		],
+		[
+			"^(\\d+) geändert$",
+			"$1 बदलीं"
+		],
+		[
+			"^(\\d+) alte entfernt$",
+			"$1 पुराने हटाए"
+		],
+		[
+			"^Persönliche Ordner \\((.+)\\)$",
+			"निजी फ़ोल्डर ($1)"
+		],
+		[
+			"^Ganzes Laufwerk (.+)$",
+			"पूरी ड्राइव $1"
+		],
+		[
+			"^(.+) – keine Hardlinks$",
+			"$1 – हार्ड लिंक नहीं"
+		],
+		[
+			"^Den Stand vom (.+) löschen\\? Die anderen Snapshots bleiben vollständig\\.$",
+			"$1 की स्थिति हटाएँ? बाकी स्नैपशॉट पूरे रहेंगे।"
+		],
+		[
+			"^Die (\\d+) vorhandenen Snapshots in (.+) ebenfalls löschen\\? Sonst bleiben sie dort liegen\\.$",
+			"$2 में मौजूद $1 स्नैपशॉट भी हटाएँ? नहीं तो वे वहीं रहेंगे।"
+		],
+		[
+			"^Snapshot „(.+)“ läuft\\.$",
+			"स्नैपशॉट “$1” चल रहा है।"
+		],
+		[
+			"^Das Ziel-Laufwerk (.+) ist nicht eingebunden\\.$",
+			"लक्ष्य ड्राइव $1 माउंट नहीं है।"
+		],
+		[
+			"^AUFTRAG (.+)$",
+			"कार्य $1"
 		],
 		[
 			"^Medienserver: (.*)$",

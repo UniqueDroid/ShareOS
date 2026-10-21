@@ -1018,6 +1018,54 @@
 		"Alle": "Toutes",
 		"Sonstige": "Autres",
 		"Suchen …": "Rechercher …",
+		"Ein Snapshot hält den Stand eines Ordners fest – stündlich, täglich oder wöchentlich.": "Un instantané conserve l'état d'un dossier – toutes les heures, chaque jour ou chaque semaine.",
+		"Jeder Stand sieht aus wie eine vollständige Kopie; unveränderte Dateien belegen aber keinen zusätzlichen Platz.": "Chaque état ressemble à une copie complète, mais les fichiers inchangés n'occupent pas d'espace supplémentaire.",
+		"So holst du eine gelöschte oder überschriebene Datei von gestern oder letzter Woche zurück: im Dateibrowser aus dem Snapshot zurückkopieren.": "Pour récupérer un fichier supprimé ou écrasé hier ou la semaine dernière, recopiez-le depuis l'instantané dans le navigateur de fichiers.",
+		"Neuer Snapshot-Auftrag": "Nouvelle tâche d’instantané",
+		"NEUER SNAPSHOT-AUFTRAG": "NOUVELLE TÂCHE D’INSTANTANÉ",
+		"Am besten auf ein anderes Laufwerk sichern (zweite Platte oder USB-Festplatte): dann schützen Snapshots auch bei einem Plattendefekt.": "Idéalement, sauvegardez sur un autre lecteur (second disque ou disque USB) : les instantanés protègent alors aussi d'une panne de disque.",
+		"Ein Spiegel (RAID 1) ersetzt keine Snapshots – er spiegelt auch jedes Löschen sofort.": "Un miroir (RAID 1) ne remplace pas les instantanés – il reproduit aussi immédiatement chaque suppression.",
+		"Die Snapshots liegen im Ordner": "Les instantanés se trouvent dans le dossier",
+		"des Ziel-Laufwerks und sind nur für Administratoren sichtbar.": "du lecteur cible et ne sont visibles que par les administrateurs.",
+		"Für eine Kopie außer Haus kann ein Cloud-Auftrag den Snapshot-Ordner hochladen.": "Pour une copie hors site, une tâche cloud peut envoyer le dossier d'instantanés.",
+		"neuester": "plus récent",
+		"Jetzt sichern": "Sauvegarder maintenant",
+		"QUELLE → ZIEL": "SOURCE → CIBLE",
+		"ZEITPLAN · BEHALTEN": "PLANIFICATION · CONSERVER",
+		"STAND": "ÉTAT",
+		"Im Dateibrowser öffnen": "Ouvrir dans le navigateur de fichiers",
+		"Zum Wiederherstellen im Dateibrowser die Datei oder den Ordner aus dem Snapshot an den alten Platz kopieren. Dateien im Snapshot nicht ändern: unveränderte Dateien teilen sich den Platz mit den anderen Snapshots.": "Pour restaurer, copiez le fichier ou le dossier de l'instantané à son ancien emplacement dans le navigateur de fichiers. Ne modifiez pas les fichiers d'un instantané : les fichiers inchangés partagent leur espace avec les autres instantanés.",
+		"WAS SICHERN": "QUOI SAUVEGARDER",
+		"ZIEL-LAUFWERK": "LECTEUR CIBLE",
+		"WIE OFT": "FRÉQUENCE",
+		"Stündlich": "Toutes les heures",
+		"Alle 6 Stunden": "Toutes les 6 heures",
+		"Täglich": "Chaque jour",
+		"Wöchentlich (Sonntag)": "Chaque semaine (dimanche)",
+		"UHRZEIT": "HEURE",
+		"AB UHRZEIT": "À PARTIR DE",
+		"MINUTE (HH:MM, NUR DIE MINUTE ZÄHLT)": "MINUTE (HH:MM, SEULE LA MINUTE COMPTE)",
+		"BEHALTEN": "CONSERVER",
+		"DIE LETZTEN": "LES DERNIERS",
+		"TAGE (JE EINER)": "JOURS (UN PAR JOUR)",
+		"WOCHEN (JE EINER)": "SEMAINES (UN PAR SEMAINE)",
+		"MONATE (JE EINER)": "MOIS (UN PAR MOIS)",
+		"Die letzten N Snapshots bleiben immer (auch die von Hand); dazu je der neueste eines Tages, einer Woche, eines Monats. Beispiel täglich: 7 Tage · 4 Wochen · 6 Monate ≈ ein halbes Jahr zurück mit 17 Ständen.": "Les N derniers instantanés restent toujours (y compris ceux faits à la main) ; en plus, le plus récent de chaque jour, semaine et mois. Exemple quotidien : 7 jours · 4 semaines · 6 mois ≈ six mois en arrière avec 17 états.",
+		"AUSNAHMEN (EINE PRO ZEILE, Z. B. *.tmp ODER /Downloads/)": "EXCLUSIONS (UNE PAR LIGNE, P. EX. *.tmp OU /Downloads/)",
+		"Quelle und Ziel liegen auf demselben Laufwerk: das schützt vor versehentlichem Löschen, aber nicht vor einem Plattendefekt.": "La source et la cible sont sur le même lecteur : cela protège d'une suppression accidentelle, pas d'une panne de disque.",
+		"Es werden keine neuen Snapshots mehr angelegt.": "Plus aucun nouvel instantané ne sera créé.",
+		"Snapshot löschen?": "Supprimer l'instantané ?",
+		"Snapshots auch löschen?": "Supprimer aussi les instantanés ?",
+		"Snapshots löschen": "Supprimer les instantanés",
+		"Snapshot gelöscht.": "Instantané supprimé.",
+		"abgebrochen": "interrompu",
+		"Lade Snapshots …": "Chargement des instantanés …",
+		"Noch kein Snapshot-Auftrag. Ein Auftrag sichert eine Freigabe, die persönlichen Ordner oder ein ganzes Laufwerk nach Zeitplan.": "Aucune tâche d'instantané. Une tâche sauvegarde un partage, les dossiers personnels ou un lecteur entier selon un planning.",
+		"Noch kein Snapshot – „Jetzt sichern“ legt den ersten an.": "Aucun instantané – « Sauvegarder maintenant » crée le premier.",
+		"rsync fehlt in dieser Firmware.": "rsync manque dans ce firmware.",
+		"Kein geeignetes Ziel: Snapshots brauchen ein Laufwerk mit ext4 oder Btrfs (FAT32/exFAT kennen keine Hardlinks).": "Aucune cible adaptée : les instantanés exigent un lecteur ext4 ou Btrfs (FAT32/exFAT n'ont pas de liens physiques).",
+		"Aufträge": "tâches",
+		"– keine Hardlinks": "– pas de liens physiques",
 		"MEDIENSERVER": "SERVEUR MULTIMÉDIA",
 		"Medienserver (DLNA)": "Serveur multimédia (DLNA)",
 		"nicht freigeben": "ne pas partager",
@@ -2042,6 +2090,78 @@
 		[
 			"^Hinweis: (.+)$",
 			"Remarque : $1"
+		],
+		[
+			"^(\\d+) Aufträge$",
+			"$1 tâches"
+		],
+		[
+			"^Täglich (\\d\\d:\\d\\d)$",
+			"Chaque jour à $1"
+		],
+		[
+			"^Wöchentlich \\(Sonntag\\) (\\d\\d:\\d\\d)$",
+			"Chaque semaine (dimanche) à $1"
+		],
+		[
+			"^die letzten (\\d+)$",
+			"les $1 derniers"
+		],
+		[
+			"^(\\d+) Tage$",
+			"$1 jours"
+		],
+		[
+			"^(\\d+) Wochen$",
+			"$1 semaines"
+		],
+		[
+			"^(\\d+) Monate$",
+			"$1 mois"
+		],
+		[
+			"^(\\d+) Dateien$",
+			"$1 fichiers"
+		],
+		[
+			"^(\\d+) geändert$",
+			"$1 modifiés"
+		],
+		[
+			"^(\\d+) alte entfernt$",
+			"$1 anciens supprimés"
+		],
+		[
+			"^Persönliche Ordner \\((.+)\\)$",
+			"Dossiers personnels ($1)"
+		],
+		[
+			"^Ganzes Laufwerk (.+)$",
+			"Lecteur entier $1"
+		],
+		[
+			"^(.+) – keine Hardlinks$",
+			"$1 – pas de liens physiques"
+		],
+		[
+			"^Den Stand vom (.+) löschen\\? Die anderen Snapshots bleiben vollständig\\.$",
+			"Supprimer l'état du $1 ? Les autres instantanés restent complets."
+		],
+		[
+			"^Die (\\d+) vorhandenen Snapshots in (.+) ebenfalls löschen\\? Sonst bleiben sie dort liegen\\.$",
+			"Supprimer aussi les $1 instantanés dans $2 ? Sinon, ils y restent."
+		],
+		[
+			"^Snapshot „(.+)“ läuft\\.$",
+			"Instantané « $1 » en cours."
+		],
+		[
+			"^Das Ziel-Laufwerk (.+) ist nicht eingebunden\\.$",
+			"Le lecteur cible $1 n'est pas monté."
+		],
+		[
+			"^AUFTRAG (.+)$",
+			"TÂCHE $1"
 		],
 		[
 			"^Medienserver: (.*)$",
