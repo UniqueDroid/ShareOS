@@ -142,14 +142,14 @@ sleep 3
 check "a long job shows progress while running" "m $GA '{\"op\":\"jobs\"}' | js \"[x['state'] for x in d['jobs'] if x['id']=='$id'][0] in ('running','queued')\""
 m $GA "{\"op\":\"cancel\",\"id\":\"$id\"}" >/dev/null
 j=$(wait_job $GA $id)
-check "cancel: job cancelled, no output, no half file" "echo '$j' | js \"d.get('state')=='cancelled'\" && [ ! -e $R/mnt/daten/home/anna/Musik/lang.mp3 ] && [ -z \"\$(ls -A $R/mnt/daten/home/anna/Musik | grep '^\.lang')\" ] && ! run "pgrep -f '[/]bin/ffmpeg '" | grep -q ."
+check "cancel: job cancelled, no output, no half file" "echo '$j' | js \"d.get('state')=='cancelled'\" && [ ! -e $R/mnt/daten/home/anna/Musik/lang.mp3 ] && [ -z \"\$(ls -A $R/mnt/daten/home/anna/Musik | grep '^\.lang')\" ] && ! run \"pgrep -f '[/]bin/ffmpeg '\" | grep -q ."
 check "remove a finished job from the list" "m $GA '{\"op\":\"remove\",\"id\":\"$id\"}' | js \"d.get('ok')\" && ! m $GA '{\"op\":\"jobs\"}' | grep -q $id"
 check "rpcd object not reachable for web sessions" "! grep -q appmedia $R/usr/share/rpcd/acl.d/shareos.json"
 id=$(start $GA '{"root":"home","path":"Musik","name":"lang.wav"}' "\"output\":$(OUT lang2),\"action\":\"audio\",\"format\":\"flac\"")
 sleep 2
 run "shareos-apps remove ffmpeg" >/dev/null
 j=$(wait_job $GA $id)
-check "removing the system app cancels running jobs" "echo '$j' | js \"d.get('state') in ('cancelled','error')\" && ! run "pgrep -f '[/]bin/ffmpeg '" | grep -q ."
+check "removing the system app cancels running jobs" "echo '$j' | js \"d.get('state') in ('cancelled','error')\" && ! run \"pgrep -f '[/]bin/ffmpeg '\" | grep -q ."
 
 echo
 echo "$pass passed, $failed failed"
