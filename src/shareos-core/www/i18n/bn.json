@@ -1096,7 +1096,17 @@
 		"Noch keine Freigabe – unter": "এখনো কোনো শেয়ার নেই – তৈরি করুন",
 		"anlegen.": "-এ।",
 		"VIDEOS": "ভিডিও",
-		"BILDER": "ছবি"
+		"BILDER": "ছবি",
+		"ANZEIGEN IM KOPF": "হেডার নির্দেশক",
+		"Anzeige im Kopf": "হেডারে নির্দেশক",
+		"VPN der Box (OpenVPN)": "বক্সের VPN (OpenVPN)",
+		"verbindet …": "সংযোগ হচ্ছে …",
+		"Gerade zeigt kein Dienst und keine App etwas an.": "এখন কোনো সেবা বা অ্যাপ কিছু দেখাচ্ছে না।",
+		"Dienste (VPN, Torrents, Medienserver) und Apps mit der Berechtigung „Anzeige im Kopf“ zeigen hier ihren Zustand; ein Klick öffnet die App.": "সেবা (VPN, টরেন্ট, মিডিয়া সার্ভার) এবং “হেডারে নির্দেশক” অনুমতিযুক্ত অ্যাপ এখানে অবস্থা দেখায়; ক্লিক করলে অ্যাপ খোলে।",
+		"Darf die Box als VPN-Client verbinden und trennen und VPN-Profile verwalten (OpenVPN) – das betrifft das Netzwerk der ganzen Box, deshalb nur für Administratoren.": "বক্সকে VPN ক্লায়েন্ট হিসেবে সংযুক্ত ও বিচ্ছিন্ন করতে এবং VPN প্রোফাইল পরিচালনা করতে পারে (OpenVPN) – এতে পুরো বক্সের নেটওয়ার্ক প্রভাবিত হয়, তাই শুধু প্রশাসকদের জন্য।",
+		"Darf oben in der Kopfzeile der ShareOS-Oberfläche einen kurzen Zustand anzeigen (z. B. „verbunden“) – nur für den Benutzer, der die App geöffnet hat; er verschwindet nach höchstens 10 Minuten von selbst.": "ShareOS ইন্টারফেসের উপরে সংক্ষিপ্ত অবস্থা দেখাতে পারে (যেমন “সংযুক্ত”) – শুধু যে ব্যবহারকারী অ্যাপ খুলেছেন তাকে; সর্বোচ্চ ১০ মিনিটে নিজে থেকেই সরে যায়।",
+		"VPN-SERVER": "VPN সার্ভার",
+		"1 Gerät": "১টি ডিভাইস"
 	},
 	"patterns": [
 		[
@@ -2166,6 +2176,10 @@
 		[
 			"^Medienserver: (.*)$",
 			"মিডিয়া সার্ভার: $1"
+		],
+		[
+			"^(\\d+) Geräte$",
+			"$1টি ডিভাইস"
 		]
 	],
 	"words": [

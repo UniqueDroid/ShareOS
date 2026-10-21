@@ -1,0 +1,475 @@
+#!/usr/bin/ucode -S
+//
+// shareos-vpn – the box as an OpenVPN client (system app "openvpn")
+//
+//   shareos-vpn list                     profiles and state (JSON)
+//   shareos-vpn import <name>            stdin JSON {text, user, pass, full}
+//   shareos-vpn set <name>               stdin JSON {autostart, full, user, pass}
+//   shareos-vpn remove <name>
+//   shareos-vpn connect <name>           one connection at a time
+//   shareos-vpn disconnect
+//   shareos-vpn status                   state, tunnel address, bytes (JSON)
+//   shareos-vpn log                      the last lines of the OpenVPN log
+//   shareos-vpn boot                     start the server (when on), connect the autostart profile
+//   shareos-vpn stop-all                 server and client off (system app removed)
+//   shareos-vpn server-status | server-set (stdin JSON {enabled, port, proto,
+//                net, host, lan}) | server-log
+//   shareos-vpn device-add|device-profile|device-remove <name>
+//                                        devices that may connect to the box
+//
+// A VPN changes the network of the whole box, so only admins reach this
+// (rpcd shareos.appvpn checks it). Profiles (.ovpn) are kept in
+// /etc/shareos/vpn (root only) and are cleaned on import: nothing that runs
+// programs (up/down scripts, plugins, script-security …), no settings of
+// the box itself (log, status, user, chroot …), no file references – keys
+// and certificates must be inline (<ca>…</ca>). Client profiles only.
+// User name and password (auth-user-pass) are kept beside the profile.
+// "full": all traffic of the box goes through the tunnel (redirect-gateway
+// as the profile or server says); off: only the networks of the VPN.
+//
+import { readfile, writefile, unlink, stat, popen, chmod } from 'fs';
+import { cursor } from 'uci';
+import * as socket from 'socket';
+
+const BIN = '/opt/shareos/bin/openvpn';
+const DIR = '/etc/shareos/vpn';
+const RUN = '/tmp/shareos-vpn';
+const MGMT = RUN + '/mgmt.sock';
+const NAME_RE = /^[A-Za-z0-9][A-Za-z0-9 _.-]{0,39}$/;
+const MAX = 262144;
+
+// options a profile may not bring (they run programs, change the box or
+// read other files); the box sets its own where needed
+const DENY = {
+	up: 1, down: 1, 'route-up': 1, 'route-pre-down': 1, ipchange: 1, 'client-connect': 1, 'client-disconnect': 1,
+	'learn-address': 1, 'tls-verify': 1, 'auth-user-pass-verify': 1, plugin: 1, 'script-security': 1, 'up-restart': 1,
+	log: 1, 'log-append': 1, status: 1, 'status-version': 1, writepid: 1, daemon: 1, cd: 1, chroot: 1, user: 1, group: 1,
+	config: 1, 'tmp-dir': 1, askpass: 1, 'auth-user-pass': 1, syslog: 1, 'machine-readable-output': 1, iproute: 1,
+	'dev-node': 1, 'ifconfig-noexec': 1, 'route-noexec': 1, 'tls-export-cert': 1, 'auth-gen-token-secret': 1,
+	'client-config-dir': 1, 'ccd-exclusive': 1, 'ifconfig-pool-persist': 1, 'replay-persist': 1, 'http-proxy-user-pass': 1,
+	'echo': 1, setenv: 1, 'setenv-safe': 1, 'pull-filter': 1
+};
+// these name files: only inline blocks are accepted
+const FILES = { ca: 1, cert: 1, key: 1, 'tls-auth': 1, 'tls-crypt': 1, 'tls-crypt-v2': 1, pkcs12: 1, 'extra-certs': 1,
+	secret: 1, 'crl-verify': 1, capath: 1, dh: 1 };
+const SERVER = { server: 1, 'server-bridge': 1, 'tls-server': 1, mode: 1, 'ifconfig-pool': 1, 'client-to-client': 1, 'duplicate-cn': 1 };
+
+function shq(s) { return "'" + replace(s, "'", "'\\''") + "'"; }
+function sh(cmd) {
+	let p = popen(cmd + ' 2>&1', 'r');
+	if (!p) return { rc: -1, out: '' };
+	let o = p.read('all') ?? '';
+	return { rc: p.close(), out: o };
+}
+function out(o) { print(sprintf('%J\n', o)); }
+function die(msg) { out({ error: msg }); exit(1); }
+function stdin_json() { let j = json(readfile('/dev/stdin') ?? 'null'); return type(j) == 'object' ? j : {}; }
+function file_of(n) { return DIR + '/' + n + '.ovpn'; }
+function auth_of(n) { return DIR + '/' + n + '.auth'; }
+function sec(n) { return 'p_' + replace(lc(n), /[^a-z0-9]/g, '_'); }
+function name_ok(n) { return match(n ?? '', NAME_RE) && !match(n, /\.\./); }
+
+function cfg() { return cursor(); }
+function prof(c, n) {
+	let found = null;
+	c.foreach('vpn', 'profile', (x) => { if (x.name == n) found = x; });
+	return found;
+}
+
+function uniq(a) { let s = {}, o = []; for (let x in a) if (!s[x]) { s[x] = 1; push(o, x); } return o; }
+
+// --- the profile is read line by line; inline blocks stay as they are -------------
+function clean(text) {
+	if (type(text) != 'string' || length(text) == 0) return { error: 'empty profile' };
+	if (length(text) > MAX) return { error: 'profile too big' };
+	let lines = split(replace(text, /\r/g, ''), '\n'), keep = [], removed = [], block = null, skip = false;
+	let needs_auth = false, remote = null, full = false;
+	for (let l in lines) {
+		if (block) {
+			if (!skip) push(keep, l);
+			if (trim(l) == '</' + block + '>') block = null;
+			continue;
+		}
+		let t = trim(l);
+		let b = match(t, /^<([a-z0-9-]+)>$/);
+		if (b) {
+			// keys and certificates inline, <connection> (remote, proto, port …); anything else goes
+			block = b[1]; skip = !(b[1] in FILES) && b[1] != 'connection';
+			if (skip) push(removed, '<' + b[1] + '>'); else push(keep, l);
+			continue;
+		}
+		if (t == '' || substr(t, 0, 1) == '#' || substr(t, 0, 1) == ';') { push(keep, l); continue; }
+		let w = split(t, /[ \t]+/), opt = lc(replace(w[0], /^--/, ''));
+		if (opt in SERVER) return { error: 'server profiles are not supported (' + opt + ')' };
+		if (opt == 'auth-user-pass') { needs_auth = true; push(removed, 'auth-user-pass'); continue; }
+		if (DENY[opt] || match(opt, /^management/)) { push(removed, opt); continue; }
+		if (FILES[opt] && length(w) > 1 && w[1] != '[inline]') return { error: 'the file of "' + opt + '" must be inside the profile (<' + opt + '>…</' + opt + '>)' };
+		if (opt == 'remote' && !remote) remote = w[1] + (w[2] ? ':' + w[2] : '');
+		if (opt == 'redirect-gateway') full = true;
+		push(keep, l);
+	}
+	if (block) return { error: 'block <' + block + '> is not closed' };
+	if (!remote) return { error: 'no "remote" in the profile' };
+	return { text: join('\n', keep) + '\n', removed: uniq(removed), needs_auth, remote, full };
+}
+
+
+function save_auth(n, user, pass) {
+	if (user == null && pass == null) return;
+	if ((user ?? '') == '' && (pass ?? '') == '') { unlink(auth_of(n)); return; }
+	if (match(user ?? '', /[\n\r]/) || match(pass ?? '', /[\n\r]/) || length(user ?? '') > 256 || length(pass ?? '') > 256) die('invalid user name or password');
+	writefile(auth_of(n), (user ?? '') + '\n' + (pass ?? '') + '\n');
+	chmod(auth_of(n), 0600);
+}
+
+// --- management interface of the running OpenVPN ------------------------------------
+function mgmt(cmd, sock) {
+	sock ??= MGMT;
+	if (!stat(sock)) return null;
+	let s = socket.create(socket.AF_UNIX, socket.SOCK_STREAM);
+	if (!s || !s.connect({ family: socket.AF_UNIX, path: sock })) return null;
+	let o = '', t = time();
+	s.send(cmd + '\n');
+	while (time() - t < 3) {
+		let r = s.recv(4096);
+		if (r == null || r == '') break;
+		o += r;
+		if (match(o, /(\r?\nEND\r?\n|SUCCESS:[^\n]*\n|ERROR:[^\n]*\n)$/)) break;
+	}
+	s.close();
+	return o;
+}
+
+function pid() {
+	let p = +trim(readfile(RUN + '/pid') ?? '0');
+	return p > 1 && index(readfile('/proc/' + p + '/cmdline') ?? '', 'openvpn') >= 0 ? p : null;
+}
+
+function status() {
+	let c = cfg(), active = c.get('vpn', 'global', 'active') ?? '', p = pid();
+	let st = { installed: stat(BIN)?.type == 'file', running: !!p, profile: p ? active : null, state: p ? 'CONNECTING' : 'OFF',
+		ip: null, remote: null, since: null, bytes_in: 0, bytes_out: 0 };
+	if (!p) return st;
+	let s = mgmt('state');
+	let m = s ? match(s, /(^|\n)([0-9]+),([A-Z_]+),[^,]*,([^,]*),([^,]*)/) : null;
+	if (m) { st.since = +m[2]; st.state = m[3]; st.ip = m[4] || null; st.remote = m[5] || null; }
+	let l = mgmt('load-stats');
+	let b = l ? match(l, /bytesin=([0-9]+),bytesout=([0-9]+)/) : null;
+	if (b) { st.bytes_in = +b[1]; st.bytes_out = +b[2]; }
+	return st;
+}
+
+function profiles() {
+	let c = cfg(), list = [];
+	c.foreach('vpn', 'profile', (x) => {
+		if (!x.name || !stat(file_of(x.name))) return;
+		push(list, { name: x.name, remote: x.remote ?? '', autostart: x.autostart == '1', full: x.full != '0',
+			needs_auth: x.needs_auth == '1', auth: !!stat(auth_of(x.name)), removed: type(x.removed) == 'array' ? x.removed : [] });
+	});
+	return sort(list, (a, b) => lc(a.name) < lc(b.name) ? -1 : 1);
+}
+
+function cmd_disconnect(quiet) {
+	let p = pid();
+	if (p) {
+		mgmt('signal SIGTERM');
+		for (let i = 0; i < 30 && pid(); i++) sh('sleep 0.2');
+		if (pid()) sh('kill ' + p);
+		for (let i = 0; i < 20 && pid(); i++) sh('sleep 0.2');
+		if (pid()) sh('kill -9 ' + p);
+	}
+	unlink(RUN + '/pid'); unlink(MGMT);
+	let c = cfg(); c.set('vpn', 'global', 'vpn'); c.set('vpn', 'global', 'active', ''); c.commit('vpn');
+	if (!quiet) out(status());
+}
+
+function cmd_connect(n) {
+	if (stat(BIN)?.type != 'file') die('OpenVPN is not installed (system app "openvpn" in the store)');
+	let c = cfg(), x = prof(c, n);
+	if (!x || !stat(file_of(n))) die('unknown profile');
+	if (stat('/dev/net/tun') == null) die('this firmware has no tunnel support (TUN) – update ShareOS');
+	if (x.needs_auth == '1' && !stat(auth_of(n))) die('the profile needs a user name and password');
+	cmd_disconnect(true);
+	sh('mkdir -p ' + RUN + ' && chmod 700 ' + RUN);
+	// the profile as it runs: without redirect-gateway when not everything goes through
+	let text = readfile(file_of(n)) ?? '';
+	if (x.full == '0') text = join('\n', filter(split(text, '\n'), (l) => !match(trim(l), /^-{0,2}redirect-gateway\b/)));
+	writefile(RUN + '/run.ovpn', text);
+	chmod(RUN + '/run.ovpn', 0600);
+	let args = [ BIN, '--config', RUN + '/run.ovpn', '--script-security', '1', '--daemon', 'shareos-vpn',
+		'--writepid', RUN + '/pid', '--log', RUN + '/log', '--verb', '3', '--management', MGMT, 'unix',
+		'--management-client-user', 'root', '--auth-nocache' ];
+	if (stat(auth_of(n))) push(args, '--auth-user-pass', auth_of(n));
+	if (x.full == '0') push(args, '--pull-filter', 'ignore', 'redirect-gateway');
+	let r = sh(join(' ', map(args, shq)));
+	for (let i = 0; i < 30 && !pid(); i++) sh('sleep 0.2');
+	if (!pid()) die('OpenVPN did not start: ' + trim(sh('tail -n 3 ' + RUN + '/log').out || r.out));
+	c.set('vpn', 'global', 'vpn'); c.set('vpn', 'global', 'active', n); c.commit('vpn');
+	out(status());
+}
+
+function cmd_import(n) {
+	if (!name_ok(n)) die('invalid name');
+	let a = stdin_json(), r = clean(a.text);
+	if (r.error) die(r.error);
+	let c = cfg();
+	if (prof(c, n)) die('a profile with this name exists');
+	sh('mkdir -p ' + DIR + ' && chmod 700 ' + DIR);
+	writefile(file_of(n), r.text);
+	chmod(file_of(n), 0600);
+	save_auth(n, a.user, a.pass);
+	let s = sec(n);
+	c.set('vpn', s, 'profile');
+	c.set('vpn', s, 'name', n);
+	c.set('vpn', s, 'remote', r.remote);
+	c.set('vpn', s, 'needs_auth', r.needs_auth ? '1' : '0');
+	c.set('vpn', s, 'full', a.full === false ? '0' : '1');
+	c.set('vpn', s, 'autostart', '0');
+	if (length(r.removed)) c.set('vpn', s, 'removed', r.removed);
+	c.commit('vpn');
+	out({ ok: true, name: n, removed: r.removed, needs_auth: r.needs_auth, remote: r.remote });
+}
+
+function cmd_set(n) {
+	let c = cfg(), x = prof(c, n), a = stdin_json();
+	if (!x) die('unknown profile');
+	let s = x['.name'];
+	if (a.full != null) c.set('vpn', s, 'full', a.full ? '1' : '0');
+	if (a.autostart != null) {
+		// one profile starts with the box
+		if (a.autostart) c.foreach('vpn', 'profile', (y) => c.set('vpn', y['.name'], 'autostart', '0'));
+		c.set('vpn', s, 'autostart', a.autostart ? '1' : '0');
+	}
+	c.commit('vpn');
+	save_auth(n, a.user, a.pass);
+	out({ ok: true, profiles: profiles() });
+}
+
+function cmd_remove(n) {
+	let c = cfg(), x = prof(c, n);
+	if (!x) die('unknown profile');
+	if ((c.get('vpn', 'global', 'active') ?? '') == n && pid()) cmd_disconnect(true);
+	unlink(file_of(n)); unlink(auth_of(n));
+	c.delete('vpn', x['.name']); c.commit('vpn');
+	out({ ok: true, profiles: profiles() });
+}
+
+function cmd_log() {
+	let t = readfile(RUN + '/log') ?? '';
+	if (length(t) > 16384) t = substr(t, length(t) - 16384);
+	// the password never shows (OpenVPN does not write it; to be safe)
+	out({ log: t });
+}
+
+// --- server: devices connect to the box ------------------------------------------------
+// Own small certificate authority (mbedtls gen_key/cert_write of the firmware):
+// /etc/shareos/vpn/server/{ca,server}.{key,crt}, tls-crypt key, per device
+// clients/<cn>.{key,crt} and ccd/<cn> – only devices with a ccd file get in
+// (ccd-exclusive), so removing a device locks it out at once. Settings:
+// UCI vpn.server (enabled, port, proto udp|tcp, net 10.8.0.0, host – the
+// public name or address the profiles use, lan – the home network is
+// reachable through the box: IP forwarding + a pushed route; the router needs
+// a route for the VPN network to the box).
+const SRV = DIR + '/server';
+const SRUN = '/tmp/shareos-vpn-server';
+const SMGMT = SRUN + '/mgmt.sock';
+const CN_RE = /^[A-Za-z0-9][A-Za-z0-9_.-]{0,31}$/;
+
+function mbed(p) { for (let d in [ '/usr/bin/', '/usr/sbin/', '/bin/' ]) if (stat(d + p)) return d + p; return p; }
+function srv_get() {
+	let c = cfg(), g = (k, d) => c.get('vpn', 'server', k) ?? d;
+	return { enabled: g('enabled', '0') == '1', port: +g('port', '1194'), proto: g('proto', 'udp'), net: g('net', '10.8.0.0'),
+		host: g('host', ''), lan: g('lan', '0') == '1' };
+}
+function srv_pid() {
+	let p = +trim(readfile(SRUN + '/pid') ?? '0');
+	return p > 1 && index(readfile('/proc/' + p + '/cmdline') ?? '', 'openvpn') >= 0 ? p : null;
+}
+function lan_of() {
+	// eth0 address and prefix -> network, e.g. 192.168.1.0 255.255.255.0
+	let m = match(sh('ip -4 -o addr show dev eth0').out, /inet ([0-9.]+)\/([0-9]+)/);
+	if (!m) return null;
+	let ip = map(split(m[1], '.'), (x) => +x), bits = +m[2], mask = [], net = [];
+	for (let i = 0; i < 4; i++) { let b = bits >= 8 ? 255 : (bits <= 0 ? 0 : (256 - (1 << (8 - bits)))); bits -= 8; push(mask, b); push(net, ip[i] & b); }
+	return { ip: m[1], net: join('.', net), mask: join('.', mask) };
+}
+function srv_ready() { return stat(SRV + '/ca.crt') && stat(SRV + '/server.crt') && stat(SRV + '/tc.key'); }
+
+function cert_dates() {
+	let y = +substr(sh('date -u +%Y').out, 0, 4);
+	return { from: trim(sh('date -u +%Y%m%d000000').out), to: (y + 10) + trim(sh('date -u +%m%d235959').out) };
+}
+function srv_pki() {
+	if (srv_ready()) return;
+	if (stat(BIN)?.type != 'file') die('OpenVPN is not installed (system app "openvpn" in the store)');
+	sh('mkdir -p ' + SRV + '/clients ' + SRV + '/ccd && chmod -R 700 ' + SRV);
+	let host = trim(readfile('/proc/sys/kernel/hostname') ?? 'shareos'), d = cert_dates();
+	let r = sh(sprintf('cd %s && %s type=ec ec_curve=secp256r1 format=pem filename=ca.key >/dev/null && %s selfsign=1 issuer_key=ca.key issuer_name=%s is_ca=1 max_pathlen=0 not_before=%s not_after=%s key_usage=key_cert_sign,crl_sign output_file=ca.crt >/dev/null && %s type=ec ec_curve=secp256r1 format=pem filename=server.key >/dev/null && %s subject_key=server.key subject_name=%s issuer_crt=ca.crt issuer_key=ca.key not_before=%s not_after=%s key_usage=digital_signature,key_agreement ns_cert_type=ssl_server output_file=server.crt >/dev/null',
+		SRV, mbed('gen_key'), mbed('cert_write'), shq('CN=ShareOS VPN CA ' + host + ',O=ShareOS'), d.from, d.to,
+		mbed('gen_key'), mbed('cert_write'), shq('CN=ShareOS VPN ' + host + ',O=ShareOS'), d.from, d.to));
+	if (r.rc != 0) die('certificates could not be made: ' + trim(r.out));
+	r = sh(sprintf('%s --genkey tls-crypt %s', shq(BIN), shq(SRV + '/tc.key')));
+	if (r.rc != 0) die('tls-crypt key could not be made: ' + trim(r.out));
+	sh('chmod 600 ' + SRV + '/*.key');
+}
+
+function srv_clients() {
+	let c = cfg(), list = [], live = {};
+	if (srv_pid()) {
+		let st = mgmt('status 2', SMGMT) ?? '';
+		for (let l in split(st, '\n')) {
+			let f = split(trim(l), ',');
+			if (f[0] == 'CLIENT_LIST' && length(f) > 7) live[f[1]] = { real: f[2], ip: f[3], bytes_in: +f[5], bytes_out: +f[6], since: +f[8] };
+		}
+	}
+	c.foreach('vpn', 'device', (x) => {
+		if (!x.cn) return;
+		push(list, { name: x.cn, created: +(x.created ?? 0), online: !!live[x.cn], ...(live[x.cn] ?? {}) });
+	});
+	return sort(list, (a, b) => lc(a.name) < lc(b.name) ? -1 : 1);
+}
+
+function srv_status() {
+	let st = srv_get(), p = srv_pid(), lan = lan_of();
+	return { installed: stat(BIN)?.type == 'file', tun: stat('/dev/net/tun') != null, running: !!p, ...st,
+		box_ip: lan?.ip ?? null, lan_net: lan ? lan.net + '/' + lan.mask : null, ready: !!srv_ready(),
+		devices: srv_clients(), online: length(filter(srv_clients(), (x) => x.online)) };
+}
+
+function srv_stop() {
+	let p = srv_pid();
+	if (p) {
+		mgmt('signal SIGTERM', SMGMT);
+		for (let i = 0; i < 30 && srv_pid(); i++) sh('sleep 0.2');
+		if (srv_pid()) sh('kill ' + p);
+		for (let i = 0; i < 20 && srv_pid(); i++) sh('sleep 0.2');
+	}
+	unlink(SRUN + '/pid'); unlink(SMGMT);
+}
+
+function srv_start() {
+	if (stat(BIN)?.type != 'file') die('OpenVPN is not installed (system app "openvpn" in the store)');
+	if (stat('/dev/net/tun') == null) die('this firmware has no tunnel support (TUN) – update ShareOS');
+	srv_pki();
+	srv_stop();
+	let st = srv_get();
+	sh('mkdir -p ' + SRUN + ' && chmod 700 ' + SRUN);
+	let args = [ BIN, '--mode', 'server', '--tls-server', '--dev', 'tun', '--topology', 'subnet',
+		'--server', st.net, '255.255.255.0', '--proto', st.proto == 'tcp' ? 'tcp-server' : 'udp', '--port', '' + st.port,
+		'--ca', SRV + '/ca.crt', '--cert', SRV + '/server.crt', '--key', SRV + '/server.key', '--dh', 'none',
+		'--tls-crypt', SRV + '/tc.key', '--client-config-dir', SRV + '/ccd', '--ccd-exclusive',
+		'--keepalive', '10', '60', '--persist-key', '--persist-tun', '--script-security', '1',
+		'--data-ciphers', 'AES-256-GCM:AES-128-GCM:CHACHA20-POLY1305',
+		'--daemon', 'shareos-vpn-server', '--writepid', SRUN + '/pid', '--log', SRUN + '/log', '--verb', '3',
+		'--management', SMGMT, 'unix', '--management-client-user', 'root', '--status', SRUN + '/status', '30', '--status-version', '2' ];
+	let lan = lan_of();
+	if (st.lan && lan) {
+		push(args, '--push', 'route ' + lan.net + ' ' + lan.mask);
+		writefile('/proc/sys/net/ipv4/ip_forward', '1');
+	}
+	let r = sh(join(' ', map(args, shq)));
+	for (let i = 0; i < 30 && !srv_pid(); i++) sh('sleep 0.2');
+	if (!srv_pid()) die('the VPN server did not start: ' + trim(sh('tail -n 3 ' + SRUN + '/log').out || r.out));
+}
+
+function cmd_server_set() {
+	let a = stdin_json(), c = cfg();
+	c.set('vpn', 'server', 'server');
+	if (a.port != null) { let p = int(+a.port); if (!(p >= 1 && p <= 65535)) die('invalid port'); c.set('vpn', 'server', 'port', '' + p); }
+	if (a.proto != null) { if (!(a.proto in { udp: 1, tcp: 1 })) die('invalid protocol'); c.set('vpn', 'server', 'proto', a.proto); }
+	if (a.net != null) {
+		let m = match(a.net, /^(10|172|192)\.([0-9]{1,3})\.([0-9]{1,3})\.0$/);
+		if (!m || +m[2] > 255 || +m[3] > 255) die('invalid VPN network (e.g. 10.8.0.0)');
+		let lan = lan_of();
+		if (lan && substr(lan.net, 0, rindex(lan.net, '.')) == substr(a.net, 0, rindex(a.net, '.'))) die('the VPN network is the home network – choose another');
+		c.set('vpn', 'server', 'net', a.net);
+	}
+	if (a.host != null) {
+		if (a.host != '' && !match(a.host, /^[A-Za-z0-9]([A-Za-z0-9.-]{0,251}[A-Za-z0-9])?$/)) die('invalid address');
+		c.set('vpn', 'server', 'host', a.host);
+	}
+	if (a.lan != null) c.set('vpn', 'server', 'lan', a.lan ? '1' : '0');
+	if (a.enabled != null) c.set('vpn', 'server', 'enabled', a.enabled ? '1' : '0');
+	c.commit('vpn');
+	let st = srv_get();
+	if (st.enabled) srv_start(); else srv_stop();
+	if (!st.lan) writefile('/proc/sys/net/ipv4/ip_forward', '0');
+	out(srv_status());
+}
+
+function device_profile(cn) {
+	let st = srv_get(), host = st.host || lan_of()?.ip || '';
+	let host_name = trim(readfile('/proc/sys/kernel/hostname') ?? 'shareos');
+	let rd = (f) => trim(readfile(f) ?? '');
+	return join('\n', [
+		'# ShareOS VPN – ' + cn + ' (' + host_name + ')',
+		'client', 'dev tun', 'proto ' + (st.proto == 'tcp' ? 'tcp-client' : 'udp'),
+		'remote ' + host + ' ' + st.port, 'nobind', 'persist-key', 'persist-tun', 'resolv-retry infinite',
+		'verify-x509-name "ShareOS VPN ' + host_name + '" name', 'data-ciphers AES-256-GCM:AES-128-GCM:CHACHA20-POLY1305', 'verb 3',
+		'<ca>', rd(SRV + '/ca.crt'), '</ca>', '<cert>', rd(SRV + '/clients/' + cn + '.crt'), '</cert>',
+		'<key>', rd(SRV + '/clients/' + cn + '.key'), '</key>', '<tls-crypt>', rd(SRV + '/tc.key'), '</tls-crypt>', '' ]);
+}
+
+function cmd_device_add(cn) {
+	if (!match(cn ?? '', CN_RE)) die('invalid device name (letters, digits, - _ .)');
+	let c = cfg(), dup = false;
+	c.foreach('vpn', 'device', (x) => { if (lc(x.cn ?? '') == lc(cn)) dup = true; });
+	if (dup) die('a device with this name exists');
+	srv_pki();
+	let d = cert_dates();
+	let r = sh(sprintf('cd %s && %s type=ec ec_curve=secp256r1 format=pem filename=%s >/dev/null && %s subject_key=%s subject_name=%s issuer_crt=../ca.crt issuer_key=../ca.key not_before=%s not_after=%s key_usage=digital_signature,key_agreement ns_cert_type=ssl_client output_file=%s >/dev/null',
+		SRV + '/clients', mbed('gen_key'), shq(cn + '.key'), mbed('cert_write'), shq(cn + '.key'), shq('CN=' + cn + ',O=ShareOS'), d.from, d.to, shq(cn + '.crt')));
+	if (r.rc != 0) die('certificate could not be made: ' + trim(r.out));
+	sh('chmod 600 ' + shq(SRV + '/clients/' + cn + '.key'));
+	writefile(SRV + '/ccd/' + cn, '# allowed by ShareOS\n');
+	let s = 'd_' + replace(lc(cn), /[^a-z0-9]/g, '_');
+	c.set('vpn', s, 'device'); c.set('vpn', s, 'cn', cn); c.set('vpn', s, 'created', '' + time()); c.commit('vpn');
+	out({ ok: true, name: cn, profile: device_profile(cn) });
+}
+
+function cmd_device_profile(cn) {
+	if (!match(cn ?? '', CN_RE) || !stat(SRV + '/clients/' + cn + '.crt')) die('unknown device');
+	out({ name: cn, profile: device_profile(cn) });
+}
+
+function cmd_device_remove(cn) {
+	let c = cfg(), sec_ = null;
+	c.foreach('vpn', 'device', (x) => { if (x.cn == cn) sec_ = x['.name']; });
+	if (!sec_ || !match(cn, CN_RE)) die('unknown device');
+	unlink(SRV + '/ccd/' + cn);
+	if (srv_pid()) mgmt('kill ' + cn, SMGMT);
+	unlink(SRV + '/clients/' + cn + '.key'); unlink(SRV + '/clients/' + cn + '.crt');
+	c.delete('vpn', sec_); c.commit('vpn');
+	out(srv_status());
+}
+
+let arg = ARGV[1];
+switch (ARGV[0]) {
+case 'list': out({ profiles: profiles(), status: status() }); break;
+case 'import': cmd_import(arg); break;
+case 'set': cmd_set(arg); break;
+case 'remove': cmd_remove(arg); break;
+case 'connect': cmd_connect(arg); break;
+case 'disconnect': cmd_disconnect(false); break;
+case 'status': out(status()); break;
+case 'log': cmd_log(); break;
+case 'server-status': out(srv_status()); break;
+case 'server-set': cmd_server_set(); break;
+case 'server-log': { let t = readfile(SRUN + '/log') ?? ''; out({ log: length(t) > 16384 ? substr(t, length(t) - 16384) : t }); break; }
+case 'device-add': cmd_device_add(arg); break;
+case 'device-profile': cmd_device_profile(arg); break;
+case 'device-remove': cmd_device_remove(arg); break;
+case 'boot':
+	if (srv_get().enabled && stat(BIN)?.type == 'file') srv_start();
+	let p = filter(profiles(), (x) => x.autostart)[0];
+	if (p && stat(BIN)?.type == 'file') cmd_connect(p.name); else out({ started: false });
+	break;
+case 'stop-all':
+	srv_stop();
+	cmd_disconnect(false);
+	break;
+default:
+	print('usage: shareos-vpn list|status|log|disconnect|boot|stop-all | import|set|remove|connect <name>\n' +
+		'       shareos-vpn server-status|server-set|server-log | device-add|device-profile|device-remove <name>\n');
+	exit(1);
+}

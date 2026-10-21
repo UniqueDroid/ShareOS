@@ -1401,3 +1401,14 @@ E1091	.
 E1092	VÍDEOS
 E1093	IMAGENS
 P266	Servidor de mídia: $1
+E1094	INDICADORES DO CABEÇALHO
+E1095	Indicador no cabeçalho
+E1096	VPN da caixa (OpenVPN)
+E1097	conectando …
+E1098	No momento nenhum serviço nem app mostra algo.
+E1099	Serviços (VPN, torrents, servidor de mídia) e apps com a permissão “Indicador no cabeçalho” mostram aqui o seu estado; um clique abre o app.
+E1100	Pode conectar e desconectar a caixa como cliente VPN e gerenciar perfis VPN (OpenVPN) – isso afeta a rede de toda a caixa, por isso só para administradores.
+E1101	Pode mostrar um estado curto no topo da interface do ShareOS (p. ex. “conectado”) – só para o usuário que abriu o app; some sozinho após no máximo 10 minutos.
+E1102	SERVIDOR VPN
+E1103	1 dispositivo
+P267	$1 dispositivos

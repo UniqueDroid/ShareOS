@@ -1452,6 +1452,73 @@ function same_token(a, b) {
 	return d == 0;
 }
 
+/* ---------- VPN client (OpenVPN system app, shareos-vpn) and status chips ---------- */
+
+const VPN = '/usr/sbin/shareos-vpn';
+const APPSTATUS = '/tmp/shareos-appstatus';
+const CHIP_STATES = { ok: 1, warn: 1, err: 1, info: 1 };
+
+function vpn_tool(args, input) {
+	let cmd = VPN + ' ' + join(' ', map(args, shq));
+	if (input != null) {
+		let f = '/tmp/.shareos-vpn-in.' + substr(new_token(), 0, 12);
+		system('umask 077; : > ' + shq(f));
+		writefile(f, sprintf('%J', input));
+		cmd += ' < ' + shq(f);
+		let r = sh(cmd);
+		unlink(f);
+		let j = json(trim(r.out) || 'null');
+		return type(j) == 'object' ? j : { error: trim(r.out) || 'failed' };
+	}
+	let j = json(trim(sh(cmd).out) || 'null');
+	return type(j) == 'object' ? j : { error: 'failed' };
+}
+
+// grant of an app with the permission p (and "files"); vpn: admin accounts only
+function app_grant_perm(grant, p) {
+	let g = app_grant_user(grant);
+	if (!g || index(g.app.permissions ?? [], p) < 0) return null;
+	if (p == 'vpn' && acc_role(g.u) != 'admin') return null;
+	return g;
+}
+
+function pid_alive(file, name) {
+	let p = +trim(readfile(file) ?? '0');
+	return p > 1 && index(readfile('/proc/' + p + '/cmdline') ?? '', name) >= 0;
+}
+
+// the chips of an account: services of the firmware, then the apps
+function status_chips(u) {
+	let chips = [], admin = acc_role(u) == 'admin', apps = apps_for(u), ids = {};
+	for (let a in apps) ids[a.id] = a;
+	if (admin && stat('/opt/shareos/bin/openvpn') && pid_alive('/tmp/shareos-vpn/pid', 'openvpn')) {
+		let st = vpn_tool([ 'status' ]);
+		let ok = st.state == 'CONNECTED';
+		push(chips, { id: 'svc:vpn', label: 'VPN', detail: ok ? (st.ip ?? 'verbunden') : 'verbindet …', state: ok ? 'ok' : 'warn',
+			app: ids.nettunnel ? 'nettunnel' : null });
+	}
+	if (admin && stat('/opt/shareos/bin/openvpn') && pid_alive('/tmp/shareos-vpn-server/pid', 'openvpn')) {
+		let n = 0;
+		for (let l in split(readfile('/tmp/shareos-vpn-server/status') ?? '', '\n')) if (substr(l, 0, 12) == 'CLIENT_LIST,') n++;
+		push(chips, { id: 'svc:vpnserver', label: 'VPN-SERVER', detail: n == 1 ? '1 Gerät' : n + ' Geräte', state: 'ok',
+			app: ids.nettunnel ? 'nettunnel' : null });
+	}
+	if (stat('/tmp/shareos-transmission/' + u + '/pid') && pid_alive('/tmp/shareos-transmission/' + u + '/pid', 'transmission'))
+		push(chips, { id: 'svc:torrent', label: 'TORRENT', detail: 'läuft', state: 'ok', app: ids.transmission ? 'transmission' : null });
+	if (admin && pid_alive('/tmp/shareos-dlna/minidlna.pid', 'minidlna'))
+		push(chips, { id: 'svc:dlna', label: 'DLNA', detail: 'läuft', state: 'ok', href: '#/services/dlna' });
+	let now = time();
+	for (let f in lsdir(APPSTATUS + '/' + u) ?? []) {
+		let m = match(f, /^([a-z][a-z0-9-]{1,31})\.json$/), a = m ? ids[m[1]] : null;
+		if (!a || index(a.permissions ?? [], 'status') < 0) continue;
+		let x = json(readfile(APPSTATUS + '/' + u + '/' + f) ?? 'null');
+		if (type(x) != 'object' || +x.until < now) continue;
+		push(chips, { id: 'app:' + a.id, label: x.text, state: x.state, app: a.id, name: a.name });
+	}
+	return chips;
+}
+
+
 function widget_status() {
 	let up = split(read_trim('/proc/uptime') ?? '0', ' ');
 	let load = split(read_trim('/proc/loadavg') ?? '', ' ');
@@ -2705,6 +2772,78 @@ return {
 		}
 	},
 
+	// called only by /_shareos/cgi/vpn on the apps web server (as root, with
+	// the grant of an app with the permission "vpn"; admin accounts only)
+	'shareos.appvpn': {
+		list: { args: { grant: '' }, call: function(req) { return app_grant_perm(req.args.grant, 'vpn') ? vpn_tool([ 'list' ]) : { error: 'no access' }; } },
+		status: { args: { grant: '' }, call: function(req) { return app_grant_perm(req.args.grant, 'vpn') ? vpn_tool([ 'status' ]) : { error: 'no access' }; } },
+		log: { args: { grant: '' }, call: function(req) { return app_grant_perm(req.args.grant, 'vpn') ? vpn_tool([ 'log' ]) : { error: 'no access' }; } },
+		disconnect: { args: { grant: '' }, call: function(req) { return app_grant_perm(req.args.grant, 'vpn') ? vpn_tool([ 'disconnect' ]) : { error: 'no access' }; } },
+		import: {
+			args: { grant: '', name: '', text: '', user: '', pass: '', full: true },
+			call: function(req) {
+				let a = req.args;
+				if (!app_grant_perm(a.grant, 'vpn')) return { error: 'no access' };
+				return vpn_tool([ 'import', a.name ?? '' ], { text: a.text, user: a.user, pass: a.pass, full: a.full !== false });
+			}
+		},
+		set: {
+			args: { grant: '', name: '', autostart: false, full: true, user: '', pass: '' },
+			call: function(req) {
+				let a = req.args, i = {};
+				if (!app_grant_perm(a.grant, 'vpn')) return { error: 'no access' };
+				for (let k in [ 'autostart', 'full', 'user', 'pass' ]) if (a[k] != null) i[k] = a[k];
+				return vpn_tool([ 'set', a.name ?? '' ], i);
+			}
+		},
+		remove: { args: { grant: '', name: '' }, call: function(req) { return app_grant_perm(req.args.grant, 'vpn') ? vpn_tool([ 'remove', req.args.name ?? '' ]) : { error: 'no access' }; } },
+		connect: { args: { grant: '', name: '' }, call: function(req) { return app_grant_perm(req.args.grant, 'vpn') ? vpn_tool([ 'connect', req.args.name ?? '' ]) : { error: 'no access' }; } },
+		// server: devices connect to the box
+		server_status: { args: { grant: '' }, call: function(req) { return app_grant_perm(req.args.grant, 'vpn') ? vpn_tool([ 'server-status' ]) : { error: 'no access' }; } },
+		server_log: { args: { grant: '' }, call: function(req) { return app_grant_perm(req.args.grant, 'vpn') ? vpn_tool([ 'server-log' ]) : { error: 'no access' }; } },
+		server_set: {
+			args: { grant: '', enabled: false, port: 0, proto: '', net: '', host: '', lan: false },
+			call: function(req) {
+				let a = req.args, i = {};
+				if (!app_grant_perm(a.grant, 'vpn')) return { error: 'no access' };
+				for (let k in [ 'enabled', 'port', 'proto', 'net', 'host', 'lan' ]) if (a[k] != null) i[k] = a[k];
+				return vpn_tool([ 'server-set' ], i);
+			}
+		},
+		device_add: { args: { grant: '', name: '' }, call: function(req) { return app_grant_perm(req.args.grant, 'vpn') ? vpn_tool([ 'device-add', req.args.name ?? '' ]) : { error: 'no access' }; } },
+		device_profile: { args: { grant: '', name: '' }, call: function(req) { return app_grant_perm(req.args.grant, 'vpn') ? vpn_tool([ 'device-profile', req.args.name ?? '' ]) : { error: 'no access' }; } },
+		device_remove: { args: { grant: '', name: '' }, call: function(req) { return app_grant_perm(req.args.grant, 'vpn') ? vpn_tool([ 'device-remove', req.args.name ?? '' ]) : { error: 'no access' }; } }
+	},
+
+	// called only by /_shareos/cgi/status (apps with the permission "status")
+	'shareos.appstatus': {
+		set: {
+			args: { grant: '', text: '', state: '', ttl: 0 },
+			call: function(req) {
+				let g = app_grant_perm(req.args.grant, 'status'), a = req.args;
+				if (!g) return { error: 'no access' };
+				let text = trim('' + (a.text ?? ''));
+				if (text == '' || length(text) > 24 || match(text, /[[:cntrl:]<>]/)) return { error: 'invalid text (1–24 characters)' };
+				let st = a.state || 'info';
+				if (!CHIP_STATES[st]) return { error: 'invalid state (ok, warn, err, info)' };
+				let ttl = int(+(a.ttl || 300));
+				if (!(ttl >= 10 && ttl <= 600)) return { error: 'invalid ttl (10–600 seconds)' };
+				system('mkdir -p ' + APPSTATUS + ' && chmod 711 ' + APPSTATUS + ' && mkdir -p ' + shq(APPSTATUS + '/' + g.u));
+				writefile(APPSTATUS + '/' + g.u + '/' + g.app.id + '.json', sprintf('%J\n', { text, state: st, until: time() + ttl }));
+				return { ok: true, until: time() + ttl };
+			}
+		},
+		clear: {
+			args: { grant: '' },
+			call: function(req) {
+				let g = app_grant_perm(req.args.grant, 'status');
+				if (!g) return { error: 'no access' };
+				unlink(APPSTATUS + '/' + g.u + '/' + g.app.id + '.json');
+				return { ok: true };
+			}
+		}
+	},
+
 	'shareos.dlna': {
 		status: { call: function() { return dlna_status(); } },
 
@@ -2741,6 +2880,16 @@ return {
 				let r = sh(DLNA + ' rescan');
 				let m = match(r.out, /error: ([^\n]*)/);
 				return m ? { error: m[1] } : dlna_status();
+			}
+		}
+	},
+
+	// chips in the header of the interface: services and apps of the account
+	'shareos.status': {
+		chips: {
+			call: function(req) {
+				let u = session_user(req);
+				return u ? { chips: status_chips(u) } : { chips: [] };
 			}
 		}
 	},

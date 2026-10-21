@@ -1096,7 +1096,17 @@
 		"Noch keine Freigabe – unter": "अभी कोई शेयर नहीं – यहाँ बनाएँ:",
 		"anlegen.": ".",
 		"VIDEOS": "वीडियो",
-		"BILDER": "चित्र"
+		"BILDER": "चित्र",
+		"ANZEIGEN IM KOPF": "हेडर संकेतक",
+		"Anzeige im Kopf": "हेडर में संकेतक",
+		"VPN der Box (OpenVPN)": "बॉक्स का VPN (OpenVPN)",
+		"verbindet …": "कनेक्ट हो रहा है …",
+		"Gerade zeigt kein Dienst und keine App etwas an.": "अभी कोई सेवा या ऐप कुछ नहीं दिखा रहा।",
+		"Dienste (VPN, Torrents, Medienserver) und Apps mit der Berechtigung „Anzeige im Kopf“ zeigen hier ihren Zustand; ein Klick öffnet die App.": "सेवाएँ (VPN, टोरेंट, मीडिया सर्वर) और “हेडर में संकेतक” अनुमति वाले ऐप यहाँ अपनी स्थिति दिखाते हैं; क्लिक करने पर ऐप खुलता है।",
+		"Darf die Box als VPN-Client verbinden und trennen und VPN-Profile verwalten (OpenVPN) – das betrifft das Netzwerk der ganzen Box, deshalb nur für Administratoren.": "बॉक्स को VPN क्लाइंट के रूप में जोड़ और अलग कर सकता है और VPN प्रोफ़ाइल संभाल सकता है (OpenVPN) – इससे पूरे बॉक्स का नेटवर्क प्रभावित होता है, इसलिए केवल व्यवस्थापक।",
+		"Darf oben in der Kopfzeile der ShareOS-Oberfläche einen kurzen Zustand anzeigen (z. B. „verbunden“) – nur für den Benutzer, der die App geöffnet hat; er verschwindet nach höchstens 10 Minuten von selbst.": "ShareOS इंटरफ़ेस के ऊपर छोटी स्थिति दिखा सकता है (जैसे “जुड़ा”) – केवल उस उपयोगकर्ता को जिसने ऐप खोला; यह अधिकतम 10 मिनट में अपने-आप हट जाती है।",
+		"VPN-SERVER": "VPN सर्वर",
+		"1 Gerät": "1 डिवाइस"
 	},
 	"patterns": [
 		[
@@ -2166,6 +2176,10 @@
 		[
 			"^Medienserver: (.*)$",
 			"मीडिया सर्वर: $1"
+		],
+		[
+			"^(\\d+) Geräte$",
+			"$1 डिवाइस"
 		]
 	],
 	"words": [

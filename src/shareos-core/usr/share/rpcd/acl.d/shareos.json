@@ -101,6 +101,9 @@
 				"shareos.notify": [
 					"list",
 					"get"
+				],
+				"shareos.status": [
+					"chips"
 				]
 			},
 			"uci": [
@@ -293,6 +296,9 @@
 					"roots",
 					"list",
 					"openers"
+				],
+				"shareos.status": [
+					"chips"
 				]
 			}
 		},

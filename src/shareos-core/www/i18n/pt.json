@@ -1096,7 +1096,17 @@
 		"Noch keine Freigabe – unter": "Nenhum compartilhamento ainda – crie em",
 		"anlegen.": ".",
 		"VIDEOS": "VÍDEOS",
-		"BILDER": "IMAGENS"
+		"BILDER": "IMAGENS",
+		"ANZEIGEN IM KOPF": "INDICADORES DO CABEÇALHO",
+		"Anzeige im Kopf": "Indicador no cabeçalho",
+		"VPN der Box (OpenVPN)": "VPN da caixa (OpenVPN)",
+		"verbindet …": "conectando …",
+		"Gerade zeigt kein Dienst und keine App etwas an.": "No momento nenhum serviço nem app mostra algo.",
+		"Dienste (VPN, Torrents, Medienserver) und Apps mit der Berechtigung „Anzeige im Kopf“ zeigen hier ihren Zustand; ein Klick öffnet die App.": "Serviços (VPN, torrents, servidor de mídia) e apps com a permissão “Indicador no cabeçalho” mostram aqui o seu estado; um clique abre o app.",
+		"Darf die Box als VPN-Client verbinden und trennen und VPN-Profile verwalten (OpenVPN) – das betrifft das Netzwerk der ganzen Box, deshalb nur für Administratoren.": "Pode conectar e desconectar a caixa como cliente VPN e gerenciar perfis VPN (OpenVPN) – isso afeta a rede de toda a caixa, por isso só para administradores.",
+		"Darf oben in der Kopfzeile der ShareOS-Oberfläche einen kurzen Zustand anzeigen (z. B. „verbunden“) – nur für den Benutzer, der die App geöffnet hat; er verschwindet nach höchstens 10 Minuten von selbst.": "Pode mostrar um estado curto no topo da interface do ShareOS (p. ex. “conectado”) – só para o usuário que abriu o app; some sozinho após no máximo 10 minutos.",
+		"VPN-SERVER": "SERVIDOR VPN",
+		"1 Gerät": "1 dispositivo"
 	},
 	"patterns": [
 		[
@@ -2166,6 +2176,10 @@
 		[
 			"^Medienserver: (.*)$",
 			"Servidor de mídia: $1"
+		],
+		[
+			"^(\\d+) Geräte$",
+			"$1 dispositivos"
 		]
 	],
 	"words": [

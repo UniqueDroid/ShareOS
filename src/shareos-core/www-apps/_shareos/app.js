@@ -54,6 +54,26 @@
  *            action: 'remux'|'audio', format, bitrate, stream, start, duration })
  *                                  {id, output}; runs in the background
  *   .jobs()   .cancel(id)   .remove(id)
+ * ShareOS.vpn                 the box as an OpenVPN client, for apps with the
+ *                             permissions "files" and "vpn" – admin accounts
+ *                             only (ShareOS 0.2.0-beta.6+, null otherwise):
+ *   .list()                        {profiles: [{name, remote, autostart, full,
+ *                                  needs_auth, auth, removed}], status}
+ *   .status()                      {installed, running, profile, state
+ *                                  (CONNECTED …), ip, remote, since, bytes_in/out}
+ *   .importProfile(name, text, {user, pass, full})   {removed: [options]}
+ *   .set(name, {autostart, full, user, pass})   .remove(name)
+ *   .connect(name)   .disconnect()   .log()  {log}
+ *   .server.status()   .server.set({enabled, port, proto, net, host, lan})
+ *   .server.addDevice(name) {profile}   .server.profile(name)   .server.removeDevice(name)
+ *   .server.log()                  devices connecting to the box (own CA)
+ * ShareOS.status              a chip in the header of the ShareOS interface,
+ *                             for apps with the permissions "files" and
+ *                             "status" (ShareOS 0.2.0-beta.6+, null otherwise):
+ *   .set({ text, state: 'ok'|'warn'|'err'|'info', ttl })   text max. 24
+ *                                  characters; it goes after ttl seconds
+ *                                  (10–600, default 300) unless set again
+ *   .clear()
  *
  * Storage per account: the apps share one web origin, so ShareOS keeps the
  * browser storage of the accounts apart – localStorage and IndexedDB of an
@@ -345,6 +365,38 @@
 			.then(function (r) { return r.json().catch(function () { return { error: 'HTTP ' + r.status }; }); })
 			.then(function (j) { if (j.error) throw new Error(j.error); return j; });
 	}
+	/* other CGIs of the platform: same calling convention as media */
+	function cgiCall(cgi, op, args) {
+		var body = { op: op };
+		for (var k in (args || {})) if (k !== 'op') body[k] = args[k];
+		return fetch('/_shareos/cgi/' + cgi + '?g=' + grant, { method: 'POST', body: JSON.stringify(body), cache: 'no-store' })
+			.then(function (r) { return r.json().catch(function () { return { error: 'HTTP ' + r.status }; }); })
+			.then(function (j) { if (j.error) throw new Error(j.error); return j; });
+	}
+	/* the box as a VPN client (permissions "files" + "vpn", admins) */
+	var vpn = fs ? {
+		list: function () { return cgiCall('vpn', 'list'); },
+		status: function () { return cgiCall('vpn', 'status'); },
+		log: function () { return cgiCall('vpn', 'log'); },
+		importProfile: function (name, text, o) { o = o || {}; return cgiCall('vpn', 'import', { name: name, text: text, user: o.user, pass: o.pass, full: o.full !== false }); },
+		set: function (name, o) { var a = { name: name }; for (var k in (o || {})) a[k] = o[k]; return cgiCall('vpn', 'set', a); },
+		remove: function (name) { return cgiCall('vpn', 'remove', { name: name }); },
+		connect: function (name) { return cgiCall('vpn', 'connect', { name: name }); },
+		disconnect: function () { return cgiCall('vpn', 'disconnect'); },
+		server: {
+			status: function () { return cgiCall('vpn', 'server_status'); },
+			log: function () { return cgiCall('vpn', 'server_log'); },
+			set: function (o) { return cgiCall('vpn', 'server_set', o || {}); },
+			addDevice: function (name) { return cgiCall('vpn', 'device_add', { name: name }); },
+			profile: function (name) { return cgiCall('vpn', 'device_profile', { name: name }); },
+			removeDevice: function (name) { return cgiCall('vpn', 'device_remove', { name: name }); }
+		}
+	} : null;
+	/* a chip in the header of the ShareOS interface (permissions "files" + "status") */
+	var status = fs ? {
+		set: function (o) { o = o || {}; return cgiCall('status', 'set', { text: o.text, state: o.state || 'info', ttl: o.ttl || 300 }); },
+		clear: function () { return cgiCall('status', 'clear'); }
+	} : null;
 	var media = fs ? {
 		probe: function (root, path, name) { return mediaCall('probe', { root: root, path: path || '', name: name }); },
 		start: function (o) { return mediaCall('start', o || {}); },
@@ -433,6 +485,8 @@
 		fs: fs,
 		torrent: torrent,
 		media: media,
+		vpn: vpn,
+		status: status,
 		menu: menu,
 		on: function (type, fn) { (handlers[type] = handlers[type] || []).push(fn); },
 		emit: function (type, data) { if (chan) chan.postMessage({ type: type, data: data, from: appId }); },

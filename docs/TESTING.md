@@ -359,6 +359,29 @@ Needs a drive with a share with music (MP3/FLAC) and one with videos (MP4/MKV) a
 7. Switch it off → *Speichern*: TV/VLC no longer see the server (after a few minutes).
 8. Apps → Installed → minidlna → *Remove*: the server stops, the page shows the hint again.
 
+## 14l. VPN with NetTunnel (client and server) and header indicators (0.2.0-beta.6)
+
+Needs an OpenVPN profile (`.ovpn`, e.g. from the office router or a VPN provider) with embedded certificates, the file `openvpn-2.6.20.sapp` (release of the firmware) and NetTunnel (store or `nettunnel-1.0.0.sapp`).
+
+1. As **root**: Apps → Store → install NetTunnel (brings `openvpn` along). NetTunnel opens inside the interface.
+2. *Vom Computer …* → the `.ovpn`: keep the name; if the profile asks for a login, enter user name/password → *Einspielen*. If the profile had e.g. an `up` script, NetTunnel says "Entfernt: up".
+3. *Verbinden*: after a few seconds "VPN verbunden" with the tunnel address; in the header of the ShareOS interface the chip **VPN · 10.x.x.x**, a click opens NetTunnel.
+4. In the terminal: `ip addr show tun0`, `ip route` – with "Gesamten Verkehr der Box durch den Tunnel" two routes `0.0.0.0/1` and `128.0.0.0/1` via tun0; without, only the VPN networks. A computer in the VPN network answers `ping`.
+5. *Bearbeiten* → *Beim Start der Box verbinden* → restart the box: the connection comes up by itself after about half a minute.
+6. A profile with `ca /path/ca.crt` instead of `<ca>…</ca>`: "Das Profil verweist auf Dateien …". A server profile: refused.
+7. As a **user** (not admin): NetTunnel is not visible or says "nur für Administratoren".
+8. A user's Transmission runs → header chip **TORRENT · läuft** (admin: own service; user: in "My ShareOS"). System → Appearance → *Anzeigen im Kopf*: untick → the chip disappears (this browser only).
+9. Apps → Installed → openvpn → *Remove*: the connection ends, the chip goes.
+
+**Server mode** (reach home from anywhere; needs a phone with the app "OpenVPN Connect" and mobile data instead of Wi-Fi):
+
+10. Install openvpn again, NetTunnel → *Box als Server*. Address in the internet (DynDNS name of the router), port 1194, UDP, VPN network 10.8.0.0, *Server eingeschaltet* → *Speichern*: the first time takes a while (certificates), then "läuft"; header chip **VPN-SERVER · 0 Geräte**. VPN network = home network (e.g. 192.168.1.0): refused.
+11. Set up the port forwarding from the hint in the router (UDP 1194 → IP of the box).
+12. Name `handy-test` → *Gerät hinzufügen*: `ShareOS-handy-test.ovpn` is downloaded. Bring it to the phone (or *Auf der Box speichern* and fetch it from the share on the phone), import it in OpenVPN Connect, Wi-Fi off, connect.
+13. NetTunnel lists the device as "verbunden" with VPN address 10.8.0.2 and traffic; the chip shows **1 Gerät**. On the phone, browser `http://10.8.0.1` → the ShareOS interface.
+14. *Auch das Heimnetz erreichbar machen* + static route 10.8.0.0/24 → IP of the box in the router: the phone reaches the router (e.g. `http://192.168.1.1`).
+15. *Entfernen* the device: the connection on the phone drops and does not come back. Restart the box: the server runs again by itself.
+
 ## 15. Buttons
 
 - **Reset button** (pin hole at the back), hold and let go:

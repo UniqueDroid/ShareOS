@@ -58,6 +58,12 @@ define SHAREOS_CORE_INSTALL_TARGET_CMDS
 	$(INSTALL) -D -m 0755 $(@D)/usr/sbin/shareos-transmission $(TARGET_DIR)/usr/sbin/shareos-transmission
 	$(INSTALL) -D -m 0755 $(@D)/etc/init.d/S95transmission $(TARGET_DIR)/etc/init.d/S95transmission
 	$(INSTALL) -D -m 0755 $(@D)/usr/lib/shareos/apphooks/transmission-daemon $(TARGET_DIR)/usr/lib/shareos/apphooks/transmission-daemon
+	$(INSTALL) -D -m 0755 $(@D)/usr/sbin/shareos-vpn $(TARGET_DIR)/usr/sbin/shareos-vpn
+	$(INSTALL) -D -m 0755 $(@D)/etc/init.d/S94vpn $(TARGET_DIR)/etc/init.d/S94vpn
+	$(INSTALL) -D -m 0755 $(@D)/usr/lib/shareos/apphooks/openvpn $(TARGET_DIR)/usr/lib/shareos/apphooks/openvpn
+	$(INSTALL) -D -m 0644 $(@D)/etc/config/vpn $(TARGET_DIR)/etc/config/vpn
+	$(INSTALL) -D -m 0755 $(@D)/www-apps/_shareos/cgi/vpn $(TARGET_DIR)/www-apps/_shareos/cgi/vpn
+	$(INSTALL) -D -m 0755 $(@D)/www-apps/_shareos/cgi/status $(TARGET_DIR)/www-apps/_shareos/cgi/status
 	$(INSTALL) -D -m 0755 $(@D)/usr/sbin/shareos-dlna $(TARGET_DIR)/usr/sbin/shareos-dlna
 	$(INSTALL) -D -m 0755 $(@D)/etc/init.d/S96dlna $(TARGET_DIR)/etc/init.d/S96dlna
 	$(INSTALL) -D -m 0755 $(@D)/usr/lib/shareos/apphooks/minidlna $(TARGET_DIR)/usr/lib/shareos/apphooks/minidlna

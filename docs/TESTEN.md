@@ -363,6 +363,29 @@ Braucht ein Laufwerk mit einer Freigabe mit Musik (MP3/FLAC) und einer mit Video
 7. Ausschalten → *Speichern*: Fernseher/VLC sehen den Server nicht mehr (nach einigen Minuten).
 8. Apps → Installiert → minidlna → *Entfernen*: der Server hält an, die Seite zeigt wieder den Hinweis.
 
+## 14l. VPN mit NetTunnel (Client und Server) und Anzeigen im Kopf (0.2.0-beta.6)
+
+Braucht ein OpenVPN-Profil (`.ovpn`, z. B. vom Router im Büro oder von einem VPN-Anbieter) mit eingebetteten Zertifikaten, die Datei `openvpn-2.6.20.sapp` (Release der Firmware) und NetTunnel (Store oder `nettunnel-1.0.0.sapp`).
+
+1. Als **root**: Apps → Store → NetTunnel installieren (holt `openvpn` mit). NetTunnel öffnet sich in der Oberfläche.
+2. *Vom Computer …* → das `.ovpn`: Name übernehmen; fragt das Profil nach Anmeldung, Benutzername/Passwort eintragen → *Einspielen*. Stand im Profil z. B. ein `up`-Skript, meldet NetTunnel „Entfernt: up“.
+3. *Verbinden*: nach ein paar Sekunden „VPN verbunden“ mit Tunnel-Adresse; oben im Kopf der ShareOS-Oberfläche der Chip **VPN · 10.x.x.x**, ein Klick öffnet NetTunnel.
+4. Im Terminal: `ip addr show tun0`, `ip route` – mit „Gesamten Verkehr der Box durch den Tunnel“ zwei Routen `0.0.0.0/1` und `128.0.0.0/1` über tun0; ohne nur die Netze des VPN. Ein Rechner im VPN-Netz ist per `ping` erreichbar.
+5. *Bearbeiten* → *Beim Start der Box verbinden* → Box neu starten: die Verbindung steht nach etwa einer halben Minute von selbst.
+6. Ein Profil mit `ca /pfad/ca.crt` statt `<ca>…</ca>`: „Das Profil verweist auf Dateien …“. Ein Server-Profil: abgelehnt.
+7. Als **Benutzer** (kein Admin): NetTunnel ist nicht sichtbar bzw. meldet „nur für Administratoren“.
+8. Transmission eines Benutzers läuft → im Kopf **TORRENT · läuft** (Admin: der eigene Dienst; Benutzer: in „Mein ShareOS“). System → Darstellung → *Anzeigen im Kopf*: Häkchen weg → der Chip verschwindet (nur in diesem Browser).
+9. Apps → Installiert → openvpn → *Entfernen*: die Verbindung endet, der Chip geht.
+
+**Server-Modus** (von unterwegs ins Heimnetz; braucht ein Handy mit der App „OpenVPN Connect“ und mobile Daten statt WLAN):
+
+10. openvpn wieder installieren, NetTunnel → *Box als Server*. Adresse im Internet (DynDNS-Name des Routers), Port 1194, UDP, VPN-Netz 10.8.0.0, *Server eingeschaltet* → *Speichern*: beim ersten Mal dauert es etwas (Zertifikate), dann „läuft“; im Kopf **VPN-SERVER · 0 Geräte**. VPN-Netz = Heimnetz (z. B. 192.168.1.0): abgelehnt.
+11. Im Router die Portfreigabe aus dem Hinweis einrichten (UDP 1194 → IP der Box).
+12. Name `handy-test` → *Gerät hinzufügen*: `ShareOS-handy-test.ovpn` wird heruntergeladen. Aufs Handy bringen (oder *Auf der Box speichern* und am Handy aus der Freigabe holen), in OpenVPN Connect importieren, WLAN aus, verbinden.
+13. In NetTunnel steht das Gerät als „verbunden“ mit VPN-Adresse 10.8.0.2 und Datenmenge; der Chip zeigt **1 Gerät**. Am Handy im Browser `http://10.8.0.1` → die ShareOS-Oberfläche.
+14. *Auch das Heimnetz erreichbar machen* + im Router die statische Route 10.8.0.0/24 → IP der Box: am Handy ist der Router (z. B. `http://192.168.1.1`) erreichbar.
+15. Gerät *Entfernen*: die Verbindung am Handy bricht ab und kommt nicht wieder. Box neu starten: der Server läuft wieder von selbst.
+
 ## 15. Tasten
 
 - **Reset-Taste** (Loch hinten), gedrückt halten und loslassen:

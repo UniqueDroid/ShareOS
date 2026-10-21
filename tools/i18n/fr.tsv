@@ -1401,3 +1401,14 @@ E1091	.
 E1092	VIDÉOS
 E1093	IMAGES
 P266	Serveur multimédia : $1
+E1094	INDICATEURS DE L’EN-TÊTE
+E1095	Indicateur dans l’en-tête
+E1096	VPN de la box (OpenVPN)
+E1097	connexion …
+E1098	Aucun service ni aucune app n'affiche quoi que ce soit pour le moment.
+E1099	Les services (VPN, torrents, serveur multimédia) et les apps disposant de l'autorisation « Indicateur dans l’en-tête » y affichent leur état ; un clic ouvre l'app.
+E1100	Peut connecter et déconnecter la box en tant que client VPN et gérer les profils VPN (OpenVPN) – cela concerne le réseau de toute la box, donc réservé aux administrateurs.
+E1101	Peut afficher un court état en haut de l'interface ShareOS (p. ex. « connecté ») – uniquement pour l'utilisateur qui a ouvert l'app ; il disparaît de lui-même au bout de 10 minutes au plus.
+E1102	SERVEUR VPN
+E1103	1 appareil
+P267	$1 appareils
