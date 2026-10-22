@@ -1,6 +1,6 @@
 {
-	"id": "tailscale",
-	"name": "Tailscale",
+	"id": "tailscaled",
+	"name": "Tailscaled",
 	"version": "1.98.8",
 	"publisher": "UniqueDroid",
 	"description": {
