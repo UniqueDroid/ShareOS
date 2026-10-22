@@ -1422,3 +1422,10 @@ E1109	inicio de sesión necesario
 E1110	desconectado
 E1111	Acceso remoto (Tailscale)
 E1112	Puede conectar la caja con Tailscale, iniciar y cerrar sesión y ver los dispositivos de la tailnet; afecta a la red de toda la caja, por eso solo para administradores.
+E1113	En la página
+E1114	Ventana propia
+E1115	Ahora se abre en la página.
+E1116	Ahora se abre en su propia ventana.
+E1117	Esta app no existe (ya).
+P269	Visualización de $1
+P270	Visualización: $1

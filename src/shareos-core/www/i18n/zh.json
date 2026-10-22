@@ -1115,7 +1115,12 @@
 		"Anmeldung nötig": "需要登录",
 		"getrennt": "已断开",
 		"Fernzugriff (Tailscale)": "远程访问（Tailscale）",
-		"Darf die Box mit Tailscale verbinden, an- und abmelden und die Geräte des Tailnets sehen – das betrifft das Netzwerk der ganzen Box, deshalb nur für Administratoren.": "可将设备连接到 Tailscale、登录和退出并查看 tailnet 中的设备——这会影响整台设备的网络，因此仅限管理员。"
+		"Darf die Box mit Tailscale verbinden, an- und abmelden und die Geräte des Tailnets sehen – das betrifft das Netzwerk der ganzen Box, deshalb nur für Administratoren.": "可将设备连接到 Tailscale、登录和退出并查看 tailnet 中的设备——这会影响整台设备的网络，因此仅限管理员。",
+		"In der Seite": "在页面中",
+		"Eigenes Fenster": "独立窗口",
+		"Öffnet sich jetzt in der Seite.": "现在在页面中打开。",
+		"Öffnet sich jetzt in einem eigenen Fenster.": "现在在独立窗口中打开。",
+		"Diese App gibt es nicht (mehr).": "此应用不存在（或已删除）。"
 	},
 	"patterns": [
 		[
@@ -2193,6 +2198,14 @@
 		[
 			"^(.+) \\(nur lesen\\)$",
 			"$1（只读）"
+		],
+		[
+			"^Anzeige von (.+)$",
+			"$1 的显示方式"
+		],
+		[
+			"^Anzeige: (.+)$",
+			"显示：$1"
 		]
 	],
 	"words": [

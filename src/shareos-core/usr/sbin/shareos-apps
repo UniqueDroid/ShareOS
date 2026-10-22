@@ -337,7 +337,7 @@ function installed() {
 			opens: opens_of(a), commands: base == SYS ? (a.commands ?? []) : [], requires: a.requires ?? [],
 			verified: c.get('apps', s, 'verified') == '1', source: c.get('apps', s, 'source') ?? '',
 			installed: +(c.get('apps', s, 'installed') ?? 0),
-			users: type(users) == 'array' ? users : (users ? [ users ] : []) });
+			users: type(users) == 'array' ? users : (users ? [ users ] : []), display: c.get('apps', s, 'display') ?? null });
 	}
 	return list;
 }

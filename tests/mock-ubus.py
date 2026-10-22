@@ -318,7 +318,8 @@ def apps_call(method, args):
         APPS['installed'].pop(args['id'], None)
         return {'ok': True}
     if method == 'set':
-        APPS['installed'][args['id']]['users'] = args['users']
+        if 'users' in args: APPS['installed'][args['id']]['users'] = args['users']
+        if 'display' in args: APPS['installed'][args['id']]['display'] = args['display']
         return {'ok': True}
     if method == 'job_set':
         for j in APPS['installed'][args['id']]['jobs']:

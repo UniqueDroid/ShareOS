@@ -1115,7 +1115,12 @@
 		"Anmeldung nötig": "нужен вход",
 		"getrennt": "отключено",
 		"Fernzugriff (Tailscale)": "Удалённый доступ (Tailscale)",
-		"Darf die Box mit Tailscale verbinden, an- und abmelden und die Geräte des Tailnets sehen – das betrifft das Netzwerk der ganzen Box, deshalb nur für Administratoren.": "Может подключать устройство к Tailscale, входить и выходить и видеть устройства tailnet — это затрагивает сеть всего устройства, поэтому только для администраторов."
+		"Darf die Box mit Tailscale verbinden, an- und abmelden und die Geräte des Tailnets sehen – das betrifft das Netzwerk der ganzen Box, deshalb nur für Administratoren.": "Может подключать устройство к Tailscale, входить и выходить и видеть устройства tailnet — это затрагивает сеть всего устройства, поэтому только для администраторов.",
+		"In der Seite": "На странице",
+		"Eigenes Fenster": "Отдельное окно",
+		"Öffnet sich jetzt in der Seite.": "Теперь открывается на странице.",
+		"Öffnet sich jetzt in einem eigenen Fenster.": "Теперь открывается в отдельном окне.",
+		"Diese App gibt es nicht (mehr).": "Этого приложения нет (больше нет)."
 	},
 	"patterns": [
 		[
@@ -2193,6 +2198,14 @@
 		[
 			"^(.+) \\(nur lesen\\)$",
 			"$1 (только чтение)"
+		],
+		[
+			"^Anzeige von (.+)$",
+			"Отображение: $1"
+		],
+		[
+			"^Anzeige: (.+)$",
+			"Отображение: $1"
 		]
 	],
 	"words": [
