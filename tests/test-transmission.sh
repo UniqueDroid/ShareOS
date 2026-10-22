@@ -105,6 +105,13 @@ check "RPC only on a Unix socket (no TCP port 9091)" "[ -S $R/tmp/shareos-transm
 MAG='magnet:?xt=urn:btih:0123456789abcdef0123456789abcdef01234567&dn=ShareOS-Test'
 o=$(tr $GA "{\"method\":\"torrent-add\",\"arguments\":{\"filename\":\"$MAG\",\"paused\":true}}")
 check "anna adds a magnet link" "echo '$o' | js \"d['result']=='success' and d['arguments'].get('torrent-added',{}).get('name')=='ShareOS-Test'\""
+SID=fedcba9876543210fedcba9876543210; mkdir -p $R/tmp/shareos-sessions; echo anna > $R/tmp/shareos-sessions/$SID
+chips() { run "ubus call shareos.status chips '{\"ubus_rpc_session\":\"$SID\"}'"; }
+check "header chip: daemon running, torrent paused – no chip" "chips | js \"not any(c['id']=='svc:torrent' for c in d['chips'])\""
+tr $GA '{"method":"torrent-start","arguments":{"ids":[1]}}' >/dev/null; sleep 2
+check "header chip: a torrent downloads – TORRENT ↓ 1" "chips | js \"[c['detail'] for c in d['chips'] if c['id']=='svc:torrent']==['↓ 1']\""
+tr $GA '{"method":"torrent-stop","arguments":{"ids":[1]}}' >/dev/null; sleep 1
+check "header chip: stopped again – gone" "chips | js \"not any(c['id']=='svc:torrent' for c in d['chips'])\""
 o=$(tr $GA '{"method":"torrent-get","arguments":{"fields":["id","name","downloadDir"]}}')
 check "anna sees it, folder as home/Downloads" "echo '$o' | js \"[(t['name'],t['downloadDir']) for t in d['arguments']['torrents']]==[('ShareOS-Test','home/Downloads')]\""
 o=$(tr $GB '{"method":"torrent-get","arguments":{"fields":["id","name"]}}')

@@ -463,7 +463,7 @@ def call(obj, method, args):
         return {'started': True}
     if obj == 'shareos.status':
         return {'chips': [{'id': 'svc:vpn', 'label': 'VPN', 'detail': '10.8.0.6', 'state': 'ok', 'app': 'nettunnel'},
-                          {'id': 'svc:torrent', 'label': 'TORRENT', 'detail': 'läuft', 'state': 'ok', 'app': 'transmission'},
+                          {'id': 'svc:torrent', 'label': 'TORRENT', 'detail': '↓ 2 ↑ 1', 'state': 'ok', 'app': 'transmission'},
                           {'id': 'app:webpad', 'label': '2 ungespeichert', 'state': 'warn', 'app': 'webpad', 'name': 'Webpad'}]}
     if obj == 'shareos.dlna':
         d = STATE.setdefault('dlna', {'installed': True, 'enabled': True, 'running': True, 'scanning': False, 'audio': 4218, 'video': 312, 'image': 15873,

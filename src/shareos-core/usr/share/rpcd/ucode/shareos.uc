@@ -1543,6 +1543,32 @@ function pid_alive(file, name) {
 	return p > 1 && index(readfile('/proc/' + p + '/cmdline') ?? '', name) >= 0;
 }
 
+// what the account's Transmission daemon is doing: torrents downloading,
+// torrents seeding that upload right now (over its Unix socket, like
+// /_shareos/cgi/transmission; the CSRF token of Transmission is shared with it)
+function torrent_activity(u) {
+	let dir = '/tmp/shareos-transmission/' + u, tokf = dir + '/token';
+	let body = '{"method":"torrent-get","arguments":{"fields":["status","rateUpload"]}}';
+	let call = () => {
+		let r = sh(sprintf("curl -s -m 3 -D - --unix-socket %s -H %s -H 'Content-Type: application/json' --data-binary %s http://localhost/transmission/rpc",
+			shq(dir + '/rpc.sock'), shq('X-Transmission-Session-Id: ' + trim(readfile(tokf) ?? '')), shq(body)));
+		let i = index(r.out, '\r\n\r\n');
+		if (i < 0) return null;
+		let head = substr(r.out, 0, i);
+		return { code: +(match(head, /^HTTP\/[0-9.]+ ([0-9]{3})/)?.[1] ?? 0), token: match(head, /\nX-Transmission-Session-Id: *([^\r\n]+)/i)?.[1], body: substr(r.out, i + 4) };
+	};
+	let r = call();
+	if (r && r.code == 409 && r.token) { writefile(tokf, r.token); r = call(); }
+	if (!r || r.code != 200) return null;
+	let j = json(r.body);
+	let down = 0, up = 0;
+	for (let x in j?.arguments?.torrents ?? []) {
+		if (x.status == 4) down++;                              // downloading
+		else if (x.status == 6 && x.rateUpload > 0) up++;      // seeding, and someone loads from it
+	}
+	return { down, up };
+}
+
 // the chips of an account: services of the firmware, then the apps
 function status_chips(u) {
 	let chips = [], admin = acc_role(u) == 'admin', apps = apps_for(u), ids = {};
@@ -1565,8 +1591,13 @@ function status_chips(u) {
 		push(chips, { id: 'svc:tailscale', label: 'TAILSCALE', detail: m ? m[1] : 'getrennt',
 			state: m ? 'ok' : 'warn', app: ids.tailscale ? 'tailscale' : null });
 	}
-	if (stat('/tmp/shareos-transmission/' + u + '/pid') && pid_alive('/tmp/shareos-transmission/' + u + '/pid', 'transmission'))
-		push(chips, { id: 'svc:torrent', label: 'TORRENT', detail: 'läuft', state: 'ok', app: ids.transmission ? 'transmission' : null });
+	if (stat('/tmp/shareos-transmission/' + u + '/pid') && pid_alive('/tmp/shareos-transmission/' + u + '/pid', 'transmission')) {
+		// only while something really moves: torrents downloading, or seeding with upload
+		let t = torrent_activity(u);
+		if (t && (t.down || t.up))
+			push(chips, { id: 'svc:torrent', label: 'TORRENT', detail: join(' ', [ ...(t.down ? [ '↓ ' + t.down ] : []), ...(t.up ? [ '↑ ' + t.up ] : []) ]),
+				state: 'ok', app: ids.transmission ? 'transmission' : null });
+	}
 	if (admin && pid_alive('/tmp/shareos-dlna/minidlna.pid', 'minidlna'))
 		push(chips, { id: 'svc:dlna', label: 'DLNA', detail: 'läuft', state: 'ok', href: '#/services/dlna' });
 	let now = time();
