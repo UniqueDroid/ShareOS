@@ -149,6 +149,17 @@ direkt auf der Box nachgesehen, warum der Webserver nicht lief.
 | 16:30 | Statt rsnapshot baut Claude **Snapshots** direkt in ShareOS (rsync mit Hardlinks wie rsnapshot, ohne OpenSSL) und den **Medienserver** (MiniDLNA als System-App, Einstellungen unter Dienste). |
 | 18:26 | Ein Tailscale-PR von außen (ShareOS-Apps #16) zeigt nur Demo-Daten, weil es auf der Box kein Tailscale gibt. Jan und Claude antworten: Die System-App und eine Schnittstelle in der Firmware kommen von ShareOS. |
 | 19:37 | #37–#40 sind gemergt, alles für `v0.2.0-beta.6` steht auf `main`. |
+| 20:01 | Jan: ShareCommander zeigt einem Benutzer nur Beispieldateien wie `/etc/hosts`. Ursache: Benutzer bekamen nur ihren persönlichen Ordner, und auch das nur mit dem Haken „Dateien“. Jetzt sehen sie ihre Freigaben nach Rechten; Jans Frage „Ist das mit dem User-Konzept sicher?“ führt zu ACLs: Linux selbst setzt die Freigabe-Rechte für jedes Programm durch. ShareCommander 1.3 startet auf der Box. |
+| 20:44 | Jan: Transmission läuft nur für Admins. Ursache: System-Apps aus der Weboberfläche landeten in einem Ordner, den nur root lesen kann (rpcd arbeitet mit umask 077); im Test nachgestellt und behoben. WinWeb Player 1.2 merkt sich Einstellungen und Playlist und spielt ganze Ordner der Box. |
+| 21:12 | Jan: „Was ist mit Tailscale?“ (ein PR von außen zeigte nur Demo-Daten). Claude baut Tailscale für ARMv5: 1.98.8 (die neueste Version, die mit dem Go von buildroot geht), ohne alles, was ein NAS nicht braucht – 17 statt 33 MB; im Emulator läuft der Dienst mit etwa 50 MB RAM. |
+| 21:52 | Jans Box hat noch 27,9 MB im Flash frei. Jan: „Auslagern, symbolische Links anlegen – bei großen Apps.“ System-Apps über 2 MB kommen aufs Laufwerk, `/opt/shareos/sysapps/<id>` ist ein Link dorthin. Dazu Berechtigung `tailscale`, `ShareOS.tailscale` und die Anzeige im Kopf. |
+| 22:59 | Jan veröffentlicht `v0.2.0-beta.6`. |
+
+### Donnerstag, 22.10.2026
+
+| Zeit | Was passiert ist |
+|---|---|
+| 08:27 | Jan merged NetTunnel, ShareCommander 1.3, WinWeb Player 1.2 und Tailscale; der Store zeigt die neuen Apps. Alles für `v0.2.0-beta.7` steht auf `main`. |
 
 ## Bemerkenswerte Problemlösungen
 

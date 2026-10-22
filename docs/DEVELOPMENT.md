@@ -148,6 +148,17 @@ the box for why the web server was not running.
 | 16:30 | Instead of rsnapshot Claude builds **snapshots** right into ShareOS (rsync with hard links like rsnapshot, without OpenSSL) and the **media server** (MiniDLNA as a system app, settings under Services). |
 | 18:26 | An outside Tailscale PR (ShareOS-Apps #16) only shows demo data, because there is no Tailscale on the box. Jan and Claude reply: the system app and an API in the firmware will come from ShareOS. |
 | 19:37 | #37–#40 are merged, everything for `v0.2.0-beta.6` is on `main`. |
+| 20:01 | Jan: ShareCommander shows a user only example files like `/etc/hosts`. Cause: users only got their personal folder, and only with "Dateien" ticked. Now they see their shares by rights; Jan's question "is that safe with the user concept?" leads to ACLs: Linux itself enforces the share rights for every program. ShareCommander 1.3 starts on the box. |
+| 20:44 | Jan: Transmission only runs for admins. Cause: system apps installed from the web interface landed in a folder only root can read (rpcd works with umask 077); reproduced in the test and fixed. WinWeb Player 1.2 keeps its settings and playlist and plays whole folders of the box. |
+| 21:12 | Jan: "What about Tailscale?" (an outside PR only showed demo data). Claude builds Tailscale for ARMv5: 1.98.8 (the newest that builds with buildroot's Go), without what a NAS does not need – 17 instead of 33 MB; in the emulator the daemon runs with about 50 MB RAM. |
+| 21:52 | Jan's box has 27.9 MB free on the flash. Jan: "Move them out, create symbolic links – for large apps." System apps over 2 MB go to the drive, `/opt/shareos/sysapps/<id>` is a link there. Plus the permission `tailscale`, `ShareOS.tailscale` and the header chip. |
+| 22:59 | Jan publishes `v0.2.0-beta.6`. |
+
+### Thursday, 22.10.2026
+
+| Time | What happened |
+|---|---|
+| 08:27 | Jan merges NetTunnel, ShareCommander 1.3, WinWeb Player 1.2 and Tailscale; the store shows the new apps. Everything for `v0.2.0-beta.7` is on `main`. |
 
 ## Notable problems solved
 
