@@ -1441,7 +1441,7 @@ function me_info(u) {
 	info.cloud = area_on('cloud') && me_cloud_allowed(u);
 	info.files = u != 'root' && role != 'admin' && files_allowed(u);
 	info.apps = role == 'admin' || !area_on('apps') ? [] : map(apps_for(u), (a) => ({ id: a.id, name: a.name, entry: a.entry, icon: a.icon, icon_data: a.icon_data, description: a.description,
-		permissions: a.permissions ?? [], window: a.window }));
+		permissions: a.permissions ?? [], window: a.window, display: a.display }));
 	info.apps_server = apps_server();
 	info.ui = u == 'root' ? null : { theme: c.get('accounts', u, 'theme') ?? null, accent: c.get('accounts', u, 'accent') ?? null };
 	info.paperless = area_on('paperless') && !!c.get('paperless', 'global', 'url') && c.get('paperless', 'global', 'enabled') != '0' && !!home;
@@ -3539,18 +3539,25 @@ return {
 		},
 
 		set: {
-			// users: '*' (everyone with web access), user names, '@group'
-			args: { id: '', users: [] },
+			// users: '*' (everyone with web access), user names, '@group';
+			// display: 'page' (in the ShareOS page, apps with "embed") or 'window'
+			args: { id: '', users: [], display: '' },
 			call: function(req) {
 				let a = req.args, c = cursor(), s = 'app_' + replace(a.id ?? '', '-', '_');
 				if (!match(a.id ?? '', /^[a-z][a-z0-9-]{1,31}$/) || c.get('apps', s) != 'app') return { error: 'unknown app' };
-				if (type(a.users) != 'array') return { error: 'invalid users' };
-				for (let x in a.users) {
-					if (x == '*') continue;
-					if (substr(x, 0, 1) == '@' ? c.get('accounts', substr(x, 1)) != 'group' : c.get('accounts', x) != 'user') return { error: 'unknown user or group: ' + x };
+				if (a.display != null) {
+					if (!(a.display in { page: 1, window: 1 })) return { error: 'invalid display' };
+					c.set('apps', s, 'display', a.display);
 				}
-				c.delete('apps', s, 'users');
-				if (length(a.users)) c.set('apps', s, 'users', a.users);
+				if (a.users != null) {
+					if (type(a.users) != 'array') return { error: 'invalid users' };
+					for (let x in a.users) {
+						if (x == '*') continue;
+						if (substr(x, 0, 1) == '@' ? c.get('accounts', substr(x, 1)) != 'group' : c.get('accounts', x) != 'user') return { error: 'unknown user or group: ' + x };
+					}
+					c.delete('apps', s, 'users');
+					if (length(a.users)) c.set('apps', s, 'users', a.users);
+				}
 				c.commit('apps');
 				return { ok: true };
 			}

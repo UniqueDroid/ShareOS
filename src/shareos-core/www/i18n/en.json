@@ -1115,7 +1115,12 @@
 		"Anmeldung nötig": "sign-in needed",
 		"getrennt": "disconnected",
 		"Fernzugriff (Tailscale)": "Remote access (Tailscale)",
-		"Darf die Box mit Tailscale verbinden, an- und abmelden und die Geräte des Tailnets sehen – das betrifft das Netzwerk der ganzen Box, deshalb nur für Administratoren.": "May connect the box with Tailscale, sign in and out and see the devices of the tailnet – this affects the network of the whole box, so admins only."
+		"Darf die Box mit Tailscale verbinden, an- und abmelden und die Geräte des Tailnets sehen – das betrifft das Netzwerk der ganzen Box, deshalb nur für Administratoren.": "May connect the box with Tailscale, sign in and out and see the devices of the tailnet – this affects the network of the whole box, so admins only.",
+		"In der Seite": "In the page",
+		"Eigenes Fenster": "Own window",
+		"Öffnet sich jetzt in der Seite.": "Now opens in the page.",
+		"Öffnet sich jetzt in einem eigenen Fenster.": "Now opens in its own window.",
+		"Diese App gibt es nicht (mehr).": "This app does not exist (any more)."
 	},
 	"patterns": [
 		[
@@ -2193,6 +2198,14 @@
 		[
 			"^(.+) \\(nur lesen\\)$",
 			"$1 (read only)"
+		],
+		[
+			"^Anzeige von (.+)$",
+			"Display of $1"
+		],
+		[
+			"^Anzeige: (.+)$",
+			"Display: $1"
 		]
 	],
 	"words": [

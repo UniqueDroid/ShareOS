@@ -1115,7 +1115,12 @@
 		"Anmeldung nötig": "inicio de sesión necesario",
 		"getrennt": "desconectado",
 		"Fernzugriff (Tailscale)": "Acceso remoto (Tailscale)",
-		"Darf die Box mit Tailscale verbinden, an- und abmelden und die Geräte des Tailnets sehen – das betrifft das Netzwerk der ganzen Box, deshalb nur für Administratoren.": "Puede conectar la caja con Tailscale, iniciar y cerrar sesión y ver los dispositivos de la tailnet; afecta a la red de toda la caja, por eso solo para administradores."
+		"Darf die Box mit Tailscale verbinden, an- und abmelden und die Geräte des Tailnets sehen – das betrifft das Netzwerk der ganzen Box, deshalb nur für Administratoren.": "Puede conectar la caja con Tailscale, iniciar y cerrar sesión y ver los dispositivos de la tailnet; afecta a la red de toda la caja, por eso solo para administradores.",
+		"In der Seite": "En la página",
+		"Eigenes Fenster": "Ventana propia",
+		"Öffnet sich jetzt in der Seite.": "Ahora se abre en la página.",
+		"Öffnet sich jetzt in einem eigenen Fenster.": "Ahora se abre en su propia ventana.",
+		"Diese App gibt es nicht (mehr).": "Esta app no existe (ya)."
 	},
 	"patterns": [
 		[
@@ -2193,6 +2198,14 @@
 		[
 			"^(.+) \\(nur lesen\\)$",
 			"$1 (solo lectura)"
+		],
+		[
+			"^Anzeige von (.+)$",
+			"Visualización de $1"
+		],
+		[
+			"^Anzeige: (.+)$",
+			"Visualización: $1"
 		]
 	],
 	"words": [

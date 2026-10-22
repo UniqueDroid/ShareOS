@@ -354,7 +354,7 @@ async function logout() {
 	S.sid = null;
 	store.del('sid');
 	stopPolling();
-	S.me = null; S.fb = null; S.fbApps = null; closeEmbed();
+	S.me = null; S.fb = null; S.fbApps = null; S.appPage = null;
 	applyOwnLook();
 	renderLogin();
 }
@@ -557,16 +557,21 @@ function parseRoute() {
 	if (S.route.tab === 'services' && !SVC_SUBS.some((x) => x[0] === S.route.sub)) S.route.sub = 'status';
 	if (S.route.tab === 'shares' && !SHR_SUBS.some((x) => x[0] === S.route.sub)) S.route.sub = 'shares';
 	if (S.route.tab === 'storage' && !STO_SUBS.some((x) => x[0] === S.route.sub)) S.route.sub = 'volumes';
-	if (S.route.tab === 'apps' && !APP_SUBS.some((x) => x[0] === S.route.sub)) S.route.sub = 'installed';
+	if (S.route.tab === 'apps' && S.route.sub === 'run') S.route.app = routeParts()[2] || '';
+	else if (S.route.tab === 'apps' && !APP_SUBS.some((x) => x[0] === S.route.sub)) S.route.sub = 'installed';
+	if (!(S.route.tab === 'apps' && S.route.sub === 'run')) S.appPage = null;
 }
 
 function renderMain() {
 	const main = $('#main');
 	if (!main) return;
 	if (S.fr) { main.innerHTML = firstRunView().s; firstRunAfter(); return; }
+	// an app shown in the page keeps running: no new render of the same app
+	if (S.route.tab === 'apps' && S.route.sub === 'run' && $('#appframe')?.dataset.id === S.route.app) return;
 	const v = VIEWS[S.route.tab] || VIEWS.overview;
 	main.innerHTML = v().s;
 	VIEWS_AFTER[S.route.tab]?.();
+	appFrameLoad();
 }
 
 /* ---------- views ----------------------------------------------------------- */
@@ -1490,8 +1495,10 @@ function userTabs() {
 }
 
 function parseUserRoute() {
-	const t = routeParts()[0];
-	S.utab = userTabs().some((x) => x[0] === t) ? t : 'me';
+	const [t, id] = routeParts();
+	S.utab = t === 'app' && id ? 'app' : userTabs().some((x) => x[0] === t) ? t : 'me';
+	S.uapp = S.utab === 'app' ? id : null;
+	if (S.utab !== 'app') S.appPage = null;
 }
 
 function renderUserTabs() {
@@ -1581,6 +1588,12 @@ function renderUserMain() {
 	const main = $('#main');
 	if (!main) return;
 	if (S.utab === 'files' && S.me?.files) { main.innerHTML = filesView().s; return; }
+	if (S.utab === 'app') {
+		if ($('#appframe')?.dataset.id === S.uapp) return;
+		main.innerHTML = appPageView(findApp(S.uapp), '#/me').s;
+		appFrameLoad();
+		return;
+	}
 	if (S.utab === 'appearance') {
 		main.innerHTML = userLookView().s;
 		$('#opt-utheme').addEventListener('change', (e) => {
@@ -1631,9 +1644,9 @@ function renderUserHome() {
 	</section>
 	${(m.apps || []).length ? html`<section class="sec">
 		<h2 class="gh">MEINE APPS <span>${m.apps.length}</span></h2>
-		<div class="grid">${m.apps.map((a) => html`<a class="card applink" href="${appLaunchUrl(a, m.apps_server)}" target="_blank" rel="noopener" data-act="app-launch" data-id="${a.id}">
+		<div class="grid">${m.apps.map((a) => html`<a class="card applink" href="${appMode(a) === 'page' ? '#/app/' + a.id : appLaunchUrl(a, m.apps_server)}" data-act="app-launch" data-id="${a.id}">
 			<div class="icon">${appIcon(a, m.apps_server)}</div>
-			<div class="info"><div class="name">${a.name} ↗</div><div class="desc">${txtOf(a.description)}</div></div></a>`)}</div>
+			<div class="info"><div class="name">${a.name}${appMode(a) === 'page' ? '' : ' ↗'}</div><div class="desc">${txtOf(a.description)}</div></div></a>`)}</div>
 	</section>` : ''}
 	${m.paperless ? myPaperless() : ''}
 	${m.cloud ? cloudSection('me') : ''}`.s;
@@ -3880,7 +3893,13 @@ Object.assign(ACTIONS, {
 		const a = findApp(el.dataset.app);
 		if (a) launchApp(a); else location.hash = S.me && S.me.role !== 'admin' ? '#/me' : '#/apps/installed';
 	},
-	'embed-close'() { closeEmbed(); },
+	// the app of the page in a window of its own: the page goes back to the list
+	'app-window'(el) {
+		const a = findApp(el.dataset.id);
+		if (!a) return;
+		openAppWindow(a);
+		location.hash = isUser() ? '#/me' : '#/apps/installed';
+	},
 	async 'fb-mkdir'() {
 		const name = await promptDlg('Neuer Ordner', 'Name des neuen Ordners:', '', 'Anlegen', 'text', 255);
 		if (!name) return;
@@ -3902,6 +3921,18 @@ Object.assign(ACTIONS, {
 		try { await rpc('shareos.files', 'delete', { root: S.fb.root, path: S.fb.path, names }); toast('Gelöscht.'); fbLoad(); }
 		catch (e) { toast('Löschen: ' + e.message, true); }
 	}
+});
+
+// how an app opens: in the page or in a window of its own (for everyone on this box)
+document.addEventListener('change', async (e) => {
+	const t = e.target;
+	if (!t.classList?.contains('app-display')) return;
+	try {
+		await rpc('shareos.apps', 'set', { id: t.dataset.id, display: t.value });
+		const a = findApp(t.dataset.id); if (a) a.display = t.value;
+		toast(t.value === 'page' ? 'Öffnet sich jetzt in der Seite.' : 'Öffnet sich jetzt in einem eigenen Fenster.');
+		renderMain();
+	} catch (err) { toast('Anzeige: ' + err.message, true); }
 });
 
 document.addEventListener('change', (e) => {
@@ -3951,7 +3982,11 @@ function appParams(extra = {}) {
 }
 const appLaunchUrl = (a, srv, extra) => `${appUrl(a, srv)}?${appParams(extra)}`;
 const appWins = new Set();
-const winFeatures = (a) => (a.window ? `popup,width=${a.window.width || 900},height=${a.window.height || 640}` : '');
+// every web app opens as a window of its own (not a tab): the size of its manifest or 1000 × 700
+const winFeatures = (a) => `popup,width=${a.window?.width || 1000},height=${a.window?.height || 700}`;
+// "page": shown in the ShareOS page (apps with the permission "embed", unless the admin chose
+// "eigenes Fenster" for it); "window": a window of its own
+const appMode = (a) => ((a?.permissions || []).includes('embed') && a.display !== 'window' ? 'page' : 'window');
 const findApp = (id) => (S.apps?.installed?.apps || []).find((x) => x.id === id) || (S.me?.apps || []).find((x) => x.id === id)
 	|| (S.fbApps?.apps || []).find((x) => x.id === id);
 const appSrv = () => S.apps?.installed || S.me?.apps_server || S.fbApps;
@@ -3968,10 +4003,13 @@ async function appGrant(a) {
 	catch (e) { if (e.message !== 'not allowed') toast('Dateizugriff: ' + e.message, true); return null; }
 }
 
-// apps with the permission "embed" are shown inside ShareOS, the others get their own window
+// apps shown in the page get their own address in this interface, the others a window
 function launchApp(a) {
-	if ((a.permissions || []).includes('embed')) { embedApp(a); return; }
-	const name = a.window ? 'sosapp-' + a.id : '_blank';
+	if (appMode(a) === 'page') { location.hash = isUser() ? '#/app/' + a.id : '#/apps/run/' + a.id; return; }
+	openAppWindow(a);
+}
+function openAppWindow(a) {
+	const name = 'sosapp-' + a.id;
 	if (!(a.permissions || []).includes('files')) {
 		const w = window.open(appLaunchUrl(a, appSrv()), name, winFeatures(a));
 		if (w) appWins.add(w);
@@ -3985,26 +4023,34 @@ function launchApp(a) {
 	});
 }
 
-async function embedApp(a) {
-	closeEmbed();
+// an app in the page: its name instead of the section title, the app below it
+function appPageView(a, back) {
+	if (!a) return html`<section class="sec"><div class="panel"><div class="empty">${S.apps?.installed || S.me ? html`${svg(I.warn)}<span>Diese App gibt es nicht (mehr). <a href="${back}">Zurück</a></span>`
+		: html`<div class="spin" style="margin:0"></div><span>Lade …</span>`}</div></div></section>`;
+	return html`<section class="sec apppage-sec"><h2 class="gh apph">${appIcon(a, appSrv())}<span class="an">${a.name}</span>
+		<button class="btn sm ghost" type="button" data-act="app-window" data-id="${a.id}">In eigenem Fenster ↗</button>
+		<a class="btn sm ghost" href="${back}" aria-label="Schließen">✕</a></h2>
+		<div class="apppage"><iframe id="appframe" data-id="${a.id}" title="${a.name}" src="${S.appPage?.id === a.id ? S.appPage.url : 'about:blank'}"
+			sandbox="allow-scripts allow-forms allow-same-origin allow-popups allow-downloads allow-modals"></iframe></div></section>`;
+}
+// the address of the app in the page (with its grant for the user's folders)
+async function appFrameLoad() {
+	const f = $('#appframe');
+	if (!f || (S.appPage?.id === f.dataset.id && f.getAttribute('src') !== 'about:blank')) return;
+	const a = findApp(f.dataset.id);
+	if (!a) return;
 	const g = await appGrant(a);
 	const url = appLaunchUrl(a, appSrv(), g ? { fs: g } : {});
-	const box = document.createElement('div');
-	box.className = 'embedwrap';
-	box.innerHTML = html`<div class="embedbox panel" role="dialog" aria-label="${a.name}"><div class="ph"><span class="pt">${a.name}</span>
-		<span class="ml"></span><a class="btn sm ghost" href="${url}" target="_blank" rel="noopener">In eigenem Fenster ↗</a>
-		<button class="btn sm ghost" type="button" data-act="embed-close" aria-label="Schließen">✕</button></div>
-		<iframe src="${url}" title="${a.name}" sandbox="allow-scripts allow-forms allow-same-origin allow-popups allow-downloads allow-modals"></iframe></div>`.s;
-	$('#app').append(box);
-	S.embed = box;
+	S.appPage = { id: a.id, url };
+	const now = $('#appframe');
+	if (now && now.dataset.id === a.id) now.src = url;
 }
-function closeEmbed() { S.embed?.remove(); S.embed = null; }
 
 // tell open app windows and embedded apps about a new look
 function themeToApps() {
 	const msg = { sos: 'theme', theme: effTheme(), accent: S.accent }, origin = appBase(appSrv());
 	for (const w of appWins) { if (w.closed) appWins.delete(w); else try { w.postMessage(msg, origin); } catch (e) { } }
-	try { $('.embedwrap iframe')?.contentWindow?.postMessage(msg, origin); } catch (e) { }
+	try { $('#appframe')?.contentWindow?.postMessage(msg, origin); } catch (e) { }
 }
 
 // messages from apps: a file was saved -> refresh the file list
@@ -4069,6 +4115,7 @@ function appsView() {
 	const nav = html`<nav class="subtabs" aria-label="Apps">${APP_SUBS.map(([id, label]) => html`<a class="st${sub === id ? ' on' : ''}" href="#/apps/${id}">${label}</a>`)}</nav>`;
 	if (!A?.installed) return html`${nav}<div class="panel"><div class="empty"><div class="spin" style="margin:0"></div><span>Lade …</span></div></div>`;
 	const job = A.job && JOB_TXT[A.job.state] ? html`<div class="banner" style="border-color:var(--dim)"><div class="spin" style="margin:0;width:20px;height:20px"></div><span><b>${A.job.id}</b> ${JOB_TXT[A.job.state]} …</span></div>` : '';
+	if (sub === 'run') return html`${nav}${appPageView(findApp(S.route.app), '#/apps/installed')}`;
 	return html`${nav}${job}${sub === 'store' ? appStore() : sub === 'sources' ? appSources() : appInstalled()}`;
 }
 
@@ -4111,7 +4158,9 @@ function appActions(a, upd) {
 	const busy = !!(S.apps.job && JOB_TXT[S.apps.job.state]);
 	const sys = a.type === 'system';
 	return html`${sys ? html`<a class="btn sm" href="#/system/terminal">${svg(I.term)}Terminal</a>`
-		: html`<button class="btn sm" type="button" data-act="app-launch" data-id="${a.id}">${(a.permissions || []).includes('embed') ? 'Öffnen' : 'Öffnen ↗'}</button>`}
+		: html`<button class="btn sm" type="button" data-act="app-launch" data-id="${a.id}">${appMode(a) === 'page' ? 'Öffnen' : 'Öffnen ↗'}</button>`}
+		${!sys && (a.permissions || []).includes('embed') ? html`<select class="btn sm ghost app-display" data-id="${a.id}" aria-label="Anzeige von ${a.name}">
+			<option value="page"${a.display !== 'window' ? raw(' selected') : ''}>In der Seite</option><option value="window"${a.display === 'window' ? raw(' selected') : ''}>Eigenes Fenster</option></select>` : ''}
 		${upd ? html`<button class="btn sm primary" type="button" data-act="app-install" data-id="${a.id}" data-v="${upd.latest}" ${busy ? 'disabled' : ''}>${svg(I.dl)}Aktualisieren</button>` : ''}
 		${(a.jobs || []).length ? html`<button class="btn sm ghost" type="button" data-act="app-jobs" data-id="${a.id}">${svg(I.clock)}Aufgaben</button>` : ''}
 		${sys ? '' : html`<button class="btn sm ghost" type="button" data-act="app-users" data-id="${a.id}">${svg(I.users)}Benutzer</button>`}

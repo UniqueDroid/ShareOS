@@ -1115,7 +1115,12 @@
 		"Anmeldung nötig": "সাইন-ইন প্রয়োজন",
 		"getrennt": "সংযোগ বিচ্ছিন্ন",
 		"Fernzugriff (Tailscale)": "রিমোট অ্যাক্সেস (Tailscale)",
-		"Darf die Box mit Tailscale verbinden, an- und abmelden und die Geräte des Tailnets sehen – das betrifft das Netzwerk der ganzen Box, deshalb nur für Administratoren.": "বক্সকে Tailscale-এ যুক্ত করতে, সাইন ইন/আউট করতে এবং tailnet-এর ডিভাইস দেখতে পারে – এটি পুরো বক্সের নেটওয়ার্ককে প্রভাবিত করে, তাই শুধু প্রশাসকদের জন্য।"
+		"Darf die Box mit Tailscale verbinden, an- und abmelden und die Geräte des Tailnets sehen – das betrifft das Netzwerk der ganzen Box, deshalb nur für Administratoren.": "বক্সকে Tailscale-এ যুক্ত করতে, সাইন ইন/আউট করতে এবং tailnet-এর ডিভাইস দেখতে পারে – এটি পুরো বক্সের নেটওয়ার্ককে প্রভাবিত করে, তাই শুধু প্রশাসকদের জন্য।",
+		"In der Seite": "পেজের ভেতরে",
+		"Eigenes Fenster": "আলাদা উইন্ডো",
+		"Öffnet sich jetzt in der Seite.": "এখন পেজের ভেতরে খোলে।",
+		"Öffnet sich jetzt in einem eigenen Fenster.": "এখন নিজস্ব উইন্ডোতে খোলে।",
+		"Diese App gibt es nicht (mehr).": "এই অ্যাপটি নেই (আর নেই)।"
 	},
 	"patterns": [
 		[
@@ -2193,6 +2198,14 @@
 		[
 			"^(.+) \\(nur lesen\\)$",
 			"$1 (শুধু পড়া)"
+		],
+		[
+			"^Anzeige von (.+)$",
+			"$1-এর প্রদর্শন"
+		],
+		[
+			"^Anzeige: (.+)$",
+			"প্রদর্শন: $1"
 		]
 	],
 	"words": [

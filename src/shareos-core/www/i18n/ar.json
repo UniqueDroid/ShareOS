@@ -1115,7 +1115,12 @@
 		"Anmeldung nötig": "يلزم تسجيل الدخول",
 		"getrennt": "غير متصل",
 		"Fernzugriff (Tailscale)": "الوصول عن بُعد (Tailscale)",
-		"Darf die Box mit Tailscale verbinden, an- und abmelden und die Geräte des Tailnets sehen – das betrifft das Netzwerk der ganzen Box, deshalb nur für Administratoren.": "يمكنه ربط الجهاز بـ Tailscale وتسجيل الدخول والخروج ورؤية أجهزة الـ tailnet – يؤثر ذلك على شبكة الجهاز بأكمله، لذا للمسؤولين فقط."
+		"Darf die Box mit Tailscale verbinden, an- und abmelden und die Geräte des Tailnets sehen – das betrifft das Netzwerk der ganzen Box, deshalb nur für Administratoren.": "يمكنه ربط الجهاز بـ Tailscale وتسجيل الدخول والخروج ورؤية أجهزة الـ tailnet – يؤثر ذلك على شبكة الجهاز بأكمله، لذا للمسؤولين فقط.",
+		"In der Seite": "داخل الصفحة",
+		"Eigenes Fenster": "نافذة مستقلة",
+		"Öffnet sich jetzt in der Seite.": "تُفتح الآن داخل الصفحة.",
+		"Öffnet sich jetzt in einem eigenen Fenster.": "تُفتح الآن في نافذة مستقلة.",
+		"Diese App gibt es nicht (mehr).": "هذا التطبيق غير موجود (بعد الآن)."
 	},
 	"patterns": [
 		[
@@ -2193,6 +2198,14 @@
 		[
 			"^(.+) \\(nur lesen\\)$",
 			"$1 (للقراءة فقط)"
+		],
+		[
+			"^Anzeige von (.+)$",
+			"عرض $1"
+		],
+		[
+			"^Anzeige: (.+)$",
+			"العرض: $1"
 		]
 	],
 	"words": [

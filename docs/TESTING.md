@@ -408,6 +408,15 @@ Needs a Tailscale account (free), a phone or computer with Tailscale, the file `
 7. In the app *Trennen*: the chip shows "getrennt"; *Abmelden*: the box leaves the tailnet (Tailscale admin console).
 8. Apps → Installed → tailscale → *Remove*: the service stops, the folder on the drive is gone.
 
+## 14o. Apps in the page (0.2.0-beta.7)
+
+1. Apps → Installed → NetTunnel → *Öffnen*: instead of "INSTALLIERTE APPS" the top says "NETTUNNEL", the app below in the full width; the address is `#/apps/run/nettunnel`. No box over the page.
+2. Wait a few seconds (the interface refreshes): NetTunnel stays as it is (no reload).
+3. *In eigenem Fenster ↗*: NetTunnel opens in a window of its own (without tabs and address bar), the page goes back to the list.
+4. Set NetTunnel to *Eigenes Fenster*: *Öffnen* now opens a window. Back to *In der Seite*.
+5. Webpad (without `embed`) → *Öffnen ↗*: a window of its own, not a new tab.
+6. As a user in "My ShareOS": an app with `embed` opens in the page (`#/app/<id>`), ✕ goes back.
+
 ## 15. Buttons
 
 - **Reset button** (pin hole at the back), hold and let go:

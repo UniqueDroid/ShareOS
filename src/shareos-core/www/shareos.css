@@ -273,11 +273,16 @@ a.card.applink{text-decoration:none;color:inherit}
 a.card.applink:hover{border-color:var(--dim);box-shadow:var(--glow)}
 
 /* app shown inside ShareOS (permission "embed") */
-.embedwrap{position:fixed;inset:0;z-index:60;display:grid;place-items:center;padding:24px;background:rgba(0,0,0,.55)}
-.embedbox{width:min(1200px,100%);height:min(860px,100%);display:flex;flex-direction:column;padding:0;overflow:hidden}
-.embedbox .ph{padding:10px 14px;margin:0;border-bottom:1px solid var(--line);gap:8px}
-.embedbox iframe{flex:1;width:100%;border:0;background:var(--bg)}
-@media (max-width:640px){.embedwrap{padding:0}.embedbox{border-radius:0}}
+/* an app shown in the page: its name as the title, the app below in the full width */
+.gh.apph{align-items:center;gap:10px}
+.gh.apph .appicon{width:20px;height:20px;flex:none}
+.gh.apph .an{color:var(--soft);font-weight:600;letter-spacing:.14em;text-transform:uppercase}
+.gh.apph::after{order:1}
+.gh.apph .btn{order:2;flex:none}
+.apppage{height:calc(100vh - 220px);min-height:440px;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--bg)}
+.apppage iframe{display:block;width:100%;height:100%;border:0;background:var(--bg)}
+select.app-display{min-height:28px;padding:0 8px}
+@media (max-width:640px){.apppage{height:calc(100vh - 170px);border-radius:0;margin:0 -16px}}
 
 /* messages */
 .chip.err,.sos a.chip.err{color:var(--red);border-color:color-mix(in srgb,var(--red) 45%,transparent)}
