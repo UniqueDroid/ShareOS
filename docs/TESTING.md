@@ -370,7 +370,7 @@ Needs an OpenVPN profile (`.ovpn`, e.g. from the office router or a VPN provider
 5. *Bearbeiten* → *Beim Start der Box verbinden* → restart the box: the connection comes up by itself after about half a minute.
 6. A profile with `ca /path/ca.crt` instead of `<ca>…</ca>`: "Das Profil verweist auf Dateien …". A server profile: refused.
 7. As a **user** (not admin): NetTunnel is not visible or says "nur für Administratoren".
-8. A user's Transmission runs → header chip **TORRENT · läuft** (admin: own service; user: in "My ShareOS"). System → Appearance → *Anzeigen im Kopf*: untick → the chip disappears (this browser only).
+8. A user's Transmission downloads something → header chip **TORRENT · ↓ 1** (from 0.2.0-beta.7 only while something is downloaded or uploaded; paused: no chip) (admin: own service; user: in "My ShareOS"). System → Appearance → *Anzeigen im Kopf*: untick → the chip disappears (this browser only).
 9. Apps → Installed → openvpn → *Remove*: the connection ends, the chip goes.
 
 **Server mode** (reach home from anywhere; needs a phone with the app "OpenVPN Connect" and mobile data instead of Wi-Fi):

@@ -374,7 +374,7 @@ Braucht ein OpenVPN-Profil (`.ovpn`, z. B. vom Router im Büro oder von einem VP
 5. *Bearbeiten* → *Beim Start der Box verbinden* → Box neu starten: die Verbindung steht nach etwa einer halben Minute von selbst.
 6. Ein Profil mit `ca /pfad/ca.crt` statt `<ca>…</ca>`: „Das Profil verweist auf Dateien …“. Ein Server-Profil: abgelehnt.
 7. Als **Benutzer** (kein Admin): NetTunnel ist nicht sichtbar bzw. meldet „nur für Administratoren“.
-8. Transmission eines Benutzers läuft → im Kopf **TORRENT · läuft** (Admin: der eigene Dienst; Benutzer: in „Mein ShareOS“). System → Darstellung → *Anzeigen im Kopf*: Häkchen weg → der Chip verschwindet (nur in diesem Browser).
+8. Transmission eines Benutzers lädt etwas herunter → im Kopf **TORRENT · ↓ 1** (ab 0.2.0-beta.7 nur, solange etwas geladen oder hochgeladen wird; pausiert: kein Chip) (Admin: der eigene Dienst; Benutzer: in „Mein ShareOS“). System → Darstellung → *Anzeigen im Kopf*: Häkchen weg → der Chip verschwindet (nur in diesem Browser).
 9. Apps → Installiert → openvpn → *Entfernen*: die Verbindung endet, der Chip geht.
 
 **Server-Modus** (von unterwegs ins Heimnetz; braucht ein Handy mit der App „OpenVPN Connect“ und mobile Daten statt WLAN):
