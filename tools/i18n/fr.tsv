@@ -1417,3 +1417,8 @@ E1105	Fichiers : dossier personnel et partages (selon les droits) dans le naviga
 P268	$1 (lecture seule)
 E1106	 (lecture seule)
 E1107	(lecture seule)
+E1108	TAILSCALE
+E1109	connexion requise
+E1110	déconnecté
+E1111	Accès à distance (Tailscale)
+E1112	Peut connecter la box avec Tailscale, se connecter et se déconnecter et voir les appareils du tailnet – cela concerne le réseau de toute la box, donc réservé aux administrateurs.

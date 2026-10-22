@@ -1110,7 +1110,12 @@
 		"Weder ein persönlicher Ordner noch eine Freigabe für dich.": "没有为你提供的个人文件夹或共享。",
 		"Dateien: persönlicher Ordner und Freigaben (nach Rechten) im Dateibrowser und in Apps": "文件：文件浏览器和应用中的个人文件夹和共享（按权限）",
 		" (nur lesen)": "（只读）",
-		"(nur lesen)": "（只读）"
+		"(nur lesen)": "（只读）",
+		"TAILSCALE": "TAILSCALE",
+		"Anmeldung nötig": "需要登录",
+		"getrennt": "已断开",
+		"Fernzugriff (Tailscale)": "远程访问（Tailscale）",
+		"Darf die Box mit Tailscale verbinden, an- und abmelden und die Geräte des Tailnets sehen – das betrifft das Netzwerk der ganzen Box, deshalb nur für Administratoren.": "可将设备连接到 Tailscale、登录和退出并查看 tailnet 中的设备——这会影响整台设备的网络，因此仅限管理员。"
 	},
 	"patterns": [
 		[

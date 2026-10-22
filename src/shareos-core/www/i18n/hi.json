@@ -1110,7 +1110,12 @@
 		"Weder ein persönlicher Ordner noch eine Freigabe für dich.": "आपके लिए न कोई निजी फ़ोल्डर है, न कोई शेयर।",
 		"Dateien: persönlicher Ordner und Freigaben (nach Rechten) im Dateibrowser und in Apps": "फ़ाइलें: फ़ाइल ब्राउज़र और ऐप्स में निजी फ़ोल्डर और शेयर (अधिकारों के अनुसार)",
 		" (nur lesen)": " (केवल पढ़ने के लिए)",
-		"(nur lesen)": "(केवल पढ़ने के लिए)"
+		"(nur lesen)": "(केवल पढ़ने के लिए)",
+		"TAILSCALE": "TAILSCALE",
+		"Anmeldung nötig": "साइन-इन आवश्यक",
+		"getrennt": "डिस्कनेक्ट",
+		"Fernzugriff (Tailscale)": "रिमोट एक्सेस (Tailscale)",
+		"Darf die Box mit Tailscale verbinden, an- und abmelden und die Geräte des Tailnets sehen – das betrifft das Netzwerk der ganzen Box, deshalb nur für Administratoren.": "बॉक्स को Tailscale से जोड़ सकता है, साइन इन/आउट कर सकता है और tailnet के डिवाइस देख सकता है – इससे पूरे बॉक्स का नेटवर्क प्रभावित होता है, इसलिए केवल व्यवस्थापकों के लिए।"
 	},
 	"patterns": [
 		[

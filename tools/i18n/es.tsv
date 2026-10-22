@@ -1417,3 +1417,8 @@ E1105	Archivos: carpeta personal y carpetas compartidas (según permisos) en el 
 P268	$1 (solo lectura)
 E1106	 (solo lectura)
 E1107	(solo lectura)
+E1108	TAILSCALE
+E1109	inicio de sesión necesario
+E1110	desconectado
+E1111	Acceso remoto (Tailscale)
+E1112	Puede conectar la caja con Tailscale, iniciar y cerrar sesión y ver los dispositivos de la tailnet; afecta a la red de toda la caja, por eso solo para administradores.

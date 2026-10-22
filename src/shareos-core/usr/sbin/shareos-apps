@@ -69,7 +69,7 @@
 //
 'use strict';
 
-import { readfile, writefile, mkdir, stat, lstat, lsdir, unlink, rename, popen } from 'fs';
+import { readfile, writefile, mkdir, stat, lstat, lsdir, unlink, rename, popen, readlink } from 'fs';
 import { cursor } from 'uci';
 
 const ROOT = getenv('SHAREOS_ROOT') ?? '';
@@ -86,7 +86,7 @@ const MAX_PKG = 64 * 1048576;       // download / upload
 const MAX_FILES = 40 * 1048576;     // unpacked
 const ID_RE = /^[a-z][a-z0-9-]{1,31}$/;
 const JOB_RE = /^[a-z][a-z0-9-]{0,23}$/;
-const PERMISSIONS = { cron: 1, embed: 1, files: 1, torrent: 1, media: 1, vpn: 1, status: 1 };
+const PERMISSIONS = { cron: 1, embed: 1, files: 1, torrent: 1, media: 1, vpn: 1, status: 1, tailscale: 1 };
 const MAX_JOBS = 5;
 const MAX_REQUIRES = 5;
 const MAX_LOG = 65536;
@@ -171,6 +171,24 @@ function cron_ok(s) {
 
 function app_user(id) { return 'app-' + substr(id, 0, 28); }
 
+// large system apps (Tailscale …) live on the apps drive, /opt/shareos/sysapps/<id>
+// is a link there – the flash (about 40 MB for settings and system apps) stays
+// free; small ones (nano, bash …) stay on the flash and work without a drive
+const BIG_SYSAPP = 2 * 1048576;     // services (FFmpeg, Transmission, MiniDLNA, OpenVPN, Tailscale) – they work on the drive anyway
+function disk_sys() {
+	let area = conf().c.get('storage', 'global', 'apps');
+	if (!area || index(readfile('/proc/mounts') ?? '', ' /mnt/' + area + ' ') < 0 && !getenv('SHAREOS_ROOT')) return null;
+	if (stat(ROOT + '/mnt/' + area + '/.shareos')?.type != 'directory') return null;
+	return ROOT + '/mnt/' + area + '/.shareos/sysapps';
+}
+function du_bytes(dir) { return 1024 * +(match(capture('du -sk ' + shq(dir)).out, /^([0-9]+)/)?.[1] ?? 0); }
+// the folder a link in /opt/shareos/sysapps points to (only inside an apps area)
+function sys_target(link) {
+	if (lstat(link)?.type != 'link') return null;
+	let t = readlink(link);
+	return t && match(t, /^\/mnt\/[^\/]+\/\.shareos\/sysapps\/[a-z0-9-]+$/) ? ROOT + t : null;
+}
+
 function data_dir(id) {
 	let c = conf().c, area = c.get('storage', 'global', 'apps');
 	if (area && stat(ROOT + '/mnt/' + area + '/.shareos')?.type == 'directory')
@@ -229,6 +247,8 @@ function check_jobs(a, dir) {
 	// "vpn": the box as a VPN client (admins only, checked when used); "status": a chip in the header
 	if (index(perms, 'vpn') >= 0 && index(perms, 'files') < 0) return 'the permission "vpn" needs "files"';
 	if (index(perms, 'status') >= 0 && index(perms, 'files') < 0) return 'the permission "status" needs "files"';
+	// "tailscale": remote access with Tailscale (admins only, checked when used)
+	if (index(perms, 'tailscale') >= 0 && index(perms, 'files') < 0) return 'the permission "tailscale" needs "files"';
 	if (a.jobs == null) return null;
 	if (type(a.jobs) != 'array' || length(a.jobs) > MAX_JOBS) return 'invalid jobs (at most ' + MAX_JOBS + ')';
 	if (length(a.jobs) && index(perms, 'cron') < 0) return 'jobs need the permission "cron"';
@@ -504,7 +524,10 @@ function install_file(file, verified, source) {
 	let err = check_tar(file);
 	if (err) return { error: err };
 	mkdir(APPS);
-	let tmp = APPS + '/.new-' + time();
+	// unpacked on the apps drive when there is one (a large system app never touches the flash)
+	let ds = disk_sys();
+	if (ds) capture(sprintf('mkdir -p %s && chmod 755 %s', shq(ds), shq(ds)));
+	let tmp = (ds ?? APPS) + '/.new-' + time();
 	capture('rm -rf ' + shq(tmp));
 	mkdir(tmp);
 	let r = capture(sprintf('gunzip -c %s | tar -xf - -C %s', shq(file), shq(tmp)));
@@ -514,11 +537,21 @@ function install_file(file, verified, source) {
 	capture(sprintf('chown -R 0:0 %s; chmod -R u=rwX,go=rX %s', shq(tmp), shq(tmp)));
 	let sys = (a.type ?? 'webapp') == 'system';
 	let base = sys ? SYS : APPS, dst = base + '/' + a.id;
+	let on_disk = null;
 	if (sys) {
-		// unpacked on the flash next to the web apps, then moved to /opt
 		opt_dirs();
 		capture(sprintf('chmod 755 %s/bin/* %s/lib/* 2>/dev/null', shq(tmp), shq(tmp)));
-		let t2 = SYS + '/.new-' + time();
+		// large: stays on the apps drive (a link in /opt), small: to /opt on the flash
+		on_disk = ds && du_bytes(tmp) > BIG_SYSAPP ? ds : null;
+		if (!on_disk) {
+			let t2 = SYS + '/.new-' + time();
+			let r2 = capture(sprintf('rm -rf %s; mv %s %s', shq(t2), shq(tmp), shq(t2)));
+			if (r2.rc != 0) { capture('rm -rf ' + shq(tmp) + ' ' + shq(t2)); return { error: 'installing failed: ' + trim(r2.out) }; }
+			tmp = t2;
+		}
+	} else if (ds) {
+		// web apps live on the flash
+		let t2 = APPS + '/.new-' + time();
 		let r2 = capture(sprintf('rm -rf %s; mv %s %s', shq(t2), shq(tmp), shq(t2)));
 		if (r2.rc != 0) { capture('rm -rf ' + shq(tmp) + ' ' + shq(t2)); return { error: 'installing failed: ' + trim(r2.out) }; }
 		tmp = t2;
@@ -526,8 +559,19 @@ function install_file(file, verified, source) {
 	// an app that changed its type: the old one goes
 	let other = (sys ? APPS : SYS) + '/' + a.id;
 	if (stat(other)) { capture('rm -rf ' + shq(other)); if (!sys) drop_starters(a.id); }
-	capture(sprintf('rm -rf %s.old; [ -d %s ] && mv %s %s.old; mv %s %s && rm -rf %s.old',
-		shq(dst), shq(dst), shq(dst), shq(dst), shq(tmp), shq(dst), shq(dst)));
+	let old_target = sys ? sys_target(dst) : null;
+	if (on_disk) {
+		// the new version beside the old one on the drive, then the link in /opt
+		let ddst = on_disk + '/' + a.id;
+		capture(sprintf('rm -rf %s.old; [ -d %s ] && mv %s %s.old; mv %s %s && rm -rf %s && ln -s %s %s && rm -rf %s.old',
+			shq(ddst), shq(ddst), shq(ddst), shq(ddst), shq(tmp), shq(ddst), shq(dst), shq(substr(ddst, length(ROOT))), shq(dst), shq(ddst)));
+		if (old_target && old_target != ddst) capture('rm -rf ' + shq(old_target));
+	} else {
+		capture(sprintf('rm -rf %s.old; [ -L %s ] && rm -f %s; [ -d %s ] && mv %s %s.old; mv %s %s && rm -rf %s.old',
+			shq(dst), shq(dst), shq(dst), shq(dst), shq(dst), shq(dst), shq(tmp), shq(dst), shq(dst)));
+		// was on a drive before (now small, or no drive): the copy there goes
+		if (old_target) capture('rm -rf ' + shq(old_target));
+	}
 	if (stat(dst + '/app.json')?.type != 'file') return { error: 'installing failed' };
 	if (sys) write_starters(a);
 	let c = conf().c, s = sect(a.id);
@@ -624,7 +668,9 @@ function cmd_remove(id, force) {
 	// a firmware hook for system apps that run services (e.g. stop the Transmission daemons)
 	let hook = ROOT + '/usr/lib/shareos/apphooks/' + id;
 	if (stat(hook)?.type == 'file') capture(shq(hook) + ' remove');
+	let target = sys_target(dir);
 	capture('rm -rf ' + shq(dir));
+	if (target) capture('rm -rf ' + shq(target));
 	drop_starters(id);
 	let c = conf().c;
 	c.delete('apps', sect(id));
@@ -698,7 +744,22 @@ switch (ARGV[0]) {
 case 'catalog': cmd_catalog(); break;
 case 'cached': cmd_cached(); break;
 case 'list': out({ apps: installed() }); break;
-case 'fix-perms': if (stat(ROOT + '/opt/shareos')) opt_dirs(); out({ ok: true }); break;
+case 'fix-perms': {
+	if (!stat(ROOT + '/opt/shareos')) { out({ ok: true }); break; }
+	opt_dirs();
+	// large system apps still on the flash (older versions): to the apps drive
+	let ds = disk_sys(), moved = [];
+	if (ds) for (let id in lsdir(SYS) ?? []) {
+		let d = SYS + '/' + id;
+		if (!match(id, ID_RE) || lstat(d)?.type != 'directory' || du_bytes(d) <= BIG_SYSAPP) continue;
+		let t = ds + '/' + id;
+		let r = capture(sprintf('mkdir -p %s && chmod 755 %s && rm -rf %s.new && cp -a %s %s.new && rm -rf %s && mv %s.new %s && mv %s %s.old && ln -s %s %s && rm -rf %s.old',
+			shq(ds), shq(ds), shq(t), shq(d), shq(t), shq(t), shq(t), shq(t), shq(d), shq(d), shq(substr(t, length(ROOT))), shq(d), shq(d)));
+		if (r.rc == 0) push(moved, id); else capture('rm -rf ' + shq(t) + '.new');
+	}
+	out({ ok: true, moved });
+	break;
+}
 case 'install': cmd_install(ARGV[1], ARGV[2]); break;
 case 'install-file': cmd_install_file(ARGV[1]); break;
 case 'remove': cmd_remove(ARGV[1], ARGV[2]); break;

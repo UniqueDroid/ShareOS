@@ -1110,7 +1110,12 @@
 		"Weder ein persönlicher Ordner noch eine Freigabe für dich.": "Ni una carpeta personal ni una carpeta compartida para ti.",
 		"Dateien: persönlicher Ordner und Freigaben (nach Rechten) im Dateibrowser und in Apps": "Archivos: carpeta personal y carpetas compartidas (según permisos) en el explorador y en las apps",
 		" (nur lesen)": " (solo lectura)",
-		"(nur lesen)": "(solo lectura)"
+		"(nur lesen)": "(solo lectura)",
+		"TAILSCALE": "TAILSCALE",
+		"Anmeldung nötig": "inicio de sesión necesario",
+		"getrennt": "desconectado",
+		"Fernzugriff (Tailscale)": "Acceso remoto (Tailscale)",
+		"Darf die Box mit Tailscale verbinden, an- und abmelden und die Geräte des Tailnets sehen – das betrifft das Netzwerk der ganzen Box, deshalb nur für Administratoren.": "Puede conectar la caja con Tailscale, iniciar y cerrar sesión y ver los dispositivos de la tailnet; afecta a la red de toda la caja, por eso solo para administradores."
 	},
 	"patterns": [
 		[

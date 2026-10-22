@@ -1417,3 +1417,8 @@ E1105	Arquivos: pasta pessoal e compartilhamentos (conforme permissões) no nave
 P268	$1 (somente leitura)
 E1106	 (somente leitura)
 E1107	(somente leitura)
+E1108	TAILSCALE
+E1109	login necessário
+E1110	desconectado
+E1111	Acesso remoto (Tailscale)
+E1112	Pode conectar a caixa ao Tailscale, entrar e sair e ver os dispositivos da tailnet – isso afeta a rede de toda a caixa, por isso só para administradores.

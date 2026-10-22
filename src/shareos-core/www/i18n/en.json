@@ -1110,7 +1110,12 @@
 		"Weder ein persönlicher Ordner noch eine Freigabe für dich.": "Neither a personal folder nor a share for you.",
 		"Dateien: persönlicher Ordner und Freigaben (nach Rechten) im Dateibrowser und in Apps": "Files: personal folder and shares (by permissions) in the file browser and in apps",
 		" (nur lesen)": " (read only)",
-		"(nur lesen)": "(read only)"
+		"(nur lesen)": "(read only)",
+		"TAILSCALE": "TAILSCALE",
+		"Anmeldung nötig": "sign-in needed",
+		"getrennt": "disconnected",
+		"Fernzugriff (Tailscale)": "Remote access (Tailscale)",
+		"Darf die Box mit Tailscale verbinden, an- und abmelden und die Geräte des Tailnets sehen – das betrifft das Netzwerk der ganzen Box, deshalb nur für Administratoren.": "May connect the box with Tailscale, sign in and out and see the devices of the tailnet – this affects the network of the whole box, so admins only."
 	},
 	"patterns": [
 		[

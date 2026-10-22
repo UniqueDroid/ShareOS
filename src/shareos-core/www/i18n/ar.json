@@ -1110,7 +1110,12 @@
 		"Weder ein persönlicher Ordner noch eine Freigabe für dich.": "لا يوجد مجلد شخصي ولا مشاركة لك.",
 		"Dateien: persönlicher Ordner und Freigaben (nach Rechten) im Dateibrowser und in Apps": "الملفات: المجلد الشخصي والمشاركات (حسب الصلاحيات) في متصفح الملفات والتطبيقات",
 		" (nur lesen)": " (للقراءة فقط)",
-		"(nur lesen)": "(للقراءة فقط)"
+		"(nur lesen)": "(للقراءة فقط)",
+		"TAILSCALE": "TAILSCALE",
+		"Anmeldung nötig": "يلزم تسجيل الدخول",
+		"getrennt": "غير متصل",
+		"Fernzugriff (Tailscale)": "الوصول عن بُعد (Tailscale)",
+		"Darf die Box mit Tailscale verbinden, an- und abmelden und die Geräte des Tailnets sehen – das betrifft das Netzwerk der ganzen Box, deshalb nur für Administratoren.": "يمكنه ربط الجهاز بـ Tailscale وتسجيل الدخول والخروج ورؤية أجهزة الـ tailnet – يؤثر ذلك على شبكة الجهاز بأكمله، لذا للمسؤولين فقط."
 	},
 	"patterns": [
 		[

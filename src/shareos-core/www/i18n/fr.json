@@ -1110,7 +1110,12 @@
 		"Weder ein persönlicher Ordner noch eine Freigabe für dich.": "Ni dossier personnel ni partage pour vous.",
 		"Dateien: persönlicher Ordner und Freigaben (nach Rechten) im Dateibrowser und in Apps": "Fichiers : dossier personnel et partages (selon les droits) dans le navigateur de fichiers et les applications",
 		" (nur lesen)": " (lecture seule)",
-		"(nur lesen)": "(lecture seule)"
+		"(nur lesen)": "(lecture seule)",
+		"TAILSCALE": "TAILSCALE",
+		"Anmeldung nötig": "connexion requise",
+		"getrennt": "déconnecté",
+		"Fernzugriff (Tailscale)": "Accès à distance (Tailscale)",
+		"Darf die Box mit Tailscale verbinden, an- und abmelden und die Geräte des Tailnets sehen – das betrifft das Netzwerk der ganzen Box, deshalb nur für Administratoren.": "Peut connecter la box avec Tailscale, se connecter et se déconnecter et voir les appareils du tailnet – cela concerne le réseau de toute la box, donc réservé aux administrateurs."
 	},
 	"patterns": [
 		[

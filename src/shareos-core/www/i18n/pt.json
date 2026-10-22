@@ -1110,7 +1110,12 @@
 		"Weder ein persönlicher Ordner noch eine Freigabe für dich.": "Nem uma pasta pessoal nem um compartilhamento para você.",
 		"Dateien: persönlicher Ordner und Freigaben (nach Rechten) im Dateibrowser und in Apps": "Arquivos: pasta pessoal e compartilhamentos (conforme permissões) no navegador de arquivos e nos apps",
 		" (nur lesen)": " (somente leitura)",
-		"(nur lesen)": "(somente leitura)"
+		"(nur lesen)": "(somente leitura)",
+		"TAILSCALE": "TAILSCALE",
+		"Anmeldung nötig": "login necessário",
+		"getrennt": "desconectado",
+		"Fernzugriff (Tailscale)": "Acesso remoto (Tailscale)",
+		"Darf die Box mit Tailscale verbinden, an- und abmelden und die Geräte des Tailnets sehen – das betrifft das Netzwerk der ganzen Box, deshalb nur für Administratoren.": "Pode conectar a caixa ao Tailscale, entrar e sair e ver os dispositivos da tailnet – isso afeta a rede de toda a caixa, por isso só para administradores."
 	},
 	"patterns": [
 		[

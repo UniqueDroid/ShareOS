@@ -1110,7 +1110,12 @@
 		"Weder ein persönlicher Ordner noch eine Freigabe für dich.": "Нет ни личной папки, ни общих папок для вас.",
 		"Dateien: persönlicher Ordner und Freigaben (nach Rechten) im Dateibrowser und in Apps": "Файлы: личная папка и общие папки (по правам) в файловом менеджере и приложениях",
 		" (nur lesen)": " (только чтение)",
-		"(nur lesen)": "(только чтение)"
+		"(nur lesen)": "(только чтение)",
+		"TAILSCALE": "TAILSCALE",
+		"Anmeldung nötig": "нужен вход",
+		"getrennt": "отключено",
+		"Fernzugriff (Tailscale)": "Удалённый доступ (Tailscale)",
+		"Darf die Box mit Tailscale verbinden, an- und abmelden und die Geräte des Tailnets sehen – das betrifft das Netzwerk der ganzen Box, deshalb nur für Administratoren.": "Может подключать устройство к Tailscale, входить и выходить и видеть устройства tailnet — это затрагивает сеть всего устройства, поэтому только для администраторов."
 	},
 	"patterns": [
 		[

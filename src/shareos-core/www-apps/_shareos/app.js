@@ -68,6 +68,19 @@
  *   .server.status()   .server.set({enabled, port, proto, net, host, lan})
  *   .server.addDevice(name) {profile}   .server.profile(name)   .server.removeDevice(name)
  *   .server.log()                  devices connecting to the box (own CA)
+ * ShareOS.tailscale           remote access with Tailscale (system app
+ *                             "tailscale"), for apps with the permissions
+ *                             "files" and "tailscale" – admin accounts only
+ *                             (ShareOS 0.2.0-beta.7+, null otherwise):
+ *   .status()                      {installed, running, state (NeedsLogin,
+ *                                  Running, Stopped …), auth_url, self {name,
+ *                                  dns, ips, key_expiry}, tailnet {name, suffix},
+ *                                  peers [{name, dns, os, ips, online, last_seen,
+ *                                  direct, rx, tx}], version}
+ *   .up({authKey})                 connect; without a key the answer has
+ *                                  auth_url (sign-in link, e.g. as QR code)
+ *   .login()   .down()   .logout()   .log() {log}
+ *   .ping(ip)                      {ms, via, direct}
  * ShareOS.status              a chip in the header of the ShareOS interface,
  *                             for apps with the permissions "files" and
  *                             "status" (ShareOS 0.2.0-beta.6+, null otherwise):
@@ -393,6 +406,16 @@
 			removeDevice: function (name) { return cgiCall('vpn', 'device_remove', { name: name }); }
 		}
 	} : null;
+	/* remote access with Tailscale (permissions "files" + "tailscale", admins) */
+	var tailscale = fs ? {
+		status: function () { return cgiCall('tailscale', 'status'); },
+		log: function () { return cgiCall('tailscale', 'log'); },
+		up: function (o) { return cgiCall('tailscale', 'up', { authkey: (o && o.authKey) || '' }); },
+		login: function () { return cgiCall('tailscale', 'login'); },
+		down: function () { return cgiCall('tailscale', 'down'); },
+		logout: function () { return cgiCall('tailscale', 'logout'); },
+		ping: function (ip) { return cgiCall('tailscale', 'ping', { ip: ip }); }
+	} : null;
 	/* a chip in the header of the ShareOS interface (permissions "files" + "status") */
 	var status = fs ? {
 		set: function (o) { o = o || {}; return cgiCall('status', 'set', { text: o.text, state: o.state || 'info', ttl: o.ttl || 300 }); },
@@ -487,6 +510,7 @@
 		torrent: torrent,
 		media: media,
 		vpn: vpn,
+		tailscale: tailscale,
 		status: status,
 		menu: menu,
 		on: function (type, fn) { (handlers[type] = handlers[type] || []).push(fn); },
