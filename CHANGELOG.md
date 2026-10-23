@@ -6,6 +6,7 @@ pre-releases for test devices only.
 
 ## 0.2.0-beta.10
 
+- **Copying in apps shown in the page works:** the frame of an app inside the ShareOS page (permission `embed`) and the web terminal now allow the clipboard (`allow="clipboard-read; clipboard-write"`, plus fullscreen and autoplay for players). Before, a copy button in such an app failed with "The Clipboard API has been blocked because of a permissions policy".
 - **Apps keep their data on the box also for accounts without "Dateien":** an app with the permission `files` opened by such an account gets one private folder of its own – `/mnt/<apps drive>/.shareos/userdata/<account>/<app>` (the account's, 0700) – as its only folder in `ShareOS.fs` (root `app`, `private: true`). The account's personal folder, the shares and the file browser stay closed, and other permissions (`torrent`, `media` …) still need "Dateien". Before, `ShareOS.fs` was missing and apps like ShareNotes fell back to the browser. Removing the app removes these folders; deleting an account with its data removes them too.
 
 ## 0.2.0-beta.9
