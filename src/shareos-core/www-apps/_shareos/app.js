@@ -34,7 +34,7 @@
  *                                  folder ("home") and their shares, ro = read only;
  *                                  accounts without "Dateien": only the app's own
  *                                  folder "app" (private: true) on the apps drive
- *                                  (ShareOS 0.2.0-beta.10+; before: fs was null)
+ *                                  (ShareOS 0.2.0-beta.9+; before: fs was null)
  *   .list(root, path, hidden)      {entries: [{name, type, size, mtime}], free, size}
  *   .mkdir(root, path, name)   .rename(root, path, name, to)
  *   .copy(root, path, names, destRoot, dest)   .move(…same…)
@@ -86,7 +86,7 @@
  *   .ping(ip)                      {ms, via, direct}
  * ShareOS.autobrr             the box's autobrr (system app "autobrr"), for
  *                             apps with the permissions "files" and "autobrr" –
- *                             admin accounts only (ShareOS 0.2.0-beta.11+, null
+ *                             admin accounts only (ShareOS 0.2.0-beta.9+, null
  *                             otherwise):
  *   .status()                      {installed, running, ready, enabled, ui, port,
  *                                  user, account, drop, drive, host}

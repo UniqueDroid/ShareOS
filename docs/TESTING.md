@@ -417,7 +417,7 @@ Needs a Tailscale account (free), a phone or computer with Tailscale, the file `
 5. Webpad (without `embed`) → *Öffnen ↗*: a window of its own, not a new tab.
 6. As a user in "My ShareOS": an app with `embed` opens in the page (`#/app/<id>`), ✕ goes back.
 
-## 14r. autobrr (0.2.0-beta.11)
+## 14r. autobrr (0.2.0-beta.9)
 
 Needs an apps drive, the system apps `autobrr` and `transmission-daemon` and an app with the permission `autobrr` (ShareOS-Apps).
 
@@ -428,7 +428,7 @@ Needs an apps drive, the system apps `autobrr` and `transmission-daemon` and an 
 5. Copy a `.torrent` file into the hand-over folder for a test (as root, `chown anna:autobrr`): it disappears after a few seconds and is in anna's Transmission.
 6. `cat /proc/$(cat /tmp/shareos-autobrr/pid)/status | grep VmRSS` – about 40–60 MB. Restart the box: autobrr runs again. In the app: switched off → stays off, also after a restart.
 
-## 14q. App folders for accounts without "Dateien" (0.2.0-beta.10)
+## 14q. App folders for accounts without "Dateien" (0.2.0-beta.9)
 
 1. Users → an account (e.g. lisa) with web interface but **without** "Dateien".
 2. Sign in as lisa → My ShareOS → open ShareNotes: no notice "Kein Zugriff auf die Ordner der Box", the bottom line says `Box: 🏠 app/notes/`.
