@@ -316,3 +316,10 @@ select.app-display{min-height:28px;padding:0 8px}
 
 /* status chips: info (no colour of its own) */
 .chip.info,.sos a.chip.info{color:var(--muted)}
+
+/* System -> Appearance: panels in two columns on wide screens, one below the other on narrow ones */
+.lookcols>.panel{max-width:none!important}
+@media (min-width:900px){
+.lookcols{column-count:2;column-gap:16px}
+.lookcols>.panel{break-inside:avoid;margin:0 0 16px!important;display:inline-block;width:100%}
+}

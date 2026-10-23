@@ -2423,7 +2423,7 @@ const SYS = {
 
 	appearance() {
 		const names = { green: 'Grün', red: 'Rot', blue: 'Blau', white: 'Weiß' };
-		return html`<div class="panel" style="max-width:560px">
+		return html`<div class="lookcols"><div class="panel" style="max-width:560px">
 			<div class="ph"><span class="pt">DARSTELLUNG</span><span class="tag ml">gilt für alle</span></div>
 			<div class="fields" style="grid-template-columns:1fr"><label class="f"><span>HELL ODER DUNKEL</span><select id="opt-theme">
 				${[['dark', 'Dunkel'], ['light', 'Hell'], ['system', 'Wie das Betriebssystem (automatisch)']].map(([v, t]) => html`<option value="${v}"${S.theme === v ? raw(' selected') : ''}>${t}</option>`)}
@@ -2460,7 +2460,7 @@ const SYS = {
 			<div class="ph"><span class="pt">LOGO</span><span class="tag ml">gilt für alle</span></div>
 			<label class="chk"><input type="checkbox" id="opt-logo"${S.logo ? raw(' checked') : ''}>ShareOS-Logo anzeigen (aus: nur Schriftzug)</label>
 			<div style="margin-top:14px;padding:14px;border:1px solid var(--line);border-radius:10px;background:var(--bg)">${brand()}</div>
-		</div>`;
+		</div></div>`;
 	},
 
 	about() {
