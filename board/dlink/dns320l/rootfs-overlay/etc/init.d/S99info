@@ -1,6 +1,7 @@
 #!/bin/sh
 #
-# Print where to reach the box once it is up.
+# Print where to reach the box once it is up (console, log, and /etc/motd
+# for SSH and the web terminal).
 #
 case "$1" in
 	start)
@@ -12,7 +13,9 @@ case "$1" in
 			sleep 1; i=$((i + 1))
 		done
 		speed=$(cat /sys/class/net/eth0/speed 2>/dev/null)
-		msg="ShareOS phase-1 test system ready: ssh root@${ip:-<no ip>} (password: shareos), link ${speed:-?} Mbit/s. Run 'shareos-check'."
+		SHAREOS_VERSION=; SHAREOS_FWNAME=
+		[ -r /etc/shareos-release ] && . /etc/shareos-release
+		msg="ShareOS ${SHAREOS_VERSION:-?}${SHAREOS_FWNAME:+ on $SHAREOS_FWNAME}: web interface http://${ip:-<no ip>}/, link ${speed:-?} Mbit/s."
 		echo "$msg"
 		echo "$msg" > /etc/motd
 		logger -t shareos "$msg"

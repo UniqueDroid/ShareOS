@@ -153,7 +153,7 @@ const S = {
 
 const TABS = [
 	['overview', 'ÜBERSICHT'], ['storage', 'SPEICHER'], ['shares', 'FREIGABEN'], ['services', 'DIENSTE'],
-	['apps', 'APPS', true], ['cloud', 'CLOUD', true], ['paperless', 'PAPERLESS', true], ['system', 'SYSTEM']
+	['apps', 'APPS'], ['cloud', 'CLOUD'], ['paperless', 'PAPERLESS'], ['system', 'SYSTEM']
 ];
 const SYS_SUBS = [['general', 'ALLGEMEIN'], ['appearance', 'DARSTELLUNG'], ['network', 'NETZWERK'], ['notifications', 'MELDUNGEN'], ['logs', 'PROTOKOLLE'], ['terminal', 'TERMINAL'], ['time', 'ZEIT'], ['power', 'ENERGIE & RESET'], ['firmware', 'FIRMWARE']];
 const SVC_SUBS = [['status', 'STATUS'], ['autostart', 'AUTOSTART'], ['dlna', 'MEDIENSERVER']];
