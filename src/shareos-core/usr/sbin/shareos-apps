@@ -792,6 +792,10 @@ function cmd_remove(id, force) {
 	c.foreach('apps', 'appjob', (x) => { if (x.app == id) c.delete('apps', x['.name']); });
 	c.commit('apps');
 	cron_sync();
+	// private folders of the app for accounts without "Dateien" (rpcd, ShareOS.fs)
+	let area = c.get('storage', 'global', 'apps');
+	if (area && match(area, /^[a-z0-9_-]+$/))
+		capture(sprintf('rm -rf %s/mnt/%s/.shareos/userdata/*/%s', ROOT, area, id));
 	// the app's user and its data on the box go with it
 	let u = app_user(id);
 	if (match(readfile(ROOT + '/etc/passwd') ?? '', regexp('(^|\n)' + u + ':'))) {

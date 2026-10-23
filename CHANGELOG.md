@@ -4,6 +4,10 @@ Changes per release (newest first). The section of a version is added to its
 GitHub release automatically when the release is built. Test versions are
 pre-releases for test devices only.
 
+## 0.2.0-beta.10
+
+- **Apps keep their data on the box also for accounts without "Dateien":** an app with the permission `files` opened by such an account gets one private folder of its own – `/mnt/<apps drive>/.shareos/userdata/<account>/<app>` (the account's, 0700) – as its only folder in `ShareOS.fs` (root `app`, `private: true`). The account's personal folder, the shares and the file browser stay closed, and other permissions (`torrent`, `media` …) still need "Dateien". Before, `ShareOS.fs` was missing and apps like ShareNotes fell back to the browser. Removing the app removes these folders; deleting an account with its data removes them too.
+
 ## 0.2.0-beta.9
 
 - **Tailscale starts by itself:** the daemon now runs as soon as the system app `tailscaled` is installed and after every restart – it waits for the sign-in, and a box that was signed in connects again by itself. Before, only an app's *Verbinden* started it.

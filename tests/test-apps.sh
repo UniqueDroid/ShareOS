@@ -349,8 +349,26 @@ check "fs: open read-only cannot save, missing file needs create" "T2=\$(fs '{\"
 check "fs: delete" "fs '{\"op\":\"delete\",\"root\":\"daten\",\"path\":\"\",\"names\":[\"ablage\"]}' | js \"d['ok']\" && [ ! -e $R/mnt/daten/ablage ]"
 check "fs: unknown op, wrong grant, GET refused" "fs '{\"op\":\"exec\"}' | grep -q 'invalid request' && fs '{\"op\":\"roots\"}' 'http://127.0.0.1:$PORT/_shareos/cgi/fs?g=ffffffffffffffffffffffffffffffff' | grep -q 'no access' && curl -s '$FS' | grep -q 'not allowed'"
 check "fs: no web session may call shareos.appfs (ACL)" "! grep -q 'shareos.appfs' $R/usr/share/rpcd/acl.d/shareos.json"
+# an account without "Dateien": the app gets only its private folder on the apps drive
+run "uci set storage.global=global; uci set storage.global.apps=daten; uci commit storage; mkdir -p /mnt/daten/.shareos" >/dev/null
+run "echo lisa1234 | shareos-users add lisa user --web=1 --files=0" >/dev/null
+SIDL=fedcba9876543210fedcba9876543210; echo lisa > "$R/tmp/shareos-sessions/$SIDL"
+sl() { printf '{"ubus_rpc_session":"%s"%s}' "$SIDL" "${1:-}"; }
+GL=$(rpc shareos.files app_grant "$(sl ',"app":"filer"')" | python3 -c 'import json,sys; print(json.load(sys.stdin).get("grant",""))')
+FL="http://127.0.0.1:$PORT/_shareos/cgi/fs?g=$GL"
+PD=$R/mnt/daten/.shareos/userdata/lisa/filer
+check "no Dateien: the app still gets a grant" "[ \${#GL} -eq 32 ]"
+LU=$(grep "^lisa:" $R/etc/passwd | cut -d: -f3)
+check "no Dateien: only the private folder, made for the account (0700)" "fs '{\"op\":\"roots\"}' '$FL' | js \"d['roots']==[{'name':'app','home':True,'usb':False,'ro':False,'private':True}]\" && [ \"\$(stat -c '%u %a' $PD)\" = \"$LU 700\" ] && [ \"\$(stat -c '%a' $R/mnt/daten/.shareos/userdata)\" = 711 ]"
+check "no Dateien: folder, new file, save – owned by the account" "fs '{\"op\":\"mkdir\",\"root\":\"app\",\"path\":\"\",\"name\":\"notes\"}' '$FL' | js \"d['ok']\" && TL=\$(fs '{\"op\":\"open\",\"root\":\"app\",\"path\":\"notes\",\"name\":\"n1.json\",\"write\":true,\"create\":true}' '$FL' | python3 -c 'import json,sys; print(json.load(sys.stdin)[\"ticket\"])') && curl -s -X PUT --data-binary '{\"t\":1}' \"$F?t=\$TL\" | js \"d['ok']\" && [ \"\$(stat -c %u $PD/notes/n1.json)\" = \"$LU\" ] && fs '{\"op\":\"list\",\"root\":\"app\",\"path\":\"notes\"}' '$FL' | js \"[e['name'] for e in d['entries']]==['n1.json']\""
+check "no Dateien: no other folder, no way out" "fs '{\"op\":\"list\",\"root\":\"daten\",\"path\":\"\"}' '$FL' | grep -q 'unknown folder' && fs '{\"op\":\"list\",\"root\":\"app\",\"path\":\"../../lisa\"}' '$FL' | grep -q 'invalid path'"
+check "no Dateien: the file browser stays closed" "rpc shareos.files roots '$(sl)' | js \"d.get('roots',[])==[]\" || rpc shareos.files roots '$(sl)' | grep -q 'not allowed'"
+check "no Dateien: an app without files still gets no grant" "rpc shareos.files app_grant '$(sl ',"app":"editor"')' | grep -q 'no access to files'"
 run 'shareos-apps remove filer' >/dev/null
 check "fs: grant ends with the app" "fs '{\"op\":\"roots\"}' | grep -q 'no access'"
+check "removing the app removes its private folders" "[ ! -e $PD ] && [ -d $R/mnt/daten/.shareos/userdata/lisa ]"
+run "shareos-users del lisa --remove-home" >/dev/null
+check "deleting the account (with its data) removes its app folders" "[ ! -e $R/mnt/daten/.shareos/userdata/lisa ]"
 check "only ShareOS scripts run as CGI on the app server" "[ \"\$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:$PORT/cgi-bin/x)\" != 200 ]"
 umount -l "$R/mnt/daten"
 

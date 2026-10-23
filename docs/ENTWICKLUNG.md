@@ -167,6 +167,7 @@ direkt auf der Box nachgesehen, warum der Webserver nicht lief.
 |---|---|
 | 08:30 | Jan: „Der startet nicht von alleine“ – `tailscaled` lief erst, wenn eine App *Verbinden* drückte, und die eingereichte Tailscale-App sprach eine Schnittstelle an, die es auf der Box nicht gibt. Claude startet den Dienst bei Installation und Boot (ShareOS #48) und portiert die App auf `ShareOS.tailscale` mit echtem QR-Code (ShareOS-Apps #22). |
 | 09:22 | Jan: „Kann man das mit SysApps vereinfachen?“ Jeder Dienst hatte ein eigenes Startskript und einen eigenen Hook – Jans Umbenennung in `tailscaled` hatte genau den Hook verwaist. Seitdem steht der Dienst in der `app.json` der System-App (`"service"`), ein Startskript startet alle, die Steuerung bleibt in der Firmware. Jan legt fest: System-Apps werden im ShareOS-Repo eingereicht, ShareOS-Apps nimmt nur Web-Apps – mit je einem Beispiel für ein Programm und einen Dienst. |
+| 11:28 | Jans App ShareNotes kommt in den Store. Seine Vorgabe: auch Konten ohne „Dateien“ sollen ihre Notizen auf der Box haben. Jan wählt einen privaten Ordner je App und Konto auf dem Apps-Laufwerk; Ordner, Freigaben und Dateibrowser des Kontos bleiben zu. |
 
 ## Bemerkenswerte Problemlösungen
 
