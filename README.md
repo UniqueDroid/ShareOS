@@ -89,7 +89,7 @@ Version in brackets = first release with the feature.
 - Cloud sync with rclone (Nextcloud/WebDAV, S3, SFTP, Google Drive …) for the device and per user, with schedule and bandwidth limit (beta.4)
 - Paperless-ngx: inbox folders per user or shared (e.g. for a scanner), upload through the Paperless API (beta.4)
 - Installable as an app (PWA), status address for widget apps (beta.4)
-- Remote access with Tailscale (system app, admins only, permission `tailscale` for apps): the box in a tailnet without port forwarding, also behind DS-Lite (0.2.0-beta.7)
+- Remote access with Tailscale (system app `tailscaled`, starts by itself, admins only, permission `tailscale` for apps): the box in a tailnet without port forwarding, also behind DS-Lite (0.2.0-beta.7)
 - Large system apps on the apps drive (link in `/opt`), the flash stays free (0.2.0-beta.7)
 - Media server (DLNA/UPnP AV, MiniDLNA as a system app): TVs and players play music, videos and pictures from chosen shares (0.2.0-beta.6)
 - VPN for the box in both directions (OpenVPN as a system app, app NetTunnel, admins only): as client with cleaned profiles, as server with its own CA and a ready-made profile per device; status chips of services and apps in the header (0.2.0-beta.6)

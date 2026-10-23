@@ -1,6 +1,6 @@
 #!/usr/bin/ucode -S
 //
-// shareos-tailscale – remote access to the box with Tailscale (system app "tailscale")
+// shareos-tailscale – remote access to the box with Tailscale (system app "tailscaled")
 //
 //   shareos-tailscale status            state, own addresses, tailnet, devices (JSON)
 //   shareos-tailscale up                stdin JSON {authkey}: connect; without a key
@@ -10,7 +10,8 @@
 //   shareos-tailscale logout            sign out, the box leaves the tailnet
 //   shareos-tailscale ping <address>    latency to a device of the tailnet
 //   shareos-tailscale log               the last lines of the daemon log
-//   shareos-tailscale boot | stop-all   start at boot (when used) / stop (app removed)
+//   shareos-tailscale start             start the daemon (system app installed)
+//   shareos-tailscale boot | stop-all   start at boot / stop (app removed)
 //
 // tailscale changes the network of the whole box, so only admins reach this
 // (rpcd shareos.apptailscale checks it). The box runs tailscaled with the
@@ -59,7 +60,7 @@ function set_enabled(on) {
 function enabled() { return cursor().get('tailscale', 'main', 'enabled') == '1'; }
 
 function start() {
-	if (!installed()) die('Tailscale is not installed (system app "tailscale" in the store)');
+	if (!installed()) die('Tailscale is not installed (system app "tailscaled" in the store)');
 	if (stat('/dev/net/tun') == null) die('this firmware has no tunnel support (TUN) – update ShareOS');
 	if (pid()) return;
 	sh('mkdir -p ' + RUN + ' ' + STATE + ' && chmod 700 ' + RUN + ' ' + STATE);
@@ -161,7 +162,10 @@ case 'logout': {
 }
 case 'ping': cmd_ping(arg); break;
 case 'log': { let t = readfile(LOG) ?? ''; out({ log: length(t) > 16384 ? substr(t, length(t) - 16384) : t }); break; }
-case 'boot': if (installed() && enabled()) { start(); out(status()); } else out({ started: false }); break;
+// the daemon runs whenever the system app is installed: it waits for the sign-in,
+// and a box that was signed in connects again by itself (tailscaled keeps that)
+case 'start': start(); out(status()); break;
+case 'boot': if (installed()) { start(); out(status()); } else out({ started: false }); break;
 case 'stop-all': stop(); out({ ok: true }); break;
 default:
 	print('usage: shareos-tailscale status|up|login|down|logout|ping <address>|log|boot|stop-all\n');

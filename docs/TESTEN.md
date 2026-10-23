@@ -401,16 +401,16 @@ Braucht ein Laufwerk mit ext4 oder Btrfs, die Benutzer **anna** und **lisa** (Ro
 9. Rechte ändern (lisa entfernen) → nach kurzer Zeit (bei vielen Dateien etwas länger, es läuft im Hintergrund) hat lisa keinen Zugriff mehr, auch nicht auf Unterordner.
 ## 14n. Tailscale und große System-Apps auf dem Laufwerk (0.2.0-beta.7)
 
-Braucht ein Tailscale-Konto (kostenlos), ein Handy oder einen Rechner mit Tailscale und die Datei `tailscale-1.98.8.sapp` (Release der Firmware) sowie eine App mit der Berechtigung `tailscale` (ShareOS-Apps).
+Braucht ein Tailscale-Konto (kostenlos), ein Handy oder einen Rechner mit Tailscale und die Datei `tailscaled-1.98.8.sapp` (Release der Firmware) sowie eine App mit der Berechtigung `tailscale` (ShareOS-Apps).
 
 1. Vor dem Update im Terminal `df -h /` merken. Nach dem Update (Neustart) zieht die Box große System-Apps (FFmpeg, Transmission, MiniDLNA, OpenVPN) aufs Laufwerk: `ls -l /opt/shareos/sysapps` zeigt bei ihnen `-> /mnt/<laufwerk>/.shareos/sysapps/…`, nano/htop/bash bleiben Ordner. `df -h /` zeigt mehr frei. Transmission, Medienserver und VPN laufen wie vorher.
-2. Apps → Store → System-Apps → **tailscale** installieren: `ls -l /opt/shareos/sysapps/tailscale` ist ein Link aufs Laufwerk, `df -h /` ändert sich kaum.
+2. Apps → Store → System-Apps → **tailscaled** installieren: `ls -l /opt/shareos/sysapps/tailscaled` ist ein Link aufs Laufwerk, `df -h /` ändert sich kaum. Ohne weiteres Zutun läuft der Dienst: `ps | grep [t]ailscaled` (ab 0.2.0-beta.9).
 3. Die Tailscale-App öffnen → *Verbinden*: Es erscheint ein Anmelde-Link (bzw. QR-Code). Am Handy öffnen, mit dem Tailscale-Konto bestätigen. Nach ein paar Sekunden „verbunden“, im Kopf **TAILSCALE · 100.x.y.z**.
 4. Am Handy (mobile Daten, WLAN aus, Tailscale an): `http://100.x.y.z` → die ShareOS-Oberfläche; Freigaben per SMB über `\\100.x.y.z`.
 5. Im Terminal: `ip addr show tailscale0`; `TS_BE_CLI=1 tailscaled --socket=/tmp/shareos-tailscale/tailscaled.sock status` listet die Geräte. `ps` zeigt `tailscaled`, `cat /proc/$(cat /tmp/shareos-tailscale/pid)/status | grep VmRSS` – unter etwa 60 MB.
 6. Box neu starten: nach etwa einer Minute ist sie von selbst wieder im Tailnet.
 7. In der App *Trennen*: der Chip zeigt „getrennt“; *Abmelden*: die Box verschwindet aus dem Tailnet (Admin-Konsole von Tailscale).
-8. Apps → Installiert → tailscale → *Entfernen*: der Dienst hält an, der Ordner auf dem Laufwerk ist weg.
+8. Apps → Installiert → tailscaled → *Entfernen*: der Dienst hält an, der Ordner auf dem Laufwerk ist weg.
 
 ## 14o. Apps in der Seite (0.2.0-beta.7)
 

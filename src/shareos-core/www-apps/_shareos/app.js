@@ -69,7 +69,7 @@
  *   .server.addDevice(name) {profile}   .server.profile(name)   .server.removeDevice(name)
  *   .server.log()                  devices connecting to the box (own CA)
  * ShareOS.tailscale           remote access with Tailscale (system app
- *                             "tailscale"), for apps with the permissions
+ *                             "tailscaled"), for apps with the permissions
  *                             "files" and "tailscale" – admin accounts only
  *                             (ShareOS 0.2.0-beta.7+, null otherwise):
  *   .status()                      {installed, running, state (NeedsLogin,

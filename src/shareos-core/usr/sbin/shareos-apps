@@ -586,6 +586,9 @@ function install_file(file, verified, source) {
 	setup_jobs(a, c);
 	c.commit('apps');
 	cron_sync();
+	// a firmware hook for system apps that run services: start them (in the background)
+	let hook = ROOT + '/usr/lib/shareos/apphooks/' + a.id;
+	if (sys && stat(hook)?.type == 'file') capture(sprintf('(%s install </dev/null >/dev/null 2>&1 &)', shq(hook)));
 	return { ok: true, id: a.id, version: a.version, verified, requires: a.requires ?? [] };
 }
 

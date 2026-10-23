@@ -65,7 +65,7 @@ define SHAREOS_CORE_INSTALL_TARGET_CMDS
 	$(INSTALL) -D -m 0755 $(@D)/www-apps/_shareos/cgi/vpn $(TARGET_DIR)/www-apps/_shareos/cgi/vpn
 	$(INSTALL) -D -m 0755 $(@D)/usr/sbin/shareos-tailscale $(TARGET_DIR)/usr/sbin/shareos-tailscale
 	$(INSTALL) -D -m 0755 $(@D)/etc/init.d/S93tailscale $(TARGET_DIR)/etc/init.d/S93tailscale
-	$(INSTALL) -D -m 0755 $(@D)/usr/lib/shareos/apphooks/tailscale $(TARGET_DIR)/usr/lib/shareos/apphooks/tailscale
+	$(INSTALL) -D -m 0755 $(@D)/usr/lib/shareos/apphooks/tailscaled $(TARGET_DIR)/usr/lib/shareos/apphooks/tailscaled
 	$(INSTALL) -D -m 0644 $(@D)/etc/config/tailscale $(TARGET_DIR)/etc/config/tailscale
 	$(INSTALL) -D -m 0755 $(@D)/www-apps/_shareos/cgi/tailscale $(TARGET_DIR)/www-apps/_shareos/cgi/tailscale
 	$(INSTALL) -D -m 0755 $(@D)/www-apps/_shareos/cgi/status $(TARGET_DIR)/www-apps/_shareos/cgi/status
