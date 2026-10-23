@@ -1,6 +1,6 @@
 #!/usr/bin/ucode -S
 //
-// shareos-tailscale – remote access to the box with Tailscale (system app "tailscale")
+// shareos-tailscale – remote access to the box with Tailscale (system app "tailscaled")
 //
 //   shareos-tailscale status            state, own addresses, tailnet, devices (JSON)
 //   shareos-tailscale up                stdin JSON {authkey}: connect; without a key
@@ -60,7 +60,7 @@ function set_enabled(on) {
 function enabled() { return cursor().get('tailscale', 'main', 'enabled') == '1'; }
 
 function start() {
-	if (!installed()) die('Tailscale is not installed (system app "tailscale" in the store)');
+	if (!installed()) die('Tailscale is not installed (system app "tailscaled" in the store)');
 	if (stat('/dev/net/tun') == null) die('this firmware has no tunnel support (TUN) – update ShareOS');
 	if (pid()) return;
 	sh('mkdir -p ' + RUN + ' ' + STATE + ' && chmod 700 ' + RUN + ' ' + STATE);

@@ -1,5 +1,5 @@
 #!/usr/bin/ucode -S
-// ShareOS app platform: remote access with Tailscale (system app "tailscale"),
+// ShareOS app platform: remote access with Tailscale (system app "tailscaled"),
 // for apps with the permissions "files" and "tailscale" – admin accounts only
 // (it changes the network of the whole box)
 //   POST /_shareos/cgi/tailscale?g=<grant>   body: {"op": "status", …}
