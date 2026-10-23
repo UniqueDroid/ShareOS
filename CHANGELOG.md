@@ -4,6 +4,11 @@ Changes per release (newest first). The section of a version is added to its
 GitHub release automatically when the release is built. Test versions are
 pre-releases for test devices only.
 
+## 0.2.0-beta.11
+
+- **autobrr (download automation):** the system app `autobrr` (autobrr 1.84, 32 MB with its web interface, on the apps drive) watches IRC announce channels and RSS feeds and picks releases by your filters. One autobrr for the whole box: `shareos-autobrr` runs it as its own user `autobrr` on 127.0.0.1:7474 with a Go memory limit (`GOMEMLIMIT=48MiB`), its database on the apps drive; the first start signs it up (user `admin`) and makes an API key for ShareOS (root only). Found torrents go to the Transmission of one account: autobrr's action *Watch dir* writes them into the hand-over folder `/mnt/<apps>/.shareos/autobrr-drop` (the account's, group `autobrr`, 2770), which that account's Transmission watches. Optionally autobrr's own web interface on `http://<box>:7474` (its own login, password set from ShareOS). Starts after installing and at boot (`"service": { "control": "autobrr" }`), listed under Services.
+- **Permission `autobrr`** for apps (needs `files`), admin accounts only: `ShareOS.autobrr` – status, start, set (on/off, web interface, account for the hand-over), password, accounts, log and `api(method, path, body)`: autobrr's REST API through `/_shareos/cgi/autobrr` with the key of ShareOS (rpcd `shareos.appautobrr`; not `/api/keys` or `/api/auth`). The app itself comes from ShareOS-Apps.
+
 ## 0.2.0-beta.10
 
 - **Copying in apps shown in the page works:** the frame of an app inside the ShareOS page (permission `embed`) and the web terminal now allow the clipboard (`allow="clipboard-read; clipboard-write"`, plus fullscreen and autoplay for players). Before, a copy button in such an app failed with "The Clipboard API has been blocked because of a permissions policy".

@@ -144,8 +144,10 @@ The settings page in the interface, if any, comes with the firmware too
 | `transmission-daemon` | `transmission` | `shareos-transmission` (one daemon per account) | app Transmission (permission `torrent`) |
 | `minidlna` | `dlna` | `shareos-dlna` | *Services → Media server* |
 | `ffmpeg` | `media` (`"boot": false`, only `stop-all`) | `shareos-media` | app MediaTranscoder (permission `media`) |
+| `autobrr` | `autobrr` | `shareos-autobrr` (one for the box, user `autobrr`) | an app with the permission `autobrr` (admins), or autobrr's own web interface on port 7474 |
 
 Packages of these apps built before 0.2.0-beta.9 have no `"service"` yet;
 `shareos-apps` knows their entries (`LEGACY_SERVICE`) until they are updated.
+`autobrr` is built from `package/shareos-autobrr` (1.84, the newest for buildroot's Go; its web interface comes from the release's `web-dist.tar.gz`).
 `tailscaled` is built from `package/shareos-tailscale` (newer than buildroot's,
 one binary with the CLI built in – `TS_BE_CLI=1 tailscaled …`).

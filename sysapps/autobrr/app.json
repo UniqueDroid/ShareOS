@@ -1,0 +1,18 @@
+{
+	"id": "autobrr",
+	"name": "autobrr",
+	"version": "1.84.0",
+	"publisher": "UniqueDroid",
+	"description": {
+		"de": "Download-Automatik für IRC-Ankündigungen und RSS-Feeds: filtert neue Releases nach deinen Regeln und legt passende Torrents in Transmission. Läuft als Dienst der Box (32 MB, auf dem Apps-Laufwerk), eingerichtet von Administratoren mit einer App mit der Berechtigung „autobrr“ oder in der eigenen Weboberfläche von autobrr.",
+		"en": "Download automation for IRC announces and RSS feeds: filters new releases by your rules and hands matching torrents to Transmission. Runs as a service of the box (32 MB, on the apps drive), set up by admins with an app with the permission “autobrr” or in autobrr's own web interface."
+	},
+	"type": "system",
+	"commands": [ "autobrr" ],
+	"service": { "control": "autobrr", "on_install": "start", "delay": 10 },
+	"icon": "icon.svg",
+	"category": "network",
+	"license": "GPL-2.0-or-later",
+	"homepage": "https://autobrr.com/",
+	"min_shareos": "0.2.0-beta.11"
+}

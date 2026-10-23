@@ -417,6 +417,17 @@ Needs a Tailscale account (free), a phone or computer with Tailscale, the file `
 5. Webpad (without `embed`) → *Öffnen ↗*: a window of its own, not a new tab.
 6. As a user in "My ShareOS": an app with `embed` opens in the page (`#/app/<id>`), ✕ goes back.
 
+## 14r. autobrr (0.2.0-beta.11)
+
+Needs an apps drive, the system apps `autobrr` and `transmission-daemon` and an app with the permission `autobrr` (ShareOS-Apps).
+
+1. Apps → Store → system apps → install **autobrr**. After about a minute: `ps | grep [a]utobrr` shows the service as the user `autobrr`; Services → Status: "Download-Automatik (autobrr)" running.
+2. In the terminal: `/usr/sbin/shareos-autobrr status` – `"ready": true`; `ls -la /mnt/<drive>/.shareos/autobrr` belongs to `autobrr` (0700), `/etc/shareos/autobrr/secret.json` root only.
+3. In the app choose the account for the hand-over (e.g. anna): `ls -ld /mnt/<drive>/.shareos/autobrr-drop` → `drwxrws--- anna autobrr`. Restart anna's Transmission: its `watch-dir` is that folder.
+4. Switch the web interface on and set a password: `http://<box>:7474` opens autobrr, sign in with `admin` and the password. Add an indexer/IRC and a filter with the action *Watch dir* → `/mnt/<drive>/.shareos/autobrr-drop`.
+5. Copy a `.torrent` file into the hand-over folder for a test (as root, `chown anna:autobrr`): it disappears after a few seconds and is in anna's Transmission.
+6. `cat /proc/$(cat /tmp/shareos-autobrr/pid)/status | grep VmRSS` – about 40–60 MB. Restart the box: autobrr runs again. In the app: switched off → stays off, also after a restart.
+
 ## 14q. App folders for accounts without "Dateien" (0.2.0-beta.10)
 
 1. Users → an account (e.g. lisa) with web interface but **without** "Dateien".

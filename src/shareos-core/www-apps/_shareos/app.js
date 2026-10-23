@@ -84,6 +84,22 @@
  *                                  auth_url (sign-in link, e.g. as QR code)
  *   .login()   .down()   .logout()   .log() {log}
  *   .ping(ip)                      {ms, via, direct}
+ * ShareOS.autobrr             the box's autobrr (system app "autobrr"), for
+ *                             apps with the permissions "files" and "autobrr" –
+ *                             admin accounts only (ShareOS 0.2.0-beta.11+, null
+ *                             otherwise):
+ *   .status()                      {installed, running, ready, enabled, ui, port,
+ *                                  user, account, drop, drive, host}
+ *   .start()   .log() {log}   .accounts() [{name, fullname}]
+ *   .set({enabled, ui, account})   ui: autobrr's own web interface on
+ *                                  http://<box>:7474 (user "admin"); account:
+ *                                  whose Transmission gets the torrents –
+ *                                  autobrr's action "Watch dir" with the
+ *                                  folder status().drop
+ *   .password(pw)                  password of "admin" for that interface
+ *   .api(method, path, body)       autobrr's REST API, e.g. api('GET',
+ *                                  '/api/filters'); resolves to the JSON answer
+ *                                  (not /api/keys or /api/auth)
  * ShareOS.status              a chip in the header of the ShareOS interface,
  *                             for apps with the permissions "files" and
  *                             "status" (ShareOS 0.2.0-beta.6+, null otherwise):
@@ -409,6 +425,21 @@
 			removeDevice: function (name) { return cgiCall('vpn', 'device_remove', { name: name }); }
 		}
 	} : null;
+	/* the box's autobrr (permissions "files" + "autobrr", admins) */
+	var autobrr = fs ? {
+		status: function () { return cgiCall('autobrr', 'status'); },
+		log: function () { return cgiCall('autobrr', 'log'); },
+		start: function () { return cgiCall('autobrr', 'start'); },
+		accounts: function () { return cgiCall('autobrr', 'accounts').then(function (j) { return j.accounts; }); },
+		set: function (o) { var a = {}; o = o || {}; ['enabled', 'ui', 'account'].forEach(function (k) { if (o[k] != null) a[k] = o[k]; }); return cgiCall('autobrr', 'set', a); },
+		password: function (pw) { return cgiCall('autobrr', 'password', { password: pw }); },
+		api: function (method, path, body) {
+			return cgiCall('autobrr', 'api', { method: method || 'GET', path: path, body: body }).then(function (j) {
+				if (j.status >= 400) throw new Error((j.data && (j.data.message || j.data.error)) || j.text || ('HTTP ' + j.status));
+				return j.data != null ? j.data : j.text;
+			});
+		}
+	} : null;
 	/* remote access with Tailscale (permissions "files" + "tailscale", admins) */
 	var tailscale = fs ? {
 		status: function () { return cgiCall('tailscale', 'status'); },
@@ -514,6 +545,7 @@
 		media: media,
 		vpn: vpn,
 		tailscale: tailscale,
+		autobrr: autobrr,
 		status: status,
 		menu: menu,
 		on: function (type, fn) { (handlers[type] = handlers[type] || []).push(fn); },
