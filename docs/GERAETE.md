@@ -14,12 +14,31 @@ beschrieben.
 |---|---|---|---|
 | DNS-320L rev A (A1–A3) | `ShareOS-<ver>-DNS-320L-rev-Ax.*` | 256 MB | **getestet** |
 | DNS-320 rev B | `ShareOS-<ver>-DNS-320-rev-Bx.*` | 128 MB | gebaut, **Tester gesucht** |
-| DNS-325 rev A | `ShareOS-<ver>-DNS-325-rev-Ax.*` | 256 MB | gebaut, **Tester gesucht** |
+| DNS-325 rev A | `ShareOS-<ver>-DNS-325-rev-Ax.*` | 256 MB | **teilweise getestet** (rev A1, siehe unten), weitere Tester gesucht |
 | DNS-320 rev A | `ShareOS-<ver>-DNS-320-rev-Ax.*` | 128 MB | gebaut, **Tester gesucht** |
 | DNR-322L | – | 128 MB | geplant |
 | DNS-327L | – | 512 MB | geplant (eigener Kernel und eigenes Flash-Layout) |
 
 Nicht möglich: DNS-323, DNS-321, DNS-343 (64 MB RAM, 8 MB Flash).
+
+## DNS-325 rev A1: was geprüft wurde
+
+Erster Test auf echter Hardware mit serieller Konsole (0.2.0-beta.7 und ein
+Build der Korrektur für 0.2.0-beta.9).
+
+- **Funktioniert:** Start aus dem Flash (ab 0.2.0-beta.9; die `.bin` von
+  beta.7 startet in einer Schleife neu, siehe [Changelog](../CHANGELOG.md)),
+  Modell und RAM (256 MB), 1-Gbit/s-Ethernet, Temperatursensor, Uhr, USB, die
+  6 Flash-Partitionen, die LEDs, die Lüfterstufen (leise, ausgewogen, kühl),
+  Einschalten nach einem Stromausfall, ein Update über System → Firmware.
+- **Funktioniert noch nicht:** die Tasten (Ein/Aus, Reset, USB):
+  `shareos-buttons` findet auf dieser Box kein Eingabegerät; eine eigene
+  Änderung behebt das.
+- **Noch nicht geprüft:** eine vollständige Erstinstallation von einer frisch
+  geflashten `.bin` mit dem korrigierten Abbild.
+- Ein DNS-325, auf dem schon das beta.7-Abbild läuft und in einer Schleife
+  neu startet, braucht zur Rettung eine serielle Konsole (die alte
+  Initramfs liegt in seinem Flash).
 
 ## Unterschiede der Modelle
 

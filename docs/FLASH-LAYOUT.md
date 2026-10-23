@@ -11,6 +11,10 @@ mtd5 config         5 MB   left alone (Alt-F settings stay, easy way back)
 mtd6 my-dlink       2 MB   never touched
 ```
 
+The DNS-325 has the same layout with `image` = 102 MB (`0x06600000`), no
+`my-dlink` partition: u-boot 1 MB, uImage 5 MB, ramdisk 5 MB, image 102 MB,
+mini firmware 10 MB, config 5 MB. `shareos-install-ubi` accepts both sizes.
+
 ## Boot flow
 
 1. U-Boot loads uImage + initramfs (`bootcmd`, unchanged stock U-Boot).
