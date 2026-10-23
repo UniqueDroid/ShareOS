@@ -1437,3 +1437,11 @@ E1122	um serviço por conta
 E1123	Automação de downloads (autobrr)
 E1124	autobrr, porta 7474
 E1125	Pode configurar e controlar o autobrr da caixa (filtros, indexadores, IRC, releases) e escolher em qual Transmission os torrents encontrados chegam – um serviço para toda a caixa, por isso só para administradores.
+E1126	Marcar como favorito
+E1127	Remover dos favoritos
+P271	Marcar como favorito: $1
+P272	Remover dos favoritos: $1
+E1128	Mostrar a barra “FAV APPS” (só para você)
+E1129	A estrela no bloco de um app o torna favorito. A barra fica acima de “Status” na visão geral e acima dos apps instalados.
+P273	Favoritos: $1
+E1130	Mostrar nomes abaixo dos ícones (desligado: só ícones)

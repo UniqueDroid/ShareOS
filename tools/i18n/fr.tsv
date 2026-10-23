@@ -1437,3 +1437,11 @@ E1122	un service par compte
 E1123	Automatisation des téléchargements (autobrr)
 E1124	autobrr, port 7474
 E1125	Peut configurer et piloter autobrr de la box (filtres, indexeurs, IRC, releases) et choisir dans quel Transmission arrivent les torrents trouvés – un service pour toute la box, donc réservé aux administrateurs.
+E1126	Marquer comme favori
+E1127	Retirer des favoris
+P271	Marquer comme favori : $1
+P272	Retirer des favoris : $1
+E1128	Afficher la barre « FAV APPS » (pour vous seul)
+E1129	L’étoile sur une tuile d’application en fait un favori. La barre se trouve au-dessus de « Statut » dans l’aperçu et au-dessus des applications installées.
+P273	Favoris : $1
+E1130	Afficher les noms sous les icônes (désactivé : icônes seules)

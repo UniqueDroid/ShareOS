@@ -1128,7 +1128,12 @@
 		"ein Dienst pro Konto": "每个账户一个服务",
 		"Download-Automatik (autobrr)": "下载自动化（autobrr）",
 		"autobrr, Port 7474": "autobrr，端口 7474",
-		"Darf autobrr der Box einrichten und steuern (Filter, Indexer, IRC, Releases) und festlegen, in wessen Transmission gefundene Torrents landen – ein Dienst für die ganze Box, deshalb nur für Administratoren.": "可以设置和控制本设备的 autobrr（过滤器、索引器、IRC、发布），并选择找到的种子进入谁的 Transmission——整个设备只有一个服务，因此仅限管理员。"
+		"Darf autobrr der Box einrichten und steuern (Filter, Indexer, IRC, Releases) und festlegen, in wessen Transmission gefundene Torrents landen – ein Dienst für die ganze Box, deshalb nur für Administratoren.": "可以设置和控制本设备的 autobrr（过滤器、索引器、IRC、发布），并选择找到的种子进入谁的 Transmission——整个设备只有一个服务，因此仅限管理员。",
+		"Als Favorit markieren": "标为收藏",
+		"Aus den Favoriten nehmen": "从收藏中移除",
+		"App-Leiste „FAV APPS“ anzeigen (nur für dich)": "显示“FAV APPS”应用栏（仅对你）",
+		"Mit dem Stern auf einer App-Kachel wird sie zum Favoriten. Die Leiste steht über „Status“ in der Übersicht und über den installierten Apps.": "点击应用卡片上的星标即可收藏。该栏位于概览中的“状态”上方以及已安装应用上方。",
+		"Namen unter den Symbolen zeigen (aus: nur Symbole)": "在图标下显示名称（关闭：仅图标）"
 	},
 	"patterns": [
 		[
@@ -2214,6 +2219,18 @@
 		[
 			"^Anzeige: (.+)$",
 			"显示：$1"
+		],
+		[
+			"^Als Favorit markieren: (.+)$",
+			"标为收藏：$1"
+		],
+		[
+			"^Aus den Favoriten nehmen: (.+)$",
+			"从收藏中移除：$1"
+		],
+		[
+			"^Favoriten: (.+)$",
+			"收藏：$1"
 		]
 	],
 	"words": [

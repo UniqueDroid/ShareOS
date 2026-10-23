@@ -1128,7 +1128,12 @@
 		"ein Dienst pro Konto": "un service par compte",
 		"Download-Automatik (autobrr)": "Automatisation des téléchargements (autobrr)",
 		"autobrr, Port 7474": "autobrr, port 7474",
-		"Darf autobrr der Box einrichten und steuern (Filter, Indexer, IRC, Releases) und festlegen, in wessen Transmission gefundene Torrents landen – ein Dienst für die ganze Box, deshalb nur für Administratoren.": "Peut configurer et piloter autobrr de la box (filtres, indexeurs, IRC, releases) et choisir dans quel Transmission arrivent les torrents trouvés – un service pour toute la box, donc réservé aux administrateurs."
+		"Darf autobrr der Box einrichten und steuern (Filter, Indexer, IRC, Releases) und festlegen, in wessen Transmission gefundene Torrents landen – ein Dienst für die ganze Box, deshalb nur für Administratoren.": "Peut configurer et piloter autobrr de la box (filtres, indexeurs, IRC, releases) et choisir dans quel Transmission arrivent les torrents trouvés – un service pour toute la box, donc réservé aux administrateurs.",
+		"Als Favorit markieren": "Marquer comme favori",
+		"Aus den Favoriten nehmen": "Retirer des favoris",
+		"App-Leiste „FAV APPS“ anzeigen (nur für dich)": "Afficher la barre « FAV APPS » (pour vous seul)",
+		"Mit dem Stern auf einer App-Kachel wird sie zum Favoriten. Die Leiste steht über „Status“ in der Übersicht und über den installierten Apps.": "L’étoile sur une tuile d’application en fait un favori. La barre se trouve au-dessus de « Statut » dans l’aperçu et au-dessus des applications installées.",
+		"Namen unter den Symbolen zeigen (aus: nur Symbole)": "Afficher les noms sous les icônes (désactivé : icônes seules)"
 	},
 	"patterns": [
 		[
@@ -2214,6 +2219,18 @@
 		[
 			"^Anzeige: (.+)$",
 			"Affichage : $1"
+		],
+		[
+			"^Als Favorit markieren: (.+)$",
+			"Marquer comme favori : $1"
+		],
+		[
+			"^Aus den Favoriten nehmen: (.+)$",
+			"Retirer des favoris : $1"
+		],
+		[
+			"^Favoriten: (.+)$",
+			"Favoris : $1"
 		]
 	],
 	"words": [
