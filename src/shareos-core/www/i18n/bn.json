@@ -1120,7 +1120,12 @@
 		"Eigenes Fenster": "আলাদা উইন্ডো",
 		"Öffnet sich jetzt in der Seite.": "এখন পেজের ভেতরে খোলে।",
 		"Öffnet sich jetzt in einem eigenen Fenster.": "এখন নিজস্ব উইন্ডোতে খোলে।",
-		"Diese App gibt es nicht (mehr).": "এই অ্যাপটি নেই (আর নেই)।"
+		"Diese App gibt es nicht (mehr).": "এই অ্যাপটি নেই (আর নেই)।",
+		"tailscaled, WireGuard-Mesh": "tailscaled, WireGuard মেশ",
+		"VPN (OpenVPN)": "VPN (OpenVPN)",
+		"Client und Server, App NetTunnel": "ক্লায়েন্ট ও সার্ভার, অ্যাপ NetTunnel",
+		"Torrents (Transmission)": "টরেন্ট (Transmission)",
+		"ein Dienst pro Konto": "প্রতি অ্যাকাউন্টে একটি পরিষেবা"
 	},
 	"patterns": [
 		[

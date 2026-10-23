@@ -142,6 +142,41 @@ check "system app: a missing program is refused" "run 'shareos-apps install-file
 check "system app: permissions are refused" "run 'shareos-apps install-file /tmp/pkg/cron-sys.sapp' | grep -q 'only for web apps'"
 check "system app: no leftovers from failed installs" "[ -z \"\$(ls -A $R/opt/shareos/sysapps | grep '^\.new')\" ] && [ -z \"\$(ls -A $R/www-apps | grep '^\.new')\" ]"
 check "system app: reinstall keeps one starter" "run 'shareos-apps install-file /tmp/pkg/demo-sys.sapp' | js \"d['ok']\" && [ \"\$(ls $R/opt/shareos/bin)\" = demo-cmd ]"
+# --- system apps that are services ("service" in app.json, controllers of the firmware)
+printf '#!/bin/sh\n# shareos-service: boot start stop-all\necho "$1" >> /tmp/demosvc.log\n' > $R/usr/sbin/shareos-demosvc
+printf '#!/bin/sh\n# shareos-service: stop-all\necho "$1" >> /tmp/onlystop.log\n' > $R/usr/sbin/shareos-onlystop
+printf '#!/bin/sh\necho "$1" >> /tmp/nomark.log\n' > $R/usr/sbin/shareos-nomark
+chmod 755 $R/usr/sbin/shareos-demosvc $R/usr/sbin/shareos-onlystop $R/usr/sbin/shareos-nomark
+rm -f $R/tmp/demosvc.log $R/tmp/onlystop.log $R/tmp/nomark.log
+mksys $T/v1 demo-svc demo-svcd "a['service']={'control':'demosvc','on_install':'start','delay':0}"
+mksys $T/v2 ghost-svc ghost-svcd "a['service']={'control':'nothere'}"
+mksys $T/v3 nomark-svc nomark-svcd "a['service']={'control':'nomark'}"
+mksys $T/v4 noboot-svc noboot-svcd "a['service']={'control':'onlystop'}"
+mksys $T/v5 stoponly-svc stoponly-svcd "a['service']={'control':'onlystop','boot':False}"
+mksys $T/v6 badkey-svc badkey-svcd "a['service']={'control':'demosvc','run':'/bin/sh'}"
+mksys $T/v7 badverb-svc badverb-svcd "a['service']={'control':'onlystop','boot':False,'on_install':'start'}"
+mksys $T/v8 minidlna minidlnad-test
+waitlog() { i=0; until grep -qx "$2" $R/tmp/$1 2>/dev/null || [ $i -ge 20 ]; do sleep 0.2; i=$((i + 1)); done; grep -qx "$2" $R/tmp/$1 2>/dev/null; }
+check "service: installs and starts right away (on_install)" "run 'shareos-apps install-file /tmp/pkg/demo-svc.sapp' | js \"d['ok']\" && waitlog demosvc.log start"
+check "service: an unknown controller is refused" "run 'shareos-apps install-file /tmp/pkg/ghost-svc.sapp' | grep 'no service controller' | grep -q nothere && [ ! -e $R/opt/shareos/sysapps/ghost-svc ]"
+check "service: a program without the shareos-service line is no controller" "run 'shareos-apps install-file /tmp/pkg/nomark-svc.sapp' | grep -q 'no service controller' && [ ! -e $R/tmp/nomark.log ]"
+check "service: boot needs a controller that can boot" "run 'shareos-apps install-file /tmp/pkg/noboot-svc.sapp' | grep -q 'cannot start at boot'"
+check "service: unknown fields are refused (no own commands)" "run 'shareos-apps install-file /tmp/pkg/badkey-svc.sapp' | grep -q 'unknown service field run'"
+check "service: on_install only with what the controller can do" "run 'shareos-apps install-file /tmp/pkg/badverb-svc.sapp' | grep -q 'on_install must be one of'"
+check "service: boot false with a stop-only controller installs" "run 'shareos-apps install-file /tmp/pkg/stoponly-svc.sapp' | js \"d['ok']\""
+check "service: an older package without \"service\" gets the known one (minidlna)" "run 'shareos-apps install-file /tmp/pkg/minidlna.sapp' | js \"d['ok']\" && run 'shareos-apps services list' | js \"[(s['control'],s['legacy'],s['delay']) for s in d['services'] if s['id']=='minidlna']==[('dlna',True,5)]\""
+check "services list: sorted by delay, with the program for the state" "run 'shareos-apps services list' | js \"[(s['id'],s['boot'],s['proc']) for s in d['services']]==[('demo-svc',True,'demo-svcd'),('minidlna',True,'minidlnad-test'),('stoponly-svc',False,'stoponly-svcd')]\""
+rm -f $R/tmp/demosvc.log
+check "services boot: starts the boot services in the background" "run 'shareos-apps services boot' | js \"d['started']==['demosvc','dlna']\" && waitlog demosvc.log boot"
+run "uci set shareos.autostart=autostart; uci add_list shareos.autostart.disabled=demosvc; uci commit shareos" >/dev/null
+check "services boot: one switched off under Autostart stays off" "run 'shareos-apps services boot' | js \"d['started']==['dlna']\""
+run "uci delete shareos.autostart.disabled; uci commit shareos" >/dev/null
+rm -f $R/tmp/demosvc.log $R/tmp/onlystop.log
+check "init script S90services boots them" "run '/etc/init.d/S90services start' >/dev/null && waitlog demosvc.log boot"
+check "services stop (shutdown): stop-all of every service, also boot-less ones" "run 'shareos-apps services stop' | js \"d['stopped']==['onlystop','dlna','demosvc']\" && waitlog demosvc.log stop-all && waitlog onlystop.log stop-all"
+rm -f $R/tmp/demosvc.log
+check "remove: the service is stopped first" "run 'shareos-apps remove stoponly-svc; shareos-apps remove minidlna' | grep -c ok | grep -qx 2 && run 'shareos-apps remove demo-svc' | js \"d['ok']\" && grep -qx stop-all $R/tmp/demosvc.log"
+run 'shareos-apps install-file /tmp/pkg/demo-svc.sapp' >/dev/null
 SYSDIR=${SHAREOS_TEST_SYSAPPS:-$TOP/output/sysapps/sapp}
 if ls $SYSDIR/nano-*.sapp $SYSDIR/htop-*.sapp >/dev/null 2>&1; then
 	cp $SYSDIR/nano-*.sapp $P/nano.sapp; cp $SYSDIR/htop-*.sapp $P/htop.sapp
@@ -177,6 +212,12 @@ for i in $(seq 60); do rpc shareos.apps catalog '{}' | js "d['refreshing']==Fals
 check "rpc: refreshed catalog is there afterwards" "rpc shareos.apps catalog '{}' | js \"d['refreshing']==False and d['time']>0 and 'hello' in [a['id'] for a in d['apps']]\""
 check "rpc: installed list follows an install (cached result renewed)" "rpc shareos.apps installed '{}' | js \"[a['version'] for a in d['apps'] if a['id']=='hello']==['1.1.0']\" && run 'shareos-apps install-file /tmp/pkg/hello-1.0.0.sapp' >/dev/null && rpc shareos.apps installed '{}' | js \"[a['version'] for a in d['apps'] if a['id']=='hello']==['1.0.0']\" && run 'shareos-apps install-file /tmp/pkg/hello-1.1.0.sapp' >/dev/null && rpc shareos.apps installed '{}' | js \"[a['version'] for a in d['apps'] if a['id']=='hello']==['1.1.0']\""
 check "rpc: services report running state" "rpc shareos.service list '{}' | js \"[s['running'] for s in d['services'] if s['name']=='rpcd']==[True]\""
+check "rpc: services of system apps are listed under their control name" "rpc shareos.service list '{}' | js \"[(s['sysapp'],s['label'],s['autostart'],s['essential']) for s in d['services'] if s['name']=='demosvc']==[('demo-svc','Sys demo-svc',True,False)]\""
+rm -f $R/tmp/demosvc.log
+check "rpc: start / stop of a system app service run its controller" "rpc shareos.service action '{\"name\":\"demosvc\",\"action\":\"start\"}' | js \"d['ok']\" && rpc shareos.service action '{\"name\":\"demosvc\",\"action\":\"stop\"}' | js \"d['ok']\" && [ \"\$(cat $R/tmp/demosvc.log | tr '\\n' ' ')\" = 'boot stop-all ' ]"
+check "rpc: autostart of a system app service can be switched off" "rpc shareos.service autostart '{\"name\":\"demosvc\",\"enabled\":false}' | js \"d['autostart']==False\" && run 'uci get shareos.autostart.disabled' | grep -qw demosvc && rpc shareos.service autostart '{\"name\":\"demosvc\",\"enabled\":true}' | js \"d['autostart']==True\""
+check "rpc: unknown services stay unknown" "rpc shareos.service action '{\"name\":\"nothere\",\"action\":\"start\"}' | js \"d.get('error')=='unknown service'\""
+run 'shareos-apps remove demo-svc' >/dev/null
 check "rpc: icon as data URL (no request to the apps server)" "rpc shareos.apps installed '{}' | js \"d['apps'][0]['icon_data'].startswith('data:image/svg+xml;base64,')\""
 check "rpc: box name for app links set by hand" "rpc shareos.web set '{\"host\":\"NAS.example.lan\"}' | js \"d['ok']\" && rpc shareos.apps installed '{}' | js \"d['host']=='nas.example.lan' and d['host_auto']==False\""
 check "rpc: invalid box name rejected" "rpc shareos.web set '{\"host\":\"a b\"}' | grep -q 'invalid host'"

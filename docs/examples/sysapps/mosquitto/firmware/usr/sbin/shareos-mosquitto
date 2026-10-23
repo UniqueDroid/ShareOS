@@ -1,0 +1,84 @@
+#!/usr/bin/ucode -S
+//
+// shareos-mosquitto – EXAMPLE controller of a service (system app "mosquitto")
+// Copy to src/shareos-core/usr/sbin/shareos-<control> and install it in
+// package/shareos-core/shareos-core.mk. Only the firmware brings controllers:
+// a package names one in its app.json ("service": {"control": "mosquitto"}).
+//
+//   shareos-mosquitto start      start the daemon (after installing the app)
+//   shareos-mosquitto boot       start at boot – only when switched on
+//   shareos-mosquitto stop-all   stop (app removed, shutdown)
+//   shareos-mosquitto status     running, port (JSON)
+//
+// shareos-service: boot start stop-all
+//
+// Settings: UCI mosquitto.main – enabled, port. The daemon runs as its own
+// user (not root); its state lives on the apps drive, not on the flash.
+//
+import { readfile, writefile, stat, popen } from 'fs';
+import { cursor } from 'uci';
+
+const BIN = '/opt/shareos/bin/mosquitto';
+const RUN = '/tmp/shareos-mosquitto';
+const PID = RUN + '/pid';
+const LOG = RUN + '/log';
+const USER = 'mosquitto';
+
+function shq(s) { return "'" + replace(s, "'", "'\\''") + "'"; }
+function sh(cmd) {
+	let p = popen(cmd + ' 2>&1', 'r');
+	if (!p) return { rc: -1, out: '' };
+	let o = p.read('all') ?? '';
+	return { rc: p.close(), out: o };
+}
+function out(o) { print(sprintf('%J\n', o)); }
+function die(msg) { out({ error: msg }); exit(1); }
+function installed() { return stat(BIN)?.type == 'file'; }
+function settings() {
+	let c = cursor();
+	return { enabled: c.get('mosquitto', 'main', 'enabled') != '0', port: +(c.get('mosquitto', 'main', 'port') ?? 1883) };
+}
+function pid() {
+	let p = +trim(readfile(PID) ?? '0');
+	return p > 1 && index(readfile('/proc/' + p + '/cmdline') ?? '', 'mosquitto') >= 0 ? p : null;
+}
+// the apps drive (see "apps" in /etc/config/storage), else /tmp
+function data_dir() {
+	let v = cursor().get('storage', 'global', 'apps');
+	return v && stat('/mnt/' + v)?.type == 'directory' ? '/mnt/' + v + '/.shareos/mosquitto' : RUN + '/data';
+}
+
+function start() {
+	if (!installed()) die('Mosquitto is not installed (system app "mosquitto" in the store)');
+	if (pid()) return;
+	let s = settings(), data = data_dir();
+	sh('grep -q ^' + USER + ': /etc/passwd || adduser -S -D -H -h /nonexistent ' + USER);
+	sh(sprintf('mkdir -p %s %s && chmod 700 %s && chown %s %s', shq(RUN), shq(data), shq(data), USER, shq(data)));
+	writefile(RUN + '/mosquitto.conf', sprintf('listener %d\nallow_anonymous true\npersistence true\npersistence_location %s/\nuser %s\n', s.port, data, USER));
+	let r = sh(sprintf('start-stop-daemon -S -b -m -p %s -x /bin/sh -- -c %s', shq(PID),
+		shq(sprintf('exec %s -c %s >>%s 2>&1', shq(BIN), shq(RUN + '/mosquitto.conf'), shq(LOG)))));
+	for (let i = 0; i < 25 && !pid(); i++) sh('sleep 0.2');
+	if (!pid()) die('Mosquitto did not start: ' + trim(sh('tail -n 3 ' + shq(LOG)).out || r.out));
+}
+
+function stop() {
+	let p = pid();
+	if (p) {
+		sh('kill ' + p);
+		for (let i = 0; i < 25 && pid(); i++) sh('sleep 0.2');
+		if (pid()) sh('kill -9 ' + p);
+	}
+	sh('rm -f ' + shq(PID));
+}
+
+function status() { return { installed: installed(), running: !!pid(), ...settings() }; }
+
+switch (ARGV[0]) {
+case 'start': start(); out(status()); break;
+case 'boot': if (installed() && settings().enabled) { start(); out(status()); } else out({ started: false }); break;
+case 'stop-all': stop(); out({ ok: true }); break;
+case 'status': out(status()); break;
+default:
+	print('usage: shareos-mosquitto start|boot|stop-all|status\n');
+	exit(2);
+}

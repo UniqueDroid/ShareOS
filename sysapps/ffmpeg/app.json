@@ -9,6 +9,7 @@
 	},
 	"type": "system",
 	"commands": [ "ffmpeg", "ffprobe" ],
+	"service": { "control": "media", "boot": false },
 	"icon": "icon.svg",
 	"category": "media",
 	"license": "LGPL-2.1-or-later (FFmpeg), LGPL (LAME), BSD (Opus)",

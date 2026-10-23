@@ -9,6 +9,7 @@
 	},
 	"type": "system",
 	"commands": [ "openvpn" ],
+	"service": { "control": "vpn", "delay": 8 },
 	"icon": "icon.svg",
 	"category": "network",
 	"license": "GPL-2.0-only",

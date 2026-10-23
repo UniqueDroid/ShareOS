@@ -1120,7 +1120,12 @@
 		"Eigenes Fenster": "Отдельное окно",
 		"Öffnet sich jetzt in der Seite.": "Теперь открывается на странице.",
 		"Öffnet sich jetzt in einem eigenen Fenster.": "Теперь открывается в отдельном окне.",
-		"Diese App gibt es nicht (mehr).": "Этого приложения нет (больше нет)."
+		"Diese App gibt es nicht (mehr).": "Этого приложения нет (больше нет).",
+		"tailscaled, WireGuard-Mesh": "tailscaled, mesh-сеть WireGuard",
+		"VPN (OpenVPN)": "VPN (OpenVPN)",
+		"Client und Server, App NetTunnel": "Клиент и сервер, приложение NetTunnel",
+		"Torrents (Transmission)": "Торренты (Transmission)",
+		"ein Dienst pro Konto": "одна служба на учётную запись"
 	},
 	"patterns": [
 		[

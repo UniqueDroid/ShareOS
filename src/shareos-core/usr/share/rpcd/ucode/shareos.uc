@@ -42,9 +42,15 @@ const SERVICES = {
 	ubus:     { proc: 'ubusd',    label: 'Systembus (ubus)', desc: 'Nachrichten zwischen den Diensten' },
 	syslogd:  { proc: 'syslogd',  label: 'Systemprotokoll', desc: 'syslogd, im RAM' },
 	'avahi-daemon': { proc: 'avahi-daemon', label: 'Netzwerkname (mDNS)', desc: 'macht die Box als <name>.local erreichbar' },
-	board:    { proc: 'dns320l-daemon', label: 'Gerätesteuerung', desc: 'Lüfter, Temperatur, Taster, MCU-Uhr' },
-	// only listed with the system app installed
-	dlna:     { proc: 'minidlnad', label: 'Medienserver (DLNA)', desc: 'MiniDLNA, Port 8200', needs: '/opt/shareos/bin/minidlnad' }
+	board:    { proc: 'dns320l-daemon', label: 'Gerätesteuerung', desc: 'Lüfter, Temperatur, Taster, MCU-Uhr' }
+};
+// services of system apps ("service" in their app.json, see shareos-apps):
+// listed while the app is installed, controlled by /usr/sbin/shareos-<control>
+const SYS_SVC_TEXT = {
+	dlna:         { label: 'Medienserver (DLNA)', desc: 'MiniDLNA, Port 8200' },
+	tailscale:    { label: 'Fernzugriff (Tailscale)', desc: 'tailscaled, WireGuard-Mesh' },
+	vpn:          { label: 'VPN (OpenVPN)', desc: 'Client und Server, App NetTunnel' },
+	transmission: { label: 'Torrents (Transmission)', desc: 'ein Dienst pro Konto' }
 };
 // services that must not be stopped from the UI (it would cut itself off)
 const ESSENTIAL = { uhttpd: true, rpcd: true, ubus: true, board: true };
@@ -218,6 +224,15 @@ function running(proc, names) {
 	return !!(names ?? proc_names())[proc];
 }
 
+function sys_services() {
+	let j = null;
+	try { j = json(sh('/usr/sbin/shareos-apps services list').out); } catch (e) { }
+	return filter(j?.services ?? [], (s) => s.boot && !SERVICES[s.control]);
+}
+function sys_service(name) {
+	for (let s in sys_services()) if (s.control == name) return s;
+	return null;
+}
 function init_script(name) {
 	let s = glob('/etc/init.d/S[0-9][0-9]' + name);
 	return length(s) == 1 ? s[0] : null;
@@ -1891,6 +1906,11 @@ return {
 					push(list, { name, label: s.label, desc: s.desc, running: running(proc, names), essential: !!ESSENTIAL[name],
 						autostart: !(name in off) });
 				}
+				for (let s in sys_services()) {
+					let t = SYS_SVC_TEXT[s.control];
+					push(list, { name: s.control, label: t?.label ?? s.name, desc: t?.desc ?? s.id, running: running(s.proc, names),
+						essential: false, autostart: !(s.control in off), sysapp: s.id });
+				}
 				return { services: list };
 			}
 		},
@@ -1899,11 +1919,18 @@ return {
 			args: { name: '', action: '' },
 			call: function(req) {
 				let name = req.args.name, act = req.args.action;
-				let script = SERVICES[name] ? init_script(name) : null;
-				if (!script)
-					return { error: 'unknown service' };
 				if (!(act in { start: 1, stop: 1, restart: 1 }))
 					return { error: 'unknown action' };
+				let script = SERVICES[name] ? init_script(name) : null;
+				let svc = script ? null : sys_service(name);
+				if (svc) {
+					// start = what the boot does (the controller follows its settings)
+					let ctl = '/usr/sbin/shareos-' + svc.control;
+					let r = sh(act == 'start' ? ctl + ' boot' : act == 'stop' ? ctl + ' stop-all' : ctl + ' stop-all; ' + ctl + ' boot');
+					return { ok: r.rc == 0, output: trim(r.out), running: running(svc.proc) };
+				}
+				if (!script)
+					return { error: 'unknown service' };
 				if (act == 'stop' && ESSENTIAL[name])
 					return { error: 'this service cannot be stopped from the web interface' };
 				if (act == 'restart' && ESSENTIAL[name]) {
@@ -1920,7 +1947,7 @@ return {
 			args: { name: '', enabled: true },
 			call: function(req) {
 				let name = req.args.name;
-				if (!SERVICES[name] || !init_script(name)) return { error: 'unknown service' };
+				if (!(SERVICES[name] && init_script(name)) && !sys_service(name)) return { error: 'unknown service' };
 				if (ESSENTIAL[name] && !req.args.enabled) return { error: 'this service is always started' };
 				let off = autostart_off();
 				if (req.args.enabled) delete off[name]; else off[name] = true;

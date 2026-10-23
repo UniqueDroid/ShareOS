@@ -9,6 +9,7 @@
 	},
 	"type": "system",
 	"commands": [ "transmission-daemon" ],
+	"service": { "control": "transmission", "delay": 5 },
 	"icon": "icon.svg",
 	"category": "network",
 	"license": "GPL-2.0-or-later",

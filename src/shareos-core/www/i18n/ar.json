@@ -1120,7 +1120,12 @@
 		"Eigenes Fenster": "نافذة مستقلة",
 		"Öffnet sich jetzt in der Seite.": "تُفتح الآن داخل الصفحة.",
 		"Öffnet sich jetzt in einem eigenen Fenster.": "تُفتح الآن في نافذة مستقلة.",
-		"Diese App gibt es nicht (mehr).": "هذا التطبيق غير موجود (بعد الآن)."
+		"Diese App gibt es nicht (mehr).": "هذا التطبيق غير موجود (بعد الآن).",
+		"tailscaled, WireGuard-Mesh": "tailscaled، شبكة WireGuard",
+		"VPN (OpenVPN)": "VPN (OpenVPN)",
+		"Client und Server, App NetTunnel": "عميل وخادم، تطبيق NetTunnel",
+		"Torrents (Transmission)": "التورنت (Transmission)",
+		"ein Dienst pro Konto": "خدمة واحدة لكل حساب"
 	},
 	"patterns": [
 		[

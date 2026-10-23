@@ -54,24 +54,18 @@ define SHAREOS_CORE_INSTALL_TARGET_CMDS
 	$(INSTALL) -D -m 0755 $(@D)/usr/sbin/shareos-media $(TARGET_DIR)/usr/sbin/shareos-media
 	$(INSTALL) -D -m 0755 $(@D)/usr/sbin/shareos-snapshot $(TARGET_DIR)/usr/sbin/shareos-snapshot
 	$(INSTALL) -D -m 0644 $(@D)/etc/config/snapshots $(TARGET_DIR)/etc/config/snapshots
-	$(INSTALL) -D -m 0755 $(@D)/usr/lib/shareos/apphooks/ffmpeg $(TARGET_DIR)/usr/lib/shareos/apphooks/ffmpeg
 	$(INSTALL) -D -m 0755 $(@D)/usr/sbin/shareos-transmission $(TARGET_DIR)/usr/sbin/shareos-transmission
-	$(INSTALL) -D -m 0755 $(@D)/etc/init.d/S95transmission $(TARGET_DIR)/etc/init.d/S95transmission
-	$(INSTALL) -D -m 0755 $(@D)/usr/lib/shareos/apphooks/transmission-daemon $(TARGET_DIR)/usr/lib/shareos/apphooks/transmission-daemon
+	$(INSTALL) -D -m 0755 $(@D)/etc/init.d/S90services $(TARGET_DIR)/etc/init.d/S90services
+	# before 0.2.0-beta.9 every service had its own init script and removal hook
+	rm -rf $(TARGET_DIR)/etc/init.d/S93tailscale $(TARGET_DIR)/etc/init.d/S94vpn $(TARGET_DIR)/etc/init.d/S95transmission $(TARGET_DIR)/etc/init.d/S96dlna $(TARGET_DIR)/usr/lib/shareos/apphooks
 	$(INSTALL) -D -m 0755 $(@D)/usr/sbin/shareos-vpn $(TARGET_DIR)/usr/sbin/shareos-vpn
-	$(INSTALL) -D -m 0755 $(@D)/etc/init.d/S94vpn $(TARGET_DIR)/etc/init.d/S94vpn
-	$(INSTALL) -D -m 0755 $(@D)/usr/lib/shareos/apphooks/openvpn $(TARGET_DIR)/usr/lib/shareos/apphooks/openvpn
 	$(INSTALL) -D -m 0644 $(@D)/etc/config/vpn $(TARGET_DIR)/etc/config/vpn
 	$(INSTALL) -D -m 0755 $(@D)/www-apps/_shareos/cgi/vpn $(TARGET_DIR)/www-apps/_shareos/cgi/vpn
 	$(INSTALL) -D -m 0755 $(@D)/usr/sbin/shareos-tailscale $(TARGET_DIR)/usr/sbin/shareos-tailscale
-	$(INSTALL) -D -m 0755 $(@D)/etc/init.d/S93tailscale $(TARGET_DIR)/etc/init.d/S93tailscale
-	$(INSTALL) -D -m 0755 $(@D)/usr/lib/shareos/apphooks/tailscaled $(TARGET_DIR)/usr/lib/shareos/apphooks/tailscaled
 	$(INSTALL) -D -m 0644 $(@D)/etc/config/tailscale $(TARGET_DIR)/etc/config/tailscale
 	$(INSTALL) -D -m 0755 $(@D)/www-apps/_shareos/cgi/tailscale $(TARGET_DIR)/www-apps/_shareos/cgi/tailscale
 	$(INSTALL) -D -m 0755 $(@D)/www-apps/_shareos/cgi/status $(TARGET_DIR)/www-apps/_shareos/cgi/status
 	$(INSTALL) -D -m 0755 $(@D)/usr/sbin/shareos-dlna $(TARGET_DIR)/usr/sbin/shareos-dlna
-	$(INSTALL) -D -m 0755 $(@D)/etc/init.d/S96dlna $(TARGET_DIR)/etc/init.d/S96dlna
-	$(INSTALL) -D -m 0755 $(@D)/usr/lib/shareos/apphooks/minidlna $(TARGET_DIR)/usr/lib/shareos/apphooks/minidlna
 	$(INSTALL) -D -m 0644 $(@D)/etc/config/dlna $(TARGET_DIR)/etc/config/dlna
 	$(INSTALL) -D -m 0755 $(@D)/usr/sbin/shareos-reset-access $(TARGET_DIR)/usr/sbin/shareos-reset-access
 	$(INSTALL) -D -m 0755 $(@D)/usr/sbin/shareos-terminal $(TARGET_DIR)/usr/sbin/shareos-terminal

@@ -9,6 +9,7 @@
 	},
 	"type": "system",
 	"commands": [ "minidlnad" ],
+	"service": { "control": "dlna", "delay": 5 },
 	"icon": "icon.svg",
 	"category": "media",
 	"license": "GPL-2.0-only, BSD-3-Clause",

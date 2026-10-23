@@ -13,6 +13,8 @@
 //   shareos-tailscale start             start the daemon (system app installed)
 //   shareos-tailscale boot | stop-all   start at boot / stop (app removed)
 //
+// shareos-service: boot start stop-all
+//
 // tailscale changes the network of the whole box, so only admins reach this
 // (rpcd shareos.apptailscale checks it). The box runs tailscaled with the
 // kernel TUN device, without firewall rules and without changing its DNS;

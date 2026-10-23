@@ -1,0 +1,18 @@
+{
+	"id": "mosquitto",
+	"name": "Mosquitto",
+	"version": "2.0.22",
+	"publisher": "Your name",
+	"description": {
+		"de": "MQTT-Broker für das Smart Home: Sensoren und Geräte im Heimnetz tauschen über die Box Nachrichten aus (Port 1883). Startet nach dem Einschalten von selbst.",
+		"en": "MQTT broker for the smart home: sensors and devices in the home network exchange messages through the box (port 1883). Starts by itself after power-on."
+	},
+	"type": "system",
+	"commands": [ "mosquitto" ],
+	"service": { "control": "mosquitto", "on_install": "start", "delay": 5 },
+	"icon": "icon.svg",
+	"category": "network",
+	"license": "EPL-2.0 OR EDL-1.0",
+	"homepage": "https://mosquitto.org/",
+	"min_shareos": "0.2.0-beta.9"
+}

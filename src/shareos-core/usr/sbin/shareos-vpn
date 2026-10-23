@@ -14,6 +14,8 @@
 //   shareos-vpn stop-all                 server and client off (system app removed)
 //   shareos-vpn server-status | server-set (stdin JSON {enabled, port, proto,
 //                net, host, lan}) | server-log
+//
+// shareos-service: boot stop-all
 //   shareos-vpn device-add|device-profile|device-remove <name>
 //                                        devices that may connect to the box
 //

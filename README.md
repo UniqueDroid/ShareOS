@@ -90,6 +90,7 @@ Version in brackets = first release with the feature.
 - Paperless-ngx: inbox folders per user or shared (e.g. for a scanner), upload through the Paperless API (beta.4)
 - Installable as an app (PWA), status address for widget apps (beta.4)
 - Remote access with Tailscale (system app `tailscaled`, starts by itself, admins only, permission `tailscale` for apps): the box in a tailnet without port forwarding, also behind DS-Lite (0.2.0-beta.7)
+- System apps declare their service in `app.json` (`"service"`), ShareOS starts and stops it through the firmware's controller; how to submit a system app: `sysapps/README.md` (0.2.0-beta.9)
 - Large system apps on the apps drive (link in `/opt`), the flash stays free (0.2.0-beta.7)
 - Media server (DLNA/UPnP AV, MiniDLNA as a system app): TVs and players play music, videos and pictures from chosen shares (0.2.0-beta.6)
 - VPN for the box in both directions (OpenVPN as a system app, app NetTunnel, admins only): as client with cleaned profiles, as server with its own CA and a ready-made profile per device; status chips of services and apps in the header (0.2.0-beta.6)
@@ -169,10 +170,20 @@ package/                 ShareOS buildroot packages
 src/alt-f-utils/         Alt-F device tools (MCU daemon, dns323-fw, sysctrl)
 patches/                 hashes/patches for buildroot packages
 src/shareos-core/        backend: rpcd ucode plugin, updater, UCI defaults, init scripts
+sysapps/                 system apps (native programs and services) for the store
 tests/                   host and emulator tests (updater, network, users/shares, storage, cloud/Paperless, qemu stack), UI mock
 scripts/                 helper scripts
 legacy/alt-f/            the original Alt-F tree, kept for reference
 ```
+
+## Apps: where to submit what
+
+- **Web apps** (HTML/JS, run in the browser, use the app SDK) →
+  [ShareOS-Apps](https://github.com/UniqueDroid/ShareOS-Apps).
+- **System apps** (native programs for the box, and services/daemons) → here,
+  in [`sysapps/`](sysapps/README.md): they are built with the firmware's
+  toolchain, and a service needs its controller in the firmware. The README
+  there has an example of each kind.
 
 ## Building
 
