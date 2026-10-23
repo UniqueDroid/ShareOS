@@ -12,12 +12,29 @@ temperature sensor, buttons, LEDs, power-off) is described per model in
 |---|---|---|---|
 | DNS-320L rev A (A1–A3) | `ShareOS-<ver>-DNS-320L-rev-Ax.*` | 256 MB | **tested** |
 | DNS-320 rev B | `ShareOS-<ver>-DNS-320-rev-Bx.*` | 128 MB | built, **testers wanted** |
-| DNS-325 rev A | `ShareOS-<ver>-DNS-325-rev-Ax.*` | 256 MB | built, **testers wanted** |
+| DNS-325 rev A | `ShareOS-<ver>-DNS-325-rev-Ax.*` | 256 MB | **partly tested** (rev A1, see below), more testers wanted |
 | DNS-320 rev A | `ShareOS-<ver>-DNS-320-rev-Ax.*` | 128 MB | built, **testers wanted** |
 | DNR-322L | – | 128 MB | planned |
 | DNS-327L | – | 512 MB | planned (own kernel and flash layout) |
 
 Not possible: DNS-323, DNS-321, DNS-343 (64 MB RAM, 8 MB flash).
+
+## DNS-325 rev A1: what has been checked
+
+First test on real hardware with a serial console (0.2.0-beta.7 and a build
+of the fix for 0.2.0-beta.11).
+
+- **Works:** boots from flash (from 0.2.0-beta.11; the beta.7 `.bin` restarts
+  in a loop, see the [changelog](../CHANGELOG.md)), model and RAM (256 MB), 1
+  Gbit/s Ethernet, temperature sensor, clock, USB, the 6 flash partitions, the
+  LEDs, the fan presets (quiet, balanced, cool), power-on after a power cut,
+  an update through System → Firmware.
+- **Does not work yet:** the power, reset and USB buttons (`shareos-buttons`
+  finds no input device on this box; a separate change fixes it).
+- **Not checked yet:** a complete first installation from a freshly flashed
+  `.bin` with the fixed image.
+- A DNS-325 that already runs the beta.7 image and restarts in a loop needs a
+  serial console to recover (the old initramfs is in its flash).
 
 ## How the models differ
 
