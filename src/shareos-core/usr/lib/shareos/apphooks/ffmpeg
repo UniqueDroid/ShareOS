@@ -1,5 +1,0 @@
-#!/bin/sh
-# system app "ffmpeg" is removed: cancel the media jobs that wait or run
-[ "$1" = remove ] || exit 0
-/usr/sbin/shareos-media stop-all >/dev/null 2>&1
-exit 0

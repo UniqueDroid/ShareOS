@@ -1120,7 +1120,12 @@
 		"Eigenes Fenster": "Fenêtre séparée",
 		"Öffnet sich jetzt in der Seite.": "S’ouvre maintenant dans la page.",
 		"Öffnet sich jetzt in einem eigenen Fenster.": "S’ouvre maintenant dans sa propre fenêtre.",
-		"Diese App gibt es nicht (mehr).": "Cette application n’existe pas (ou plus)."
+		"Diese App gibt es nicht (mehr).": "Cette application n’existe pas (ou plus).",
+		"tailscaled, WireGuard-Mesh": "tailscaled, maillage WireGuard",
+		"VPN (OpenVPN)": "VPN (OpenVPN)",
+		"Client und Server, App NetTunnel": "Client et serveur, app NetTunnel",
+		"Torrents (Transmission)": "Torrents (Transmission)",
+		"ein Dienst pro Konto": "un service par compte"
 	},
 	"patterns": [
 		[

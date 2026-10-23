@@ -1429,3 +1429,8 @@ E1116	现在在独立窗口中打开。
 E1117	此应用不存在（或已删除）。
 P269	$1 的显示方式
 P270	显示：$1
+E1118	tailscaled，WireGuard 网状网络
+E1119	VPN（OpenVPN）
+E1120	客户端和服务器，应用 NetTunnel
+E1121	种子下载（Transmission）
+E1122	每个账户一个服务

@@ -421,6 +421,16 @@ Braucht ein Tailscale-Konto (kostenlos), ein Handy oder einen Rechner mit Tailsc
 5. Webpad (ohne `embed`) → *Öffnen ↗*: ein eigenes Fenster, kein neuer Tab.
 6. Als Benutzer in „Mein ShareOS“: eine App mit `embed` öffnet sich in der Seite (`#/app/<id>`), ✕ führt zurück.
 
+## 14p. Dienste der System-Apps (0.2.0-beta.9)
+
+1. Nach dem Update im Terminal: `ls /etc/init.d` zeigt `S90services`, kein `S93tailscale`, `S94vpn`, `S95transmission`, `S96dlna` mehr; `/usr/lib/shareos/apphooks` gibt es nicht mehr.
+2. `shareos-apps services list` listet die installierten Dienste, z. B. `tailscaled` mit `control` `tailscale`. Bei Paketen von vor beta.9 steht `"legacy": true`.
+3. Dienste → Status: Fernzugriff (Tailscale), VPN (OpenVPN), Torrents (Transmission), Medienserver (DLNA) – je nach installierten System-Apps – mit „läuft“ / „gestoppt“. Tailscale *Stoppen*: `ps | grep [t]ailscaled` ist leer; *Starten*: läuft wieder.
+4. Dienste → Autostart: bei Tailscale den Haken *starten* entfernen, Box neu starten: `tailscaled` läuft nicht. Haken wieder setzen, neu starten: läuft (die Box ist von selbst wieder im Tailnet).
+5. Nach einem Neustart im Systemprotokoll (`logread | grep shareos-`): `shareos-services` meldet die gestarteten Dienste, die Steuerungen (`shareos-tailscale`, `shareos-transmission` …) ihre Ausgabe.
+6. System-App *tailscaled* entfernen und wieder installieren: Der Dienst hält an bzw. läuft gleich nach der Installation.
+7. Eine eigene System-App mit `"service": { "control": "gibtsnicht" }` hochladen: abgelehnt mit „this ShareOS has no service controller“.
+
 ## 15. Tasten
 
 - **Reset-Taste** (Loch hinten), gedrückt halten und loslassen:

@@ -6,7 +6,10 @@ pre-releases for test devices only.
 
 ## 0.2.0-beta.9
 
-- **Tailscale starts by itself:** the daemon now runs as soon as the system app `tailscaled` is installed and after every restart – it waits for the sign-in, and a box that was signed in connects again by itself. Before, only an app's *Verbinden* started it. The removal hook follows the new id `tailscaled`.
+- **Tailscale starts by itself:** the daemon now runs as soon as the system app `tailscaled` is installed and after every restart – it waits for the sign-in, and a box that was signed in connects again by itself. Before, only an app's *Verbinden* started it.
+- **Services of system apps are declared in their `app.json`:** `"service": { "control": "tailscale", "on_install": "start", "delay": 5 }` – ShareOS starts it at boot (`/etc/init.d/S90services`, after its delay, in the background), right after installing if asked, and stops it when the app is removed or the box shuts down. The work is done by the firmware's controller `/usr/sbin/shareos-<control>`, which states what it can do (`shareos-service: boot start stop-all`); a package cannot bring its own, so only reviewed code starts daemons as root. One init script and no removal hooks replace `S93tailscale`, `S94vpn`, `S95transmission`, `S96dlna` and `/usr/lib/shareos/apphooks` – renaming a system app can no longer break its start. Packages built before carry no `"service"` yet; ShareOS knows their entries.
+- **Services → Status / Autostart** list the services of installed system apps (Tailscale, VPN, Transmission, media server) with their state; start, stop and switching the autostart off work for them as for the other services (the names stay `tailscale`, `vpn`, `transmission`, `dlna`).
+- **System apps are submitted to the ShareOS repository** (`sysapps/`), web apps to ShareOS-Apps: `sysapps/README.md` explains both kinds with an example each – a program (`tree`) and a service with its controller (`mosquitto`) in `docs/examples/sysapps/`.
 
 ## 0.2.0-beta.8
 

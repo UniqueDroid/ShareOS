@@ -161,6 +161,13 @@ direkt auf der Box nachgesehen, warum der Webserver nicht lief.
 |---|---|
 | 08:27 | Jan merged NetTunnel, ShareCommander 1.3, WinWeb Player 1.2 und Tailscale; der Store zeigt die neuen Apps. Alles für `v0.2.0-beta.7` steht auf `main`. |
 
+### Freitag, 23.10.2026
+
+| Zeit | Was passiert ist |
+|---|---|
+| 08:30 | Jan: „Der startet nicht von alleine“ – `tailscaled` lief erst, wenn eine App *Verbinden* drückte, und die eingereichte Tailscale-App sprach eine Schnittstelle an, die es auf der Box nicht gibt. Claude startet den Dienst bei Installation und Boot (ShareOS #48) und portiert die App auf `ShareOS.tailscale` mit echtem QR-Code (ShareOS-Apps #22). |
+| 09:22 | Jan: „Kann man das mit SysApps vereinfachen?“ Jeder Dienst hatte ein eigenes Startskript und einen eigenen Hook – Jans Umbenennung in `tailscaled` hatte genau den Hook verwaist. Seitdem steht der Dienst in der `app.json` der System-App (`"service"`), ein Startskript startet alle, die Steuerung bleibt in der Firmware. Jan legt fest: System-Apps werden im ShareOS-Repo eingereicht, ShareOS-Apps nimmt nur Web-Apps – mit je einem Beispiel für ein Programm und einen Dienst. |
+
 ## Bemerkenswerte Problemlösungen
 
 - **3-MB-Grenze des Bootloaders:** Der Kernel ist von 4,2 auf 2,4 MB geschrumpft, Treiber wurden in Module ausgelagert. Das Start-System umfasst nur 0,9 MB.

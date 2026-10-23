@@ -5,6 +5,8 @@
 //   shareos-media run        the worker: runs queued jobs one after another
 //   shareos-media stop-all   cancel running and queued jobs (system app removed)
 //
+// shareos-service: stop-all
+//
 // Jobs are written by rpcd (shareos.appmedia, for apps with the permission
 // "media") to /tmp/shareos-media/jobs/<id>.json: account, input and output
 // (absolute paths inside the account's folders, checked by rpcd) and the

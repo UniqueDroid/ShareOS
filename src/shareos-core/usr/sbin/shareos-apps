@@ -34,9 +34,9 @@
 //          for file managers and editors that save on the box.
 // Apps it needs (optional): "requires": [ "transmission-daemon" ] – installed
 // from the store first (also for an uploaded package); an app another one
-// needs is removed only with --force. Services (daemons) come only with the
-// firmware: a system app runs when someone starts it, its daemon is started
-// by a firmware hook (e.g. shareos-transmission), never by the package.
+// needs is removed only with --force. Services (daemons): see "service" for
+// system apps below – the package names a controller of the firmware, it
+// never starts anything by itself.
 // Not a permission: "internet": true says the app loads data from the
 // internet (online services, streams, maps …); shown in the store. Web apps
 // and jobs may always use the network.
@@ -57,6 +57,20 @@
 // and TERMINFO_DIRS. A command the firmware has or another app provides is
 // refused. They run with the rights of who starts them (in the terminal: root)
 // – no permissions, jobs or windows.
+// A system app that is a service (daemon) says so (ShareOS 0.2.0-beta.9+):
+//   "service": { "control": "tailscale", "boot": true, "on_install": "start",
+//                "delay": 5 }
+//   control     the firmware's controller /usr/sbin/shareos-<control>; it says
+//               what it can do in a line "shareos-service: boot start stop-all"
+//               (packages cannot bring their own – only reviewed controllers
+//               start daemons as root)
+//   boot        started at boot with "<controller> boot" (default true; the
+//               controller decides from its settings, e.g. only when switched
+//               on); "Services -> Autostart" can switch it off by its name
+//   on_install  "start" or "boot": run right after installing (optional)
+//   delay       seconds after boot before it starts, 0 … 60 (default 5)
+// Removing the app runs "<controller> stop-all"; so does shutting down.
+// The boot runs from /etc/init.d/S90services ("shareos-apps services boot").
 // Web apps are served by their own web server (port apps.store.port, default
 // 8081) from /www-apps/<id>/ – another origin than the admin interface, so an
 // app cannot use the admin's login.
@@ -441,6 +455,104 @@ function starter_owner(cmd) {
 	return m ? m[1] : null;
 }
 
+/* ---------- services of system apps ---------- */
+
+const CTL_RE = /^[a-z][a-z0-9-]{1,23}$/;
+const SVC_VERBS = { start: true, boot: true };
+// packages built before ShareOS 0.2.0-beta.9 have no "service" yet
+const LEGACY_SERVICE = {
+	tailscaled: { control: 'tailscale', on_install: 'start', delay: 5 },
+	openvpn: { control: 'vpn', delay: 8 },
+	'transmission-daemon': { control: 'transmission', delay: 5 },
+	minidlna: { control: 'dlna', delay: 5 },
+	ffmpeg: { control: 'media', boot: false }
+};
+
+function controller(name) { return ROOT + '/usr/sbin/shareos-' + name; }
+
+// what a controller of the firmware can do: its line "shareos-service: …"
+function ctl_verbs(name) {
+	if (!match(name ?? '', CTL_RE)) return null;
+	let m = match(readfile(controller(name), 4096) ?? '', /shareos-service:([ a-z-]*)/);
+	if (!m) return null;
+	let v = {};
+	for (let w in split(trim(m[1]), /[ ]+/)) if (w != '') v[w] = true;
+	return v;
+}
+
+function check_service(s) {
+	if (s == null) return null;
+	if (type(s) != 'object') return 'system app: "service" is an object { "control": … }';
+	let v = ctl_verbs(s.control);
+	if (!v) return 'system app: this ShareOS has no service controller "' + (s.control ?? '') + '" (shareos-<control>)';
+	if (s.boot != null && type(s.boot) != 'bool') return 'system app: service.boot is true or false';
+	if (s.boot !== false && !v.boot) return 'system app: the controller ' + s.control + ' cannot start at boot – set "boot": false';
+	if (s.on_install != null && (!SVC_VERBS[s.on_install] || !v[s.on_install])) return 'system app: service.on_install must be one of: ' + join(', ', filter(keys(SVC_VERBS), (k) => v[k]));
+	if (s.delay != null && (type(s.delay) != 'int' || s.delay < 0 || s.delay > 60)) return 'system app: service.delay is 0 … 60 seconds';
+	for (let k in keys(s)) if (!(k in { control: 1, boot: 1, on_install: 1, delay: 1 })) return 'system app: unknown service field ' + k;
+	return null;
+}
+
+// the service of an installed (or just checked) system app, or null
+function service_of(a) {
+	if (type(a) != 'object' || a.type != 'system') return null;
+	let s = a.service ?? LEGACY_SERVICE[a.id];
+	if (type(s) != 'object' || check_service(s)) return null;
+	return { control: s.control, boot: s.boot !== false, on_install: s.on_install ?? null, delay: s.delay ?? 5, legacy: a.service == null };
+}
+
+// runs "<controller> <verb>"; in the background its output goes to the log
+function service_run(svc, verb, bg, delay) {
+	if (!ctl_verbs(svc.control)?.[verb]) return false;
+	let cmd = shq(controller(svc.control)) + ' ' + verb;
+	if (bg) capture(sprintf('( (%s%s </dev/null 2>&1 | logger -t shareos-%s) & ) >/dev/null 2>&1',
+		delay ? 'sleep ' + delay + '; ' : '', cmd, svc.control));
+	else capture(cmd + ' </dev/null >/dev/null 2>&1');
+	return true;
+}
+
+function sysapp_json(id) {
+	let a = json(readfile(SYS + '/' + id + '/app.json') ?? 'null');
+	return type(a) == 'object' && a.id == id ? a : null;
+}
+
+// installed system apps that are services, sorted by delay then id
+function services() {
+	let l = [];
+	for (let id in lsdir(SYS) ?? []) {
+		if (!match(id, ID_RE)) continue;
+		let a = sysapp_json(id), s = service_of(a);
+		if (s) push(l, { id, name: a.name, proc: a.commands?.[0], ...s });
+	}
+	return sort(l, (x, y) => x.delay != y.delay ? x.delay - y.delay : (x.id < y.id ? -1 : 1));
+}
+
+// "Services -> Autostart": names switched off (UCI shareos.autostart.disabled)
+function autostart_off() {
+	let l = conf().c.get('shareos', 'autostart', 'disabled') ?? [];
+	if (type(l) != 'array') l = split(l, ' ');
+	let o = {};
+	for (let n in l) if (n != '') o[n] = true;
+	return o;
+}
+
+function cmd_services(what) {
+	let l = services();
+	if (what == 'list') return out({ services: l });
+	if (what == 'boot') {
+		let off = autostart_off(), started = [];
+		for (let s in l)
+			if (s.boot && !off[s.control] && service_run(s, 'boot', true, s.delay)) push(started, s.control);
+		return out({ started });
+	}
+	if (what == 'stop') {
+		let stopped = [];
+		for (let s in reverse(l)) if (service_run(s, 'stop-all', false)) push(stopped, s.control);
+		return out({ stopped });
+	}
+	die('usage: shareos-apps services list|boot|stop');
+}
+
 function check_system(a, dir) {
 	let cmds = a.commands;
 	if (type(cmds) != 'array' || !length(cmds) || length(cmds) > MAX_CMDS) return 'system app: "commands" lists 1 … ' + MAX_CMDS + ' programs';
@@ -453,7 +565,7 @@ function check_system(a, dir) {
 	}
 	for (let k in [ 'permissions', 'jobs', 'opens', 'window' ])
 		if (a[k] != null && !(type(a[k]) == 'array' && !length(a[k]))) return 'system app: "' + k + '" is only for web apps';
-	return null;
+	return check_service(a.service);
 }
 
 function drop_starters(id, keep) {
@@ -586,9 +698,9 @@ function install_file(file, verified, source) {
 	setup_jobs(a, c);
 	c.commit('apps');
 	cron_sync();
-	// a firmware hook for system apps that run services: start them (in the background)
-	let hook = ROOT + '/usr/lib/shareos/apphooks/' + a.id;
-	if (sys && stat(hook)?.type == 'file') capture(sprintf('(%s install </dev/null >/dev/null 2>&1 &)', shq(hook)));
+	// a service: start it right away when it asks for that (in the background)
+	let svc = sys ? service_of(a) : null;
+	if (svc?.on_install) service_run(svc, svc.on_install, true, 0);
 	return { ok: true, id: a.id, version: a.version, verified, requires: a.requires ?? [] };
 }
 
@@ -668,9 +780,9 @@ function cmd_remove(id, force) {
 	if (!dir) die('unknown app');
 	let users = map(filter(installed(), (a) => a.id != id && index(a.requires, id) >= 0), (a) => a.name);
 	if (length(users) && force != '--force') die('needed by ' + join(', ', users));
-	// a firmware hook for system apps that run services (e.g. stop the Transmission daemons)
-	let hook = ROOT + '/usr/lib/shareos/apphooks/' + id;
-	if (stat(hook)?.type == 'file') capture(shq(hook) + ' remove');
+	// a service: stop it first (e.g. the Transmission daemons of all accounts)
+	let svc = service_of(sysapp_json(id));
+	if (svc) service_run(svc, 'stop-all', false);
 	let target = sys_target(dir);
 	capture('rm -rf ' + shq(dir));
 	if (target) capture('rm -rf ' + shq(target));
@@ -763,6 +875,7 @@ case 'fix-perms': {
 	out({ ok: true, moved });
 	break;
 }
+case 'services': cmd_services(ARGV[1]); break;
 case 'install': cmd_install(ARGV[1], ARGV[2]); break;
 case 'install-file': cmd_install_file(ARGV[1]); break;
 case 'remove': cmd_remove(ARGV[1], ARGV[2]); break;
@@ -770,6 +883,6 @@ case 'status': out(json(readfile(ST + '/job.json') ?? 'null') ?? { state: 'idle'
 case 'run-job': cmd_run_job(ARGV[1], ARGV[2]); break;
 case 'job-log': cmd_job_log(ARGV[1], ARGV[2]); break;
 default:
-	warn('usage: shareos-apps catalog | cached | list | install <id> [version] | install-file <file> | remove <id> | status | run-job <id> <job> | job-log <id> <job>\n');
+	warn('usage: shareos-apps catalog | cached | list | install <id> [version] | install-file <file> | remove <id> | status | run-job <id> <job> | job-log <id> <job> | services list|boot|stop\n');
 	exit(2);
 }

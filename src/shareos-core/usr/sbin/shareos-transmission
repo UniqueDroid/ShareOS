@@ -8,6 +8,8 @@
 //   shareos-transmission boot              start the daemons of all accounts that used it
 //   shareos-transmission stop-all          stop all (system app removed, shutdown)
 //
+// shareos-service: boot stop-all
+//
 // The daemon comes from the system app "transmission-daemon" (the store).
 // Every account gets its own daemon, with its own torrents:
 //   - it runs with the account's rights (admins: root, like their file browser),
@@ -173,6 +175,7 @@ case 'boot':
 	break;
 case 'stop-all':
 	for (let a in lsdir(RUN) ?? []) if (match(a, NAME_RE)) stop(a, true);
+	sh('rm -rf ' + shq(RUN));
 	out({ ok: true });
 	break;
 default:

@@ -1,0 +1,17 @@
+{
+	"id": "tree",
+	"name": "tree",
+	"version": "2.2.1",
+	"publisher": "Your name",
+	"description": {
+		"de": "Zeigt im Terminal (System → Terminal oder SSH) Ordner als Baum an: „tree /mnt/daten“.",
+		"en": "Shows folders as a tree in the terminal (System → Terminal or SSH): “tree /mnt/daten”."
+	},
+	"type": "system",
+	"commands": [ "tree" ],
+	"icon": "icon.svg",
+	"category": "tools",
+	"license": "GPL-2.0-or-later",
+	"homepage": "https://oldmanprogrammer.net/source.php?dir=projects/tree",
+	"min_shareos": "0.2.0-beta.1"
+}

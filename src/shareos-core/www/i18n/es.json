@@ -1120,7 +1120,12 @@
 		"Eigenes Fenster": "Ventana propia",
 		"Öffnet sich jetzt in der Seite.": "Ahora se abre en la página.",
 		"Öffnet sich jetzt in einem eigenen Fenster.": "Ahora se abre en su propia ventana.",
-		"Diese App gibt es nicht (mehr).": "Esta app no existe (ya)."
+		"Diese App gibt es nicht (mehr).": "Esta app no existe (ya).",
+		"tailscaled, WireGuard-Mesh": "tailscaled, malla WireGuard",
+		"VPN (OpenVPN)": "VPN (OpenVPN)",
+		"Client und Server, App NetTunnel": "Cliente y servidor, app NetTunnel",
+		"Torrents (Transmission)": "Torrents (Transmission)",
+		"ein Dienst pro Konto": "un servicio por cuenta"
 	},
 	"patterns": [
 		[

@@ -1120,7 +1120,12 @@
 		"Eigenes Fenster": "独立窗口",
 		"Öffnet sich jetzt in der Seite.": "现在在页面中打开。",
 		"Öffnet sich jetzt in einem eigenen Fenster.": "现在在独立窗口中打开。",
-		"Diese App gibt es nicht (mehr).": "此应用不存在（或已删除）。"
+		"Diese App gibt es nicht (mehr).": "此应用不存在（或已删除）。",
+		"tailscaled, WireGuard-Mesh": "tailscaled，WireGuard 网状网络",
+		"VPN (OpenVPN)": "VPN（OpenVPN）",
+		"Client und Server, App NetTunnel": "客户端和服务器，应用 NetTunnel",
+		"Torrents (Transmission)": "种子下载（Transmission）",
+		"ein Dienst pro Konto": "每个账户一个服务"
 	},
 	"patterns": [
 		[

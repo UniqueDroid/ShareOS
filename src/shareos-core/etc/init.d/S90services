@@ -1,0 +1,21 @@
+#!/bin/sh
+# Services of the system apps (Tailscale, VPN, Transmission, media server …):
+# every installed system app with "service" in its app.json is started by its
+# firmware controller ("shareos-<control> boot", after its delay, in the
+# background) unless it is switched off under "Services -> Autostart".
+# See "service" in /usr/sbin/shareos-apps.
+case "$1" in
+	start)
+		/usr/sbin/shareos-apps services boot 2>&1 | logger -t shareos-services
+		;;
+	stop)
+		/usr/sbin/shareos-apps services stop >/dev/null 2>&1
+		;;
+	restart)
+		"$0" stop; "$0" start
+		;;
+	*)
+		echo "Usage: $0 {start|stop|restart}"; exit 1
+		;;
+esac
+exit 0

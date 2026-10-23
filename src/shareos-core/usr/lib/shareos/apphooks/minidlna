@@ -1,6 +1,0 @@
-#!/bin/sh
-# system app "minidlna" is removed: stop the media server (its library on the
-# drive stays; installed again, it goes on)
-[ "$1" = remove ] || exit 0
-/usr/sbin/shareos-dlna stop >/dev/null 2>&1
-exit 0

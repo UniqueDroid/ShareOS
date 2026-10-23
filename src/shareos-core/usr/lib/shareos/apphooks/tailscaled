@@ -1,9 +1,0 @@
-#!/bin/sh
-# system app "tailscaled": installed -> start the daemon (it waits for the sign-in,
-# a box that was signed in before connects again by itself); removed -> stop it
-# (its state stays, a new install signs in again by itself)
-case "$1" in
-	install) /usr/sbin/shareos-tailscale start >/dev/null 2>&1 ;;
-	remove) /usr/sbin/shareos-tailscale stop-all >/dev/null 2>&1 ;;
-esac
-exit 0

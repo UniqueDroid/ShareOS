@@ -9,6 +9,7 @@
 	},
 	"type": "system",
 	"commands": [ "tailscaled" ],
+	"service": { "control": "tailscale", "on_install": "start", "delay": 5 },
 	"icon": "icon.svg",
 	"category": "network",
 	"license": "BSD-3-Clause",

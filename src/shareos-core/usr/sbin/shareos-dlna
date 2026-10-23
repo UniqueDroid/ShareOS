@@ -6,6 +6,9 @@
 #   shareos-dlna rescan      read all folders again (rebuilds the library)
 #   shareos-dlna status      key=value lines for the web interface
 #   shareos-dlna boot        start at boot when it is switched on
+#   shareos-dlna stop-all    stop (system app removed, shutdown)
+#
+# shareos-service: boot start stop-all
 #
 # Settings: UCI dlna.main – enabled, name (shown on TVs; default: the box's
 # name) and list media '<A|V|P|->,share:<name>' (audio, video, pictures or
@@ -108,11 +111,11 @@ cmd_status() {
 
 case "$1" in
 	start) cmd_start ;;
-	stop) cmd_stop ;;
+	stop|stop-all) cmd_stop ;;
 	restart) cmd_stop; cmd_start ;;
 	rescan) cmd_stop; cmd_start -R ;;
 	status) cmd_status ;;
 	boot) [ "$(uci -q get dlna.main.enabled)" = 1 ] && [ -x $BIN ] && cmd_start ;;
-	*) sed -n '3,16s/^# \{0,1\}//p' "$0"; exit 2 ;;
+	*) sed -n '3,20s/^# \{0,1\}//p' "$0"; exit 2 ;;
 esac
 exit 0

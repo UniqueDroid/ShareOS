@@ -1429,3 +1429,8 @@ E1116	S’ouvre maintenant dans sa propre fenêtre.
 E1117	Cette application n’existe pas (ou plus).
 P269	Affichage de $1
 P270	Affichage : $1
+E1118	tailscaled, maillage WireGuard
+E1119	VPN (OpenVPN)
+E1120	Client et serveur, app NetTunnel
+E1121	Torrents (Transmission)
+E1122	un service par compte
