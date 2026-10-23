@@ -2400,7 +2400,7 @@ const SYS = {
 		return html`<div class="panel">
 			<div class="ph"><span class="pt">TERMINAL</span><span class="tag warn ml">root</span>
 				${t ? html`<a class="btn sm ghost" href="${termUrl(t)}" target="_blank" rel="noopener">In eigenem Fenster ↗</a><button class="btn sm ghost" type="button" data-act="term-close">Beenden</button>` : ''}</div>
-			${t ? html`<iframe class="termframe" src="${termUrl(t)}" title="Terminal"></iframe>`
+			${t ? html`<iframe class="termframe" src="${termUrl(t)}" title="Terminal" allow="clipboard-read; clipboard-write"></iframe>`
 				: html`<p class="mut" style="margin:0 0 12px">Eine Shell als <b>root</b> direkt auf der Box – für Diagnose und Handarbeit (BusyBox, uci, logread, mdadm, smartctl …).</p>
 				${sysApps().length ? html`<p class="mut" style="margin:0 0 12px"><span>Aus System-Apps:</span> ${sysApps().map((a, i) => html`${i ? ' · ' : ''}${sysCmds(a)}`)}</p>` : ''}
 				<div class="acts"><button class="btn primary" type="button" data-act="term-open">Terminal öffnen</button></div>`}
@@ -4031,7 +4031,8 @@ function appPageView(a, back) {
 		<button class="btn sm ghost" type="button" data-act="app-window" data-id="${a.id}">In eigenem Fenster ↗</button>
 		<a class="btn sm ghost" href="${back}" aria-label="Schließen">✕</a></h2>
 		<div class="apppage"><iframe id="appframe" data-id="${a.id}" title="${a.name}" src="${S.appPage?.id === a.id ? S.appPage.url : 'about:blank'}"
-			sandbox="allow-scripts allow-forms allow-same-origin allow-popups allow-downloads allow-modals"></iframe></div></section>`;
+			sandbox="allow-scripts allow-forms allow-same-origin allow-popups allow-downloads allow-modals"
+			allow="clipboard-read; clipboard-write; fullscreen; autoplay"></iframe></div></section>`;
 }
 // the address of the app in the page (with its grant for the user's folders)
 async function appFrameLoad() {
