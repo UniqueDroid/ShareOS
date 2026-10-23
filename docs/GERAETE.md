@@ -30,10 +30,9 @@ Build der Korrektur für 0.2.0-beta.11).
   beta.7 startet in einer Schleife neu, siehe [Changelog](../CHANGELOG.md)),
   Modell und RAM (256 MB), 1-Gbit/s-Ethernet, Temperatursensor, Uhr, USB, die
   6 Flash-Partitionen, die LEDs, die Lüfterstufen (leise, ausgewogen, kühl),
-  Einschalten nach einem Stromausfall, ein Update über System → Firmware.
-- **Funktioniert noch nicht:** die Tasten (Ein/Aus, Reset, USB):
-  `shareos-buttons` findet auf dieser Box kein Eingabegerät; eine eigene
-  Änderung behebt das.
+  die Tasten (Ein/Aus, Reset, USB; ab 0.2.0-beta.11 – vorher fand
+  `shareos-buttons` auf dieser Box kein Eingabegerät), Einschalten nach einem
+  Stromausfall, ein Update über System → Firmware.
 - **Noch nicht geprüft:** eine vollständige Erstinstallation von einer frisch
   geflashten `.bin` mit dem korrigierten Abbild.
 - Ein DNS-325, auf dem schon das beta.7-Abbild läuft und in einer Schleife

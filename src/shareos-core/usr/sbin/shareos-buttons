@@ -34,6 +34,8 @@ const KEY_EJECTCD = 0xa1;           // USB button (DNS-320 rev A, DNS-325)
 const KEY_POWER = 0x74;             // power button
 const ACCESS_MIN = 5, ACCESS_MAX = 10, FACTORY_MIN = 15;
 const DRY = !!getenv('SHAREOS_BUTTONS_DRY');
+// PID of the dd that reads the events (S05board stops it with the program)
+const DDPID = getenv('SHAREOS_BUTTONS_DDPID') ?? '/var/run/shareos-buttons-dd.pid';
 
 function log(msg) {
 	if (DRY) print('log: ' + msg + '\n');
@@ -45,12 +47,17 @@ function run(cmd) {
 	else system(cmd);
 }
 
-// the event device of gpio-keys
+function sq(s) {
+	return "'" + replace(s, "'", "'\\''") + "'";
+}
+
+// the event device of gpio-keys. The kernel names the input device after the
+// device-tree node: "gpio-keys" (DNS-320L) or "gpio_keys" (DNS-325, DNS-320).
 function find_dev() {
 	let env = getenv('SHAREOS_BUTTONS_DEV');
 	if (env) return env;
-	for (let d in glob('/sys/class/input/event*'))
-		if (trim(readfile(d + '/device/name') ?? '') == 'gpio-keys')
+	for (let d in glob((getenv('SHAREOS_BUTTONS_SYS') ?? '/sys/class/input') + '/event*'))
+		if (match(trim(readfile(d + '/device/name') ?? ''), /^gpio[-_]keys$/))
 			return '/dev/input/' + substr(d, rindex(d, '/') + 1);
 	return null;
 }
@@ -116,13 +123,22 @@ function usb_pressed() {
 }
 
 let evdev = find_dev();
+// test hook: print the device that was found
+if (getenv('SHAREOS_BUTTONS_FIND')) {
+	print((evdev ?? 'none') + '\n');
+	exit(0);
+}
 if (!evdev) {
 	log('no gpio-keys input device – buttons not available');
 	exit(0);
 }
-let f = open(evdev, "r");
+// The events are read through dd: ucode reads through stdio, which asks the
+// kernel for a first chunk of 15 bytes (a 16-byte read minus one), and an
+// evdev device refuses reads of less than one event (16 bytes): EINVAL, so the
+// loop ended at once and no button worked.
+let f = popen('echo $$ 2>/dev/null > ' + sq(DDPID) + '; exec dd if=' + sq(evdev) + ' bs=16 2>/dev/null', 'r');
 if (!f) {
-	log("cannot open " + evdev);
+	log("cannot read " + evdev);
 	exit(1);
 }
 
