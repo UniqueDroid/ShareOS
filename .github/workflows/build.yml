@@ -36,6 +36,8 @@ jobs:
         run: LD_LIBRARY_PATH="$HOME/hostroot/lib" tests/test-net.sh "$HOME/hostroot/bin/uci"
       - name: Model descriptions (board.sh, LEDs, fan backends)
         run: tests/test-boards.sh
+      - name: Size check of the flash partition in shareos-install-ubi
+        run: tests/test-install-ubi.sh
       - name: Button tests (reset/USB)
         run: LD_LIBRARY_PATH="$HOME/hostroot/lib" tests/test-buttons.sh "$HOME/hostroot/bin"
       - name: Notification tests
@@ -83,6 +85,9 @@ jobs:
 
       - name: Test writing .bin files (rollback to Alt-F)
         run: tests/test-flash-bin.sh output/${{ matrix.board }}/host/bin
+
+      - name: Initramfs load address of every model
+        run: tests/check-initrd-address.sh output/${{ matrix.board }}/images
 
       - name: Build system apps (nano, htop … as .sapp, with this toolchain)
         if: matrix.board == 'dns320l'

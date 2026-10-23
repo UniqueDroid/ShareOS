@@ -68,7 +68,7 @@ in the Alt-F SVN, versus the trunk (r3935, kernel 4.14.268) ShareOS forked from:
 |---|---|---|---|
 | DNS-320L device tree | reference | identical to 1.0 | ported from it (Linux 6.x paths) |
 | Kernel image | zImage + appended DTB, uImage `-a/-e 0x8000`, no mach-id prologue | same | same |
-| Initramfs | uImage ramdisk `-a 0x800000` (squashfs "sqall") | same (UBI variant) | same header, cpio.xz content |
+| Initramfs | uImage ramdisk `-a 0x800000` (squashfs "sqall") | same (UBI variant) | cpio.xz content, load address `0x800000` (DNS-320L, DNS-320) or `0x1000000` (DNS-325 only: at `0x800000` the kernel drops the initramfs there, "overlaps in-use memory region") |
 | Size limits | 3 MB kernel / 3 MB initramfs | same | same, checked at build time |
 | D-Link signature | prod 0, cust 8, model 11, sub 1, ver 1, type 6 | same | same |
 | Extra image | squashfs sqimage appended (`sqsplit`) | UBI image (`ubisplit`) | none yet |
