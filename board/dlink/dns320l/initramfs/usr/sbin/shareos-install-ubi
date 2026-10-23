@@ -32,11 +32,17 @@ if [ -z "$SRC" ] || [ $YES != 1 ]; then
 fi
 
 die() { echo "shareos-install-ubi: $*" >&2; exit 1; }
-MTD=$(sed -n 's/^\(mtd[0-9]*\):.*"image"$/\1/p' /proc/mtd)
+MTD=$(sed -n 's/^\(mtd[0-9]*\):.*"image"$/\1/p' ${SHAREOS_PROC_MTD:-/proc/mtd})
 [ -n "$MTD" ] || die "flash partition 'image' not found"
 N=${MTD#mtd}
-SIZE=$(sed -n "s/^$MTD: \([0-9a-f]*\) .*/\1/p" /proc/mtd)
-[ "$SIZE" = 06400000 ] || die "unexpected size 0x$SIZE of 'image' (expected 0x06400000), refusing"
+SIZE=$(sed -n "s/^$MTD: \([0-9a-f]*\) .*/\1/p" ${SHAREOS_PROC_MTD:-/proc/mtd})
+# 0x06400000: DNS-320L, DNS-320 rev B (100 MB, my-dlink follows); 0x06600000: DNS-325
+# (102 MB, seen on a rev A1) and, from Alt-F's device trees (kirkwood-dnskw.dtsi),
+# DNS-320 rev A (not seen on hardware yet).
+case "$SIZE" in
+	06400000|06600000) ;;
+	*) die "unexpected size 0x$SIZE of 'image' (expected 0x06400000 or 0x06600000), refusing" ;;
+esac
 
 # get the image
 FILE=/tmp/shareos-rootfs.squashfs

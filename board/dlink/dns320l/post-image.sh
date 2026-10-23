@@ -8,6 +8,7 @@
 # Layout and limits (stock U-Boot, see legacy/alt-f/mkfw.sh NOTE-2):
 #   uImage  partition 5 MB, U-Boot reads 0x300000 -> uImage   <= 3145728
 #   ramdisk partition 5 MB, U-Boot reads 0x300000 -> urootfs  <= 3145728
+#   (one urootfs.<model> per model, they differ only in the load address)
 #
 set -euo pipefail
 
@@ -22,14 +23,15 @@ KERNEL_MAX=3145728
 INITRD_MAX=3145728
 
 # The Kirkwood models: one kernel, one initramfs and one system for all, a
-# uImage per model (zImage + its device tree, U-Boot passes none) and a .bin
-# with the D-Link signature of the model (legacy/alt-f/mkfw.sh).
-#   firmware name     device tree        product custom model sub nver type
+# uImage per model (zImage + its device tree, U-Boot passes none), an initramfs
+# header per model (load address, see below) and a .bin with the D-Link
+# signature of the model (legacy/alt-f/mkfw.sh).
+#   firmware name     device tree        product custom model sub nver type  initramfs address
 MODELS="
-DNS-320L-rev-Ax   kirkwood-dns320l   0 8 11 1 1 6
-DNS-320-rev-Bx    kirkwood-dns320b   0 8 12 1 1 5
-DNS-320-rev-Ax    kirkwood-dns320    0 8  7 2 0 4
-DNS-325-rev-Ax    kirkwood-dns325    0 8  5 2 0 3
+DNS-320L-rev-Ax   kirkwood-dns320l   0 8 11 1 1 6   0x00800000
+DNS-320-rev-Bx    kirkwood-dns320b   0 8 12 1 1 5   0x00800000
+DNS-320-rev-Ax    kirkwood-dns320    0 8  7 2 0 4   0x00800000
+DNS-325-rev-Ax    kirkwood-dns325    0 8  5 2 0 3   0x01000000
 "
 
 KVER=$(sed -n 's/^BR2_LINUX_KERNEL_CUSTOM_VERSION_VALUE="\(.*\)"/\1/p' "$BR2_CONFIG")
@@ -38,8 +40,17 @@ KVER=$(sed -n 's/^BR2_LINUX_KERNEL_CUSTOM_VERSION_VALUE="\(.*\)"/\1/p' "$BR2_CON
 "$BOARD_DIR/mk-initramfs.sh" "$TARGET_DIR" "$B" "$HOST_DIR" "$BOARD_DIR"
 [ -s "$B/rootfs.squashfs" ] || { echo "post-image: rootfs.squashfs missing"; exit 1; }
 
-"$MKIMAGE" -A arm -O linux -T ramdisk -C none -a 0x00800000 -e 0x00800000 \
-	-n "ShareOS-${VERSION}, initrd" -d "$B/initramfs.cpio.xz" "$B/urootfs"
+# Load address of the initramfs (last column of MODELS): the stock U-Boot reads
+# the ramdisk partition to 0xf00000 and copies it here before it starts the
+# kernel. 0x800000 is what Alt-F uses and what the DNS-320L and DNS-320 have
+# booted with so far. On the DNS-325 it is inside memory that is in use: the
+# kernel prints "INITRD: ... overlaps in-use memory region - disabling initrd",
+# finds no /init and panics in a reboot loop. 0x1000000 booted from flash on a
+# DNS-325 rev A1 and is used there only; the other models keep 0x800000 until
+# someone tries 0x1000000 on them (a wrong address means a reboot loop that
+# needs a serial console). The kernel is the same everywhere, so what is in
+# use at 0x800000 depends on the board or its U-Boot (not found yet).
+# Only the header differs: the data of the initramfs is the same for all.
 
 check_size() {
 	local f=$1 max=$2 sz
@@ -50,30 +61,36 @@ check_size() {
 	fi
 	echo "post-image: $(basename "$f") $sz bytes, $((max - sz)) bytes free"
 }
-check_size "$B/urootfs" $INITRD_MAX
 
 T=$(mktemp -d)
 trap 'rm -rf "$T"' EXIT
 
-echo "$MODELS" | while read -r NAME DTB PROD CUST MODEL SUB NVER TYPE; do
+echo "$MODELS" | while read -r NAME DTB PROD CUST MODEL SUB NVER TYPE INITRD_ADDR; do
 	[ -n "$NAME" ] || continue
 	ZIMAGE="$B/zImage.$DTB"
 	[ -f "$ZIMAGE" ] || { echo "post-image: $ZIMAGE missing"; exit 1; }
 	UIMAGE="$B/uImage.$NAME"
+	UROOTFS="$B/urootfs.$NAME"
 	OUT="ShareOS-${VERSION}-${NAME}.bin"
 
 	"$MKIMAGE" -A arm -O linux -T kernel -C none -a 0x00008000 -e 0x00008000 \
 		-n "ShareOS-${VERSION}, kernel ${KVER}" -d "$ZIMAGE" "$UIMAGE" >/dev/null
 	check_size "$UIMAGE" $KERNEL_MAX
 
+	"$MKIMAGE" -A arm -O linux -T ramdisk -C none -a $INITRD_ADDR -e $INITRD_ADDR \
+		-n "ShareOS-${VERSION}, initrd" -d "$B/initramfs.cpio.xz" "$UROOTFS" >/dev/null
+	"$MKIMAGE" -l "$UROOTFS" | grep -q "Load Address: $(printf '%08x' $((INITRD_ADDR)))" \
+		|| { echo "post-image: initramfs load address of $NAME is not $INITRD_ADDR" >&2; exit 1; }
+	check_size "$UROOTFS" $INITRD_MAX
+
 	rm -f "$B/$OUT"
 	"$FW" -m -q -p $PROD -c $CUST -l $MODEL -u $SUB -v $NVER -t $TYPE \
-		-k "$UIMAGE" -i "$B/urootfs" "$B/$OUT"
+		-k "$UIMAGE" -i "$UROOTFS" "$B/$OUT"
 
 	# verify: split again and compare with the parts
 	"$FW" -s -q -k "$T/kernel" -i "$T/initramfs" "$B/$OUT"
 	cmp "$T/kernel" "$UIMAGE"
-	cmp "$T/initramfs" "$B/urootfs"
+	cmp "$T/initramfs" "$UROOTFS"
 	"$MKIMAGE" -l "$T/kernel" >/dev/null
 	"$MKIMAGE" -l "$T/initramfs" >/dev/null
 
@@ -89,7 +106,7 @@ echo "$MODELS" | while read -r NAME DTB PROD CUST MODEL SUB NVER TYPE; do
 	# The bundle names its model in shareos-release (SHAREOS_FWNAME).
 	SU="ShareOS-${VERSION}-${NAME}.sysupgrade.tar"
 	P="$T/su-$NAME"; mkdir -p "$P"
-	cp "$UIMAGE" "$P/uImage"; ln -f "$B/urootfs" "$P/urootfs" 2>/dev/null || cp "$B/urootfs" "$P/urootfs"
+	cp "$UIMAGE" "$P/uImage"; cp "$UROOTFS" "$P/urootfs"
 	ln -f "$B/rootfs.squashfs" "$P/rootfs.squashfs" 2>/dev/null || cp "$B/rootfs.squashfs" "$P/rootfs.squashfs"
 	sed "s/^SHAREOS_FWNAME=.*/SHAREOS_FWNAME=\"$NAME\"/" "$TARGET_DIR/etc/shareos-release" > "$P/shareos-release"
 	(cd "$P" && sha256sum uImage urootfs rootfs.squashfs > SHA256SUMS \
@@ -101,4 +118,5 @@ done
 
 # the DNS-320L parts under their old names (netboot docs, tools)
 cp "$B/uImage.DNS-320L-rev-Ax" "$B/uImage"
+cp "$B/urootfs.DNS-320L-rev-Ax" "$B/urootfs"
 echo "post-image: rootfs.squashfs $(stat -c %s "$B/rootfs.squashfs") bytes (UBI volume 'rootfs')"
