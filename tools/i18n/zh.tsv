@@ -1434,3 +1434,6 @@ E1119	VPN（OpenVPN）
 E1120	客户端和服务器，应用 NetTunnel
 E1121	种子下载（Transmission）
 E1122	每个账户一个服务
+E1123	下载自动化（autobrr）
+E1124	autobrr，端口 7474
+E1125	可以设置和控制本设备的 autobrr（过滤器、索引器、IRC、发布），并选择找到的种子进入谁的 Transmission——整个设备只有一个服务，因此仅限管理员。

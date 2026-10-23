@@ -1,0 +1,270 @@
+#!/usr/bin/ucode -S
+//
+// shareos-autobrr – download automation with autobrr (system app "autobrr")
+//
+//   shareos-autobrr status            state, web interface, hand-over account (JSON)
+//   shareos-autobrr start             start (system app installed); the first start
+//                                     signs autobrr up (user "admin") and makes an
+//                                     API key for ShareOS
+//   shareos-autobrr boot | stop-all   start at boot (when switched on) / stop
+//   shareos-autobrr set               stdin JSON {enabled, ui, account}
+//   shareos-autobrr password          stdin JSON {password}: password of "admin"
+//                                     for autobrr's own web interface
+//   shareos-autobrr api               stdin JSON {method, path, body}: autobrr's
+//                                     REST API (/api/…) with the key of ShareOS
+//   shareos-autobrr log               the last lines of the log
+//
+// shareos-service: boot start stop-all
+//
+// One autobrr for the whole box, set up by admins (rpcd shareos.appautobrr,
+// app permission "autobrr"). It runs as the user "autobrr" on 127.0.0.1:7474 –
+// with "ui" switched on on all addresses, for autobrr's own web interface
+// (its own login, user "admin"). Its database lives on the apps drive
+// (/mnt/<apps>/.shareos/autobrr). Matching torrents go to the Transmission of
+// one account ("account"): autobrr's action "Watch dir" writes them into the
+// hand-over folder /mnt/<apps>/.shareos/autobrr-drop, which that account's
+// Transmission watches (shareos-transmission). Go is held to a memory limit.
+//
+import { readfile, writefile, unlink, stat, popen, mkdir } from 'fs';
+import { cursor } from 'uci';
+
+const BIN = '/opt/shareos/bin/autobrr';
+const SECRET = '/etc/shareos/autobrr';           // admin password, API key (root only)
+const RUN = '/tmp/shareos-autobrr';
+const PID = RUN + '/pid';
+const LOG = RUN + '/log';
+const PORT = 7474;
+const USER = 'autobrr';
+const API = 'http://127.0.0.1:' + PORT;
+const NAME_RE = /^[a-z_][a-z0-9_-]{0,31}$/;
+const PATH_RE = /^\/api\/[A-Za-z0-9_\/.,=&?%:+-]*$/;
+const METHODS = { GET: 1, POST: 1, PUT: 1, PATCH: 1, DELETE: 1 };
+
+function shq(s) { return "'" + replace(s, "'", "'\\''") + "'"; }
+function sh(cmd) {
+	let p = popen(cmd + ' 2>&1', 'r');
+	if (!p) return { rc: -1, out: '' };
+	let o = p.read('all') ?? '';
+	return { rc: p.close(), out: o };
+}
+function out(o) { print(sprintf('%J\n', o)); }
+function die(msg) { out({ error: msg }); exit(1); }
+function stdin_json() { let j = json(readfile('/dev/stdin') ?? 'null'); return type(j) == 'object' ? j : {}; }
+function installed() { return stat(BIN)?.type == 'file'; }
+function token(n) {
+	let r = readfile('/dev/urandom', n) ?? '', t = '';
+	for (let i = 0; i < length(r); i++) t += sprintf('%02x', ord(r, i));
+	return t;
+}
+
+function conf() {
+	let c = cursor();
+	return { enabled: c.get('autobrr', 'main', 'enabled') == '1', ui: c.get('autobrr', 'main', 'ui') == '1',
+		account: c.get('autobrr', 'main', 'account') ?? '' };
+}
+
+// the apps drive: autobrr's database and the hand-over folder
+function apps_base() {
+	let a = cursor().get('storage', 'global', 'apps');
+	if (!a || !match(a, /^[a-z0-9_-]+$/)) return null;
+	let b = '/mnt/' + a + '/.shareos';
+	if (stat(b)?.type != 'directory' || index(readfile('/proc/mounts') ?? '', ' /mnt/' + a + ' ') < 0) return null;
+	return b;
+}
+function data_dir() { let b = apps_base(); return b ? b + '/autobrr' : null; }
+function drop_dir() { let b = apps_base(); return b ? b + '/autobrr-drop' : null; }
+
+function secret() { let j = json(readfile(SECRET + '/secret.json') ?? 'null'); return type(j) == 'object' ? j : {}; }
+function secret_set(s) {
+	sh('mkdir -p ' + SECRET + ' && chmod 700 ' + SECRET + ' && umask 077 && : > ' + SECRET + '/secret.json');
+	writefile(SECRET + '/secret.json', sprintf('%J', s));
+}
+
+function pid() {
+	let p = +trim(readfile(PID) ?? '0');
+	return p > 1 && index(readfile('/proc/' + p + '/cmdline') ?? '', 'autobrr') >= 0 ? p : null;
+}
+
+function account_ok(u) {
+	if (!match(u ?? '', NAME_RE)) return false;
+	let r = cursor().get('accounts', u, 'role');
+	return u == 'root' || r == 'user' || r == 'admin';
+}
+
+// curl to autobrr's API; key: the API key (else a cookie jar for the sign-up)
+function call(method, path, body, key, jar) {
+	let args = [ 'curl', '-s', '-m', '20', '-X', method, '-o', '-', '-w', '\n%{http_code}', '-H', 'Content-Type: application/json' ];
+	if (key) push(args, '-H', 'X-API-Token: ' + key);
+	if (jar) push(args, '-b', jar, '-c', jar);
+	let f = null;
+	if (body != null) {
+		f = RUN + '/.req.' + substr(token(6), 0, 12);
+		sh('umask 077; : > ' + shq(f));
+		writefile(f, type(body) == 'string' ? body : sprintf('%J', body));
+		push(args, '--data-binary', '@' + f);
+	}
+	push(args, API + path);
+	let r = sh(join(' ', map(args, shq)));
+	if (f) unlink(f);
+	let i = rindex(r.out, '\n');
+	return { status: i >= 0 ? +substr(r.out, i + 1) : 0, body: i >= 0 ? substr(r.out, 0, i) : r.out };
+}
+
+// first start: sign up "admin" (onboarding) and make the API key of ShareOS
+function setup() {
+	let s = secret();
+	if (s.key && call('GET', '/api/config', null, s.key).status == 200) return s;
+	let jar = RUN + '/.jar';
+	unlink(jar);
+	let pw = s.password ?? token(12);
+	let can = call('GET', '/api/auth/onboard', null, null, null);
+	if (can.status == 204 || can.status == 200) {
+		let r = call('POST', '/api/auth/onboard', { username: 'admin', password: pw }, null, jar);
+		if (r.status >= 300) die('autobrr sign-up failed (' + r.status + ')');
+	}
+	let l = call('POST', '/api/auth/login', { username: 'admin', password: pw }, null, jar);
+	if (l.status >= 300) { unlink(jar); die('autobrr sign-in failed – was its database set up by hand? Set a new password with "password".'); }
+	let k = call('POST', '/api/keys', { name: 'ShareOS', scopes: [] }, null, jar);
+	unlink(jar);
+	let kj = json(k.body || 'null');
+	if (k.status >= 300 || !kj?.key) die('autobrr API key failed (' + k.status + ')');
+	s = { password: pw, key: kj.key };
+	secret_set(s);
+	return s;
+}
+
+// the account into the group autobrr, so its Transmission reads the torrents
+// (busybox addgroup cannot add a user to a group here)
+function group_add(u) {
+	let lines = split(readfile('/etc/group') ?? '', '\n'), changed = false;
+	for (let i = 0; i < length(lines); i++) {
+		let f = split(lines[i], ':');
+		if (f[0] != USER || length(f) < 4) continue;
+		let m = filter(split(f[3], ','), (x) => x != '');
+		if (index(m, u) < 0) { push(m, u); f[3] = join(',', m); lines[i] = join(':', f); changed = true; }
+	}
+	if (changed) writefile('/etc/group', join('\n', lines));
+}
+
+// the account's Transmission watches the hand-over folder (shareos-transmission
+// reads autobrr.main.account); the folder: the account's, group autobrr, 2770
+function handover(u, old) {
+	let d = drop_dir();
+	if (!d) return;
+	if (account_ok(u)) {
+		let owner = u == 'root' ? 'root' : u;
+		sh(sprintf('mkdir -p %s && chown %s:%s %s && chmod 2770 %s', shq(d), shq(owner), USER, shq(d), shq(d)));
+		if (u != 'root') group_add(u);
+	}
+	for (let a in [ old, u ])
+		if (account_ok(a) && stat('/tmp/shareos-transmission/' + a)?.type == 'directory')
+			sh(sprintf('/usr/sbin/shareos-transmission stop %s; /usr/sbin/shareos-transmission start %s', shq(a), shq(a)));
+}
+
+function start() {
+	if (!installed()) die('autobrr is not installed (system app "autobrr" in the store)');
+	let data = data_dir();
+	if (!data) die('autobrr needs a drive for apps (Storage)');
+	if (pid()) return;
+	let c = conf();
+	sh(sprintf('grep -q "^%s:" /etc/group || addgroup -S %s; grep -q "^%s:" /etc/passwd || adduser -S -D -H -G %s -h %s -s /bin/false %s',
+		USER, USER, USER, USER, shq(data), USER));
+	sh(sprintf('mkdir -p %s %s && chmod 700 %s && chown -R %s:%s %s && touch %s && chown %s %s',
+		shq(RUN), shq(data), shq(data), USER, USER, shq(data), shq(LOG), USER, shq(LOG)));
+	sh('chmod 755 ' + shq(RUN));
+	if (account_ok(c.account)) handover(c.account, null);
+	// autobrr writes torrents group-readable into the hand-over folder (umask 007)
+	let env = sprintf('GOMEMLIMIT=48MiB GOGC=30 AUTOBRR__HOST=%s AUTOBRR__PORT=%d AUTOBRR__CHECK_FOR_UPDATES=false AUTOBRR__LOG_PATH=%s AUTOBRR__DATABASE_TYPE=sqlite',
+		c.ui ? '0.0.0.0' : '127.0.0.1', PORT, shq(LOG));
+	let cmd = sprintf('umask 007; exec env %s %s --config %s >>%s 2>&1', env, shq(BIN), shq(data), shq(LOG));
+	let r = sh(sprintf('start-stop-daemon -S -b -m -p %s -c %s -x /bin/sh -- -c %s', shq(PID), USER, shq(cmd)));
+	for (let i = 0; i < 150 && call('GET', '/api/healthz/liveness').status != 200; i++) {
+		if (i > 10 && !pid()) break;
+		sh('sleep 0.2');
+	}
+	if (!pid() || call('GET', '/api/healthz/liveness').status != 200)
+		die('autobrr did not start: ' + trim(sh('tail -n 3 ' + shq(LOG)).out || r.out));
+	setup();
+}
+
+function stop() {
+	let p = pid();
+	if (p) {
+		sh('kill ' + p);
+		for (let i = 0; i < 50 && pid(); i++) sh('sleep 0.2');
+		if (pid()) sh('kill -9 ' + p);
+	}
+	unlink(PID);
+}
+
+function set_conf(k, v) {
+	let c = cursor();
+	c.set('autobrr', 'main', 'autobrr');
+	c.set('autobrr', 'main', k, v);
+	c.commit('autobrr');
+}
+
+function status() {
+	let c = conf(), running = !!pid(), s = secret();
+	let host = trim(readfile('/proc/sys/kernel/hostname') ?? 'shareos');
+	return { installed: installed(), running, enabled: c.enabled, ready: running && !!s.key,
+		ui: c.ui, port: PORT, user: 'admin', account: c.account || null,
+		drop: c.account ? drop_dir() : null, drive: !!apps_base(), host };
+}
+
+function cmd_set() {
+	let a = stdin_json(), c = conf();
+	if (a.account != null && a.account !== '' && !account_ok(a.account)) die('unknown account');
+	if (a.enabled != null) set_conf('enabled', a.enabled ? '1' : '0');
+	if (a.ui != null) set_conf('ui', a.ui ? '1' : '0');
+	if (a.account != null && a.account != c.account) {
+		set_conf('account', a.account);
+		handover(a.account, c.account);
+	}
+	let n = conf();
+	if (!n.enabled) stop();
+	else if (pid() && n.ui != c.ui) { stop(); start(); }
+	else if (!pid()) start();
+	out(status());
+}
+
+function cmd_password() {
+	let a = stdin_json(), s = secret();
+	if (type(a.password) != 'string' || length(a.password) < 8 || length(a.password) > 128) die('the password needs 8 to 128 characters');
+	if (!pid()) die('autobrr is not running');
+	s = setup();
+	let r = call('PATCH', '/api/auth/user/admin', { username_new: '', password_current: s.password, password_new: a.password }, s.key);
+	if (r.status >= 300) die('failed (' + r.status + '): ' + substr(trim(r.body), 0, 200));
+	s.password = a.password;
+	secret_set(s);
+	out({ ok: true });
+}
+
+function cmd_api() {
+	let a = stdin_json();
+	let m = uc(a.method ?? 'GET');
+	if (!METHODS[m]) die('invalid method');
+	if (type(a.path) != 'string' || length(a.path) > 400 || !match(a.path, PATH_RE) || index(a.path, '..') >= 0 || index(a.path, '\\') >= 0) die('invalid path');
+	// the key of ShareOS and the sign-in stay ShareOS's business
+	if (match(a.path, /^\/api\/(keys|auth)(\/|\?|$)/)) die('not allowed');
+	if (!pid()) die('autobrr is not running');
+	let s = setup();
+	let r = call(m, a.path, a.body, s.key);
+	let j = null;
+	try { j = json(r.body); } catch (e) { }
+	out({ status: r.status, data: j, text: j == null ? substr(r.body, 0, 65536) : null });
+}
+
+switch (ARGV[0]) {
+case 'status': out(status()); break;
+case 'start': set_conf('enabled', '1'); start(); out(status()); break;
+case 'boot': if (installed() && conf().enabled && data_dir()) { start(); out(status()); } else out({ started: false }); break;
+case 'stop-all': stop(); out({ ok: true }); break;
+case 'set': cmd_set(); break;
+case 'password': cmd_password(); break;
+case 'api': cmd_api(); break;
+case 'log': { let t = readfile(LOG) ?? ''; out({ log: length(t) > 16384 ? substr(t, length(t) - 16384) : t }); break; }
+default:
+	print('usage: shareos-autobrr status|start|boot|stop-all|set|password|api|log\n');
+	exit(2);
+}

@@ -50,7 +50,8 @@ const SYS_SVC_TEXT = {
 	dlna:         { label: 'Medienserver (DLNA)', desc: 'MiniDLNA, Port 8200' },
 	tailscale:    { label: 'Fernzugriff (Tailscale)', desc: 'tailscaled, WireGuard-Mesh' },
 	vpn:          { label: 'VPN (OpenVPN)', desc: 'Client und Server, App NetTunnel' },
-	transmission: { label: 'Torrents (Transmission)', desc: 'ein Dienst pro Konto' }
+	transmission: { label: 'Torrents (Transmission)', desc: 'ein Dienst pro Konto' },
+	autobrr:      { label: 'Download-Automatik (autobrr)', desc: 'autobrr, Port 7474' }
 };
 // services that must not be stopped from the UI (it would cut itself off)
 const ESSENTIAL = { uhttpd: true, rpcd: true, ubus: true, board: true };
@@ -1579,12 +1580,29 @@ function ts_tool(args, input) {
 	return type(j) == 'object' ? j : { error: trim(r.out) || 'failed' };
 }
 
-// grant of an app with the permission p (and "files"); vpn, tailscale: admin accounts only
+// grant of an app with the permission p (and "files"); vpn, tailscale, autobrr: admin accounts only
 function app_grant_perm(grant, p) {
 	let g = app_grant_user(grant);
 	if (!g || index(g.app.permissions ?? [], p) < 0) return null;
-	if ((p == 'vpn' || p == 'tailscale') && acc_role(g.u) != 'admin') return null;
+	if ((p == 'vpn' || p == 'tailscale' || p == 'autobrr') && acc_role(g.u) != 'admin') return null;
 	return g;
+}
+
+// shareos-autobrr <args> (JSON on stdin for set, password, api)
+const AUTOBRR = '/usr/sbin/shareos-autobrr';
+function ab_tool(args, input) {
+	let cmd = AUTOBRR + ' ' + join(' ', map(args, shq));
+	let f = null;
+	if (input != null) {
+		f = '/tmp/.shareos-ab-in.' + substr(new_token(), 0, 12);
+		system('umask 077; : > ' + shq(f));
+		writefile(f, sprintf('%J', input));
+		cmd += ' < ' + shq(f);
+	}
+	let r = sh(cmd);
+	if (f) unlink(f);
+	let j = json(trim(r.out) || 'null');
+	return type(j) == 'object' ? j : { error: trim(r.out) || 'failed' };
 }
 
 function pid_alive(file, name) {
@@ -2944,6 +2962,45 @@ return {
 		down: { args: { grant: '' }, call: function(req) { return app_grant_perm(req.args.grant, 'tailscale') ? ts_tool([ 'down' ]) : { error: 'no access' }; } },
 		logout: { args: { grant: '' }, call: function(req) { return app_grant_perm(req.args.grant, 'tailscale') ? ts_tool([ 'logout' ]) : { error: 'no access' }; } },
 		ping: { args: { grant: '', ip: '' }, call: function(req) { return app_grant_perm(req.args.grant, 'tailscale') ? ts_tool([ 'ping', req.args.ip ?? '' ]) : { error: 'no access' }; } }
+	},
+
+	// called only by /_shareos/cgi/autobrr (as root, local ubus socket): autobrr
+	// for apps with "files" + "autobrr", admin accounts only
+	'shareos.appautobrr': {
+		status: { args: { grant: '' }, call: function(req) { return app_grant_perm(req.args.grant, 'autobrr') ? ab_tool([ 'status' ]) : { error: 'no access' }; } },
+		log: { args: { grant: '' }, call: function(req) { return app_grant_perm(req.args.grant, 'autobrr') ? ab_tool([ 'log' ]) : { error: 'no access' }; } },
+		start: { args: { grant: '' }, call: function(req) { return app_grant_perm(req.args.grant, 'autobrr') ? ab_tool([ 'start' ]) : { error: 'no access' }; } },
+		set: {
+			args: { grant: '', enabled: false, ui: false, account: '' },
+			call: function(req) {
+				let a = req.args, i = {};
+				if (!app_grant_perm(a.grant, 'autobrr')) return { error: 'no access' };
+				for (let k in [ 'enabled', 'ui', 'account' ]) if (a[k] != null) i[k] = a[k];
+				return ab_tool([ 'set' ], i);
+			}
+		},
+		password: {
+			args: { grant: '', password: '' },
+			call: function(req) { return app_grant_perm(req.args.grant, 'autobrr') ? ab_tool([ 'password' ], { password: req.args.password }) : { error: 'no access' }; }
+		},
+		api: {
+			args: { grant: '', method: '', path: '', body: {} },
+			call: function(req) {
+				let a = req.args;
+				if (!app_grant_perm(a.grant, 'autobrr')) return { error: 'no access' };
+				return ab_tool([ 'api' ], { method: a.method ?? 'GET', path: a.path ?? '', body: a.body });
+			}
+		},
+		// accounts whose Transmission can get autobrr's torrents
+		accounts: {
+			args: { grant: '' },
+			call: function(req) {
+				if (!app_grant_perm(req.args.grant, 'autobrr')) return { error: 'no access' };
+				let l = [ { name: 'root', fullname: 'Administrator' } ], c = cursor();
+				c.foreach('accounts', 'user', (x) => { if (x.role == 'user' || x.role == 'admin') push(l, { name: x['.name'], fullname: x.fullname ?? '' }); });
+				return { accounts: l };
+			}
+		}
 	},
 
 	'shareos.appvpn': {

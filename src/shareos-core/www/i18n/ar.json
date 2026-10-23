@@ -1125,7 +1125,10 @@
 		"VPN (OpenVPN)": "VPN (OpenVPN)",
 		"Client und Server, App NetTunnel": "عميل وخادم، تطبيق NetTunnel",
 		"Torrents (Transmission)": "التورنت (Transmission)",
-		"ein Dienst pro Konto": "خدمة واحدة لكل حساب"
+		"ein Dienst pro Konto": "خدمة واحدة لكل حساب",
+		"Download-Automatik (autobrr)": "أتمتة التنزيلات (autobrr)",
+		"autobrr, Port 7474": "autobrr، المنفذ 7474",
+		"Darf autobrr der Box einrichten und steuern (Filter, Indexer, IRC, Releases) und festlegen, in wessen Transmission gefundene Torrents landen – ein Dienst für die ganze Box, deshalb nur für Administratoren.": "يمكنه إعداد autobrr الخاص بالجهاز والتحكم فيه (المرشحات، المفهرسات، IRC، الإصدارات) واختيار Transmission الذي تصل إليه التورنتات الموجودة – خدمة واحدة للجهاز كله، لذا للمسؤولين فقط."
 	},
 	"patterns": [
 		[

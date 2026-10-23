@@ -62,6 +62,9 @@ define SHAREOS_CORE_INSTALL_TARGET_CMDS
 	$(INSTALL) -D -m 0644 $(@D)/etc/config/vpn $(TARGET_DIR)/etc/config/vpn
 	$(INSTALL) -D -m 0755 $(@D)/www-apps/_shareos/cgi/vpn $(TARGET_DIR)/www-apps/_shareos/cgi/vpn
 	$(INSTALL) -D -m 0755 $(@D)/usr/sbin/shareos-tailscale $(TARGET_DIR)/usr/sbin/shareos-tailscale
+	$(INSTALL) -D -m 0755 $(@D)/usr/sbin/shareos-autobrr $(TARGET_DIR)/usr/sbin/shareos-autobrr
+	$(INSTALL) -D -m 0644 $(@D)/etc/config/autobrr $(TARGET_DIR)/etc/config/autobrr
+	$(INSTALL) -D -m 0755 $(@D)/www-apps/_shareos/cgi/autobrr $(TARGET_DIR)/www-apps/_shareos/cgi/autobrr
 	$(INSTALL) -D -m 0644 $(@D)/etc/config/tailscale $(TARGET_DIR)/etc/config/tailscale
 	$(INSTALL) -D -m 0755 $(@D)/www-apps/_shareos/cgi/tailscale $(TARGET_DIR)/www-apps/_shareos/cgi/tailscale
 	$(INSTALL) -D -m 0755 $(@D)/www-apps/_shareos/cgi/status $(TARGET_DIR)/www-apps/_shareos/cgi/status

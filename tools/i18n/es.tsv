@@ -1434,3 +1434,6 @@ E1119	VPN (OpenVPN)
 E1120	Cliente y servidor, app NetTunnel
 E1121	Torrents (Transmission)
 E1122	un servicio por cuenta
+E1123	Automatización de descargas (autobrr)
+E1124	autobrr, puerto 7474
+E1125	Puede configurar y controlar autobrr de la caja (filtros, indexadores, IRC, releases) y elegir en qué Transmission acaban los torrents encontrados – un servicio para toda la caja, por eso solo para administradores.

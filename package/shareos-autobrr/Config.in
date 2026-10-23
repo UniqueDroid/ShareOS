@@ -1,0 +1,10 @@
+config BR2_PACKAGE_SHAREOS_AUTOBRR
+	bool "shareos-autobrr"
+	depends on BR2_PACKAGE_HOST_GO_TARGET_ARCH_SUPPORTS
+	select BR2_PACKAGE_HOST_GO
+	help
+	  autobrr for the system app "autobrr": download automation from
+	  IRC announce channels and RSS feeds, with its web interface
+	  (from the autobrr release).
+
+	  https://github.com/autobrr/autobrr

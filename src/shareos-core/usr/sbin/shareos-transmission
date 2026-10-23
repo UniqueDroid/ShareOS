@@ -86,6 +86,15 @@ function status(u) {
 		enabled: stat(ENABLED + '/' + u)?.type == 'file' };
 }
 
+// the hand-over folder of autobrr (shareos-autobrr) when this account gets its torrents
+function autobrr_drop(u) {
+	let c = cursor();
+	if (c.get('autobrr', 'main', 'account') != u || c.get('autobrr', 'main', 'enabled') == '0') return null;
+	let a = c.get('storage', 'global', 'apps');
+	let d = a && match(a, /^[a-z0-9_-]+$/) ? '/mnt/' + a + '/.shareos/autobrr-drop' : null;
+	return d && stat(ROOT + d)?.type == 'directory' ? d : null;
+}
+
 // settings the box decides; the rest (speed limits …) stays as the user set it
 function settings(u, pl) {
 	let file = ROOT + pl.state + '/settings.json';
@@ -105,7 +114,11 @@ function settings(u, pl) {
 	s['script-torrent-done-enabled'] = false;
 	s['script-torrent-added-enabled'] = false;
 	s['script-torrent-done-seeding-enabled'] = false;
-	s['watch-dir-enabled'] = false;
+	// only the hand-over folder of autobrr (torrents it found), nothing else
+	let drop = autobrr_drop(u);
+	s['watch-dir-enabled'] = !!drop;
+	if (drop) s['watch-dir'] = drop; else delete s['watch-dir'];
+	s['trash-original-torrent-files'] = !!drop;
 	s['umask'] = pl.run_as == 'root' ? '002' : '077';
 	if (s['download-dir'] == null) s['download-dir'] = pl.download;
 	if (s['incomplete-dir-enabled'] == null) s['incomplete-dir-enabled'] = false;

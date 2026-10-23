@@ -421,6 +421,17 @@ Braucht ein Tailscale-Konto (kostenlos), ein Handy oder einen Rechner mit Tailsc
 5. Webpad (ohne `embed`) → *Öffnen ↗*: ein eigenes Fenster, kein neuer Tab.
 6. Als Benutzer in „Mein ShareOS“: eine App mit `embed` öffnet sich in der Seite (`#/app/<id>`), ✕ führt zurück.
 
+## 14r. autobrr (0.2.0-beta.11)
+
+Braucht ein Apps-Laufwerk, die System-Apps `autobrr` und `transmission-daemon` und eine App mit der Berechtigung `autobrr` (ShareOS-Apps).
+
+1. Apps → Store → System-Apps → **autobrr** installieren. Nach etwa einer Minute: `ps | grep [a]utobrr` zeigt den Dienst unter dem Benutzer `autobrr`; Dienste → Status: „Download-Automatik (autobrr)“ läuft.
+2. Im Terminal: `/usr/sbin/shareos-autobrr status` – `"ready": true`, `ls -la /mnt/<laufwerk>/.shareos/autobrr` gehört `autobrr` (0700), `/etc/shareos/autobrr/secret.json` nur root.
+3. In der App das Konto für die Übergabe wählen (z. B. anna): `ls -ld /mnt/<laufwerk>/.shareos/autobrr-drop` → `drwxrws--- anna autobrr`. annas Transmission neu starten: in ihren Einstellungen ist `watch-dir` dieser Ordner.
+4. Weboberfläche einschalten und ein Passwort setzen: `http://<box>:7474` öffnet autobrr, Anmeldung mit `admin` und dem Passwort. Dort einen Indexer/IRC und einen Filter mit der Aktion *Watch dir* → `/mnt/<laufwerk>/.shareos/autobrr-drop` anlegen.
+5. Eine `.torrent`-Datei zum Test in den Übergabe-Ordner kopieren (als root, `chown anna:autobrr`): sie verschwindet nach ein paar Sekunden und steht in annas Transmission.
+6. `cat /proc/$(cat /tmp/shareos-autobrr/pid)/status | grep VmRSS` – etwa 40–60 MB. Box neu starten: autobrr läuft wieder. App: ausschalten → bleibt aus, auch nach einem Neustart.
+
 ## 14q. App-Ordner für Konten ohne „Dateien“ (0.2.0-beta.10)
 
 1. Benutzer → ein Konto (z. B. lisa) mit Weboberfläche, aber **ohne** „Dateien“.

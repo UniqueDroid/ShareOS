@@ -1125,7 +1125,10 @@
 		"VPN (OpenVPN)": "VPN (OpenVPN)",
 		"Client und Server, App NetTunnel": "Client and server, app NetTunnel",
 		"Torrents (Transmission)": "Torrents (Transmission)",
-		"ein Dienst pro Konto": "one service per account"
+		"ein Dienst pro Konto": "one service per account",
+		"Download-Automatik (autobrr)": "Download automation (autobrr)",
+		"autobrr, Port 7474": "autobrr, port 7474",
+		"Darf autobrr der Box einrichten und steuern (Filter, Indexer, IRC, Releases) und festlegen, in wessen Transmission gefundene Torrents landen – ein Dienst für die ganze Box, deshalb nur für Administratoren.": "May set up and control the box's autobrr (filters, indexers, IRC, releases) and choose whose Transmission gets the torrents it finds – one service for the whole box, so for administrators only."
 	},
 	"patterns": [
 		[
