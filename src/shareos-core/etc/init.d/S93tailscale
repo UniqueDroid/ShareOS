@@ -1,6 +1,6 @@
 #!/bin/sh
-# Tailscale: starts the daemon when the system app "tailscale" is installed and
-# the box was connected (it signs in again by itself); in the background, after the network.
+# Tailscale: starts the daemon when the system app "tailscaled" is installed (it
+# waits for the sign-in or connects again by itself); in the background, after the network.
 case "$1" in
 	start)
 		[ -x /opt/shareos/bin/tailscaled ] || exit 0

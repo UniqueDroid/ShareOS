@@ -397,16 +397,16 @@ Needs a drive with ext4 or Btrfs, the users **anna** and **lisa** (role user, "D
 9. Change the rights (remove lisa) → after a short while (longer with many files, it runs in the background) lisa has no access any more, not even to subfolders.
 ## 14n. Tailscale and large system apps on the drive (0.2.0-beta.7)
 
-Needs a Tailscale account (free), a phone or computer with Tailscale, the file `tailscale-1.98.8.sapp` (release of the firmware) and an app with the permission `tailscale` (ShareOS-Apps).
+Needs a Tailscale account (free), a phone or computer with Tailscale, the file `tailscaled-1.98.8.sapp` (release of the firmware) and an app with the permission `tailscale` (ShareOS-Apps).
 
 1. Before the update note `df -h /` in the terminal. After the update (restart) the box moves large system apps (FFmpeg, Transmission, MiniDLNA, OpenVPN) to the drive: `ls -l /opt/shareos/sysapps` shows `-> /mnt/<drive>/.shareos/sysapps/…` for them, nano/htop/bash stay folders. `df -h /` shows more free. Transmission, media server and VPN work as before.
-2. Apps → Store → system apps → install **tailscale**: `ls -l /opt/shareos/sysapps/tailscale` is a link to the drive, `df -h /` hardly changes.
+2. Apps → Store → system apps → install **tailscaled**: `ls -l /opt/shareos/sysapps/tailscaled` is a link to the drive, `df -h /` hardly changes. Without anything else the daemon runs: `ps | grep [t]ailscaled` (from 0.2.0-beta.9).
 3. Open the Tailscale app → *Verbinden*: a sign-in link (or QR code) appears. Open it on the phone, confirm with the Tailscale account. After a few seconds "verbunden", header chip **TAILSCALE · 100.x.y.z**.
 4. On the phone (mobile data, Wi-Fi off, Tailscale on): `http://100.x.y.z` → the ShareOS interface; shares over SMB at `\\100.x.y.z`.
 5. In the terminal: `ip addr show tailscale0`; `TS_BE_CLI=1 tailscaled --socket=/tmp/shareos-tailscale/tailscaled.sock status` lists the devices. `ps` shows `tailscaled`, `cat /proc/$(cat /tmp/shareos-tailscale/pid)/status | grep VmRSS` – below about 60 MB.
 6. Restart the box: after about a minute it is back in the tailnet by itself.
 7. In the app *Trennen*: the chip shows "getrennt"; *Abmelden*: the box leaves the tailnet (Tailscale admin console).
-8. Apps → Installed → tailscale → *Remove*: the service stops, the folder on the drive is gone.
+8. Apps → Installed → tailscaled → *Remove*: the service stops, the folder on the drive is gone.
 
 ## 14o. Apps in the page (0.2.0-beta.7)
 

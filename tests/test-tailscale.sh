@@ -17,10 +17,10 @@ SQFS="$OUT/images/rootfs.squashfs"
 UNSQ="$OUT/host/bin/unsquashfs"
 QEMU=$(command -v qemu-arm-static) || { echo "install qemu-user-static"; exit 1; }
 [ -f "$SQFS" ] || { echo "no $SQFS"; exit 1; }
-SAPP=${2:-$(ls -t "$TOP"/output/sysapps/sapp/tailscale-*.sapp 2>/dev/null | head -1)}
+SAPP=${2:-$(ls -t "$TOP"/output/sysapps/sapp/tailscaled-*.sapp 2>/dev/null | head -1)}
 SMALL=$(ls -t "$TOP"/output/sysapps/sapp/nano-*.sapp 2>/dev/null | head -1)
 MID=$(ls -t "$TOP"/output/sysapps/sapp/ffmpeg-*.sapp 2>/dev/null | head -1)
-[ -f "$SAPP" ] && [ -f "$SMALL" ] && [ -f "$MID" ] || { echo "no tailscale/nano/ffmpeg .sapp – make sysapps-pack"; exit 1; }
+[ -f "$SAPP" ] && [ -f "$SMALL" ] && [ -f "$MID" ] || { echo "no tailscaled/nano/ffmpeg .sapp – make sysapps-pack"; exit 1; }
 
 T=$(mktemp -d /tmp/shareos-ts-test.XXXX)
 R=$T/root
@@ -61,14 +61,14 @@ run "mkdir -p /mnt/daten/.shareos; uci set storage.global=global; uci set storag
 o=$(run "umask 077; shareos-apps install-file /tmp/small.sapp")
 check "small system app (nano) stays on the flash" "[ -d $R/opt/shareos/sysapps/nano ] && [ ! -L $R/opt/shareos/sysapps/nano ]"
 o=$(run "umask 077; shareos-apps install-file /tmp/ts.sapp")
-check "tailscale installs" "echo '$o' | js \"d.get('id')=='tailscale'\""
-check "large system app on the drive, a link in /opt" "[ -L $R/opt/shareos/sysapps/tailscale ] && [ \"\$(readlink $R/opt/shareos/sysapps/tailscale)\" = /mnt/daten/.shareos/sysapps/tailscale ] && [ -x $R/mnt/daten/.shareos/sysapps/tailscale/bin/tailscaled ]"
+check "tailscaled installs" "echo '$o' | js \"d.get('id')=='tailscaled'\""
+check "large system app on the drive, a link in /opt" "[ -L $R/opt/shareos/sysapps/tailscaled ] && [ \"\$(readlink $R/opt/shareos/sysapps/tailscaled)\" = /mnt/daten/.shareos/sysapps/tailscaled ] && [ -x $R/mnt/daten/.shareos/sysapps/tailscaled/bin/tailscaled ]"
 check "nothing of it left on the flash" "[ -z \"\$(ls -A $R/www-apps | grep '^\.new')\" ] && [ \"\$(du -sk $R/opt/shareos | cut -f1)\" -lt 15000 ]"
 check "the command runs through the link" "run 'TS_BE_CLI=1 /opt/shareos/bin/tailscaled version' | grep -q '^1\.'"
 o=$(run "shareos-apps fix-perms")
 check "boot: a large system app of an older version moves to the drive" "echo '$o' | js \"d['moved']==['ffmpeg']\" && [ -L $R/opt/shareos/sysapps/ffmpeg ] && run '/opt/shareos/bin/ffmpeg -version' | grep -q 'ffmpeg version'"
 o=$(run "umask 077; shareos-apps install-file /tmp/ts.sapp")
-check "update of a large system app keeps it on the drive" "[ -L $R/opt/shareos/sysapps/tailscale ] && [ -x $R/mnt/daten/.shareos/sysapps/tailscale/bin/tailscaled ] && ! ls -d $R/mnt/daten/.shareos/sysapps/tailscale.old 2>/dev/null"
+check "update of a large system app keeps it on the drive" "[ -L $R/opt/shareos/sysapps/tailscaled ] && [ -x $R/mnt/daten/.shareos/sysapps/tailscaled/bin/tailscaled ] && ! ls -d $R/mnt/daten/.shareos/sysapps/tailscaled.old 2>/dev/null"
 
 # --- permission, rpcd --------------------------------------------------------------
 mkapp() {   # id perms
@@ -89,7 +89,8 @@ GR=$(grant root tailscaleui); GA=$(grant anna tailscaleui); GO=$(grant root othe
 t() { local m=$1 a=${2:-'{}'}; a=$(echo "$a" | python3 -c "import json,sys; d=json.load(sys.stdin); d['grant']='$GR'; print(json.dumps(d))"); printf '%s' "$a" > $R/tmp/req.json; run "ubus call shareos.apptailscale $m \"\$(cat /tmp/req.json)\""; }
 check "user account: no access" "run \"ubus call shareos.apptailscale status '{\\\"grant\\\":\\\"$GA\\\"}'\" | js \"d.get('error')=='no access'\""
 check "app without the permission: no access" "run \"ubus call shareos.apptailscale status '{\\\"grant\\\":\\\"$GO\\\"}'\" | js \"d.get('error')=='no access'\""
-check "admin: installed, not running" "t status | js \"d['installed'] and not d['running'] and d['state']=='Stopped'\""
+i=0; until t status | js "d['running']" || [ $i -ge 60 ]; do sleep 0.5; i=$((i + 1)); done
+check "installing the system app starts the daemon (waits for the sign-in)" "t status | js \"d['installed'] and d['running'] and d['state'] in ('NeedsLogin','NoState','Stopped')\""
 check "invalid auth key refused" "t up '{\"authkey\":\"nope\"}' | grep -q 'invalid auth key'"
 o=$(t up)
 check "up: the daemon starts and waits for the sign-in" "echo '$o' | js \"d['running'] and d['state'] in ('NeedsLogin','NoState','Starting','Stopped')\" && run 'ip link show tailscale0' | grep -q tailscale0"
@@ -103,8 +104,10 @@ run "/usr/sbin/shareos-tailscale stop-all" >/dev/null
 check "stopped" "t status | js \"not d['running']\""
 run "/usr/sbin/shareos-tailscale boot" >/dev/null
 check "boot starts it again" "t status | js \"d['running']\""
-o=$(run "shareos-apps remove tailscale")
-check "removing the system app stops the daemon, link and folder on the drive go" "t status | js \"not d['installed'] and not d['running']\" && [ ! -e $R/opt/shareos/sysapps/tailscale ] && [ ! -L $R/opt/shareos/sysapps/tailscale ] && [ ! -e $R/mnt/daten/.shareos/sysapps/tailscale ] && [ ! -e $R/opt/shareos/bin/tailscaled ]"
+run "uci set tailscale.main.enabled=0; uci commit tailscale; /usr/sbin/shareos-tailscale stop-all; /usr/sbin/shareos-tailscale boot" >/dev/null
+check "boot starts it whenever the system app is installed (also never signed in)" "t status | js \"d['running']\""
+o=$(run "shareos-apps remove tailscaled")
+check "removing the system app stops the daemon, link and folder on the drive go" "t status | js \"not d['installed'] and not d['running']\" && [ ! -e $R/opt/shareos/sysapps/tailscaled ] && [ ! -L $R/opt/shareos/sysapps/tailscaled ] && [ ! -e $R/mnt/daten/.shareos/sysapps/tailscaled ] && [ ! -e $R/opt/shareos/bin/tailscaled ]"
 o=$(run "shareos-apps remove ffmpeg")
 check "removing a moved system app removes its folder on the drive" "[ ! -e $R/mnt/daten/.shareos/sysapps/ffmpeg ] && [ ! -L $R/opt/shareos/sysapps/ffmpeg ]"
 

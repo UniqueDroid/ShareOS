@@ -38,7 +38,8 @@ itself, so only reviewed daemons run on the box. The media server
 `minidlna` works the same way (`shareos-dlna`, `S96dlna`, settings in the
 interface under Services → Media server), and so does `openvpn` (`shareos-vpn`,
 `S94vpn`, app NetTunnel with the permission `vpn`).
-`tailscale` too (`shareos-tailscale`, `S93tailscale`, app permission
+`tailscaled` too (`shareos-tailscale`, `S93tailscale`, started on install by
+its hook, app permission
 `tailscale`); its package is `package/shareos-tailscale` (newer than
 buildroot's, one binary with the CLI built in – `TS_BE_CLI=1 tailscaled …`).
 

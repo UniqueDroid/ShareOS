@@ -4,10 +4,19 @@ Changes per release (newest first). The section of a version is added to its
 GitHub release automatically when the release is built. Test versions are
 pre-releases for test devices only.
 
+## 0.2.0-beta.9
+
+- **Tailscale starts by itself:** the daemon now runs as soon as the system app `tailscaled` is installed and after every restart – it waits for the sign-in, and a box that was signed in connects again by itself. Before, only an app's *Verbinden* started it. The removal hook follows the new id `tailscaled`.
+
+## 0.2.0-beta.8
+
+- The system app is called **`tailscaled`** (before: `tailscale`), so it no longer clashes with the web app *Tailscale* (ShareOS-Apps).
+
 ## 0.2.0-beta.7
 
 - **Tailscale (remote access without port forwarding):** the system app `tailscale` (Tailscale 1.98.8, one slim binary of 17 MB – the CLI built in, without what a NAS does not use; in the release as `.sapp`) connects the box to a tailnet – the web interface, shares and services are reachable from anywhere, also behind DS-Lite. `shareos-tailscale` runs `tailscaled` with the kernel TUN device, without firewall rules and without changing the DNS of the box, with a Go memory limit (`GOMEMLIMIT=40MiB`, `GOGC=25`); the keys stay in `/etc/shareos/tailscale` (root only). Sign-in with a link (an app can show it as a QR code) or an auth key; starts again after a restart (`S93tailscale`); removing the system app stops it. Header chip **TAILSCALE · 100.x.y.z**.
 - **Permission `tailscale`** for apps (needs `files`), admin accounts only: `ShareOS.tailscale` – status (state, own addresses, tailnet, devices), up (with auth key or sign-in link), login, down, logout, ping, log – through `/_shareos/cgi/tailscale` (rpcd `shareos.apptailscale`). The app itself comes from ShareOS-Apps.
+- **Apps in the page:** an app with the permission `embed` (e.g. NetTunnel) opens **in the ShareOS page itself** – its name takes the place of the section title, the app fills the area below, with its own address (`#/apps/run/<id>`, for users `#/app/<id>`) – instead of a box over the page; it keeps running while the interface refreshes. "In eigenem Fenster ↗" opens it in a window of its own.
 - **Every web app gets a window of its own** (not a browser tab): the size from the manifest (`"window"`) or 1000 × 700.
 - **Display per app:** Apps → Installed → "In der Seite" / "Eigenes Fenster" for apps with `embed` – for everyone on the box.
 - **Torrent chip only while something moves:** the header shows **TORRENT · ↓ 2 ↑ 1** only while torrents download (↓) or seeding torrents upload (↑) – no longer just because the user's Transmission daemon runs.
