@@ -245,6 +245,9 @@ cmd_del() {
 	if [ $O_REMOVE_HOME = 1 ] && [ -n "$h" ] && echo "$h" | grep -qE "^/mnt/[a-z0-9_-]+/home/$n\$" && [ -d "$h" ]; then
 		rm -rf "$h"
 	fi
+	# private folders of apps (accounts without "Dateien", see app_private_dir in rpcd)
+	a=$(uci -q get storage.global.apps)
+	[ $O_REMOVE_HOME = 1 ] && [ -n "$a" ] && [ -d "/mnt/$a/.shareos/userdata/$n" ] && rm -rf "/mnt/$a/.shareos/userdata/$n"
 	cmd_sync
 	log "user $n deleted"
 }

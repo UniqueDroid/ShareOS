@@ -421,6 +421,15 @@ Braucht ein Tailscale-Konto (kostenlos), ein Handy oder einen Rechner mit Tailsc
 5. Webpad (ohne `embed`) → *Öffnen ↗*: ein eigenes Fenster, kein neuer Tab.
 6. Als Benutzer in „Mein ShareOS“: eine App mit `embed` öffnet sich in der Seite (`#/app/<id>`), ✕ führt zurück.
 
+## 14q. App-Ordner für Konten ohne „Dateien“ (0.2.0-beta.10)
+
+1. Benutzer → ein Konto (z. B. lisa) mit Weboberfläche, aber **ohne** „Dateien“.
+2. Als lisa anmelden → Mein ShareOS → ShareNotes öffnen: kein Hinweis „Kein Zugriff auf die Ordner der Box“, unten steht `Box: 🏠 app/notes/`.
+3. Eine Notiz anlegen. Im Terminal (als root): `ls -la /mnt/<apps-laufwerk>/.shareos/userdata/lisa/notes/notes/` zeigt `note_….json`, Besitzer lisa; der Ordner `userdata/lisa` hat `drwx------`.
+4. Als lisa: Mein ShareOS zeigt weiterhin keinen Dateibrowser; per SMB ist der Ordner nicht zu sehen.
+5. Box neu starten bzw. App neu öffnen: die Notiz ist noch da (auch in einem anderen Browser).
+6. Apps → Installiert → ShareNotes entfernen: `userdata/lisa/notes` ist weg. Konto lisa mit „Daten löschen“ entfernen: `userdata/lisa` ist weg.
+
 ## 14p. Dienste der System-Apps (0.2.0-beta.9)
 
 1. Nach dem Update im Terminal: `ls /etc/init.d` zeigt `S90services`, kein `S93tailscale`, `S94vpn`, `S95transmission`, `S96dlna` mehr; `/usr/lib/shareos/apphooks` gibt es nicht mehr.

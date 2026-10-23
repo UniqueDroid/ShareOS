@@ -166,6 +166,7 @@ the box for why the web server was not running.
 |---|---|
 | 08:30 | Jan: "it does not start by itself" – `tailscaled` only ran once an app pressed *Verbinden*, and the submitted Tailscale app talked to an interface the box does not have. Claude starts the daemon on install and at boot (ShareOS #48) and ports the app to `ShareOS.tailscale` with a real QR code (ShareOS-Apps #22). |
 | 09:22 | Jan: "Can this be simpler with system apps?" Every service had its own init script and its own hook – Jan's rename to `tailscaled` had orphaned exactly that hook. Since then the service is declared in the system app's `app.json` (`"service"`), one init script starts them all, the control stays in the firmware. Jan decides: system apps are submitted to the ShareOS repo, ShareOS-Apps only takes web apps – with one example each for a program and a service. |
+| 11:28 | Jan's app ShareNotes goes into the store. His requirement: accounts without "Dateien" should keep their notes on the box too. Jan picks a private folder per app and account on the apps drive; the account's folders, shares and file browser stay closed. |
 
 ## Notable problems solved
 

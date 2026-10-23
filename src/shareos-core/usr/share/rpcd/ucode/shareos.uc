@@ -1273,7 +1273,12 @@ function share_access(u, x, gs) {
 	return null;
 }
 
+// who: an account name, or { u, roots } – an app grant with its own roots
+// (accounts without "Dateien" get only the app's private folder)
+function who_user(w) { return type(w) == 'object' ? w.u : w; }
+
 function files_roots(u) {
+	if (type(u) == 'object') return u.roots ?? files_roots(u.u);
 	let c = cursor(), roots = [];
 	if (!u || !files_allowed(u)) return roots;
 	let mounts = readfile('/proc/mounts') ?? '';
@@ -1319,7 +1324,7 @@ function files_path(u, root, rel, want) {
 	let rp = realpath(chk);
 	if (!rp || !base || (rp != base && index(rp, base + '/') != 0)) return { error: 'not found' };
 	if (want == 'dir' && stat(rp)?.type != 'directory') return { error: 'not a folder' };
-	return { root: r, abs, rel: join('/', parts), admin: acc_role(u) == 'admin' };
+	return { root: r, abs, rel: join('/', parts), admin: acc_role(who_user(u)) == 'admin' };
 }
 
 // the same for writing: refused in a share the account may only read
@@ -1487,15 +1492,44 @@ function app_grant_new(u, app) {
 	return t;
 }
 
-// grant -> account, while the app is installed, has "files" and is visible to the account
-function app_grant_user(g) {
+// accounts that may use apps but not the folders of the box ("Dateien" off)
+function app_private_allowed(u) {
+	let c = cursor();
+	return acc_role(u) == 'user' && c.get('accounts', u, 'web') != '0' && !files_allowed(u);
+}
+
+// the private folder of an app for such an account, on the apps drive:
+// /mnt/<apps>/.shareos/userdata/<account>/<app> – the account's, 0700; made
+// when first needed; null without an apps drive
+function app_private_dir(u, id) {
+	let a = cursor().get('storage', 'global', 'apps');
+	if (!a || !acc_name_ok(u) || !match(id ?? '', /^[a-z][a-z0-9-]{1,31}$/)) return null;
+	let base = '/mnt/' + a + '/.shareos';
+	if (stat(base)?.type != 'directory' || index(readfile('/proc/mounts') ?? '', ' /mnt/' + a + ' ') < 0) return null;
+	let ud = base + '/userdata/' + u, d = ud + '/' + id;
+	if (stat(d)?.type != 'directory')
+		system(sprintf('chmod a+x %s && mkdir -p %s && chmod 711 %s && mkdir -p %s && chown %s %s %s && chmod 700 %s %s',
+			shq(base), shq(base + '/userdata'), shq(base + '/userdata'), shq(d), shq(u), shq(ud), shq(d), shq(ud), shq(d)));
+	return stat(d)?.type == 'directory' ? d : null;
+}
+
+// grant -> account, while the app is installed, has "files" and is visible to
+// the account. private_ok: an account without "Dateien" gets the app's private
+// folder as its only root (ShareOS.fs of that app); other permissions (torrent,
+// media …) still need "Dateien".
+function app_grant_user(g, private_ok) {
 	if (type(g) != 'string' || !match(g, /^[0-9a-f]{32}$/)) return null;
 	let l = split(readfile(APP_GRANTS + '/' + g) ?? '', '\n');
 	if (length(l) < 3 || +l[2] < time()) return null;
 	let u = l[0], id = l[1];
-	if (!(u == 'root' || acc_name_ok(u)) || !files_allowed(u)) return null;
+	if (!(u == 'root' || acc_name_ok(u))) return null;
+	let full = files_allowed(u);
+	if (!full && !(private_ok && app_private_allowed(u))) return null;
 	let app = filter(apps_for(u), (x) => x.id == id)[0];
-	return app && app_has_files(app) ? { u, app } : null;
+	if (!app || !app_has_files(app)) return null;
+	if (full) return { u, app, roots: null };
+	let d = app_private_dir(u, app.id);
+	return { u, app, roots: d ? [ { name: 'app', path: d, home: true, private: true } ] : [] };
 }
 
 // compares without stopping at the first wrong character
@@ -3254,7 +3288,7 @@ return {
 			args: { app: '' },
 			call: function(req) {
 				let u = session_user(req);
-				if (!u || !files_allowed(u)) return { error: 'not allowed' };
+				if (!u || !(files_allowed(u) || app_private_allowed(u))) return { error: 'not allowed' };
 				let app = filter(apps_for(u), (x) => x.id == req.args.app)[0];
 				if (!app) return { error: 'app not available' };
 				if (!app_has_files(app)) return { error: 'the app has no access to files' };
@@ -3427,28 +3461,28 @@ return {
 		roots: {
 			args: { grant: '' },
 			call: function(req) {
-				let g = app_grant_user(req.args.grant);
+				let g = app_grant_user(req.args.grant, true);
 				if (!g) return { error: 'no access' };
-				return { roots: map(files_roots(g.u), (r) => ({ name: r.name, home: r.home, usb: !!r.usb, ro: !!r.ro })), user: g.u };
+				return { roots: map(files_roots(g), (r) => ({ name: r.name, home: r.home, usb: !!r.usb, ro: !!r.ro, private: !!r.private })), user: g.u };
 			}
 		},
 
 		list: {
 			args: { grant: '', root: '', path: '', hidden: false },
 			call: function(req) {
-				let g = app_grant_user(req.args.grant);
+				let g = app_grant_user(req.args.grant, true);
 				if (!g) return { error: 'no access' };
-				return files_list(g.u, req.args.root, req.args.path, req.args.hidden === true);
+				return files_list(g, req.args.root, req.args.path, req.args.hidden === true);
 			}
 		},
 
 		mkdir: {
 			args: { grant: '', root: '', path: '', name: '' },
 			call: function(req) {
-				let g = app_grant_user(req.args.grant), a = req.args;
+				let g = app_grant_user(req.args.grant, true), a = req.args;
 				if (!g) return { error: 'no access' };
 				if (!name_ok(a.name)) return { error: 'invalid name' };
-				let p = files_wpath(g.u, a.root, a.path, 'dir');
+				let p = files_wpath(g, a.root, a.path, 'dir');
 				if (p.error) return p;
 				let r = files_sh(g.u, 'mkdir -- ' + shq(p.abs + '/' + a.name), p.root.share);
 				return r.rc == 0 ? { ok: true } : { error: files_err(r) };
@@ -3458,10 +3492,10 @@ return {
 		rename: {
 			args: { grant: '', root: '', path: '', name: '', to: '' },
 			call: function(req) {
-				let g = app_grant_user(req.args.grant), a = req.args;
+				let g = app_grant_user(req.args.grant, true), a = req.args;
 				if (!g) return { error: 'no access' };
 				if (!name_ok(a.name) || !name_ok(a.to)) return { error: 'invalid name' };
-				let p = files_wpath(g.u, a.root, a.path, 'dir');
+				let p = files_wpath(g, a.root, a.path, 'dir');
 				if (p.error) return p;
 				if (!lstat(p.abs + '/' + a.name)) return { error: 'not found' };
 				if (lstat(p.abs + '/' + a.to)) return { error: 'already exists' };
@@ -3474,12 +3508,12 @@ return {
 		move: {
 			args: { grant: '', root: '', path: '', names: [], dest_root: '', dest: '', copy: false },
 			call: function(req) {
-				let g = app_grant_user(req.args.grant), a = req.args;
+				let g = app_grant_user(req.args.grant, true), a = req.args;
 				if (!g) return { error: 'no access' };
 				if (type(a.names) != 'array' || !length(a.names) || length(a.names) > 1000) return { error: 'nothing selected' };
 				for (let n in a.names) if (!name_ok(n)) return { error: 'invalid name' };
 				let droot = a.dest_root || a.root;
-				let p = a.copy ? files_path(g.u, a.root, a.path, 'dir') : files_wpath(g.u, a.root, a.path, 'dir'), d = files_wpath(g.u, droot, a.dest, 'dir');
+				let p = a.copy ? files_path(g, a.root, a.path, 'dir') : files_wpath(g, a.root, a.path, 'dir'), d = files_wpath(g, droot, a.dest, 'dir');
 				if (p.error) return p;
 				if (d.error) return d;
 				for (let n in a.names) {
@@ -3496,11 +3530,11 @@ return {
 		delete: {
 			args: { grant: '', root: '', path: '', names: [] },
 			call: function(req) {
-				let g = app_grant_user(req.args.grant), a = req.args;
+				let g = app_grant_user(req.args.grant, true), a = req.args;
 				if (!g) return { error: 'no access' };
 				if (type(a.names) != 'array' || !length(a.names) || length(a.names) > 1000) return { error: 'nothing selected' };
 				for (let n in a.names) if (!name_ok(n)) return { error: 'invalid name' };
-				let p = files_wpath(g.u, a.root, a.path, 'dir');
+				let p = files_wpath(g, a.root, a.path, 'dir');
 				if (p.error) return p;
 				let r = files_sh(g.u, 'rm -rf -- ' + join(' ', map(a.names, (n) => shq(p.abs + '/' + n))), p.root.share);
 				return r.rc == 0 ? { ok: true } : { error: files_err(r) };
@@ -3511,10 +3545,10 @@ return {
 		open: {
 			args: { grant: '', root: '', path: '', name: '', write: false, create: false },
 			call: function(req) {
-				let g = app_grant_user(req.args.grant), a = req.args;
+				let g = app_grant_user(req.args.grant, true), a = req.args;
 				if (!g) return { error: 'no access' };
 				if (!name_ok(a.name)) return { error: 'invalid name' };
-				let p = a.write ? files_wpath(g.u, a.root, a.path, 'dir') : files_path(g.u, a.root, a.path, 'dir');
+				let p = a.write ? files_wpath(g, a.root, a.path, 'dir') : files_path(g, a.root, a.path, 'dir');
 				if (p.error) return p;
 				let target = p.abs + '/' + a.name, st = lstat(target);
 				if (st ? st.type != 'file' : !(a.write && a.create)) return { error: st ? 'not a file' : 'not found' };
