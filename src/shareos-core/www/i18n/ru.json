@@ -1133,7 +1133,15 @@
 		"Aus den Favoriten nehmen": "Убрать из избранного",
 		"App-Leiste „FAV APPS“ anzeigen (nur für dich)": "Показывать панель «FAV APPS» (только для вас)",
 		"Mit dem Stern auf einer App-Kachel wird sie zum Favoriten. Die Leiste steht über „Status“ in der Übersicht und über den installierten Apps.": "Звёздочка на плитке приложения добавляет его в избранное. Панель находится над «Статусом» в обзоре и над установленными приложениями.",
-		"Namen unter den Symbolen zeigen (aus: nur Symbole)": "Показывать названия под значками (выкл.: только значки)"
+		"Namen unter den Symbolen zeigen (aus: nur Symbole)": "Показывать названия под значками (выкл.: только значки)",
+		"Werte der Box": "Показатели устройства",
+		"Netzwerk prüfen": "Проверка сети",
+		"Docker-Hosts": "Хосты Docker",
+		"Darf die Werte der Box lesen (CPU, Arbeitsspeicher, Temperatur, Lüfter, Laufwerke, Prozesse) und Prozesse beenden, die ShareOS nicht braucht – nur für Administratoren.": "Может читать показатели устройства (ЦП, память, температура, вентилятор, диски, процессы) и завершать процессы, не нужные ShareOS, – только администраторы.",
+		"Darf von der Box aus prüfen, ob Geräte und Dienste im Netz erreichbar sind (Ping, Port, HTTP/HTTPS) – nur für Administratoren.": "Может проверять с устройства доступность устройств и сервисов в сети (ping, порт, HTTP/HTTPS) – только администраторы.",
+		"Darf die Docker-Hosts verwalten, die der Administrator einträgt, und dort Container ansehen, starten, stoppen und neu starten sowie ihre Protokolle lesen (Docker-API) – nur für Administratoren.": "Может управлять хостами Docker, добавленными администратором, и там просматривать, запускать, останавливать и перезапускать контейнеры и читать их журналы (Docker API) – только администраторы.",
+		"Smart Home (Tuya)": "Умный дом (Tuya)",
+		"Darf von der Box aus Tuya-Geräte im Heimnetz suchen, ihren Zustand lesen und sie schalten (lokal, ohne Cloud) – nur für Administratoren.": "Может с устройства находить устройства Tuya в домашней сети, читать их состояние и переключать их (локально, без облака) – только администраторы."
 	},
 	"patterns": [
 		[

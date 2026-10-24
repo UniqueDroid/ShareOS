@@ -1,0 +1,103 @@
+#!/usr/bin/ucode -S
+// ShareOS app platform: reachability checks from the box (ping, TCP port,
+// HTTP/HTTPS), for apps with the permissions "files" and "netcheck" – admin
+// accounts only
+//   POST /_shareos/cgi/netcheck?g=<grant>
+//   body: {"op": "check", "checks": [{"kind": "ping", "host": "192.168.1.1", "count": 2},
+//                                    {"kind": "tcp", "host": "nas", "port": 22},
+//                                    {"kind": "http", "url": "https://example.lan/"}]}
+// At most 32 checks per request, run side by side with short time limits;
+// the answer has one result per check in the same order. The grant is
+// checked by rpcd (shareos.appnet), the checks run here (not in rpcd, which
+// must not wait for the network).
+import { stdin, stdout, readfile, popen, mkdtemp, unlink, rmdir } from 'fs';
+import * as ubus from 'ubus';
+
+function reply(status, obj) {
+	stdout.write(sprintf('Status: %s\r\nContent-Type: application/json\r\nCache-Control: no-store\r\nX-Content-Type-Options: nosniff\r\n\r\n%J\n', status, obj));
+	exit(0);
+}
+function rnd(x) { return int(x + 0.5); }
+function shq(s) { return "'" + replace(s, "'", "'\\''") + "'"; }
+
+let g = match(getenv('QUERY_STRING') ?? '', /(^|&)g=([0-9a-f]{32})(&|$)/);
+if (!g) reply('403 Forbidden', { error: 'no access' });
+if (getenv('REQUEST_METHOD') != 'POST') reply('405 Method Not Allowed', { error: 'method not allowed' });
+let len = +(getenv('CONTENT_LENGTH') ?? 0);
+if (!(len > 0) || len > 16384) reply('413 Payload Too Large', { error: 'invalid request' });
+let req = json(stdin.read(len) ?? 'null');
+if (type(req) != 'object' || req.op != 'check' || type(req.checks) != 'array' || !length(req.checks) || length(req.checks) > 32)
+	reply('400 Bad Request', { error: 'invalid request (1 to 32 checks)' });
+
+let conn = ubus.connect();
+if (!conn) reply('503 Service Unavailable', { error: 'not ready' });
+let ok = conn.call('shareos.appnet', 'allowed', { grant: g[2] });
+if (ok?.ok !== true) reply('403 Forbidden', { error: 'no access' });
+
+function host_ok(h) {
+	return type(h) == 'string' && length(h) <= 253 &&
+		(!!match(h, /^[A-Za-z0-9]([A-Za-z0-9-]*[A-Za-z0-9])?(\.[A-Za-z0-9]([A-Za-z0-9-]*[A-Za-z0-9])?)*$/) || !!match(h, /^[0-9A-Fa-f:.]+$/) && index(h, ':') >= 0);
+}
+function url_ok(u) {
+	return type(u) == 'string' && length(u) <= 300 && !!match(u, /^https?:\/\/[A-Za-z0-9\[]/) && !match(u, /[[:space:]"'`\\<>]/);
+}
+
+// one shell command per check; invalid checks get their error right away
+let cmds = [], results = [];
+for (let i = 0; i < length(req.checks); i++) {
+	let c = req.checks[i], cmd = null;
+	if (type(c) != 'object') { results[i] = { ok: false, error: 'invalid check' }; continue; }
+	if (c.kind == 'ping') {
+		let n = +(c.count ?? 1);
+		if (!host_ok(c.host)) results[i] = { kind: 'ping', ok: false, error: 'invalid host' };
+		else if (!(n >= 1 && n <= 5)) results[i] = { kind: 'ping', ok: false, error: 'count 1 to 5' };
+		else cmd = sprintf('ping -c %d -W 2 -w %d %s', n, n * 2 + 1, shq(c.host));
+	} else if (c.kind == 'tcp') {
+		let p = +(c.port ?? 0);
+		if (!host_ok(c.host)) results[i] = { kind: 'tcp', ok: false, error: 'invalid host' };
+		else if (!(p >= 1 && p <= 65535)) results[i] = { kind: 'tcp', ok: false, error: 'invalid port' };
+		else cmd = sprintf("curl -s -o /dev/null --connect-timeout 3 --max-time 4 -w '%%{time_connect} %%{remote_ip}' %s </dev/null",
+			shq(sprintf('telnet://%s:%d', index(c.host, ':') >= 0 ? '[' + c.host + ']' : c.host, p)));
+	} else if (c.kind == 'http') {
+		if (!url_ok(c.url)) results[i] = { kind: 'http', ok: false, error: 'invalid address' };
+		else cmd = sprintf("curl -s -k -o /dev/null --connect-timeout 4 --max-time 8 -A 'ShareOS netcheck' -w '%%{http_code} %%{time_total} %%{remote_ip} %%{ssl_verify_result}' %s", shq(c.url));
+	} else results[i] = { ok: false, error: 'unknown kind (ping, tcp, http)' };
+	if (cmd) push(cmds, [ i, cmd ]);
+}
+
+let dir = length(cmds) ? mkdtemp('/tmp/netcheck.XXXXXX') : null;
+if (length(cmds) && !dir) reply('500 Internal Server Error', { error: 'failed' });
+if (length(cmds)) {
+	let script = '';
+	for (let x in cmds) script += sprintf('( %s ) > %s/%d 2>&1 &\n', x[1], dir, x[0]);
+	script += 'wait\n';
+	let p = popen('/bin/sh -c ' + shq(script), 'r');
+	p?.read('all'); p?.close();
+}
+
+for (let x in cmds) {
+	let i = x[0], c = req.checks[i], f = sprintf('%s/%d', dir, i), out = readfile(f) ?? '';
+	unlink(f);
+	if (c.kind == 'ping') {
+		let t = match(out, /([0-9]+) packets transmitted, ([0-9]+) (packets )?received/);
+		let rt = match(out, /= ([0-9.]+)\/([0-9.]+)\/([0-9.]+)/);
+		let ip = match(out, /^PING [^ ]+ \(([0-9A-Fa-f.:]+)\)/);
+		let sent = t ? +t[1] : 0, recv = t ? +t[2] : 0;
+		results[i] = { kind: 'ping', host: c.host, ok: recv > 0, sent, received: recv, loss: sent ? rnd((sent - recv) * 100 / sent) : 100,
+			ms: rt ? +rt[2] : null, min: rt ? +rt[1] : null, max: rt ? +rt[3] : null, ip: ip ? ip[1] : null,
+			error: t ? (recv ? null : 'no answer') : (match(out, /bad address|unknown host/i) ? 'unknown host' : trim(out) || 'failed') };
+	} else if (c.kind == 'tcp') {
+		let m = match(trim(out), /^([0-9.]+) (\S*)/);
+		let tc = m ? +m[1] : 0;
+		results[i] = { kind: 'tcp', host: c.host, port: +c.port, ok: tc > 0, ms: tc > 0 ? rnd(tc * 10000) / 10 : null, ip: m?.[2] || null,
+			error: tc > 0 ? null : 'closed or not reachable' };
+	} else {
+		let m = match(trim(out), /^([0-9]{3}) ([0-9.]+) (\S*) ([0-9]+)/);
+		let code = m ? +m[1] : 0;
+		results[i] = { kind: 'http', url: c.url, ok: code >= 100 && code < 500, status: code || null, ms: code ? rnd(+m[2] * 10000) / 10 : null,
+			ip: m?.[3] || null, cert_ok: match(c.url, /^https:/) && m ? m[4] == '0' : null,
+			error: code ? (code >= 500 ? 'server error ' + code : null) : 'not reachable' };
+	}
+}
+if (dir) rmdir(dir);
+reply('200 OK', { results });

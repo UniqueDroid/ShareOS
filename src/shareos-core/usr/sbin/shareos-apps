@@ -100,7 +100,7 @@ const MAX_PKG = 64 * 1048576;       // download / upload
 const MAX_FILES = 40 * 1048576;     // unpacked
 const ID_RE = /^[a-z][a-z0-9-]{1,31}$/;
 const JOB_RE = /^[a-z][a-z0-9-]{0,23}$/;
-const PERMISSIONS = { cron: 1, embed: 1, files: 1, torrent: 1, media: 1, vpn: 1, status: 1, tailscale: 1, autobrr: 1 };
+const PERMISSIONS = { cron: 1, embed: 1, files: 1, torrent: 1, media: 1, vpn: 1, status: 1, tailscale: 1, autobrr: 1, sysinfo: 1, netcheck: 1, docker: 1, tuya: 1 };
 const MAX_JOBS = 5;
 const MAX_REQUIRES = 5;
 const MAX_LOG = 65536;
@@ -265,6 +265,10 @@ function check_jobs(a, dir) {
 	if (index(perms, 'tailscale') >= 0 && index(perms, 'files') < 0) return 'the permission "tailscale" needs "files"';
 	// "autobrr": the box's autobrr (admins only, checked when used)
 	if (index(perms, 'autobrr') >= 0 && index(perms, 'files') < 0) return 'the permission "autobrr" needs "files"';
+	// "sysinfo" (the box's values), "netcheck" (checks from the box), "docker"
+	// (Docker hosts of the homelab), "tuya" (smart-home devices): admins only, checked when used
+	for (let p in [ 'sysinfo', 'netcheck', 'docker', 'tuya' ])
+		if (index(perms, p) >= 0 && index(perms, 'files') < 0) return 'the permission "' + p + '" needs "files"';
 	if (a.jobs == null) return null;
 	if (type(a.jobs) != 'array' || length(a.jobs) > MAX_JOBS) return 'invalid jobs (at most ' + MAX_JOBS + ')';
 	if (length(a.jobs) && index(perms, 'cron') < 0) return 'jobs need the permission "cron"';

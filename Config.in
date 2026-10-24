@@ -7,6 +7,7 @@ source "$BR2_EXTERNAL_SHAREOS_PATH/package/rpcd/Config.in"
 source "$BR2_EXTERNAL_SHAREOS_PATH/package/shareos-core/Config.in"
 source "$BR2_EXTERNAL_SHAREOS_PATH/package/shareos-tailscale/Config.in"
 source "$BR2_EXTERNAL_SHAREOS_PATH/package/shareos-autobrr/Config.in"
+source "$BR2_EXTERNAL_SHAREOS_PATH/package/shareos-tuya/Config.in"
 
 endmenu
 

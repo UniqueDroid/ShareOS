@@ -1445,3 +1445,11 @@ E1128	Mostrar a barra “FAV APPS” (só para você)
 E1129	A estrela no bloco de um app o torna favorito. A barra fica acima de “Status” na visão geral e acima dos apps instalados.
 P273	Favoritos: $1
 E1130	Mostrar nomes abaixo dos ícones (desligado: só ícones)
+E1131	Valores da caixa
+E1132	Verificar a rede
+E1133	Hosts Docker
+E1134	Pode ler os valores da caixa (CPU, memória, temperatura, ventoinha, discos, processos) e encerrar processos de que o ShareOS não precisa – apenas administradores.
+E1135	Pode verificar a partir da caixa se dispositivos e serviços da rede estão acessíveis (ping, porta, HTTP/HTTPS) – apenas administradores.
+E1136	Pode gerir os hosts Docker que o administrador adiciona e aí ver, iniciar, parar e reiniciar contentores e ler os seus registos (API do Docker) – apenas administradores.
+E1137	Casa inteligente (Tuya)
+E1138	Pode procurar a partir da caixa dispositivos Tuya na rede doméstica, ler o seu estado e ligá-los/desligá-los (localmente, sem a nuvem) – apenas administradores.

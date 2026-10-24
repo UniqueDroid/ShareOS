@@ -4221,7 +4221,7 @@ function appActions(a, upd) {
 }
 
 // permissions an app can ask for (app.json "permissions")
-const PERM_TAG = { cron: 'Zeitgesteuerte Aufgaben', embed: 'In ShareOS anzeigen', files: 'Zugriff auf Dateien', torrent: 'Eigene Torrents (Transmission)', media: 'Medien umwandeln (FFmpeg)', vpn: 'VPN der Box (OpenVPN)', tailscale: 'Fernzugriff (Tailscale)', autobrr: 'Download-Automatik (autobrr)', status: 'Anzeige im Kopf', internet: 'Nutzt das Internet', system: 'System-App · Terminal' };
+const PERM_TAG = { cron: 'Zeitgesteuerte Aufgaben', embed: 'In ShareOS anzeigen', files: 'Zugriff auf Dateien', torrent: 'Eigene Torrents (Transmission)', media: 'Medien umwandeln (FFmpeg)', vpn: 'VPN der Box (OpenVPN)', tailscale: 'Fernzugriff (Tailscale)', autobrr: 'Download-Automatik (autobrr)', sysinfo: 'Werte der Box', netcheck: 'Netzwerk prüfen', docker: 'Docker-Hosts', tuya: 'Smart Home (Tuya)', status: 'Anzeige im Kopf', internet: 'Nutzt das Internet', system: 'System-App · Terminal' };
 // permissions plus "internet" (manifest field: the app loads data from the internet – not a restriction, shown for transparency)
 // and "system" for system apps (programs for the terminal)
 const appPerms = (x) => [...(x?.type === 'system' ? ['system'] : []), ...(x?.permissions || []), ...(x?.internet ? ['internet'] : [])];
@@ -4234,6 +4234,10 @@ const PERM_TXT = { cron: 'Darf zeitgesteuerte Aufgaben auf der Box ausführen �
 	vpn: 'Darf die Box als VPN-Client verbinden und trennen und VPN-Profile verwalten (OpenVPN) – das betrifft das Netzwerk der ganzen Box, deshalb nur für Administratoren.',
 	tailscale: 'Darf die Box mit Tailscale verbinden, an- und abmelden und die Geräte des Tailnets sehen – das betrifft das Netzwerk der ganzen Box, deshalb nur für Administratoren.',
 	autobrr: 'Darf autobrr der Box einrichten und steuern (Filter, Indexer, IRC, Releases) und festlegen, in wessen Transmission gefundene Torrents landen – ein Dienst für die ganze Box, deshalb nur für Administratoren.',
+	sysinfo: 'Darf die Werte der Box lesen (CPU, Arbeitsspeicher, Temperatur, Lüfter, Laufwerke, Prozesse) und Prozesse beenden, die ShareOS nicht braucht – nur für Administratoren.',
+	netcheck: 'Darf von der Box aus prüfen, ob Geräte und Dienste im Netz erreichbar sind (Ping, Port, HTTP/HTTPS) – nur für Administratoren.',
+	docker: 'Darf die Docker-Hosts verwalten, die der Administrator einträgt, und dort Container ansehen, starten, stoppen und neu starten sowie ihre Protokolle lesen (Docker-API) – nur für Administratoren.',
+	tuya: 'Darf von der Box aus Tuya-Geräte im Heimnetz suchen, ihren Zustand lesen und sie schalten (lokal, ohne Cloud) – nur für Administratoren.',
 	status: 'Darf oben in der Kopfzeile der ShareOS-Oberfläche einen kurzen Zustand anzeigen (z. B. „verbunden“) – nur für den Benutzer, der die App geöffnet hat; er verschwindet nach höchstens 10 Minuten von selbst.',
 	internet: 'Lädt Daten aus dem Internet (z. B. Online-Dienste, Streams, Karten). Ohne Internetverbindung funktionieren diese Teile der App nicht.',
 	system: 'Programm für die Kommandozeile der Box (System → Terminal oder SSH). Es läuft mit den Rechten dessen, der es startet – im Terminal als root.' };

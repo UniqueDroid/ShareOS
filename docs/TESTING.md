@@ -417,6 +417,17 @@ Needs a Tailscale account (free), a phone or computer with Tailscale, the file `
 5. Webpad (without `embed`) → *Öffnen ↗*: a window of its own, not a new tab.
 6. As a user in "My ShareOS": an app with `embed` opens in the page (`#/app/<id>`), ✕ goes back.
 
+## 14u. Permissions sysinfo, netcheck, docker, tuya (0.2.0-beta.11)
+
+Needs the apps SysMon, HomePing and DockerDeck in a version with these permissions (ShareOS-Apps) – or an own test app.
+
+1. As root open SysMon: CPU, memory, temperature and fan match the ShareOS overview; the process list shows e.g. `rpcd`, `uhttpd`, `smbd`/`ksmbd`. Start `sleep 600 &` in the terminal and end it in SysMon: `ps | grep [s]leep` is empty. Ending `rpcd` is refused.
+2. HomePing: add the router (ping), the box itself (`tcp` port 22) and a web interface (`http://…`) – green with times. A device switched off turns red.
+3. DockerDeck: add a Docker host with its API open (`http://<server>:2375`; on the server e.g. `-H tcp://0.0.0.0:2375`, home network only). The containers appear with their state; *Restart* really restarts a container (`docker ps` on the server), *Log* shows its output.
+4. TuyaPulse (version with `tuya`): *Search* finds the Tuya devices on the home network (IP, device id, protocol). Add a device with its local key (from the Tuya cloud, e.g. with `tinytuya wizard`): the switch switches the real device, the state matches the Smart Life app. A wrong local key gives an error. In the terminal the same works with `shareos-tuya discover 6` and `shareos-tuya status <ip> <id> <key> 3.3`.
+5. Open them as a normal user (e.g. anna): the apps report "no access".
+6. System → Backup: the file contains `dockerhosts`.
+
 ## 14t. Personal folder for admins (0.2.0-beta.10)
 
 1. As root open ShareNotes (or another app with `files`) and add a note: the bottom line reads `Box: 🏠 home/notes/`. In the terminal: `ls -la /mnt/<apps drive>/home/root/notes/` shows the note; `/mnt/<apps drive>/home/root` is `drwx------ root`.

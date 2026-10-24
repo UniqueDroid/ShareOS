@@ -68,6 +68,11 @@ define SHAREOS_CORE_INSTALL_TARGET_CMDS
 	$(INSTALL) -D -m 0644 $(@D)/etc/config/tailscale $(TARGET_DIR)/etc/config/tailscale
 	$(INSTALL) -D -m 0755 $(@D)/www-apps/_shareos/cgi/tailscale $(TARGET_DIR)/www-apps/_shareos/cgi/tailscale
 	$(INSTALL) -D -m 0755 $(@D)/www-apps/_shareos/cgi/status $(TARGET_DIR)/www-apps/_shareos/cgi/status
+	$(INSTALL) -D -m 0755 $(@D)/www-apps/_shareos/cgi/sysinfo $(TARGET_DIR)/www-apps/_shareos/cgi/sysinfo
+	$(INSTALL) -D -m 0755 $(@D)/www-apps/_shareos/cgi/netcheck $(TARGET_DIR)/www-apps/_shareos/cgi/netcheck
+	$(INSTALL) -D -m 0755 $(@D)/www-apps/_shareos/cgi/docker $(TARGET_DIR)/www-apps/_shareos/cgi/docker
+	$(INSTALL) -D -m 0755 $(@D)/www-apps/_shareos/cgi/tuya $(TARGET_DIR)/www-apps/_shareos/cgi/tuya
+	$(INSTALL) -D -m 0644 $(@D)/etc/config/dockerhosts $(TARGET_DIR)/etc/config/dockerhosts
 	$(INSTALL) -D -m 0755 $(@D)/usr/sbin/shareos-dlna $(TARGET_DIR)/usr/sbin/shareos-dlna
 	$(INSTALL) -D -m 0644 $(@D)/etc/config/dlna $(TARGET_DIR)/etc/config/dlna
 	$(INSTALL) -D -m 0755 $(@D)/usr/sbin/shareos-reset-access $(TARGET_DIR)/usr/sbin/shareos-reset-access

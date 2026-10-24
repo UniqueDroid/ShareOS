@@ -1133,7 +1133,15 @@
 		"Aus den Favoriten nehmen": "从收藏中移除",
 		"App-Leiste „FAV APPS“ anzeigen (nur für dich)": "显示“FAV APPS”应用栏（仅对你）",
 		"Mit dem Stern auf einer App-Kachel wird sie zum Favoriten. Die Leiste steht über „Status“ in der Übersicht und über den installierten Apps.": "点击应用卡片上的星标即可收藏。该栏位于概览中的“状态”上方以及已安装应用上方。",
-		"Namen unter den Symbolen zeigen (aus: nur Symbole)": "在图标下显示名称（关闭：仅图标）"
+		"Namen unter den Symbolen zeigen (aus: nur Symbole)": "在图标下显示名称（关闭：仅图标）",
+		"Werte der Box": "设备数据",
+		"Netzwerk prüfen": "网络检测",
+		"Docker-Hosts": "Docker 主机",
+		"Darf die Werte der Box lesen (CPU, Arbeitsspeicher, Temperatur, Lüfter, Laufwerke, Prozesse) und Prozesse beenden, die ShareOS nicht braucht – nur für Administratoren.": "可读取设备数据（CPU、内存、温度、风扇、硬盘、进程），并结束 ShareOS 不需要的进程——仅限管理员。",
+		"Darf von der Box aus prüfen, ob Geräte und Dienste im Netz erreichbar sind (Ping, Port, HTTP/HTTPS) – nur für Administratoren.": "可从设备检测网络中的设备和服务是否可达（Ping、端口、HTTP/HTTPS）——仅限管理员。",
+		"Darf die Docker-Hosts verwalten, die der Administrator einträgt, und dort Container ansehen, starten, stoppen und neu starten sowie ihre Protokolle lesen (Docker-API) – nur für Administratoren.": "可管理管理员添加的 Docker 主机，并在其上查看、启动、停止和重启容器以及读取日志（Docker API）——仅限管理员。",
+		"Smart Home (Tuya)": "智能家居（Tuya）",
+		"Darf von der Box aus Tuya-Geräte im Heimnetz suchen, ihren Zustand lesen und sie schalten (lokal, ohne Cloud) – nur für Administratoren.": "可从设备在家庭网络中查找 Tuya 设备、读取其状态并进行开关（本地，无需云）——仅限管理员。"
 	},
 	"patterns": [
 		[

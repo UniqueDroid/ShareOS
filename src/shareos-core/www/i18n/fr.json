@@ -1133,7 +1133,15 @@
 		"Aus den Favoriten nehmen": "Retirer des favoris",
 		"App-Leiste „FAV APPS“ anzeigen (nur für dich)": "Afficher la barre « FAV APPS » (pour vous seul)",
 		"Mit dem Stern auf einer App-Kachel wird sie zum Favoriten. Die Leiste steht über „Status“ in der Übersicht und über den installierten Apps.": "L’étoile sur une tuile d’application en fait un favori. La barre se trouve au-dessus de « Statut » dans l’aperçu et au-dessus des applications installées.",
-		"Namen unter den Symbolen zeigen (aus: nur Symbole)": "Afficher les noms sous les icônes (désactivé : icônes seules)"
+		"Namen unter den Symbolen zeigen (aus: nur Symbole)": "Afficher les noms sous les icônes (désactivé : icônes seules)",
+		"Werte der Box": "Valeurs du boîtier",
+		"Netzwerk prüfen": "Vérifier le réseau",
+		"Docker-Hosts": "Hôtes Docker",
+		"Darf die Werte der Box lesen (CPU, Arbeitsspeicher, Temperatur, Lüfter, Laufwerke, Prozesse) und Prozesse beenden, die ShareOS nicht braucht – nur für Administratoren.": "Peut lire les valeurs du boîtier (CPU, mémoire, température, ventilateur, disques, processus) et arrêter les processus dont ShareOS n'a pas besoin – administrateurs uniquement.",
+		"Darf von der Box aus prüfen, ob Geräte und Dienste im Netz erreichbar sind (Ping, Port, HTTP/HTTPS) – nur für Administratoren.": "Peut vérifier depuis le boîtier si les appareils et services du réseau sont joignables (ping, port, HTTP/HTTPS) – administrateurs uniquement.",
+		"Darf die Docker-Hosts verwalten, die der Administrator einträgt, und dort Container ansehen, starten, stoppen und neu starten sowie ihre Protokolle lesen (Docker-API) – nur für Administratoren.": "Peut gérer les hôtes Docker ajoutés par l'administrateur et y afficher, démarrer, arrêter et redémarrer des conteneurs ainsi que lire leurs journaux (API Docker) – administrateurs uniquement.",
+		"Smart Home (Tuya)": "Maison connectée (Tuya)",
+		"Darf von der Box aus Tuya-Geräte im Heimnetz suchen, ihren Zustand lesen und sie schalten (lokal, ohne Cloud) – nur für Administratoren.": "Peut rechercher depuis le boîtier les appareils Tuya du réseau domestique, lire leur état et les commuter (en local, sans cloud) – administrateurs uniquement."
 	},
 	"patterns": [
 		[

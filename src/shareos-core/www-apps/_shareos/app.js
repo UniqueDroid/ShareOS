@@ -100,6 +100,50 @@
  *   .api(method, path, body)       autobrr's REST API, e.g. api('GET',
  *                                  '/api/filters'); resolves to the JSON answer
  *                                  (not /api/keys or /api/auth)
+ * ShareOS.sysinfo             the box's values, for apps with the permissions
+ *                             "files" and "sysinfo" – admin accounts only
+ *                             (ShareOS 0.2.0-beta.11+, null otherwise):
+ *   .info()                        {model, board, version, hostname, kernel,
+ *                                  uptime, load, cpu {total, idle} (jiffies –
+ *                                  CPU use from two samples), cores, memory
+ *                                  {memtotal, memavailable …}, temperature (m°C),
+ *                                  fan_pwm (0–255), network {speed, rx_bytes,
+ *                                  tx_bytes}, volumes [{name, mount, fs, usb,
+ *                                  size, used, avail}], disks [{name, model,
+ *                                  size, removable, standby}]}
+ *   .processes()                   {cpu, hz, uptime, processes [{pid, ppid, name,
+ *                                  cmd, kernel, user, state, threads, nice,
+ *                                  ticks, start, rss}]}
+ *   .kill(pid, signal)             TERM (default), KILL or HUP; not init,
+ *                                  kernel threads or what ShareOS needs
+ * ShareOS.netcheck            checks from the box, for apps with the
+ *                             permissions "files" and "netcheck" – admin
+ *                             accounts only (ShareOS 0.2.0-beta.11+):
+ *   .check([{kind: 'ping', host, count}, {kind: 'tcp', host, port},
+ *           {kind: 'http', url}])  up to 32 side by side; resolves to one
+ *                                  result per check {ok, ms, error, …}
+ *                                  (ping: sent, received, loss, min, max, ip;
+ *                                  tcp: ip; http: status, cert_ok)
+ *   .ping(host, count)   .tcp(host, port)   .http(url)   one check
+ * ShareOS.docker              Docker hosts of the homelab (Docker Engine API,
+ *                             http://host:2375 or https://host:2376), for apps
+ *                             with the permissions "files" and "docker" –
+ *                             admin accounts only (ShareOS 0.2.0-beta.11+):
+ *   .hosts()                       [{name, label, url, insecure}]
+ *   .setHost({name, label, url, insecure})   .removeHost(name)
+ *   .version(host)   .info(host)   .images(host)   Docker's answer
+ *   .containers(host, all)         like /containers/json (all: also stopped)
+ *   .inspect(host, id)   .stats(host, id)   .logs(host, id, tail) (text)
+ *   .action(host, id, 'start'|'stop'|'restart'|'pause'|'unpause')
+ * ShareOS.tuya                Tuya smart-home devices in the local network
+ *                             (protocol 3.3/3.4, no cloud), for apps with the
+ *                             permissions "files" and "tuya" – admin accounts
+ *                             only (ShareOS 0.2.0-beta.11+):
+ *   .discover(seconds)             [{ip, id, product, version}] – devices that
+ *                                  announce themselves (UDP 6666/6667, 1–20 s)
+ *   .status({ip, id, key, version})          data points {"1": true, "19": 1234 …}
+ *   .set({ip, id, key, version}, {"1": false})   switch; resolves to the
+ *                                  changed data points
  * ShareOS.status              a chip in the header of the ShareOS interface,
  *                             for apps with the permissions "files" and
  *                             "status" (ShareOS 0.2.0-beta.6+, null otherwise):
@@ -440,6 +484,43 @@
 			});
 		}
 	} : null;
+	/* the box's values (permissions "files" + "sysinfo", admins) */
+	var sysinfo = fs ? {
+		info: function () { return cgiCall('sysinfo', 'info'); },
+		processes: function () { return cgiCall('sysinfo', 'processes'); },
+		kill: function (pid, signal) { return cgiCall('sysinfo', 'kill', { pid: pid, signal: signal || 'TERM' }); }
+	} : null;
+	/* checks from the box (permissions "files" + "netcheck", admins) */
+	var netcheck = fs ? {
+		check: function (list) { return cgiCall('netcheck', 'check', { checks: list }).then(function (j) { return j.results; }); },
+		ping: function (host, count) { return netcheck.check([{ kind: 'ping', host: host, count: count || 1 }]).then(function (r) { return r[0]; }); },
+		tcp: function (host, port) { return netcheck.check([{ kind: 'tcp', host: host, port: port }]).then(function (r) { return r[0]; }); },
+		http: function (url) { return netcheck.check([{ kind: 'http', url: url }]).then(function (r) { return r[0]; }); }
+	} : null;
+	/* Docker hosts of the homelab (permissions "files" + "docker", admins) */
+	function dockerCall(op, args) {
+		return cgiCall('docker', op, args).then(function (j) { return j.text != null ? j.text : j.data; });
+	}
+	var docker = fs ? {
+		hosts: function () { return cgiCall('docker', 'hosts').then(function (j) { return j.hosts; }); },
+		setHost: function (o) { o = o || {}; return cgiCall('docker', 'host_set', { name: o.name, label: o.label, url: o.url, insecure: !!o.insecure }).then(function (j) { return j.hosts; }); },
+		removeHost: function (name) { return cgiCall('docker', 'host_del', { name: name }).then(function (j) { return j.hosts; }); },
+		version: function (host) { return dockerCall('version', { host: host }); },
+		info: function (host) { return dockerCall('info', { host: host }); },
+		images: function (host) { return dockerCall('images', { host: host }); },
+		containers: function (host, all) { return dockerCall('containers', { host: host, all: all !== false }); },
+		inspect: function (host, id) { return dockerCall('inspect', { host: host, id: id }); },
+		stats: function (host, id) { return dockerCall('stats', { host: host, id: id }); },
+		logs: function (host, id, tail) { return dockerCall('logs', { host: host, id: id, tail: tail || 200 }); },
+		action: function (host, id, action) { return dockerCall('action', { host: host, id: id, action: action }); }
+	} : null;
+	/* Tuya devices (permissions "files" + "tuya", admins) */
+	function tuyaDev(d) { d = d || {}; return { ip: d.ip, id: d.id, key: d.key, version: d.version || '3.3' }; }
+	var tuya = fs ? {
+		discover: function (seconds) { return cgiCall('tuya', 'discover', { seconds: seconds || 6 }).then(function (j) { return j.devices; }); },
+		status: function (d) { return cgiCall('tuya', 'status', tuyaDev(d)).then(function (j) { return j.dps; }); },
+		set: function (d, dps) { var a = tuyaDev(d); a.dps = dps; return cgiCall('tuya', 'set', a).then(function (j) { return j.dps; }); }
+	} : null;
 	/* remote access with Tailscale (permissions "files" + "tailscale", admins) */
 	var tailscale = fs ? {
 		status: function () { return cgiCall('tailscale', 'status'); },
@@ -546,6 +627,10 @@
 		vpn: vpn,
 		tailscale: tailscale,
 		autobrr: autobrr,
+		sysinfo: sysinfo,
+		netcheck: netcheck,
+		docker: docker,
+		tuya: tuya,
 		status: status,
 		menu: menu,
 		on: function (type, fn) { (handlers[type] = handlers[type] || []).push(fn); },
