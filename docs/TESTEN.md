@@ -232,6 +232,7 @@ persönlichen Ordner). Ihre Aufträge laufen mit ihren Rechten.
 - **Zwei Platten:** Neben „Spiegel (RAID 1)“ und „zwei getrennte Laufwerke“ bietet der Assistent **RAID 0** und **JBOD** an; die Zusammenfassung zeigt die Größe (RAID 0: doppelte kleinere Platte, JBOD: beide zusammen). `cat /proc/mdstat` zeigt `raid0` bzw. `linear`.
 - Dateisysteme **ext3**, **ext2** und **FAT32** sind auch für Platten wählbar (FAT32: Dateien höchstens 4 GB).
 - **Spiegel reparieren:** Fehlt eine Platte des Spiegels (Karte: „eine Platte fehlt (U_)“) und steckt eine Platte im freien Schacht, löscht *Spiegel reparieren* diese Platte und nimmt sie auf; die Karte zeigt danach „Wiederherstellung … %“.
+- **Spiegel nach einem Neustart (Platten, die nacheinander anlaufen, z. B. DNS-325):** mit vollständigem Spiegel mehrmals neu starten; jedes Mal zeigt `cat /proc/mdstat` `[2/2] [UU]` und `dmesg | grep md/raid1` „active with 2 out of 2 mirrors“, auch wenn die zweite Platte Sekunden später kommt (`dmesg | grep 'SATA link up'`). Mit einer gezogenen Platte wartet die Box bis zu 40 s, startet dann den Spiegel mit einer Platte und schreibt „RAID incomplete after 40s“ ins Protokoll (`grep shareos-storage /var/log/messages`).
 
 ## 14. Zeit und Sprachen
 

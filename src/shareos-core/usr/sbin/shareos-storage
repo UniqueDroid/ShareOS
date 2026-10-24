@@ -39,6 +39,9 @@ PATH=/usr/sbin:/usr/bin:/sbin:/bin
 JOBDIR=/tmp/shareos-storage
 JOB=$JOBDIR/job
 MDCONF=/etc/mdadm.conf
+PARTITIONS=/proc/partitions
+SYSBLOCK=/sys/class/block
+RAID_WAIT=40   # seconds to wait for late RAID members at boot
 
 log() { logger -t shareos-storage "$*"; echo "$*"; }
 die() {
@@ -409,7 +412,48 @@ cmd_repair() {
 	log "repair of $name with $disk started"
 }
 
+# RAID members known to mdadm.conf (UUIDs of its ARRAY lines) and the ones
+# that run already (inactive, half-assembled arrays are not counted)
+conf_uuids() { [ -s $MDCONF ] && sed -n 's/^ARRAY .*UUID=\([0-9a-fA-F:]*\).*/\1/p' $MDCONF; }
+running_uuids() { mdadm --detail --scan 2>/dev/null | sed -n 's/^ARRAY .*UUID=\([0-9a-fA-F:]*\).*/\1/p'; }
+# partitions that are in no array yet: sdXN (or the test disks' pN)
+free_parts() {
+	awk 'NR > 2 { print $4 }' "$PARTITIONS" | grep -E "^(sd[a-z]+[0-9]+${SHAREOS_STORAGE_DISKS:+|(${SHAREOS_STORAGE_DISKS})p[0-9]+})\$" | while read -r p; do
+		[ -n "$(ls -A "$SYSBLOCK/$p/holders" 2>/dev/null)" ] || echo "$p"
+	done
+}
+
+# Disks can come up one after the other: the DNS-325 brings its second bay
+# about 10 s after the first, after S20storage may have started (#65). A
+# single "assemble --scan" then starts a mirror with one disk (or leaves a
+# stripe/span inactive). So the members of the arrays in mdadm.conf are
+# offered to "mdadm --incremental" as they appear – mdadm starts an array
+# when its last member is there – for at most RAID_WAIT seconds; after that
+# whatever is complete enough is started (a really missing disk gives a
+# degraded mirror, as before). No mdadm.conf, no wait.
+wait_members() {
+	want=$(conf_uuids | sort -u)
+	[ -n "$want" ] || return 0
+	t=0
+	while :; do
+		for p in $(free_parts); do
+			u=$(mdadm --examine --export /dev/$p 2>/dev/null | sed -n 's/^MD_UUID=//p')
+			[ -n "$u" ] && echo "$want" | grep -qixF "$u" && mdadm --incremental /dev/$p >/dev/null 2>&1
+		done
+		run=$(running_uuids)
+		missing=$want
+		[ -n "$run" ] && missing=$(echo "$want" | grep -vixF "$run")
+		[ -z "$missing" ] && return 0
+		[ $t -ge "$RAID_WAIT" ] && break
+		sleep 1; t=$((t + 1))
+	done
+	log "RAID incomplete after ${t}s: $(echo $missing) – starting what is there"
+	mdadm --incremental --run --scan >/dev/null 2>&1
+	return 0
+}
+
 cmd_boot() {
+	wait_members
 	if [ -s $MDCONF ]; then
 		mdadm --assemble --scan --config=$MDCONF >/dev/null 2>&1
 	else
