@@ -1141,7 +1141,13 @@
 		"Darf von der Box aus prüfen, ob Geräte und Dienste im Netz erreichbar sind (Ping, Port, HTTP/HTTPS) – nur für Administratoren.": "Puede comprobar desde la caja si los dispositivos y servicios de la red están accesibles (ping, puerto, HTTP/HTTPS) – solo administradores.",
 		"Darf die Docker-Hosts verwalten, die der Administrator einträgt, und dort Container ansehen, starten, stoppen und neu starten sowie ihre Protokolle lesen (Docker-API) – nur für Administratoren.": "Puede gestionar los hosts Docker que añade el administrador y allí ver, iniciar, detener y reiniciar contenedores y leer sus registros (API de Docker) – solo administradores.",
 		"Smart Home (Tuya)": "Hogar inteligente (Tuya)",
-		"Darf von der Box aus Tuya-Geräte im Heimnetz suchen, ihren Zustand lesen und sie schalten (lokal, ohne Cloud) – nur für Administratoren.": "Puede buscar desde la caja dispositivos Tuya en la red doméstica, leer su estado y conmutarlos (en local, sin la nube) – solo administradores."
+		"Darf von der Box aus Tuya-Geräte im Heimnetz suchen, ihren Zustand lesen und sie schalten (lokal, ohne Cloud) – nur für Administratoren.": "Puede buscar desde la caja dispositivos Tuya en la red doméstica, leer su estado y conmutarlos (en local, sin la nube) – solo administradores.",
+		"Kein Laufwerk für dich eingehängt.": "No hay ninguna unidad montada para ti.",
+		"ENTHÄLT": "CONTIENE",
+		"MEIN VERBRAUCH": "MI USO",
+		"BELEGUNG": "OCUPACIÓN",
+		"FREI": "LIBRE",
+		"LIMIT": "LÍMITE"
 	},
 	"patterns": [
 		[
@@ -2239,6 +2245,26 @@
 		[
 			"^Favoriten: (.+)$",
 			"Favoritos: $1"
+		],
+		[
+			"^Datei (\\d+)$",
+			"Archivo $1"
+		],
+		[
+			"^Teilen: (\\d+) Datei\\(en\\) nicht gespeichert – (.*)$",
+			"Compartir: $1 archivo(s) no guardado(s) – $2"
+		],
+		[
+			"^(\\d+) Datei\\(en\\) in „Geteilt“ in deinem persönlichen Ordner gespeichert\\.$",
+			"$1 archivo(s) guardado(s) en «Geteilt» de tu carpeta personal."
+		],
+		[
+			"^(\\d+) % von meinem Limit$",
+			"$1 % de mi límite"
+		],
+		[
+			"^Laufwerk (\\d+) % belegt$",
+			"Unidad al $1 % de uso"
 		]
 	],
 	"words": [

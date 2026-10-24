@@ -170,6 +170,14 @@ direkt auf der Box nachgesehen, warum der Webserver nicht lief.
 | 11:28 | Jans App ShareNotes kommt in den Store. Seine Vorgabe: auch Konten ohne „Dateien“ sollen ihre Notizen auf der Box haben. Jan wählt einen privaten Ordner je App und Konto auf dem Apps-Laufwerk; Ordner, Freigaben und Dateibrowser des Kontos bleiben zu. |
 | 15:03 | autobrr für die Box (PR #20 von außen hatte nur die Oberfläche): Claude baut autobrr 1.84 für ARMv5 (32 MB samt Weboberfläche, im Emulator etwa 45 MB RAM). Jan entscheidet: ein autobrr für die ganze Box, eingerichtet von Administratoren; Treffer landen über einen Übergabe-Ordner im Transmission eines gewählten Kontos; dazu die eigene Weboberfläche von autobrr. |
 
+### Samstag, 24.10.2026
+
+| Zeit | Was passiert ist |
+|---|---|
+| 14:17 | Jan veröffentlicht `v0.2.0-beta.10`. |
+| 17:30 | Jan: „Kannst du aus den Apps, die nichts Vernünftiges machen, etwas machen?“ SysMon, HomePing, DockerDeck und TuyaPulse zeigten Beispieldaten. Vier neue Berechtigungen nur für Admins: `sysinfo` (Werte der Box), `netcheck` (Prüfungen von der Box aus), `docker` (Docker-Hosts im Heimnetz) und `tuya` – dafür ein eigenes kleines Programm `shareos-tuya` (C, 13 KB), das Tuya-Geräte lokal ohne Cloud schaltet, geprüft gegen ein nachgebautes Gerät aus dem Code von tinytuya. Dazu ShareVault mit Rubriken, TinyPDF mit echtem PDF-Betrachter, KeyKeeper verschlüsselt, alle UniqueDroid-Apps unter GPL-2.0-only. |
+| 19:20 | Jans Redesign von *Mein ShareOS*: *Darstellung* wird *Einstellungen* mit Passwort, *Speicher* als Tabelle über die ganze Breite, „Teilen mit“ auf dem Handy in den Ordner `Geteilt` und Freigaben im Dateidialog der Apps auch ohne „Dateien“. Jan: „Wir können auch alles zusammen in einem Release machen“ – alles kommt in `v0.2.0-beta.11`. |
+
 ## Bemerkenswerte Problemlösungen
 
 - **3-MB-Grenze des Bootloaders:** Der Kernel ist von 4,2 auf 2,4 MB geschrumpft, Treiber wurden in Module ausgelagert. Das Start-System umfasst nur 0,9 MB.

@@ -1141,7 +1141,13 @@
 		"Darf von der Box aus prüfen, ob Geräte und Dienste im Netz erreichbar sind (Ping, Port, HTTP/HTTPS) – nur für Administratoren.": "Может проверять с устройства доступность устройств и сервисов в сети (ping, порт, HTTP/HTTPS) – только администраторы.",
 		"Darf die Docker-Hosts verwalten, die der Administrator einträgt, und dort Container ansehen, starten, stoppen und neu starten sowie ihre Protokolle lesen (Docker-API) – nur für Administratoren.": "Может управлять хостами Docker, добавленными администратором, и там просматривать, запускать, останавливать и перезапускать контейнеры и читать их журналы (Docker API) – только администраторы.",
 		"Smart Home (Tuya)": "Умный дом (Tuya)",
-		"Darf von der Box aus Tuya-Geräte im Heimnetz suchen, ihren Zustand lesen und sie schalten (lokal, ohne Cloud) – nur für Administratoren.": "Может с устройства находить устройства Tuya в домашней сети, читать их состояние и переключать их (локально, без облака) – только администраторы."
+		"Darf von der Box aus Tuya-Geräte im Heimnetz suchen, ihren Zustand lesen und sie schalten (lokal, ohne Cloud) – nur für Administratoren.": "Может с устройства находить устройства Tuya в домашней сети, читать их состояние и переключать их (локально, без облака) – только администраторы.",
+		"Kein Laufwerk für dich eingehängt.": "Для вас не подключён ни один диск.",
+		"ENTHÄLT": "СОДЕРЖИТ",
+		"MEIN VERBRAUCH": "МОЁ ИСПОЛЬЗОВАНИЕ",
+		"BELEGUNG": "ЗАНЯТО",
+		"FREI": "СВОБОДНО",
+		"LIMIT": "ЛИМИТ"
 	},
 	"patterns": [
 		[
@@ -2239,6 +2245,26 @@
 		[
 			"^Favoriten: (.+)$",
 			"Избранное: $1"
+		],
+		[
+			"^Datei (\\d+)$",
+			"Файл $1"
+		],
+		[
+			"^Teilen: (\\d+) Datei\\(en\\) nicht gespeichert – (.*)$",
+			"Поделиться: $1 файл(ов) не сохранено – $2"
+		],
+		[
+			"^(\\d+) Datei\\(en\\) in „Geteilt“ in deinem persönlichen Ordner gespeichert\\.$",
+			"$1 файл(ов) сохранено в «Geteilt» в вашей личной папке."
+		],
+		[
+			"^(\\d+) % von meinem Limit$",
+			"$1 % от моего лимита"
+		],
+		[
+			"^Laufwerk (\\d+) % belegt$",
+			"Диск занят на $1 %"
 		]
 	],
 	"words": [

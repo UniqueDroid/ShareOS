@@ -1141,7 +1141,13 @@
 		"Darf von der Box aus prüfen, ob Geräte und Dienste im Netz erreichbar sind (Ping, Port, HTTP/HTTPS) – nur für Administratoren.": "可从设备检测网络中的设备和服务是否可达（Ping、端口、HTTP/HTTPS）——仅限管理员。",
 		"Darf die Docker-Hosts verwalten, die der Administrator einträgt, und dort Container ansehen, starten, stoppen und neu starten sowie ihre Protokolle lesen (Docker-API) – nur für Administratoren.": "可管理管理员添加的 Docker 主机，并在其上查看、启动、停止和重启容器以及读取日志（Docker API）——仅限管理员。",
 		"Smart Home (Tuya)": "智能家居（Tuya）",
-		"Darf von der Box aus Tuya-Geräte im Heimnetz suchen, ihren Zustand lesen und sie schalten (lokal, ohne Cloud) – nur für Administratoren.": "可从设备在家庭网络中查找 Tuya 设备、读取其状态并进行开关（本地，无需云）——仅限管理员。"
+		"Darf von der Box aus Tuya-Geräte im Heimnetz suchen, ihren Zustand lesen und sie schalten (lokal, ohne Cloud) – nur für Administratoren.": "可从设备在家庭网络中查找 Tuya 设备、读取其状态并进行开关（本地，无需云）——仅限管理员。",
+		"Kein Laufwerk für dich eingehängt.": "没有为你挂载的磁盘。",
+		"ENTHÄLT": "包含",
+		"MEIN VERBRAUCH": "我的用量",
+		"BELEGUNG": "占用",
+		"FREI": "可用",
+		"LIMIT": "限额"
 	},
 	"patterns": [
 		[
@@ -2239,6 +2245,26 @@
 		[
 			"^Favoriten: (.+)$",
 			"收藏：$1"
+		],
+		[
+			"^Datei (\\d+)$",
+			"文件 $1"
+		],
+		[
+			"^Teilen: (\\d+) Datei\\(en\\) nicht gespeichert – (.*)$",
+			"分享：$1 个文件未保存 – $2"
+		],
+		[
+			"^(\\d+) Datei\\(en\\) in „Geteilt“ in deinem persönlichen Ordner gespeichert\\.$",
+			"已将 $1 个文件保存到个人文件夹的“Geteilt”中。"
+		],
+		[
+			"^(\\d+) % von meinem Limit$",
+			"我的限额的 $1 %"
+		],
+		[
+			"^Laufwerk (\\d+) % belegt$",
+			"磁盘已用 $1 %"
 		]
 	],
 	"words": [

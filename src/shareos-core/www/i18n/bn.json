@@ -1141,7 +1141,13 @@
 		"Darf von der Box aus prüfen, ob Geräte und Dienste im Netz erreichbar sind (Ping, Port, HTTP/HTTPS) – nur für Administratoren.": "বক্স থেকে যাচাই করতে পারে নেটওয়ার্কের ডিভাইস ও সেবা পৌঁছানো যায় কি না (পিং, পোর্ট, HTTP/HTTPS) – শুধু প্রশাসক।",
 		"Darf die Docker-Hosts verwalten, die der Administrator einträgt, und dort Container ansehen, starten, stoppen und neu starten sowie ihre Protokolle lesen (Docker-API) – nur für Administratoren.": "প্রশাসকের যোগ করা Docker হোস্ট পরিচালনা করতে এবং সেখানে কনটেইনার দেখতে, চালু, বন্ধ ও পুনরায় চালু করতে এবং লগ পড়তে পারে (Docker API) – শুধু প্রশাসক।",
 		"Smart Home (Tuya)": "স্মার্ট হোম (Tuya)",
-		"Darf von der Box aus Tuya-Geräte im Heimnetz suchen, ihren Zustand lesen und sie schalten (lokal, ohne Cloud) – nur für Administratoren.": "বক্স থেকে হোম নেটওয়ার্কে Tuya ডিভাইস খুঁজতে, অবস্থা পড়তে এবং চালু/বন্ধ করতে পারে (স্থানীয়ভাবে, ক্লাউড ছাড়া) – শুধু প্রশাসক।"
+		"Darf von der Box aus Tuya-Geräte im Heimnetz suchen, ihren Zustand lesen und sie schalten (lokal, ohne Cloud) – nur für Administratoren.": "বক্স থেকে হোম নেটওয়ার্কে Tuya ডিভাইস খুঁজতে, অবস্থা পড়তে এবং চালু/বন্ধ করতে পারে (স্থানীয়ভাবে, ক্লাউড ছাড়া) – শুধু প্রশাসক।",
+		"Kein Laufwerk für dich eingehängt.": "আপনার জন্য কোনো ড্রাইভ মাউন্ট করা নেই।",
+		"ENTHÄLT": "রয়েছে",
+		"MEIN VERBRAUCH": "আমার ব্যবহার",
+		"BELEGUNG": "ব্যবহৃত",
+		"FREI": "খালি",
+		"LIMIT": "সীমা"
 	},
 	"patterns": [
 		[
@@ -2239,6 +2245,26 @@
 		[
 			"^Favoriten: (.+)$",
 			"প্রিয়: $1"
+		],
+		[
+			"^Datei (\\d+)$",
+			"ফাইল $1"
+		],
+		[
+			"^Teilen: (\\d+) Datei\\(en\\) nicht gespeichert – (.*)$",
+			"শেয়ার: $1টি ফাইল সংরক্ষিত হয়নি – $2"
+		],
+		[
+			"^(\\d+) Datei\\(en\\) in „Geteilt“ in deinem persönlichen Ordner gespeichert\\.$",
+			"$1টি ফাইল আপনার ব্যক্তিগত ফোল্ডারের “Geteilt”-এ সংরক্ষিত হয়েছে।"
+		],
+		[
+			"^(\\d+) % von meinem Limit$",
+			"আমার সীমার $1 %"
+		],
+		[
+			"^Laufwerk (\\d+) % belegt$",
+			"ড্রাইভ $1 % ব্যবহৃত"
 		]
 	],
 	"words": [

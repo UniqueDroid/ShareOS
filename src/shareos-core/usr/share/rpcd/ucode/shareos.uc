@@ -1240,6 +1240,7 @@ function apps_for(u) {
 /* ---------- file browser ---------- */
 
 const FILES_TICKETS = '/tmp/shareos-files';
+const SHARE_IN = 'Geteilt';   // folder for "Teilen mit" in the personal folder
 const APP_TICKETS = '/tmp/shareos-appfiles';     // read by /www-apps/_shareos/cgi/file
 const FILES_MAX = 2000;            // entries listed per folder
 
@@ -1296,6 +1297,25 @@ function admin_home(c, u, mounts) {
 	return stat(p)?.type == 'directory' ? p : null;
 }
 
+// a plain user's folders: the personal folder ("home") and the shares by
+// rights (ro = read only); also used for apps of accounts without "Dateien"
+function user_roots(c, u, mounts) {
+	let roots = [];
+	let v = c.get('accounts', u, 'home'), p = '/mnt/' + v + '/home/' + u;
+	if (v && index(mounts, ' /mnt/' + v + ' ') >= 0 && stat(p)?.type == 'directory') push(roots, { name: 'home', path: p, home: true });
+	let gs = acc_groups(u), shares = [];
+	c.foreach('shares', 'share', (x) => {
+		let n = x['.name'], v = x.volume ?? '', rel = x.path ?? n, acc = share_access(u, x, gs);
+		if (!acc || n == 'home' || !match(n, /^[A-Za-z0-9_-]+$/) || !v || substr(rel, 0, 1) == '/' || index(rel, '..') >= 0) return;
+		if (match(rel, /^(home|\.shareos)(\/|$)/)) return;    // never other people's folders or the apps area
+		if (c.get('storage', v) != 'volume' || index(mounts, ' /mnt/' + v + ' ') < 0) return;
+		let sp = '/mnt/' + v + '/' + rel;
+		if (stat(sp)?.type == 'directory') push(shares, { name: n, path: sp, home: false, share: true, ro: acc == 'ro' });
+	});
+	push(roots, ...sort(shares, (a, b) => a.name < b.name ? -1 : 1));
+	return roots;
+}
+
 function files_roots(u) {
 	if (type(u) == 'object') return u.roots ?? files_roots(u.u);
 	let c = cursor(), roots = [];
@@ -1311,20 +1331,8 @@ function files_roots(u) {
 			if (index(mounts, ' ' + mp + ' ') >= 0) push(roots, { name: x['.name'], path: mp, home: false });
 		});
 		for (let m in usb_mounts()) push(roots, { name: substr(m.path, 5), path: m.path, home: false, usb: true });
-	} else {
-		let v = c.get('accounts', u, 'home'), p = '/mnt/' + v + '/home/' + u;
-		if (v && index(mounts, ' /mnt/' + v + ' ') >= 0 && stat(p)?.type == 'directory') push(roots, { name: 'home', path: p, home: true });
-		let gs = acc_groups(u), shares = [];
-		c.foreach('shares', 'share', (x) => {
-			let n = x['.name'], v = x.volume ?? '', rel = x.path ?? n, acc = share_access(u, x, gs);
-			if (!acc || n == 'home' || !match(n, /^[A-Za-z0-9_-]+$/) || !v || substr(rel, 0, 1) == '/' || index(rel, '..') >= 0) return;
-			if (match(rel, /^(home|\.shareos)(\/|$)/)) return;    // never other people's folders or the apps area
-			if (c.get('storage', v) != 'volume' || index(mounts, ' /mnt/' + v + ' ') < 0) return;
-			let sp = '/mnt/' + v + '/' + rel;
-			if (stat(sp)?.type == 'directory') push(shares, { name: n, path: sp, home: false, share: true, ro: acc == 'ro' });
-		});
-		push(roots, ...sort(shares, (a, b) => a.name < b.name ? -1 : 1));
-	}
+	} else
+		roots = user_roots(c, u, mounts);
 	return roots;
 }
 
@@ -1485,9 +1493,21 @@ function me_info(u) {
 		let rw = list_of(x.rw), ro = list_of(x.ro), access = null;
 		for (let t in tags) { if (index(rw, t) >= 0) access = 'rw'; else if (!access && index(ro, t) >= 0) access = 'ro'; }
 		if (!access && x.guest == '1') access = 'ro';
-		if (access && x.smb == '1') push(mine, { name: x['.name'], access, comment: x.comment ?? '' });
+		if (access && x.smb == '1') push(mine, { name: x['.name'], access, comment: x.comment ?? '', volume: x.volume ?? '' });
 	});
 	info.shares = mine;
+	// the drives of the personal folder and the shares: size and free space
+	// ("SPEICHER" table of Mein ShareOS)
+	let vols = home ? [ home ] : [], mounts = readfile('/proc/mounts') ?? '';
+	for (let s in mine) if (s.volume && index(vols, s.volume) < 0) push(vols, s.volume);
+	vols = filter(vols, (v) => match(v, /^[A-Za-z0-9._-]+$/) && index(mounts, ' /mnt/' + v + ' ') >= 0);
+	info.volumes = [];
+	if (length(vols))
+		for (let line in split(sh('df -k ' + join(' ', map(vols, (v) => shq('/mnt/' + v)))).out, '\n')) {
+			let f = split(trim(line), /\s+/);
+			if (length(f) < 6 || !match(f[1], /^[0-9]+$/) || substr(f[5], 0, 5) != '/mnt/') continue;
+			push(info.volumes, { name: substr(f[5], 5), size: +f[1] * 1024, used: +f[2] * 1024, avail: +f[3] * 1024 });
+		}
 	info.host = read_trim('/proc/sys/kernel/hostname');
 	info.cloud = area_on('cloud') && me_cloud_allowed(u);
 	info.files = u != 'root' && role != 'admin' && files_allowed(u);
@@ -1560,8 +1580,12 @@ function app_grant_user(g, private_ok) {
 	let app = filter(apps_for(u), (x) => x.id == id)[0];
 	if (!app || !app_has_files(app)) return null;
 	if (full) return { u, app, roots: null };
+	// the app's own folder stays first and "home", so the app keeps its data
+	// there; after it the personal folder and the shares by rights, for the
+	// file dialog (ShareOS.fs.pick) – "Dateien" only adds the file browser
 	let d = app_private_dir(u, app.id);
-	return { u, app, roots: d ? [ { name: 'app', path: d, home: true, private: true } ] : [] };
+	let more = map(user_roots(cursor(), u, readfile('/proc/mounts') ?? ''), (r) => r.home ? { ...r, home: false, personal: true } : r);
+	return { u, app, roots: [ ...(d ? [ { name: 'app', path: d, home: true, private: true } ] : []), ...more ] };
 }
 
 // compares without stopping at the first wrong character
@@ -2647,6 +2671,42 @@ return {
 	},
 
 	'shareos.me': {
+		// "Teilen mit" of the installed app (Web Share Target): an upload
+		// ticket for one shared file into <personal folder>/Geteilt; a name
+		// that is taken gets " (2)", " (3)" … – nothing is replaced
+		share_ticket: {
+			args: { name: '' },
+			call: function(req) {
+				let u = session_user(req), a = req.args;
+				if (!u) return { error: 'not allowed' };
+				if (!name_ok(a.name) || substr(a.name, 0, 1) == '.') return { error: 'invalid name' };
+				let c = cursor(), mounts = readfile('/proc/mounts') ?? '', h = null;
+				if (acc_role(u) == 'admin') h = admin_home(c, u, mounts);
+				else {
+					let r = filter(user_roots(c, u, mounts), (x) => x.home)[0];
+					h = r?.path;
+				}
+				if (!h) return { error: 'no personal folder' };
+				let d = h + '/' + SHARE_IN;
+				if (lstat(d) && stat(d)?.type != 'directory') return { error: 'not a folder: ' + SHARE_IN };
+				if (!lstat(d)) {
+					let r = files_sh(u, 'mkdir -- ' + shq(d), false);
+					if (r.rc != 0) return { error: files_err(r) };
+				}
+				let dot = rindex(a.name, '.'), n = a.name;
+				let base = dot > 0 && length(a.name) - dot <= 11 ? substr(a.name, 0, dot) : a.name, ext = substr(a.name, length(base));
+				for (let i = 2; lstat(d + '/' + n); i++) {
+					if (i > 999) return { error: 'already exists' };
+					n = base + ' (' + i + ')' + ext;
+				}
+				system('mkdir -p ' + FILES_TICKETS + ' && chmod 700 ' + FILES_TICKETS);
+				system('find ' + FILES_TICKETS + ' -type f -mmin +5 -delete 2>/dev/null');
+				let t = new_token();
+				writefile(FILES_TICKETS + '/' + t, sprintf('put\n%s\n%s\n%d\n%s\n', acc_role(u) == 'admin' ? 'root' : u, d + '/' + n, time() + 120, pct_enc(n)));
+				return { url: '/cgi-bin/files?t=' + t, name: n, folder: SHARE_IN };
+			}
+		},
+
 		// link this web session to the account that logged in
 		bind: {
 			args: { username: '', password: '' },
@@ -3725,7 +3785,7 @@ return {
 			call: function(req) {
 				let g = app_grant_user(req.args.grant, true);
 				if (!g) return { error: 'no access' };
-				return { roots: map(files_roots(g), (r) => ({ name: r.name, home: r.home, usb: !!r.usb, ro: !!r.ro, private: !!r.private })), user: g.u };
+				return { roots: map(files_roots(g), (r) => ({ name: r.name, home: r.home, usb: !!r.usb, ro: !!r.ro, private: !!r.private, personal: !!r.personal, share: !!r.share })), user: g.u };
 			}
 		},
 

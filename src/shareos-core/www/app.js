@@ -346,8 +346,70 @@ function applyOwnLook() {
 
 function enter() {
 	applyOwnLook();
+	if (location.hash === '#/shared') history.replaceState(null, '', isUser() ? '#/me' : '#/overview');
 	if (isUser()) renderUserShell();
 	else renderShell();
+	shareInbox();
+}
+
+/* ---------- share target ("share with" on the phone, see sw.js) ----------------
+ * what was shared with the installed app waits in IndexedDB until someone is
+ * logged in; then it goes into <personal folder>/Geteilt of that account */
+
+function shareDb() {
+	return new Promise((resolve, reject) => {
+		const r = indexedDB.open('shareos', 1);
+		r.onupgradeneeded = () => r.result.createObjectStore('share', { keyPath: 'id', autoIncrement: true });
+		r.onsuccess = () => resolve(r.result);
+		r.onerror = () => reject(r.error);
+	});
+}
+
+function shareTx(db, mode, fn) {
+	return new Promise((resolve, reject) => {
+		const tx = db.transaction('share', mode), req = fn(tx.objectStore('share'));
+		tx.oncomplete = () => resolve(req?.result); tx.onerror = () => reject(tx.error);
+	});
+}
+
+// file name for the box: no slashes or control characters, no leading dot
+const shareName = (n, i) => (String(n || '').replace(/[\/\\\u0000-\u001f]+/g, '_').replace(/^\.+/, '').trim().slice(0, 200) || `Datei ${i + 1}`);
+
+async function shareInbox() {
+	if (!('indexedDB' in window)) return;
+	let db, items;
+	try { db = await shareDb(); items = await shareTx(db, 'readonly', (st) => st.getAll()); } catch (e) { return; }
+	if (!items?.length) { db.close(); return; }
+	let ok = 0, bad = [];
+	for (const it of items) {
+		const list = (it.files || []).map((f, i) => ({ name: shareName(f.name, i), blob: f }));
+		// only text or a link: kept as a small text file
+		if (!list.length) {
+			const d = new Date(it.time || Date.now()), z = (x) => String(x).padStart(2, '0');
+			const stamp = `${d.getFullYear()}-${z(d.getMonth() + 1)}-${z(d.getDate())} ${z(d.getHours())}-${z(d.getMinutes())}-${z(d.getSeconds())}`;
+			const body = [it.title, it.text, it.url].filter((x) => x && x.trim()).join('\n') + '\n';
+			list.push({ name: `${it.url ? 'Link' : 'Notiz'} ${stamp}.txt`, blob: new Blob([body], { type: 'text/plain' }) });
+		}
+		for (const x of list) {
+			try {
+				const t = await rpc('shareos.me', 'share_ticket', { name: x.name });
+				await fbSend(t.url, x.blob, () => { });
+				ok++;
+			} catch (e) { bad.push(`${x.name}: ${e.message}`); }
+		}
+		// done either way – a file that cannot be stored would otherwise come back at every login
+		try { await shareTx(db, 'readwrite', (st) => st.delete(it.id)); } catch (e) { }
+	}
+	db.close();
+	if (bad.length) toast(`Teilen: ${bad.length} Datei(en) nicht gespeichert – ${bad[0]}`, true);
+	if (ok) {
+		toast(`${ok} Datei(en) in „Geteilt“ in deinem persönlichen Ordner gespeichert.`);
+		// show them in the file browser when there is one
+		if (!isUser() || S.me?.files) {
+			S.fb = null; fbInit(); S.fb.root = 'home'; S.fb.path = 'Geteilt';
+			location.hash = isUser() ? '#/files' : '#/shares/files';
+		}
+	}
 }
 
 async function logout() {
@@ -1493,11 +1555,12 @@ function snapAfter() {
 /* ---------- "Mein ShareOS" for plain users ------------------------------------ */
 
 function userTabs() {
-	return [['me', 'MEIN SHAREOS'], ...(S.me?.files ? [['files', 'DATEIEN']] : []), ['appearance', 'DARSTELLUNG']];
+	return [['me', 'MEIN SHAREOS'], ...(S.me?.files ? [['files', 'DATEIEN']] : []), ['settings', 'EINSTELLUNGEN']];
 }
 
 function parseUserRoute() {
-	const [t, id] = routeParts();
+	let [t, id] = routeParts();
+	if (t === 'appearance') { t = 'settings'; history.replaceState(null, '', '#/settings'); }   // old address (before 0.2.0-beta.11)
 	S.utab = t === 'app' && id ? 'app' : userTabs().some((x) => x[0] === t) ? t : 'me';
 	S.uapp = S.utab === 'app' ? id : null;
 	if (S.utab !== 'app') S.appPage = null;
@@ -1525,7 +1588,7 @@ function userLookView() {
 	const names = { green: 'Grün', red: 'Rot', blue: 'Blau', white: 'Weiß' };
 	const own = S.me.ui || {}, sys = S.sysLook || {};
 	const themeTxt = { dark: 'Dunkel', light: 'Hell', system: 'Wie das Betriebssystem (automatisch)' };
-	return html`<section class="sec"><div class="panel" style="max-width:560px">
+	return html`<section class="sec"><h2 class="gh">EINSTELLUNGEN <span>${S.me.name}</span></h2><div class="g2"><div class="panel">
 		<div class="ph"><span class="pt">DARSTELLUNG</span><span class="tag ml">nur für dich</span></div>
 		<div class="fields" style="grid-template-columns:1fr"><label class="f"><span>HELL ODER DUNKEL</span><select id="opt-utheme">
 			<option value=""${!own.theme ? raw(' selected') : ''}>Wie für alle (${themeTxt[sys.theme] || '–'})</option>
@@ -1539,7 +1602,17 @@ function userLookView() {
 			${favBarOpt()}
 		</div>
 		${own.theme || own.accent ? html`<div class="acts" style="margin-top:14px"><button class="btn ghost" type="button" data-act="look-reset">Wie für alle</button></div>` : ''}
-	</div></section>`;
+	</div>
+	<form class="panel" id="f-mypass" style="align-self:start">
+		<div class="ph"><span class="pt">PASSWORT ÄNDERN</span></div>
+		<div class="fields" style="grid-template-columns:1fr">
+			<label class="f"><span>AKTUELLES PASSWORT</span><input name="old" type="password" autocomplete="current-password" required></label>
+			<label class="f"><span>NEUES PASSWORT</span><input name="p1" type="password" minlength="6" autocomplete="new-password" required></label>
+			<label class="f"><span>WIEDERHOLEN</span><input name="p2" type="password" minlength="6" autocomplete="new-password" required></label>
+		</div>
+		<p class="note">Gilt für die Freigaben und diese Oberfläche.</p>
+		<div class="acts" style="margin-top:12px"><button class="btn primary" type="submit">Passwort ändern</button></div>
+	</form></div></section>`;
 }
 
 function renderUserHeader() {
@@ -1597,8 +1670,15 @@ function renderUserMain() {
 		appFrameLoad();
 		return;
 	}
-	if (S.utab === 'appearance') {
+	if (S.utab === 'settings') {
 		main.innerHTML = userLookView().s;
+		$('#f-mypass').addEventListener('submit', async (e) => {
+			e.preventDefault();
+			const f = e.target;
+			if (f.p1.value !== f.p2.value) { toast('Die Passwörter stimmen nicht überein.', true); return; }
+			try { await rpc('shareos.me', 'passwd', { old: f.old.value, password: f.p1.value }); f.reset(); toast('Passwort geändert.'); }
+			catch (err) { toast('Passwort: ' + err.message, true); }
+		});
 		$('#opt-utheme').addEventListener('change', (e) => {
 			const v = e.target.value;
 			S.me.ui = { ...S.me.ui, theme: v || null };
@@ -1611,31 +1691,37 @@ function renderUserMain() {
 	renderUserHome();
 }
 
+// "SPEICHER" of Mein ShareOS: one row per drive of the personal folder and the
+// shares – what lies there, own use and limit (quota), free space of the drive
+function myStorage(m, host, ip) {
+	const vols = m.volumes || [], use = Object.fromEntries((m.usage || []).map((x) => [x.volume, x]));
+	const on = (v) => [...(m.home?.volume === v ? ['Persönlicher Ordner'] : []), ...(m.shares || []).filter((x) => x.volume === v).map((x) => x.name)];
+	const paths = m.home ? html`<dl class="kv" style="margin-top:12px">
+		<dt>Persönlicher Ordner</dt><dd><code>\\\\${host}\\${m.name}</code></dd>
+		<dt>macOS / Linux</dt><dd><code>smb://${ip}/${m.name}</code></dd></dl>` : html`<p class="note">Kein persönlicher Ordner eingerichtet.</p>`;
+	const head = html`<div class="ph"><span class="pt">SPEICHER</span>${m.quota ? html`<span class="tag ml">Limit ${fmtMB(m.quota)} je Laufwerk</span>` : html`<span class="tag ml">kein Limit</span>`}</div>`;
+	if (!vols.length) return html`<div class="panel">${head}<p class="mut" style="margin:0;font-size:13px">Kein Laufwerk für dich eingehängt.</p>${paths}</div>`;
+	return html`<div class="panel">${head}
+		<div class="tw"><table class="t" style="min-width:680px"><thead><tr><th>LAUFWERK</th><th>ENTHÄLT</th><th class="r">MEIN VERBRAUCH</th><th class="r">LIMIT</th><th style="width:28%">BELEGUNG</th><th class="r">FREI</th></tr></thead>
+		<tbody>${vols.map((v) => {
+			const u = use[v.name], lim = u?.limit || 0;
+			const p = lim ? pct(u.used, lim) : pct(v.used, v.size);
+			return html`<tr><td><b>${v.name}</b></td><td class="mut">${on(v.name).length ? on(v.name).map((x, i) => html`${i ? ', ' : ''}<span>${x}</span>`) : '–'}</td>
+				<td class="r">${u ? fmtBytes(u.used) : '–'}</td><td class="r mut">${lim ? fmtBytes(lim) : '–'}</td>
+				<td><div class="bar"><i class="${p > 95 ? 'crit' : p > 85 ? 'warn' : ''}" style="width:${p.toFixed(0)}%"></i></div>
+					<div class="mut" style="font-size:11px;margin-top:3px">${lim ? html`${p.toFixed(0)} % von meinem Limit` : html`Laufwerk ${p.toFixed(0)} % belegt`}</div></td>
+				<td class="r">${fmtBytes(v.avail)}</td></tr>`;
+		})}</tbody></table></div>
+		${paths}</div>`;
+}
+
 function renderUserHome() {
 	const m = S.me || {}, host = m.host || location.hostname, ip = location.hostname;
 	$('#main').innerHTML = html`
 	${favBar(m.apps || [], m.apps_server)}
 	<section class="sec">
 		<h2 class="gh">MEIN SHAREOS <span>${m.name}</span></h2>
-		<div class="g2">
-			<div class="panel">
-				<div class="ph"><span class="pt">SPEICHER</span>${m.quota ? html`<span class="tag ml">Limit ${fmtMB(m.quota)} je Laufwerk</span>` : html`<span class="tag ml">kein Limit</span>`}</div>
-				${m.usage?.length ? usageLine(m) : html`<p class="mut" style="margin:0;font-size:13px">Noch nichts gespeichert.</p>`}
-				${m.home ? html`<dl class="kv" style="margin-top:14px">
-					<dt>Persönlicher Ordner</dt><dd><code>\\\\${host}\\${m.name}</code></dd>
-					<dt>macOS / Linux</dt><dd><code>smb://${ip}/${m.name}</code></dd></dl>` : html`<p class="note">Kein persönlicher Ordner eingerichtet.</p>`}
-			</div>
-			<form class="panel" id="f-mypass">
-				<div class="ph"><span class="pt">PASSWORT ÄNDERN</span></div>
-				<div class="fields" style="grid-template-columns:1fr">
-					<label class="f"><span>AKTUELLES PASSWORT</span><input name="old" type="password" autocomplete="current-password" required></label>
-					<label class="f"><span>NEUES PASSWORT</span><input name="p1" type="password" minlength="6" autocomplete="new-password" required></label>
-					<label class="f"><span>WIEDERHOLEN</span><input name="p2" type="password" minlength="6" autocomplete="new-password" required></label>
-				</div>
-				<p class="note">Gilt für die Freigaben und diese Oberfläche.</p>
-				<div class="acts" style="margin-top:12px"><button class="btn primary" type="submit">Passwort ändern</button></div>
-			</form>
-		</div>
+		${myStorage(m, host, ip)}
 	</section>
 	<section class="sec">
 		<h2 class="gh">MEINE FREIGABEN <span>${(m.shares || []).length}</span></h2>
@@ -1665,13 +1751,6 @@ function renderUserHome() {
 			if (test) toast(`Verbindung in Ordnung – ${r.documents} Dokumente in Paperless.`);
 			else { toast('Paperless-Eingang gespeichert.'); S.myPl = null; loadMyPaperless(); }
 		} catch (err) { toast('Paperless: ' + err.message, true); }
-	});
-	$('#f-mypass').addEventListener('submit', async (e) => {
-		e.preventDefault();
-		const f = e.target;
-		if (f.p1.value !== f.p2.value) { toast('Die Passwörter stimmen nicht überein.', true); return; }
-		try { await rpc('shareos.me', 'passwd', { old: f.old.value, password: f.p1.value }); f.reset(); toast('Passwort geändert.'); }
-		catch (err) { toast('Passwort: ' + err.message, true); }
 	});
 }
 
@@ -3235,7 +3314,7 @@ const ACTIONS = {
 		S.theme = effTheme() === 'light' ? 'dark' : 'light';
 		if (isUser()) S.me.ui = { ...S.me.ui, theme: S.theme };
 		applyTheme(); renderHeader();
-		if (isUser()) { renderUserHeader(); if (S.utab === 'appearance') renderUserMain(); }
+		if (isUser()) { renderUserHeader(); if (S.utab === 'settings') renderUserMain(); }
 		else if (S.route.sub === 'appearance') renderMain();
 		// plain users change it only for themselves (the look for everyone is an admin setting)
 		saveLook({ theme: S.theme });

@@ -417,6 +417,15 @@ Needs a Tailscale account (free), a phone or computer with Tailscale, the file `
 5. Webpad (without `embed`) → *Öffnen ↗*: a window of its own, not a new tab.
 6. As a user in "My ShareOS": an app with `embed` opens in the page (`#/app/<id>`), ✕ goes back.
 
+## 14v. Mein ShareOS, "Teilen mit", file dialog with shares (0.2.0-beta.11)
+
+1. Log in as a plain user: the tabs read *MEIN SHAREOS*, (*DATEIEN*,) *EINSTELLUNGEN*. *Einstellungen* has the look on the left and *Passwort ändern* on the right; changing the password works as before. The old address `#/appearance` opens *Einstellungen*.
+2. *Mein ShareOS*: *SPEICHER* is a table over the full width – one row per drive with what lies there (personal folder, shares), own use, limit, bar and free space. With a limit the bar shows the share of the limit, without one how full the drive is.
+3. "Teilen mit" (Android, Chrome, interface opened with a trusted certificate, e.g. `https://shareos.skynet.lan`): menu ⋮ → *App installieren*. Then share a photo from the gallery → *ShareOS*. ShareOS opens; after the login (if needed) the toast says "1 Datei(en) in „Geteilt“ …" and the file browser shows `Persönlicher Ordner / Geteilt`. In the terminal: `ls -la /mnt/<drive>/home/<user>/Geteilt/` – the file belongs to the user, the folder is `drwx------`.
+4. Share the same photo again: it arrives as `name (2).jpg`. Share a link from the browser: a file `Link <date time>.txt` with the address.
+5. An account without a personal folder: sharing shows "no personal folder"; the shared item is dropped and does not come back at the next login.
+6. File dialog of an app for an account **without** *Dateien* (e.g. Webpad → *Öffnen*): the list of folders shows *App-Daten* first, then *Mein Ordner* and the user's shares; read-only shares are marked and are missing when saving. The app still keeps its own files in *App-Daten*.
+
 ## 14u. Permissions sysinfo, netcheck, docker, tuya (0.2.0-beta.11)
 
 Needs the apps SysMon, HomePing and DockerDeck in a version with these permissions (ShareOS-Apps) – or an own test app.
