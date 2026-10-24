@@ -417,6 +417,13 @@ Needs a Tailscale account (free), a phone or computer with Tailscale, the file `
 5. Webpad (without `embed`) → *Öffnen ↗*: a window of its own, not a new tab.
 6. As a user in "My ShareOS": an app with `embed` opens in the page (`#/app/<id>`), ✕ goes back.
 
+## 14t. Personal folder for admins (0.2.0-beta.10)
+
+1. As root open ShareNotes (or another app with `files`) and add a note: the bottom line reads `Box: 🏠 home/notes/`. In the terminal: `ls -la /mnt/<apps drive>/home/root/notes/` shows the note; `/mnt/<apps drive>/home/root` is `drwx------ root`.
+2. No new folder `notes` appears at the top of the drive (`ls /mnt/<drive>/`).
+3. In root's file browser "Persönlicher Ordner" comes first, then the drives as before.
+4. An admin account with its own personal folder (e.g. jan): apps store their files under `/mnt/<drive>/home/jan/`.
+
 ## 14s. FAV APPS and Appearance (0.2.0-beta.10)
 
 1. As root: Apps → Installed – every web app has a small star at the top right (system apps like nano do not). Click two: the star fills, and the bar **FAV APPS** with both apps appears above "Installierte Apps" (in the order they were marked). In the table view the star is next to the name.
