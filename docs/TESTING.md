@@ -255,7 +255,7 @@ their permissions.
 
 ## 14c. New in beta.12
 
-- **Terminal:** System → Terminal → *Open terminal*: a root shell appears in the window (e.g. `uptime`, `logread | tail`). *End* or leaving the page ends it.
+- **Terminal:** System → Terminal → *Open terminal*: a root shell appears in the window (e.g. `uptime`, `tail /var/log/messages`). *End* or leaving the page ends it.
 - **Areas:** System → Appearance → Areas: switch *Cloud* off – the CLOUD tab disappears, scheduled cloud jobs no longer run. Switch it on again.
 - **Telegram:** System → Messages → Push → service *Telegram (bot)*: enter the bot token from @BotFather, save, write to the bot, *Find chat ID*, save, *Test message*.
 - **Cloud:** Cloud → add account → *Google Drive*: "Sign in at Google Drive ↗", sign in, paste the address from the browser bar (http://127.0.0.1:53682/…), *Apply*, *Add*, *Check*.
@@ -453,7 +453,7 @@ Needs an apps drive, the system apps `autobrr` and `transmission-daemon` and an 
 2. `shareos-apps services list` lists the installed services, e.g. `tailscaled` with `control` `tailscale`. Packages from before beta.9 show `"legacy": true`.
 3. Services → Status: Remote access (Tailscale), VPN (OpenVPN), Torrents (Transmission), Media server (DLNA) – depending on the installed system apps – with "läuft" / "gestoppt". Tailscale *Stop*: `ps | grep [t]ailscaled` is empty; *Start*: runs again.
 4. Services → Autostart: untick *starten* for Tailscale, restart the box: `tailscaled` does not run. Tick it again, restart: it runs (the box is back in the tailnet by itself).
-5. After a restart in the system log (`logread | grep shareos-`): `shareos-services` reports the started services, the controllers (`shareos-tailscale`, `shareos-transmission` …) their output.
+5. After a restart in the system log (`grep shareos- /var/log/messages`): `shareos-services` reports the started services, the controllers (`shareos-tailscale`, `shareos-transmission` …) their output.
 6. Remove the system app *tailscaled* and install it again: the service stops, and runs right after installing.
 7. Upload an own system app with `"service": { "control": "nothere" }`: refused with "this ShareOS has no service controller".
 

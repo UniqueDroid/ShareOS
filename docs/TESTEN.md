@@ -259,7 +259,7 @@ persönlichen Ordner). Ihre Aufträge laufen mit ihren Rechten.
 
 ## 14c. Neu in beta.12
 
-- **Terminal:** System → Terminal → *Terminal öffnen*: eine Shell als root erscheint im Fenster (z. B. `uptime`, `logread | tail`). *Beenden* oder Seite verlassen beendet sie.
+- **Terminal:** System → Terminal → *Terminal öffnen*: eine Shell als root erscheint im Fenster (z. B. `uptime`, `tail /var/log/messages`). *Beenden* oder Seite verlassen beendet sie.
 - **Bereiche:** System → Darstellung → Bereiche: *Cloud* ausschalten – der Reiter CLOUD verschwindet, geplante Cloud-Aufträge laufen nicht mehr. Wieder einschalten.
 - **Telegram:** System → Meldungen → Push → Dienst *Telegram (Bot)*: Bot-Token von @BotFather eintragen, speichern, dem Bot schreiben, *Chat-ID suchen*, speichern, *Testnachricht*.
 - **Cloud:** Cloud → Konto hinzufügen → *Google Drive*: „Bei Google Drive anmelden ↗“, anmelden, die Adresse aus der Browserzeile (http://127.0.0.1:53682/…) einfügen, *Übernehmen*, *Hinzufügen*, *Prüfen*.
@@ -457,7 +457,7 @@ Braucht ein Apps-Laufwerk, die System-Apps `autobrr` und `transmission-daemon` u
 2. `shareos-apps services list` listet die installierten Dienste, z. B. `tailscaled` mit `control` `tailscale`. Bei Paketen von vor beta.9 steht `"legacy": true`.
 3. Dienste → Status: Fernzugriff (Tailscale), VPN (OpenVPN), Torrents (Transmission), Medienserver (DLNA) – je nach installierten System-Apps – mit „läuft“ / „gestoppt“. Tailscale *Stoppen*: `ps | grep [t]ailscaled` ist leer; *Starten*: läuft wieder.
 4. Dienste → Autostart: bei Tailscale den Haken *starten* entfernen, Box neu starten: `tailscaled` läuft nicht. Haken wieder setzen, neu starten: läuft (die Box ist von selbst wieder im Tailnet).
-5. Nach einem Neustart im Systemprotokoll (`logread | grep shareos-`): `shareos-services` meldet die gestarteten Dienste, die Steuerungen (`shareos-tailscale`, `shareos-transmission` …) ihre Ausgabe.
+5. Nach einem Neustart im Systemprotokoll (`grep shareos- /var/log/messages`): `shareos-services` meldet die gestarteten Dienste, die Steuerungen (`shareos-tailscale`, `shareos-transmission` …) ihre Ausgabe.
 6. System-App *tailscaled* entfernen und wieder installieren: Der Dienst hält an bzw. läuft gleich nach der Installation.
 7. Eine eigene System-App mit `"service": { "control": "gibtsnicht" }` hochladen: abgelehnt mit „this ShareOS has no service controller“.
 
