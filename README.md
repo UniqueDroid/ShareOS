@@ -110,6 +110,7 @@ Version in brackets = first release with the feature.
 - Terminal in the browser (System → Terminal, root shell, beta.12); Apps, Cloud and Paperless can be switched off (beta.12)
 - Services with autostart, fan curve and LEDs, logs, settings backup and restore (JSON, optionally AES-256), messages that can be closed
 - Look: light/dark/system, accent colours, tiles or tables, per user
+- FAV APPS: favourite apps per account as an icon bar above the overview status, the installed apps and in *Mein ShareOS* (with names or icons only, beta.10)
 - 10 languages: English, German, Chinese, Hindi, Spanish, French, Arabic (right to left), Bengali, Portuguese, Russian (beta.7; more: [docs/TRANSLATING.md](docs/TRANSLATING.md))
 - Time: time zone, NTP on/off with own servers (e.g. the router), sync now, set the clock by hand; the battery clock follows (beta.7)
 - SSH/SFTP (Dropbear), rescue system in the initramfs (SSH, flash tools)

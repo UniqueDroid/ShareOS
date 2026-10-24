@@ -4,6 +4,13 @@ Changes per release (newest first). The section of a version is added to its
 GitHub release automatically when the release is built. Test versions are
 pre-releases for test devices only.
 
+## 0.2.0-beta.10
+
+- **FAV APPS – favourite apps per account:** a small star on every app card (Apps → Installed, also in the table view; *Mein ShareOS* → My apps) marks an app as favourite. The favourites appear as an icon bar **FAV APPS** directly above *Status* in the overview, above the installed apps and at the top of *Mein ShareOS*; a click opens the app. Every account has its own favourites (root too). Under Appearance each account switches the bar on or off and chooses icons with names or icons only. Stored per account (`fav`, `fav_bar`, `fav_text` – root in `shareos.ui`, the others in their `accounts` section), set through `shareos.me fav_set`.
+- **System → Appearance in two columns** on screens from 900 px; on narrower screens the panels stay one below the other, now over the full width.
+- The tabs Apps, Cloud and Paperless no longer carry the "NEU" badge.
+- **Login message:** the line on the console and in `/etc/motd` (SSH, web terminal) names version, model and web address – e.g. `ShareOS 0.2.0-beta.10 on DNS-320L-rev-Ax: web interface http://192.168.1.20/, link 1000 Mbit/s.` – instead of "phase-1 test system ready … (password: shareos)".
+
 ## 0.2.0-beta.9
 
 - **Tailscale starts by itself:** the daemon now runs as soon as the system app `tailscaled` is installed and after every restart – it waits for the sign-in, and a box that was signed in connects again by itself. Before, only an app's *Verbinden* started it.
