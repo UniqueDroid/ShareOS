@@ -1278,12 +1278,34 @@ function share_access(u, x, gs) {
 // (accounts without "Dateien" get only the app's private folder)
 function who_user(w) { return type(w) == 'object' ? w.u : w; }
 
+// personal folder of an admin account: its own home, for root /mnt/<apps drive
+// or first drive>/home/root (made on first use, root only)
+function admin_home(c, u, mounts) {
+	let v = c.get('accounts', u, 'home');
+	if (u == 'root') {
+		v = c.get('storage', 'global', 'apps');
+		if (!v || c.get('storage', v) != 'volume' || index(mounts, ' /mnt/' + v + ' ') < 0) {
+			v = null;
+			c.foreach('storage', 'volume', (x) => { if (!v && index(mounts, ' /mnt/' + x['.name'] + ' ') >= 0) v = x['.name']; });
+		}
+	}
+	if (!v || v == 'home' || c.get('storage', v) != 'volume' || index(mounts, ' /mnt/' + v + ' ') < 0) return null;
+	let p = '/mnt/' + v + '/home/' + u;
+	if (u == 'root' && stat(p)?.type != 'directory')
+		system(sprintf('mkdir -p %s && chmod 700 %s', shq(p), shq(p)));
+	return stat(p)?.type == 'directory' ? p : null;
+}
+
 function files_roots(u) {
 	if (type(u) == 'object') return u.roots ?? files_roots(u.u);
 	let c = cursor(), roots = [];
 	if (!u || !files_allowed(u)) return roots;
 	let mounts = readfile('/proc/mounts') ?? '';
 	if (acc_role(u) == 'admin') {
+		// a personal folder first, so apps keep their files there and not at the
+		// top of a drive: the account's home, for root home/root on the apps drive
+		let h = admin_home(c, u, mounts);
+		if (h) push(roots, { name: 'home', path: h, home: true });
 		c.foreach('storage', 'volume', (x) => {
 			let mp = '/mnt/' + x['.name'];
 			if (index(mounts, ' ' + mp + ' ') >= 0) push(roots, { name: x['.name'], path: mp, home: false });

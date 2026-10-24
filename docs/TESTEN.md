@@ -421,6 +421,14 @@ Braucht ein Tailscale-Konto (kostenlos), ein Handy oder einen Rechner mit Tailsc
 5. Webpad (ohne `embed`) → *Öffnen ↗*: ein eigenes Fenster, kein neuer Tab.
 6. Als Benutzer in „Mein ShareOS“: eine App mit `embed` öffnet sich in der Seite (`#/app/<id>`), ✕ führt zurück.
 
+## 14t. Persönlicher Ordner für Admins (0.2.0-beta.10)
+
+1. Als root ShareNotes (oder eine andere App mit `files`) öffnen und eine Notiz anlegen: unten steht `Box: 🏠 home/notes/`. Im Terminal: `ls -la /mnt/<apps-laufwerk>/home/root/notes/` zeigt die Notiz; `/mnt/<apps-laufwerk>/home/root` hat `drwx------ root`.
+2. Oben auf dem Laufwerk (`ls /mnt/<laufwerk>/`) entsteht kein neuer Ordner `notes`.
+3. Im Dateibrowser von root steht „Persönlicher Ordner“ an erster Stelle, danach die Laufwerke wie bisher.
+4. Ein Admin-Konto mit eigenem persönlichen Ordner (z. B. jan): Apps legen ihre Dateien unter `/mnt/<laufwerk>/home/jan/` ab.
+5. Alte Notizen von oben umziehen: `mkdir -p /mnt/daten/home/root && chmod 700 /mnt/daten/home/root`, dann `mv /mnt/daten/notes /mnt/daten/home/root/` – ShareNotes zeigt sie danach wieder.
+
 ## 14s. FAV APPS und Darstellung (0.2.0-beta.10)
 
 1. Als root: Apps → Installiert – jede Web-App hat oben rechts einen kleinen Stern (System-Apps wie nano nicht). Zwei Apps anklicken: der Stern füllt sich, über „Installierte Apps“ erscheint die Leiste **FAV APPS** mit beiden Apps (in der Reihenfolge des Markierens). Auch in der Tabellenansicht steht der Stern neben dem Namen.

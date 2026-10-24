@@ -184,6 +184,7 @@ check "fav: a missing key stays" "rpc shareos.me fav_set '{\"ubus_rpc_session\":
 check "fav: invalid app id rejected" "rpc shareos.me fav_set '{\"ubus_rpc_session\":\"$SL\",\"apps\":[\"../x\"]}' | grep -q 'invalid app id'"
 RS=fedcba9876543210fedcba9876543210; mkdir -p $R/tmp/shareos-sessions; echo root > $R/tmp/shareos-sessions/$RS
 check "fav: root keeps its own (in shareos.ui)" "rpc shareos.me fav_set '{\"ubus_rpc_session\":\"$RS\",\"apps\":[\"webpad\"]}' | js \"d=={'apps':['webpad'],'bar':True,'text':True}\" && run 'uci -q get shareos.ui.fav' | grep -qx webpad && rpc shareos.me get '{\"ubus_rpc_session\":\"$SL\"}' | js \"d['fav']['apps']==['notes','webpad']\""
+check "files: root gets home/root as its personal folder first (apps keep files there)" "rpc shareos.files roots '{\"ubus_rpc_session\":\"$RS\"}' | js \"d['roots'][0]=={'name':'home','home':True,'ro':False} and any(r['name']=='daten' for r in d['roots'])\" && [ \"\$(run 'stat -c %a:%U /mnt/daten/home/root')\" = 700:root ]"
 rm -f $R/tmp/shareos-sessions/$RS
 run "shareos-users del lisa" >/dev/null
 
