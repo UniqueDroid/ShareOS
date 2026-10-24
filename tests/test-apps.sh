@@ -351,7 +351,7 @@ check "fs: unknown op, wrong grant, GET refused" "fs '{\"op\":\"exec\"}' | grep 
 check "fs: no web session may call shareos.appfs (ACL)" "! grep -q 'shareos.appfs' $R/usr/share/rpcd/acl.d/shareos.json"
 # an account without "Dateien": the app gets only its private folder on the apps drive
 run "uci set storage.global=global; uci set storage.global.apps=daten; uci commit storage; mkdir -p /mnt/daten/.shareos" >/dev/null
-run "echo lisa1234 | shareos-users add lisa user --web=1 --files=0" >/dev/null
+run "echo lisa1234 | shareos-users add lisa user --web=1 --files=0; shareos-users set lisa --home=daten --files=0" >/dev/null
 SIDL=fedcba9876543210fedcba9876543210; echo lisa > "$R/tmp/shareos-sessions/$SIDL"
 sl() { printf '{"ubus_rpc_session":"%s"%s}' "$SIDL" "${1:-}"; }
 GL=$(rpc shareos.files app_grant "$(sl ',"app":"filer"')" | python3 -c 'import json,sys; print(json.load(sys.stdin).get("grant",""))')
