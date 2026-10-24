@@ -178,6 +178,13 @@ check "files: right can be withdrawn" "run 'shareos-users set lisa --files=0' >/
 check "look: own theme and accent" "rpc shareos.me ui_set '{\"ubus_rpc_session\":\"$SL\",\"theme\":\"light\",\"accent\":\"green\"}' | js \"d=={'theme':'light','accent':'green'}\" && rpc shareos.me get '{\"ubus_rpc_session\":\"$SL\"}' | js \"d['ui']['theme']=='light'\""
 check "look: invalid accent rejected" "rpc shareos.me ui_set '{\"ubus_rpc_session\":\"$SL\",\"accent\":\"pink\"}' | grep -q 'invalid accent'"
 check "look: back to the look for everyone" "rpc shareos.me ui_set '{\"ubus_rpc_session\":\"$SL\",\"theme\":\"\",\"accent\":\"\"}' | js \"d=={'theme':None,'accent':None}\""
+check "fav: none at first, bar on" "rpc shareos.me get '{\"ubus_rpc_session\":\"$SL\"}' | js \"d['fav']=={'apps':[],'bar':True,'text':True}\""
+check "fav: own favourites (doubles dropped) and bar off" "rpc shareos.me fav_set '{\"ubus_rpc_session\":\"$SL\",\"apps\":[\"notes\",\"webpad\",\"notes\"],\"bar\":false,\"text\":false}' | js \"d=={'apps':['notes','webpad'],'bar':False,'text':False}\" && rpc shareos.me get '{\"ubus_rpc_session\":\"$SL\"}' | js \"d['fav']['apps']==['notes','webpad'] and not d['fav']['bar']\""
+check "fav: a missing key stays" "rpc shareos.me fav_set '{\"ubus_rpc_session\":\"$SL\",\"bar\":true}' | js \"d=={'apps':['notes','webpad'],'bar':True,'text':False}\""
+check "fav: invalid app id rejected" "rpc shareos.me fav_set '{\"ubus_rpc_session\":\"$SL\",\"apps\":[\"../x\"]}' | grep -q 'invalid app id'"
+RS=fedcba9876543210fedcba9876543210; mkdir -p $R/tmp/shareos-sessions; echo root > $R/tmp/shareos-sessions/$RS
+check "fav: root keeps its own (in shareos.ui)" "rpc shareos.me fav_set '{\"ubus_rpc_session\":\"$RS\",\"apps\":[\"webpad\"]}' | js \"d=={'apps':['webpad'],'bar':True,'text':True}\" && run 'uci -q get shareos.ui.fav' | grep -qx webpad && rpc shareos.me get '{\"ubus_rpc_session\":\"$SL\"}' | js \"d['fav']['apps']==['notes','webpad']\""
+rm -f $R/tmp/shareos-sessions/$RS
 run "shareos-users del lisa" >/dev/null
 
 # --- delete, Alt-F import -----------------------------------------------------

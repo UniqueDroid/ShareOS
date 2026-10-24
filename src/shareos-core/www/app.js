@@ -63,6 +63,7 @@ const store = {
 const svg = (d, cls = '') => raw(`<svg ${cls ? `class="${cls}" ` : ''}viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`);
 const I = {
 	moon: '<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/>',
+	star: '<path d="m12 3 2.7 5.6 6.1.8-4.5 4.2 1.1 6.1L12 16.8l-5.4 2.9 1.1-6.1-4.5-4.2 6.1-.8z"/>',
 	power: '<path d="M12 3v9"/><path d="M6.3 6.3a8 8 0 1 0 11.4 0"/>',
 	disk: '<rect x="3" y="13" width="18" height="8" rx="2"/><path d="M5 13 7.5 4h9L19 13"/><path d="M7 17h.01M11 17h6"/>',
 	usb: '<path d="M7 3h10v6H7z"/><path d="M5 9h14v10a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2z"/><path d="M10 6h.01M14 6h.01"/>',
@@ -152,7 +153,7 @@ const S = {
 
 const TABS = [
 	['overview', 'ÜBERSICHT'], ['storage', 'SPEICHER'], ['shares', 'FREIGABEN'], ['services', 'DIENSTE'],
-	['apps', 'APPS', true], ['cloud', 'CLOUD', true], ['paperless', 'PAPERLESS', true], ['system', 'SYSTEM']
+	['apps', 'APPS'], ['cloud', 'CLOUD'], ['paperless', 'PAPERLESS'], ['system', 'SYSTEM']
 ];
 const SYS_SUBS = [['general', 'ALLGEMEIN'], ['appearance', 'DARSTELLUNG'], ['network', 'NETZWERK'], ['notifications', 'MELDUNGEN'], ['logs', 'PROTOKOLLE'], ['terminal', 'TERMINAL'], ['time', 'ZEIT'], ['power', 'ENERGIE & RESET'], ['firmware', 'FIRMWARE']];
 const SVC_SUBS = [['status', 'STATUS'], ['autostart', 'AUTOSTART'], ['dlna', 'MEDIENSERVER']];
@@ -652,6 +653,7 @@ const VIEWS = {
 				</div>
 			</div>
 		</section>
+		${favBar(S.apps?.installed?.apps || [])}
 		<section class="sec">
 			${secHead('status', 'STATUS')}
 			${statusTiles([
@@ -1534,6 +1536,7 @@ function userLookView() {
 		<p class="note">Gilt nur für deine Anmeldung, auf jedem Gerät. Logo und Browser-Symbol nehmen die Akzentfarbe an.</p>
 		<div style="display:grid;gap:6px;margin-top:14px">
 			<label class="chk"><input type="checkbox" id="opt-uscan"${S.scan ? raw(' checked') : ''}>Scanlines (nur in diesem Browser)</label>
+			${favBarOpt()}
 		</div>
 		${own.theme || own.accent ? html`<div class="acts" style="margin-top:14px"><button class="btn ghost" type="button" data-act="look-reset">Wie für alle</button></div>` : ''}
 	</div></section>`;
@@ -1611,6 +1614,7 @@ function renderUserMain() {
 function renderUserHome() {
 	const m = S.me || {}, host = m.host || location.hostname, ip = location.hostname;
 	$('#main').innerHTML = html`
+	${favBar(m.apps || [], m.apps_server)}
 	<section class="sec">
 		<h2 class="gh">MEIN SHAREOS <span>${m.name}</span></h2>
 		<div class="g2">
@@ -1644,9 +1648,9 @@ function renderUserHome() {
 	</section>
 	${(m.apps || []).length ? html`<section class="sec">
 		<h2 class="gh">MEINE APPS <span>${m.apps.length}</span></h2>
-		<div class="grid">${m.apps.map((a) => html`<a class="card applink" href="${appMode(a) === 'page' ? '#/app/' + a.id : appLaunchUrl(a, m.apps_server)}" data-act="app-launch" data-id="${a.id}">
+		<div class="grid">${m.apps.map((a) => html`<div class="favwrap"><a class="card applink" href="${appHref(a, m.apps_server)}" data-act="app-launch" data-id="${a.id}">
 			<div class="icon">${appIcon(a, m.apps_server)}</div>
-			<div class="info"><div class="name">${a.name}${appMode(a) === 'page' ? '' : ' ↗'}</div><div class="desc">${txtOf(a.description)}</div></div></a>`)}</div>
+			<div class="info"><div class="name">${a.name}${appMode(a) === 'page' ? '' : ' ↗'}</div><div class="desc">${txtOf(a.description)}</div></div></a>${favStar(a)}</div>`)}</div>
 	</section>` : ''}
 	${m.paperless ? myPaperless() : ''}
 	${m.cloud ? cloudSection('me') : ''}`.s;
@@ -2419,7 +2423,7 @@ const SYS = {
 
 	appearance() {
 		const names = { green: 'Grün', red: 'Rot', blue: 'Blau', white: 'Weiß' };
-		return html`<div class="panel" style="max-width:560px">
+		return html`<div class="lookcols"><div class="panel" style="max-width:560px">
 			<div class="ph"><span class="pt">DARSTELLUNG</span><span class="tag ml">gilt für alle</span></div>
 			<div class="fields" style="grid-template-columns:1fr"><label class="f"><span>HELL ODER DUNKEL</span><select id="opt-theme">
 				${[['dark', 'Dunkel'], ['light', 'Hell'], ['system', 'Wie das Betriebssystem (automatisch)']].map(([v, t]) => html`<option value="${v}"${S.theme === v ? raw(' selected') : ''}>${t}</option>`)}
@@ -2430,6 +2434,11 @@ const SYS = {
 			<div style="display:grid;gap:6px;margin-top:14px">
 				<label class="chk"><input type="checkbox" id="opt-scan"${S.scan ? raw(' checked') : ''}>Scanlines (nur in diesem Browser)</label>
 			</div>
+		</div>
+		<div class="panel" style="max-width:560px;margin-top:16px">
+			<div class="ph"><span class="pt">FAV APPS</span><span class="tag ml">nur für dich</span></div>
+			<div style="display:grid;gap:6px">${favBarOpt()}</div>
+			<p class="note">Mit dem Stern auf einer App-Kachel wird sie zum Favoriten. Die Leiste steht über „Status“ in der Übersicht und über den installierten Apps.</p>
 		</div>
 		${chipsPanel()}
 		<div class="panel" style="max-width:560px;margin-top:16px">
@@ -2451,7 +2460,7 @@ const SYS = {
 			<div class="ph"><span class="pt">LOGO</span><span class="tag ml">gilt für alle</span></div>
 			<label class="chk"><input type="checkbox" id="opt-logo"${S.logo ? raw(' checked') : ''}>ShareOS-Logo anzeigen (aus: nur Schriftzug)</label>
 			<div style="margin-top:14px;padding:14px;border:1px solid var(--line);border-radius:10px;background:var(--bg)">${brand()}</div>
-		</div>`;
+		</div></div>`;
 	},
 
 	about() {
@@ -2830,7 +2839,11 @@ const VIEWS_AFTER = {
 			c.disabled = false;
 		}));
 	},
-	overview() { if (!S.services) loadServices(); }
+	overview() {
+		if (!S.services) loadServices();
+		// the FAV APPS bar needs the installed apps (asked once)
+		if (tabOn('apps') && !S.apps?.installed && !S.apps?.tried) { S.apps = { ...S.apps, tried: true }; loadApps(['installed']); }
+	}
 };
 
 
@@ -3888,6 +3901,11 @@ Object.assign(ACTIONS, {
 	},
 	'fb-app'(el) { fbOpenIn(el.dataset.app, el.dataset.name); },
 	'app-launch'(el) { const a = findApp(el.dataset.id); if (a) launchApp(a); },
+	fav(el) {
+		const id = el.dataset.id, ids = favIds();
+		S.me.fav = { bar: favBarOn(), text: favTextOn(), ...S.me.fav, apps: ids.includes(id) ? ids.filter((x) => x !== id) : [...ids, id] };
+		favSave({ apps: S.me.fav.apps });
+	},
 	async 'chip-open'(el) {
 		if (!findApp(el.dataset.app) && !(S.me && S.me.role !== 'admin')) await loadApps(['installed']);
 		const a = findApp(el.dataset.app);
@@ -3924,6 +3942,13 @@ Object.assign(ACTIONS, {
 });
 
 // how an app opens: in the page or in a window of its own (for everyone on this box)
+document.addEventListener('change', (e) => {
+	const k = { 'opt-favbar': 'bar', 'opt-favtext': 'text' }[e.target.id];
+	if (!k || !S.me) return;
+	S.me.fav = { apps: favIds(), bar: favBarOn(), text: favTextOn(), ...S.me.fav, [k]: e.target.checked };
+	favSave({ [k]: e.target.checked });
+});
+
 document.addEventListener('change', async (e) => {
 	const t = e.target;
 	if (!t.classList?.contains('app-display')) return;
@@ -3973,6 +3998,33 @@ const appUrl = (a, srv) => `${appBase(srv)}/${a.id}/${a.entry || 'index.html'}`;
 function appIcon(a, srv) {
 	const src = a.icon_data || a.icon_url || (a.icon ? `${appBase(srv)}/${a.id}/${a.icon}` : '');
 	return src ? html`<img class="appicon" src="${src}" alt="" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'appicon ph'}))">` : html`<span class="appicon ph"></span>`;
+}
+
+// favourite apps of the logged-in account ("FAV APPS" bar above the overview / the apps / Mein ShareOS)
+const favIds = () => S.me?.fav?.apps || [];
+const favBarOn = () => S.me?.fav?.bar !== false;
+const favTextOn = () => S.me?.fav?.text !== false;
+const appHref = (a, srv) => appMode(a) === 'page' ? (isUser() ? '#/app/' : '#/apps/run/') + a.id : appLaunchUrl(a, srv);
+function favStar(a) {
+	if (a.type === 'system') return '';
+	const on = favIds().includes(a.id);
+	const t = on ? 'Aus den Favoriten nehmen' : 'Als Favorit markieren';
+	return html`<button class="favstar${on ? ' on' : ''}" type="button" data-act="fav" data-id="${a.id}" aria-pressed="${on}" aria-label="${t}: ${a.name}" title="${t}">${svg(I.star)}</button>`;
+}
+function favBar(apps, srv) {
+	if (!favBarOn()) return '';
+	const list = favIds().map((id) => apps.find((x) => x.id === id && x.type !== 'system')).filter(Boolean);
+	if (!list.length) return '';
+	return html`<section class="sec"><h2 class="gh">FAV APPS <span>${list.length}</span></h2>
+		<div class="favbar${favTextOn() ? '' : ' icons'}">${list.map((a) => html`<a class="favapp" aria-label="${a.name}" href="${appHref(a, srv || appSrv())}" data-act="app-launch" data-id="${a.id}" title="${a.name}">
+			${appIcon(a, srv || appSrv())}<span class="fn">${a.name}</span></a>`)}</div></section>`;
+}
+const favBarOpt = () => html`<label class="chk"><input type="checkbox" id="opt-favbar"${favBarOn() ? raw(' checked') : ''}>App-Leiste „FAV APPS“ anzeigen (nur für dich)</label>
+	<label class="chk"><input type="checkbox" id="opt-favtext"${favTextOn() ? raw(' checked') : ''}${favBarOn() ? '' : raw(' disabled')}>Namen unter den Symbolen zeigen (aus: nur Symbole)</label>`;
+async function favSave(args) {
+	try { S.me.fav = await rpc('shareos.me', 'fav_set', args); }
+	catch (e) { toast('Favoriten: ' + e.message, true); }
+	if (isUser()) renderUserMain(); else renderMain();
 }
 
 // apps get the look and the address of this interface (for messages) in the URL
@@ -4072,7 +4124,7 @@ async function loadApps(what = ['installed', 'catalog', 'store']) {
 		// first visit: ask the catalog sources once
 		if (!S.apps.refreshed && !(cat?.time > 0)) { S.apps.refreshed = true; refreshCatalog(true); }
 	} catch (e) { toast('Apps: ' + e.message, true); }
-	if (S.route.tab === 'apps' && !document.activeElement?.matches('input,select,textarea')) renderMain();
+	if ((S.route.tab === 'apps' || S.route.tab === 'overview') && !document.activeElement?.matches('input,select,textarea')) renderMain();
 }
 
 async function refreshCatalog(quiet = false) {
@@ -4134,13 +4186,13 @@ function appInstalled() {
 	if (A.jobs) return appJobsEditor(A.jobs);
 	const upd = (a) => cat[a.id]?.update_available ? cat[a.id] : null;
 	const t = isTable('apps');
-	return html`<section class="sec">${secHead('apps', 'INSTALLIERTE APPS', list.length ? `${list.length}` : '')}
+	return html`${favBar(list)}<section class="sec">${secHead('apps', 'INSTALLIERTE APPS', list.length ? `${list.length}` : '')}
 		${!list.length ? html`<div class="panel"><div class="empty">${svg(I.box)}<span>Noch keine App installiert. Im <a href="#/apps/store">Store</a> gibt es Apps zum Installieren – oder ein eigenes Paket (.sapp) hochladen.</span></div></div>`
 		: t ? html`<div class="tw"><table class="t" style="min-width:720px"><thead><tr><th></th><th>APP</th><th>VERSION</th><th>HERAUSGEBER</th><th>SICHTBAR FÜR</th><th></th></tr></thead><tbody>
-			${list.map((a) => html`<tr><td style="width:44px">${appIcon(a)}</td><td><b>${a.name}</b>${a.verified ? '' : html` <span class="tag warn">eigene</span>`}<div class="mut" style="font-size:12px">${txtOf(a.description)}</div></td>
+			${list.map((a) => html`<tr><td style="width:44px">${appIcon(a)}</td><td><b>${a.name}</b> ${favStar(a)}${a.verified ? '' : html` <span class="tag warn">eigene</span>`}<div class="mut" style="font-size:12px">${txtOf(a.description)}</div></td>
 				<td>${a.version}${upd(a) ? html` <span class="tag warn">→ ${upd(a).latest}</span>` : ''}</td><td class="mut">${a.publisher}</td><td class="mut">${appUsersTxt(a)}</td>
 				<td style="white-space:nowrap">${appActions(a, upd(a))}</td></tr>`)}</tbody></table></div>`
-		: html`<div class="grid">${list.map((a) => html`<div class="card">
+		: html`<div class="grid">${list.map((a) => html`<div class="card">${favStar(a)}
 			<div class="icon">${appIcon(a)}</div>
 			<div class="info"><div class="name">${a.name} <span class="mut" style="font-size:12px">${a.version}</span></div>
 				<div class="desc">${txtOf(a.description)}</div>

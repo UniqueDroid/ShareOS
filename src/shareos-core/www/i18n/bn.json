@@ -1128,7 +1128,12 @@
 		"ein Dienst pro Konto": "প্রতি অ্যাকাউন্টে একটি পরিষেবা",
 		"Download-Automatik (autobrr)": "ডাউনলোড অটোমেশন (autobrr)",
 		"autobrr, Port 7474": "autobrr, পোর্ট 7474",
-		"Darf autobrr der Box einrichten und steuern (Filter, Indexer, IRC, Releases) und festlegen, in wessen Transmission gefundene Torrents landen – ein Dienst für die ganze Box, deshalb nur für Administratoren.": "বক্সের autobrr সেট আপ ও নিয়ন্ত্রণ করতে পারে (ফিল্টার, ইনডেক্সার, IRC, রিলিজ) এবং পাওয়া টরেন্ট কার Transmission-এ যাবে তা বেছে নিতে পারে – পুরো বক্সের জন্য একটি পরিষেবা, তাই শুধু প্রশাসকদের জন্য।"
+		"Darf autobrr der Box einrichten und steuern (Filter, Indexer, IRC, Releases) und festlegen, in wessen Transmission gefundene Torrents landen – ein Dienst für die ganze Box, deshalb nur für Administratoren.": "বক্সের autobrr সেট আপ ও নিয়ন্ত্রণ করতে পারে (ফিল্টার, ইনডেক্সার, IRC, রিলিজ) এবং পাওয়া টরেন্ট কার Transmission-এ যাবে তা বেছে নিতে পারে – পুরো বক্সের জন্য একটি পরিষেবা, তাই শুধু প্রশাসকদের জন্য।",
+		"Als Favorit markieren": "প্রিয় হিসেবে চিহ্নিত করুন",
+		"Aus den Favoriten nehmen": "প্রিয় থেকে সরান",
+		"App-Leiste „FAV APPS“ anzeigen (nur für dich)": "“FAV APPS” অ্যাপ বার দেখান (শুধু আপনার জন্য)",
+		"Mit dem Stern auf einer App-Kachel wird sie zum Favoriten. Die Leiste steht über „Status“ in der Übersicht und über den installierten Apps.": "অ্যাপ টাইলের তারকা চাপলে সেটি প্রিয় হয়ে যায়। বারটি ওভারভিউতে “স্ট্যাটাস”-এর উপরে এবং ইনস্টল করা অ্যাপগুলোর উপরে থাকে।",
+		"Namen unter den Symbolen zeigen (aus: nur Symbole)": "আইকনের নিচে নাম দেখান (বন্ধ: শুধু আইকন)"
 	},
 	"patterns": [
 		[
@@ -2214,6 +2219,18 @@
 		[
 			"^Anzeige: (.+)$",
 			"প্রদর্শন: $1"
+		],
+		[
+			"^Als Favorit markieren: (.+)$",
+			"প্রিয় হিসেবে চিহ্নিত করুন: $1"
+		],
+		[
+			"^Aus den Favoriten nehmen: (.+)$",
+			"প্রিয় থেকে সরান: $1"
+		],
+		[
+			"^Favoriten: (.+)$",
+			"প্রিয়: $1"
 		]
 	],
 	"words": [
