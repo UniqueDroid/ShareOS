@@ -1141,7 +1141,13 @@
 		"Darf von der Box aus prüfen, ob Geräte und Dienste im Netz erreichbar sind (Ping, Port, HTTP/HTTPS) – nur für Administratoren.": "May check from the box whether devices and services on the network are reachable (ping, port, HTTP/HTTPS) – administrators only.",
 		"Darf die Docker-Hosts verwalten, die der Administrator einträgt, und dort Container ansehen, starten, stoppen und neu starten sowie ihre Protokolle lesen (Docker-API) – nur für Administratoren.": "May manage the Docker hosts the administrator adds and there view, start, stop and restart containers and read their logs (Docker API) – administrators only.",
 		"Smart Home (Tuya)": "Smart home (Tuya)",
-		"Darf von der Box aus Tuya-Geräte im Heimnetz suchen, ihren Zustand lesen und sie schalten (lokal, ohne Cloud) – nur für Administratoren.": "May find Tuya devices on the home network from the box, read their state and switch them (locally, without the cloud) – administrators only."
+		"Darf von der Box aus Tuya-Geräte im Heimnetz suchen, ihren Zustand lesen und sie schalten (lokal, ohne Cloud) – nur für Administratoren.": "May find Tuya devices on the home network from the box, read their state and switch them (locally, without the cloud) – administrators only.",
+		"Kein Laufwerk für dich eingehängt.": "No drive mounted for you.",
+		"ENTHÄLT": "CONTAINS",
+		"MEIN VERBRAUCH": "MY USAGE",
+		"BELEGUNG": "USED",
+		"FREI": "FREE",
+		"LIMIT": "LIMIT"
 	},
 	"patterns": [
 		[
@@ -2239,6 +2245,26 @@
 		[
 			"^Favoriten: (.+)$",
 			"Favourites: $1"
+		],
+		[
+			"^Datei (\\d+)$",
+			"File $1"
+		],
+		[
+			"^Teilen: (\\d+) Datei\\(en\\) nicht gespeichert – (.*)$",
+			"Share: $1 file(s) not saved – $2"
+		],
+		[
+			"^(\\d+) Datei\\(en\\) in „Geteilt“ in deinem persönlichen Ordner gespeichert\\.$",
+			"$1 file(s) saved to “Geteilt” in your personal folder."
+		],
+		[
+			"^(\\d+) % von meinem Limit$",
+			"$1 % of my limit"
+		],
+		[
+			"^Laufwerk (\\d+) % belegt$",
+			"Drive $1 % used"
 		]
 	],
 	"words": [

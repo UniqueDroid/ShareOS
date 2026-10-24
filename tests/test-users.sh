@@ -149,6 +149,17 @@ check "files: rename" "fs rename '\"root\":\"home\",\"path\":\"Docs\",\"name\":\
 check "files: copy" "fs move '\"root\":\"home\",\"path\":\"Docs\",\"names\":[\"c.txt\"],\"dest\":\"\",\"copy\":true' | js \"d['ok']\" && [ -f $R/mnt/daten/home/lisa/c.txt ] && [ -f $R/mnt/daten/home/lisa/Docs/c.txt ]"
 check "files: folder cannot go into itself" "fs move '\"root\":\"home\",\"path\":\"\",\"names\":[\"Docs\"],\"dest\":\"Docs\"' | grep -q 'into itself'"
 check "files: delete" "fs delete '\"root\":\"home\",\"path\":\"\",\"names\":[\"c.txt\",\"Docs\"]' | js \"d['ok']\" && [ -z \"\$(ls -A $R/mnt/daten/home/lisa)\" ]"
+# --- "Teilen mit" of the installed app: into <personal folder>/Geteilt ---------
+st() { rpc shareos.me share_ticket "{\"ubus_rpc_session\":\"${2:-$SL}\",\"name\":\"$1\"}"; }
+S1=$(st 'Foto 1.jpg')
+TK=$(echo "$S1" | python3 -c 'import json,sys; print(json.load(sys.stdin)["url"].split("t=")[1])')
+o=$(run "QUERY_STRING=t=$TK REQUEST_METHOD=POST CONTENT_LENGTH=11 /www/cgi-bin/files < /tmp/up.txt")
+check "share: ticket into Geteilt, folder made for the user (0700), upload" "echo '$S1' | js \"d['name']=='Foto 1.jpg' and d['folder']=='Geteilt'\" && echo \"\$o\" | grep -q 'Status: 200' && [ \"\$(cat '$R/mnt/daten/home/lisa/Geteilt/Foto 1.jpg')\" = 'hallo welt' ] && [ \"\$(run 'stat -c %U:%a /mnt/daten/home/lisa/Geteilt')\" = lisa:700 ]"
+check "share: a taken name gets a number, nothing is replaced" "st 'Foto 1.jpg' | js \"d['name']=='Foto 1 (2).jpg'\" && st 'notiz' | js \"d['name']=='notiz'\""
+check "share: bad names rejected" "st 'a/b' | grep -q 'invalid name' && st '.profile' | grep -q 'invalid name'"
+check "share: account without a personal folder is refused" "st 'x.txt' '$SID' | grep -q 'no personal folder'"
+check "me: drives of the personal folder with free space" "rpc shareos.me get '{\"ubus_rpc_session\":\"$SL\"}' | js \"[v['name'] for v in d['volumes']]==['daten'] and d['volumes'][0]['avail']>0 and d['volumes'][0]['size']>=d['volumes'][0]['used']\""
+rm -rf "$R/mnt/daten/home/lisa/Geteilt"
 LJ=$(rpc session login '{"username":"jan","password":"geheim1"}')
 SJ=$(echo "$LJ" | python3 -c 'import json,sys; print(json.load(sys.stdin)["ubus_rpc_session"])' 2>/dev/null)
 rpc shareos.me bind "{\"username\":\"jan\",\"password\":\"geheim1\",\"ubus_rpc_session\":\"$SJ\"}" >/dev/null

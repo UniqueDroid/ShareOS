@@ -1453,3 +1453,14 @@ E1135	Pode verificar a partir da caixa se dispositivos e serviços da rede estã
 E1136	Pode gerir os hosts Docker que o administrador adiciona e aí ver, iniciar, parar e reiniciar contentores e ler os seus registos (API do Docker) – apenas administradores.
 E1137	Casa inteligente (Tuya)
 E1138	Pode procurar a partir da caixa dispositivos Tuya na rede doméstica, ler o seu estado e ligá-los/desligá-los (localmente, sem a nuvem) – apenas administradores.
+P274	Arquivo $1
+P275	Compartilhar: $1 arquivo(s) não salvo(s) – $2
+P276	$1 arquivo(s) salvo(s) em “Geteilt” na sua pasta pessoal.
+E1139	Nenhuma unidade montada para você.
+E1140	CONTÉM
+P277	$1 % do meu limite
+P278	Unidade $1 % ocupada
+E1141	MEU USO
+E1142	OCUPAÇÃO
+E1143	LIVRE
+E1144	LIMITE

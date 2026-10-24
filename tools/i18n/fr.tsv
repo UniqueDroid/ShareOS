@@ -1453,3 +1453,14 @@ E1135	Peut vérifier depuis le boîtier si les appareils et services du réseau 
 E1136	Peut gérer les hôtes Docker ajoutés par l'administrateur et y afficher, démarrer, arrêter et redémarrer des conteneurs ainsi que lire leurs journaux (API Docker) – administrateurs uniquement.
 E1137	Maison connectée (Tuya)
 E1138	Peut rechercher depuis le boîtier les appareils Tuya du réseau domestique, lire leur état et les commuter (en local, sans cloud) – administrateurs uniquement.
+P274	Fichier $1
+P275	Partage : $1 fichier(s) non enregistré(s) – $2
+P276	$1 fichier(s) enregistré(s) dans « Geteilt » de votre dossier personnel.
+E1139	Aucun disque monté pour vous.
+E1140	CONTIENT
+P277	$1 % de ma limite
+P278	Disque utilisé à $1 %
+E1141	MON UTILISATION
+E1142	OCCUPATION
+E1143	LIBRE
+E1144	LIMITE

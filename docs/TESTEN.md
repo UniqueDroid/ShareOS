@@ -421,6 +421,15 @@ Braucht ein Tailscale-Konto (kostenlos), ein Handy oder einen Rechner mit Tailsc
 5. Webpad (ohne `embed`) → *Öffnen ↗*: ein eigenes Fenster, kein neuer Tab.
 6. Als Benutzer in „Mein ShareOS“: eine App mit `embed` öffnet sich in der Seite (`#/app/<id>`), ✕ führt zurück.
 
+## 14v. Mein ShareOS, „Teilen mit“, Dateidialog mit Freigaben (0.2.0-beta.12)
+
+1. Als normaler Benutzer anmelden: Die Reiter heißen *MEIN SHAREOS*, (*DATEIEN*,) *EINSTELLUNGEN*. *Einstellungen* zeigt links die Darstellung und rechts *Passwort ändern*; das Ändern funktioniert wie bisher. Die alte Adresse `#/appearance` öffnet *Einstellungen*.
+2. *Mein ShareOS*: *SPEICHER* ist eine Tabelle über die ganze Breite – je Laufwerk eine Zeile mit Inhalt (persönlicher Ordner, Freigaben), eigenem Verbrauch, Limit, Balken und freiem Platz. Mit Limit zeigt der Balken den Anteil am Limit, ohne Limit die Belegung des Laufwerks.
+3. „Teilen mit“ (Android, Chrome, Oberfläche mit vertrauenswürdigem Zertifikat geöffnet, z. B. `https://shareos.skynet.lan`): Menü ⋮ → *App installieren*. Dann in der Galerie ein Foto teilen → *ShareOS*. ShareOS öffnet sich; nach der Anmeldung (falls nötig) meldet ein Hinweis „1 Datei(en) in „Geteilt“ …“ und der Dateibrowser zeigt `Persönlicher Ordner / Geteilt`. Im Terminal: `ls -la /mnt/<laufwerk>/home/<benutzer>/Geteilt/` – die Datei gehört dem Benutzer, der Ordner hat `drwx------`.
+4. Dasselbe Foto noch einmal teilen: Es kommt als `name (2).jpg` an. Einen Link aus dem Browser teilen: Es entsteht `Link <Datum Uhrzeit>.txt` mit der Adresse.
+5. Konto ohne persönlichen Ordner: Teilen meldet „no personal folder“; das Geteilte wird verworfen und kommt bei der nächsten Anmeldung nicht wieder.
+6. Dateidialog einer App für ein Konto **ohne** *Dateien* (z. B. Webpad → *Öffnen*): Die Ordnerauswahl zeigt zuerst *App-Daten*, dann *Mein Ordner* und die Freigaben des Benutzers; Freigaben nur zum Lesen sind markiert und fehlen beim Speichern. Die App legt ihre eigenen Dateien weiter in *App-Daten* ab.
+
 ## 14u. Berechtigungen sysinfo, netcheck, docker, tuya (0.2.0-beta.11)
 
 Braucht die Apps SysMon, HomePing und DockerDeck in einer Version mit diesen Berechtigungen (ShareOS-Apps) – oder eine eigene Test-App.

@@ -261,7 +261,8 @@ label.btn.dis{opacity:.45;cursor:not-allowed}
 .fbt button.lnk svg{color:var(--accent)}
 .fbt tr.sel td{background:color-mix(in srgb,var(--accent) 8%,transparent)}
 .fbt input[type=checkbox]{accent-color:var(--accent);width:15px;height:15px;cursor:pointer}
-.fbt .r{text-align:right}
+.fbt .r,.t .r{text-align:right}
+.panel>.tw{background:transparent}
 .fb.drag{border-color:var(--accent);box-shadow:var(--glow)}
 @media (max-width:640px){.fbt th:nth-child(4),.fbt td:nth-child(4){display:none}.fbtools .sep{display:none}}
 

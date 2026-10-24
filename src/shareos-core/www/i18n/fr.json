@@ -1141,7 +1141,13 @@
 		"Darf von der Box aus prüfen, ob Geräte und Dienste im Netz erreichbar sind (Ping, Port, HTTP/HTTPS) – nur für Administratoren.": "Peut vérifier depuis le boîtier si les appareils et services du réseau sont joignables (ping, port, HTTP/HTTPS) – administrateurs uniquement.",
 		"Darf die Docker-Hosts verwalten, die der Administrator einträgt, und dort Container ansehen, starten, stoppen und neu starten sowie ihre Protokolle lesen (Docker-API) – nur für Administratoren.": "Peut gérer les hôtes Docker ajoutés par l'administrateur et y afficher, démarrer, arrêter et redémarrer des conteneurs ainsi que lire leurs journaux (API Docker) – administrateurs uniquement.",
 		"Smart Home (Tuya)": "Maison connectée (Tuya)",
-		"Darf von der Box aus Tuya-Geräte im Heimnetz suchen, ihren Zustand lesen und sie schalten (lokal, ohne Cloud) – nur für Administratoren.": "Peut rechercher depuis le boîtier les appareils Tuya du réseau domestique, lire leur état et les commuter (en local, sans cloud) – administrateurs uniquement."
+		"Darf von der Box aus Tuya-Geräte im Heimnetz suchen, ihren Zustand lesen und sie schalten (lokal, ohne Cloud) – nur für Administratoren.": "Peut rechercher depuis le boîtier les appareils Tuya du réseau domestique, lire leur état et les commuter (en local, sans cloud) – administrateurs uniquement.",
+		"Kein Laufwerk für dich eingehängt.": "Aucun disque monté pour vous.",
+		"ENTHÄLT": "CONTIENT",
+		"MEIN VERBRAUCH": "MON UTILISATION",
+		"BELEGUNG": "OCCUPATION",
+		"FREI": "LIBRE",
+		"LIMIT": "LIMITE"
 	},
 	"patterns": [
 		[
@@ -2239,6 +2245,26 @@
 		[
 			"^Favoriten: (.+)$",
 			"Favoris : $1"
+		],
+		[
+			"^Datei (\\d+)$",
+			"Fichier $1"
+		],
+		[
+			"^Teilen: (\\d+) Datei\\(en\\) nicht gespeichert – (.*)$",
+			"Partage : $1 fichier(s) non enregistré(s) – $2"
+		],
+		[
+			"^(\\d+) Datei\\(en\\) in „Geteilt“ in deinem persönlichen Ordner gespeichert\\.$",
+			"$1 fichier(s) enregistré(s) dans « Geteilt » de votre dossier personnel."
+		],
+		[
+			"^(\\d+) % von meinem Limit$",
+			"$1 % de ma limite"
+		],
+		[
+			"^Laufwerk (\\d+) % belegt$",
+			"Disque utilisé à $1 %"
 		]
 	],
 	"words": [

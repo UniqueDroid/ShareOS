@@ -1141,7 +1141,13 @@
 		"Darf von der Box aus prüfen, ob Geräte und Dienste im Netz erreichbar sind (Ping, Port, HTTP/HTTPS) – nur für Administratoren.": "يمكنه التحقق من الجهاز مما إذا كانت الأجهزة والخدمات على الشبكة قابلة للوصول (Ping، منفذ، HTTP/HTTPS) – للمسؤولين فقط.",
 		"Darf die Docker-Hosts verwalten, die der Administrator einträgt, und dort Container ansehen, starten, stoppen und neu starten sowie ihre Protokolle lesen (Docker-API) – nur für Administratoren.": "يمكنه إدارة مضيفي Docker الذين يضيفهم المسؤول، وعرض الحاويات وتشغيلها وإيقافها وإعادة تشغيلها وقراءة سجلاتها (Docker API) – للمسؤولين فقط.",
 		"Smart Home (Tuya)": "المنزل الذكي (Tuya)",
-		"Darf von der Box aus Tuya-Geräte im Heimnetz suchen, ihren Zustand lesen und sie schalten (lokal, ohne Cloud) – nur für Administratoren.": "يمكنه من الجهاز البحث عن أجهزة Tuya في الشبكة المنزلية وقراءة حالتها وتشغيلها وإيقافها (محليًا، بدون سحابة) – للمسؤولين فقط."
+		"Darf von der Box aus Tuya-Geräte im Heimnetz suchen, ihren Zustand lesen und sie schalten (lokal, ohne Cloud) – nur für Administratoren.": "يمكنه من الجهاز البحث عن أجهزة Tuya في الشبكة المنزلية وقراءة حالتها وتشغيلها وإيقافها (محليًا، بدون سحابة) – للمسؤولين فقط.",
+		"Kein Laufwerk für dich eingehängt.": "لا يوجد قرص مركّب لك.",
+		"ENTHÄLT": "يحتوي",
+		"MEIN VERBRAUCH": "استخدامي",
+		"BELEGUNG": "المستخدم",
+		"FREI": "متاح",
+		"LIMIT": "الحد"
 	},
 	"patterns": [
 		[
@@ -2239,6 +2245,26 @@
 		[
 			"^Favoriten: (.+)$",
 			"المفضّلة: $1"
+		],
+		[
+			"^Datei (\\d+)$",
+			"ملف $1"
+		],
+		[
+			"^Teilen: (\\d+) Datei\\(en\\) nicht gespeichert – (.*)$",
+			"مشاركة: لم يُحفظ $1 ملف – $2"
+		],
+		[
+			"^(\\d+) Datei\\(en\\) in „Geteilt“ in deinem persönlichen Ordner gespeichert\\.$",
+			"تم حفظ $1 ملف في «Geteilt» في مجلدك الشخصي."
+		],
+		[
+			"^(\\d+) % von meinem Limit$",
+			"$1 % من حدّي"
+		],
+		[
+			"^Laufwerk (\\d+) % belegt$",
+			"القرص مستخدم بنسبة $1 %"
 		]
 	],
 	"words": [

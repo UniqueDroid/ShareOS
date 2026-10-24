@@ -1141,7 +1141,13 @@
 		"Darf von der Box aus prüfen, ob Geräte und Dienste im Netz erreichbar sind (Ping, Port, HTTP/HTTPS) – nur für Administratoren.": "बॉक्स से जाँच सकता है कि नेटवर्क के उपकरण और सेवाएँ पहुँच में हैं या नहीं (पिंग, पोर्ट, HTTP/HTTPS) – केवल प्रशासक।",
 		"Darf die Docker-Hosts verwalten, die der Administrator einträgt, und dort Container ansehen, starten, stoppen und neu starten sowie ihre Protokolle lesen (Docker-API) – nur für Administratoren.": "प्रशासक द्वारा जोड़े गए Docker होस्ट प्रबंधित कर सकता है और वहाँ कंटेनर देख, शुरू, बंद और फिर से शुरू कर सकता है तथा उनके लॉग पढ़ सकता है (Docker API) – केवल प्रशासक।",
 		"Smart Home (Tuya)": "स्मार्ट होम (Tuya)",
-		"Darf von der Box aus Tuya-Geräte im Heimnetz suchen, ihren Zustand lesen und sie schalten (lokal, ohne Cloud) – nur für Administratoren.": "बॉक्स से होम नेटवर्क में Tuya उपकरण खोज सकता है, उनकी स्थिति पढ़ सकता है और उन्हें चालू/बंद कर सकता है (स्थानीय रूप से, बिना क्लाउड) – केवल प्रशासक।"
+		"Darf von der Box aus Tuya-Geräte im Heimnetz suchen, ihren Zustand lesen und sie schalten (lokal, ohne Cloud) – nur für Administratoren.": "बॉक्स से होम नेटवर्क में Tuya उपकरण खोज सकता है, उनकी स्थिति पढ़ सकता है और उन्हें चालू/बंद कर सकता है (स्थानीय रूप से, बिना क्लाउड) – केवल प्रशासक।",
+		"Kein Laufwerk für dich eingehängt.": "आपके लिए कोई ड्राइव माउंट नहीं है।",
+		"ENTHÄLT": "शामिल",
+		"MEIN VERBRAUCH": "मेरा उपयोग",
+		"BELEGUNG": "उपयोग",
+		"FREI": "खाली",
+		"LIMIT": "सीमा"
 	},
 	"patterns": [
 		[
@@ -2239,6 +2245,26 @@
 		[
 			"^Favoriten: (.+)$",
 			"पसंदीदा: $1"
+		],
+		[
+			"^Datei (\\d+)$",
+			"फ़ाइल $1"
+		],
+		[
+			"^Teilen: (\\d+) Datei\\(en\\) nicht gespeichert – (.*)$",
+			"साझा करें: $1 फ़ाइल(लें) सहेजी नहीं गईं – $2"
+		],
+		[
+			"^(\\d+) Datei\\(en\\) in „Geteilt“ in deinem persönlichen Ordner gespeichert\\.$",
+			"$1 फ़ाइल(लें) आपके निजी फ़ोल्डर में “Geteilt” में सहेजी गईं।"
+		],
+		[
+			"^(\\d+) % von meinem Limit$",
+			"मेरी सीमा का $1 %"
+		],
+		[
+			"^Laufwerk (\\d+) % belegt$",
+			"ड्राइव $1 % भरी"
 		]
 	],
 	"words": [

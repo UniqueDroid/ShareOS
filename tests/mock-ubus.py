@@ -121,10 +121,11 @@ def me(user):
         tags = [user] + ['@' + g for g in x['groups']]
         acc = 'rw' if any(t in sh['rw'] for t in tags) else 'ro' if any(t in sh['ro'] for t in tags) or sh['guest'] else None
         if acc:
-            mine.append({'name': n, 'access': acc, 'comment': sh['comment']})
+            mine.append({'name': n, 'access': acc, 'comment': sh['comment'], 'volume': sh['volume']})
     return {'name': user, 'role': x['role'], 'fullname': x['fullname'], 'groups': x['groups'], 'quota': x['quota'],
             'home': {'volume': x['home'], 'path': f"/mnt/{x['home']}/home/{user}", 'smb': user} if x['home'] else None,
             'usage': [{'volume': 'daten', 'used': 61_500_000_000, 'limit': x['quota'] * 1000000}], 'shares': mine, 'host': 'skynet-nas',
+            'volumes': [{'name': 'daten', 'size': 3_936_000_000_000, 'used': 1_412_000_000_000, 'avail': 2_524_000_000_000}],
             'cloud': x.get('cloud', False), 'paperless': bool(x['home']), 'files': x.get('files', False) and x['role'] == 'user',
             'ui': x.get('ui', {'theme': None, 'accent': None}),
             'apps': [{'id': a['id'], 'name': a['name'], 'entry': a['entry'], 'icon': a['icon'], 'description': a['description']}
@@ -176,6 +177,7 @@ FS = {   # root -> path -> list of (name, type, size)
              'Paperless': [], 'Dokumente': [('Steuer 2025.pdf', 'file', 1_204_000)], 'Handy-Fotos': [('IMG_2041.jpg', 'file', 3_400_000)]},
 }
 TICKETS = {}
+SHARED = []   # names given out by shareos.me share_ticket
 
 
 def fs_entries(root, path):
@@ -366,6 +368,22 @@ def call(obj, method, args):
         u = STATE['sessions'].get(SID, 'root')
         if method == 'passwd':
             return {'ok': True}
+        if method == 'share_ticket':
+            d = FS['home'].setdefault('Geteilt', [])
+            if not any(n == 'Geteilt' for n, _, _ in FS['home']['']):
+                FS['home'][''].insert(0, ('Geteilt', 'dir', 0))
+            base, dot, ext = args['name'].rpartition('.')
+            if not dot or not base:
+                base, ext = args['name'], ''
+            else:
+                ext = '.' + ext
+            n, i = args['name'], 2
+            while any(x[0] == n for x in d):
+                n = f'{base} ({i}){ext}'; i += 1
+            t = os.urandom(16).hex()
+            TICKETS[t] = ('home', 'Geteilt', n, 'put')
+            SHARED.append(n)
+            return {'url': '/cgi-bin/files?t=' + t, 'name': n, 'folder': 'Geteilt'}
         if method == 'fav_set':
             f = FAV.setdefault(u, {'apps': [], 'bar': True, 'text': True})
             if 'apps' in args:

@@ -4,6 +4,14 @@ Changes per release (newest first). The section of a version is added to its
 GitHub release automatically when the release is built. Test versions are
 pre-releases for test devices only.
 
+## 0.2.0-beta.12
+
+- ***Mein ShareOS* reworked:**
+  - The tab *Darstellung* is now *Einstellungen* (`#/settings`; the old address still works) and holds *Passwort ändern* next to the look settings.
+  - *Speicher* on the start page is a table over the full width: one row per drive of the personal folder and the shares – what lies there, own use and limit, a bar (own limit, or the drive when there is none) and the free space of the drive (`shareos.me` gives `volumes` and the drive of each share).
+- **"Teilen mit" on the phone:** the app installed from the browser (Android/Chrome; iOS does not offer this to web apps) appears in the share menu. What is shared goes into the folder `Geteilt` in the personal folder of the account that is logged in – photos and files as they are, a link or text as a small `.txt` file; a name that is taken gets " (2)". Only for accounts with a personal folder. Manifest `share_target`, the service worker keeps the shared files until the interface uploads them (also after a login), rpcd `shareos.me share_ticket`. Needs a trusted certificate (as for installing the app at all).
+- **File dialog of the apps (`ShareOS.fs.pick`) with the shares:** accounts without *Dateien* now see their personal folder and their shares there as well (by their rights; read-only shares are not offered for saving). The app's own folder stays first and keeps its data; in the dialog it is called *App-Daten*. `ShareOS.fs.roots()` marks the entries with `personal` and `share`. *Dateien* still decides about the file browser in the interface.
+
 ## 0.2.0-beta.11
 
 - **App permissions `sysinfo`, `netcheck`, `docker` and `tuya`** (each needs `files`, admin accounts only), so apps like SysMon, HomePing, DockerDeck and TuyaPulse show real data instead of sample values:

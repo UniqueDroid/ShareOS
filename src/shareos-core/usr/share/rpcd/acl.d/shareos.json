@@ -208,7 +208,8 @@
 					"cloud_job_set",
 					"cloud_job_del",
 					"cloud_job_run",
-					"fav_set"
+					"fav_set",
+					"share_ticket"
 				],
 				"shareos.backup": [
 					"export",
@@ -317,7 +318,8 @@
 					"cloud_job_del",
 					"cloud_job_run",
 					"fav_set",
-					"ui_set"
+					"ui_set",
+					"share_ticket"
 				],
 				"shareos.files": [
 					"mkdir",

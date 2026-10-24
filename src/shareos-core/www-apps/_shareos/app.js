@@ -30,10 +30,13 @@
  * ShareOS.embedded            true when shown inside the ShareOS interface
  * ShareOS.fs                  folders of the user, for apps with the permission
  *                             "files" (null otherwise); all calls return promises:
- *   .roots()                       [{name, home, usb, ro, private}] – users: personal
- *                                  folder ("home") and their shares, ro = read only;
- *                                  accounts without "Dateien": only the app's own
- *                                  folder "app" (private: true) on the apps drive
+ *   .roots()                       [{name, home, usb, ro, private, personal, share}] –
+ *                                  users: personal folder ("home") and their
+ *                                  shares, ro = read only; accounts without
+ *                                  "Dateien": first the app's own folder "app"
+ *                                  (home and private: true) on the apps drive,
+ *                                  then (0.2.0-beta.12+) the personal folder
+ *                                  ("home", personal: true) and the shares
  *                                  (ShareOS 0.2.0-beta.9+; before: fs was null)
  *   .list(root, path, hidden)      {entries: [{name, type, size, mtime}], free, size}
  *   .mkdir(root, path, name)   .rename(root, path, name, to)
@@ -425,7 +428,13 @@
 				bottom.insertBefore(allB, cancelB);
 			}
 			fs.roots().then(function (roots) {
-				roots.forEach(function (r) { var op = el('option', null, r.home ? (de ? 'Mein Ordner' : 'My folder') : r.name); op.value = r.name; rootSel.appendChild(op); });
+				// saving needs a folder that can be written
+				if (o.save) roots = roots.filter(function (r) { return !r.ro; });
+				roots.forEach(function (r) {
+					var t = r.private ? (de ? 'App-Daten' : 'App data') : r.home || r.personal ? (de ? 'Mein Ordner' : 'My folder')
+						: r.name + (r.ro ? (de ? ' (nur lesen)' : ' (read only)') : '');
+					var op = el('option', null, t); op.value = r.name; rootSel.appendChild(op);
+				});
 				if (!roots.length) { msg.textContent = de ? 'Kein Ordner auf der Box erreichbar.' : 'No folder on the box available.'; return; }
 				cur.root = roots[0].name; load();
 			}).catch(function (err) { msg.textContent = err.message; });
