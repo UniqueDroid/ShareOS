@@ -396,6 +396,7 @@ Needs a drive with ext4 or Btrfs, the users **anna** and **lisa** (role user, "D
 7. Linux level in the terminal (as root): `getfacl /mnt/<drive>/<fotos folder>` shows `user:anna:rwx`, `user:lisa:r-x`, `other::---`. `su -s /bin/sh lisa -c 'touch /mnt/<drive>/<fotos folder>/x'` → "Permission denied".
 8. Over SMB from a computer: lisa can read, not write; anna both; lisa can open new files of anna.
 9. Change the rights (remove lisa) → after a short while (longer with many files, it runs in the background) lisa has no access any more, not even to subfolders.
+10. Over SMB, access through a group: put lisa in a group `familie`, give the share `fotos` to the group (`@familie`) only and remove lisa as a user of it. Sign in from macOS (Finder) as lisa: the share opens (before ksmbd-tools 3.5.3 the Finder said "the original item can't be found").
 ## 14n. Tailscale and large system apps on the drive (0.2.0-beta.7)
 
 Needs a Tailscale account (free), a phone or computer with Tailscale, the file `tailscaled-1.98.8.sapp` (release of the firmware) and an app with the permission `tailscale` (ShareOS-Apps).

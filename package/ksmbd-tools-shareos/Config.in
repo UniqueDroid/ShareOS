@@ -1,0 +1,22 @@
+config BR2_PACKAGE_KSMBD_TOOLS_SHAREOS
+	bool "ksmbd-tools (3.5.3)"
+	depends on BR2_USE_MMU # fork()
+	depends on BR2_USE_WCHAR # libglib2
+	depends on BR2_TOOLCHAIN_HAS_THREADS # libglib2, libnl
+	depends on !BR2_PACKAGE_KSMBD_TOOLS # both install the same files
+	select BR2_PACKAGE_LIBGLIB2
+	select BR2_PACKAGE_LIBNL
+	help
+	  ksmbd kernel server userspace utilities, in a newer version than
+	  buildroot's package (3.5.2): 3.5.3 passes the supplementary groups
+	  of a user to the kernel, so access through a group (POSIX ACL
+	  group:<name>) works over SMB (ksmbd issue #461). Use this instead
+	  of BR2_PACKAGE_KSMBD_TOOLS (it is hidden while that one is on).
+
+	  Drop this package when buildroot has ksmbd-tools >= 3.5.3.
+
+	  https://github.com/cifsd-team/ksmbd-tools
+
+comment "ksmbd-tools needs a toolchain w/ wchar, threads"
+	depends on BR2_USE_MMU
+	depends on !BR2_USE_WCHAR || !BR2_TOOLCHAIN_HAS_THREADS
