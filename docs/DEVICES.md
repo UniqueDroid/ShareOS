@@ -27,10 +27,10 @@ of the fix for 0.2.0-beta.9).
 - **Works:** boots from flash (from 0.2.0-beta.9; the beta.7 `.bin` restarts
   in a loop, see the [changelog](../CHANGELOG.md)), model and RAM (256 MB), 1
   Gbit/s Ethernet, temperature sensor, clock, USB, the 6 flash partitions, the
-  LEDs, the fan presets (quiet, balanced, cool), power-on after a power cut,
-  an update through System → Firmware.
-- **Does not work yet:** the power, reset and USB buttons (`shareos-buttons`
-  finds no input device on this box; a separate change fixes it).
+  LEDs, the fan presets (quiet, balanced, cool), the power, reset and USB
+  buttons (from 0.2.0-beta.10; before, `shareos-buttons` found no input device
+  on this box), power-on after a power cut, an update through System →
+  Firmware.
 - **Not checked yet:** a complete first installation from a freshly flashed
   `.bin` with the fixed image.
 - A DNS-325 that already runs the beta.7 image and restarts in a loop needs a
