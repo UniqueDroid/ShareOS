@@ -35,7 +35,7 @@
  *                                  shares, ro = read only; accounts without
  *                                  "Dateien": first the app's own folder "app"
  *                                  (home and private: true) on the apps drive,
- *                                  then (0.2.0-beta.12+) the personal folder
+ *                                  then (0.2.0-beta.11+) the personal folder
  *                                  ("home", personal: true) and the shares
  *                                  (ShareOS 0.2.0-beta.9+; before: fs was null)
  *   .list(root, path, hidden)      {entries: [{name, type, size, mtime}], free, size}

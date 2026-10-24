@@ -417,7 +417,7 @@ Needs a Tailscale account (free), a phone or computer with Tailscale, the file `
 5. Webpad (without `embed`) → *Öffnen ↗*: a window of its own, not a new tab.
 6. As a user in "My ShareOS": an app with `embed` opens in the page (`#/app/<id>`), ✕ goes back.
 
-## 14v. Mein ShareOS, "Teilen mit", file dialog with shares (0.2.0-beta.12)
+## 14v. Mein ShareOS, "Teilen mit", file dialog with shares (0.2.0-beta.11)
 
 1. Log in as a plain user: the tabs read *MEIN SHAREOS*, (*DATEIEN*,) *EINSTELLUNGEN*. *Einstellungen* has the look on the left and *Passwort ändern* on the right; changing the password works as before. The old address `#/appearance` opens *Einstellungen*.
 2. *Mein ShareOS*: *SPEICHER* is a table over the full width – one row per drive with what lies there (personal folder, shares), own use, limit, bar and free space. With a limit the bar shows the share of the limit, without one how full the drive is.

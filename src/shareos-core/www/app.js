@@ -1560,7 +1560,7 @@ function userTabs() {
 
 function parseUserRoute() {
 	let [t, id] = routeParts();
-	if (t === 'appearance') { t = 'settings'; history.replaceState(null, '', '#/settings'); }   // old address (before 0.2.0-beta.12)
+	if (t === 'appearance') { t = 'settings'; history.replaceState(null, '', '#/settings'); }   // old address (before 0.2.0-beta.11)
 	S.utab = t === 'app' && id ? 'app' : userTabs().some((x) => x[0] === t) ? t : 'me';
 	S.uapp = S.utab === 'app' ? id : null;
 	if (S.utab !== 'app') S.appPage = null;
