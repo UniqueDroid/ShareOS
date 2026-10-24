@@ -417,6 +417,16 @@ Needs a Tailscale account (free), a phone or computer with Tailscale, the file `
 5. Webpad (without `embed`) → *Öffnen ↗*: a window of its own, not a new tab.
 6. As a user in "My ShareOS": an app with `embed` opens in the page (`#/app/<id>`), ✕ goes back.
 
+## 14s. FAV APPS and Appearance (0.2.0-beta.10)
+
+1. As root: Apps → Installed – every web app has a small star at the top right (system apps like nano do not). Click two: the star fills, and the bar **FAV APPS** with both apps appears above "Installierte Apps" (in the order they were marked). In the table view the star is next to the name.
+2. Overview: the bar sits directly above "Status". A click on an icon opens the app (in the page or in a window of its own, as set).
+3. System → Appearance → **FAV APPS**: "Namen unter den Symbolen zeigen" off → icons only; "App-Leiste anzeigen" off → the bar is gone from the overview and Apps. Switch it on again. In the terminal: `uci show shareos.ui | grep fav`.
+4. Log in as a user (e.g. anna): My ShareOS → My apps has stars; a favourite appears as a bar at the top. anna's favourites are independent of root's; Appearance → both switches only affect anna (`uci show accounts.anna | grep fav`).
+5. Appearance in a wide window: the panels stand in two columns; narrow window (or phone): one below the other, full width.
+6. The tabs Apps, Cloud and Paperless no longer show "NEU".
+7. Log in over SSH: the greeting reads `ShareOS 0.2.0-beta.10 on <model>: web interface http://<ip>/, link … Mbit/s.` (no "test system", no password).
+
 ## 14r. autobrr (0.2.0-beta.9)
 
 Needs an apps drive, the system apps `autobrr` and `transmission-daemon` and an app with the permission `autobrr` (ShareOS-Apps).
