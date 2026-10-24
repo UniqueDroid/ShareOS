@@ -4,6 +4,14 @@ Changes per release (newest first). The section of a version is added to its
 GitHub release automatically when the release is built. Test versions are
 pre-releases for test devices only.
 
+## 0.2.0-beta.11
+
+- **App permissions `sysinfo`, `netcheck` and `docker`** (each needs `files`, admin accounts only), so apps like SysMon, HomePing and DockerDeck show real data instead of sample values:
+  - `sysinfo` – `ShareOS.sysinfo`: the box's values (CPU from two samples, memory, temperature, fan, load, network counters, drives with their use and standby, uptime, version) and the process list (user, memory, CPU ticks, command line); `kill(pid, signal)` ends a process – never init, kernel threads or what keeps ShareOS running (rpcd, ubusd, uhttpd, the board daemon, syslog). Through `/_shareos/cgi/sysinfo` (rpcd `shareos.appsys`).
+  - `netcheck` – `ShareOS.netcheck.check([...])`: up to 32 checks side by side **from the box** – ping (loss, min/avg/max), TCP port open, HTTP/HTTPS answer with status, time and certificate check. Runs in the CGI `/_shareos/cgi/netcheck` with short time limits (rpcd `shareos.appnet` only checks the grant, so rpcd never waits for the network).
+  - `docker` – `ShareOS.docker`: Docker hosts of the homelab through their Docker Engine API (`http://host:2375` or `https://host:2376`, up to 16, kept in `/etc/config/dockerhosts` and in the settings backup). Fixed calls only: version, info, images, containers, inspect, stats, logs (as plain text) and start/stop/restart/pause/unpause – no exec, no new containers, no other paths. Docker does not run on the box itself.
+- New test `tests/test-sysperms.sh` (with a fake Docker API).
+
 ## 0.2.0-beta.10
 
 - **FAV APPS – favourite apps per account:** a small star on every app card (Apps → Installed, also in the table view; *Mein ShareOS* → My apps) marks an app as favourite. The favourites appear as an icon bar **FAV APPS** directly above *Status* in the overview, above the installed apps and at the top of *Mein ShareOS*; a click opens the app. Every account has its own favourites (root too). Under Appearance each account switches the bar on or off and chooses icons with names or icons only. Stored per account (`fav`, `fav_bar`, `fav_text` – root in `shareos.ui`, the others in their `accounts` section), set through `shareos.me fav_set`.

@@ -1445,3 +1445,9 @@ E1128	Afficher la barre « FAV APPS » (pour vous seul)
 E1129	L’étoile sur une tuile d’application en fait un favori. La barre se trouve au-dessus de « Statut » dans l’aperçu et au-dessus des applications installées.
 P273	Favoris : $1
 E1130	Afficher les noms sous les icônes (désactivé : icônes seules)
+E1131	Valeurs du boîtier
+E1132	Vérifier le réseau
+E1133	Hôtes Docker
+E1134	Peut lire les valeurs du boîtier (CPU, mémoire, température, ventilateur, disques, processus) et arrêter les processus dont ShareOS n'a pas besoin – administrateurs uniquement.
+E1135	Peut vérifier depuis le boîtier si les appareils et services du réseau sont joignables (ping, port, HTTP/HTTPS) – administrateurs uniquement.
+E1136	Peut gérer les hôtes Docker ajoutés par l'administrateur et y afficher, démarrer, arrêter et redémarrer des conteneurs ainsi que lire leurs journaux (API Docker) – administrateurs uniquement.
