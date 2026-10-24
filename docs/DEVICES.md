@@ -22,13 +22,13 @@ Not possible: DNS-323, DNS-321, DNS-343 (64 MB RAM, 8 MB flash).
 ## DNS-325 rev A1: what has been checked
 
 First test on real hardware with a serial console (0.2.0-beta.7 and a build
-of the fix for 0.2.0-beta.11).
+of the fix for 0.2.0-beta.9).
 
-- **Works:** boots from flash (from 0.2.0-beta.11; the beta.7 `.bin` restarts
+- **Works:** boots from flash (from 0.2.0-beta.9; the beta.7 `.bin` restarts
   in a loop, see the [changelog](../CHANGELOG.md)), model and RAM (256 MB), 1
   Gbit/s Ethernet, temperature sensor, clock, USB, the 6 flash partitions, the
   LEDs, the fan presets (quiet, balanced, cool), the power, reset and USB
-  buttons (from 0.2.0-beta.11; before, `shareos-buttons` found no input device
+  buttons (from 0.2.0-beta.10; before, `shareos-buttons` found no input device
   on this box), power-on after a power cut, an update through System →
   Firmware.
 - **Not checked yet:** a complete first installation from a freshly flashed

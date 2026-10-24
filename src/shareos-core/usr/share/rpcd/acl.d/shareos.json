@@ -207,7 +207,8 @@
 					"cloud_remote_del",
 					"cloud_job_set",
 					"cloud_job_del",
-					"cloud_job_run"
+					"cloud_job_run",
+					"fav_set"
 				],
 				"shareos.backup": [
 					"export",
@@ -315,6 +316,7 @@
 					"cloud_job_set",
 					"cloud_job_del",
 					"cloud_job_run",
+					"fav_set",
 					"ui_set"
 				],
 				"shareos.files": [

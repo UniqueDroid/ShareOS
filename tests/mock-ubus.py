@@ -113,7 +113,8 @@ def shares():
 
 def me(user):
     if user == 'root':
-        return {'name': 'root', 'role': 'admin', 'fullname': 'Administrator', 'groups': [], 'quota': 0, 'home': None, 'usage': [], 'shares': [], 'host': 'skynet-nas'}
+        return {'name': 'root', 'role': 'admin', 'fullname': 'Administrator', 'groups': [], 'quota': 0, 'home': None, 'usage': [], 'shares': [], 'host': 'skynet-nas',
+                'fav': FAV.setdefault('root', {'apps': [], 'bar': True, 'text': True})}
     x = STATE['users'][user]
     mine = []
     for n, sh in sorted(STATE['shares'].items()):
@@ -128,7 +129,11 @@ def me(user):
             'ui': x.get('ui', {'theme': None, 'accent': None}),
             'apps': [{'id': a['id'], 'name': a['name'], 'entry': a['entry'], 'icon': a['icon'], 'description': a['description']}
                      for a in APPS['installed'].values() if a.get('type') != 'system' and ('*' in a['users'] or user in a['users'])],
-            'apps_server': {'port': 8081, 'https_port': 8444, 'https': True}}
+            'apps_server': {'port': 8081, 'https_port': 8444, 'https': True},
+            'fav': FAV.setdefault(user, {'apps': [], 'bar': True, 'text': True})}
+
+
+FAV = {}
 
 
 PL_LOG = [
@@ -361,6 +366,14 @@ def call(obj, method, args):
         u = STATE['sessions'].get(SID, 'root')
         if method == 'passwd':
             return {'ok': True}
+        if method == 'fav_set':
+            f = FAV.setdefault(u, {'apps': [], 'bar': True, 'text': True})
+            if 'apps' in args:
+                f['apps'] = list(dict.fromkeys(args['apps']))
+            for k in ('bar', 'text'):
+                if k in args:
+                    f[k] = bool(args[k])
+            return f
         if method == 'ui_set':
             ui = STATE['users'][u].setdefault('ui', {'theme': None, 'accent': None})
             for k in ('theme', 'accent'):

@@ -1128,7 +1128,12 @@
 		"ein Dienst pro Konto": "प्रति खाता एक सेवा",
 		"Download-Automatik (autobrr)": "डाउनलोड ऑटोमेशन (autobrr)",
 		"autobrr, Port 7474": "autobrr, पोर्ट 7474",
-		"Darf autobrr der Box einrichten und steuern (Filter, Indexer, IRC, Releases) und festlegen, in wessen Transmission gefundene Torrents landen – ein Dienst für die ganze Box, deshalb nur für Administratoren.": "बॉक्स का autobrr सेट अप और नियंत्रित कर सकता है (फ़िल्टर, इंडेक्सर, IRC, रिलीज़) और चुन सकता है कि मिले टॉरेंट किसके Transmission में जाएँ – पूरे बॉक्स के लिए एक सेवा, इसलिए केवल व्यवस्थापकों के लिए।"
+		"Darf autobrr der Box einrichten und steuern (Filter, Indexer, IRC, Releases) und festlegen, in wessen Transmission gefundene Torrents landen – ein Dienst für die ganze Box, deshalb nur für Administratoren.": "बॉक्स का autobrr सेट अप और नियंत्रित कर सकता है (फ़िल्टर, इंडेक्सर, IRC, रिलीज़) और चुन सकता है कि मिले टॉरेंट किसके Transmission में जाएँ – पूरे बॉक्स के लिए एक सेवा, इसलिए केवल व्यवस्थापकों के लिए।",
+		"Als Favorit markieren": "पसंदीदा के रूप में चिह्नित करें",
+		"Aus den Favoriten nehmen": "पसंदीदा से हटाएँ",
+		"App-Leiste „FAV APPS“ anzeigen (nur für dich)": "“FAV APPS” ऐप बार दिखाएँ (सिर्फ़ आपके लिए)",
+		"Mit dem Stern auf einer App-Kachel wird sie zum Favoriten. Die Leiste steht über „Status“ in der Übersicht und über den installierten Apps.": "ऐप टाइल पर स्टार दबाने से वह पसंदीदा बन जाता है। बार अवलोकन में “स्थिति” के ऊपर और इंस्टॉल किए गए ऐप्स के ऊपर दिखता है।",
+		"Namen unter den Symbolen zeigen (aus: nur Symbole)": "आइकनों के नीचे नाम दिखाएँ (बंद: केवल आइकन)"
 	},
 	"patterns": [
 		[
@@ -2214,6 +2219,18 @@
 		[
 			"^Anzeige: (.+)$",
 			"प्रदर्शन: $1"
+		],
+		[
+			"^Als Favorit markieren: (.+)$",
+			"पसंदीदा के रूप में चिह्नित करें: $1"
+		],
+		[
+			"^Aus den Favoriten nehmen: (.+)$",
+			"पसंदीदा से हटाएँ: $1"
+		],
+		[
+			"^Favoriten: (.+)$",
+			"पसंदीदा: $1"
 		]
 	],
 	"words": [

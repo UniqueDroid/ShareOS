@@ -259,7 +259,7 @@ persönlichen Ordner). Ihre Aufträge laufen mit ihren Rechten.
 
 ## 14c. Neu in beta.12
 
-- **Terminal:** System → Terminal → *Terminal öffnen*: eine Shell als root erscheint im Fenster (z. B. `uptime`, `logread | tail`). *Beenden* oder Seite verlassen beendet sie.
+- **Terminal:** System → Terminal → *Terminal öffnen*: eine Shell als root erscheint im Fenster (z. B. `uptime`, `tail /var/log/messages`). *Beenden* oder Seite verlassen beendet sie.
 - **Bereiche:** System → Darstellung → Bereiche: *Cloud* ausschalten – der Reiter CLOUD verschwindet, geplante Cloud-Aufträge laufen nicht mehr. Wieder einschalten.
 - **Telegram:** System → Meldungen → Push → Dienst *Telegram (Bot)*: Bot-Token von @BotFather eintragen, speichern, dem Bot schreiben, *Chat-ID suchen*, speichern, *Testnachricht*.
 - **Cloud:** Cloud → Konto hinzufügen → *Google Drive*: „Bei Google Drive anmelden ↗“, anmelden, die Adresse aus der Browserzeile (http://127.0.0.1:53682/…) einfügen, *Übernehmen*, *Hinzufügen*, *Prüfen*.
@@ -421,7 +421,17 @@ Braucht ein Tailscale-Konto (kostenlos), ein Handy oder einen Rechner mit Tailsc
 5. Webpad (ohne `embed`) → *Öffnen ↗*: ein eigenes Fenster, kein neuer Tab.
 6. Als Benutzer in „Mein ShareOS“: eine App mit `embed` öffnet sich in der Seite (`#/app/<id>`), ✕ führt zurück.
 
-## 14r. autobrr (0.2.0-beta.11)
+## 14s. FAV APPS und Darstellung (0.2.0-beta.10)
+
+1. Als root: Apps → Installiert – jede Web-App hat oben rechts einen kleinen Stern (System-Apps wie nano nicht). Zwei Apps anklicken: der Stern füllt sich, über „Installierte Apps“ erscheint die Leiste **FAV APPS** mit beiden Apps (in der Reihenfolge des Markierens). Auch in der Tabellenansicht steht der Stern neben dem Namen.
+2. Übersicht: die Leiste steht direkt über „Status“. Ein Klick auf ein Symbol öffnet die App (in der Seite oder im eigenen Fenster, wie eingestellt).
+3. System → Darstellung → **FAV APPS**: „Namen unter den Symbolen zeigen“ aus → nur Symbole; „App-Leiste anzeigen“ aus → die Leiste ist in Übersicht und Apps weg. Wieder einschalten. Im Terminal: `uci show shareos.ui | grep fav`.
+4. Als Benutzer (z. B. anna) anmelden: Mein ShareOS → Meine Apps hat Sterne; ein Favorit erscheint oben als Leiste. annas Favoriten sind unabhängig von denen von root; Darstellung → beide Schalter wirken nur für anna (`uci show accounts.anna | grep fav`).
+5. Darstellung bei breitem Fenster: die Felder stehen in zwei Spalten; Fenster schmal ziehen (oder Handy): untereinander, volle Breite.
+6. Die Reiter Apps, Cloud und Paperless zeigen kein „NEU“ mehr.
+7. Per SSH anmelden: die Begrüßung lautet `ShareOS 0.2.0-beta.10 on <Modell>: web interface http://<ip>/, link … Mbit/s.` (kein „test system“, kein Passwort).
+
+## 14r. autobrr (0.2.0-beta.9)
 
 Braucht ein Apps-Laufwerk, die System-Apps `autobrr` und `transmission-daemon` und eine App mit der Berechtigung `autobrr` (ShareOS-Apps).
 
@@ -432,7 +442,7 @@ Braucht ein Apps-Laufwerk, die System-Apps `autobrr` und `transmission-daemon` u
 5. Eine `.torrent`-Datei zum Test in den Übergabe-Ordner kopieren (als root, `chown anna:autobrr`): sie verschwindet nach ein paar Sekunden und steht in annas Transmission.
 6. `cat /proc/$(cat /tmp/shareos-autobrr/pid)/status | grep VmRSS` – etwa 40–60 MB. Box neu starten: autobrr läuft wieder. App: ausschalten → bleibt aus, auch nach einem Neustart.
 
-## 14q. App-Ordner für Konten ohne „Dateien“ (0.2.0-beta.10)
+## 14q. App-Ordner für Konten ohne „Dateien“ (0.2.0-beta.9)
 
 1. Benutzer → ein Konto (z. B. lisa) mit Weboberfläche, aber **ohne** „Dateien“.
 2. Als lisa anmelden → Mein ShareOS → ShareNotes öffnen: kein Hinweis „Kein Zugriff auf die Ordner der Box“, unten steht `Box: 🏠 app/notes/`.
@@ -447,7 +457,7 @@ Braucht ein Apps-Laufwerk, die System-Apps `autobrr` und `transmission-daemon` u
 2. `shareos-apps services list` listet die installierten Dienste, z. B. `tailscaled` mit `control` `tailscale`. Bei Paketen von vor beta.9 steht `"legacy": true`.
 3. Dienste → Status: Fernzugriff (Tailscale), VPN (OpenVPN), Torrents (Transmission), Medienserver (DLNA) – je nach installierten System-Apps – mit „läuft“ / „gestoppt“. Tailscale *Stoppen*: `ps | grep [t]ailscaled` ist leer; *Starten*: läuft wieder.
 4. Dienste → Autostart: bei Tailscale den Haken *starten* entfernen, Box neu starten: `tailscaled` läuft nicht. Haken wieder setzen, neu starten: läuft (die Box ist von selbst wieder im Tailnet).
-5. Nach einem Neustart im Systemprotokoll (`logread | grep shareos-`): `shareos-services` meldet die gestarteten Dienste, die Steuerungen (`shareos-tailscale`, `shareos-transmission` …) ihre Ausgabe.
+5. Nach einem Neustart im Systemprotokoll (`grep shareos- /var/log/messages`): `shareos-services` meldet die gestarteten Dienste, die Steuerungen (`shareos-tailscale`, `shareos-transmission` …) ihre Ausgabe.
 6. System-App *tailscaled* entfernen und wieder installieren: Der Dienst hält an bzw. läuft gleich nach der Installation.
 7. Eine eigene System-App mit `"service": { "control": "gibtsnicht" }` hochladen: abgelehnt mit „this ShareOS has no service controller“.
 

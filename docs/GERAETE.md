@@ -24,13 +24,13 @@ Nicht möglich: DNS-323, DNS-321, DNS-343 (64 MB RAM, 8 MB Flash).
 ## DNS-325 rev A1: was geprüft wurde
 
 Erster Test auf echter Hardware mit serieller Konsole (0.2.0-beta.7 und ein
-Build der Korrektur für 0.2.0-beta.11).
+Build der Korrektur für 0.2.0-beta.9).
 
-- **Funktioniert:** Start aus dem Flash (ab 0.2.0-beta.11; die `.bin` von
+- **Funktioniert:** Start aus dem Flash (ab 0.2.0-beta.9; die `.bin` von
   beta.7 startet in einer Schleife neu, siehe [Changelog](../CHANGELOG.md)),
   Modell und RAM (256 MB), 1-Gbit/s-Ethernet, Temperatursensor, Uhr, USB, die
   6 Flash-Partitionen, die LEDs, die Lüfterstufen (leise, ausgewogen, kühl),
-  die Tasten (Ein/Aus, Reset, USB; ab 0.2.0-beta.11 – vorher fand
+  die Tasten (Ein/Aus, Reset, USB; ab 0.2.0-beta.10 – vorher fand
   `shareos-buttons` auf dieser Box kein Eingabegerät), Einschalten nach einem
   Stromausfall, ein Update über System → Firmware.
 - **Noch nicht geprüft:** eine vollständige Erstinstallation von einer frisch

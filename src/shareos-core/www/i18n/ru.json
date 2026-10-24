@@ -1128,7 +1128,12 @@
 		"ein Dienst pro Konto": "одна служба на учётную запись",
 		"Download-Automatik (autobrr)": "Автоматизация загрузок (autobrr)",
 		"autobrr, Port 7474": "autobrr, порт 7474",
-		"Darf autobrr der Box einrichten und steuern (Filter, Indexer, IRC, Releases) und festlegen, in wessen Transmission gefundene Torrents landen – ein Dienst für die ganze Box, deshalb nur für Administratoren.": "Может настраивать и управлять autobrr устройства (фильтры, индексаторы, IRC, релизы) и выбирать, в чей Transmission попадают найденные торренты – одна служба на всё устройство, поэтому только для администраторов."
+		"Darf autobrr der Box einrichten und steuern (Filter, Indexer, IRC, Releases) und festlegen, in wessen Transmission gefundene Torrents landen – ein Dienst für die ganze Box, deshalb nur für Administratoren.": "Может настраивать и управлять autobrr устройства (фильтры, индексаторы, IRC, релизы) и выбирать, в чей Transmission попадают найденные торренты – одна служба на всё устройство, поэтому только для администраторов.",
+		"Als Favorit markieren": "Добавить в избранное",
+		"Aus den Favoriten nehmen": "Убрать из избранного",
+		"App-Leiste „FAV APPS“ anzeigen (nur für dich)": "Показывать панель «FAV APPS» (только для вас)",
+		"Mit dem Stern auf einer App-Kachel wird sie zum Favoriten. Die Leiste steht über „Status“ in der Übersicht und über den installierten Apps.": "Звёздочка на плитке приложения добавляет его в избранное. Панель находится над «Статусом» в обзоре и над установленными приложениями.",
+		"Namen unter den Symbolen zeigen (aus: nur Symbole)": "Показывать названия под значками (выкл.: только значки)"
 	},
 	"patterns": [
 		[
@@ -2214,6 +2219,18 @@
 		[
 			"^Anzeige: (.+)$",
 			"Отображение: $1"
+		],
+		[
+			"^Als Favorit markieren: (.+)$",
+			"Добавить в избранное: $1"
+		],
+		[
+			"^Aus den Favoriten nehmen: (.+)$",
+			"Убрать из избранного: $1"
+		],
+		[
+			"^Favoriten: (.+)$",
+			"Избранное: $1"
 		]
 	],
 	"words": [

@@ -6,7 +6,7 @@
 //   shareos.net      get | set | confirm   (network with automatic rollback)
 //   shareos.accounts list | add | set | passwd | del | group_add | group_del | import_altf
 //   shareos.shares   list | set | del | global
-//   shareos.me       bind | get | passwd | ui_set   (the logged-in account, also for plain users)
+//   shareos.me       bind | get | passwd | ui_set | fav_set   (the logged-in account, also for plain users)
 //   shareos.backup   export | restore      (settings as JSON, optionally encrypted)
 //   shareos.paperless get | set_global | test | inbox_set | inbox_del | run | tags | log
 //   shareos.cloud    status | install | remotes | remote_add | remote_del | remote_test |
@@ -1440,6 +1440,14 @@ function pct_enc(s) {
 	return o;
 }
 
+// favourite apps of an account ("FAV APPS" bar): root keeps them in shareos.ui,
+// every other account in its accounts section
+function fav_of(c, u) {
+	let cfg = u == 'root' ? [ 'shareos', 'ui' ] : [ 'accounts', u ];
+	return { apps: list_of(c.get(cfg[0], cfg[1], 'fav')), bar: c.get(cfg[0], cfg[1], 'fav_bar') != '0',
+		text: c.get(cfg[0], cfg[1], 'fav_text') != '0' };
+}
+
 function me_info(u) {
 	let c = cursor();
 	let role = u == 'root' ? 'admin' : (c.get('accounts', u, 'role') ?? 'share');
@@ -1465,6 +1473,7 @@ function me_info(u) {
 		permissions: a.permissions ?? [], window: a.window, display: a.display }));
 	info.apps_server = apps_server();
 	info.ui = u == 'root' ? null : { theme: c.get('accounts', u, 'theme') ?? null, accent: c.get('accounts', u, 'accent') ?? null };
+	info.fav = fav_of(c, u);
 	info.paperless = area_on('paperless') && !!c.get('paperless', 'global', 'url') && c.get('paperless', 'global', 'enabled') != '0' && !!home;
 	return info;
 }
@@ -2697,6 +2706,34 @@ return {
 				}
 				c.commit('accounts');
 				return { theme: c.get('accounts', u, 'theme') ?? null, accent: c.get('accounts', u, 'accent') ?? null };
+			}
+		},
+
+		fav_set: {
+			// favourite apps (ids, in order), whether the bar is shown and with names or icons only;
+			// a missing key stays as it is
+			args: { apps: [], bar: true, text: true },
+			call: function(req) {
+				let u = session_user(req), a = req.args, c = cursor();
+				if (!u) return { error: 'session not bound' };
+				let cfg = u == 'root' ? [ 'shareos', 'ui' ] : [ 'accounts', u ];
+				if (u != 'root' && c.get('accounts', u) != 'user') return { error: 'session not bound' };
+				if ('apps' in a) {
+					if (type(a.apps) != 'array' || length(a.apps) > 64) return { error: 'invalid apps' };
+					let ids = [];
+					for (let id in a.apps) {
+						if (type(id) != 'string' || !match(id, /^[a-z][a-z0-9-]{1,31}$/)) return { error: 'invalid app id' };
+						if (index(ids, id) < 0) push(ids, id);
+					}
+					if (length(ids)) c.set(cfg[0], cfg[1], 'fav', ids); else c.delete(cfg[0], cfg[1], 'fav');
+				}
+				for (let k in [ 'bar', 'text' ]) {
+					if (!(k in a)) continue;
+					if (type(a[k]) != 'bool') return { error: 'invalid ' + k };
+					if (a[k]) c.delete(cfg[0], cfg[1], 'fav_' + k); else c.set(cfg[0], cfg[1], 'fav_' + k, '0');
+				}
+				c.commit(cfg[0]);
+				return fav_of(cursor(), u);
 			}
 		},
 

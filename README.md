@@ -23,7 +23,7 @@ years of work goes to the Alt-F project — see [LICENSE](LICENSE) and
 
 ## Status: public test versions (beta) for the DNS-320L
 
-**More models** from 0.2.0-beta.3: DNS-320 rev B, DNS-325 rev A, DNS-320 rev A – built; the DNS-325 rev A1 is partly tested on hardware (from 0.2.0-beta.11), the others not yet; testers wanted: [docs/DEVICES.md](docs/DEVICES.md).
+**More models** from 0.2.0-beta.3: DNS-320 rev B, DNS-325 rev A, DNS-320 rev A – built; the DNS-325 rev A1 is partly tested on hardware (from 0.2.0-beta.9), the others not yet; testers wanted: [docs/DEVICES.md](docs/DEVICES.md).
 
 ShareOS runs from flash on the DNS-320L (kernel, initramfs and the system in
 UBI with a persistent overlay for settings and packages). Test releases
@@ -90,8 +90,8 @@ Version in brackets = first release with the feature.
 - Paperless-ngx: inbox folders per user or shared (e.g. for a scanner), upload through the Paperless API (beta.4)
 - Installable as an app (PWA), status address for widget apps (beta.4)
 - Remote access with Tailscale (system app `tailscaled`, starts by itself, admins only, permission `tailscale` for apps): the box in a tailnet without port forwarding, also behind DS-Lite (0.2.0-beta.7)
-- Download automation with autobrr (system app, one for the box, admins only, permission `autobrr` for apps): IRC announces and RSS feeds, matching torrents go to the Transmission of a chosen account (0.2.0-beta.11)
-- Apps keep their data on the box also for accounts without file access: a private folder per app and account (0.2.0-beta.10)
+- Download automation with autobrr (system app, one for the box, admins only, permission `autobrr` for apps): IRC announces and RSS feeds, matching torrents go to the Transmission of a chosen account (0.2.0-beta.9)
+- Apps keep their data on the box also for accounts without file access: a private folder per app and account (0.2.0-beta.9)
 - System apps declare their service in `app.json` (`"service"`), ShareOS starts and stops it through the firmware's controller; how to submit a system app: `sysapps/README.md` (0.2.0-beta.9)
 - Large system apps on the apps drive (link in `/opt`), the flash stays free (0.2.0-beta.7)
 - Media server (DLNA/UPnP AV, MiniDLNA as a system app): TVs and players play music, videos and pictures from chosen shares (0.2.0-beta.6)
@@ -110,6 +110,7 @@ Version in brackets = first release with the feature.
 - Terminal in the browser (System → Terminal, root shell, beta.12); Apps, Cloud and Paperless can be switched off (beta.12)
 - Services with autostart, fan curve and LEDs, logs, settings backup and restore (JSON, optionally AES-256), messages that can be closed
 - Look: light/dark/system, accent colours, tiles or tables, per user
+- FAV APPS: favourite apps per account as an icon bar above the overview status, the installed apps and in *Mein ShareOS* (with names or icons only, beta.10)
 - 10 languages: English, German, Chinese, Hindi, Spanish, French, Arabic (right to left), Bengali, Portuguese, Russian (beta.7; more: [docs/TRANSLATING.md](docs/TRANSLATING.md))
 - Time: time zone, NTP on/off with own servers (e.g. the router), sync now, set the clock by hand; the battery clock follows (beta.7)
 - SSH/SFTP (Dropbear), rescue system in the initramfs (SSH, flash tools)

@@ -271,6 +271,25 @@ label.btn.dis{opacity:.45;cursor:not-allowed}
 .card .icon .appicon{width:100%;height:100%;border:0;padding:6px;background:none}
 a.card.applink{text-decoration:none;color:inherit}
 a.card.applink:hover{border-color:var(--dim);box-shadow:var(--glow)}
+/* favourite apps: star on the app cards, icon bar "FAV APPS" */
+.favwrap{position:relative;display:grid;min-width:0}
+.favwrap>.card,.card:has(>.favstar){padding-right:44px}
+.favwrap>.card{height:100%}
+.favstar{position:absolute;top:10px;right:10px;display:grid;place-items:center;width:28px;height:28px;padding:0;border:0;border-radius:7px;background:none;color:var(--muted);cursor:pointer;opacity:.55}
+.favstar svg{width:17px;height:17px}
+.favstar:hover,.favstar:focus-visible{opacity:1;color:var(--accent)}
+.favstar:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.favstar.on{opacity:1;color:var(--accent)}
+.favstar.on svg{fill:currentColor}
+td .favstar{position:static;display:inline-grid;vertical-align:middle;width:24px;height:24px}
+.favbar{display:flex;flex-wrap:wrap;gap:10px}
+.favapp{display:flex;flex-direction:column;align-items:center;gap:6px;width:84px;padding:10px 6px 8px;border:1px solid var(--line);border-radius:12px;background:var(--panel);color:inherit;text-decoration:none}
+.favapp:hover,.favapp:focus-visible{background:var(--ph);border-color:var(--dim);box-shadow:var(--glow)}
+.favapp .appicon{width:44px;height:44px}
+.favapp .fn{max-width:100%;font-size:11px;color:var(--soft);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.favbar.icons{gap:8px}
+.favbar.icons .favapp{width:auto;padding:8px}
+.favbar.icons .favapp .fn{display:none}
 
 /* app shown inside ShareOS (permission "embed") */
 /* an app shown in the page: its name as the title, the app below in the full width */
@@ -297,3 +316,10 @@ select.app-display{min-height:28px;padding:0 8px}
 
 /* status chips: info (no colour of its own) */
 .chip.info,.sos a.chip.info{color:var(--muted)}
+
+/* System -> Appearance: panels in two columns on wide screens, one below the other on narrow ones */
+.lookcols>.panel{max-width:none!important}
+@media (min-width:900px){
+.lookcols{column-count:2;column-gap:16px}
+.lookcols>.panel{break-inside:avoid;margin:0 0 16px!important;display:inline-block;width:100%}
+}
