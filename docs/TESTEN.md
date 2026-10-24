@@ -427,6 +427,7 @@ Braucht ein Tailscale-Konto (kostenlos), ein Handy oder einen Rechner mit Tailsc
 2. Oben auf dem Laufwerk (`ls /mnt/<laufwerk>/`) entsteht kein neuer Ordner `notes`.
 3. Im Dateibrowser von root steht „Persönlicher Ordner“ an erster Stelle, danach die Laufwerke wie bisher.
 4. Ein Admin-Konto mit eigenem persönlichen Ordner (z. B. jan): Apps legen ihre Dateien unter `/mnt/<laufwerk>/home/jan/` ab.
+5. Alte Notizen von oben umziehen: `mkdir -p /mnt/daten/home/root && chmod 700 /mnt/daten/home/root`, dann `mv /mnt/daten/notes /mnt/daten/home/root/` – ShareNotes zeigt sie danach wieder.
 
 ## 14s. FAV APPS und Darstellung (0.2.0-beta.10)
 

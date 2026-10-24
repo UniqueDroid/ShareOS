@@ -10,7 +10,14 @@ pre-releases for test devices only.
 - **System → Appearance in two columns** on screens from 900 px; on narrower screens the panels stay one below the other, now over the full width.
 - The tabs Apps, Cloud and Paperless no longer carry the "NEU" badge.
 - **Login message:** the line on the console and in `/etc/motd` (SSH, web terminal) names version, model and web address – e.g. `ShareOS 0.2.0-beta.10 on DNS-320L-rev-Ax: web interface http://192.168.1.20/, link 1000 Mbit/s.` – instead of "phase-1 test system ready … (password: shareos)".
-- **Apps keep the files of admins in their own folder:** for admin accounts the folders an app sees (`ShareOS.fs`) now start with a personal folder – the account's own home (`/mnt/<drive>/home/<name>`), for root `/mnt/<apps drive>/home/root` (made on first use, 0700). Apps that store their data in the personal folder (ShareNotes, Webpad …) no longer write it to the top of a drive. The drives themselves stay reachable for admins as before. Files an app already wrote to the top of a drive stay there; move them by hand if wanted (e.g. `mv /mnt/daten/notes /mnt/daten/home/root/`).
+- **Apps keep the files of admins in their own folder:** for admin accounts the folders an app sees (`ShareOS.fs`) now start with a personal folder – the account's own home (`/mnt/<drive>/home/<name>`), for root `/mnt/<apps drive>/home/root` (made on first use, 0700). Apps that store their data in the personal folder (ShareNotes, Webpad …) no longer write it to the top of a drive. The drives themselves stay reachable for admins as before. Files an app already wrote to the top of a drive stay there; move them by hand if wanted, e.g. for ShareNotes on the drive `daten` (in System → Terminal or over SSH):
+
+  ```sh
+  mkdir -p /mnt/daten/home/root && chmod 700 /mnt/daten/home/root
+  mv /mnt/daten/notes /mnt/daten/home/root/
+  ```
+
+  If your apps drive is not `daten`, use its name instead; other apps' folders (e.g. `webpad`) move the same way.
 
 ## 0.2.0-beta.9
 

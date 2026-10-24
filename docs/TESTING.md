@@ -423,6 +423,7 @@ Needs a Tailscale account (free), a phone or computer with Tailscale, the file `
 2. No new folder `notes` appears at the top of the drive (`ls /mnt/<drive>/`).
 3. In root's file browser "Persönlicher Ordner" comes first, then the drives as before.
 4. An admin account with its own personal folder (e.g. jan): apps store their files under `/mnt/<drive>/home/jan/`.
+5. Move old notes from the top: `mkdir -p /mnt/daten/home/root && chmod 700 /mnt/daten/home/root`, then `mv /mnt/daten/notes /mnt/daten/home/root/` – ShareNotes shows them again.
 
 ## 14s. FAV APPS and Appearance (0.2.0-beta.10)
 
