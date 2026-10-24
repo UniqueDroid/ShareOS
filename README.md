@@ -1,8 +1,8 @@
 # ShareOS
 
 ShareOS is a free, open source alternative firmware for the D-Link
-DNS-320L (and, later, the DNS-320/321/323/325/327L, DNR-322L and
-compatible NAS boxes).
+DNS-320L, DNS-320 (rev A/B) and DNS-325 (later perhaps more, e.g. the
+DNS-327L).
 
 It is a fork of [Alt-F](http://sourceforge.net/projects/alt-f) by João
 Cardoso. All credit for the original design, the hardware support and
@@ -21,9 +21,12 @@ years of work goes to the Alt-F project — see [LICENSE](LICENSE) and
 
 ![ShareOS web interface](docs/images/gui-uebersicht.png)
 
-## Status: public test versions (beta) for the DNS-320L
+## Status: public test versions (beta)
 
-**More models** from 0.2.0-beta.3: DNS-320 rev B, DNS-325 rev A, DNS-320 rev A – built; the DNS-325 rev A1 is partly tested on hardware (from 0.2.0-beta.9), the others not yet; testers wanted: [docs/DEVICES.md](docs/DEVICES.md).
+**DNS-320L:** the main device, tested on hardware with every release.
+**More models** from 0.2.0-beta.3: DNS-320 rev B, DNS-325 rev A, DNS-320 rev A – built; the DNS-325 rev A1 boots from flash (from 0.2.0-beta.9) and its buttons work (from 0.2.0-beta.10), the DNS-320 rev A/B are not tested yet; testers wanted: [docs/DEVICES.md](docs/DEVICES.md).
+
+**Known issue:** a share that gives access only to a **group** is refused over SMB to the members of that group; naming the user in the share works ([#57](https://github.com/UniqueDroid/ShareOS/issues/57), fix with ksmbd-tools 3.5.3 planned).
 
 ShareOS runs from flash on the DNS-320L (kernel, initramfs and the system in
 UBI with a persistent overlay for settings and packages). Test releases
@@ -79,7 +82,7 @@ Version in brackets = first release with the feature.
 - File browser in the web interface: admins for all drives and USB drives, users for their personal folder and the shares they have rights to (enabled per user; read-only shares stay read-only, also for apps); upload/download with progress, drag and drop, large files
 
 **Apps and integrations**
-- APPS area with a store from [ShareOS-Apps](https://github.com/UniqueDroid/ShareOS-Apps): one-click install/update with SHA-256 check, own `.sapp` packages, more catalogs, visibility per user/group; apps run on their own port (8081/8444) (beta.6)
+- APPS area with a store from [ShareOS-Apps](https://github.com/UniqueDroid/ShareOS-Apps) – 38 web apps for files and office, media, network, security, development and everyday life: one-click install/update with SHA-256 check, own `.sapp` packages, more catalogs, visibility per user/group; apps run on their own port (8081/8444) (beta.6)
 - App permissions: scheduled tasks (`cron`) as a restricted app user, schedule editable in the interface (beta.7)
 - Open files from the file browser in apps (e.g. Webpad), save back; app SDK and ShareOS look for apps (`/_shareos/theme.css`, `/_shareos/app.js`), apps inside the interface (permission `embed`) (beta.9)
 - App permission `files`: apps work with the folders of the box with the user's rights – ShareCommander (two-pane file manager), Webpad saves on the box; music and videos stream with seeking (beta.11)
@@ -92,6 +95,7 @@ Version in brackets = first release with the feature.
 - Remote access with Tailscale (system app `tailscaled`, starts by itself, admins only, permission `tailscale` for apps): the box in a tailnet without port forwarding, also behind DS-Lite (0.2.0-beta.7)
 - Download automation with autobrr (system app, one for the box, admins only, permission `autobrr` for apps): IRC announces and RSS feeds, matching torrents go to the Transmission of a chosen account (0.2.0-beta.9)
 - Apps keep their data on the box also for accounts without file access: a private folder per app and account (0.2.0-beta.9)
+- Admins get a personal folder for apps too (their home, for root `home/root` on the apps drive), so app data no longer lands at the top of a drive (0.2.0-beta.10)
 - System apps declare their service in `app.json` (`"service"`), ShareOS starts and stops it through the firmware's controller; how to submit a system app: `sysapps/README.md` (0.2.0-beta.9)
 - Large system apps on the apps drive (link in `/opt`), the flash stays free (0.2.0-beta.7)
 - Media server (DLNA/UPnP AV, MiniDLNA as a system app): TVs and players play music, videos and pictures from chosen shares (0.2.0-beta.6)
@@ -105,12 +109,12 @@ Version in brackets = first release with the feature.
 - Back to Alt-F (or any D-Link `.bin`) from the firmware page, checked and read back (beta.7)
 - First-run assistant, network settings with automatic rollback, name via mDNS (`<name>.local`), fallback address `192.168.0.32` without DHCP
 - HTTPS with a self-signed certificate that follows name and IP, own certificate possible
-- Reset button: access reset (5–10 s: network, root password, certificate) or factory reset (≥ 15 s), USB button removes USB drives (beta.9)
+- Reset button: access reset (5–10 s: network, root password, certificate) or factory reset (≥ 15 s), USB button removes USB drives (beta.9); the buttons work again on the DNS-320L and DNS-325 (0.2.0-beta.10)
 - Messages: RAID, volumes, temperature, SMART, updates, failed cloud jobs and app tasks – in the interface, by e-mail (SMTP) and push (ntfy, Gotify, webhook) (beta.9), Telegram bot (beta.12)
 - Terminal in the browser (System → Terminal, root shell, beta.12); Apps, Cloud and Paperless can be switched off (beta.12)
 - Services with autostart, fan curve and LEDs, logs, settings backup and restore (JSON, optionally AES-256), messages that can be closed
-- Look: light/dark/system, accent colours, tiles or tables, per user
-- FAV APPS: favourite apps per account as an icon bar above the overview status, the installed apps and in *Mein ShareOS* (with names or icons only, beta.10)
+- Look: light/dark/system, accent colours, tiles or tables, per user; Appearance page in two columns on wide screens (0.2.0-beta.10)
+- FAV APPS: favourite apps per account as an icon bar above the overview status, the installed apps and in *Mein ShareOS* (with names or icons only, 0.2.0-beta.10)
 - 10 languages: English, German, Chinese, Hindi, Spanish, French, Arabic (right to left), Bengali, Portuguese, Russian (beta.7; more: [docs/TRANSLATING.md](docs/TRANSLATING.md))
 - Time: time zone, NTP on/off with own servers (e.g. the router), sync now, set the clock by hand; the battery clock follows (beta.7)
 - SSH/SFTP (Dropbear), rescue system in the initramfs (SSH, flash tools)
@@ -119,7 +123,7 @@ Version in brackets = first release with the feature.
 
 | | D-Link firmware (ShareCenter) | Alt-F | ShareOS |
 |---|---|---|---|
-| Last release | 1.11 (last version listed for CVE-2024-3273); product end of life | 1.0 (Oct 2017); trunk r3935 (basis of ShareOS) | 0.1.0 betas (2026), updated continuously |
+| Last release | 1.11 (last version listed for CVE-2024-3273); product end of life | 1.0 (Oct 2017); trunk r3935 (basis of ShareOS) | 0.2.0 betas (2026), updated continuously |
 | Linux kernel | 2.6.31 ¹ | 3.10.32 (0.1RC4, 2014), 4.4.86 (1.0), 4.14.268 (trunk) | **6.18 LTS** |
 | Boot loader | Marvell U-Boot 1.1.4 | stock U-Boot (unchanged) | stock U-Boot (unchanged, never written) |
 | Build system / toolchain | D-Link GPL sources, uClibc ¹ | buildroot 2009.08 fork, GCC 7.4, uClibc-ng 1.0.44 (trunk) | buildroot 2026.02 LTS (`BR2_EXTERNAL`), GCC 14.3, musl 1.2.6 |
@@ -149,7 +153,7 @@ reports and were not checked on a box. Alt-F data from its release notes
 
 **Installing:** flash the ShareOS `.bin` from the Alt-F or D-Link firmware
 page; ShareOS then installs its system from a USB stick or from GitHub by
-itself (new in 0.1.0-beta.7, hardware test pending). The tested way over the
+itself (since 0.1.0-beta.7, tested on the DNS-320L). The way over the
 serial console (TFTP boot) stays available. **Back to Alt-F** works from the
 ShareOS firmware page. Details: [docs/TESTING.md](docs/TESTING.md),
 [docs/HARDWARE-DNS320L.md](docs/HARDWARE-DNS320L.md). The backend can be run on
@@ -159,10 +163,10 @@ sample data via `tests/mock-ubus.py`.
 ## Roadmap
 
 - Hardware tests of the current betas, then a public beta
-- More native apps in the same store: system apps for the terminal (0.2.0-beta.1), Transmission (0.2.0-beta.4), FFmpeg (0.2.0-beta.5) and the media server MiniDLNA (0.2.0-beta.6) are there; next Syncthing …
+- More native apps in the same store: system apps for the terminal (0.2.0-beta.1), Transmission (0.2.0-beta.4), FFmpeg (0.2.0-beta.5), the media server MiniDLNA and OpenVPN (0.2.0-beta.6), Tailscale (0.2.0-beta.7) and autobrr (0.2.0-beta.9) are there; next Syncthing …
 - More of the app platform: "open with" defaults per file type
 - Storage: **LVM2**; RAID 5 only makes sense with three or more disks (the DNS-320L has two bays)
-- More devices (DNS-320/325/327L)
+- More devices: hardware tests of the DNS-320 rev A/B; the DNS-327L (Armada 370, ARMv7) needs its own kernel configuration and a tester ([#61](https://github.com/UniqueDroid/ShareOS/issues/61))
 
 ## Layout
 
