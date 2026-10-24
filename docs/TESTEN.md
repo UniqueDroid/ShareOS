@@ -399,6 +399,7 @@ Braucht ein Laufwerk mit ext4 oder Btrfs, die Benutzer **anna** und **lisa** (Ro
 7. Linux-Ebene im Terminal (als root): `getfacl /mnt/<laufwerk>/<fotos-ordner>` zeigt `user:anna:rwx`, `user:lisa:r-x`, `other::---`. `su -s /bin/sh lisa -c 'touch /mnt/<laufwerk>/<fotos-ordner>/x'` → „Permission denied“.
 8. Per SMB vom Rechner: lisa kann lesen, nicht schreiben; anna beides; neue Dateien von anna kann lisa öffnen.
 9. Rechte ändern (lisa entfernen) → nach kurzer Zeit (bei vielen Dateien etwas länger, es läuft im Hintergrund) hat lisa keinen Zugriff mehr, auch nicht auf Unterordner.
+10. Per SMB, Zugriff über eine Gruppe: lisa in eine Gruppe `familie` aufnehmen, die Freigabe `fotos` nur der Gruppe (`@familie`) geben und lisa dort als Benutzer entfernen. Am Mac (Finder) als lisa anmelden: die Freigabe öffnet sich (vor ksmbd-tools 3.5.3 meldete der Finder „Das Original wurde nicht gefunden“).
 ## 14n. Tailscale und große System-Apps auf dem Laufwerk (0.2.0-beta.7)
 
 Braucht ein Tailscale-Konto (kostenlos), ein Handy oder einen Rechner mit Tailscale und die Datei `tailscaled-1.98.8.sapp` (Release der Firmware) sowie eine App mit der Berechtigung `tailscale` (ShareOS-Apps).

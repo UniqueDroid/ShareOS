@@ -4,6 +4,10 @@ Changes per release (newest first). The section of a version is added to its
 GitHub release automatically when the release is built. Test versions are
 pre-releases for test devices only.
 
+## 0.2.0-beta.12
+
+- **SMB: access through a group works (ksmbd-tools 3.5.3).** A user who only got a share through a group (`@family` in the share's access list) was refused over SMB – the Finder said "the original item can't be found" – while the same user named directly worked. ksmbd-tools 3.5.2, the version of the pinned buildroot, does not pass the supplementary groups of a user to the kernel, so the POSIX ACL entry `group:<name>` never applied ([ksmbd issue #461](https://github.com/namjaejeon/ksmbd/issues/461)); 3.5.3 is the first release that does. Buildroot has no newer ksmbd-tools, so the firmware uses the package `ksmbd-tools-shareos` (ksmbd-tools 3.5.3) of the ShareOS tree instead of buildroot's `BR2_PACKAGE_KSMBD_TOOLS`; it goes away when buildroot has caught up. Checked on a DNS-325 rev A1 with kernel 6.18: a user with the share only through a group opens it from macOS.
+
 ## 0.2.0-beta.11
 
 - **App permissions `sysinfo`, `netcheck`, `docker` and `tuya`** (each needs `files`, admin accounts only), so apps like SysMon, HomePing, DockerDeck and TuyaPulse show real data instead of sample values:
