@@ -14,6 +14,7 @@ DAEMON=/usr/sbin/dns320l-daemon
 PIDFILE=/var/run/dns320l-daemon.pid
 BOARDPID=/var/run/shareos-board.pid
 BUTTONPID=/var/run/shareos-buttons.pid
+BUTTONDDPID=/var/run/shareos-buttons-dd.pid   # the dd that feeds shareos-buttons
 
 . /usr/lib/shareos/board.sh
 board_detect
@@ -88,6 +89,9 @@ stop() {
 	fi
 	start-stop-daemon -K -q -p "$BOARDPID" 2>/dev/null
 	start-stop-daemon -K -q -p "$BUTTONPID" 2>/dev/null
+	# its dd would wait for the next button press before it notices that nobody reads it
+	start-stop-daemon -K -q -p "$BUTTONDDPID" 2>/dev/null
+	rm -f "$BUTTONDDPID"
 	start-stop-daemon -K -q -p "$PIDFILE" 2>/dev/null
 	sleep 1
 	if [ -f /tmp/.poweroff ] && [ "$BOARD_CONTROL" = mcu ]; then
