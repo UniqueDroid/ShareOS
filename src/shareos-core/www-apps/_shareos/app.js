@@ -135,6 +135,15 @@
  *   .containers(host, all)         like /containers/json (all: also stopped)
  *   .inspect(host, id)   .stats(host, id)   .logs(host, id, tail) (text)
  *   .action(host, id, 'start'|'stop'|'restart'|'pause'|'unpause')
+ * ShareOS.tuya                Tuya smart-home devices in the local network
+ *                             (protocol 3.3/3.4, no cloud), for apps with the
+ *                             permissions "files" and "tuya" – admin accounts
+ *                             only (ShareOS 0.2.0-beta.11+):
+ *   .discover(seconds)             [{ip, id, product, version}] – devices that
+ *                                  announce themselves (UDP 6666/6667, 1–20 s)
+ *   .status({ip, id, key, version})          data points {"1": true, "19": 1234 …}
+ *   .set({ip, id, key, version}, {"1": false})   switch; resolves to the
+ *                                  changed data points
  * ShareOS.status              a chip in the header of the ShareOS interface,
  *                             for apps with the permissions "files" and
  *                             "status" (ShareOS 0.2.0-beta.6+, null otherwise):
@@ -505,6 +514,13 @@
 		logs: function (host, id, tail) { return dockerCall('logs', { host: host, id: id, tail: tail || 200 }); },
 		action: function (host, id, action) { return dockerCall('action', { host: host, id: id, action: action }); }
 	} : null;
+	/* Tuya devices (permissions "files" + "tuya", admins) */
+	function tuyaDev(d) { d = d || {}; return { ip: d.ip, id: d.id, key: d.key, version: d.version || '3.3' }; }
+	var tuya = fs ? {
+		discover: function (seconds) { return cgiCall('tuya', 'discover', { seconds: seconds || 6 }).then(function (j) { return j.devices; }); },
+		status: function (d) { return cgiCall('tuya', 'status', tuyaDev(d)).then(function (j) { return j.dps; }); },
+		set: function (d, dps) { var a = tuyaDev(d); a.dps = dps; return cgiCall('tuya', 'set', a).then(function (j) { return j.dps; }); }
+	} : null;
 	/* remote access with Tailscale (permissions "files" + "tailscale", admins) */
 	var tailscale = fs ? {
 		status: function () { return cgiCall('tailscale', 'status'); },
@@ -614,6 +630,7 @@
 		sysinfo: sysinfo,
 		netcheck: netcheck,
 		docker: docker,
+		tuya: tuya,
 		status: status,
 		menu: menu,
 		on: function (type, fn) { (handlers[type] = handlers[type] || []).push(fn); },

@@ -421,15 +421,16 @@ Braucht ein Tailscale-Konto (kostenlos), ein Handy oder einen Rechner mit Tailsc
 5. Webpad (ohne `embed`) → *Öffnen ↗*: ein eigenes Fenster, kein neuer Tab.
 6. Als Benutzer in „Mein ShareOS“: eine App mit `embed` öffnet sich in der Seite (`#/app/<id>`), ✕ führt zurück.
 
-## 14u. Berechtigungen sysinfo, netcheck, docker (0.2.0-beta.11)
+## 14u. Berechtigungen sysinfo, netcheck, docker, tuya (0.2.0-beta.11)
 
 Braucht die Apps SysMon, HomePing und DockerDeck in einer Version mit diesen Berechtigungen (ShareOS-Apps) – oder eine eigene Test-App.
 
 1. Als root SysMon öffnen: CPU, Arbeitsspeicher, Temperatur und Lüfter entsprechen der Übersicht von ShareOS; die Prozessliste zeigt z. B. `rpcd`, `uhttpd`, `smbd`/`ksmbd`. Im Terminal `sleep 600 &` starten, in SysMon beenden: `ps | grep [s]leep` ist leer. `rpcd` beenden wird abgelehnt.
 2. HomePing: den Router (Ping), die Box selbst (`tcp` Port 22) und eine Weboberfläche (`http://…`) eintragen – grün mit Zeiten. Ein ausgeschaltetes Gerät wird rot.
 3. DockerDeck: einen Docker-Host mit freigegebener API eintragen (`http://<server>:2375`; am Server z. B. `-H tcp://0.0.0.0:2375` nur im Heimnetz). Die Container erscheinen mit Zustand; *Neu starten* startet einen Container wirklich neu (`docker ps` am Server), *Protokoll* zeigt seine Ausgabe.
-4. Als normaler Benutzer (z. B. anna) öffnen: die Apps melden „no access“.
-5. System → Backup: die Datei enthält `dockerhosts`.
+4. TuyaPulse (Version mit `tuya`): *Suchen* findet die Tuya-Geräte im Heimnetz (IP, Geräte-ID, Protokoll). Ein Gerät mit seinem Local Key (aus der Tuya-Cloud, z. B. mit `tinytuya wizard`) anlegen: der Schalter schaltet das echte Gerät, der Zustand stimmt mit der Smart-Life-App überein. Ein falscher Local Key ergibt eine Fehlermeldung. Im Terminal geht dasselbe mit `shareos-tuya discover 6` und `shareos-tuya status <ip> <id> <key> 3.3`.
+5. Als normaler Benutzer (z. B. anna) öffnen: die Apps melden „no access“.
+6. System → Backup: die Datei enthält `dockerhosts`.
 
 ## 14t. Persönlicher Ordner für Admins (0.2.0-beta.10)
 

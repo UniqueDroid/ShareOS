@@ -1139,7 +1139,9 @@
 		"Docker-Hosts": "Docker হোস্ট",
 		"Darf die Werte der Box lesen (CPU, Arbeitsspeicher, Temperatur, Lüfter, Laufwerke, Prozesse) und Prozesse beenden, die ShareOS nicht braucht – nur für Administratoren.": "বক্সের মান (CPU, মেমরি, তাপমাত্রা, ফ্যান, ড্রাইভ, প্রসেস) পড়তে এবং ShareOS-এর প্রয়োজন নেই এমন প্রসেস বন্ধ করতে পারে – শুধু প্রশাসক।",
 		"Darf von der Box aus prüfen, ob Geräte und Dienste im Netz erreichbar sind (Ping, Port, HTTP/HTTPS) – nur für Administratoren.": "বক্স থেকে যাচাই করতে পারে নেটওয়ার্কের ডিভাইস ও সেবা পৌঁছানো যায় কি না (পিং, পোর্ট, HTTP/HTTPS) – শুধু প্রশাসক।",
-		"Darf die Docker-Hosts verwalten, die der Administrator einträgt, und dort Container ansehen, starten, stoppen und neu starten sowie ihre Protokolle lesen (Docker-API) – nur für Administratoren.": "প্রশাসকের যোগ করা Docker হোস্ট পরিচালনা করতে এবং সেখানে কনটেইনার দেখতে, চালু, বন্ধ ও পুনরায় চালু করতে এবং লগ পড়তে পারে (Docker API) – শুধু প্রশাসক।"
+		"Darf die Docker-Hosts verwalten, die der Administrator einträgt, und dort Container ansehen, starten, stoppen und neu starten sowie ihre Protokolle lesen (Docker-API) – nur für Administratoren.": "প্রশাসকের যোগ করা Docker হোস্ট পরিচালনা করতে এবং সেখানে কনটেইনার দেখতে, চালু, বন্ধ ও পুনরায় চালু করতে এবং লগ পড়তে পারে (Docker API) – শুধু প্রশাসক।",
+		"Smart Home (Tuya)": "স্মার্ট হোম (Tuya)",
+		"Darf von der Box aus Tuya-Geräte im Heimnetz suchen, ihren Zustand lesen und sie schalten (lokal, ohne Cloud) – nur für Administratoren.": "বক্স থেকে হোম নেটওয়ার্কে Tuya ডিভাইস খুঁজতে, অবস্থা পড়তে এবং চালু/বন্ধ করতে পারে (স্থানীয়ভাবে, ক্লাউড ছাড়া) – শুধু প্রশাসক।"
 	},
 	"patterns": [
 		[

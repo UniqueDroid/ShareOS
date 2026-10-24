@@ -1612,8 +1612,8 @@ function ts_tool(args, input) {
 }
 
 // grant of an app with the permission p (and "files"); vpn, tailscale,
-// autobrr, sysinfo, netcheck, docker: admin accounts only
-const ADMIN_PERMS = { vpn: 1, tailscale: 1, autobrr: 1, sysinfo: 1, netcheck: 1, docker: 1 };
+// autobrr, sysinfo, netcheck, docker, tuya: admin accounts only
+const ADMIN_PERMS = { vpn: 1, tailscale: 1, autobrr: 1, sysinfo: 1, netcheck: 1, docker: 1, tuya: 1 };
 function app_grant_perm(grant, p) {
 	let g = app_grant_user(grant);
 	if (!g || index(g.app.permissions ?? [], p) < 0) return null;
@@ -3160,6 +3160,11 @@ return {
 	// called only by /_shareos/cgi/netcheck: may this app check hosts from the box?
 	'shareos.appnet': {
 		allowed: { args: { grant: '' }, call: function(req) { return app_grant_perm(req.args.grant, 'netcheck') ? { ok: true } : { error: 'no access' }; } }
+	},
+
+	// called only by /_shareos/cgi/tuya: may this app talk to Tuya devices?
+	'shareos.apptuya': {
+		allowed: { args: { grant: '' }, call: function(req) { return app_grant_perm(req.args.grant, 'tuya') ? { ok: true } : { error: 'no access' }; } }
 	},
 
 	// called only by /_shareos/cgi/docker: the Docker hosts (admin accounts only)

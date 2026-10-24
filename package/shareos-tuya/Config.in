@@ -1,0 +1,6 @@
+config BR2_PACKAGE_SHAREOS_TUYA
+	bool "shareos-tuya"
+	select BR2_PACKAGE_MBEDTLS
+	help
+	  Talks to Tuya smart-home devices in the local network
+	  (protocol 3.3/3.4, no cloud) for the app permission "tuya".

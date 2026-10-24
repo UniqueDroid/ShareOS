@@ -1139,7 +1139,9 @@
 		"Docker-Hosts": "Hosts Docker",
 		"Darf die Werte der Box lesen (CPU, Arbeitsspeicher, Temperatur, Lüfter, Laufwerke, Prozesse) und Prozesse beenden, die ShareOS nicht braucht – nur für Administratoren.": "Pode ler os valores da caixa (CPU, memória, temperatura, ventoinha, discos, processos) e encerrar processos de que o ShareOS não precisa – apenas administradores.",
 		"Darf von der Box aus prüfen, ob Geräte und Dienste im Netz erreichbar sind (Ping, Port, HTTP/HTTPS) – nur für Administratoren.": "Pode verificar a partir da caixa se dispositivos e serviços da rede estão acessíveis (ping, porta, HTTP/HTTPS) – apenas administradores.",
-		"Darf die Docker-Hosts verwalten, die der Administrator einträgt, und dort Container ansehen, starten, stoppen und neu starten sowie ihre Protokolle lesen (Docker-API) – nur für Administratoren.": "Pode gerir os hosts Docker que o administrador adiciona e aí ver, iniciar, parar e reiniciar contentores e ler os seus registos (API do Docker) – apenas administradores."
+		"Darf die Docker-Hosts verwalten, die der Administrator einträgt, und dort Container ansehen, starten, stoppen und neu starten sowie ihre Protokolle lesen (Docker-API) – nur für Administratoren.": "Pode gerir os hosts Docker que o administrador adiciona e aí ver, iniciar, parar e reiniciar contentores e ler os seus registos (API do Docker) – apenas administradores.",
+		"Smart Home (Tuya)": "Casa inteligente (Tuya)",
+		"Darf von der Box aus Tuya-Geräte im Heimnetz suchen, ihren Zustand lesen und sie schalten (lokal, ohne Cloud) – nur für Administratoren.": "Pode procurar a partir da caixa dispositivos Tuya na rede doméstica, ler o seu estado e ligá-los/desligá-los (localmente, sem a nuvem) – apenas administradores."
 	},
 	"patterns": [
 		[

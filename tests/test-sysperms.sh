@@ -59,8 +59,8 @@ mkapp() {   # id permissions
 	(cd $T/$1 && tar -czf $R/tmp/$1.sapp app.json -C files .)
 	run "shareos-apps install-file /tmp/$1.sapp"
 }
-check "sysinfo, netcheck and docker without files are refused" "mkapp nofiles1 '[\"sysinfo\"]' | grep -q 'sysinfo.*needs' && mkapp nofiles2 '[\"netcheck\"]' | grep -q 'netcheck.*needs' && mkapp nofiles3 '[\"docker\"]' | grep -q 'docker.*needs'"
-mkapp homelab '["files","sysinfo","netcheck","docker"]' >/dev/null
+check "sysinfo, netcheck, docker and tuya without files are refused" "mkapp nofiles1 '[\"sysinfo\"]' | grep -q 'sysinfo.*needs' && mkapp nofiles2 '[\"netcheck\"]' | grep -q 'netcheck.*needs' && mkapp nofiles3 '[\"docker\"]' | grep -q 'docker.*needs' && mkapp nofiles4 '[\"tuya\"]' | grep -q 'tuya.*needs'"
+mkapp homelab '["files","sysinfo","netcheck","docker","tuya"]' >/dev/null
 mkapp other '["files"]' >/dev/null
 run '/etc/init.d/S12ubus start && /etc/init.d/S13rpcd start' >/dev/null
 i=0; until run 'ubus list shareos.appsys' | grep -q appsys || [ $i -ge 40 ]; do sleep 0.5; i=$((i + 1)); done
@@ -133,6 +133,30 @@ check "docker: Docker's error message, unknown actions and ids refused" "cgi doc
 check "docker: unknown host, unreachable host" "cgi docker $GR '{\"op\":\"info\",\"host\":\"gibtsnicht\"}' | grep -q 'unknown host' && cgi docker $GR '{\"op\":\"host_set\",\"name\":\"off\",\"url\":\"http://127.0.0.1:1\"}' >/dev/null && cgi docker $GR '{\"op\":\"info\",\"host\":\"off\"}' | grep -q 'host not reachable'"
 check "docker: remove a host" "cgi docker $GR '{\"op\":\"host_del\",\"name\":\"off\"}' | js \"[h['name'] for h in d['hosts']]==['nuc']\""
 check "docker hosts are in the settings backup" "run \"ubus call shareos.backup export '{}'\" | js \"'nuc' in json.loads(d['content'])['configs']['dockerhosts']\""
+
+# --- tuya ---------------------------------------------------------------------------------
+if python3 -c 'import tinytuya' 2>/dev/null; then
+	check "tuya: no access for users" "cgi tuya $GA '{\"op\":\"discover\",\"seconds\":1}' | js \"d.get('error')=='no access'\""
+	ID3=bf1234567890abcdefgh; K3=0123456789abcdef
+	python3 $TOP/tests/fake-tuya.py 3.3 $ID3 $K3 127.0.0.1 2>/dev/null & TUYA=$!
+	sleep 1
+	check "tuya: discover finds the device (encrypted announcement on UDP 6667)" "cgi tuya $GR '{\"op\":\"discover\",\"seconds\":3}' | js \"d['devices']==[{'ip':'127.0.0.1','id':'$ID3','product':'keyfake123','version':'3.3','encrypted':True}]\""
+	D3="\"ip\":\"127.0.0.1\",\"id\":\"$ID3\",\"key\":\"$K3\",\"version\":\"3.3\""
+	check "tuya 3.3: status" "cgi tuya $GR '{\"op\":\"status\",$D3}' | js \"d['ok'] and d['dps']['1']==False and d['dps']['19']==1234\""
+	check "tuya 3.3: switch on, the device reports it" "cgi tuya $GR '{\"op\":\"set\",$D3,\"dps\":{\"1\":true}}' | js \"d['dps']=={'1':True}\" && cgi tuya $GR '{\"op\":\"status\",$D3}' | js \"d['dps']['1']==True\""
+	check "tuya: invalid input refused" "cgi tuya $GR '{\"op\":\"status\",\"ip\":\"x;reboot\",\"id\":\"$ID3\",\"key\":\"$K3\"}' | grep -q 'invalid IP' && cgi tuya $GR '{\"op\":\"status\",\"ip\":\"127.0.0.1\",\"id\":\"$ID3\",\"key\":\"short\"}' | grep -q '16 characters' && cgi tuya $GR '{\"op\":\"set\",$D3,\"dps\":{\"1\":[1]}}' | grep -q 'invalid dps' && cgi tuya $GR '{\"op\":\"status\",\"ip\":\"127.0.0.1\",\"id\":\"$ID3\",\"key\":\"$K3\",\"version\":\"3.5\"}' | grep -q '3.3 or 3.4'"
+	kill $TUYA 2>/dev/null; wait $TUYA 2>/dev/null; sleep 0.5
+	ID4=bf9999567890abcdefgh; K4=fedcba9876543210
+	python3 $TOP/tests/fake-tuya.py 3.4 $ID4 $K4 127.0.0.1 2>/dev/null & TUYA=$!
+	sleep 1
+	D4="\"ip\":\"127.0.0.1\",\"id\":\"$ID4\",\"key\":\"$K4\",\"version\":\"3.4\""
+	check "tuya 3.4: session key, status and switch" "cgi tuya $GR '{\"op\":\"status\",$D4}' | js \"d['ok'] and d['dps']['20']==2301\" && cgi tuya $GR '{\"op\":\"set\",$D4,\"dps\":{\"1\":true,\"18\":42}}' | js \"d['dps']=={'1':True,'18':42}\""
+	check "tuya 3.4: wrong local key" "cgi tuya $GR '{\"op\":\"status\",\"ip\":\"127.0.0.1\",\"id\":\"$ID4\",\"key\":\"0000000000000000\",\"version\":\"3.4\"}' | grep -q 'wrong local key'"
+	kill $TUYA 2>/dev/null; wait $TUYA 2>/dev/null
+	check "tuya: device not reachable" "cgi tuya $GR '{\"op\":\"status\",$D4}' | grep -q 'not reachable'"
+else
+	echo "SKIP  tuya (pip install tinytuya for the fake device)"
+fi
 
 echo
 echo "$pass passed, $failed failed"

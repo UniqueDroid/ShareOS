@@ -6,11 +6,12 @@ pre-releases for test devices only.
 
 ## 0.2.0-beta.11
 
-- **App permissions `sysinfo`, `netcheck` and `docker`** (each needs `files`, admin accounts only), so apps like SysMon, HomePing and DockerDeck show real data instead of sample values:
+- **App permissions `sysinfo`, `netcheck`, `docker` and `tuya`** (each needs `files`, admin accounts only), so apps like SysMon, HomePing, DockerDeck and TuyaPulse show real data instead of sample values:
   - `sysinfo` – `ShareOS.sysinfo`: the box's values (CPU from two samples, memory, temperature, fan, load, network counters, drives with their use and standby, uptime, version) and the process list (user, memory, CPU ticks, command line); `kill(pid, signal)` ends a process – never init, kernel threads or what keeps ShareOS running (rpcd, ubusd, uhttpd, the board daemon, syslog). Through `/_shareos/cgi/sysinfo` (rpcd `shareos.appsys`).
   - `netcheck` – `ShareOS.netcheck.check([...])`: up to 32 checks side by side **from the box** – ping (loss, min/avg/max), TCP port open, HTTP/HTTPS answer with status, time and certificate check. Runs in the CGI `/_shareos/cgi/netcheck` with short time limits (rpcd `shareos.appnet` only checks the grant, so rpcd never waits for the network).
   - `docker` – `ShareOS.docker`: Docker hosts of the homelab through their Docker Engine API (`http://host:2375` or `https://host:2376`, up to 16, kept in `/etc/config/dockerhosts` and in the settings backup). Fixed calls only: version, info, images, containers, inspect, stats, logs (as plain text) and start/stop/restart/pause/unpause – no exec, no new containers, no other paths. Docker does not run on the box itself.
-- New test `tests/test-sysperms.sh` (with a fake Docker API).
+  - `tuya` – `ShareOS.tuya`: Tuya smart-home devices in the local network, **without the cloud** – `discover()` (their encrypted announcements on UDP 6666/6667), `status(device)` and `set(device, dps)` over TCP 6668 with the device's local key, protocol 3.3 and 3.4 (session key); 3.1 and 3.5 are not supported yet. The new program `/usr/sbin/shareos-tuya` (C, mbedtls, 13 KB) does the talking; the app keeps its devices and keys.
+- New test `tests/test-sysperms.sh` (with a fake Docker API and a fake Tuya device built from tinytuya's own frame and cipher code).
 
 ## 0.2.0-beta.10
 
