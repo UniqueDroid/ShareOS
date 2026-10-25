@@ -1846,6 +1846,28 @@ function smartLine(sm) {
 // small "x" that hides a message for good (the box forgets it)
 const closeX = (act) => html`<button class="bx" type="button" data-act="${act}" title="Schließen" aria-label="Schließen">${svg(I.x)}</button>`;
 
+// USB button: copy the USB drives into a folder on a drive (short press)
+const USB_COPY_ERR = { 'no USB drive': 'Kein USB-Laufwerk eingesteckt.', 'not enough space': 'Zu wenig Platz auf dem Ziel – nichts kopiert.',
+	'target drive not mounted': 'Das Ziellaufwerk ist nicht eingehängt.', 'no target set': 'Kein Ziel eingestellt.' };
+function usbCopyPanel(st) {
+	const u = st.usb_copy || { enabled: false, volume: '', path: 'USB-Kopien' }, last = u.last;
+	return html`<form class="panel" id="f-usbcopy">
+		<div class="ph"><span class="pt">USB-TASTE</span>${u.enabled ? html`<span class="tag ml ok">kopiert</span>` : ''}</div>
+		<label class="chk"><input type="checkbox" name="enabled"${u.enabled ? raw(' checked') : ''}>Kurz drücken kopiert die USB-Laufwerke, 3 s halten wirft sie aus</label>
+		<div class="fields" style="margin-top:12px">
+			<label class="f"><span>ZIEL-LAUFWERK</span><select name="volume">
+				<option value="">–</option>
+				${(st.volumes || []).map((v) => html`<option value="${v.name}"${u.volume === v.name ? raw(' selected') : ''}>${v.name}</option>`)}
+			</select></label>
+			<label class="f"><span>ORDNER</span><input name="path" value="${u.path}" maxlength="200"></label>
+		</div>
+		<p class="note">Jedes Mal ein neuer Ordner mit Datum, z. B. <code>${u.volume || 'daten'}/${u.path}/2026-10-25_1430-STICK</code> – auf der Box wird nichts überschrieben oder gelöscht. Die USB-Lampe blinkt beim Kopieren; das Ergebnis kommt als Meldung. Ohne Häkchen wirft die Taste wie bisher nur aus.</p>
+		${last ? html`<p class="note">Zuletzt: ${last.state === 'running' ? html`<b>läuft …</b>` : last.state === 'done' ? html`<span class="tag ok">OK</span> ${fmtTime(last.time)} · ${last.files} Dateien · ${fmtBytes(last.bytes || 0)}` : html`<span class="tag err">FEHLER</span> ${USB_COPY_ERR[last.error] || last.error}`}</p>` : ''}
+		<div class="acts" style="margin-top:12px"><button class="btn primary" type="submit">Speichern</button>
+			<button class="btn" type="button" data-act="usb-copy" ${u.volume && (st.usb || []).length && last?.state !== 'running' ? '' : 'disabled'}>Jetzt kopieren</button></div>
+	</form>`;
+}
+
 function storageView() {
 	const st = S.storage, i = S.info || {};
 	if (!st) return html`<div class="panel"><div class="empty"><div class="spin" style="margin:0"></div><span>Lade Laufwerke …</span></div></div>`;
@@ -1880,6 +1902,7 @@ function storageView() {
 					<dt>Apps-Bereich</dt><dd>${st.apps ? '/mnt/' + st.apps + '/.shareos' : 'noch keiner'}</dd>
 				</dl>
 			</div>
+			${usbCopyPanel(st)}
 			<div class="panel">
 				<div class="ph"><span class="pt">NEU EINRICHTEN</span></div>
 				<p class="mut" style="margin:0 0 12px;font-size:13px">Der Assistent löscht die ausgewählten Platten und richtet sie neu ein. Einzelne Platten lassen sich auch direkt an der Platte unter „Laufwerke“ formatieren.</p>
@@ -2964,6 +2987,12 @@ const VIEWS_AFTER = {
 			try { await rpc('shareos.storage', 'smart_schedule', { mode: e.target.value }); S.storage.smart_schedule = e.target.value; toast('Zeitplan gespeichert.'); }
 			catch (err) { toast('Selbsttest: ' + err.message, true); }
 		});
+		$('#f-usbcopy')?.addEventListener('submit', async (e) => {
+			e.preventDefault();
+			const f = e.target;
+			try { S.storage.usb_copy = await rpc('shareos.storage', 'usb_copy_config', { enabled: f.enabled.checked, volume: f.volume.value, path: f.path.value.trim() }); toast('USB-Taste gespeichert.'); renderMain(); }
+			catch (err) { toast('USB-Taste: ' + err.message, true); }
+		});
 		$('#spindown')?.addEventListener('change', async (e) => {
 			try { await rpc('shareos.storage', 'spindown', { minutes: +e.target.value }); toast('Ruhezustand gespeichert.'); }
 			catch (err) { toast('Ruhezustand: ' + err.message, true); }
@@ -3727,6 +3756,12 @@ const ACTIONS = {
 		if (!await confirmDlg(`${disk} löschen?`, `Alles auf ${disk} wird gelöscht. Danach ist es ein ${FS_NAME[r.fs]}-Laufwerk „${r.name}“.`, 'Löschen & formatieren', true)) return;
 		try { await rpc('shareos.storage', 'usb_format', { disk, fs: r.fs, name: r.name, confirm: true }); toast('Formatieren gestartet.'); setTimeout(loadStorage, 1000); }
 		catch (e) { toast('Formatieren: ' + e.message, true); }
+	},
+	async 'usb-copy'(el) {
+		el.disabled = true;
+		try { await rpc('shareos.storage', 'usb_copy'); toast('USB-Kopie gestartet.'); }
+		catch (e) { toast('USB-Kopie: ' + (USB_COPY_ERR[e.message] || e.message), true); }
+		setTimeout(loadStorage, 1500);
 	},
 	async smart(el) {
 		el.disabled = true;

@@ -427,6 +427,14 @@ Needs a Tailscale account (free), a phone or computer with Tailscale, the file `
 3. *Endgültig löschen* / *Papierkorb leeren* remove for good. In the terminal: `ls -la /mnt/<drive>/home/<user>/.shareos-trash/` (personal folder) or `ls -la /mnt/<drive>/<share folder>/.shareos-trash/`.
 4. Below the browser (admins): switch the trash off → *Löschen* deletes at once again (red dialog). Days: 7–90 or never; older entries go when that trash is opened or used next.
 5. Over SMB from a PC a deleted file is gone at once (the `.shareos-trash` folder is hidden; leave it alone).
+## 14x. USB copy with the USB button (0.2.0-beta.12)
+
+1. *Speicher → Einstellungen → USB-Taste*: tick, target drive (e.g. `daten`), folder `USB-Kopien`, *Speichern*.
+2. Plug in a USB stick with a few files. Press the USB button briefly: the USB light blinks; afterwards a message "USB-Kopie fertig" with the number of files. `ls /mnt/daten/USB-Kopien/` shows `2026-…_…-<stick name>` with the files. The stick stays mounted.
+3. Press again: a second folder, the first one is untouched.
+4. Hold the button 3 s or longer: the stick is ejected (as before).
+5. *Jetzt kopieren* on the page does the same. A stick larger than the free space: message "Zu wenig Platz", nothing copied.
+6. Untick: a short press only ejects again.
 
 ## 14v. Mein ShareOS, "Teilen mit", file dialog with shares (0.2.0-beta.11)
 

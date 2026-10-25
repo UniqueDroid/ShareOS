@@ -103,7 +103,7 @@ def storage():
                     'health': 'UU', 'sync': {'action': 'recovery' if STATE.get('repair_t') else 'resync', 'percent': pct, 'finish': '412.5min'}}},
         'volumes': [{'name': 'daten', 'uuid': '1b4e28ba-2fa1-11d2-883f-0016d3cca427', 'fstype': 'ext4', 'layout': 'mirror', 'enabled': True,
                      'device': '/dev/md0', 'mountpoint': '/mnt/daten', 'mounted': True, 'size': 3936 << 30, 'used': 1210 << 30, 'avail': 2726 << 30}],
-        'spindown': 20, 'smart_schedule': STATE.get('smart_schedule', ''), 'job': STATE['job']}
+        'spindown': 20, 'smart_schedule': STATE.get('smart_schedule', ''), 'job': STATE['job'], 'usb_copy': STATE.setdefault('usb_copy', {'enabled': False, 'volume': '', 'path': 'USB-Kopien', 'last': None})}
 
 
 SERVICES = [('board', 'Gerätesteuerung', 'Lüfter, Temperatur, Taster, MCU-Uhr', True), ('crond', 'Zeitplaner', 'cron', False),
@@ -742,6 +742,16 @@ def call(obj, method, args):
             if sm and sm['test_running']:
                 sm['test_running']['remaining'] = max(0, sm['test_running']['remaining'] - 10)
             return sm or {'error': 'no SMART data'}
+        if method == 'usb_copy_config':
+            u = STATE.setdefault('usb_copy', {'enabled': False, 'volume': '', 'path': 'USB-Kopien', 'last': None})
+            u.update(enabled=bool(args.get('enabled')), volume=args.get('volume', ''), path=args.get('path') or 'USB-Kopien')
+            return u
+        if method == 'usb_copy':
+            u = STATE.setdefault('usb_copy', {'enabled': False, 'volume': '', 'path': 'USB-Kopien', 'last': None})
+            if not u['volume']:
+                return {'error': 'no target set'}
+            u['last'] = {'state': 'done', 'time': int(time.time()), 'files': 128, 'bytes': 734_003_200, 'dest': f"/mnt/{u['volume']}/{u['path']}/2026-10-25_1130-stick"}
+            return {'started': True}
         if method == 'usb_eject':
             STATE['usb_gone'] = True
         if method == 'repair':

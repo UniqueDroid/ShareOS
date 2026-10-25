@@ -11,6 +11,10 @@
 #                                          fs: exfat (default), vfat, ntfs, ext4
 #   shareos-usb list                       mounted USB partitions:
 #                                          <dev> <mount point> <fs>
+#   shareos-usb copy                       copy every mounted USB partition into
+#                                          a new dated folder below the target
+#                                          (shareos.usbcopy.volume/path); the USB
+#                                          button does this when it is switched on
 #
 # USB partitions are mounted at /mnt/usb-<label> (or /mnt/usb-<dev> without a
 # label). FAT, exFAT and NTFS have no owners: everybody may write. The
@@ -210,12 +214,87 @@ cmd_list() {
 	return 0
 }
 
+# --- USB copy (USB button or the interface) -----------------------------------
+# Each mounted USB partition goes into <target>/<YYYY-MM-DD_HHMM>-<name>, a new
+# folder every time: nothing on the NAS is overwritten or deleted. The USB LED
+# blinks while copying; the result is in $ST.copy/state (read by rpcd) and
+# comes as a message. Not enough space: nothing is copied.
+COPY=/tmp/shareos-usb.copy
+
+copy_state() {   # key value …
+	mkdir -p $COPY
+	: > $COPY/state.new
+	while [ $# -ge 2 ]; do echo "$1=$2" >> $COPY/state.new; shift 2; done
+	mv $COPY/state.new $COPY/state
+}
+
+usb_led() {
+	l=$(sed -n 's/^BOARD_LED_USB="\([A-Za-z0-9:_.-]*\)"$/\1/p' /tmp/sys/board.env 2>/dev/null)
+	[ -n "$l" ] && [ -e /sys/class/leds/$l/trigger ] && echo /sys/class/leds/$l
+}
+led() {   # blink <ms> | off
+	L=$(usb_led); [ -n "$L" ] || return 0
+	if [ "$1" = blink ]; then echo timer > $L/trigger; echo $2 > $L/delay_on; echo $2 > $L/delay_off
+	else echo none > $L/trigger; echo 0 > $L/brightness; fi
+}
+
+cmd_copy() {
+	vol=$(uci -q get shareos.usbcopy.volume); rel=$(uci -q get shareos.usbcopy.path)
+	[ -n "$rel" ] || rel=USB-Kopien
+	echo "$vol" | grep -qE '^[A-Za-z0-9._-]+$' || { copy_state state error error "no target set"; exit 1; }
+	echo "/$rel/" | grep -qE '/\.\.?/|//' && { copy_state state error error "invalid target folder"; exit 1; }
+	grep -q " /mnt/$vol " /proc/mounts || { copy_state state error error "target drive not mounted"; notify_copy warn "Ziellaufwerk $vol ist nicht eingehängt." "Target drive $vol is not mounted."; exit 1; }
+	mkdir $COPY.lock 2>/dev/null || { log "USB copy is already running"; exit 0; }
+	trap 'rmdir $COPY.lock 2>/dev/null; led off' EXIT
+	srcs=$(cmd_list | awk '{print $2}')
+	if [ -z "$srcs" ]; then
+		copy_state state error error "no USB drive"; log "USB copy: no USB drive mounted"
+		led blink 100; sleep 3; exit 0
+	fi
+	led blink 500
+	stamp=$(date +%Y-%m-%d_%H%M)
+	need=0; for m in $srcs; do need=$((need + $(du -sk "$m" 2>/dev/null | cut -f1))); done
+	avail=$(df -k /mnt/$vol | awk 'NR == 2 {print $4}')
+	if [ "$need" -gt "$avail" ]; then
+		copy_state state error error "not enough space" need $((need * 1024)) avail $((avail * 1024))
+		notify_copy warn "Zu wenig Platz auf $vol: $((need / 1024)) MB nötig, $((avail / 1024)) MB frei. Nichts kopiert." "Not enough space on $vol: $((need / 1024)) MB needed, $((avail / 1024)) MB free. Nothing copied."
+		led blink 100; sleep 5; exit 1
+	fi
+	copy_state state running time "$(date +%s)" bytes $((need * 1024))
+	dests=; files=0; err=
+	for m in $srcs; do
+		d="/mnt/$vol/$rel/$stamp-${m#/mnt/usb-}"; i=2
+		while [ -e "$d" ]; do d="/mnt/$vol/$rel/$stamp-${m#/mnt/usb-}-$i"; i=$((i + 1)); done
+		mkdir -p "$d" || { err="cannot create $d"; break; }
+		n=$(find "$m" -type f 2>/dev/null | wc -l)
+		# -R: folders; no owners/permissions from FAT/exFAT – the target's (ACLs of the share) apply
+		if cp -R "$m"/. "$d"/ 2>$COPY/err; then files=$((files + n)); dests="$dests $d"
+		else err=$(tail -n 1 $COPY/err); break; fi
+	done
+	sync
+	if [ -n "$err" ]; then
+		copy_state state error time "$(date +%s)" error "$err" files $files
+		notify_copy warn "USB-Kopie abgebrochen: $err" "USB copy stopped: $err"
+		led blink 100; sleep 5; exit 1
+	fi
+	copy_state state done time "$(date +%s)" files $files bytes $((need * 1024)) dest "${dests# }"
+	log "USB copy: $files files into${dests}"
+	notify_copy info "$files Dateien ($((need / 1024)) MB) nach $(echo $dests | sed 's|/mnt/||g')." "$files files ($((need / 1024)) MB) into $(echo $dests | sed 's|/mnt/||g')."
+}
+
+notify_copy() {   # level text_de text_en
+	/usr/sbin/shareos-notify send "$1" storage usb-copy-$(date +%s) \
+		"$([ "$1" = info ] && echo 'USB-Kopie fertig' || echo 'USB-Kopie fehlgeschlagen')" \
+		"$([ "$1" = info ] && echo 'USB copy done' || echo 'USB copy failed')" "$2" "$3" >/dev/null 2>&1
+}
+
 case "$1" in
+	copy) cmd_copy ;;
 	mount-all) cmd_mount_all ;;
 	umount-all) cmd_umount_all ;;
 	hotplug) cmd_hotplug ;;
 	eject) cmd_eject "$2" ;;
 	format) cmd_format "$2" "$3" "$4" "$5" ;;
 	list) cmd_list ;;
-	*) sed -n '3,18s/^# \{0,1\}//p' "$0"; exit 2 ;;
+	*) sed -n '3,21s/^# \{0,1\}//p' "$0"; exit 2 ;;
 esac
