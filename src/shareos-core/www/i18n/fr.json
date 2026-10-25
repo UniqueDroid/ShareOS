@@ -1223,7 +1223,20 @@
 		"Gelöschtes im Dateibrowser erst in den Papierkorb legen": "Mettre d'abord à la corbeille ce qui est supprimé dans le navigateur de fichiers",
 		"AUTOMATISCH ENDGÜLTIG LÖSCHEN NACH": "SUPPRIMER DÉFINITIVEMENT APRÈS",
 		"Das lässt sich nicht rückgängig machen.": "Cette action est irréversible.",
-		"Jeder Ordner hat seinen eigenen Papierkorb: der persönliche Ordner, jede Freigabe, jedes Laufwerk. Er liegt auf derselben Platte und zählt zum Speicherlimit. Gilt für den Dateibrowser dieser Oberfläche – über SMB vom PC oder in Apps Gelöschtes ist sofort weg; dafür gibt es die Snapshots.": "Chaque dossier a sa propre corbeille : le dossier personnel, chaque partage, chaque disque. Elle se trouve sur le même disque et compte dans le quota. Elle s'applique au navigateur de fichiers de cette interface – ce qui est supprimé via SMB depuis un PC ou dans les applications disparaît aussitôt ; pour cela il y a les instantanés."
+		"Jeder Ordner hat seinen eigenen Papierkorb: der persönliche Ordner, jede Freigabe, jedes Laufwerk. Er liegt auf derselben Platte und zählt zum Speicherlimit. Gilt für den Dateibrowser dieser Oberfläche – über SMB vom PC oder in Apps Gelöschtes ist sofort weg; dafür gibt es die Snapshots.": "Chaque dossier a sa propre corbeille : le dossier personnel, chaque partage, chaque disque. Elle se trouve sur le même disque et compte dans le quota. Elle s'applique au navigateur de fichiers de cette interface – ce qui est supprimé via SMB depuis un PC ou dans les applications disparaît aussitôt ; pour cela il y a les instantanés.",
+		"USB-TASTE": "BOUTON USB",
+		"kopiert": "copie",
+		"Jetzt kopieren": "Copier maintenant",
+		"USB-Taste gespeichert.": "Bouton USB enregistré.",
+		"USB-Kopie gestartet.": "Copie USB lancée.",
+		"Zuletzt:": "Dernière :",
+		"Kein USB-Laufwerk eingesteckt.": "Aucun disque USB branché.",
+		"Kein Ziel eingestellt.": "Aucune cible définie.",
+		"Zu wenig Platz auf dem Ziel – nichts kopiert.": "Pas assez de place sur la cible – rien copié.",
+		"Das Ziellaufwerk ist nicht eingehängt.": "Le disque cible n'est pas monté.",
+		"Kurz drücken kopiert die USB-Laufwerke, 3 s halten wirft sie aus": "Un appui court copie les disques USB, 3 s les éjecte",
+		"Jedes Mal ein neuer Ordner mit Datum, z. B.": "Un nouveau dossier daté à chaque fois, p. ex.",
+		"– auf der Box wird nichts überschrieben oder gelöscht. Die USB-Lampe blinkt beim Kopieren; das Ergebnis kommt als Meldung. Ohne Häkchen wirft die Taste wie bisher nur aus.": "– rien n'est écrasé ni supprimé sur le boîtier. Le voyant USB clignote pendant la copie ; le résultat arrive sous forme de message. Sans la case cochée, le bouton ne fait qu'éjecter, comme avant."
 	},
 	"patterns": [
 		[
@@ -2461,6 +2474,14 @@
 		[
 			"^Papierkorb: (.*)$",
 			"Corbeille : $1"
+		],
+		[
+			"^USB-Kopie: (.*)$",
+			"Copie USB : $1"
+		],
+		[
+			"^USB-Taste: (.*)$",
+			"Bouton USB : $1"
 		]
 	],
 	"words": [

@@ -1223,7 +1223,20 @@
 		"Gelöschtes im Dateibrowser erst in den Papierkorb legen": "Удалённое в файловом браузере сначала помещать в корзину",
 		"AUTOMATISCH ENDGÜLTIG LÖSCHEN NACH": "АВТОМАТИЧЕСКИ УДАЛЯТЬ ЧЕРЕЗ",
 		"Das lässt sich nicht rückgängig machen.": "Это нельзя отменить.",
-		"Jeder Ordner hat seinen eigenen Papierkorb: der persönliche Ordner, jede Freigabe, jedes Laufwerk. Er liegt auf derselben Platte und zählt zum Speicherlimit. Gilt für den Dateibrowser dieser Oberfläche – über SMB vom PC oder in Apps Gelöschtes ist sofort weg; dafür gibt es die Snapshots.": "У каждой папки своя корзина: личная папка, каждый общий ресурс, каждый диск. Она лежит на том же диске и учитывается в лимите. Действует для файлового браузера этого интерфейса – удалённое по SMB с ПК или в приложениях исчезает сразу; для этого есть снапшоты."
+		"Jeder Ordner hat seinen eigenen Papierkorb: der persönliche Ordner, jede Freigabe, jedes Laufwerk. Er liegt auf derselben Platte und zählt zum Speicherlimit. Gilt für den Dateibrowser dieser Oberfläche – über SMB vom PC oder in Apps Gelöschtes ist sofort weg; dafür gibt es die Snapshots.": "У каждой папки своя корзина: личная папка, каждый общий ресурс, каждый диск. Она лежит на том же диске и учитывается в лимите. Действует для файлового браузера этого интерфейса – удалённое по SMB с ПК или в приложениях исчезает сразу; для этого есть снапшоты.",
+		"USB-TASTE": "КНОПКА USB",
+		"kopiert": "копирует",
+		"Jetzt kopieren": "Копировать сейчас",
+		"USB-Taste gespeichert.": "Кнопка USB сохранена.",
+		"USB-Kopie gestartet.": "Копирование с USB запущено.",
+		"Zuletzt:": "Последний раз:",
+		"Kein USB-Laufwerk eingesteckt.": "USB-накопитель не подключён.",
+		"Kein Ziel eingestellt.": "Цель не задана.",
+		"Zu wenig Platz auf dem Ziel – nichts kopiert.": "Недостаточно места на цели – ничего не скопировано.",
+		"Das Ziellaufwerk ist nicht eingehängt.": "Целевой диск не подключён.",
+		"Kurz drücken kopiert die USB-Laufwerke, 3 s halten wirft sie aus": "Короткое нажатие копирует USB-накопители, удержание 3 с извлекает их",
+		"Jedes Mal ein neuer Ordner mit Datum, z. B.": "Каждый раз новая папка с датой, например",
+		"– auf der Box wird nichts überschrieben oder gelöscht. Die USB-Lampe blinkt beim Kopieren; das Ergebnis kommt als Meldung. Ohne Häkchen wirft die Taste wie bisher nur aus.": "– на устройстве ничего не перезаписывается и не удаляется. Индикатор USB мигает при копировании; результат приходит сообщением. Без галочки кнопка, как и раньше, только извлекает."
 	},
 	"patterns": [
 		[
@@ -2461,6 +2474,14 @@
 		[
 			"^Papierkorb: (.*)$",
 			"Корзина: $1"
+		],
+		[
+			"^USB-Kopie: (.*)$",
+			"Копирование USB: $1"
+		],
+		[
+			"^USB-Taste: (.*)$",
+			"Кнопка USB: $1"
 		]
 	],
 	"words": [

@@ -1570,3 +1570,18 @@ P305	$1 – restaurable depuis la corbeille.
 P306	Supprimer définitivement $1 élément(s) ?
 P307	$1 élément(s) restauré(s).
 P308	Corbeille : $1
+E1221	BOUTON USB
+E1222	copie
+E1223	Copier maintenant
+E1224	Bouton USB enregistré.
+E1225	Copie USB lancée.
+E1226	Dernière :
+E1227	Aucun disque USB branché.
+E1228	Aucune cible définie.
+E1229	Pas assez de place sur la cible – rien copié.
+E1230	Le disque cible n'est pas monté.
+E1231	Un appui court copie les disques USB, 3 s les éjecte
+E1232	Un nouveau dossier daté à chaque fois, p. ex.
+E1233	– rien n'est écrasé ni supprimé sur le boîtier. Le voyant USB clignote pendant la copie ; le résultat arrive sous forme de message. Sans la case cochée, le bouton ne fait qu'éjecter, comme avant.
+P309	Copie USB : $1
+P310	Bouton USB : $1

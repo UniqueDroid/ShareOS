@@ -1223,7 +1223,20 @@
 		"Gelöschtes im Dateibrowser erst in den Papierkorb legen": "在文件浏览器中删除的内容先放入回收站",
 		"AUTOMATISCH ENDGÜLTIG LÖSCHEN NACH": "自动永久删除时间",
 		"Das lässt sich nicht rückgängig machen.": "此操作无法撤销。",
-		"Jeder Ordner hat seinen eigenen Papierkorb: der persönliche Ordner, jede Freigabe, jedes Laufwerk. Er liegt auf derselben Platte und zählt zum Speicherlimit. Gilt für den Dateibrowser dieser Oberfläche – über SMB vom PC oder in Apps Gelöschtes ist sofort weg; dafür gibt es die Snapshots.": "每个文件夹都有自己的回收站：个人文件夹、每个共享、每个磁盘。它位于同一块硬盘上，计入存储限额。仅适用于本界面的文件浏览器——通过 SMB 从电脑或在应用中删除的内容会立即消失；对此可使用快照。"
+		"Jeder Ordner hat seinen eigenen Papierkorb: der persönliche Ordner, jede Freigabe, jedes Laufwerk. Er liegt auf derselben Platte und zählt zum Speicherlimit. Gilt für den Dateibrowser dieser Oberfläche – über SMB vom PC oder in Apps Gelöschtes ist sofort weg; dafür gibt es die Snapshots.": "每个文件夹都有自己的回收站：个人文件夹、每个共享、每个磁盘。它位于同一块硬盘上，计入存储限额。仅适用于本界面的文件浏览器——通过 SMB 从电脑或在应用中删除的内容会立即消失；对此可使用快照。",
+		"USB-TASTE": "USB 按钮",
+		"kopiert": "复制",
+		"Jetzt kopieren": "立即复制",
+		"USB-Taste gespeichert.": "USB 按钮已保存。",
+		"USB-Kopie gestartet.": "USB 复制已开始。",
+		"Zuletzt:": "上次：",
+		"Kein USB-Laufwerk eingesteckt.": "未插入 USB 驱动器。",
+		"Kein Ziel eingestellt.": "未设置目标。",
+		"Zu wenig Platz auf dem Ziel – nichts kopiert.": "目标空间不足——未复制任何内容。",
+		"Das Ziellaufwerk ist nicht eingehängt.": "目标驱动器未挂载。",
+		"Kurz drücken kopiert die USB-Laufwerke, 3 s halten wirft sie aus": "短按复制 USB 驱动器，按住 3 秒弹出",
+		"Jedes Mal ein neuer Ordner mit Datum, z. B.": "每次一个带日期的新文件夹，例如",
+		"– auf der Box wird nichts überschrieben oder gelöscht. Die USB-Lampe blinkt beim Kopieren; das Ergebnis kommt als Meldung. Ohne Häkchen wirft die Taste wie bisher nur aus.": "——设备上的内容不会被覆盖或删除。复制时 USB 指示灯闪烁，结果以消息形式发送。不勾选时，按钮和以前一样只弹出。"
 	},
 	"patterns": [
 		[
@@ -2461,6 +2474,14 @@
 		[
 			"^Papierkorb: (.*)$",
 			"回收站：$1"
+		],
+		[
+			"^USB-Kopie: (.*)$",
+			"USB 复制：$1"
+		],
+		[
+			"^USB-Taste: (.*)$",
+			"USB 按钮：$1"
 		]
 	],
 	"words": [

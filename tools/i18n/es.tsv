@@ -1570,3 +1570,18 @@ P305	$1: se puede restaurar desde la papelera.
 P306	¿Eliminar definitivamente $1 elemento(s)?
 P307	$1 elemento(s) restaurado(s).
 P308	Papelera: $1
+E1221	BOTÓN USB
+E1222	copia
+E1223	Copiar ahora
+E1224	Botón USB guardado.
+E1225	Copia USB iniciada.
+E1226	Última:
+E1227	No hay ninguna unidad USB conectada.
+E1228	No hay destino configurado.
+E1229	No hay espacio suficiente en el destino: no se copió nada.
+E1230	La unidad de destino no está montada.
+E1231	Una pulsación corta copia las unidades USB; mantener 3 s las expulsa
+E1232	Cada vez una carpeta nueva con la fecha, p. ej.
+E1233	: en el equipo no se sobrescribe ni se borra nada. La luz USB parpadea al copiar; el resultado llega como aviso. Sin la casilla, el botón solo expulsa, como antes.
+P309	Copia USB: $1
+P310	Botón USB: $1

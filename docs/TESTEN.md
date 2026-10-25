@@ -431,6 +431,14 @@ Braucht ein Tailscale-Konto (kostenlos), ein Handy oder einen Rechner mit Tailsc
 3. *Endgültig löschen* / *Papierkorb leeren* löschen für immer. Im Terminal: `ls -la /mnt/<laufwerk>/home/<benutzer>/.shareos-trash/` (persönlicher Ordner) oder `ls -la /mnt/<laufwerk>/<freigabe-ordner>/.shareos-trash/`.
 4. Unter dem Dateibrowser (Admins): Papierkorb ausschalten → *Löschen* löscht wieder sofort (roter Dialog). Tage: 7–90 oder nie; ältere Einträge verschwinden, wenn dieser Papierkorb das nächste Mal geöffnet oder benutzt wird.
 5. Über SMB vom PC gelöschte Dateien sind sofort weg (der Ordner `.shareos-trash` ist versteckt; bitte nicht anfassen).
+## 14x. USB-Kopie mit der USB-Taste (0.2.0-beta.12)
+
+1. *Speicher → Einstellungen → USB-Taste*: Häkchen, Ziel-Laufwerk (z. B. `daten`), Ordner `USB-Kopien`, *Speichern*.
+2. USB-Stick mit ein paar Dateien einstecken. USB-Taste kurz drücken: Die USB-Lampe blinkt; danach kommt die Meldung „USB-Kopie fertig“ mit der Zahl der Dateien. `ls /mnt/daten/USB-Kopien/` zeigt `2026-…_…-<Stick-Name>` mit den Dateien. Der Stick bleibt eingehängt.
+3. Noch einmal drücken: ein zweiter Ordner, der erste bleibt unberührt.
+4. Taste 3 s oder länger halten: Der Stick wird ausgeworfen (wie bisher).
+5. *Jetzt kopieren* auf der Seite macht dasselbe. Ein Stick, der größer ist als der freie Platz: Meldung „Zu wenig Platz“, nichts kopiert.
+6. Häkchen weg: Kurz drücken wirft wieder nur aus.
 
 ## 14v. Mein ShareOS, „Teilen mit“, Dateidialog mit Freigaben (0.2.0-beta.11)
 

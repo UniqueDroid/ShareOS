@@ -1223,7 +1223,20 @@
 		"Gelöschtes im Dateibrowser erst in den Papierkorb legen": "Mover primero a la papelera lo eliminado en el explorador de archivos",
 		"AUTOMATISCH ENDGÜLTIG LÖSCHEN NACH": "ELIMINAR DEFINITIVAMENTE TRAS",
 		"Das lässt sich nicht rückgängig machen.": "No se puede deshacer.",
-		"Jeder Ordner hat seinen eigenen Papierkorb: der persönliche Ordner, jede Freigabe, jedes Laufwerk. Er liegt auf derselben Platte und zählt zum Speicherlimit. Gilt für den Dateibrowser dieser Oberfläche – über SMB vom PC oder in Apps Gelöschtes ist sofort weg; dafür gibt es die Snapshots.": "Cada carpeta tiene su propia papelera: la carpeta personal, cada recurso compartido, cada unidad. Está en el mismo disco y cuenta para el límite de almacenamiento. Se aplica al explorador de archivos de esta interfaz: lo que se borra por SMB desde un PC o en apps desaparece al momento; para eso están las instantáneas."
+		"Jeder Ordner hat seinen eigenen Papierkorb: der persönliche Ordner, jede Freigabe, jedes Laufwerk. Er liegt auf derselben Platte und zählt zum Speicherlimit. Gilt für den Dateibrowser dieser Oberfläche – über SMB vom PC oder in Apps Gelöschtes ist sofort weg; dafür gibt es die Snapshots.": "Cada carpeta tiene su propia papelera: la carpeta personal, cada recurso compartido, cada unidad. Está en el mismo disco y cuenta para el límite de almacenamiento. Se aplica al explorador de archivos de esta interfaz: lo que se borra por SMB desde un PC o en apps desaparece al momento; para eso están las instantáneas.",
+		"USB-TASTE": "BOTÓN USB",
+		"kopiert": "copia",
+		"Jetzt kopieren": "Copiar ahora",
+		"USB-Taste gespeichert.": "Botón USB guardado.",
+		"USB-Kopie gestartet.": "Copia USB iniciada.",
+		"Zuletzt:": "Última:",
+		"Kein USB-Laufwerk eingesteckt.": "No hay ninguna unidad USB conectada.",
+		"Kein Ziel eingestellt.": "No hay destino configurado.",
+		"Zu wenig Platz auf dem Ziel – nichts kopiert.": "No hay espacio suficiente en el destino: no se copió nada.",
+		"Das Ziellaufwerk ist nicht eingehängt.": "La unidad de destino no está montada.",
+		"Kurz drücken kopiert die USB-Laufwerke, 3 s halten wirft sie aus": "Una pulsación corta copia las unidades USB; mantener 3 s las expulsa",
+		"Jedes Mal ein neuer Ordner mit Datum, z. B.": "Cada vez una carpeta nueva con la fecha, p. ej.",
+		"– auf der Box wird nichts überschrieben oder gelöscht. Die USB-Lampe blinkt beim Kopieren; das Ergebnis kommt als Meldung. Ohne Häkchen wirft die Taste wie bisher nur aus.": ": en el equipo no se sobrescribe ni se borra nada. La luz USB parpadea al copiar; el resultado llega como aviso. Sin la casilla, el botón solo expulsa, como antes."
 	},
 	"patterns": [
 		[
@@ -2461,6 +2474,14 @@
 		[
 			"^Papierkorb: (.*)$",
 			"Papelera: $1"
+		],
+		[
+			"^USB-Kopie: (.*)$",
+			"Copia USB: $1"
+		],
+		[
+			"^USB-Taste: (.*)$",
+			"Botón USB: $1"
 		]
 	],
 	"words": [

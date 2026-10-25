@@ -137,6 +137,8 @@
 					"volume",
 					"usb_eject",
 					"usb_format",
+					"usb_copy",
+					"usb_copy_config",
 					"job_clear",
 					"spindown",
 					"smart_test",

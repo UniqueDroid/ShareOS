@@ -1223,7 +1223,20 @@
 		"Gelöschtes im Dateibrowser erst in den Papierkorb legen": "وضع ما يُحذف في مستعرض الملفات في السلة أولًا",
 		"AUTOMATISCH ENDGÜLTIG LÖSCHEN NACH": "الحذف النهائي تلقائيًا بعد",
 		"Das lässt sich nicht rückgängig machen.": "لا يمكن التراجع عن ذلك.",
-		"Jeder Ordner hat seinen eigenen Papierkorb: der persönliche Ordner, jede Freigabe, jedes Laufwerk. Er liegt auf derselben Platte und zählt zum Speicherlimit. Gilt für den Dateibrowser dieser Oberfläche – über SMB vom PC oder in Apps Gelöschtes ist sofort weg; dafür gibt es die Snapshots.": "لكل مجلد سلته الخاصة: المجلد الشخصي وكل مشاركة وكل قرص. توجد على القرص نفسه وتُحسب ضمن حد التخزين. تنطبق على مستعرض الملفات في هذه الواجهة – ما يُحذف عبر SMB من الحاسوب أو في التطبيقات يختفي فورًا؛ ولذلك توجد اللقطات."
+		"Jeder Ordner hat seinen eigenen Papierkorb: der persönliche Ordner, jede Freigabe, jedes Laufwerk. Er liegt auf derselben Platte und zählt zum Speicherlimit. Gilt für den Dateibrowser dieser Oberfläche – über SMB vom PC oder in Apps Gelöschtes ist sofort weg; dafür gibt es die Snapshots.": "لكل مجلد سلته الخاصة: المجلد الشخصي وكل مشاركة وكل قرص. توجد على القرص نفسه وتُحسب ضمن حد التخزين. تنطبق على مستعرض الملفات في هذه الواجهة – ما يُحذف عبر SMB من الحاسوب أو في التطبيقات يختفي فورًا؛ ولذلك توجد اللقطات.",
+		"USB-TASTE": "زر USB",
+		"kopiert": "ينسخ",
+		"Jetzt kopieren": "انسخ الآن",
+		"USB-Taste gespeichert.": "تم حفظ زر USB.",
+		"USB-Kopie gestartet.": "بدأ النسخ من USB.",
+		"Zuletzt:": "آخر مرة:",
+		"Kein USB-Laufwerk eingesteckt.": "لا يوجد قرص USB موصول.",
+		"Kein Ziel eingestellt.": "لم يُحدَّد هدف.",
+		"Zu wenig Platz auf dem Ziel – nichts kopiert.": "لا توجد مساحة كافية على الهدف – لم يُنسخ شيء.",
+		"Das Ziellaufwerk ist nicht eingehängt.": "قرص الهدف غير مركّب.",
+		"Kurz drücken kopiert die USB-Laufwerke, 3 s halten wirft sie aus": "الضغط القصير ينسخ أقراص USB، والضغط 3 ثوانٍ يُخرجها",
+		"Jedes Mal ein neuer Ordner mit Datum, z. B.": "مجلد جديد بالتاريخ في كل مرة، مثلًا",
+		"– auf der Box wird nichts überschrieben oder gelöscht. Die USB-Lampe blinkt beim Kopieren; das Ergebnis kommt als Meldung. Ohne Häkchen wirft die Taste wie bisher nur aus.": "– لا يُستبدل ولا يُحذف شيء على الجهاز. يومض مصباح USB أثناء النسخ؛ وتصل النتيجة كرسالة. دون علامة الاختيار يُخرج الزر الأقراص فقط كما كان."
 	},
 	"patterns": [
 		[
@@ -2461,6 +2474,14 @@
 		[
 			"^Papierkorb: (.*)$",
 			"السلة: $1"
+		],
+		[
+			"^USB-Kopie: (.*)$",
+			"نسخ USB: $1"
+		],
+		[
+			"^USB-Taste: (.*)$",
+			"زر USB: $1"
 		]
 	],
 	"words": [

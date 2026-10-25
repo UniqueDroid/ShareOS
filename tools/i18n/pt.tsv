@@ -1570,3 +1570,18 @@ P305	$1 – pode ser restaurado da lixeira.
 P306	Excluir definitivamente $1 item(ns)?
 P307	$1 item(ns) restaurado(s).
 P308	Lixeira: $1
+E1221	BOTÃO USB
+E1222	copia
+E1223	Copiar agora
+E1224	Botão USB salvo.
+E1225	Cópia USB iniciada.
+E1226	Última:
+E1227	Nenhuma unidade USB conectada.
+E1228	Nenhum destino definido.
+E1229	Espaço insuficiente no destino – nada copiado.
+E1230	A unidade de destino não está montada.
+E1231	Pressionar rápido copia as unidades USB, segurar 3 s as ejeta
+E1232	Sempre uma nova pasta com a data, p. ex.
+E1233	– nada na caixa é sobrescrito ou apagado. A luz USB pisca durante a cópia; o resultado chega como mensagem. Sem a marcação, o botão só ejeta, como antes.
+P309	Cópia USB: $1
+P310	Botão USB: $1

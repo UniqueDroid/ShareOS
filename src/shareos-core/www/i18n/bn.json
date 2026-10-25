@@ -1223,7 +1223,20 @@
 		"Gelöschtes im Dateibrowser erst in den Papierkorb legen": "ফাইল ব্রাউজারে মোছা জিনিস আগে রিসাইকেল বিনে রাখুন",
 		"AUTOMATISCH ENDGÜLTIG LÖSCHEN NACH": "এর পরে স্বয়ংক্রিয়ভাবে স্থায়ীভাবে মুছুন",
 		"Das lässt sich nicht rückgängig machen.": "এটি পূর্বাবস্থায় ফেরানো যাবে না।",
-		"Jeder Ordner hat seinen eigenen Papierkorb: der persönliche Ordner, jede Freigabe, jedes Laufwerk. Er liegt auf derselben Platte und zählt zum Speicherlimit. Gilt für den Dateibrowser dieser Oberfläche – über SMB vom PC oder in Apps Gelöschtes ist sofort weg; dafür gibt es die Snapshots.": "প্রতিটি ফোল্ডারের নিজস্ব রিসাইকেল বিন আছে: ব্যক্তিগত ফোল্ডার, প্রতিটি শেয়ার, প্রতিটি ড্রাইভ। এটি একই ডিস্কে থাকে এবং স্টোরেজ সীমায় গোনা হয়। এটি এই ইন্টারফেসের ফাইল ব্রাউজারে প্রযোজ্য – PC থেকে SMB বা অ্যাপে মোছা জিনিস সঙ্গে সঙ্গে চলে যায়; এর জন্য স্ন্যাপশট আছে।"
+		"Jeder Ordner hat seinen eigenen Papierkorb: der persönliche Ordner, jede Freigabe, jedes Laufwerk. Er liegt auf derselben Platte und zählt zum Speicherlimit. Gilt für den Dateibrowser dieser Oberfläche – über SMB vom PC oder in Apps Gelöschtes ist sofort weg; dafür gibt es die Snapshots.": "প্রতিটি ফোল্ডারের নিজস্ব রিসাইকেল বিন আছে: ব্যক্তিগত ফোল্ডার, প্রতিটি শেয়ার, প্রতিটি ড্রাইভ। এটি একই ডিস্কে থাকে এবং স্টোরেজ সীমায় গোনা হয়। এটি এই ইন্টারফেসের ফাইল ব্রাউজারে প্রযোজ্য – PC থেকে SMB বা অ্যাপে মোছা জিনিস সঙ্গে সঙ্গে চলে যায়; এর জন্য স্ন্যাপশট আছে।",
+		"USB-TASTE": "USB বোতাম",
+		"kopiert": "কপি করে",
+		"Jetzt kopieren": "এখন কপি করুন",
+		"USB-Taste gespeichert.": "USB বোতাম সংরক্ষিত।",
+		"USB-Kopie gestartet.": "USB কপি শুরু হয়েছে।",
+		"Zuletzt:": "শেষবার:",
+		"Kein USB-Laufwerk eingesteckt.": "কোনো USB ড্রাইভ লাগানো নেই।",
+		"Kein Ziel eingestellt.": "কোনো লক্ষ্য সেট করা নেই।",
+		"Zu wenig Platz auf dem Ziel – nichts kopiert.": "লক্ষ্যে যথেষ্ট জায়গা নেই – কিছুই কপি হয়নি।",
+		"Das Ziellaufwerk ist nicht eingehängt.": "লক্ষ্য ড্রাইভ মাউন্ট করা নেই।",
+		"Kurz drücken kopiert die USB-Laufwerke, 3 s halten wirft sie aus": "ছোট চাপ USB ড্রাইভ কপি করে, ৩ s ধরে রাখলে বের করে",
+		"Jedes Mal ein neuer Ordner mit Datum, z. B.": "প্রতিবার তারিখসহ নতুন ফোল্ডার, যেমন",
+		"– auf der Box wird nichts überschrieben oder gelöscht. Die USB-Lampe blinkt beim Kopieren; das Ergebnis kommt als Meldung. Ohne Häkchen wirft die Taste wie bisher nur aus.": "– বক্সে কিছুই ওভাররাইট বা মোছা হয় না। কপির সময় USB আলো জ্বলে-নেভে; ফলাফল বার্তা হিসেবে আসে। টিক ছাড়া বোতাম আগের মতো শুধু বের করে।"
 	},
 	"patterns": [
 		[
@@ -2461,6 +2474,14 @@
 		[
 			"^Papierkorb: (.*)$",
 			"রিসাইকেল বিন: $1"
+		],
+		[
+			"^USB-Kopie: (.*)$",
+			"USB কপি: $1"
+		],
+		[
+			"^USB-Taste: (.*)$",
+			"USB বোতাম: $1"
 		]
 	],
 	"words": [

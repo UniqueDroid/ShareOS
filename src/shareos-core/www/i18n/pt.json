@@ -1223,7 +1223,20 @@
 		"Gelöschtes im Dateibrowser erst in den Papierkorb legen": "Colocar primeiro na lixeira o que for excluído no navegador de arquivos",
 		"AUTOMATISCH ENDGÜLTIG LÖSCHEN NACH": "EXCLUIR DEFINITIVAMENTE APÓS",
 		"Das lässt sich nicht rückgängig machen.": "Não é possível desfazer.",
-		"Jeder Ordner hat seinen eigenen Papierkorb: der persönliche Ordner, jede Freigabe, jedes Laufwerk. Er liegt auf derselben Platte und zählt zum Speicherlimit. Gilt für den Dateibrowser dieser Oberfläche – über SMB vom PC oder in Apps Gelöschtes ist sofort weg; dafür gibt es die Snapshots.": "Cada pasta tem sua própria lixeira: a pasta pessoal, cada compartilhamento, cada unidade. Ela fica no mesmo disco e conta para o limite de armazenamento. Vale para o navegador de arquivos desta interface – o que for excluído via SMB do PC ou em apps some na hora; para isso existem os snapshots."
+		"Jeder Ordner hat seinen eigenen Papierkorb: der persönliche Ordner, jede Freigabe, jedes Laufwerk. Er liegt auf derselben Platte und zählt zum Speicherlimit. Gilt für den Dateibrowser dieser Oberfläche – über SMB vom PC oder in Apps Gelöschtes ist sofort weg; dafür gibt es die Snapshots.": "Cada pasta tem sua própria lixeira: a pasta pessoal, cada compartilhamento, cada unidade. Ela fica no mesmo disco e conta para o limite de armazenamento. Vale para o navegador de arquivos desta interface – o que for excluído via SMB do PC ou em apps some na hora; para isso existem os snapshots.",
+		"USB-TASTE": "BOTÃO USB",
+		"kopiert": "copia",
+		"Jetzt kopieren": "Copiar agora",
+		"USB-Taste gespeichert.": "Botão USB salvo.",
+		"USB-Kopie gestartet.": "Cópia USB iniciada.",
+		"Zuletzt:": "Última:",
+		"Kein USB-Laufwerk eingesteckt.": "Nenhuma unidade USB conectada.",
+		"Kein Ziel eingestellt.": "Nenhum destino definido.",
+		"Zu wenig Platz auf dem Ziel – nichts kopiert.": "Espaço insuficiente no destino – nada copiado.",
+		"Das Ziellaufwerk ist nicht eingehängt.": "A unidade de destino não está montada.",
+		"Kurz drücken kopiert die USB-Laufwerke, 3 s halten wirft sie aus": "Pressionar rápido copia as unidades USB, segurar 3 s as ejeta",
+		"Jedes Mal ein neuer Ordner mit Datum, z. B.": "Sempre uma nova pasta com a data, p. ex.",
+		"– auf der Box wird nichts überschrieben oder gelöscht. Die USB-Lampe blinkt beim Kopieren; das Ergebnis kommt als Meldung. Ohne Häkchen wirft die Taste wie bisher nur aus.": "– nada na caixa é sobrescrito ou apagado. A luz USB pisca durante a cópia; o resultado chega como mensagem. Sem a marcação, o botão só ejeta, como antes."
 	},
 	"patterns": [
 		[
@@ -2461,6 +2474,14 @@
 		[
 			"^Papierkorb: (.*)$",
 			"Lixeira: $1"
+		],
+		[
+			"^USB-Kopie: (.*)$",
+			"Cópia USB: $1"
+		],
+		[
+			"^USB-Taste: (.*)$",
+			"Botão USB: $1"
 		]
 	],
 	"words": [
