@@ -300,18 +300,46 @@ function check_temp(n) {
 	else if (t < max - 3) cmd_clear('temp');
 }
 
+// reasons of the SMART rating (rpcd smart_assess) as text
+const SMART_TXT = {
+	failed: [ 'Gesamtbewertung der Platte: FEHLER', 'overall assessment of the disk: FAILED' ],
+	test_failed: [ 'letzter Selbsttest fehlgeschlagen', 'last self-test failed' ],
+	reallocated: [ 'umgelagerte Sektoren: %s', 'reallocated sectors: %s' ],
+	pending: [ 'schwebende Sektoren: %s', 'pending sectors: %s' ],
+	uncorrectable: [ 'nicht korrigierbare Sektoren: %s', 'uncorrectable sectors: %s' ],
+	crc: [ 'Übertragungsfehler (CRC): %s – Anschluss prüfen', 'transfer errors (CRC): %s – check the connection' ],
+	errors: [ 'Fehler im Fehlerprotokoll: %s', 'errors in the error log: %s' ],
+	worn: [ 'SSD fast verbraucht: noch %s %%', 'SSD almost worn out: %s %% left' ],
+	wearing: [ 'SSD-Lebensdauer: noch %s %%', 'SSD life: %s %% left' ],
+	hot: [ 'Temperatur %s °C', 'temperature %s °C' ],
+	warm: [ 'Temperatur %s °C', 'temperature %s °C' ]
+};
+function smart_reason(s, r, en) {
+	let m = match(r, /^attr_(now|past):(.+)$/);
+	if (m) return sprintf(en ? 'attribute %s below its threshold%s' : 'Wert %s unter der Schwelle%s', m[2], m[1] == 'past' ? (en ? ' (earlier)' : ' (früher)') : '');
+	let t = SMART_TXT[r];
+	if (!t) return r;
+	let v = { reallocated: s.reallocated, pending: s.pending, uncorrectable: s.uncorrectable, crc: s.crc_errors, errors: s.error_count,
+		worn: s.life_left, wearing: s.life_left, hot: s.temperature, warm: s.temperature }[r];
+	return sprintf(t[en ? 1 : 0], v ?? '?');
+}
+
 function check_smart() {
 	for (let f in glob(ROOT + '/tmp/shareos-storage/smart-*.json')) {
 		let disk = match(f, /smart-(sd[a-z]+)\.json$/)?.[1], s = null;
 		if (!disk) continue;
 		try { s = json(readfile(f)); } catch (e) { }
 		if (type(s) != 'object' || s.standby || s.error) continue;
-		let bad = s.passed === false ? 'error' : ((+s.reallocated > 0 || +s.pending > 0 || +s.uncorrectable > 0) ? 'warn' : null);
-		if (bad)
-			cmd_send(bad, 'storage', 'smart-' + disk, 'Platte ' + disk + ': SMART meldet Probleme', 'Disk ' + disk + ': SMART reports problems',
-				sprintf('Gesamtstatus %s, neu zugeordnete Sektoren %s, schwebende %s. Daten sichern und die Platte bald tauschen.', s.passed === false ? 'FEHLER' : 'ok', s.reallocated ?? '?', s.pending ?? '?'),
-				sprintf('Overall %s, reallocated sectors %s, pending %s. Back up the data and replace the disk soon.', s.passed === false ? 'FAILED' : 'ok', s.reallocated ?? '?', s.pending ?? '?'));
-		else cmd_clear('smart-' + disk);
+		// values cached by an older firmware have no rating yet
+		let rating = s.rating ?? (s.passed === false ? 'bad' : ((+s.reallocated > 0 || +s.pending > 0 || +s.uncorrectable > 0) ? 'warn' : 'good'));
+		let reasons = s.reasons ?? [];
+		if (rating == 'good') { cmd_clear('smart-' + disk); continue; }
+		let de = join('; ', map(reasons, (r) => smart_reason(s, r, false))), en = join('; ', map(reasons, (r) => smart_reason(s, r, true)));
+		cmd_send(rating == 'bad' ? 'error' : 'warn', 'storage', 'smart-' + disk,
+			'Platte ' + disk + ': ' + (rating == 'bad' ? 'SMART meldet Probleme' : 'SMART meldet Auffälligkeiten'),
+			'Disk ' + disk + ': ' + (rating == 'bad' ? 'SMART reports problems' : 'SMART reports warnings'),
+			(de ? de + '. ' : '') + (rating == 'bad' ? 'Daten sichern und die Platte bald tauschen.' : 'Unter Speicher → Gesundheit beobachten.'),
+			(en ? en + '. ' : '') + (rating == 'bad' ? 'Back up the data and replace the disk soon.' : 'Keep an eye on it under Storage → Health.'));
 	}
 }
 

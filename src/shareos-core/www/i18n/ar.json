@@ -1147,7 +1147,61 @@
 		"MEIN VERBRAUCH": "استخدامي",
 		"BELEGUNG": "المستخدم",
 		"FREI": "متاح",
-		"LIMIT": "الحد"
+		"LIMIT": "الحد",
+		"GESUNDHEIT": "الصحة",
+		"Gesundheit": "الصحة",
+		"SELBSTTEST": "الاختبار الذاتي",
+		"GUT": "جيد",
+		"ACHTUNG": "تنبيه",
+		"KRITISCH": "حرج",
+		"SCHACHT": "الحجرة",
+		"Neu lesen": "قراءة مجددًا",
+		"Jetzt lesen": "اقرأ الآن",
+		"Kurztest": "اختبار قصير",
+		"Langtest": "اختبار طويل",
+		"Test abbrechen": "إلغاء الاختبار",
+		"Alle Werte": "كل القيم",
+		"Werte ausblenden": "إخفاء القيم",
+		"Temperatur": "درجة الحرارة",
+		"Betriebszeit": "مدة التشغيل",
+		"Einschaltvorgänge": "مرات التشغيل",
+		"Anläufe des Motors": "مرات بدء المحرك",
+		"Umgelagerte Sektoren": "القطاعات المعاد تخصيصها",
+		"Schwebende Sektoren": "القطاعات المعلّقة",
+		"Nicht lesbare Sektoren": "قطاعات غير مقروءة",
+		"Übertragungsfehler (CRC)": "أخطاء النقل (CRC)",
+		"Fehlerprotokoll": "سجل الأخطاء",
+		"SCHLECHTESTER": "الأسوأ",
+		"SCHWELLE": "العتبة",
+		"ROHWERT": "القيمة الخام",
+		"FRÜHER": "سابقًا",
+		"FEHLGESCHLAGEN": "فشل",
+		"SELBSTTEST NACH ZEITPLAN": "اختبار ذاتي مجدول",
+		"ALLE PLATTEN IN DEN SCHÄCHTEN": "كل الأقراص في الحجرات",
+		"SO WIRD BEWERTET": "طريقة التقييم",
+		"Kurztest jeden Sonntag (3:30 Uhr)": "اختبار قصير كل أحد (3:30)",
+		"Langtest am 1. jedes Monats (3:30 Uhr)": "اختبار طويل في اليوم الأول من كل شهر (3:30)",
+		"Selbsttest läuft": "الاختبار الذاتي جارٍ",
+		"Langtest starten?": "بدء الاختبار الطويل؟",
+		"Selbsttest gestartet.": "بدأ الاختبار الذاتي.",
+		"Selbsttest abgebrochen.": "أُلغي الاختبار الذاتي.",
+		"Zeitplan gespeichert.": "تم حفظ الجدول.",
+		"Keine Auffälligkeiten.": "لا شيء غير عادي.",
+		"Lebensdauer der SSD": "عمر SSD",
+		"Noch kein Selbsttest gelaufen.": "لم يُجرَ أي اختبار ذاتي بعد.",
+		"Daten sichern und die Platte bald tauschen.": "انسخ البيانات احتياطيًا واستبدل القرص قريبًا.",
+		"SMART der Platten und SSDs": "SMART للأقراص وSSD",
+		"Keine Platte erkannt.": "لم يُعثر على قرص.",
+		"SMART noch nicht gelesen. Beim Lesen wacht die Platte auf.": "لم تُقرأ SMART بعد. القراءة توقظ القرص.",
+		"Die Platte schläft – die Werte kommen beim nächsten Aufwachen.": "القرص في وضع السكون – تصل القيم عند استيقاظه التالي.",
+		"Diese Platte liefert keine SMART-Werte.": "هذا القرص لا يقدّم قيم SMART.",
+		"Dieser USB-Adapter reicht keine SMART-Werte weiter.": "محوّل USB هذا لا يمرّر قيم SMART.",
+		"Die Platte meldet selbst: Ausfall droht (SMART-Gesamtbewertung FEHLER).": "يُبلغ القرص نفسه: الفشل وشيك (تقييم SMART العام: فشل).",
+		"Der letzte Selbsttest ist fehlgeschlagen.": "فشل آخر اختبار ذاتي.",
+		"Die Platte meldet selbst einen Ausfall, ein Wert liegt unter der Schwelle des Herstellers, ein Selbsttest schlug fehl, über 100 umgelagerte oder über 10 schwebende Sektoren, SSD mit höchstens 10 % Lebensdauer, 60 °C und mehr.": "يُبلغ القرص عن عطل، أو قيمة أقل من عتبة الشركة المصنعة، أو فشل اختبار ذاتي، أو أكثر من 100 قطاع معاد تخصيصه أو أكثر من 10 قطاعات معلّقة، أو SSD بعمر 10 % أو أقل، أو 60 °C فأكثر.",
+		"Einzelne umgelagerte, schwebende oder nicht lesbare Sektoren, Übertragungsfehler, Einträge im Fehlerprotokoll, SSD mit höchstens 20 % Lebensdauer, ab 55 °C.": "قطاعات قليلة معاد تخصيصها أو معلّقة أو غير مقروءة، أخطاء نقل، إدخالات في سجل الأخطاء، SSD بعمر 20 % أو أقل، ابتداءً من 55 °C.",
+		"Der Kurztest prüft die Elektronik und einen Teil der Oberfläche, der Langtest liest die ganze Platte (bei großen Platten viele Stunden; die Platte bleibt dabei wach). Das Ergebnis erscheint hier und als Meldung, wenn etwas auffällt.": "يفحص الاختبار القصير الإلكترونيات وجزءًا من السطح، ويقرأ الاختبار الطويل القرص كله (ساعات طويلة للأقراص الكبيرة؛ يبقى القرص مستيقظًا خلالها). تظهر النتيجة هنا وكرسالة عند وجود مشكلة.",
+		"ohne Fehler": "بلا أخطاء"
 	},
 	"patterns": [
 		[
@@ -2265,6 +2319,98 @@
 		[
 			"^Laufwerk (\\d+) % belegt$",
 			"القرص مستخدم بنسبة $1 %"
+		],
+		[
+			"^([\\d.,  ]+) Sektoren wurden schon ersetzt \\(umgelagert\\)\\.$",
+			"تم استبدال $1 قطاع بالفعل (أُعيد تخصيصها)."
+		],
+		[
+			"^([\\d.,  ]+) Sektoren sind unsicher \\(schwebend\\) – sie werden beim nächsten Schreiben geprüft\\.$",
+			"$1 قطاع غير مؤكد (معلّق) – يُفحص عند الكتابة التالية."
+		],
+		[
+			"^([\\d.,  ]+) Sektoren waren nicht lesbar\\.$",
+			"تعذّرت قراءة $1 قطاع."
+		],
+		[
+			"^([\\d.,  ]+) Übertragungsfehler \\(CRC\\) – meist Anschluss oder Kabel, nicht die Platte selbst\\.$",
+			"$1 خطأ نقل (CRC) – غالبًا الموصل أو الكابل وليس القرص نفسه."
+		],
+		[
+			"^([\\d.,  ]+) Einträge im Fehlerprotokoll der Platte\\.$",
+			"$1 إدخال في سجل أخطاء القرص."
+		],
+		[
+			"^Die SSD ist fast verbraucht: noch (\\d+) % Lebensdauer\\.$",
+			"SSD على وشك الاستهلاك: تبقّى $1 % من العمر."
+		],
+		[
+			"^Die SSD nutzt sich ab: noch (\\d+) % Lebensdauer\\.$",
+			"SSD يتآكل: تبقّى $1 % من العمر."
+		],
+		[
+			"^Sehr warm: (\\d+) °C\\.$",
+			"ساخن جدًا: $1 °C."
+		],
+		[
+			"^Warm: (\\d+) °C\\.$",
+			"دافئ: $1 °C."
+		],
+		[
+			"^Wert (\\S+) unter der Schwelle des Herstellers$",
+			"القيمة $1 أقل من عتبة الشركة المصنعة"
+		],
+		[
+			"^Wert (\\S+) war früher unter der Schwelle$",
+			"كانت القيمة $1 أقل من العتبة سابقًا"
+		],
+		[
+			"^([\\d.,  ]+) Einträge$",
+			"$1 إدخال"
+		],
+		[
+			"^(\\d+) °C \\(höchste: (\\d+) °C\\)$",
+			"$1 °C (الأعلى: $2 °C)"
+		],
+		[
+			"^([\\d.,  ]+) Tage \\(([\\d.,  ]+) h\\)$",
+			"$1 يوم ($2 ساعة)"
+		],
+		[
+			"^([\\d.,  ]+) Jahre \\(([\\d.,  ]+) h\\)$",
+			"$1 سنة ($2 ساعة)"
+		],
+		[
+			"^noch (\\d+) %$",
+			"تبقّى $1 %"
+		],
+		[
+			"^SSD noch (\\d+) %$",
+			"SSD: تبقّى $1 %"
+		],
+		[
+			"^Läuft – noch (\\d+) %$",
+			"جارٍ – تبقّى $1 %"
+		],
+		[
+			"^\\(bei ([\\d.,  ]+) h\\)$",
+			"(عند $1 ساعة)"
+		],
+		[
+			"^Gelesen (.+)\\.$",
+			"قُرئ في $1."
+		],
+		[
+			"^(\\d+) U/min$",
+			"$1 دورة/دقيقة"
+		],
+		[
+			"^Der Langtest liest die ganze Platte (\\S+) – bei großen Platten viele Stunden\\. Die Box bleibt dabei nutzbar, die Platte ist etwas langsamer\\.$",
+			"يقرأ الاختبار الطويل القرص $1 كاملًا – ساعات طويلة للأقراص الكبيرة. يبقى الجهاز قابلًا للاستخدام والقرص أبطأ قليلًا."
+		],
+		[
+			"^Selbsttest: (.*)$",
+			"الاختبار الذاتي: $1"
 		]
 	],
 	"words": [

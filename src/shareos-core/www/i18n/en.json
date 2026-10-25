@@ -1147,7 +1147,61 @@
 		"MEIN VERBRAUCH": "MY USAGE",
 		"BELEGUNG": "USED",
 		"FREI": "FREE",
-		"LIMIT": "LIMIT"
+		"LIMIT": "LIMIT",
+		"GESUNDHEIT": "HEALTH",
+		"Gesundheit": "Health",
+		"SELBSTTEST": "SELF-TEST",
+		"GUT": "GOOD",
+		"ACHTUNG": "CAUTION",
+		"KRITISCH": "CRITICAL",
+		"SCHACHT": "BAY",
+		"Neu lesen": "Read again",
+		"Jetzt lesen": "Read now",
+		"Kurztest": "Short test",
+		"Langtest": "Long test",
+		"Test abbrechen": "Abort test",
+		"Alle Werte": "All values",
+		"Werte ausblenden": "Hide values",
+		"Temperatur": "Temperature",
+		"Betriebszeit": "Running time",
+		"Einschaltvorgänge": "Power cycles",
+		"Anläufe des Motors": "Motor start-ups",
+		"Umgelagerte Sektoren": "Reallocated sectors",
+		"Schwebende Sektoren": "Pending sectors",
+		"Nicht lesbare Sektoren": "Unreadable sectors",
+		"Übertragungsfehler (CRC)": "Transfer errors (CRC)",
+		"Fehlerprotokoll": "Error log",
+		"SCHLECHTESTER": "WORST",
+		"SCHWELLE": "THRESHOLD",
+		"ROHWERT": "RAW VALUE",
+		"FRÜHER": "EARLIER",
+		"FEHLGESCHLAGEN": "FAILED",
+		"SELBSTTEST NACH ZEITPLAN": "SCHEDULED SELF-TEST",
+		"ALLE PLATTEN IN DEN SCHÄCHTEN": "ALL DISKS IN THE BAYS",
+		"SO WIRD BEWERTET": "HOW IT IS RATED",
+		"Kurztest jeden Sonntag (3:30 Uhr)": "Short test every Sunday (3:30 am)",
+		"Langtest am 1. jedes Monats (3:30 Uhr)": "Long test on the 1st of every month (3:30 am)",
+		"Selbsttest läuft": "self-test running",
+		"Langtest starten?": "Start the long test?",
+		"Selbsttest gestartet.": "Self-test started.",
+		"Selbsttest abgebrochen.": "Self-test aborted.",
+		"Zeitplan gespeichert.": "Schedule saved.",
+		"Keine Auffälligkeiten.": "Nothing unusual.",
+		"Lebensdauer der SSD": "SSD life",
+		"Noch kein Selbsttest gelaufen.": "No self-test has run yet.",
+		"Daten sichern und die Platte bald tauschen.": "Back up the data and replace the disk soon.",
+		"SMART der Platten und SSDs": "SMART of the disks and SSDs",
+		"Keine Platte erkannt.": "No disk found.",
+		"SMART noch nicht gelesen. Beim Lesen wacht die Platte auf.": "SMART not read yet. Reading wakes the disk up.",
+		"Die Platte schläft – die Werte kommen beim nächsten Aufwachen.": "The disk is asleep – the values come when it next wakes up.",
+		"Diese Platte liefert keine SMART-Werte.": "This disk gives no SMART values.",
+		"Dieser USB-Adapter reicht keine SMART-Werte weiter.": "This USB adapter does not pass on SMART values.",
+		"Die Platte meldet selbst: Ausfall droht (SMART-Gesamtbewertung FEHLER).": "The disk itself reports: failure is imminent (SMART overall assessment FAILED).",
+		"Der letzte Selbsttest ist fehlgeschlagen.": "The last self-test failed.",
+		"Die Platte meldet selbst einen Ausfall, ein Wert liegt unter der Schwelle des Herstellers, ein Selbsttest schlug fehl, über 100 umgelagerte oder über 10 schwebende Sektoren, SSD mit höchstens 10 % Lebensdauer, 60 °C und mehr.": "The disk itself reports a failure, a value is below the manufacturer's threshold, a self-test failed, more than 100 reallocated or more than 10 pending sectors, an SSD with 10 % life or less, 60 °C and above.",
+		"Einzelne umgelagerte, schwebende oder nicht lesbare Sektoren, Übertragungsfehler, Einträge im Fehlerprotokoll, SSD mit höchstens 20 % Lebensdauer, ab 55 °C.": "A few reallocated, pending or unreadable sectors, transfer errors, entries in the error log, an SSD with 20 % life or less, from 55 °C.",
+		"Der Kurztest prüft die Elektronik und einen Teil der Oberfläche, der Langtest liest die ganze Platte (bei großen Platten viele Stunden; die Platte bleibt dabei wach). Das Ergebnis erscheint hier und als Meldung, wenn etwas auffällt.": "The short test checks the electronics and part of the surface, the long test reads the whole disk (many hours for large disks; the disk stays awake meanwhile). The result shows here and as a message when something is wrong.",
+		"ohne Fehler": "without errors"
 	},
 	"patterns": [
 		[
@@ -2265,6 +2319,98 @@
 		[
 			"^Laufwerk (\\d+) % belegt$",
 			"Drive $1 % used"
+		],
+		[
+			"^([\\d.,  ]+) Sektoren wurden schon ersetzt \\(umgelagert\\)\\.$",
+			"$1 sectors have already been replaced (reallocated)."
+		],
+		[
+			"^([\\d.,  ]+) Sektoren sind unsicher \\(schwebend\\) – sie werden beim nächsten Schreiben geprüft\\.$",
+			"$1 sectors are uncertain (pending) – they are checked on the next write."
+		],
+		[
+			"^([\\d.,  ]+) Sektoren waren nicht lesbar\\.$",
+			"$1 sectors could not be read."
+		],
+		[
+			"^([\\d.,  ]+) Übertragungsfehler \\(CRC\\) – meist Anschluss oder Kabel, nicht die Platte selbst\\.$",
+			"$1 transfer errors (CRC) – usually the connector or cable, not the disk itself."
+		],
+		[
+			"^([\\d.,  ]+) Einträge im Fehlerprotokoll der Platte\\.$",
+			"$1 entries in the disk's error log."
+		],
+		[
+			"^Die SSD ist fast verbraucht: noch (\\d+) % Lebensdauer\\.$",
+			"The SSD is almost worn out: $1 % life left."
+		],
+		[
+			"^Die SSD nutzt sich ab: noch (\\d+) % Lebensdauer\\.$",
+			"The SSD is wearing: $1 % life left."
+		],
+		[
+			"^Sehr warm: (\\d+) °C\\.$",
+			"Very warm: $1 °C."
+		],
+		[
+			"^Warm: (\\d+) °C\\.$",
+			"Warm: $1 °C."
+		],
+		[
+			"^Wert (\\S+) unter der Schwelle des Herstellers$",
+			"Value $1 below the manufacturer's threshold"
+		],
+		[
+			"^Wert (\\S+) war früher unter der Schwelle$",
+			"Value $1 was below the threshold earlier"
+		],
+		[
+			"^([\\d.,  ]+) Einträge$",
+			"$1 entries"
+		],
+		[
+			"^(\\d+) °C \\(höchste: (\\d+) °C\\)$",
+			"$1 °C (highest: $2 °C)"
+		],
+		[
+			"^([\\d.,  ]+) Tage \\(([\\d.,  ]+) h\\)$",
+			"$1 days ($2 h)"
+		],
+		[
+			"^([\\d.,  ]+) Jahre \\(([\\d.,  ]+) h\\)$",
+			"$1 years ($2 h)"
+		],
+		[
+			"^noch (\\d+) %$",
+			"$1 % left"
+		],
+		[
+			"^SSD noch (\\d+) %$",
+			"SSD $1 % left"
+		],
+		[
+			"^Läuft – noch (\\d+) %$",
+			"Running – $1 % left"
+		],
+		[
+			"^\\(bei ([\\d.,  ]+) h\\)$",
+			"(at $1 h)"
+		],
+		[
+			"^Gelesen (.+)\\.$",
+			"Read $1."
+		],
+		[
+			"^(\\d+) U/min$",
+			"$1 rpm"
+		],
+		[
+			"^Der Langtest liest die ganze Platte (\\S+) – bei großen Platten viele Stunden\\. Die Box bleibt dabei nutzbar, die Platte ist etwas langsamer\\.$",
+			"The long test reads the whole disk $1 – many hours for large disks. The box stays usable, the disk is a bit slower."
+		],
+		[
+			"^Selbsttest: (.*)$",
+			"Self-test: $1"
 		]
 	],
 	"words": [

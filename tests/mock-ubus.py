@@ -43,7 +43,28 @@ DISK = lambda n, model, serial: {
         {'name': n + '1', 'type': 'part', 'size': 1073741824, 'fstype': 'swap', 'label': 'shareos-swap'},
         {'name': n + '2', 'type': 'part', 'size': 3999713288192, 'fstype': 'linux_raid_member', 'label': 'shareos:daten',
          'children': [{'name': 'md0', 'type': 'raid1', 'fstype': 'ext4', 'label': 'daten', 'mountpoint': '/mnt/daten'}]}],
-    'smart': {'passed': True, 'temperature': 38, 'power_on_hours': 18234, 'reallocated': 0, 'pending': 0, 'uncorrectable': 0}}
+    'smart': SMART.get(n)}
+
+ATTR = lambda i, name, v, w, t, raw, wf='': {'id': i, 'name': name, 'value': v, 'worst': w, 'thresh': t, 'raw': raw, 'when_failed': wf, 'prefail': i in (1, 5)}
+# SMART values as the rpcd plugin gives them (smart_parse): sda healthy, sdb with warnings
+SMART = {
+    'sda': {'time': int(time.time()) - 600, 'passed': True, 'temperature': 38, 'temperature_max': 47, 'power_on_hours': 18234, 'power_cycles': 61,
+            'start_stops': 412, 'reallocated': 0, 'pending': 0, 'uncorrectable': 0, 'crc_errors': 0, 'error_count': 0, 'model': 'WDC WD40EFPX-68C6CN0',
+            'serial': 'WD-WX12A3456789', 'firmware': '81.00A81', 'rpm': 5400, 'ssd': False, 'life_left': None, 'written': None,
+            'test_running': None, 'test_minutes': {'short': 2, 'long': 461},
+            'last_test': {'type': 'Short offline', 'status': 'Completed without error', 'passed': True, 'hours': 18100},
+            'attributes': [ATTR(1, 'Raw_Read_Error_Rate', 200, 200, 51, '0'), ATTR(5, 'Reallocated_Sector_Ct', 200, 200, 140, '0'),
+                           ATTR(9, 'Power_On_Hours', 76, 76, 0, '18234'), ATTR(194, 'Temperature_Celsius', 112, 103, 0, '38 (Min/Max 18/47)'),
+                           ATTR(197, 'Current_Pending_Sector', 200, 200, 0, '0'), ATTR(199, 'UDMA_CRC_Error_Count', 200, 200, 0, '0')],
+            'rating': 'good', 'reasons': []},
+    'sdb': {'time': int(time.time()) - 600, 'passed': True, 'temperature': 41, 'temperature_max': 52, 'power_on_hours': 18190, 'power_cycles': 60,
+            'start_stops': 409, 'reallocated': 8, 'pending': 2, 'uncorrectable': 0, 'crc_errors': 14, 'error_count': 3, 'model': 'WDC WD40EFPX-68C6CN0',
+            'serial': 'WD-WX98B7654321', 'firmware': '81.00A81', 'rpm': 5400, 'ssd': False, 'life_left': None, 'written': None,
+            'test_running': None, 'test_minutes': {'short': 2, 'long': 461}, 'last_test': None,
+            'attributes': [ATTR(5, 'Reallocated_Sector_Ct', 199, 199, 140, '8'), ATTR(197, 'Current_Pending_Sector', 200, 200, 0, '2'),
+                           ATTR(199, 'UDMA_CRC_Error_Count', 200, 200, 0, '14'), ATTR(200, 'Multi_Zone_Error_Rate', 100, 1, 51, '0', 'past')],
+            'rating': 'warn', 'reasons': ['attr_past:Multi_Zone_Error_Rate', 'reallocated', 'pending', 'crc', 'errors']},
+}
 
 
 def info():
@@ -82,7 +103,7 @@ def storage():
                     'health': 'UU', 'sync': {'action': 'recovery' if STATE.get('repair_t') else 'resync', 'percent': pct, 'finish': '412.5min'}}},
         'volumes': [{'name': 'daten', 'uuid': '1b4e28ba-2fa1-11d2-883f-0016d3cca427', 'fstype': 'ext4', 'layout': 'mirror', 'enabled': True,
                      'device': '/dev/md0', 'mountpoint': '/mnt/daten', 'mounted': True, 'size': 3936 << 30, 'used': 1210 << 30, 'avail': 2726 << 30}],
-        'spindown': 20, 'job': STATE['job']}
+        'spindown': 20, 'smart_schedule': STATE.get('smart_schedule', ''), 'job': STATE['job']}
 
 
 SERVICES = [('board', 'Gerätesteuerung', 'Lüfter, Temperatur, Taster, MCU-Uhr', True), ('crond', 'Zeitplaner', 'cron', False),
@@ -682,6 +703,20 @@ def call(obj, method, args):
     if obj == 'shareos.storage':
         if method == 'status':
             return storage()
+        if method == 'smart_test':
+            sm = SMART.get(args.get('disk'))
+            if not sm:
+                return {'error': 'unknown disk'}
+            sm['test_running'] = None if args.get('type') == 'abort' else {'remaining': 90, 'text': 'in progress'}
+            return sm
+        if method == 'smart_schedule':
+            STATE['smart_schedule'] = args.get('mode', '')
+            return {'ok': True, 'mode': STATE['smart_schedule']}
+        if method == 'smart':
+            sm = SMART.get(args.get('disk'))
+            if sm and sm['test_running']:
+                sm['test_running']['remaining'] = max(0, sm['test_running']['remaining'] - 10)
+            return sm or {'error': 'no SMART data'}
         if method == 'usb_eject':
             STATE['usb_gone'] = True
         if method == 'repair':
