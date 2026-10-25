@@ -399,7 +399,7 @@ Needs a drive with ext4 or Btrfs, the users **anna** and **lisa** (role user, "D
 10. Over SMB, access through a group: put lisa in a group `familie`, give the share `fotos` to the group (`@familie`) only and remove lisa as a user of it. Sign in from macOS (Finder) as lisa: the share opens (before ksmbd-tools 3.5.3 the Finder said "the original item can't be found").
 ## 14n. Tailscale and large system apps on the drive (0.2.0-beta.7)
 
-Needs a Tailscale account (free), a phone or computer with Tailscale, the file `tailscaled-1.98.8.sapp` (release of the firmware) and an app with the permission `tailscale` (ShareOS-Apps).
+Needs a Tailscale account (free), a phone or computer with Tailscale, the file `tailscaled-<version>.sapp` (release of the firmware) and an app with the permission `tailscale` (ShareOS-Apps).
 
 1. Before the update note `df -h /` in the terminal. After the update (restart) the box moves large system apps (FFmpeg, Transmission, MiniDLNA, OpenVPN) to the drive: `ls -l /opt/shareos/sysapps` shows `-> /mnt/<drive>/.shareos/sysapps/…` for them, nano/htop/bash stay folders. `df -h /` shows more free. Transmission, media server and VPN work as before.
 2. Apps → Store → system apps → install **tailscaled**: `ls -l /opt/shareos/sysapps/tailscaled` is a link to the drive, `df -h /` hardly changes. Without anything else the daemon runs: `ps | grep [t]ailscaled` (from 0.2.0-beta.9).

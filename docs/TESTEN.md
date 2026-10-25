@@ -403,7 +403,7 @@ Braucht ein Laufwerk mit ext4 oder Btrfs, die Benutzer **anna** und **lisa** (Ro
 10. Per SMB, Zugriff über eine Gruppe: lisa in eine Gruppe `familie` aufnehmen, die Freigabe `fotos` nur der Gruppe (`@familie`) geben und lisa dort als Benutzer entfernen. Am Mac (Finder) als lisa anmelden: die Freigabe öffnet sich (vor ksmbd-tools 3.5.3 meldete der Finder „Das Original wurde nicht gefunden“).
 ## 14n. Tailscale und große System-Apps auf dem Laufwerk (0.2.0-beta.7)
 
-Braucht ein Tailscale-Konto (kostenlos), ein Handy oder einen Rechner mit Tailscale und die Datei `tailscaled-1.98.8.sapp` (Release der Firmware) sowie eine App mit der Berechtigung `tailscale` (ShareOS-Apps).
+Braucht ein Tailscale-Konto (kostenlos), ein Handy oder einen Rechner mit Tailscale und die Datei `tailscaled-<version>.sapp` (Release der Firmware) sowie eine App mit der Berechtigung `tailscale` (ShareOS-Apps).
 
 1. Vor dem Update im Terminal `df -h /` merken. Nach dem Update (Neustart) zieht die Box große System-Apps (FFmpeg, Transmission, MiniDLNA, OpenVPN) aufs Laufwerk: `ls -l /opt/shareos/sysapps` zeigt bei ihnen `-> /mnt/<laufwerk>/.shareos/sysapps/…`, nano/htop/bash bleiben Ordner. `df -h /` zeigt mehr frei. Transmission, Medienserver und VPN laufen wie vorher.
 2. Apps → Store → System-Apps → **tailscaled** installieren: `ls -l /opt/shareos/sysapps/tailscaled` ist ein Link aufs Laufwerk, `df -h /` ändert sich kaum. Ohne weiteres Zutun läuft der Dienst: `ps | grep [t]ailscaled` (ab 0.2.0-beta.9).

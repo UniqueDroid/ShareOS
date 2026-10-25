@@ -87,7 +87,7 @@ a() { local m=$1 x=${2:-'{}'}; x=$(echo "$x" | python3 -c "import json,sys; d=js
 check "user account: no access" "run \"ubus call shareos.appautobrr status '{\\\"grant\\\":\\\"$GA\\\"}'\" | js \"d.get('error')=='no access'\""
 check "app without the permission: no access" "run \"ubus call shareos.appautobrr status '{\\\"grant\\\":\\\"$GO\\\"}'\" | js \"d.get('error')=='no access'\""
 check "status for the admin app" "a status | js \"d['ready'] and d['port']==7474 and d['user']=='admin' and d['drive']\""
-check "api: autobrr's config with the key of ShareOS" "a api '{\"method\":\"GET\",\"path\":\"/api/config\"}' | js \"d['status']==200 and d['data']['version']=='1.84.0'\""
+check "api: autobrr's config with the key of ShareOS" "a api '{\"method\":\"GET\",\"path\":\"/api/config\"}' | js \"d['status']==200 and d['data']['version']=='1.89.0'\""
 check "api: create a filter and list it" "a api '{\"method\":\"POST\",\"path\":\"/api/filters\",\"body\":{\"name\":\"Test-Filter\",\"enabled\":false,\"resolutions\":[],\"codecs\":[],\"sources\":[],\"containers\":[]}}' | js \"d['status'] in (200,201)\" && a api '{\"method\":\"GET\",\"path\":\"/api/filters\"}' | js \"'Test-Filter' in [f['name'] for f in d['data']]\""
 check "api: keys and sign-in stay closed, no other paths" "a api '{\"method\":\"GET\",\"path\":\"/api/keys\"}' | grep -q 'not allowed' && a api '{\"method\":\"GET\",\"path\":\"/api/../etc\"}' | grep -q 'invalid path' && a api '{\"method\":\"GET\",\"path\":\"/x\"}' | grep -q 'invalid path' && a api '{\"method\":\"TRACE\",\"path\":\"/api/config\"}' | grep -q 'invalid method'"
 check "accounts for the hand-over" "a accounts | js \"[x['name'] for x in d['accounts']]==['root','anna']\""
