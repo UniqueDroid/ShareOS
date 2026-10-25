@@ -1204,7 +1204,26 @@
 		"ohne Fehler": "بلا أخطاء",
 		"SCHLÄFT": "في السكون",
 		"Die Platte schläft (Ruhezustand)": "القرص في وضع السكون (الاستعداد)",
-		"Die Platte läuft": "القرص يعمل"
+		"Die Platte läuft": "القرص يعمل",
+		"Papierkorb": "سلة المحذوفات",
+		"PAPIERKORB": "سلة المحذوفات",
+		"Endgültig löschen": "حذف نهائي",
+		"Papierkorb leeren": "إفراغ السلة",
+		"Papierkorb leeren?": "إفراغ السلة؟",
+		"HERKUNFT": "المصدر",
+		"GELÖSCHT": "حُذف",
+		"In den Papierkorb": "نقل إلى السلة",
+		"In den Papierkorb verschoben.": "نُقل إلى السلة.",
+		"Leeren": "إفراغ",
+		"Papierkorb geleert.": "أُفرغت السلة.",
+		"Endgültig gelöscht.": "حُذف نهائيًا.",
+		"Papierkorb gespeichert.": "تم حفظ إعدادات السلة.",
+		"Der Papierkorb ist leer.": "السلة فارغة.",
+		"nie (nur von Hand leeren)": "أبدًا (الإفراغ يدويًا فقط)",
+		"Gelöschtes im Dateibrowser erst in den Papierkorb legen": "وضع ما يُحذف في مستعرض الملفات في السلة أولًا",
+		"AUTOMATISCH ENDGÜLTIG LÖSCHEN NACH": "الحذف النهائي تلقائيًا بعد",
+		"Das lässt sich nicht rückgängig machen.": "لا يمكن التراجع عن ذلك.",
+		"Jeder Ordner hat seinen eigenen Papierkorb: der persönliche Ordner, jede Freigabe, jedes Laufwerk. Er liegt auf derselben Platte und zählt zum Speicherlimit. Gilt für den Dateibrowser dieser Oberfläche – über SMB vom PC oder in Apps Gelöschtes ist sofort weg; dafür gibt es die Snapshots.": "لكل مجلد سلته الخاصة: المجلد الشخصي وكل مشاركة وكل قرص. توجد على القرص نفسه وتُحسب ضمن حد التخزين. تنطبق على مستعرض الملفات في هذه الواجهة – ما يُحذف عبر SMB من الحاسوب أو في التطبيقات يختفي فورًا؛ ولذلك توجد اللقطات."
 	},
 	"patterns": [
 		[
@@ -2414,6 +2433,34 @@
 		[
 			"^Selbsttest: (.*)$",
 			"الاختبار الذاتي: $1"
+		],
+		[
+			"^(\\d+) Tagen$",
+			"$1 يومًا"
+		],
+		[
+			"^löscht nach (\\d+) Tagen$",
+			"يحذف بعد $1 يومًا"
+		],
+		[
+			"^(\\d+) Eintrag/Einträge in den Papierkorb\\?$",
+			"نقل $1 عنصر إلى السلة؟"
+		],
+		[
+			"^(.+) – lässt sich im Papierkorb wiederherstellen\\.$",
+			"$1 – يمكن استعادته من السلة."
+		],
+		[
+			"^Endgültig löschen – (\\d+) Eintrag/Einträge$",
+			"حذف $1 عنصر نهائيًا؟"
+		],
+		[
+			"^(\\d+) Eintrag/Einträge wiederhergestellt\\.$",
+			"تمت استعادة $1 عنصر."
+		],
+		[
+			"^Papierkorb: (.*)$",
+			"السلة: $1"
 		]
 	],
 	"words": [

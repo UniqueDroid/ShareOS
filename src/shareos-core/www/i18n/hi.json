@@ -1204,7 +1204,26 @@
 		"ohne Fehler": "बिना त्रुटि",
 		"SCHLÄFT": "स्लीप में",
 		"Die Platte schläft (Ruhezustand)": "डिस्क स्लीप में है (स्टैंडबाय)",
-		"Die Platte läuft": "डिस्क चल रही है"
+		"Die Platte läuft": "डिस्क चल रही है",
+		"Papierkorb": "रीसायकल बिन",
+		"PAPIERKORB": "रीसायकल बिन",
+		"Endgültig löschen": "स्थायी रूप से हटाएँ",
+		"Papierkorb leeren": "रीसायकल बिन खाली करें",
+		"Papierkorb leeren?": "रीसायकल बिन खाली करें?",
+		"HERKUNFT": "मूल स्थान",
+		"GELÖSCHT": "हटाया गया",
+		"In den Papierkorb": "रीसायकल बिन में डालें",
+		"In den Papierkorb verschoben.": "रीसायकल बिन में डाला गया।",
+		"Leeren": "खाली करें",
+		"Papierkorb geleert.": "रीसायकल बिन खाली हुआ।",
+		"Endgültig gelöscht.": "स्थायी रूप से हटाया गया।",
+		"Papierkorb gespeichert.": "रीसायकल बिन सहेजा गया।",
+		"Der Papierkorb ist leer.": "रीसायकल बिन खाली है।",
+		"nie (nur von Hand leeren)": "कभी नहीं (केवल हाथ से खाली करें)",
+		"Gelöschtes im Dateibrowser erst in den Papierkorb legen": "फ़ाइल ब्राउज़र में हटाई गई चीज़ें पहले रीसायकल बिन में डालें",
+		"AUTOMATISCH ENDGÜLTIG LÖSCHEN NACH": "इसके बाद अपने-आप स्थायी रूप से हटाएँ",
+		"Das lässt sich nicht rückgängig machen.": "इसे पूर्ववत नहीं किया जा सकता।",
+		"Jeder Ordner hat seinen eigenen Papierkorb: der persönliche Ordner, jede Freigabe, jedes Laufwerk. Er liegt auf derselben Platte und zählt zum Speicherlimit. Gilt für den Dateibrowser dieser Oberfläche – über SMB vom PC oder in Apps Gelöschtes ist sofort weg; dafür gibt es die Snapshots.": "हर फ़ोल्डर का अपना रीसायकल बिन है: निजी फ़ोल्डर, हर शेयर, हर ड्राइव। यह उसी डिस्क पर रहता है और स्टोरेज सीमा में गिना जाता है। यह इस इंटरफ़ेस के फ़ाइल ब्राउज़र पर लागू होता है – PC से SMB या ऐप्स में हटाई गई चीज़ें तुरंत चली जाती हैं; इसके लिए स्नैपशॉट हैं।"
 	},
 	"patterns": [
 		[
@@ -2414,6 +2433,34 @@
 		[
 			"^Selbsttest: (.*)$",
 			"स्व-परीक्षण: $1"
+		],
+		[
+			"^(\\d+) Tagen$",
+			"$1 दिन"
+		],
+		[
+			"^löscht nach (\\d+) Tagen$",
+			"$1 दिन बाद हटाता है"
+		],
+		[
+			"^(\\d+) Eintrag/Einträge in den Papierkorb\\?$",
+			"$1 आइटम रीसायकल बिन में डालें?"
+		],
+		[
+			"^(.+) – lässt sich im Papierkorb wiederherstellen\\.$",
+			"$1 – रीसायकल बिन से वापस लाया जा सकता है।"
+		],
+		[
+			"^Endgültig löschen – (\\d+) Eintrag/Einträge$",
+			"$1 आइटम स्थायी रूप से हटाएँ?"
+		],
+		[
+			"^(\\d+) Eintrag/Einträge wiederhergestellt\\.$",
+			"$1 आइटम वापस लाए गए।"
+		],
+		[
+			"^Papierkorb: (.*)$",
+			"रीसायकल बिन: $1"
 		]
 	],
 	"words": [

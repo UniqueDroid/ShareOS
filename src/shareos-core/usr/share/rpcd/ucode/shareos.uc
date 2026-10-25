@@ -1520,6 +1520,7 @@ function files_list(u, root, rel, hidden) {
 	let names = lsdir(p.abs) ?? [], out = [], n = 0;
 	for (let name in sort(names)) {
 		if (!hidden && substr(name, 0, 1) == '.') continue;
+		if (name == '.shareos-trash' && p.rel == '') continue;   // the trash has its own view
 		if (++n > FILES_MAX) break;
 		let st = lstat(p.abs + '/' + name);
 		if (!st) continue;
@@ -1598,6 +1599,73 @@ function new_token() {
 	let t = '';
 	for (let i = 0; i < length(r); i++) t += sprintf('%02x', ord(r, i));
 	return t;
+}
+
+/* ---------- trash of the file browser ----------------------------------------
+ * Deleting in the file browser moves into <root>/.shareos-trash (same drive,
+ * so it is only a rename): the item as <id>, next to it <id>.json with the
+ * name, the folder it came from, the time and the account. Restore moves it
+ * back, "empty" deletes for good. What is older than shareos.files.trash_days
+ * goes when the trash of that root is used next (deleting or looking into
+ * it) – things only get there through the file browser, so no timer has to
+ * wake the disks for it. SMB and apps delete directly. */
+const TRASH = '.shareos-trash';
+
+function trash_conf() {
+	let c = cursor();
+	let d = +(c.get('shareos', 'files', 'trash_days') ?? 30);
+	return { enabled: c.get('shareos', 'files', 'trash') != '0', days: d >= 0 && d <= 365 ? d : 30 };
+}
+
+function trash_dir(p) { return p.root.path + '/' + TRASH; }
+// a path inside the trash itself: deleting there is for good
+function in_trash(rel) { return rel == TRASH || index(rel, TRASH + '/') == 0; }
+
+// move names of folder p (files_wpath) into the trash, with the rights of u
+function trash_move(u, p, names) {
+	let t = trash_dir(p);
+	let r = files_sh(u, 'mkdir -p -- ' + shq(t), p.root.share);
+	if (r.rc != 0) return { error: files_err(r) };
+	for (let n in names) {
+		let id = sprintf('%d-%s', time(), substr(new_token(), 0, 8));
+		let st = lstat(p.abs + '/' + n);
+		if (!st) return { error: 'not found: ' + n };
+		r = files_sh(u, sprintf('mv -- %s %s', shq(p.abs + '/' + n), shq(t + '/' + id)), p.root.share);
+		if (r.rc != 0) return { error: files_err(r) };
+		writefile(t + '/' + id + '.json', sprintf('%J', { name: n, path: p.rel, time: time(), user: u == 'root' ? 'root' : u,
+			type: st.type == 'directory' ? 'dir' : 'file', size: st.type == 'file' ? st.size : null }));
+		// the account owns its entry (it may empty its trash); in shares the group reads it
+		system(sprintf('chown %s %s 2>/dev/null; chmod %s %s', shq(acc_role(u) == 'admin' ? 'root' : u), shq(t + '/' + id + '.json'), p.root.share ? '664' : '600', shq(t + '/' + id + '.json')));
+	}
+	return { ok: true, trash: true };
+}
+
+function trash_items(p) {
+	let t = trash_dir(p), out = [];
+	for (let f in lsdir(t) ?? []) {
+		let m = match(f, /^([0-9]+-[0-9a-f]{8})\.json$/);
+		if (!m || !lstat(t + '/' + m[1])) continue;
+		let j = null;
+		try { j = json(readfile(t + '/' + f)); } catch (e) { }
+		if (type(j) != 'object' || !name_ok(j.name ?? '')) continue;
+		push(out, { id: m[1], name: j.name, path: j.path ?? '', time: +j.time, user: j.user ?? '', type: j.type ?? 'file', size: j.size });
+	}
+	return sort(out, (a, b) => b.time - a.time);
+}
+
+// delete entries older than the configured days (0 = keep until emptied)
+function trash_purge(u, p) {
+	let days = trash_conf().days;
+	if (!days) return;
+	let old = filter(trash_items(p), (x) => x.time < time() - days * 86400);
+	if (length(old))
+		files_sh(u, 'rm -rf -- ' + join(' ', map(old, (x) => shq(trash_dir(p) + '/' + x.id) + ' ' + shq(trash_dir(p) + '/' + x.id + '.json'))), p.root.share);
+}
+
+function trash_ids_ok(ids) {
+	if (type(ids) != 'array' || !length(ids)) return false;
+	for (let i in ids) if (type(i) != 'string' || !match(i, /^[0-9]+-[0-9a-f]{8}$/)) return false;
+	return true;
 }
 
 // apps with the permission "files": a grant for the apps web server
@@ -3577,7 +3645,7 @@ return {
 			call: function(req) {
 				let u = session_user(req);
 				if (!u || !files_allowed(u)) return { error: 'not allowed' };
-				return { roots: map(files_roots(u), (r) => ({ name: r.name, home: r.home, ro: !!r.ro })) };
+				return { roots: map(files_roots(u), (r) => ({ name: r.name, home: r.home, ro: !!r.ro })), trash: trash_conf() };
 			}
 		},
 
@@ -3639,7 +3707,8 @@ return {
 		},
 
 		delete: {
-			args: { root: '', path: '', names: [] },
+			// into the trash when it is on (permanent: for good)
+			args: { root: '', path: '', names: [], permanent: false },
 			call: function(req) {
 				let u = session_user(req), a = req.args;
 				if (!u || !files_allowed(u)) return { error: 'not allowed' };
@@ -3647,8 +3716,86 @@ return {
 				for (let n in a.names) if (!name_ok(n)) return { error: 'invalid name' };
 				let p = files_wpath(u, a.root, a.path, 'dir');
 				if (p.error) return p;
+				if (a.permanent !== true && trash_conf().enabled && !in_trash(p.rel) && !(p.rel == '' && index(a.names, TRASH) >= 0)) {
+					let r = trash_move(u, p, a.names);
+					trash_purge(u, files_wpath(u, a.root, '', 'dir'));
+					return r;
+				}
 				let r = files_sh(u, 'rm -rf -- ' + join(' ', map(a.names, (n) => shq(p.abs + '/' + n))), p.root.share);
 				return r.rc == 0 ? { ok: true } : { error: files_err(r) };
+			}
+		},
+
+		// the trash of a root (personal folder, share, drive)
+		trash_list: {
+			args: { root: '' },
+			call: function(req) {
+				let u = session_user(req);
+				if (!u || !files_allowed(u)) return { error: 'not allowed' };
+				let p = files_path(u, req.args.root, '', 'dir');
+				if (p.error) return p;
+				if (!p.root.ro) trash_purge(u, p);
+				return { ...trash_conf(), items: trash_items(p), ro: !!p.root.ro };
+			}
+		},
+
+		trash_restore: {
+			args: { root: '', ids: [] },
+			call: function(req) {
+				let u = session_user(req), a = req.args;
+				if (!u || !files_allowed(u)) return { error: 'not allowed' };
+				if (!trash_ids_ok(a.ids)) return { error: 'nothing selected' };
+				let p = files_wpath(u, a.root, '', 'dir');
+				if (p.error) return p;
+				let items = trash_items(p), t = trash_dir(p), done = [];
+				for (let id in a.ids) {
+					let it = filter(items, (x) => x.id == id)[0];
+					if (!it) return { error: 'not in the trash' };
+					// back into its folder; when that is gone, to the top
+					let d = files_wpath(u, a.root, it.path, 'dir');
+					if (d.error) d = p;
+					let dot = rindex(it.name, '.'), base = dot > 0 ? substr(it.name, 0, dot) : it.name, ext = dot > 0 ? substr(it.name, dot) : '', n = it.name;
+					for (let i = 2; lstat(d.abs + '/' + n); i++) n = base + ' (' + i + ')' + ext;
+					let r = files_sh(u, sprintf('mv -- %s %s', shq(t + '/' + id), shq(d.abs + '/' + n)), p.root.share);
+					if (r.rc != 0) return { error: files_err(r) };
+					unlink(t + '/' + id + '.json');
+					push(done, { name: n, path: d.rel });
+				}
+				return { ok: true, restored: done };
+			}
+		},
+
+		// delete for good: the given entries, or all (ids empty)
+		trash_empty: {
+			args: { root: '', ids: [] },
+			call: function(req) {
+				let u = session_user(req), a = req.args;
+				if (!u || !files_allowed(u)) return { error: 'not allowed' };
+				let p = files_wpath(u, a.root, '', 'dir');
+				if (p.error) return p;
+				let t = trash_dir(p);
+				let ids = (type(a.ids) == 'array' && length(a.ids)) ? a.ids : map(trash_items(p), (x) => x.id);
+				if (!length(ids)) return { ok: true, removed: 0 };
+				if (!trash_ids_ok(ids)) return { error: 'invalid entry' };
+				let r = files_sh(u, 'rm -rf -- ' + join(' ', map(ids, (i) => shq(t + '/' + i) + ' ' + shq(t + '/' + i + '.json'))), p.root.share);
+				return r.rc == 0 ? { ok: true, removed: length(ids) } : { error: files_err(r) };
+			}
+		},
+
+		// admins: trash on/off and how many days it keeps things (0 = until emptied)
+		trash_config: {
+			args: { enabled: true, days: 30 },
+			call: function(req) {
+				let u = session_user(req), a = req.args;
+				if (!u || acc_role(u) != 'admin') return { error: 'not allowed' };
+				let d = +a.days;
+				if (!(d >= 0 && d <= 365) || type(a.enabled) != 'bool') return { error: 'invalid value' };
+				let c = cursor();
+				if (c.get('shareos', 'files') != 'files') c.set('shareos', 'files', 'files');
+				c.set('shareos', 'files', 'trash', a.enabled ? '1' : '0');
+				c.set('shareos', 'files', 'trash_days', '' + d);
+				c.save('shareos'); c.commit('shareos');
+				return trash_conf();
 			}
 		},
 
