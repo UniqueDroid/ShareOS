@@ -1201,7 +1201,10 @@
 		"Die Platte meldet selbst einen Ausfall, ein Wert liegt unter der Schwelle des Herstellers, ein Selbsttest schlug fehl, über 100 umgelagerte oder über 10 schwebende Sektoren, SSD mit höchstens 10 % Lebensdauer, 60 °C und mehr.": "डिस्क स्वयं विफलता बताती है, कोई मान निर्माता की सीमा से नीचे है, स्व-परीक्षण विफल हुआ, 100 से अधिक पुनः आवंटित या 10 से अधिक लंबित सेक्टर, 10 % या कम आयु वाली SSD, 60 °C या अधिक।",
 		"Einzelne umgelagerte, schwebende oder nicht lesbare Sektoren, Übertragungsfehler, Einträge im Fehlerprotokoll, SSD mit höchstens 20 % Lebensdauer, ab 55 °C.": "कुछ पुनः आवंटित, लंबित या अपठनीय सेक्टर, स्थानांतरण त्रुटियाँ, त्रुटि लॉग में प्रविष्टियाँ, 20 % या कम आयु वाली SSD, 55 °C से।",
 		"Der Kurztest prüft die Elektronik und einen Teil der Oberfläche, der Langtest liest die ganze Platte (bei großen Platten viele Stunden; die Platte bleibt dabei wach). Das Ergebnis erscheint hier und als Meldung, wenn etwas auffällt.": "लघु परीक्षण इलेक्ट्रॉनिक्स और सतह के एक हिस्से की जाँच करता है, लंबा परीक्षण पूरी डिस्क पढ़ता है (बड़ी डिस्क पर कई घंटे; इस दौरान डिस्क जागी रहती है)। परिणाम यहाँ दिखता है और कुछ गड़बड़ होने पर संदेश के रूप में आता है।",
-		"ohne Fehler": "बिना त्रुटि"
+		"ohne Fehler": "बिना त्रुटि",
+		"SCHLÄFT": "स्लीप में",
+		"Die Platte schläft (Ruhezustand)": "डिस्क स्लीप में है (स्टैंडबाय)",
+		"Die Platte läuft": "डिस्क चल रही है"
 	},
 	"patterns": [
 		[

@@ -1201,7 +1201,10 @@
 		"Die Platte meldet selbst einen Ausfall, ein Wert liegt unter der Schwelle des Herstellers, ein Selbsttest schlug fehl, über 100 umgelagerte oder über 10 schwebende Sektoren, SSD mit höchstens 10 % Lebensdauer, 60 °C und mehr.": "硬盘自身报告故障、某项数值低于厂商阈值、自检失败、重映射扇区超过 100 个或待映射扇区超过 10 个、SSD 寿命不超过 10 %、温度 60 °C 及以上。",
 		"Einzelne umgelagerte, schwebende oder nicht lesbare Sektoren, Übertragungsfehler, Einträge im Fehlerprotokoll, SSD mit höchstens 20 % Lebensdauer, ab 55 °C.": "少量重映射、待映射或不可读扇区，传输错误，错误日志中有条目，SSD 寿命不超过 20 %，温度从 55 °C 起。",
 		"Der Kurztest prüft die Elektronik und einen Teil der Oberfläche, der Langtest liest die ganze Platte (bei großen Platten viele Stunden; die Platte bleibt dabei wach). Das Ergebnis erscheint hier und als Meldung, wenn etwas auffällt.": "短测试检查电子部件和部分盘面，长测试读取整个硬盘（大硬盘需要数小时，期间硬盘保持唤醒）。结果显示在此处，如有异常也会发送消息。",
-		"ohne Fehler": "无错误"
+		"ohne Fehler": "无错误",
+		"SCHLÄFT": "休眠",
+		"Die Platte schläft (Ruhezustand)": "硬盘正在休眠（待机）",
+		"Die Platte läuft": "硬盘正在运行"
 	},
 	"patterns": [
 		[

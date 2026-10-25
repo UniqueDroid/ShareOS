@@ -200,8 +200,13 @@ function cmd_send(level, source, key, tde, ten, xde, xen) {
 		push(list, m);
 		again = true;
 	}
+	// the list lives in the flash: a problem that stays (checked every 10
+	// minutes) only updates its counter there once an hour; texts or the level
+	// that changed are saved at once
+	let changed = !m.saved || m.level != m.saved_level || m.text_de != m.saved_text;
+	if (again || changed || now - m.saved >= 3600) { m.saved = now; m.saved_level = m.level; m.saved_text = m.text_de; }
 	if (again) { m.delivered = now; save(list); deliver(m); }
-	else save(list);
+	else if (m.saved == now) save(list);
 	system('logger -t shareos-notify ' + shq(level + ' ' + key + ': ' + m.title_en));
 	out({ ok: true, id: m.id, sent: again });
 }

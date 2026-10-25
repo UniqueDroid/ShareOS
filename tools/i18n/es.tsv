@@ -1541,3 +1541,6 @@ P299	$1 rpm
 P300	La prueba larga lee todo el disco $1: muchas horas en discos grandes. El equipo sigue siendo utilizable; el disco va algo más lento.
 P301	Autoprueba: $1
 E1198	sin errores
+E1199	EN REPOSO
+E1200	El disco está en reposo
+E1201	El disco está en marcha

@@ -19,6 +19,8 @@ js() { python3 -c "import json,sys; d=json.loads(sys.stdin.read().strip().splitl
 
 o=$(N send warn storage test-1 'Titel' 'Title' 'Text' 'Text en'); check "send stores a message" "echo '$o' | js \"d['ok'] and d['sent']\"" "$o"
 o=$(N send warn storage test-1 'Titel' 'Title'); check "same key again: counted, not sent again" "echo '$o' | js \"d['ok'] and not d['sent']\" && N list | js \"len(d['items'])==1 and d['items'][0]['count']==2 and d['unread']==1\"" "$o"
+m1=$(stat -c %Y.%s "$R/etc/shareos/notifications.json"); sleep 1
+o=$(N send warn storage test-1 'Titel' 'Title'); check "same message again within an hour: the list in the flash is not rewritten" "[ \"\$(stat -c %Y.%s $R/etc/shareos/notifications.json)\" = '$m1' ] && N list | js \"d['items'][0]['count']==2\"" "$o"
 o=$(N send oops storage x T T); check "invalid level rejected" "echo '$o' | grep -q usage" "$o"
 N clear test-1 >/dev/null
 o=$(N send warn storage test-1 'Titel' 'Title'); check "after clear: a new message" "N list | js \"len(d['items'])==2 and d['unread']==1\"" "$o"

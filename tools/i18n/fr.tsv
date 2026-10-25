@@ -1541,3 +1541,6 @@ P299	$1 tr/min
 P300	Le test long lit tout le disque $1 – de nombreuses heures pour les gros disques. Le boîtier reste utilisable, le disque est un peu plus lent.
 P301	Autotest : $1
 E1198	sans erreur
+E1199	EN VEILLE
+E1200	Le disque est en veille
+E1201	Le disque tourne

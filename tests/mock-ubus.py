@@ -43,7 +43,7 @@ DISK = lambda n, model, serial: {
         {'name': n + '1', 'type': 'part', 'size': 1073741824, 'fstype': 'swap', 'label': 'shareos-swap'},
         {'name': n + '2', 'type': 'part', 'size': 3999713288192, 'fstype': 'linux_raid_member', 'label': 'shareos:daten',
          'children': [{'name': 'md0', 'type': 'raid1', 'fstype': 'ext4', 'label': 'daten', 'mountpoint': '/mnt/daten'}]}],
-    'smart': SMART.get(n)}
+    'smart': SMART.get(n), 'standby': n == 'sdb'}
 
 ATTR = lambda i, name, v, w, t, raw, wf='': {'id': i, 'name': name, 'value': v, 'worst': w, 'thresh': t, 'raw': raw, 'when_failed': wf, 'prefail': i in (1, 5)}
 # SMART values as the rpcd plugin gives them (smart_parse): sda healthy, sdb with warnings

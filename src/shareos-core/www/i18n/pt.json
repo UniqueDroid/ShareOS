@@ -1201,7 +1201,10 @@
 		"Die Platte meldet selbst einen Ausfall, ein Wert liegt unter der Schwelle des Herstellers, ein Selbsttest schlug fehl, über 100 umgelagerte oder über 10 schwebende Sektoren, SSD mit höchstens 10 % Lebensdauer, 60 °C und mehr.": "O disco relata uma falha, um valor está abaixo do limiar do fabricante, um autoteste falhou, mais de 100 setores realocados ou mais de 10 pendentes, SSD com 10 % de vida ou menos, 60 °C ou mais.",
 		"Einzelne umgelagerte, schwebende oder nicht lesbare Sektoren, Übertragungsfehler, Einträge im Fehlerprotokoll, SSD mit höchstens 20 % Lebensdauer, ab 55 °C.": "Alguns setores realocados, pendentes ou ilegíveis, erros de transferência, entradas no registro de erros, SSD com 20 % de vida ou menos, a partir de 55 °C.",
 		"Der Kurztest prüft die Elektronik und einen Teil der Oberfläche, der Langtest liest die ganze Platte (bei großen Platten viele Stunden; die Platte bleibt dabei wach). Das Ergebnis erscheint hier und als Meldung, wenn etwas auffällt.": "O teste curto verifica a eletrônica e parte da superfície, o teste longo lê o disco inteiro (muitas horas em discos grandes; o disco fica acordado). O resultado aparece aqui e como mensagem se algo estiver errado.",
-		"ohne Fehler": "sem erros"
+		"ohne Fehler": "sem erros",
+		"SCHLÄFT": "EM REPOUSO",
+		"Die Platte schläft (Ruhezustand)": "O disco está em repouso",
+		"Die Platte läuft": "O disco está em funcionamento"
 	},
 	"patterns": [
 		[

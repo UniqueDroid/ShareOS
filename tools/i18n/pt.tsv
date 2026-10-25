@@ -1541,3 +1541,6 @@ P299	$1 rpm
 P300	O teste longo lê o disco $1 inteiro – muitas horas em discos grandes. A caixa continua utilizável, o disco fica um pouco mais lento.
 P301	Autoteste: $1
 E1198	sem erros
+E1199	EM REPOUSO
+E1200	O disco está em repouso
+E1201	O disco está em funcionamento

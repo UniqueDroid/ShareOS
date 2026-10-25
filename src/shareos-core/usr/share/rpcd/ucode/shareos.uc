@@ -2442,6 +2442,8 @@ return {
 					if (d.type != 'disk' || !match(d.name, /^sd[a-z]$/)) continue;
 					d.usb = is_usb(d.name);
 					d.smart = d.usb ? null : smart_read(d.name, false);
+					// CHECK POWER MODE does not wake a sleeping disk
+					d.standby = d.usb ? null : !!match(sh('hdparm -C /dev/' + d.name).out, /standby/);
 					push(disks, d);
 				}
 				let c = cursor();

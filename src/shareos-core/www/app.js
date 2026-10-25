@@ -1961,7 +1961,8 @@ const fmtTestMin = (m) => (m >= 90 ? `${Math.round(m / 60)} h` : `${m} min`);
 function healthCard(d) {
 	const sm = d.smart, open = S.hOpen?.has(d.name), bay = !d.usb && d.tran !== 'usb';
 	const head = html`<div class="ph"><span class="pt">${bay ? 'SCHACHT' : 'USB'} · ${d.name}</span>
-		${sm && !sm.standby && !sm.error ? html`<span class="tag ml ${SMART_RATING[smartRating(sm)][0]}">${SMART_RATING[smartRating(sm)][1]}</span>` : ''}</div>
+		${d.standby != null ? html`<span class="tag ml">${d.standby ? 'SCHLÄFT' : 'AKTIV'}</span>` : ''}
+		${sm && !sm.standby && !sm.error ? html`<span class="tag ${d.standby != null ? '' : 'ml'} ${SMART_RATING[smartRating(sm)][0]}">${SMART_RATING[smartRating(sm)][1]}</span>` : ''}</div>
 		<div class="mut" style="font-size:13px;margin:-4px 0 12px"><span>${d.model || sm?.model || 'unbekanntes Modell'}</span> · ${fmtBytes(d.size)}${sm?.ssd ? ' · SSD' : sm?.rpm ? html` · <span>${sm.rpm} U/min</span>` : ''}${(sm?.serial || d.serial) ? ' · ' + (sm?.serial || d.serial) : ''}${sm?.firmware ? ' · ' + sm.firmware : ''}</div>`;
 	const read = html`<button class="btn sm" type="button" data-act="smart" data-disk="${d.name}">${sm ? 'Neu lesen' : 'Jetzt lesen'}</button>`;
 	if (!sm || sm.standby || sm.error) return html`<div class="panel">${head}
@@ -2085,7 +2086,7 @@ function diskCard(st, d, running) {
 	return html`<div class="card">
 		<div class="icon">${svg(d.rm || d.tran === 'usb' ? I.usb : I.disk)}<span class="dot ${sm && !sm.standby && !sm.error && smartRating(sm) !== 'good' ? 'warn' : 'up'}"></span></div>
 		<div class="info">
-			<div class="name">${d.usb || d.tran === 'usb' ? 'USB' : 'Schacht'} · ${d.name}</div>
+			<div class="name">${d.usb || d.tran === 'usb' ? 'USB' : 'Schacht'} · ${d.name}${d.standby ? html` <span class="tag">SCHLÄFT</span>` : ''}</div>
 			<div class="desc">${d.model || 'unbekanntes Modell'} · ${fmtBytes(d.size)}${d.serial ? ' · ' + d.serial : ''}</div>
 			${d.usb ? usbLines(st, d) : html`<div class="desc" style="margin-top:8px">${smartLine(sm)}</div>`}
 			<div class="ip">${use.txt}</div>

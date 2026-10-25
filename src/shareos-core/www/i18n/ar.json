@@ -1201,7 +1201,10 @@
 		"Die Platte meldet selbst einen Ausfall, ein Wert liegt unter der Schwelle des Herstellers, ein Selbsttest schlug fehl, über 100 umgelagerte oder über 10 schwebende Sektoren, SSD mit höchstens 10 % Lebensdauer, 60 °C und mehr.": "يُبلغ القرص عن عطل، أو قيمة أقل من عتبة الشركة المصنعة، أو فشل اختبار ذاتي، أو أكثر من 100 قطاع معاد تخصيصه أو أكثر من 10 قطاعات معلّقة، أو SSD بعمر 10 % أو أقل، أو 60 °C فأكثر.",
 		"Einzelne umgelagerte, schwebende oder nicht lesbare Sektoren, Übertragungsfehler, Einträge im Fehlerprotokoll, SSD mit höchstens 20 % Lebensdauer, ab 55 °C.": "قطاعات قليلة معاد تخصيصها أو معلّقة أو غير مقروءة، أخطاء نقل، إدخالات في سجل الأخطاء، SSD بعمر 20 % أو أقل، ابتداءً من 55 °C.",
 		"Der Kurztest prüft die Elektronik und einen Teil der Oberfläche, der Langtest liest die ganze Platte (bei großen Platten viele Stunden; die Platte bleibt dabei wach). Das Ergebnis erscheint hier und als Meldung, wenn etwas auffällt.": "يفحص الاختبار القصير الإلكترونيات وجزءًا من السطح، ويقرأ الاختبار الطويل القرص كله (ساعات طويلة للأقراص الكبيرة؛ يبقى القرص مستيقظًا خلالها). تظهر النتيجة هنا وكرسالة عند وجود مشكلة.",
-		"ohne Fehler": "بلا أخطاء"
+		"ohne Fehler": "بلا أخطاء",
+		"SCHLÄFT": "في السكون",
+		"Die Platte schläft (Ruhezustand)": "القرص في وضع السكون (الاستعداد)",
+		"Die Platte läuft": "القرص يعمل"
 	},
 	"patterns": [
 		[
