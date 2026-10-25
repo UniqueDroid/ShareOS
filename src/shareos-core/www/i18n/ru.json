@@ -1147,7 +1147,64 @@
 		"MEIN VERBRAUCH": "МОЁ ИСПОЛЬЗОВАНИЕ",
 		"BELEGUNG": "ЗАНЯТО",
 		"FREI": "СВОБОДНО",
-		"LIMIT": "ЛИМИТ"
+		"LIMIT": "ЛИМИТ",
+		"GESUNDHEIT": "СОСТОЯНИЕ",
+		"Gesundheit": "Состояние",
+		"SELBSTTEST": "САМОТЕСТ",
+		"GUT": "ХОРОШО",
+		"ACHTUNG": "ВНИМАНИЕ",
+		"KRITISCH": "КРИТИЧНО",
+		"SCHACHT": "ОТСЕК",
+		"Neu lesen": "Прочитать снова",
+		"Jetzt lesen": "Прочитать сейчас",
+		"Kurztest": "Короткий тест",
+		"Langtest": "Длинный тест",
+		"Test abbrechen": "Прервать тест",
+		"Alle Werte": "Все значения",
+		"Werte ausblenden": "Скрыть значения",
+		"Temperatur": "Температура",
+		"Betriebszeit": "Время работы",
+		"Einschaltvorgänge": "Включения",
+		"Anläufe des Motors": "Запуски двигателя",
+		"Umgelagerte Sektoren": "Переназначенные секторы",
+		"Schwebende Sektoren": "Нестабильные секторы",
+		"Nicht lesbare Sektoren": "Нечитаемые секторы",
+		"Übertragungsfehler (CRC)": "Ошибки передачи (CRC)",
+		"Fehlerprotokoll": "Журнал ошибок",
+		"SCHLECHTESTER": "ХУДШЕЕ",
+		"SCHWELLE": "ПОРОГ",
+		"ROHWERT": "СЫРОЕ ЗНАЧЕНИЕ",
+		"FRÜHER": "РАНЕЕ",
+		"FEHLGESCHLAGEN": "НЕУДАЧА",
+		"SELBSTTEST NACH ZEITPLAN": "САМОТЕСТ ПО РАСПИСАНИЮ",
+		"ALLE PLATTEN IN DEN SCHÄCHTEN": "ВСЕ ДИСКИ В ОТСЕКАХ",
+		"SO WIRD BEWERTET": "КАК ОЦЕНИВАЕТСЯ",
+		"Kurztest jeden Sonntag (3:30 Uhr)": "Короткий тест по воскресеньям (3:30)",
+		"Langtest am 1. jedes Monats (3:30 Uhr)": "Длинный тест 1-го числа каждого месяца (3:30)",
+		"Selbsttest läuft": "идёт самотест",
+		"Langtest starten?": "Запустить длинный тест?",
+		"Selbsttest gestartet.": "Самотест запущен.",
+		"Selbsttest abgebrochen.": "Самотест прерван.",
+		"Zeitplan gespeichert.": "Расписание сохранено.",
+		"Keine Auffälligkeiten.": "Отклонений нет.",
+		"Lebensdauer der SSD": "Ресурс SSD",
+		"Noch kein Selbsttest gelaufen.": "Самотест ещё не выполнялся.",
+		"Daten sichern und die Platte bald tauschen.": "Сохраните данные и вскоре замените диск.",
+		"SMART der Platten und SSDs": "SMART дисков и SSD",
+		"Keine Platte erkannt.": "Диски не найдены.",
+		"SMART noch nicht gelesen. Beim Lesen wacht die Platte auf.": "SMART ещё не прочитан. При чтении диск проснётся.",
+		"Die Platte schläft – die Werte kommen beim nächsten Aufwachen.": "Диск спит – значения появятся при следующем пробуждении.",
+		"Diese Platte liefert keine SMART-Werte.": "Этот диск не выдаёт значения SMART.",
+		"Dieser USB-Adapter reicht keine SMART-Werte weiter.": "Этот USB-адаптер не передаёт значения SMART.",
+		"Die Platte meldet selbst: Ausfall droht (SMART-Gesamtbewertung FEHLER).": "Диск сам сообщает: грозит отказ (общая оценка SMART: ОШИБКА).",
+		"Der letzte Selbsttest ist fehlgeschlagen.": "Последний самотест не пройден.",
+		"Die Platte meldet selbst einen Ausfall, ein Wert liegt unter der Schwelle des Herstellers, ein Selbsttest schlug fehl, über 100 umgelagerte oder über 10 schwebende Sektoren, SSD mit höchstens 10 % Lebensdauer, 60 °C und mehr.": "Диск сам сообщает об отказе, значение ниже порога производителя, самотест не пройден, более 100 переназначенных или более 10 нестабильных секторов, SSD с ресурсом 10 % и менее, 60 °C и выше.",
+		"Einzelne umgelagerte, schwebende oder nicht lesbare Sektoren, Übertragungsfehler, Einträge im Fehlerprotokoll, SSD mit höchstens 20 % Lebensdauer, ab 55 °C.": "Отдельные переназначенные, нестабильные или нечитаемые секторы, ошибки передачи, записи в журнале ошибок, SSD с ресурсом 20 % и менее, от 55 °C.",
+		"Der Kurztest prüft die Elektronik und einen Teil der Oberfläche, der Langtest liest die ganze Platte (bei großen Platten viele Stunden; die Platte bleibt dabei wach). Das Ergebnis erscheint hier und als Meldung, wenn etwas auffällt.": "Короткий тест проверяет электронику и часть поверхности, длинный читает весь диск (на больших дисках много часов; диск при этом не засыпает). Результат появится здесь и в виде сообщения, если что-то не так.",
+		"ohne Fehler": "без ошибок",
+		"SCHLÄFT": "СПИТ",
+		"Die Platte schläft (Ruhezustand)": "Диск спит (режим ожидания)",
+		"Die Platte läuft": "Диск работает"
 	},
 	"patterns": [
 		[
@@ -2265,6 +2322,98 @@
 		[
 			"^Laufwerk (\\d+) % belegt$",
 			"Диск занят на $1 %"
+		],
+		[
+			"^([\\d.,  ]+) Sektoren wurden schon ersetzt \\(umgelagert\\)\\.$",
+			"Уже заменено секторов: $1 (переназначены)."
+		],
+		[
+			"^([\\d.,  ]+) Sektoren sind unsicher \\(schwebend\\) – sie werden beim nächsten Schreiben geprüft\\.$",
+			"Нестабильных секторов: $1 – они проверяются при следующей записи."
+		],
+		[
+			"^([\\d.,  ]+) Sektoren waren nicht lesbar\\.$",
+			"Не удалось прочитать секторов: $1."
+		],
+		[
+			"^([\\d.,  ]+) Übertragungsfehler \\(CRC\\) – meist Anschluss oder Kabel, nicht die Platte selbst\\.$",
+			"Ошибок передачи (CRC): $1 – обычно разъём или кабель, а не сам диск."
+		],
+		[
+			"^([\\d.,  ]+) Einträge im Fehlerprotokoll der Platte\\.$",
+			"Записей в журнале ошибок диска: $1."
+		],
+		[
+			"^Die SSD ist fast verbraucht: noch (\\d+) % Lebensdauer\\.$",
+			"SSD почти изношен: осталось $1 % ресурса."
+		],
+		[
+			"^Die SSD nutzt sich ab: noch (\\d+) % Lebensdauer\\.$",
+			"SSD изнашивается: осталось $1 % ресурса."
+		],
+		[
+			"^Sehr warm: (\\d+) °C\\.$",
+			"Очень горячо: $1 °C."
+		],
+		[
+			"^Warm: (\\d+) °C\\.$",
+			"Тепло: $1 °C."
+		],
+		[
+			"^Wert (\\S+) unter der Schwelle des Herstellers$",
+			"Значение $1 ниже порога производителя"
+		],
+		[
+			"^Wert (\\S+) war früher unter der Schwelle$",
+			"Значение $1 ранее было ниже порога"
+		],
+		[
+			"^([\\d.,  ]+) Einträge$",
+			"Записей: $1"
+		],
+		[
+			"^(\\d+) °C \\(höchste: (\\d+) °C\\)$",
+			"$1 °C (максимум: $2 °C)"
+		],
+		[
+			"^([\\d.,  ]+) Tage \\(([\\d.,  ]+) h\\)$",
+			"$1 дн. ($2 ч)"
+		],
+		[
+			"^([\\d.,  ]+) Jahre \\(([\\d.,  ]+) h\\)$",
+			"$1 г. ($2 ч)"
+		],
+		[
+			"^noch (\\d+) %$",
+			"осталось $1 %"
+		],
+		[
+			"^SSD noch (\\d+) %$",
+			"SSD: осталось $1 %"
+		],
+		[
+			"^Läuft – noch (\\d+) %$",
+			"Выполняется – осталось $1 %"
+		],
+		[
+			"^\\(bei ([\\d.,  ]+) h\\)$",
+			"(при $1 ч)"
+		],
+		[
+			"^Gelesen (.+)\\.$",
+			"Прочитано $1."
+		],
+		[
+			"^(\\d+) U/min$",
+			"$1 об/мин"
+		],
+		[
+			"^Der Langtest liest die ganze Platte (\\S+) – bei großen Platten viele Stunden\\. Die Box bleibt dabei nutzbar, die Platte ist etwas langsamer\\.$",
+			"Длинный тест читает весь диск $1 – на больших дисках много часов. Устройство остаётся доступным, диск работает чуть медленнее."
+		],
+		[
+			"^Selbsttest: (.*)$",
+			"Самотест: $1"
 		]
 	],
 	"words": [

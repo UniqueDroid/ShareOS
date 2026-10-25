@@ -1147,7 +1147,64 @@
 		"MEIN VERBRAUCH": "MI USO",
 		"BELEGUNG": "OCUPACIÓN",
 		"FREI": "LIBRE",
-		"LIMIT": "LÍMITE"
+		"LIMIT": "LÍMITE",
+		"GESUNDHEIT": "SALUD",
+		"Gesundheit": "Salud",
+		"SELBSTTEST": "AUTOPRUEBA",
+		"GUT": "BUENO",
+		"ACHTUNG": "ATENCIÓN",
+		"KRITISCH": "CRÍTICO",
+		"SCHACHT": "BAHÍA",
+		"Neu lesen": "Volver a leer",
+		"Jetzt lesen": "Leer ahora",
+		"Kurztest": "Prueba corta",
+		"Langtest": "Prueba larga",
+		"Test abbrechen": "Cancelar prueba",
+		"Alle Werte": "Todos los valores",
+		"Werte ausblenden": "Ocultar valores",
+		"Temperatur": "Temperatura",
+		"Betriebszeit": "Tiempo de funcionamiento",
+		"Einschaltvorgänge": "Encendidos",
+		"Anläufe des Motors": "Arranques del motor",
+		"Umgelagerte Sektoren": "Sectores reasignados",
+		"Schwebende Sektoren": "Sectores pendientes",
+		"Nicht lesbare Sektoren": "Sectores ilegibles",
+		"Übertragungsfehler (CRC)": "Errores de transferencia (CRC)",
+		"Fehlerprotokoll": "Registro de errores",
+		"SCHLECHTESTER": "PEOR",
+		"SCHWELLE": "UMBRAL",
+		"ROHWERT": "VALOR BRUTO",
+		"FRÜHER": "ANTES",
+		"FEHLGESCHLAGEN": "FALLIDO",
+		"SELBSTTEST NACH ZEITPLAN": "AUTOPRUEBA PROGRAMADA",
+		"ALLE PLATTEN IN DEN SCHÄCHTEN": "TODOS LOS DISCOS DE LAS BAHÍAS",
+		"SO WIRD BEWERTET": "CÓMO SE EVALÚA",
+		"Kurztest jeden Sonntag (3:30 Uhr)": "Prueba corta cada domingo (3:30)",
+		"Langtest am 1. jedes Monats (3:30 Uhr)": "Prueba larga el día 1 de cada mes (3:30)",
+		"Selbsttest läuft": "autoprueba en curso",
+		"Langtest starten?": "¿Iniciar la prueba larga?",
+		"Selbsttest gestartet.": "Autoprueba iniciada.",
+		"Selbsttest abgebrochen.": "Autoprueba cancelada.",
+		"Zeitplan gespeichert.": "Programación guardada.",
+		"Keine Auffälligkeiten.": "Nada anómalo.",
+		"Lebensdauer der SSD": "Vida útil del SSD",
+		"Noch kein Selbsttest gelaufen.": "Aún no se ha hecho ninguna autoprueba.",
+		"Daten sichern und die Platte bald tauschen.": "Haz una copia de los datos y cambia pronto el disco.",
+		"SMART der Platten und SSDs": "SMART de discos y SSD",
+		"Keine Platte erkannt.": "No se detectó ningún disco.",
+		"SMART noch nicht gelesen. Beim Lesen wacht die Platte auf.": "SMART aún no leído. Al leer, el disco se despierta.",
+		"Die Platte schläft – die Werte kommen beim nächsten Aufwachen.": "El disco duerme: los valores llegarán cuando despierte.",
+		"Diese Platte liefert keine SMART-Werte.": "Este disco no proporciona valores SMART.",
+		"Dieser USB-Adapter reicht keine SMART-Werte weiter.": "Este adaptador USB no transmite valores SMART.",
+		"Die Platte meldet selbst: Ausfall droht (SMART-Gesamtbewertung FEHLER).": "El propio disco avisa: fallo inminente (evaluación SMART global: FALLO).",
+		"Der letzte Selbsttest ist fehlgeschlagen.": "La última autoprueba falló.",
+		"Die Platte meldet selbst einen Ausfall, ein Wert liegt unter der Schwelle des Herstellers, ein Selbsttest schlug fehl, über 100 umgelagerte oder über 10 schwebende Sektoren, SSD mit höchstens 10 % Lebensdauer, 60 °C und mehr.": "El disco avisa de un fallo, un valor está por debajo del umbral del fabricante, una autoprueba falló, más de 100 sectores reasignados o más de 10 pendientes, SSD con un 10 % de vida o menos, 60 °C o más.",
+		"Einzelne umgelagerte, schwebende oder nicht lesbare Sektoren, Übertragungsfehler, Einträge im Fehlerprotokoll, SSD mit höchstens 20 % Lebensdauer, ab 55 °C.": "Algunos sectores reasignados, pendientes o ilegibles, errores de transferencia, entradas en el registro de errores, SSD con un 20 % de vida o menos, desde 55 °C.",
+		"Der Kurztest prüft die Elektronik und einen Teil der Oberfläche, der Langtest liest die ganze Platte (bei großen Platten viele Stunden; die Platte bleibt dabei wach). Das Ergebnis erscheint hier und als Meldung, wenn etwas auffällt.": "La prueba corta comprueba la electrónica y parte de la superficie; la larga lee todo el disco (muchas horas en discos grandes; el disco permanece despierto). El resultado aparece aquí y como aviso si algo falla.",
+		"ohne Fehler": "sin errores",
+		"SCHLÄFT": "EN REPOSO",
+		"Die Platte schläft (Ruhezustand)": "El disco está en reposo",
+		"Die Platte läuft": "El disco está en marcha"
 	},
 	"patterns": [
 		[
@@ -2265,6 +2322,98 @@
 		[
 			"^Laufwerk (\\d+) % belegt$",
 			"Unidad al $1 % de uso"
+		],
+		[
+			"^([\\d.,  ]+) Sektoren wurden schon ersetzt \\(umgelagert\\)\\.$",
+			"Ya se han sustituido $1 sectores (reasignados)."
+		],
+		[
+			"^([\\d.,  ]+) Sektoren sind unsicher \\(schwebend\\) – sie werden beim nächsten Schreiben geprüft\\.$",
+			"$1 sectores son dudosos (pendientes): se comprobarán en la próxima escritura."
+		],
+		[
+			"^([\\d.,  ]+) Sektoren waren nicht lesbar\\.$",
+			"$1 sectores no se pudieron leer."
+		],
+		[
+			"^([\\d.,  ]+) Übertragungsfehler \\(CRC\\) – meist Anschluss oder Kabel, nicht die Platte selbst\\.$",
+			"$1 errores de transferencia (CRC): normalmente el conector o el cable, no el disco."
+		],
+		[
+			"^([\\d.,  ]+) Einträge im Fehlerprotokoll der Platte\\.$",
+			"$1 entradas en el registro de errores del disco."
+		],
+		[
+			"^Die SSD ist fast verbraucht: noch (\\d+) % Lebensdauer\\.$",
+			"El SSD está casi agotado: queda un $1 % de vida."
+		],
+		[
+			"^Die SSD nutzt sich ab: noch (\\d+) % Lebensdauer\\.$",
+			"El SSD se desgasta: queda un $1 % de vida."
+		],
+		[
+			"^Sehr warm: (\\d+) °C\\.$",
+			"Muy caliente: $1 °C."
+		],
+		[
+			"^Warm: (\\d+) °C\\.$",
+			"Caliente: $1 °C."
+		],
+		[
+			"^Wert (\\S+) unter der Schwelle des Herstellers$",
+			"Valor $1 por debajo del umbral del fabricante"
+		],
+		[
+			"^Wert (\\S+) war früher unter der Schwelle$",
+			"Valor $1 estuvo antes por debajo del umbral"
+		],
+		[
+			"^([\\d.,  ]+) Einträge$",
+			"$1 entradas"
+		],
+		[
+			"^(\\d+) °C \\(höchste: (\\d+) °C\\)$",
+			"$1 °C (máxima: $2 °C)"
+		],
+		[
+			"^([\\d.,  ]+) Tage \\(([\\d.,  ]+) h\\)$",
+			"$1 días ($2 h)"
+		],
+		[
+			"^([\\d.,  ]+) Jahre \\(([\\d.,  ]+) h\\)$",
+			"$1 años ($2 h)"
+		],
+		[
+			"^noch (\\d+) %$",
+			"queda un $1 %"
+		],
+		[
+			"^SSD noch (\\d+) %$",
+			"SSD: queda un $1 %"
+		],
+		[
+			"^Läuft – noch (\\d+) %$",
+			"En curso: queda un $1 %"
+		],
+		[
+			"^\\(bei ([\\d.,  ]+) h\\)$",
+			"(a las $1 h)"
+		],
+		[
+			"^Gelesen (.+)\\.$",
+			"Leído $1."
+		],
+		[
+			"^(\\d+) U/min$",
+			"$1 rpm"
+		],
+		[
+			"^Der Langtest liest die ganze Platte (\\S+) – bei großen Platten viele Stunden\\. Die Box bleibt dabei nutzbar, die Platte ist etwas langsamer\\.$",
+			"La prueba larga lee todo el disco $1: muchas horas en discos grandes. El equipo sigue siendo utilizable; el disco va algo más lento."
+		],
+		[
+			"^Selbsttest: (.*)$",
+			"Autoprueba: $1"
 		]
 	],
 	"words": [

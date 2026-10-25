@@ -1464,3 +1464,83 @@ E1141	MON UTILISATION
 E1142	OCCUPATION
 E1143	LIBRE
 E1144	LIMITE
+E1145	SANTÉ
+E1146	Santé
+E1147	AUTOTEST
+E1148	BON
+E1149	ATTENTION
+E1150	CRITIQUE
+E1151	BAIE
+E1152	Relire
+E1153	Lire maintenant
+E1154	Test court
+E1155	Test long
+E1156	Annuler le test
+E1157	Toutes les valeurs
+E1158	Masquer les valeurs
+E1159	Température
+E1160	Durée de fonctionnement
+E1161	Mises sous tension
+E1162	Démarrages du moteur
+E1163	Secteurs réalloués
+E1164	Secteurs en attente
+E1165	Secteurs illisibles
+E1166	Erreurs de transfert (CRC)
+E1167	Journal d'erreurs
+E1168	PIRE
+E1169	SEUIL
+E1170	VALEUR BRUTE
+E1171	AVANT
+E1172	ÉCHEC
+E1173	AUTOTEST PROGRAMMÉ
+E1174	TOUS LES DISQUES DES BAIES
+E1175	MODE D'ÉVALUATION
+E1176	Test court chaque dimanche (3h30)
+E1177	Test long le 1er de chaque mois (3h30)
+E1178	autotest en cours
+E1179	Lancer le test long ?
+E1180	Autotest lancé.
+E1181	Autotest annulé.
+E1182	Planification enregistrée.
+E1183	Rien d'anormal.
+E1184	Durée de vie du SSD
+E1185	Aucun autotest effectué.
+E1186	Sauvegardez les données et remplacez bientôt le disque.
+E1187	SMART des disques et SSD
+E1188	Aucun disque détecté.
+E1189	SMART pas encore lu. La lecture réveille le disque.
+E1190	Le disque dort – les valeurs arriveront à son prochain réveil.
+E1191	Ce disque ne fournit pas de valeurs SMART.
+E1192	Cet adaptateur USB ne transmet pas les valeurs SMART.
+E1193	Le disque signale lui-même une panne imminente (évaluation SMART globale : ÉCHEC).
+E1194	Le dernier autotest a échoué.
+E1195	Le disque signale lui-même une panne, une valeur est sous le seuil du fabricant, un autotest a échoué, plus de 100 secteurs réalloués ou plus de 10 en attente, SSD avec 10 % de durée de vie ou moins, 60 °C et plus.
+E1196	Quelques secteurs réalloués, en attente ou illisibles, erreurs de transfert, entrées dans le journal d'erreurs, SSD avec 20 % de durée de vie ou moins, à partir de 55 °C.
+E1197	Le test court vérifie l'électronique et une partie de la surface, le test long lit tout le disque (de nombreuses heures pour les gros disques ; le disque reste éveillé). Le résultat s'affiche ici et sous forme de message en cas de problème.
+P279	$1 secteurs ont déjà été remplacés (réalloués).
+P280	$1 secteurs sont incertains (en attente) – ils seront vérifiés à la prochaine écriture.
+P281	$1 secteurs étaient illisibles.
+P282	$1 erreurs de transfert (CRC) – généralement le connecteur ou le câble, pas le disque.
+P283	$1 entrées dans le journal d'erreurs du disque.
+P284	Le SSD est presque usé : $1 % de durée de vie restante.
+P285	Le SSD s'use : $1 % de durée de vie restante.
+P286	Très chaud : $1 °C.
+P287	Chaud : $1 °C.
+P288	Valeur $1 sous le seuil du fabricant
+P289	Valeur $1 était sous le seuil auparavant
+P290	$1 entrées
+P291	$1 °C (max : $2 °C)
+P292	$1 jours ($2 h)
+P293	$1 ans ($2 h)
+P294	$1 % restant
+P295	SSD $1 % restant
+P296	En cours – $1 % restant
+P297	(à $1 h)
+P298	Lu le $1.
+P299	$1 tr/min
+P300	Le test long lit tout le disque $1 – de nombreuses heures pour les gros disques. Le boîtier reste utilisable, le disque est un peu plus lent.
+P301	Autotest : $1
+E1198	sans erreur
+E1199	EN VEILLE
+E1200	Le disque est en veille
+E1201	Le disque tourne
