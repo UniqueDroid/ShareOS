@@ -1148,6 +1148,63 @@
 		"BELEGUNG": "उपयोग",
 		"FREI": "खाली",
 		"LIMIT": "सीमा",
+		"GESUNDHEIT": "स्वास्थ्य",
+		"Gesundheit": "स्वास्थ्य",
+		"SELBSTTEST": "स्व-परीक्षण",
+		"GUT": "अच्छा",
+		"ACHTUNG": "सावधान",
+		"KRITISCH": "गंभीर",
+		"SCHACHT": "बे",
+		"Neu lesen": "फिर से पढ़ें",
+		"Jetzt lesen": "अभी पढ़ें",
+		"Kurztest": "लघु परीक्षण",
+		"Langtest": "लंबा परीक्षण",
+		"Test abbrechen": "परीक्षण रोकें",
+		"Alle Werte": "सभी मान",
+		"Werte ausblenden": "मान छिपाएँ",
+		"Temperatur": "तापमान",
+		"Betriebszeit": "चालू समय",
+		"Einschaltvorgänge": "पावर चक्र",
+		"Anläufe des Motors": "मोटर स्टार्ट",
+		"Umgelagerte Sektoren": "पुनः आवंटित सेक्टर",
+		"Schwebende Sektoren": "लंबित सेक्टर",
+		"Nicht lesbare Sektoren": "अपठनीय सेक्टर",
+		"Übertragungsfehler (CRC)": "स्थानांतरण त्रुटियाँ (CRC)",
+		"Fehlerprotokoll": "त्रुटि लॉग",
+		"SCHLECHTESTER": "सबसे खराब",
+		"SCHWELLE": "सीमा",
+		"ROHWERT": "कच्चा मान",
+		"FRÜHER": "पहले",
+		"FEHLGESCHLAGEN": "विफल",
+		"SELBSTTEST NACH ZEITPLAN": "निर्धारित स्व-परीक्षण",
+		"ALLE PLATTEN IN DEN SCHÄCHTEN": "बे की सभी डिस्क",
+		"SO WIRD BEWERTET": "आकलन कैसे होता है",
+		"Kurztest jeden Sonntag (3:30 Uhr)": "हर रविवार लघु परीक्षण (3:30)",
+		"Langtest am 1. jedes Monats (3:30 Uhr)": "हर महीने की 1 तारीख को लंबा परीक्षण (3:30)",
+		"Selbsttest läuft": "स्व-परीक्षण चल रहा है",
+		"Langtest starten?": "लंबा परीक्षण शुरू करें?",
+		"Selbsttest gestartet.": "स्व-परीक्षण शुरू हुआ।",
+		"Selbsttest abgebrochen.": "स्व-परीक्षण रोका गया।",
+		"Zeitplan gespeichert.": "समय-सारणी सहेजी गई।",
+		"Keine Auffälligkeiten.": "कुछ असामान्य नहीं।",
+		"Lebensdauer der SSD": "SSD की आयु",
+		"Noch kein Selbsttest gelaufen.": "अभी तक कोई स्व-परीक्षण नहीं हुआ।",
+		"Daten sichern und die Platte bald tauschen.": "डेटा का बैकअप लें और डिस्क जल्द बदलें।",
+		"SMART der Platten und SSDs": "डिस्क और SSD का SMART",
+		"Keine Platte erkannt.": "कोई डिस्क नहीं मिली।",
+		"SMART noch nicht gelesen. Beim Lesen wacht die Platte auf.": "SMART अभी नहीं पढ़ा गया। पढ़ने पर डिस्क जाग जाती है।",
+		"Die Platte schläft – die Werte kommen beim nächsten Aufwachen.": "डिस्क सो रही है – मान अगली बार जागने पर आएँगे।",
+		"Diese Platte liefert keine SMART-Werte.": "यह डिस्क SMART मान नहीं देती।",
+		"Dieser USB-Adapter reicht keine SMART-Werte weiter.": "यह USB एडेप्टर SMART मान आगे नहीं भेजता।",
+		"Die Platte meldet selbst: Ausfall droht (SMART-Gesamtbewertung FEHLER).": "डिस्क स्वयं बता रही है: विफलता निकट है (SMART समग्र आकलन: विफल)।",
+		"Der letzte Selbsttest ist fehlgeschlagen.": "पिछला स्व-परीक्षण विफल रहा।",
+		"Die Platte meldet selbst einen Ausfall, ein Wert liegt unter der Schwelle des Herstellers, ein Selbsttest schlug fehl, über 100 umgelagerte oder über 10 schwebende Sektoren, SSD mit höchstens 10 % Lebensdauer, 60 °C und mehr.": "डिस्क स्वयं विफलता बताती है, कोई मान निर्माता की सीमा से नीचे है, स्व-परीक्षण विफल हुआ, 100 से अधिक पुनः आवंटित या 10 से अधिक लंबित सेक्टर, 10 % या कम आयु वाली SSD, 60 °C या अधिक।",
+		"Einzelne umgelagerte, schwebende oder nicht lesbare Sektoren, Übertragungsfehler, Einträge im Fehlerprotokoll, SSD mit höchstens 20 % Lebensdauer, ab 55 °C.": "कुछ पुनः आवंटित, लंबित या अपठनीय सेक्टर, स्थानांतरण त्रुटियाँ, त्रुटि लॉग में प्रविष्टियाँ, 20 % या कम आयु वाली SSD, 55 °C से।",
+		"Der Kurztest prüft die Elektronik und einen Teil der Oberfläche, der Langtest liest die ganze Platte (bei großen Platten viele Stunden; die Platte bleibt dabei wach). Das Ergebnis erscheint hier und als Meldung, wenn etwas auffällt.": "लघु परीक्षण इलेक्ट्रॉनिक्स और सतह के एक हिस्से की जाँच करता है, लंबा परीक्षण पूरी डिस्क पढ़ता है (बड़ी डिस्क पर कई घंटे; इस दौरान डिस्क जागी रहती है)। परिणाम यहाँ दिखता है और कुछ गड़बड़ होने पर संदेश के रूप में आता है।",
+		"ohne Fehler": "बिना त्रुटि",
+		"SCHLÄFT": "स्लीप में",
+		"Die Platte schläft (Ruhezustand)": "डिस्क स्लीप में है (स्टैंडबाय)",
+		"Die Platte läuft": "डिस्क चल रही है",
 		"Papierkorb": "रीसायकल बिन",
 		"PAPIERKORB": "रीसायकल बिन",
 		"Endgültig löschen": "स्थायी रूप से हटाएँ",
@@ -2284,6 +2341,98 @@
 		[
 			"^Laufwerk (\\d+) % belegt$",
 			"ड्राइव $1 % भरी"
+		],
+		[
+			"^([\\d.,  ]+) Sektoren wurden schon ersetzt \\(umgelagert\\)\\.$",
+			"$1 सेक्टर पहले ही बदले जा चुके हैं (पुनः आवंटित)।"
+		],
+		[
+			"^([\\d.,  ]+) Sektoren sind unsicher \\(schwebend\\) – sie werden beim nächsten Schreiben geprüft\\.$",
+			"$1 सेक्टर अनिश्चित हैं (लंबित) – अगली बार लिखते समय जाँचे जाएँगे।"
+		],
+		[
+			"^([\\d.,  ]+) Sektoren waren nicht lesbar\\.$",
+			"$1 सेक्टर पढ़े नहीं जा सके।"
+		],
+		[
+			"^([\\d.,  ]+) Übertragungsfehler \\(CRC\\) – meist Anschluss oder Kabel, nicht die Platte selbst\\.$",
+			"$1 स्थानांतरण त्रुटियाँ (CRC) – अक्सर कनेक्टर या केबल, डिस्क नहीं।"
+		],
+		[
+			"^([\\d.,  ]+) Einträge im Fehlerprotokoll der Platte\\.$",
+			"डिस्क के त्रुटि लॉग में $1 प्रविष्टियाँ।"
+		],
+		[
+			"^Die SSD ist fast verbraucht: noch (\\d+) % Lebensdauer\\.$",
+			"SSD लगभग घिस चुकी है: $1 % आयु शेष।"
+		],
+		[
+			"^Die SSD nutzt sich ab: noch (\\d+) % Lebensdauer\\.$",
+			"SSD घिस रही है: $1 % आयु शेष।"
+		],
+		[
+			"^Sehr warm: (\\d+) °C\\.$",
+			"बहुत गर्म: $1 °C।"
+		],
+		[
+			"^Warm: (\\d+) °C\\.$",
+			"गर्म: $1 °C।"
+		],
+		[
+			"^Wert (\\S+) unter der Schwelle des Herstellers$",
+			"मान $1 निर्माता की सीमा से नीचे"
+		],
+		[
+			"^Wert (\\S+) war früher unter der Schwelle$",
+			"मान $1 पहले सीमा से नीचे था"
+		],
+		[
+			"^([\\d.,  ]+) Einträge$",
+			"$1 प्रविष्टियाँ"
+		],
+		[
+			"^(\\d+) °C \\(höchste: (\\d+) °C\\)$",
+			"$1 °C (अधिकतम: $2 °C)"
+		],
+		[
+			"^([\\d.,  ]+) Tage \\(([\\d.,  ]+) h\\)$",
+			"$1 दिन ($2 घंटे)"
+		],
+		[
+			"^([\\d.,  ]+) Jahre \\(([\\d.,  ]+) h\\)$",
+			"$1 वर्ष ($2 घंटे)"
+		],
+		[
+			"^noch (\\d+) %$",
+			"$1 % शेष"
+		],
+		[
+			"^SSD noch (\\d+) %$",
+			"SSD $1 % शेष"
+		],
+		[
+			"^Läuft – noch (\\d+) %$",
+			"चल रहा है – $1 % शेष"
+		],
+		[
+			"^\\(bei ([\\d.,  ]+) h\\)$",
+			"($1 घंटे पर)"
+		],
+		[
+			"^Gelesen (.+)\\.$",
+			"पढ़ा गया $1।"
+		],
+		[
+			"^(\\d+) U/min$",
+			"$1 RPM"
+		],
+		[
+			"^Der Langtest liest die ganze Platte (\\S+) – bei großen Platten viele Stunden\\. Die Box bleibt dabei nutzbar, die Platte ist etwas langsamer\\.$",
+			"लंबा परीक्षण पूरी डिस्क $1 पढ़ता है – बड़ी डिस्क पर कई घंटे। बॉक्स इस्तेमाल योग्य रहता है, डिस्क थोड़ी धीमी रहती है।"
+		],
+		[
+			"^Selbsttest: (.*)$",
+			"स्व-परीक्षण: $1"
 		],
 		[
 			"^(\\d+) Tagen$",

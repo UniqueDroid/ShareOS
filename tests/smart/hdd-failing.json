@@ -1,0 +1,13 @@
+{"smartctl":{"version":[7,5],"exit_status":24},"device":{"name":"/dev/sda","type":"sat"},
+"model_name":"ST2000DM001","serial_number":"Z1E12345","firmware_version":"CC26","user_capacity":{"bytes":2000398934016},
+"logical_block_size":512,"rotation_rate":7200,"smart_status":{"passed":false},
+"ata_smart_data":{"self_test":{"status":{"value":249,"string":"in progress, 70% remaining","remaining_percent":70},"polling_minutes":{"short":1,"extended":220}}},
+"ata_smart_attributes":{"table":[
+{"id":5,"name":"Reallocated_Sector_Ct","value":5,"worst":5,"thresh":10,"when_failed":"now","flags":{"prefailure":true},"raw":{"value":3920,"string":"3920"}},
+{"id":187,"name":"Reported_Uncorrect","value":1,"worst":1,"thresh":0,"when_failed":"past","flags":{"prefailure":false},"raw":{"value":512,"string":"512"}},
+{"id":194,"name":"Temperature_Celsius","value":43,"worst":30,"thresh":0,"when_failed":"","flags":{"prefailure":false},"raw":{"value":57,"string":"57 (0 15 0 0 0)"}},
+{"id":197,"name":"Current_Pending_Sector","value":100,"worst":100,"thresh":0,"when_failed":"","flags":{"prefailure":false},"raw":{"value":24,"string":"24"}},
+{"id":198,"name":"Offline_Uncorrectable","value":100,"worst":100,"thresh":0,"when_failed":"","flags":{"prefailure":false},"raw":{"value":24,"string":"24"}}]},
+"power_on_time":{"hours":38000},"power_cycle_count":1200,"temperature":{"current":57},
+"ata_smart_error_log":{"summary":{"revision":1,"count":731}},
+"ata_smart_self_test_log":{"standard":{"revision":1,"table":[{"type":{"value":2,"string":"Extended offline"},"status":{"value":121,"string":"Completed: read failure","passed":false},"lifetime_hours":37990}],"count":1}}}

@@ -7,12 +7,12 @@
 #   make clean              remove build output (keeps downloads)
 #
 # Variables:
-#   BR_VERSION  buildroot release (current LTS)
+#   BR_VERSION  buildroot release (current stable)
 #   O           build directory   (default: output/<board>)
 #   DL          download cache    (default: dl/, or $BR2_DL_DIR)
 
-BR_VERSION ?= 2026.02.3
-BR_SHA256  ?= 65528a544f1e07c2f5ec487beca483bd380a6af8351a45f3649a19a0e8b63de2
+BR_VERSION ?= 2026.08.1
+BR_SHA256  ?= 38a6c152490096018720a9ade379ee1e571c9bf5f93a3657a166566945a98b0d
 BR_URL     := https://buildroot.org/downloads/buildroot-$(BR_VERSION).tar.gz
 
 TOP   := $(CURDIR)

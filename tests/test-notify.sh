@@ -19,6 +19,8 @@ js() { python3 -c "import json,sys; d=json.loads(sys.stdin.read().strip().splitl
 
 o=$(N send warn storage test-1 'Titel' 'Title' 'Text' 'Text en'); check "send stores a message" "echo '$o' | js \"d['ok'] and d['sent']\"" "$o"
 o=$(N send warn storage test-1 'Titel' 'Title'); check "same key again: counted, not sent again" "echo '$o' | js \"d['ok'] and not d['sent']\" && N list | js \"len(d['items'])==1 and d['items'][0]['count']==2 and d['unread']==1\"" "$o"
+m1=$(stat -c %Y.%s "$R/etc/shareos/notifications.json"); sleep 1
+o=$(N send warn storage test-1 'Titel' 'Title'); check "same message again within an hour: the list in the flash is not rewritten" "[ \"\$(stat -c %Y.%s $R/etc/shareos/notifications.json)\" = '$m1' ] && N list | js \"d['items'][0]['count']==2\"" "$o"
 o=$(N send oops storage x T T); check "invalid level rejected" "echo '$o' | grep -q usage" "$o"
 N clear test-1 >/dev/null
 o=$(N send warn storage test-1 'Titel' 'Title'); check "after clear: a new message" "N list | js \"len(d['items'])==2 and d['unread']==1\"" "$o"
@@ -64,6 +66,15 @@ printf 'md0 : active raid1 sdb2[1] sda2[0]\n      3906886464 blocks super 1.2 [2
 echo 40000 > "$R/tmp/sys/temp1_input"
 N check >/dev/null
 check "check: RAID complete and cool again -> resolved" "N list | js \"all(x['resolved'] for x in d['items'] if x['key'] in ('raid-md0','temp'))\""
+# SMART values with a rating (0.2.0-beta.12): reasons in the text, bad = error
+echo '{"time":1,"passed":false,"reallocated":3920,"pending":24,"crc_errors":0,"life_left":null,"rating":"bad","reasons":["failed","attr_now:Reallocated_Sector_Ct","reallocated","pending"]}' > "$R/tmp/shareos-storage/smart-sdc.json"
+echo '{"time":1,"passed":true,"ssd":true,"life_left":15,"crc_errors":3,"rating":"warn","reasons":["crc","wearing"]}' > "$R/tmp/shareos-storage/smart-sdd.json"
+echo '{"time":1,"passed":true,"rating":"good","reasons":[]}' > "$R/tmp/shareos-storage/smart-sdb.json"
+N check >/dev/null
+L=$(N list)
+check "SMART rating bad: error with the reasons" "echo '$L' | js \"any(x['key']=='smart-sdc' and x['level']=='error' and 'umgelagerte Sektoren: 3920' in x['text_de'] and 'Reallocated_Sector_Ct' in x['text_en'] for x in d['items'])\"" "$L"
+check "SMART rating warn: SSD wear and CRC" "echo '$L' | js \"any(x['key']=='smart-sdd' and x['level']=='warn' and 'noch 15 %' in x['text_de'] and 'CRC' in x['text_en'] for x in d['items'])\"" "$L"
+check "SMART good again: resolved" "echo '$L' | js \"all(x['resolved'] for x in d['items'] if x['key']=='smart-sdb')\"" "$L"
 
 echo; echo "$pass passed, $failed failed"
 [ $failed -eq 0 ]

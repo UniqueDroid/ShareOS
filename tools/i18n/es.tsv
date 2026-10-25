@@ -1464,29 +1464,109 @@ E1141	MI USO
 E1142	OCUPACIÓN
 E1143	LIBRE
 E1144	LÍMITE
-E1145	Papelera
-E1146	PAPELERA
-E1147	Eliminar definitivamente
-E1148	Vaciar papelera
-E1149	¿Vaciar la papelera?
-E1150	ORIGEN
-E1151	ELIMINADO
-E1152	Mover a la papelera
-E1153	Movido a la papelera.
-E1154	Vaciar
-E1155	Papelera vaciada.
-E1156	Eliminado definitivamente.
-E1157	Papelera guardada.
-E1158	La papelera está vacía.
-E1159	nunca (solo vaciar a mano)
-E1160	Mover primero a la papelera lo eliminado en el explorador de archivos
-E1161	ELIMINAR DEFINITIVAMENTE TRAS
-E1162	No se puede deshacer.
-E1163	Cada carpeta tiene su propia papelera: la carpeta personal, cada recurso compartido, cada unidad. Está en el mismo disco y cuenta para el límite de almacenamiento. Se aplica al explorador de archivos de esta interfaz: lo que se borra por SMB desde un PC o en apps desaparece al momento; para eso están las instantáneas.
-P279	$1 días
-P280	borra tras $1 días
-P281	¿Mover $1 elemento(s) a la papelera?
-P282	$1: se puede restaurar desde la papelera.
-P283	¿Eliminar definitivamente $1 elemento(s)?
-P284	$1 elemento(s) restaurado(s).
-P285	Papelera: $1
+E1145	SALUD
+E1146	Salud
+E1147	AUTOPRUEBA
+E1148	BUENO
+E1149	ATENCIÓN
+E1150	CRÍTICO
+E1151	BAHÍA
+E1152	Volver a leer
+E1153	Leer ahora
+E1154	Prueba corta
+E1155	Prueba larga
+E1156	Cancelar prueba
+E1157	Todos los valores
+E1158	Ocultar valores
+E1159	Temperatura
+E1160	Tiempo de funcionamiento
+E1161	Encendidos
+E1162	Arranques del motor
+E1163	Sectores reasignados
+E1164	Sectores pendientes
+E1165	Sectores ilegibles
+E1166	Errores de transferencia (CRC)
+E1167	Registro de errores
+E1168	PEOR
+E1169	UMBRAL
+E1170	VALOR BRUTO
+E1171	ANTES
+E1172	FALLIDO
+E1173	AUTOPRUEBA PROGRAMADA
+E1174	TODOS LOS DISCOS DE LAS BAHÍAS
+E1175	CÓMO SE EVALÚA
+E1176	Prueba corta cada domingo (3:30)
+E1177	Prueba larga el día 1 de cada mes (3:30)
+E1178	autoprueba en curso
+E1179	¿Iniciar la prueba larga?
+E1180	Autoprueba iniciada.
+E1181	Autoprueba cancelada.
+E1182	Programación guardada.
+E1183	Nada anómalo.
+E1184	Vida útil del SSD
+E1185	Aún no se ha hecho ninguna autoprueba.
+E1186	Haz una copia de los datos y cambia pronto el disco.
+E1187	SMART de discos y SSD
+E1188	No se detectó ningún disco.
+E1189	SMART aún no leído. Al leer, el disco se despierta.
+E1190	El disco duerme: los valores llegarán cuando despierte.
+E1191	Este disco no proporciona valores SMART.
+E1192	Este adaptador USB no transmite valores SMART.
+E1193	El propio disco avisa: fallo inminente (evaluación SMART global: FALLO).
+E1194	La última autoprueba falló.
+E1195	El disco avisa de un fallo, un valor está por debajo del umbral del fabricante, una autoprueba falló, más de 100 sectores reasignados o más de 10 pendientes, SSD con un 10 % de vida o menos, 60 °C o más.
+E1196	Algunos sectores reasignados, pendientes o ilegibles, errores de transferencia, entradas en el registro de errores, SSD con un 20 % de vida o menos, desde 55 °C.
+E1197	La prueba corta comprueba la electrónica y parte de la superficie; la larga lee todo el disco (muchas horas en discos grandes; el disco permanece despierto). El resultado aparece aquí y como aviso si algo falla.
+P279	Ya se han sustituido $1 sectores (reasignados).
+P280	$1 sectores son dudosos (pendientes): se comprobarán en la próxima escritura.
+P281	$1 sectores no se pudieron leer.
+P282	$1 errores de transferencia (CRC): normalmente el conector o el cable, no el disco.
+P283	$1 entradas en el registro de errores del disco.
+P284	El SSD está casi agotado: queda un $1 % de vida.
+P285	El SSD se desgasta: queda un $1 % de vida.
+P286	Muy caliente: $1 °C.
+P287	Caliente: $1 °C.
+P288	Valor $1 por debajo del umbral del fabricante
+P289	Valor $1 estuvo antes por debajo del umbral
+P290	$1 entradas
+P291	$1 °C (máxima: $2 °C)
+P292	$1 días ($2 h)
+P293	$1 años ($2 h)
+P294	queda un $1 %
+P295	SSD: queda un $1 %
+P296	En curso: queda un $1 %
+P297	(a las $1 h)
+P298	Leído $1.
+P299	$1 rpm
+P300	La prueba larga lee todo el disco $1: muchas horas en discos grandes. El equipo sigue siendo utilizable; el disco va algo más lento.
+P301	Autoprueba: $1
+E1198	sin errores
+E1199	EN REPOSO
+E1200	El disco está en reposo
+E1201	El disco está en marcha
+E1202	Papelera
+E1203	PAPELERA
+E1204	Eliminar definitivamente
+E1205	Vaciar papelera
+E1206	¿Vaciar la papelera?
+E1207	ORIGEN
+E1208	ELIMINADO
+E1209	Mover a la papelera
+E1210	Movido a la papelera.
+E1211	Vaciar
+E1212	Papelera vaciada.
+E1213	Eliminado definitivamente.
+E1214	Papelera guardada.
+E1215	La papelera está vacía.
+E1216	nunca (solo vaciar a mano)
+E1217	Mover primero a la papelera lo eliminado en el explorador de archivos
+E1218	ELIMINAR DEFINITIVAMENTE TRAS
+E1219	No se puede deshacer.
+E1220	Cada carpeta tiene su propia papelera: la carpeta personal, cada recurso compartido, cada unidad. Está en el mismo disco y cuenta para el límite de almacenamiento. Se aplica al explorador de archivos de esta interfaz: lo que se borra por SMB desde un PC o en apps desaparece al momento; para eso están las instantáneas.
+P302	$1 días
+P303	borra tras $1 días
+P304	¿Mover $1 elemento(s) a la papelera?
+P305	$1: se puede restaurar desde la papelera.
+P306	¿Eliminar definitivamente $1 elemento(s)?
+P307	$1 elemento(s) restaurado(s).
+P308	Papelera: $1

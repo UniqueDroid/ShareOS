@@ -1,7 +1,7 @@
 {
 	"id": "openvpn",
 	"name": "OpenVPN",
-	"version": "2.6.20",
+	"version": "2.7.8",
 	"publisher": "UniqueDroid",
 	"description": {
 		"de": "VPN-Client für die Box (OpenVPN): verbindet die Box mit einem VPN – z. B. ins Büro oder zu einem VPN-Anbieter. Gesteuert mit der App „NetTunnel“ (nur Administratoren); die Verbindung kann beim Start der Box von selbst aufgebaut werden.",

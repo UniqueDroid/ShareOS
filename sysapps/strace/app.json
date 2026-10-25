@@ -1,7 +1,7 @@
 {
 	"id": "strace",
 	"name": "strace",
-	"version": "6.19.0",
+	"version": "7.1.0",
 	"publisher": "UniqueDroid",
 	"description": {
 		"de": "Zeigt im Terminal die Systemaufrufe eines Programms – zur Fehlersuche: „strace -f programm“ oder „strace -p PID“. Bis ShareOS 0.1 war es fest eingebaut.",

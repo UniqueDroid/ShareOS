@@ -1148,6 +1148,63 @@
 		"BELEGUNG": "OCCUPATION",
 		"FREI": "LIBRE",
 		"LIMIT": "LIMITE",
+		"GESUNDHEIT": "SANTÉ",
+		"Gesundheit": "Santé",
+		"SELBSTTEST": "AUTOTEST",
+		"GUT": "BON",
+		"ACHTUNG": "ATTENTION",
+		"KRITISCH": "CRITIQUE",
+		"SCHACHT": "BAIE",
+		"Neu lesen": "Relire",
+		"Jetzt lesen": "Lire maintenant",
+		"Kurztest": "Test court",
+		"Langtest": "Test long",
+		"Test abbrechen": "Annuler le test",
+		"Alle Werte": "Toutes les valeurs",
+		"Werte ausblenden": "Masquer les valeurs",
+		"Temperatur": "Température",
+		"Betriebszeit": "Durée de fonctionnement",
+		"Einschaltvorgänge": "Mises sous tension",
+		"Anläufe des Motors": "Démarrages du moteur",
+		"Umgelagerte Sektoren": "Secteurs réalloués",
+		"Schwebende Sektoren": "Secteurs en attente",
+		"Nicht lesbare Sektoren": "Secteurs illisibles",
+		"Übertragungsfehler (CRC)": "Erreurs de transfert (CRC)",
+		"Fehlerprotokoll": "Journal d'erreurs",
+		"SCHLECHTESTER": "PIRE",
+		"SCHWELLE": "SEUIL",
+		"ROHWERT": "VALEUR BRUTE",
+		"FRÜHER": "AVANT",
+		"FEHLGESCHLAGEN": "ÉCHEC",
+		"SELBSTTEST NACH ZEITPLAN": "AUTOTEST PROGRAMMÉ",
+		"ALLE PLATTEN IN DEN SCHÄCHTEN": "TOUS LES DISQUES DES BAIES",
+		"SO WIRD BEWERTET": "MODE D'ÉVALUATION",
+		"Kurztest jeden Sonntag (3:30 Uhr)": "Test court chaque dimanche (3h30)",
+		"Langtest am 1. jedes Monats (3:30 Uhr)": "Test long le 1er de chaque mois (3h30)",
+		"Selbsttest läuft": "autotest en cours",
+		"Langtest starten?": "Lancer le test long ?",
+		"Selbsttest gestartet.": "Autotest lancé.",
+		"Selbsttest abgebrochen.": "Autotest annulé.",
+		"Zeitplan gespeichert.": "Planification enregistrée.",
+		"Keine Auffälligkeiten.": "Rien d'anormal.",
+		"Lebensdauer der SSD": "Durée de vie du SSD",
+		"Noch kein Selbsttest gelaufen.": "Aucun autotest effectué.",
+		"Daten sichern und die Platte bald tauschen.": "Sauvegardez les données et remplacez bientôt le disque.",
+		"SMART der Platten und SSDs": "SMART des disques et SSD",
+		"Keine Platte erkannt.": "Aucun disque détecté.",
+		"SMART noch nicht gelesen. Beim Lesen wacht die Platte auf.": "SMART pas encore lu. La lecture réveille le disque.",
+		"Die Platte schläft – die Werte kommen beim nächsten Aufwachen.": "Le disque dort – les valeurs arriveront à son prochain réveil.",
+		"Diese Platte liefert keine SMART-Werte.": "Ce disque ne fournit pas de valeurs SMART.",
+		"Dieser USB-Adapter reicht keine SMART-Werte weiter.": "Cet adaptateur USB ne transmet pas les valeurs SMART.",
+		"Die Platte meldet selbst: Ausfall droht (SMART-Gesamtbewertung FEHLER).": "Le disque signale lui-même une panne imminente (évaluation SMART globale : ÉCHEC).",
+		"Der letzte Selbsttest ist fehlgeschlagen.": "Le dernier autotest a échoué.",
+		"Die Platte meldet selbst einen Ausfall, ein Wert liegt unter der Schwelle des Herstellers, ein Selbsttest schlug fehl, über 100 umgelagerte oder über 10 schwebende Sektoren, SSD mit höchstens 10 % Lebensdauer, 60 °C und mehr.": "Le disque signale lui-même une panne, une valeur est sous le seuil du fabricant, un autotest a échoué, plus de 100 secteurs réalloués ou plus de 10 en attente, SSD avec 10 % de durée de vie ou moins, 60 °C et plus.",
+		"Einzelne umgelagerte, schwebende oder nicht lesbare Sektoren, Übertragungsfehler, Einträge im Fehlerprotokoll, SSD mit höchstens 20 % Lebensdauer, ab 55 °C.": "Quelques secteurs réalloués, en attente ou illisibles, erreurs de transfert, entrées dans le journal d'erreurs, SSD avec 20 % de durée de vie ou moins, à partir de 55 °C.",
+		"Der Kurztest prüft die Elektronik und einen Teil der Oberfläche, der Langtest liest die ganze Platte (bei großen Platten viele Stunden; die Platte bleibt dabei wach). Das Ergebnis erscheint hier und als Meldung, wenn etwas auffällt.": "Le test court vérifie l'électronique et une partie de la surface, le test long lit tout le disque (de nombreuses heures pour les gros disques ; le disque reste éveillé). Le résultat s'affiche ici et sous forme de message en cas de problème.",
+		"ohne Fehler": "sans erreur",
+		"SCHLÄFT": "EN VEILLE",
+		"Die Platte schläft (Ruhezustand)": "Le disque est en veille",
+		"Die Platte läuft": "Le disque tourne",
 		"Papierkorb": "Corbeille",
 		"PAPIERKORB": "CORBEILLE",
 		"Endgültig löschen": "Supprimer définitivement",
@@ -2284,6 +2341,98 @@
 		[
 			"^Laufwerk (\\d+) % belegt$",
 			"Disque utilisé à $1 %"
+		],
+		[
+			"^([\\d.,  ]+) Sektoren wurden schon ersetzt \\(umgelagert\\)\\.$",
+			"$1 secteurs ont déjà été remplacés (réalloués)."
+		],
+		[
+			"^([\\d.,  ]+) Sektoren sind unsicher \\(schwebend\\) – sie werden beim nächsten Schreiben geprüft\\.$",
+			"$1 secteurs sont incertains (en attente) – ils seront vérifiés à la prochaine écriture."
+		],
+		[
+			"^([\\d.,  ]+) Sektoren waren nicht lesbar\\.$",
+			"$1 secteurs étaient illisibles."
+		],
+		[
+			"^([\\d.,  ]+) Übertragungsfehler \\(CRC\\) – meist Anschluss oder Kabel, nicht die Platte selbst\\.$",
+			"$1 erreurs de transfert (CRC) – généralement le connecteur ou le câble, pas le disque."
+		],
+		[
+			"^([\\d.,  ]+) Einträge im Fehlerprotokoll der Platte\\.$",
+			"$1 entrées dans le journal d'erreurs du disque."
+		],
+		[
+			"^Die SSD ist fast verbraucht: noch (\\d+) % Lebensdauer\\.$",
+			"Le SSD est presque usé : $1 % de durée de vie restante."
+		],
+		[
+			"^Die SSD nutzt sich ab: noch (\\d+) % Lebensdauer\\.$",
+			"Le SSD s'use : $1 % de durée de vie restante."
+		],
+		[
+			"^Sehr warm: (\\d+) °C\\.$",
+			"Très chaud : $1 °C."
+		],
+		[
+			"^Warm: (\\d+) °C\\.$",
+			"Chaud : $1 °C."
+		],
+		[
+			"^Wert (\\S+) unter der Schwelle des Herstellers$",
+			"Valeur $1 sous le seuil du fabricant"
+		],
+		[
+			"^Wert (\\S+) war früher unter der Schwelle$",
+			"Valeur $1 était sous le seuil auparavant"
+		],
+		[
+			"^([\\d.,  ]+) Einträge$",
+			"$1 entrées"
+		],
+		[
+			"^(\\d+) °C \\(höchste: (\\d+) °C\\)$",
+			"$1 °C (max : $2 °C)"
+		],
+		[
+			"^([\\d.,  ]+) Tage \\(([\\d.,  ]+) h\\)$",
+			"$1 jours ($2 h)"
+		],
+		[
+			"^([\\d.,  ]+) Jahre \\(([\\d.,  ]+) h\\)$",
+			"$1 ans ($2 h)"
+		],
+		[
+			"^noch (\\d+) %$",
+			"$1 % restant"
+		],
+		[
+			"^SSD noch (\\d+) %$",
+			"SSD $1 % restant"
+		],
+		[
+			"^Läuft – noch (\\d+) %$",
+			"En cours – $1 % restant"
+		],
+		[
+			"^\\(bei ([\\d.,  ]+) h\\)$",
+			"(à $1 h)"
+		],
+		[
+			"^Gelesen (.+)\\.$",
+			"Lu le $1."
+		],
+		[
+			"^(\\d+) U/min$",
+			"$1 tr/min"
+		],
+		[
+			"^Der Langtest liest die ganze Platte (\\S+) – bei großen Platten viele Stunden\\. Die Box bleibt dabei nutzbar, die Platte ist etwas langsamer\\.$",
+			"Le test long lit tout le disque $1 – de nombreuses heures pour les gros disques. Le boîtier reste utilisable, le disque est un peu plus lent."
+		],
+		[
+			"^Selbsttest: (.*)$",
+			"Autotest : $1"
 		],
 		[
 			"^(\\d+) Tagen$",

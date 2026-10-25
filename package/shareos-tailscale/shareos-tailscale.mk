@@ -4,8 +4,9 @@
 #
 ################################################################################
 
-# newest release that builds with the Go of buildroot 2026.02 (1.26.3)
-SHAREOS_TAILSCALE_VERSION = v1.98.8
+# newest release that builds with the Go of buildroot 2026.08.1 (1.27.2);
+# 1.104.2 needs Go 1.27.3
+SHAREOS_TAILSCALE_VERSION = v1.104.1
 SHAREOS_TAILSCALE_SITE = https://github.com/tailscale/tailscale.git
 SHAREOS_TAILSCALE_SITE_METHOD = git
 SHAREOS_TAILSCALE_LICENSE = BSD-3-Clause
