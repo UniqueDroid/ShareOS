@@ -25,7 +25,7 @@ Browser ──HTTP──► uhttpd ──/ubus (JSON-RPC)──► rpcd ──�
 | ShareOS backend | `src/shareos-core` | `package/shareos-core` |
 
 Commits of uci/ucode/rpcd are pinned to the same period as buildroot's
-libubox (buildroot 2026.02), see the `.mk` files.
+libubox (buildroot 2026.08.1), see the `.mk` files.
 
 ## Files on the box
 

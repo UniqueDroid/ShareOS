@@ -130,7 +130,7 @@ Version in brackets = first release with the feature.
 | Last release | 1.11 (last version listed for CVE-2024-3273); product end of life | 1.0 (Oct 2017); trunk r3935 (basis of ShareOS) | 0.2.0 betas (2026), updated continuously |
 | Linux kernel | 2.6.31 ¹ | 3.10.32 (0.1RC4, 2014), 4.4.86 (1.0), 4.14.268 (trunk) | **6.18 LTS** |
 | Boot loader | Marvell U-Boot 1.1.4 | stock U-Boot (unchanged) | stock U-Boot (unchanged, never written) |
-| Build system / toolchain | D-Link GPL sources, uClibc ¹ | buildroot 2009.08 fork, GCC 7.4, uClibc-ng 1.0.44 (trunk) | buildroot 2026.02 LTS (`BR2_EXTERNAL`), GCC 14.3, musl 1.2.6 |
+| Build system / toolchain | D-Link GPL sources, uClibc ¹ | buildroot 2009.08 fork, GCC 7.4, uClibc-ng 1.0.44 (trunk) | buildroot 2026.08.1 (`BR2_EXTERNAL`), GCC 15.3, musl 1.2.6 |
 | System layout | own image formats | squashfs/jffs2, packages in the flash or on disk | squashfs in UBI + UBIFS overlay for settings and packages |
 | SMB | Samba 3.x, SMB1 ¹ | Samba 3.6.25: SMB1 and SMB2 (1.0); Samba 4.15 as an optional package | ksmbd (in the kernel): SMB 2.1/3 |
 | NFS | ¹ | nfs-utils | NFS v4 (nfs-utils 2.8) |

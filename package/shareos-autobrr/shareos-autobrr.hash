@@ -1,0 +1,4 @@
+# Locally calculated (git tag v1.89.0 with the Go modules vendored by buildroot)
+sha256  bfd033ec2f7ea890d80b59cc37c40955330ef3b9f75041f8bf8b44f10d65728a  shareos-autobrr-v1.89.0-git4-go2.tar.gz
+# from the autobrr release v1.89.0
+sha256  62c21e36a57caa088d26ebd456a1ac57b8366dc15f2a31673d7c33e20a051ebb  web-dist.tar.gz

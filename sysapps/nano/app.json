@@ -1,7 +1,7 @@
 {
 	"id": "nano",
 	"name": "nano",
-	"version": "8.7.0",
+	"version": "9.0.0",
 	"publisher": "UniqueDroid",
 	"description": {
 		"de": "Einfacher Texteditor für das Terminal (System → Terminal oder SSH): „nano datei“. Mit Rückgängig, Suchen und Ersetzen und UTF-8.",

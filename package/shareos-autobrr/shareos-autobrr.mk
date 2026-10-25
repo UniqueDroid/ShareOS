@@ -4,9 +4,8 @@
 #
 ################################################################################
 
-# newest release that builds with the Go of buildroot 2026.02 (1.26.3);
-# 1.85 needs Go 1.27
-SHAREOS_AUTOBRR_VERSION = v1.84.0
+# needs Go 1.27 (buildroot 2026.08.1 has 1.27.2)
+SHAREOS_AUTOBRR_VERSION = v1.89.0
 SHAREOS_AUTOBRR_SITE = https://github.com/autobrr/autobrr.git
 SHAREOS_AUTOBRR_SITE_METHOD = git
 SHAREOS_AUTOBRR_LICENSE = GPL-2.0-or-later

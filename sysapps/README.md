@@ -148,6 +148,6 @@ The settings page in the interface, if any, comes with the firmware too
 
 Packages of these apps built before 0.2.0-beta.9 have no `"service"` yet;
 `shareos-apps` knows their entries (`LEGACY_SERVICE`) until they are updated.
-`autobrr` is built from `package/shareos-autobrr` (1.84, the newest for buildroot's Go; its web interface comes from the release's `web-dist.tar.gz`).
+`autobrr` is built from `package/shareos-autobrr` (1.89, built with the Go of buildroot 2026.08.1; its web interface comes from the release's `web-dist.tar.gz`).
 `tailscaled` is built from `package/shareos-tailscale` (newer than buildroot's,
 one binary with the CLI built in – `TS_BE_CLI=1 tailscaled …`).
