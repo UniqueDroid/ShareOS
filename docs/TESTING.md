@@ -228,6 +228,7 @@ their permissions.
 - **Two disks:** besides "Mirror (RAID 1)" and "two separate volumes" the wizard offers **RAID 0** and **JBOD**; the summary shows the size (RAID 0: twice the smaller disk, JBOD: both together). `cat /proc/mdstat` shows `raid0` or `linear`.
 - File systems **ext3**, **ext2** and **FAT32** can be chosen for disks too (FAT32: files up to 4 GB).
 - **Repair a mirror:** with a disk of a mirror missing (card: "one disk missing (U_)") and a disk in the free bay, *Repair mirror* erases that disk and adds it; the card then shows "Recovery … %".
+- **Mirror after a reboot (disks that spin up one after the other, e.g. DNS-325):** reboot with a complete mirror several times; each time `cat /proc/mdstat` shows `[2/2] [UU]` and `dmesg | grep md/raid1` shows "active with 2 out of 2 mirrors", even when the second disk comes up seconds later (`dmesg | grep 'SATA link up'`). With one disk pulled the box waits up to 40 s, then starts the mirror with one disk and logs "RAID incomplete after 40s" (`grep shareos-storage /var/log/messages`).
 
 ## 14. Time and languages
 
