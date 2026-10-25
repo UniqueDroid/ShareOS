@@ -12,3 +12,8 @@ LIBCURL_CONF_OPTS += \
 	--with-ca-bundle=/etc/ssl/certs/ca-certificates.crt \
 	--with-ca-path=/etc/ssl/certs
 endif
+
+# libgpiod 2.3 (buildroot 2026.08) builds its GLib bindings whenever GLib is
+# there; they need GIO/GObject, which the firmware leaves out (post-build.sh).
+# ShareOS uses the C library only.
+LIBGPIOD2_CONF_OPTS += -Dbindings-glib=disabled
