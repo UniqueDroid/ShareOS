@@ -4,7 +4,7 @@
 set -euo pipefail
 PREFIX=${1:?install prefix}
 TOP=$(cd "$(dirname "$0")/.." && pwd)
-BR=${BR:-$TOP/buildroot/buildroot-2026.02.3}
+BR=${BR:-$TOP/buildroot/buildroot-2026.08.1}
 W=$(mktemp -d); trap 'rm -rf "$W"' EXIT
 
 ver() { sed -n "s/^$2_VERSION = //p" "$1"; }

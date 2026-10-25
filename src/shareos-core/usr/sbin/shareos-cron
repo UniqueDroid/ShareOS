@@ -11,7 +11,8 @@
 # schedule (cloud.<job>.schedule, a 5-field cron time) and scheduled tasks of
 # apps (apps.<job>=appjob, see shareos-apps), snapshots (snapshots.<job>:
 # every hour/6h/day/week at its time); every 10 minutes the checks of
-# shareos-notify. Areas switched off under System -> Appearance
+# shareos-notify; SMART self-tests (storage.global.smart_test). Areas
+# switched off under System -> Appearance
 # (shareos.ui.area_apps/area_cloud/area_paperless = 0) get no entries.
 #
 PATH=/usr/sbin:/usr/bin:/sbin:/bin
@@ -40,6 +41,11 @@ entries() {
 		echo "$s" | grep -qE '^[0-9*/,-]+( [0-9*/,-]+){4}$' || continue
 		echo "$s /usr/sbin/shareos-cloud run $j >/dev/null 2>&1"
 	done
+	# SMART self-tests of the disks in the bays (storage.global.smart_test)
+	case "$(uci -q get storage.global.smart_test)" in
+		short_weekly) echo "30 3 * * 0 /usr/sbin/shareos-storage smart-test short >/dev/null 2>&1" ;;
+		long_monthly) echo "30 3 1 * * /usr/sbin/shareos-storage smart-test long >/dev/null 2>&1" ;;
+	esac
 	# snapshots: every hour / 6 hours / day / week (Sunday) at the job's time
 	for j in $(uci -q show snapshots | sed -n "s/^snapshots\.\([^.=]*\)=job$/\1/p"); do
 		[ "$(uci -q get snapshots."$j".enabled)" = 0 ] && continue
@@ -83,5 +89,5 @@ cmd_sync() {
 
 case "$1" in
 	sync) cmd_sync ;;
-	*) sed -n '3,14s/^# \{0,1\}//p' "$0"; exit 2 ;;
+	*) sed -n '3,16s/^# \{0,1\}//p' "$0"; exit 2 ;;
 esac

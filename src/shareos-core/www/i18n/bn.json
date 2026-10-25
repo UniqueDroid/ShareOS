@@ -1148,6 +1148,63 @@
 		"BELEGUNG": "ব্যবহৃত",
 		"FREI": "খালি",
 		"LIMIT": "সীমা",
+		"GESUNDHEIT": "স্বাস্থ্য",
+		"Gesundheit": "স্বাস্থ্য",
+		"SELBSTTEST": "স্ব-পরীক্ষা",
+		"GUT": "ভালো",
+		"ACHTUNG": "সতর্কতা",
+		"KRITISCH": "গুরুতর",
+		"SCHACHT": "বে",
+		"Neu lesen": "আবার পড়ুন",
+		"Jetzt lesen": "এখন পড়ুন",
+		"Kurztest": "সংক্ষিপ্ত পরীক্ষা",
+		"Langtest": "দীর্ঘ পরীক্ষা",
+		"Test abbrechen": "পরীক্ষা বাতিল",
+		"Alle Werte": "সব মান",
+		"Werte ausblenden": "মান লুকান",
+		"Temperatur": "তাপমাত্রা",
+		"Betriebszeit": "চালু সময়",
+		"Einschaltvorgänge": "চালু হওয়ার সংখ্যা",
+		"Anläufe des Motors": "মোটর চালু হওয়া",
+		"Umgelagerte Sektoren": "পুনর্বণ্টিত সেক্টর",
+		"Schwebende Sektoren": "অমীমাংসিত সেক্টর",
+		"Nicht lesbare Sektoren": "অপাঠযোগ্য সেক্টর",
+		"Übertragungsfehler (CRC)": "স্থানান্তর ত্রুটি (CRC)",
+		"Fehlerprotokoll": "ত্রুটি লগ",
+		"SCHLECHTESTER": "সবচেয়ে খারাপ",
+		"SCHWELLE": "সীমা",
+		"ROHWERT": "কাঁচা মান",
+		"FRÜHER": "আগে",
+		"FEHLGESCHLAGEN": "ব্যর্থ",
+		"SELBSTTEST NACH ZEITPLAN": "নির্ধারিত স্ব-পরীক্ষা",
+		"ALLE PLATTEN IN DEN SCHÄCHTEN": "বে-এর সব ডিস্ক",
+		"SO WIRD BEWERTET": "কীভাবে মূল্যায়ন হয়",
+		"Kurztest jeden Sonntag (3:30 Uhr)": "প্রতি রবিবার সংক্ষিপ্ত পরীক্ষা (৩:৩০)",
+		"Langtest am 1. jedes Monats (3:30 Uhr)": "প্রতি মাসের ১ তারিখে দীর্ঘ পরীক্ষা (৩:৩০)",
+		"Selbsttest läuft": "স্ব-পরীক্ষা চলছে",
+		"Langtest starten?": "দীর্ঘ পরীক্ষা শুরু করবেন?",
+		"Selbsttest gestartet.": "স্ব-পরীক্ষা শুরু হয়েছে।",
+		"Selbsttest abgebrochen.": "স্ব-পরীক্ষা বাতিল হয়েছে।",
+		"Zeitplan gespeichert.": "সময়সূচি সংরক্ষিত।",
+		"Keine Auffälligkeiten.": "অস্বাভাবিক কিছু নেই।",
+		"Lebensdauer der SSD": "SSD-এর আয়ু",
+		"Noch kein Selbsttest gelaufen.": "এখনও কোনো স্ব-পরীক্ষা হয়নি।",
+		"Daten sichern und die Platte bald tauschen.": "ডেটা ব্যাকআপ নিন এবং শীঘ্রই ডিস্ক বদলান।",
+		"SMART der Platten und SSDs": "ডিস্ক ও SSD-এর SMART",
+		"Keine Platte erkannt.": "কোনো ডিস্ক পাওয়া যায়নি।",
+		"SMART noch nicht gelesen. Beim Lesen wacht die Platte auf.": "SMART এখনও পড়া হয়নি। পড়লে ডিস্ক জেগে ওঠে।",
+		"Die Platte schläft – die Werte kommen beim nächsten Aufwachen.": "ডিস্ক ঘুমাচ্ছে – পরের বার জাগলে মানগুলো আসবে।",
+		"Diese Platte liefert keine SMART-Werte.": "এই ডিস্ক SMART মান দেয় না।",
+		"Dieser USB-Adapter reicht keine SMART-Werte weiter.": "এই USB অ্যাডাপ্টার SMART মান পাঠায় না।",
+		"Die Platte meldet selbst: Ausfall droht (SMART-Gesamtbewertung FEHLER).": "ডিস্ক নিজেই জানাচ্ছে: বিকল হওয়ার আশঙ্কা (SMART সামগ্রিক মূল্যায়ন: ব্যর্থ)।",
+		"Der letzte Selbsttest ist fehlgeschlagen.": "শেষ স্ব-পরীক্ষা ব্যর্থ হয়েছে।",
+		"Die Platte meldet selbst einen Ausfall, ein Wert liegt unter der Schwelle des Herstellers, ein Selbsttest schlug fehl, über 100 umgelagerte oder über 10 schwebende Sektoren, SSD mit höchstens 10 % Lebensdauer, 60 °C und mehr.": "ডিস্ক নিজেই বিকলতা জানায়, কোনো মান নির্মাতার সীমার নিচে, স্ব-পরীক্ষা ব্যর্থ, ১০০-র বেশি পুনর্বণ্টিত বা ১০-এর বেশি অমীমাংসিত সেক্টর, ১০ % বা কম আয়ুর SSD, ৬০ °C বা তার বেশি।",
+		"Einzelne umgelagerte, schwebende oder nicht lesbare Sektoren, Übertragungsfehler, Einträge im Fehlerprotokoll, SSD mit höchstens 20 % Lebensdauer, ab 55 °C.": "কিছু পুনর্বণ্টিত, অমীমাংসিত বা অপাঠযোগ্য সেক্টর, স্থানান্তর ত্রুটি, ত্রুটি লগে এন্ট্রি, ২০ % বা কম আয়ুর SSD, ৫৫ °C থেকে।",
+		"Der Kurztest prüft die Elektronik und einen Teil der Oberfläche, der Langtest liest die ganze Platte (bei großen Platten viele Stunden; die Platte bleibt dabei wach). Das Ergebnis erscheint hier und als Meldung, wenn etwas auffällt.": "সংক্ষিপ্ত পরীক্ষা ইলেকট্রনিক্স ও পৃষ্ঠের একাংশ পরীক্ষা করে, দীর্ঘ পরীক্ষা পুরো ডিস্ক পড়ে (বড় ডিস্কে অনেক ঘণ্টা; এ সময় ডিস্ক জেগে থাকে)। ফলাফল এখানে দেখায় এবং সমস্যা হলে বার্তা হিসেবে আসে।",
+		"ohne Fehler": "ত্রুটি ছাড়া",
+		"SCHLÄFT": "ঘুমন্ত",
+		"Die Platte schläft (Ruhezustand)": "ডিস্ক ঘুমন্ত (স্ট্যান্ডবাই)",
+		"Die Platte läuft": "ডিস্ক চলছে",
 		"USB-TASTE": "USB বোতাম",
 		"kopiert": "কপি করে",
 		"Jetzt kopieren": "এখন কপি করুন",
@@ -2278,6 +2335,98 @@
 		[
 			"^Laufwerk (\\d+) % belegt$",
 			"ড্রাইভ $1 % ব্যবহৃত"
+		],
+		[
+			"^([\\d.,  ]+) Sektoren wurden schon ersetzt \\(umgelagert\\)\\.$",
+			"$1টি সেক্টর ইতিমধ্যে বদলানো হয়েছে (পুনর্বণ্টিত)।"
+		],
+		[
+			"^([\\d.,  ]+) Sektoren sind unsicher \\(schwebend\\) – sie werden beim nächsten Schreiben geprüft\\.$",
+			"$1টি সেক্টর অনিশ্চিত (অমীমাংসিত) – পরের বার লেখার সময় পরীক্ষা হবে।"
+		],
+		[
+			"^([\\d.,  ]+) Sektoren waren nicht lesbar\\.$",
+			"$1টি সেক্টর পড়া যায়নি।"
+		],
+		[
+			"^([\\d.,  ]+) Übertragungsfehler \\(CRC\\) – meist Anschluss oder Kabel, nicht die Platte selbst\\.$",
+			"$1টি স্থানান্তর ত্রুটি (CRC) – সাধারণত সংযোগ বা কেবল, ডিস্ক নিজে নয়।"
+		],
+		[
+			"^([\\d.,  ]+) Einträge im Fehlerprotokoll der Platte\\.$",
+			"ডিস্কের ত্রুটি লগে $1টি এন্ট্রি।"
+		],
+		[
+			"^Die SSD ist fast verbraucht: noch (\\d+) % Lebensdauer\\.$",
+			"SSD প্রায় ক্ষয়ে গেছে: $1 % আয়ু বাকি।"
+		],
+		[
+			"^Die SSD nutzt sich ab: noch (\\d+) % Lebensdauer\\.$",
+			"SSD ক্ষয়ে যাচ্ছে: $1 % আয়ু বাকি।"
+		],
+		[
+			"^Sehr warm: (\\d+) °C\\.$",
+			"খুব গরম: $1 °C।"
+		],
+		[
+			"^Warm: (\\d+) °C\\.$",
+			"গরম: $1 °C।"
+		],
+		[
+			"^Wert (\\S+) unter der Schwelle des Herstellers$",
+			"মান $1 নির্মাতার সীমার নিচে"
+		],
+		[
+			"^Wert (\\S+) war früher unter der Schwelle$",
+			"মান $1 আগে সীমার নিচে ছিল"
+		],
+		[
+			"^([\\d.,  ]+) Einträge$",
+			"$1টি এন্ট্রি"
+		],
+		[
+			"^(\\d+) °C \\(höchste: (\\d+) °C\\)$",
+			"$1 °C (সর্বোচ্চ: $2 °C)"
+		],
+		[
+			"^([\\d.,  ]+) Tage \\(([\\d.,  ]+) h\\)$",
+			"$1 দিন ($2 ঘণ্টা)"
+		],
+		[
+			"^([\\d.,  ]+) Jahre \\(([\\d.,  ]+) h\\)$",
+			"$1 বছর ($2 ঘণ্টা)"
+		],
+		[
+			"^noch (\\d+) %$",
+			"$1 % বাকি"
+		],
+		[
+			"^SSD noch (\\d+) %$",
+			"SSD $1 % বাকি"
+		],
+		[
+			"^Läuft – noch (\\d+) %$",
+			"চলছে – $1 % বাকি"
+		],
+		[
+			"^\\(bei ([\\d.,  ]+) h\\)$",
+			"($1 ঘণ্টায়)"
+		],
+		[
+			"^Gelesen (.+)\\.$",
+			"পড়া হয়েছে $1।"
+		],
+		[
+			"^(\\d+) U/min$",
+			"$1 RPM"
+		],
+		[
+			"^Der Langtest liest die ganze Platte (\\S+) – bei großen Platten viele Stunden\\. Die Box bleibt dabei nutzbar, die Platte ist etwas langsamer\\.$",
+			"দীর্ঘ পরীক্ষা পুরো ডিস্ক $1 পড়ে – বড় ডিস্কে অনেক ঘণ্টা। বক্স ব্যবহারযোগ্য থাকে, ডিস্ক একটু ধীর হয়।"
+		],
+		[
+			"^Selbsttest: (.*)$",
+			"স্ব-পরীক্ষা: $1"
 		],
 		[
 			"^USB-Kopie: (.*)$",

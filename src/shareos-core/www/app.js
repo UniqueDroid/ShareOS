@@ -158,7 +158,7 @@ const TABS = [
 const SYS_SUBS = [['general', 'ALLGEMEIN'], ['appearance', 'DARSTELLUNG'], ['network', 'NETZWERK'], ['notifications', 'MELDUNGEN'], ['logs', 'PROTOKOLLE'], ['terminal', 'TERMINAL'], ['time', 'ZEIT'], ['power', 'ENERGIE & RESET'], ['firmware', 'FIRMWARE']];
 const SVC_SUBS = [['status', 'STATUS'], ['autostart', 'AUTOSTART'], ['dlna', 'MEDIENSERVER']];
 const SHR_SUBS = [['shares', 'FREIGABEN'], ['files', 'DATEIEN'], ['users', 'BENUTZER'], ['groups', 'GRUPPEN']];
-const STO_SUBS = [['volumes', 'LAUFWERKE'], ['snapshots', 'SNAPSHOTS']];
+const STO_SUBS = [['volumes', 'LAUFWERKE'], ['health', 'GESUNDHEIT'], ['snapshots', 'SNAPSHOTS']];
 const ROLE_TXT = { admin: 'Administrator', user: 'Benutzer', share: 'Nur Freigaben' };
 // pages that moved: old link -> new place
 const SUB_MOVED = { hardware: 'power', https: 'network', about: 'general' };
@@ -424,7 +424,17 @@ async function logout() {
 
 /* ---------- polling --------------------------------------------------------- */
 
+// a hidden tab or an app in the background asks the box nothing: the regular
+// calls skip while document.hidden and catch up when it is shown again
+const away = () => document.hidden;
+document.addEventListener('visibilitychange', () => {
+	if (away() || !S.sid || !S.me) return;
+	if (!isUser()) { tick(); loadNotes(); if (S.route.tab === 'storage' && S.stActive) loadStorage(); }
+	loadChips();
+});
+
 async function tick() {
+	if (away()) return;
 	try {
 		const info = await rpc('shareos.system', 'info');
 		const prev = S.info;
@@ -542,6 +552,7 @@ function renderShell() {
 
 const chipHidden = () => { try { return JSON.parse(store.get('chips.hidden') || '[]'); } catch (e) { return []; } };
 async function loadChips() {
+	if (away()) return;
 	try { S.chips = (await rpc('shareos.status', 'chips')).chips || []; } catch (e) { return; }
 	if (S.me && S.me.role !== 'admin') renderUserHeader(); else renderHeader();
 }
@@ -741,7 +752,7 @@ const VIEWS = {
 		const sub = S.route.sub;
 		return html`
 		<nav class="subtabs" aria-label="Speicher">${STO_SUBS.map(([id, label]) => html`<a class="st${sub === id ? ' on' : ''}" href="#/storage/${id}">${label}</a>`)}</nav>
-		${sub === 'snapshots' ? snapshotsView() : storageView()}`;
+		${sub === 'snapshots' ? snapshotsView() : sub === 'health' ? healthView() : storageView()}`;
 	},
 
 	shares() {
@@ -1824,11 +1835,12 @@ function smartLine(sm) {
 	if (!sm) return html`<span class="mut">SMART noch nicht gelesen</span>`;
 	if (sm.standby) return html`<span class="mut">schläft (SMART beim nächsten Aufwachen)</span>`;
 	if (sm.error) return html`<span class="mut">${sm.error}</span>`;
-	const bad = (sm.reallocated || 0) + (sm.pending || 0) + (sm.uncorrectable || 0);
-	return html`<span class="tag ${sm.passed === false || bad ? 'err' : 'ok'}">SMART ${sm.passed === false ? 'FEHLER' : bad ? 'WARNUNG' : 'OK'}</span>
-		${sm.temperature != null ? html` · ${sm.temperature} °C` : ''}
-		${sm.power_on_hours != null ? html` · ${Math.round(sm.power_on_hours / 24)} Tage Laufzeit` : ''}
-		${bad ? html` · <span style="color:var(--red)">${sm.reallocated || 0} umgelagert, ${sm.pending || 0} schwebend</span>` : ''}`;
+	const r = smartRating(sm);
+	return html`<a class="tag ${SMART_RATING[r][0]}" href="#/storage/health" title="Gesundheit">SMART <span>${SMART_RATING[r][1]}</span></a>
+		${sm.temperature != null ? html` · <span>${sm.temperature} °C</span>` : ''}
+		${sm.power_on_hours != null ? html` · <span>${Math.round(sm.power_on_hours / 24)} Tage Laufzeit</span>` : ''}
+		${sm.life_left != null ? html` · <span>SSD noch ${sm.life_left} %</span>` : ''}
+		${sm.test_running ? html` · <span>Selbsttest läuft</span>` : ''}`;
 }
 
 // small "x" that hides a message for good (the box forgets it)
@@ -1940,6 +1952,109 @@ function volumeTable(st, running) {
 		})}</tbody></table></div>`;
 }
 
+/* --- disk health (SMART): rating, values, self-tests, all attributes --- */
+
+const SMART_RATING = { good: ['ok', 'GUT'], warn: ['warn', 'ACHTUNG'], bad: ['err', 'KRITISCH'] };
+// reasons of the rating (rpcd smart_assess) as text
+function smartReason(sm, r) {
+	const m = /^attr_(now|past):(.+)$/.exec(r);
+	if (m) return m[1] === 'now' ? `Wert ${m[2]} unter der Schwelle des Herstellers` : `Wert ${m[2]} war früher unter der Schwelle`;
+	return {
+		failed: 'Die Platte meldet selbst: Ausfall droht (SMART-Gesamtbewertung FEHLER).',
+		test_failed: 'Der letzte Selbsttest ist fehlgeschlagen.',
+		reallocated: `${sm.reallocated} Sektoren wurden schon ersetzt (umgelagert).`,
+		pending: `${sm.pending} Sektoren sind unsicher (schwebend) – sie werden beim nächsten Schreiben geprüft.`,
+		uncorrectable: `${sm.uncorrectable} Sektoren waren nicht lesbar.`,
+		crc: `${sm.crc_errors} Übertragungsfehler (CRC) – meist Anschluss oder Kabel, nicht die Platte selbst.`,
+		errors: `${sm.error_count} Einträge im Fehlerprotokoll der Platte.`,
+		worn: `Die SSD ist fast verbraucht: noch ${sm.life_left} % Lebensdauer.`,
+		wearing: `Die SSD nutzt sich ab: noch ${sm.life_left} % Lebensdauer.`,
+		hot: `Sehr warm: ${sm.temperature} °C.`,
+		warm: `Warm: ${sm.temperature} °C.`
+	}[r] || r;
+}
+// values without a rating (cached by an older firmware) get one here
+function smartRating(sm) {
+	if (sm.rating) return sm.rating;
+	return sm.passed === false ? 'bad' : (sm.reallocated || sm.pending || sm.uncorrectable) ? 'warn' : 'good';
+}
+const fmtHours = (h) => (h >= 24 * 365 ? `${(h / 24 / 365).toLocaleString(LOC, { maximumFractionDigits: 1 })} Jahre` : `${Math.round(h / 24)} Tage`);
+const fmtTestMin = (m) => (m >= 90 ? `${Math.round(m / 60)} h` : `${m} min`);
+
+function healthCard(d) {
+	const sm = d.smart, open = S.hOpen?.has(d.name), bay = !d.usb && d.tran !== 'usb';
+	const head = html`<div class="ph"><span class="pt">${bay ? 'SCHACHT' : 'USB'} · ${d.name}</span>
+		${d.standby != null ? html`<span class="tag ml">${d.standby ? 'SCHLÄFT' : 'AKTIV'}</span>` : ''}
+		${sm && !sm.standby && !sm.error ? html`<span class="tag ${d.standby != null ? '' : 'ml'} ${SMART_RATING[smartRating(sm)][0]}">${SMART_RATING[smartRating(sm)][1]}</span>` : ''}</div>
+		<div class="mut" style="font-size:13px;margin:-4px 0 12px"><span>${d.model || sm?.model || 'unbekanntes Modell'}</span> · ${fmtBytes(d.size)}${sm?.ssd ? ' · SSD' : sm?.rpm ? html` · <span>${sm.rpm} U/min</span>` : ''}${(sm?.serial || d.serial) ? ' · ' + (sm?.serial || d.serial) : ''}${sm?.firmware ? ' · ' + sm.firmware : ''}</div>`;
+	const read = html`<button class="btn sm" type="button" data-act="smart" data-disk="${d.name}">${sm ? 'Neu lesen' : 'Jetzt lesen'}</button>`;
+	if (!sm || sm.standby || sm.error) return html`<div class="panel">${head}
+		<p class="mut" style="margin:0 0 12px;font-size:13px">${!sm ? 'SMART noch nicht gelesen. Beim Lesen wacht die Platte auf.' : sm.standby ? 'Die Platte schläft – die Werte kommen beim nächsten Aufwachen.' : bay ? 'Diese Platte liefert keine SMART-Werte.' : 'Dieser USB-Adapter reicht keine SMART-Werte weiter.'}</p>
+		<div class="acts">${read}</div></div>`;
+	const rating = smartRating(sm), reasons = sm.reasons || [];
+	const kv = [
+		['Temperatur', sm.temperature == null ? null : sm.temperature_max != null ? `${sm.temperature} °C (höchste: ${sm.temperature_max} °C)` : `${sm.temperature} °C`],
+		['Betriebszeit', sm.power_on_hours != null ? `${fmtHours(sm.power_on_hours)} (${sm.power_on_hours.toLocaleString(LOC)} h)` : null],
+		['Einschaltvorgänge', sm.power_cycles],
+		['Anläufe des Motors', sm.ssd ? null : sm.start_stops],
+		['Umgelagerte Sektoren', sm.reallocated],
+		['Schwebende Sektoren', sm.pending],
+		['Nicht lesbare Sektoren', sm.uncorrectable],
+		['Übertragungsfehler (CRC)', sm.crc_errors],
+		['Fehlerprotokoll', sm.error_count != null ? `${sm.error_count} Einträge` : null],
+		['Geschrieben', sm.written != null ? fmtBytes(sm.written) : null]
+	].filter(([, v]) => v != null);
+	const t = sm.test_running, last = sm.last_test, mins = sm.test_minutes || {};
+	return html`<div class="panel">${head}
+		${reasons.length ? html`<ul class="hreasons">${reasons.map((r) => html`<li>${smartReason(sm, r)}</li>`)}</ul>`
+			: html`<p style="margin:0 0 12px;font-size:13px">Keine Auffälligkeiten.</p>`}
+		${sm.life_left != null ? html`<div style="margin-bottom:12px"><div class="row" style="justify-content:space-between;font-size:13px"><span>Lebensdauer der SSD</span><b>noch ${sm.life_left} %</b></div>
+			<div class="bar" style="margin-top:4px"><i class="${sm.life_left <= 10 ? 'crit' : sm.life_left <= 20 ? 'warn' : ''}" style="width:${sm.life_left}%"></i></div></div>` : ''}
+		<dl class="kv">${kv.map(([k, v]) => html`<dt>${k}</dt><dd>${typeof v === 'number' ? v.toLocaleString(LOC) : v}</dd>`)}</dl>
+		<div class="pt" style="margin:16px 0 8px">SELBSTTEST</div>
+		${t ? html`<div style="font-size:13px">Läuft – noch ${t.remaining} %<div class="bar busy" style="margin-top:4px"><i style="width:${100 - t.remaining}%"></i></div></div>`
+			: last ? html`<div style="font-size:13px"><span class="tag ${last.passed === false ? 'err' : 'ok'}">${last.passed === false ? 'FEHLGESCHLAGEN' : 'OK'}</span> <span>${({ 'Short offline': 'Kurztest', 'Extended offline': 'Langtest', 'Short captive': 'Kurztest', 'Extended captive': 'Langtest' })[last.type] || last.type}</span> · ${last.passed === false ? last.status : html`<span>ohne Fehler</span>`}${last.hours != null ? html` <span class="mut">(bei ${last.hours.toLocaleString(LOC)} h)</span>` : ''}</div>`
+			: html`<div class="mut" style="font-size:13px">Noch kein Selbsttest gelaufen.</div>`}
+		<div class="acts" style="margin-top:12px">
+			${read}
+			${bay && !t ? html`<button class="btn sm" type="button" data-act="smart-test" data-disk="${d.name}" data-t="short"><span>Kurztest</span>${mins.short ? html` <span class="mut">${fmtTestMin(mins.short)}</span>` : ''}</button>
+				<button class="btn sm" type="button" data-act="smart-test" data-disk="${d.name}" data-t="long"><span>Langtest</span>${mins.long ? html` <span class="mut">${fmtTestMin(mins.long)}</span>` : ''}</button>` : ''}
+			${bay && t ? html`<button class="btn sm danger" type="button" data-act="smart-test" data-disk="${d.name}" data-t="abort">Test abbrechen</button>` : ''}
+			${(sm.attributes || []).length ? html`<button class="btn sm ghost ml" type="button" data-act="smart-attrs" data-disk="${d.name}" aria-expanded="${!!open}">${open ? 'Werte ausblenden' : 'Alle Werte'}</button>` : ''}
+		</div>
+		${open ? html`<div class="tw" style="margin-top:12px"><table class="t" style="min-width:560px"><thead><tr><th class="r">ID</th><th>WERT</th><th class="r">AKTUELL</th><th class="r">SCHLECHTESTER</th><th class="r">SCHWELLE</th><th>ROHWERT</th></tr></thead>
+			<tbody>${sm.attributes.map((a) => html`<tr${a.when_failed ? raw(' class="sel"') : ''}><td class="r mut">${a.id}</td><td>${a.name}${a.when_failed ? html` <span class="tag ${a.when_failed === 'now' ? 'err' : 'warn'}">${a.when_failed === 'now' ? 'JETZT' : 'FRÜHER'}</span>` : ''}</td>
+				<td class="r">${a.value}</td><td class="r mut">${a.worst}</td><td class="r mut">${a.thresh}</td><td class="mut"><code>${a.raw}</code></td></tr>`)}</tbody></table></div>` : ''}
+		${rating === 'bad' ? html`<p class="note" style="color:var(--red)">Daten sichern und die Platte bald tauschen.</p>` : ''}
+		${sm.time ? html`<p class="note">Gelesen ${fmtTime(sm.time)}.</p>` : ''}
+	</div>`;
+}
+
+function healthView() {
+	const st = S.storage;
+	if (!st) return html`<div class="panel"><div class="empty"><div class="spin" style="margin:0"></div><span>Lade Laufwerke …</span></div></div>`;
+	const sched = st.smart_schedule || '';
+	return html`<section class="sec">
+		<h2 class="gh">GESUNDHEIT <span>SMART der Platten und SSDs</span></h2>
+		${st.disks.length ? html`<div class="g2">${st.disks.map((d) => healthCard(d))}</div>` : html`<div class="panel"><div class="empty">${svg(I.info)}<span>Keine Platte erkannt.</span></div></div>`}
+	</section>
+	<section class="sec">
+		<h2 class="gh">EINSTELLUNGEN</h2>
+		<div class="g2"><div class="panel">
+			<div class="ph"><span class="pt">SELBSTTEST NACH ZEITPLAN</span></div>
+			<div class="fields" style="grid-template-columns:1fr"><label class="f"><span>ALLE PLATTEN IN DEN SCHÄCHTEN</span><select id="smart-sched">
+				${[['', 'Aus'], ['short_weekly', 'Kurztest jeden Sonntag (3:30 Uhr)'], ['long_monthly', 'Langtest am 1. jedes Monats (3:30 Uhr)']].map(([v, t]) => html`<option value="${v}"${sched === v ? raw(' selected') : ''}>${t}</option>`)}
+			</select></label></div>
+			<p class="note">Der Kurztest prüft die Elektronik und einen Teil der Oberfläche, der Langtest liest die ganze Platte (bei großen Platten viele Stunden; die Platte bleibt dabei wach). Das Ergebnis erscheint hier und als Meldung, wenn etwas auffällt.</p>
+		</div>
+		<div class="panel">
+			<div class="ph"><span class="pt">SO WIRD BEWERTET</span></div>
+			<dl class="hrate"><dt><span class="tag err">KRITISCH</span></dt><dd>Die Platte meldet selbst einen Ausfall, ein Wert liegt unter der Schwelle des Herstellers, ein Selbsttest schlug fehl, über 100 umgelagerte oder über 10 schwebende Sektoren, SSD mit höchstens 10 % Lebensdauer, 60 °C und mehr.</dd>
+			<dt><span class="tag warn">ACHTUNG</span></dt><dd>Einzelne umgelagerte, schwebende oder nicht lesbare Sektoren, Übertragungsfehler, Einträge im Fehlerprotokoll, SSD mit höchstens 20 % Lebensdauer, ab 55 °C.</dd></dl>
+		</div></div>
+	</section>`;
+}
+
 function diskTable(st, running) {
 	return html`<div class="tw"><table class="t" style="min-width:820px"><thead><tr><th>LAUFWERK</th><th>MODELL</th><th>GRÖSSE</th><th>SMART</th><th>INHALT</th><th></th></tr></thead>
 		<tbody>${st.disks.map((d) => html`<tr>
@@ -1992,9 +2107,9 @@ function diskCard(st, d, running) {
 	const use = diskUse(st, d);
 	const sm = d.smart;
 	return html`<div class="card">
-		<div class="icon">${svg(d.rm || d.tran === 'usb' ? I.usb : I.disk)}<span class="dot ${sm && !sm.standby && !sm.error && (sm.passed === false || sm.reallocated || sm.pending) ? 'warn' : 'up'}"></span></div>
+		<div class="icon">${svg(d.rm || d.tran === 'usb' ? I.usb : I.disk)}<span class="dot ${sm && !sm.standby && !sm.error && smartRating(sm) !== 'good' ? 'warn' : 'up'}"></span></div>
 		<div class="info">
-			<div class="name">${d.usb || d.tran === 'usb' ? 'USB' : 'Schacht'} · ${d.name}</div>
+			<div class="name">${d.usb || d.tran === 'usb' ? 'USB' : 'Schacht'} · ${d.name}${d.standby ? html` <span class="tag">SCHLÄFT</span>` : ''}</div>
 			<div class="desc">${d.model || 'unbekanntes Modell'} · ${fmtBytes(d.size)}${d.serial ? ' · ' + d.serial : ''}</div>
 			${d.usb ? usbLines(st, d) : html`<div class="desc" style="margin-top:8px">${smartLine(sm)}</div>`}
 			<div class="ip">${use.txt}</div>
@@ -2097,12 +2212,17 @@ function wizardCheck() {
 async function loadStorage() {
 	clearTimeout(S.stTimer);
 	S.stActive = true;
+	if (away()) { S.stTimer = setTimeout(loadStorage, 15000); return; }
 	try {
+		// a running self-test: read its disk again (the status only has cached values)
+		if (S.route.sub === 'health') for (const d of (S.storage?.disks || []).filter((x) => x.smart?.test_running))
+			try { await rpc('shareos.storage', 'smart', { disk: d.name }); } catch (e) { }
 		S.storage = await rpc('shareos.storage', 'status');
 		if (S.wizAfterLoad) { S.wizAfterLoad = false; if (!S.storage.volumes.length && S.storage.disks.length) { ACTIONS['wiz-start'](); } }
 		if (S.route.tab === 'storage' && !(S.wiz && S.wiz.step === 2) && !document.activeElement?.matches('select')) renderMain();
 		const busy = S.storage.job?.state === 'running' || Object.values(S.storage.arrays || {}).some((a) => a.sync);
-		if (S.route.tab === 'storage') S.stTimer = setTimeout(loadStorage, busy ? 3000 : 15000);
+		const testing = S.route.sub === 'health' && S.storage.disks.some((d) => d.smart?.test_running);
+		if (S.route.tab === 'storage') S.stTimer = setTimeout(loadStorage, busy ? 3000 : testing ? 60000 : 15000);
 	} catch (e) {
 		if (e.code !== 'auth') { toast('Speicher: ' + e.message, true); S.stTimer = setTimeout(loadStorage, 15000); }
 	}
@@ -2863,6 +2983,10 @@ const VIEWS_AFTER = {
 	storage() {
 		if (S.route.sub === 'snapshots') { snapAfter(); return; }
 		if (!S.stActive) loadStorage();
+		$('#smart-sched')?.addEventListener('change', async (e) => {
+			try { await rpc('shareos.storage', 'smart_schedule', { mode: e.target.value }); S.storage.smart_schedule = e.target.value; toast('Zeitplan gespeichert.'); }
+			catch (err) { toast('Selbsttest: ' + err.message, true); }
+		});
 		$('#f-usbcopy')?.addEventListener('submit', async (e) => {
 			e.preventDefault();
 			const f = e.target;
@@ -2980,6 +3104,7 @@ function fromLocalInput(v, tz) {
 }
 function setTime(t) { S.time = t; S.timeOffset = t.now - Math.floor(Date.now() / 1000); }
 async function loadNotes() {
+	if (away()) return;
 	try {
 		const n = await rpc('shareos.notify', 'list');
 		const was = S.notes?.unread;
@@ -3642,6 +3767,20 @@ const ACTIONS = {
 		el.disabled = true;
 		try { await rpc('shareos.storage', 'smart', { disk: el.dataset.disk }); } catch (e) { toast('SMART: ' + e.message, true); }
 		loadStorage();
+	},
+	async 'smart-test'(el) {
+		const disk = el.dataset.disk, t = el.dataset.t;
+		if (t === 'long' && !await confirmDlg('Langtest starten?', `Der Langtest liest die ganze Platte ${disk} – bei großen Platten viele Stunden. Die Box bleibt dabei nutzbar, die Platte ist etwas langsamer.`, 'Starten')) return;
+		el.disabled = true;
+		try { await rpc('shareos.storage', 'smart_test', { disk, type: t }); toast(t === 'abort' ? 'Selbsttest abgebrochen.' : 'Selbsttest gestartet.'); }
+		catch (e) { toast('Selbsttest: ' + e.message, true); }
+		loadStorage();
+	},
+	'smart-attrs'(el) {
+		S.hOpen = S.hOpen || new Set();
+		const d = el.dataset.disk;
+		if (S.hOpen.has(d)) S.hOpen.delete(d); else S.hOpen.add(d);
+		renderMain();
 	},
 	async 'vol-repair'(el) {
 		const name = el.dataset.name, st = S.storage, v = (st.volumes || []).find((x) => x.name === name);

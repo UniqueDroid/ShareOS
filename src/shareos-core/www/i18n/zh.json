@@ -1148,6 +1148,63 @@
 		"BELEGUNG": "占用",
 		"FREI": "可用",
 		"LIMIT": "限额",
+		"GESUNDHEIT": "健康",
+		"Gesundheit": "健康",
+		"SELBSTTEST": "自检",
+		"GUT": "良好",
+		"ACHTUNG": "注意",
+		"KRITISCH": "严重",
+		"SCHACHT": "盘位",
+		"Neu lesen": "重新读取",
+		"Jetzt lesen": "立即读取",
+		"Kurztest": "短测试",
+		"Langtest": "长测试",
+		"Test abbrechen": "中止测试",
+		"Alle Werte": "全部数值",
+		"Werte ausblenden": "隐藏数值",
+		"Temperatur": "温度",
+		"Betriebszeit": "运行时间",
+		"Einschaltvorgänge": "通电次数",
+		"Anläufe des Motors": "电机启动次数",
+		"Umgelagerte Sektoren": "重映射扇区",
+		"Schwebende Sektoren": "待映射扇区",
+		"Nicht lesbare Sektoren": "不可读扇区",
+		"Übertragungsfehler (CRC)": "传输错误 (CRC)",
+		"Fehlerprotokoll": "错误日志",
+		"SCHLECHTESTER": "最差",
+		"SCHWELLE": "阈值",
+		"ROHWERT": "原始值",
+		"FRÜHER": "曾经",
+		"FEHLGESCHLAGEN": "失败",
+		"SELBSTTEST NACH ZEITPLAN": "定时自检",
+		"ALLE PLATTEN IN DEN SCHÄCHTEN": "所有盘位中的硬盘",
+		"SO WIRD BEWERTET": "评估方式",
+		"Kurztest jeden Sonntag (3:30 Uhr)": "每周日短测试（3:30）",
+		"Langtest am 1. jedes Monats (3:30 Uhr)": "每月1日长测试（3:30）",
+		"Selbsttest läuft": "自检进行中",
+		"Langtest starten?": "开始长测试？",
+		"Selbsttest gestartet.": "自检已开始。",
+		"Selbsttest abgebrochen.": "自检已中止。",
+		"Zeitplan gespeichert.": "计划已保存。",
+		"Keine Auffälligkeiten.": "未见异常。",
+		"Lebensdauer der SSD": "SSD 寿命",
+		"Noch kein Selbsttest gelaufen.": "尚未运行过自检。",
+		"Daten sichern und die Platte bald tauschen.": "请备份数据并尽快更换硬盘。",
+		"SMART der Platten und SSDs": "硬盘和 SSD 的 SMART",
+		"Keine Platte erkannt.": "未检测到硬盘。",
+		"SMART noch nicht gelesen. Beim Lesen wacht die Platte auf.": "尚未读取 SMART。读取会唤醒硬盘。",
+		"Die Platte schläft – die Werte kommen beim nächsten Aufwachen.": "硬盘正在休眠——下次唤醒时获取数值。",
+		"Diese Platte liefert keine SMART-Werte.": "此硬盘不提供 SMART 数值。",
+		"Dieser USB-Adapter reicht keine SMART-Werte weiter.": "此 USB 适配器不传递 SMART 数值。",
+		"Die Platte meldet selbst: Ausfall droht (SMART-Gesamtbewertung FEHLER).": "硬盘自身报告：即将故障（SMART 总体评估：失败）。",
+		"Der letzte Selbsttest ist fehlgeschlagen.": "上次自检失败。",
+		"Die Platte meldet selbst einen Ausfall, ein Wert liegt unter der Schwelle des Herstellers, ein Selbsttest schlug fehl, über 100 umgelagerte oder über 10 schwebende Sektoren, SSD mit höchstens 10 % Lebensdauer, 60 °C und mehr.": "硬盘自身报告故障、某项数值低于厂商阈值、自检失败、重映射扇区超过 100 个或待映射扇区超过 10 个、SSD 寿命不超过 10 %、温度 60 °C 及以上。",
+		"Einzelne umgelagerte, schwebende oder nicht lesbare Sektoren, Übertragungsfehler, Einträge im Fehlerprotokoll, SSD mit höchstens 20 % Lebensdauer, ab 55 °C.": "少量重映射、待映射或不可读扇区，传输错误，错误日志中有条目，SSD 寿命不超过 20 %，温度从 55 °C 起。",
+		"Der Kurztest prüft die Elektronik und einen Teil der Oberfläche, der Langtest liest die ganze Platte (bei großen Platten viele Stunden; die Platte bleibt dabei wach). Das Ergebnis erscheint hier und als Meldung, wenn etwas auffällt.": "短测试检查电子部件和部分盘面，长测试读取整个硬盘（大硬盘需要数小时，期间硬盘保持唤醒）。结果显示在此处，如有异常也会发送消息。",
+		"ohne Fehler": "无错误",
+		"SCHLÄFT": "休眠",
+		"Die Platte schläft (Ruhezustand)": "硬盘正在休眠（待机）",
+		"Die Platte läuft": "硬盘正在运行",
 		"USB-TASTE": "USB 按钮",
 		"kopiert": "复制",
 		"Jetzt kopieren": "立即复制",
@@ -2278,6 +2335,98 @@
 		[
 			"^Laufwerk (\\d+) % belegt$",
 			"磁盘已用 $1 %"
+		],
+		[
+			"^([\\d.,  ]+) Sektoren wurden schon ersetzt \\(umgelagert\\)\\.$",
+			"已有 $1 个扇区被替换（重映射）。"
+		],
+		[
+			"^([\\d.,  ]+) Sektoren sind unsicher \\(schwebend\\) – sie werden beim nächsten Schreiben geprüft\\.$",
+			"$1 个扇区状态不确定（待映射），将在下次写入时检查。"
+		],
+		[
+			"^([\\d.,  ]+) Sektoren waren nicht lesbar\\.$",
+			"$1 个扇区无法读取。"
+		],
+		[
+			"^([\\d.,  ]+) Übertragungsfehler \\(CRC\\) – meist Anschluss oder Kabel, nicht die Platte selbst\\.$",
+			"$1 次传输错误 (CRC)——通常是接口或线缆问题，而非硬盘本身。"
+		],
+		[
+			"^([\\d.,  ]+) Einträge im Fehlerprotokoll der Platte\\.$",
+			"硬盘错误日志中有 $1 条记录。"
+		],
+		[
+			"^Die SSD ist fast verbraucht: noch (\\d+) % Lebensdauer\\.$",
+			"SSD 即将耗尽：剩余寿命 $1 %。"
+		],
+		[
+			"^Die SSD nutzt sich ab: noch (\\d+) % Lebensdauer\\.$",
+			"SSD 正在磨损：剩余寿命 $1 %。"
+		],
+		[
+			"^Sehr warm: (\\d+) °C\\.$",
+			"温度很高：$1 °C。"
+		],
+		[
+			"^Warm: (\\d+) °C\\.$",
+			"温度偏高：$1 °C。"
+		],
+		[
+			"^Wert (\\S+) unter der Schwelle des Herstellers$",
+			"数值 $1 低于厂商阈值"
+		],
+		[
+			"^Wert (\\S+) war früher unter der Schwelle$",
+			"数值 $1 曾低于阈值"
+		],
+		[
+			"^([\\d.,  ]+) Einträge$",
+			"$1 条"
+		],
+		[
+			"^(\\d+) °C \\(höchste: (\\d+) °C\\)$",
+			"$1 °C（最高：$2 °C）"
+		],
+		[
+			"^([\\d.,  ]+) Tage \\(([\\d.,  ]+) h\\)$",
+			"$1 天（$2 小时）"
+		],
+		[
+			"^([\\d.,  ]+) Jahre \\(([\\d.,  ]+) h\\)$",
+			"$1 年（$2 小时）"
+		],
+		[
+			"^noch (\\d+) %$",
+			"剩余 $1 %"
+		],
+		[
+			"^SSD noch (\\d+) %$",
+			"SSD 剩余 $1 %"
+		],
+		[
+			"^Läuft – noch (\\d+) %$",
+			"进行中——剩余 $1 %"
+		],
+		[
+			"^\\(bei ([\\d.,  ]+) h\\)$",
+			"（$1 小时时）"
+		],
+		[
+			"^Gelesen (.+)\\.$",
+			"读取于 $1。"
+		],
+		[
+			"^(\\d+) U/min$",
+			"$1 转/分"
+		],
+		[
+			"^Der Langtest liest die ganze Platte (\\S+) – bei großen Platten viele Stunden\\. Die Box bleibt dabei nutzbar, die Platte ist etwas langsamer\\.$",
+			"长测试会读取整个硬盘 $1——大硬盘需要数小时。期间设备可正常使用，硬盘会稍慢。"
+		],
+		[
+			"^Selbsttest: (.*)$",
+			"自检：$1"
 		],
 		[
 			"^USB-Kopie: (.*)$",

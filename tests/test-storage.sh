@@ -109,6 +109,21 @@ S=$(run ubus call shareos.storage status)
 [ -n "${VERBOSE:-}" ] && echo "$S" | head -20
 check "status: volume daten mounted with size" "echo '$S' | python3 -c \"import json,sys; d=json.load(sys.stdin); v=[x for x in d['volumes'] if x['name']=='daten'][0]; sys.exit(0 if v['mounted'] and v['size']>0 and v['layout']=='single' else 1)\""
 check "status: job and spindown reported" "echo '$S' | python3 -c \"import json,sys; d=json.load(sys.stdin); sys.exit(0 if d['spindown']==30 and d['job']['state']=='done' else 1)\""
+# disk health: self-test schedule into the crontab, test on an unknown disk refused
+E=$(run ubus call shareos.storage smart_schedule "'{\"mode\":\"short_weekly\"}'")
+check "smart: weekly short self-test scheduled (crontab)" "echo '$E' | grep -q short_weekly && run uci get storage.global.smart_test | grep -qx short_weekly && grep -q 'shareos-storage smart-test short' $R/etc/crontabs/root && run ubus call shareos.storage status | grep -q '\"smart_schedule\": \"short_weekly\"'"
+E=$(run ubus call shareos.storage smart_schedule "'{\"mode\":\"long_monthly\"}'")
+check "smart: monthly long self-test replaces it" "grep -q '^30 3 1 \* \* /usr/sbin/shareos-storage smart-test long' $R/etc/crontabs/root && ! grep -q 'smart-test short' $R/etc/crontabs/root"
+E=$(run ubus call shareos.storage smart_schedule "'{\"mode\":\"\"}'")
+check "smart: schedule off removes the entry" "! grep -q smart-test $R/etc/crontabs/root && ! run uci -q get storage.global.smart_test"
+E=$(run ubus call shareos.storage smart_schedule "'{\"mode\":\"hourly\"}'")
+check "smart: invalid schedule rejected" "echo '$E' | grep -q 'invalid value'"
+E=$(run ubus call shareos.storage smart_test "'{\"disk\":\"sdz\",\"type\":\"short\"}'")
+check "smart: self-test on an unknown disk refused" "echo '$E' | grep -q 'unknown disk'"
+o=$(run shareos-storage smart-test short; echo rc=$?)
+check "smart-test without disks in bays: nothing to do, no error" "echo '$o' | grep -q 'rc=0'"
+o=$(run shareos-storage smart-test medium; echo rc=$?)
+check "smart-test with an invalid type refused" "echo '$o' | grep -q 'rc=2'"
 E=$(run ubus call shareos.storage setup "'{\"layout\":\"mirror\",\"name\":\"x\",\"disks\":[\"sda\",\"sda\"],\"confirm\":true}'")
 check "rpc: mirror with the same disk twice rejected" "echo '$E' | grep -q 'two different disks'"
 E=$(run ubus call shareos.storage setup "'{\"layout\":\"stripe\",\"name\":\"x\",\"disks\":[\"sda\"],\"confirm\":true}'")

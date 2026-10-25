@@ -229,6 +229,7 @@ their permissions.
 - File systems **ext3**, **ext2** and **FAT32** can be chosen for disks too (FAT32: files up to 4 GB).
 - **Repair a mirror:** with a disk of a mirror missing (card: "one disk missing (U_)") and a disk in the free bay, *Repair mirror* erases that disk and adds it; the card then shows "Recovery … %".
 - **Mirror after a reboot (disks that spin up one after the other, e.g. DNS-325):** reboot with a complete mirror several times; each time `cat /proc/mdstat` shows `[2/2] [UU]` and `dmesg | grep md/raid1` shows "active with 2 out of 2 mirrors", even when the second disk comes up seconds later (`dmesg | grep 'SATA link up'`). With one disk pulled the box waits up to 40 s, then starts the mirror with one disk and logs "RAID incomplete after 40s" (`grep shareos-storage /var/log/messages`).
+- **Health (SMART):** *Speicher → Gesundheit* shows a card per disk. With a healthy disk: *GUT*, "Keine Auffälligkeiten", temperature, running time, sectors 0. *Neu lesen* wakes a sleeping disk and reads again. *Kurztest* starts the self-test: the card shows "Läuft – noch … %" and *Test abbrechen*; after about 2 minutes (*Neu lesen*) the last test reads *OK*. In the terminal: `smartctl -l selftest /dev/sda` shows the same test. *Alle Werte* opens the attribute table. With an SSD: "Lebensdauer der SSD" with a bar. Schedule *Kurztest jeden Sonntag*: `grep smart-test /etc/crontabs/root` shows `30 3 * * 0 … smart-test short`; run it by hand with `shareos-storage smart-test short`, after a few minutes `grep shareos-storage /var/log/messages` shows "SMART short self-test started".
 
 ## 14. Time and languages
 
@@ -399,7 +400,7 @@ Needs a drive with ext4 or Btrfs, the users **anna** and **lisa** (role user, "D
 10. Over SMB, access through a group: put lisa in a group `familie`, give the share `fotos` to the group (`@familie`) only and remove lisa as a user of it. Sign in from macOS (Finder) as lisa: the share opens (before ksmbd-tools 3.5.3 the Finder said "the original item can't be found").
 ## 14n. Tailscale and large system apps on the drive (0.2.0-beta.7)
 
-Needs a Tailscale account (free), a phone or computer with Tailscale, the file `tailscaled-1.98.8.sapp` (release of the firmware) and an app with the permission `tailscale` (ShareOS-Apps).
+Needs a Tailscale account (free), a phone or computer with Tailscale, the file `tailscaled-<version>.sapp` (release of the firmware) and an app with the permission `tailscale` (ShareOS-Apps).
 
 1. Before the update note `df -h /` in the terminal. After the update (restart) the box moves large system apps (FFmpeg, Transmission, MiniDLNA, OpenVPN) to the drive: `ls -l /opt/shareos/sysapps` shows `-> /mnt/<drive>/.shareos/sysapps/…` for them, nano/htop/bash stay folders. `df -h /` shows more free. Transmission, media server and VPN work as before.
 2. Apps → Store → system apps → install **tailscaled**: `ls -l /opt/shareos/sysapps/tailscaled` is a link to the drive, `df -h /` hardly changes. Without anything else the daemon runs: `ps | grep [t]ailscaled` (from 0.2.0-beta.9).

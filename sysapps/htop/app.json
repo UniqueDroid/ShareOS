@@ -1,7 +1,7 @@
 {
 	"id": "htop",
 	"name": "htop",
-	"version": "3.4.1",
+	"version": "3.5.1",
 	"publisher": "UniqueDroid",
 	"description": {
 		"de": "Zeigt im Terminal (System → Terminal oder SSH) laufende Prozesse, CPU- und Speicherauslastung live an: „htop“. Beenden mit F10 oder q.",

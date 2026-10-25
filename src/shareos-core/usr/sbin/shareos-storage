@@ -21,6 +21,9 @@
 #   shareos-storage mount <name> | umount <name>
 #   shareos-storage forget <name>              unmount and remove from the config
 #   shareos-storage spindown <minutes>         0 = never
+#   shareos-storage smart-test short|long      SMART self-test on the disks in the bays
+#                                              (not USB); the values are read again
+#                                              when the tests are done
 #   shareos-storage job                        state of the last setup job
 #
 # Disks are given as sda, sdb, ... (whole disks). Each disk gets an optional
@@ -469,6 +472,35 @@ cmd_boot() {
 	return $rc
 }
 
+# SMART self-test on every disk in a bay (cron: storage.global.smart_test).
+# When all tests are done (long: hours) the values are read again through
+# rpcd, so the overview and the messages (shareos-notify) see the result.
+cmd_smart_test() {
+	case "$1" in short|long) ;; *) echo "smart-test short|long" >&2; return 2 ;; esac
+	started=
+	for d in /sys/block/sd?; do
+		[ -e "$d" ] || continue
+		n=${d##*/}
+		case "$(readlink -f "$d")" in */usb*) continue ;; esac
+		smartctl -t "$1" /dev/$n >/dev/null 2>&1 && started="$started $n"
+	done
+	[ -n "$started" ] || { log "SMART $1 self-test: no disk"; return 0; }
+	log "SMART $1 self-test started:$started"
+	(
+		[ "$1" = short ] && sleep 300 || sleep 3600
+		i=0
+		while [ $i -lt 48 ]; do
+			busy=0
+			for n in $started; do smartctl -n standby -c /dev/$n 2>/dev/null | grep -q 'in progress' && busy=1; done
+			[ $busy = 0 ] && break
+			sleep 1800; i=$((i + 1))
+		done
+		for n in $started; do ubus call shareos.storage smart "{\"disk\":\"$n\"}" >/dev/null 2>&1; done
+		/usr/sbin/shareos-notify check >/dev/null 2>&1
+	) >/dev/null 2>&1 </dev/null &
+	return 0
+}
+
 cmd_shutdown() {
 	for sw in $(find_dev LABEL=shareos-swap); do swapoff $sw 2>/dev/null; done
 	for n in $(uci -q show storage | sed -n "s/^storage\.\([^.=]*\)=volume$/\1/p"); do
@@ -498,10 +530,11 @@ case "$1" in
 		[ "$(uci -q get storage.global.apps)" = "$2" ] && uci -q delete storage.global.apps
 		uci commit storage
 		rmdir /mnt/$2 2>/dev/null; true ;;
+	smart-test) cmd_smart_test "$2" ;;
 	spindown)
 		echo "$2" | grep -qE '^[0-9]+$' || exit 2
 		uci set storage.global.spindown="$2" && uci commit storage
 		apply_spindown ;;
 	job) cat $JOB 2>/dev/null ;;
-	*) sed -n '3,19s/^# \{0,1\}//p' "$0"; exit 2 ;;
+	*) sed -n '3,27s/^# \{0,1\}//p' "$0"; exit 2 ;;
 esac

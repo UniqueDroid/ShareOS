@@ -139,7 +139,9 @@
 					"usb_copy",
 					"usb_copy_config",
 					"job_clear",
-					"spindown"
+					"spindown",
+					"smart_test",
+					"smart_schedule"
 				],
 				"shareos.update": [
 					"download",

@@ -1464,18 +1464,98 @@ E1141	MEU USO
 E1142	OCUPAÇÃO
 E1143	LIVRE
 E1144	LIMITE
-E1145	BOTÃO USB
-E1146	copia
-E1147	Copiar agora
-E1148	Botão USB salvo.
-E1149	Cópia USB iniciada.
-E1150	Última:
-E1151	Nenhuma unidade USB conectada.
-E1152	Nenhum destino definido.
-E1153	Espaço insuficiente no destino – nada copiado.
-E1154	A unidade de destino não está montada.
-E1155	Pressionar rápido copia as unidades USB, segurar 3 s as ejeta
-E1156	Sempre uma nova pasta com a data, p. ex.
-E1157	– nada na caixa é sobrescrito ou apagado. A luz USB pisca durante a cópia; o resultado chega como mensagem. Sem a marcação, o botão só ejeta, como antes.
-P279	Cópia USB: $1
-P280	Botão USB: $1
+E1145	SAÚDE
+E1146	Saúde
+E1147	AUTOTESTE
+E1148	BOM
+E1149	ATENÇÃO
+E1150	CRÍTICO
+E1151	BAIA
+E1152	Ler novamente
+E1153	Ler agora
+E1154	Teste curto
+E1155	Teste longo
+E1156	Cancelar teste
+E1157	Todos os valores
+E1158	Ocultar valores
+E1159	Temperatura
+E1160	Tempo de funcionamento
+E1161	Ligações
+E1162	Arranques do motor
+E1163	Setores realocados
+E1164	Setores pendentes
+E1165	Setores ilegíveis
+E1166	Erros de transferência (CRC)
+E1167	Registro de erros
+E1168	PIOR
+E1169	LIMIAR
+E1170	VALOR BRUTO
+E1171	ANTES
+E1172	FALHOU
+E1173	AUTOTESTE AGENDADO
+E1174	TODOS OS DISCOS DAS BAIAS
+E1175	COMO É AVALIADO
+E1176	Teste curto todo domingo (3:30)
+E1177	Teste longo no dia 1 de cada mês (3:30)
+E1178	autoteste em andamento
+E1179	Iniciar o teste longo?
+E1180	Autoteste iniciado.
+E1181	Autoteste cancelado.
+E1182	Agendamento salvo.
+E1183	Nada fora do normal.
+E1184	Vida útil do SSD
+E1185	Nenhum autoteste executado ainda.
+E1186	Faça backup dos dados e troque o disco em breve.
+E1187	SMART dos discos e SSDs
+E1188	Nenhum disco detectado.
+E1189	SMART ainda não lido. A leitura acorda o disco.
+E1190	O disco está dormindo – os valores virão quando ele acordar.
+E1191	Este disco não fornece valores SMART.
+E1192	Este adaptador USB não repassa valores SMART.
+E1193	O próprio disco avisa: falha iminente (avaliação SMART geral: FALHA).
+E1194	O último autoteste falhou.
+E1195	O disco relata uma falha, um valor está abaixo do limiar do fabricante, um autoteste falhou, mais de 100 setores realocados ou mais de 10 pendentes, SSD com 10 % de vida ou menos, 60 °C ou mais.
+E1196	Alguns setores realocados, pendentes ou ilegíveis, erros de transferência, entradas no registro de erros, SSD com 20 % de vida ou menos, a partir de 55 °C.
+E1197	O teste curto verifica a eletrônica e parte da superfície, o teste longo lê o disco inteiro (muitas horas em discos grandes; o disco fica acordado). O resultado aparece aqui e como mensagem se algo estiver errado.
+P279	$1 setores já foram substituídos (realocados).
+P280	$1 setores estão incertos (pendentes) – serão verificados na próxima gravação.
+P281	$1 setores não puderam ser lidos.
+P282	$1 erros de transferência (CRC) – geralmente o conector ou o cabo, não o disco.
+P283	$1 entradas no registro de erros do disco.
+P284	O SSD está quase gasto: resta $1 % de vida útil.
+P285	O SSD está se desgastando: resta $1 % de vida útil.
+P286	Muito quente: $1 °C.
+P287	Quente: $1 °C.
+P288	Valor $1 abaixo do limiar do fabricante
+P289	Valor $1 esteve abaixo do limiar antes
+P290	$1 entradas
+P291	$1 °C (máxima: $2 °C)
+P292	$1 dias ($2 h)
+P293	$1 anos ($2 h)
+P294	resta $1 %
+P295	SSD: resta $1 %
+P296	Em andamento – resta $1 %
+P297	(às $1 h)
+P298	Lido em $1.
+P299	$1 rpm
+P300	O teste longo lê o disco $1 inteiro – muitas horas em discos grandes. A caixa continua utilizável, o disco fica um pouco mais lento.
+P301	Autoteste: $1
+E1198	sem erros
+E1199	EM REPOUSO
+E1200	O disco está em repouso
+E1201	O disco está em funcionamento
+E1202	BOTÃO USB
+E1203	copia
+E1204	Copiar agora
+E1205	Botão USB salvo.
+E1206	Cópia USB iniciada.
+E1207	Última:
+E1208	Nenhuma unidade USB conectada.
+E1209	Nenhum destino definido.
+E1210	Espaço insuficiente no destino – nada copiado.
+E1211	A unidade de destino não está montada.
+E1212	Pressionar rápido copia as unidades USB, segurar 3 s as ejeta
+E1213	Sempre uma nova pasta com a data, p. ex.
+E1214	– nada na caixa é sobrescrito ou apagado. A luz USB pisca durante a cópia; o resultado chega como mensagem. Sem a marcação, o botão só ejeta, como antes.
+P302	Cópia USB: $1
+P303	Botão USB: $1

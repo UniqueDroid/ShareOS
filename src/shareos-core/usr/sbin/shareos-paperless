@@ -131,6 +131,7 @@ check_tasks() {   # inbox
 ensure_folders() {
 	for ib in $(inboxes); do
 		dir=$(inbox_path "$ib"); [ -n "$dir" ] || continue
+		asleep "$dir" && continue                     # do not wake the disks for it
 		parent=${dir%/*}
 		[ -d "$parent" ] || continue                  # volume/home not there
 		if [ ! -d "$dir" ]; then
@@ -142,13 +143,33 @@ ensure_folders() {
 	done
 }
 
+# every disk below a folder sleeps (hdparm -C does not wake a disk). Then
+# nobody has put a file there since (that would have woken it), so the run
+# leaves the folder alone and the disks keep sleeping. Only the mount point
+# /mnt/<volume> is looked at: it is always in memory, the folder may not be.
+asleep() {   # folder
+	mp=$(echo "$1" | cut -d/ -f1-3)
+	dev=$(df "$mp" 2>/dev/null | awk 'NR == 2 { print $1 }'); dev=${dev#/dev/}
+	case "$dev" in md*) parts=$(ls /sys/block/"$dev"/slaves 2>/dev/null) ;; sd*) parts=$dev ;; *) return 1 ;; esac
+	[ -n "$parts" ] || return 1
+	for p in $parts; do
+		d=$(echo "$p" | sed 's/[0-9]*$//')
+		case "$d" in sd[a-z]) ;; *) return 1 ;; esac
+		hdparm -C /dev/"$d" 2>/dev/null | grep -q standby || return 1
+	done
+	return 0
+}
+
 cmd_run() {
 	[ -n "$(url)" ] || return 0
 	[ "$(g global enabled)" = 0 ] && return 0
 	mkdir "$LOCK" 2>/dev/null || { [ $(( $(date +%s) - $(stat -c %Y "$LOCK") )) -gt 3600 ] && rmdir "$LOCK" && mkdir "$LOCK" || exit 0; }
 	trap 'rmdir "$LOCK" 2>/dev/null' EXIT
 	ensure_folders
-	for ib in $(inboxes); do upload_inbox "$ib"; check_tasks "$ib"; done
+	for ib in $(inboxes); do
+		d=$(inbox_path "$ib"); [ -n "$d" ] && asleep "$d" && continue
+		upload_inbox "$ib"; check_tasks "$ib"
+	done
 	date +%s > /tmp/shareos-paperless.last
 }
 
