@@ -1585,3 +1585,5 @@ E1232	Un nouveau dossier daté à chaque fois, p. ex.
 E1233	– rien n'est écrasé ni supprimé sur le boîtier. Le voyant USB clignote pendant la copie ; le résultat arrive sous forme de message. Sans la case cochée, le bouton ne fait qu'éjecter, comme avant.
 P309	Copie USB : $1
 P310	Bouton USB : $1
+E1234	Envoyer des notifications
+E1235	Peut envoyer des messages via les notifications de la box (interface, e-mail, push) – 20 par heure au maximum, précédés du nom de l'application ; dans le navigateur, réservé aux administrateurs.

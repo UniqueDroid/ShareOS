@@ -99,6 +99,7 @@ Version in brackets = first release with the feature.
 - Apps keep their data on the box also for accounts without file access: a private folder per app and account (0.2.0-beta.9)
 - Admins get a personal folder for apps too (their home, for root `home/root` on the apps drive), so app data no longer lands at the top of a drive (0.2.0-beta.10)
 - App permissions `sysinfo`, `netcheck`, `docker` and `tuya` (admins only): SysMon, HomePing, DockerDeck and TuyaPulse show real data – the box's values, checks from the box, Docker hosts of the homelab, Tuya devices locally without the cloud (0.2.0-beta.11)
+- App permission `notify`: apps send messages through the box's notifications (web interface, e-mail, push) – from their scheduled tasks with `shareos-app-notify`, from the browser with `ShareOS.notify` (admins); at most 20 an hour per app (0.2.0-beta.12)
 - File dialog of the apps with the personal folder and the user's shares, also for accounts without file access (0.2.0-beta.11)
 - System apps declare their service in `app.json` (`"service"`), ShareOS starts and stops it through the firmware's controller; how to submit a system app: `sysapps/README.md` (0.2.0-beta.9)
 - Large system apps on the apps drive (link in `/opt`), the flash stays free (0.2.0-beta.7)

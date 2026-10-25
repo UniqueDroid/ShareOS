@@ -1,0 +1,41 @@
+#!/usr/bin/ucode -S
+//
+// shareos-app-notify – a message from a scheduled task of an app with the
+// permission "notify" (shown in the web interface, sent by e-mail/push)
+//
+//   shareos-app-notify <info|warn|error> <key> <title> [text]
+//   shareos-app-notify clear <key>        the cause is gone
+//
+// The same key is one message (counted, sent again after 24 h at most).
+// The messages are sent when the task has finished; at most 10 per run and
+// 20 an hour per app. Key: 1–32 characters A-Z a-z 0-9 . _ -; title: at most
+// 100 characters (the app's name is put in front); text: at most 1000.
+//
+'use strict';
+
+import { readfile, writefile, rename, stat, lsdir } from 'fs';
+
+function usage(msg) {
+	warn((msg ? 'shareos-app-notify: ' + msg + '\n' : '') +
+		'usage: shareos-app-notify <info|warn|error> <key> <title> [text] | clear <key>\n');
+	exit(2);
+}
+
+let dir = getenv('SHAREOS_NOTIFY_DIR');
+if (!dir || stat(dir)?.type != 'directory')
+	usage('only in a scheduled task of an app with the permission "notify"');
+let op = ARGV[0], m;
+if (op == 'clear') {
+	if (length(ARGV) != 2) usage();
+	m = { op: 'clear', key: ARGV[1] };
+} else if (op == 'info' || op == 'warn' || op == 'error') {
+	if (length(ARGV) < 3 || length(ARGV) > 4) usage();
+	m = { op: 'send', level: op, key: ARGV[1], title: ARGV[2], text: ARGV[3] ?? '' };
+} else usage();
+if (!match(m.key, /^[A-Za-z0-9._-]{1,32}$/)) usage('invalid key');
+if (length(m.title ?? '') > 100 || length(m.text ?? '') > 1000) usage('title or text too long');
+if (length(lsdir(dir) ?? []) >= 10) usage('at most 10 messages per run');
+// sorted by time; written in one piece
+let id = sprintf('%010d-%s', time(), substr(replace(trim(readfile('/proc/sys/kernel/random/uuid') ?? ''), '-', ''), 0, 12));
+let tmp = dir + '/.' + id;
+if (!writefile(tmp, sprintf('%J\n', m)) || !rename(tmp, dir + '/' + id + '.json')) usage('cannot write the message');

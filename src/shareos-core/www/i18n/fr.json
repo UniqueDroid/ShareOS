@@ -1236,7 +1236,9 @@
 		"Das Ziellaufwerk ist nicht eingehängt.": "Le disque cible n'est pas monté.",
 		"Kurz drücken kopiert die USB-Laufwerke, 3 s halten wirft sie aus": "Un appui court copie les disques USB, 3 s les éjecte",
 		"Jedes Mal ein neuer Ordner mit Datum, z. B.": "Un nouveau dossier daté à chaque fois, p. ex.",
-		"– auf der Box wird nichts überschrieben oder gelöscht. Die USB-Lampe blinkt beim Kopieren; das Ergebnis kommt als Meldung. Ohne Häkchen wirft die Taste wie bisher nur aus.": "– rien n'est écrasé ni supprimé sur le boîtier. Le voyant USB clignote pendant la copie ; le résultat arrive sous forme de message. Sans la case cochée, le bouton ne fait qu'éjecter, comme avant."
+		"– auf der Box wird nichts überschrieben oder gelöscht. Die USB-Lampe blinkt beim Kopieren; das Ergebnis kommt als Meldung. Ohne Häkchen wirft die Taste wie bisher nur aus.": "– rien n'est écrasé ni supprimé sur le boîtier. Le voyant USB clignote pendant la copie ; le résultat arrive sous forme de message. Sans la case cochée, le bouton ne fait qu'éjecter, comme avant.",
+		"Meldungen senden": "Envoyer des notifications",
+		"Darf Meldungen über die Benachrichtigungen der Box senden (Oberfläche, E-Mail, Push) – höchstens 20 pro Stunde, mit dem Namen der App davor; im Browser nur für Administratoren.": "Peut envoyer des messages via les notifications de la box (interface, e-mail, push) – 20 par heure au maximum, précédés du nom de l'application ; dans le navigateur, réservé aux administrateurs."
 	},
 	"patterns": [
 		[

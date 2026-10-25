@@ -11,6 +11,11 @@
 //   shareos-apps status             state of the last install job (JSON)
 //   shareos-apps run-job <id> <job> run a scheduled task of an app now (cron)
 //   shareos-apps job-log <id> <job> output of the last run
+//   shareos-apps notify <id> send <info|warn|error> <key> <title> [text]
+//   shareos-apps notify <id> clear <key>
+//                                   a message of an app with the permission
+//                                   "notify" through shareos-notify (rpcd for
+//                                   ShareOS.notify; the spool of its jobs)
 //
 // A package is a tar.gz with app.json at the top and the app's files:
 //   { "id": "webpad", "name": "Webpad", "version": "1.0.0",
@@ -100,7 +105,7 @@ const MAX_PKG = 64 * 1048576;       // download / upload
 const MAX_FILES = 40 * 1048576;     // unpacked
 const ID_RE = /^[a-z][a-z0-9-]{1,31}$/;
 const JOB_RE = /^[a-z][a-z0-9-]{0,23}$/;
-const PERMISSIONS = { cron: 1, embed: 1, files: 1, torrent: 1, media: 1, vpn: 1, status: 1, tailscale: 1, autobrr: 1, sysinfo: 1, netcheck: 1, docker: 1, tuya: 1 };
+const PERMISSIONS = { cron: 1, notify: 1, embed: 1, files: 1, torrent: 1, media: 1, vpn: 1, status: 1, tailscale: 1, autobrr: 1, sysinfo: 1, netcheck: 1, docker: 1, tuya: 1 };
 const MAX_JOBS = 5;
 const MAX_REQUIRES = 5;
 const MAX_LOG = 65536;
@@ -781,6 +786,70 @@ function cmd_install_file(f) {
 	return out(res);
 }
 
+// permission "notify": messages of apps through the box's notification service
+// (web interface, e-mail, push). Key, title and text are checked here, the
+// title gets the app's name in front, and an app may send at most
+// NOTIFY_MAX messages an hour (the messages are kept on the flash).
+const NOTIFY_MAX = 20;
+const NOTIFY_KEY_RE = /^[A-Za-z0-9._-]{1,32}$/;
+const NOTIFY_LEVELS = { info: 1, warn: 1, error: 1 };
+const NOTIFY_SPOOL_MAX = 10;
+function notify_app(id) {
+	let d = match(id ?? '', ID_RE) ? app_dir(id) : null;
+	let a = d ? json(readfile(d + '/app.json') ?? 'null') : null;
+	return type(a) == 'object' && index(a.permissions ?? [], 'notify') >= 0 ? a : null;
+}
+function notify_text_ok(s, max, nl) {
+	return type(s) == 'string' && length(s) <= max && !match(s, nl ? /[\x01-\x09\x0b-\x1f\x7f]/ : /[[:cntrl:]]/);
+}
+function app_notify(id, op, level, key, title, text) {
+	let a = notify_app(id);
+	if (!a) return { error: 'the app has no permission "notify"' };
+	if (!match(key ?? '', NOTIFY_KEY_RE)) return { error: 'invalid key (1–32 characters A-Z a-z 0-9 . _ -)' };
+	let full = 'app-' + id + '-' + key;
+	if (op == 'clear') {
+		system('/usr/sbin/shareos-notify clear ' + shq(full) + ' >/dev/null 2>&1');
+		return { ok: true };
+	}
+	if (op != 'send') return { error: 'invalid operation' };
+	if (!NOTIFY_LEVELS[level]) return { error: 'invalid level (info, warn, error)' };
+	title = trim(title ?? ''); text = trim(text ?? '');
+	if (title == '' || !notify_text_ok(title, 100, false)) return { error: 'invalid title (1–100 characters)' };
+	if (!notify_text_ok(text, 1000, true)) return { error: 'invalid text (at most 1000 characters)' };
+	// the last hour's sends of this app (RAM)
+	mkdir(ST); mkdir(ST + '/notify');
+	let rf = ST + '/notify/' + id, now = time();
+	let sent = filter(map(split(readfile(rf) ?? '', '\n'), (x) => +x), (t) => t > now - 3600);
+	if (length(sent) >= NOTIFY_MAX) return { error: 'too many messages (at most ' + NOTIFY_MAX + ' an hour)' };
+	push(sent, now);
+	writefile(rf, join('\n', sent) + '\n');
+	let t = (a.name ?? id) + ': ' + title;
+	let r = capture(sprintf('/usr/sbin/shareos-notify send %s apps %s %s %s %s %s', level, shq(full), shq(t), shq(t), shq(text), shq(text)));
+	let j = json(trim(r.out) || 'null');
+	return type(j) == 'object' && j.ok ? { ok: true, sent: j.sent } : { error: 'sending failed' };
+}
+
+// the messages a job left in its spool folder (shareos-app-notify): at most
+// NOTIFY_SPOOL_MAX, only plain files of the app's user, 4 KB each
+function notify_spool(id, dir, uid) {
+	let n = 0;
+	for (let f in sort(lsdir(dir) ?? [])) {
+		let p = dir + '/' + f, s = lstat(p);
+		if (!s || s.type != 'file' || s.uid != +uid || s.size > 4096) continue;
+		if (++n > NOTIFY_SPOOL_MAX) break;
+		let m = null;
+		try { m = json(readfile(p) ?? 'null'); } catch (e) { }
+		if (type(m) == 'object') app_notify(id, m.op, m.level, m.key, m.title, m.text);
+	}
+	capture('rm -rf ' + shq(dir));
+}
+
+function cmd_notify(id, op, a1, a2, a3, a4) {
+	let r = op == 'clear' ? app_notify(id, op, null, a1) : app_notify(id, op, a1, a2, a3, a4);
+	out(r);
+	if (r.error) exit(1);
+}
+
 function cmd_remove(id, force) {
 	let dir = match(id ?? '', ID_RE) ? app_dir(id) : null;
 	if (!dir) die('unknown app');
@@ -798,6 +867,8 @@ function cmd_remove(id, force) {
 	c.foreach('apps', 'appjob', (x) => { if (x.app == id) c.delete('apps', x['.name']); });
 	c.commit('apps');
 	cron_sync();
+	// its messages are no longer a cause
+	if (!ROOT) system('/usr/sbin/shareos-notify clear ' + shq('app-' + id + '-*') + ' >/dev/null 2>&1');
 	// private folders of the app for accounts without "Dateien" (rpcd, ShareOS.fs)
 	let area = c.get('storage', 'global', 'apps');
 	if (area && match(area, /^[a-z0-9_-]+$/))
@@ -823,11 +894,18 @@ function cmd_run_job(id, j) {
 	let u = app_user(id), d = data_dir(id), t0 = time();
 	let uid = trim(capture('id -u ' + u).out);
 	if (!match(uid, /^[0-9]+$/) || +uid < 100) { system('rmdir ' + shq(lock)); die('the app user is missing – reinstall the app'); }
+	// permission "notify": the job leaves its messages in a spool folder
+	// (shareos-app-notify); they are sent when it has finished
+	let spool = index(a.permissions ?? [], 'notify') >= 0 ? ST + '/spool/' + id : null;
+	if (spool) {
+		mkdir(ST + '/spool');
+		capture(sprintf('rm -rf %s && mkdir -m 700 %s && chown %s:%s %s', shq(spool), shq(spool), u, u, shq(spool)));
+	}
 	// the job and everything it starts runs as the app user; at the time limit
 	// all processes of that user are stopped (TERM, then KILL)
 	let sh = sprintf(`
 cd %s || exit 1
-export APP_ID=%s APP_DIR=%s APP_DATA=%s HOME=%s
+export APP_ID=%s APP_DIR=%s APP_DATA=%s HOME=%s%s
 kill_app() { for p in /proc/[0-9]*; do [ "$(awk '/^Uid:/ {print $2; exit}' $p/status 2>/dev/null)" = %s ] && kill -$1 \${p#/proc/} 2>/dev/null; done; }
 nice -n 10 su -p -s /bin/sh %s -c %s &
 pid=$!
@@ -836,7 +914,7 @@ w=$!
 wait $pid; rc=$?
 kill $w 2>/dev/null
 kill_app KILL
-exit $rc`, shq(d), id, shq(APPS + '/' + id), shq(d), shq(d), uid, u,
+exit $rc`, shq(d), id, shq(APPS + '/' + id), shq(d), shq(d), spool ? ' SHAREOS_NOTIFY_DIR=' + shq(spool) : '', uid, u,
 		shq('exec /bin/sh ' + shq(APPS + '/' + id + '/' + def.command)), +(def.timeout ?? 300), shq(base + '.timeout'));
 	unlink(base + '.timeout');
 	let r = capture('/bin/sh -c ' + shq(sh));
@@ -847,6 +925,7 @@ exit $rc`, shq(d), id, shq(APPS + '/' + id), shq(d), shq(d), uid, u,
 	unlink(base + '.timeout');
 	writefile(base + '.json', sprintf('%J', st));
 	system('rmdir ' + shq(lock));
+	if (spool) notify_spool(id, spool, uid);
 	system(sprintf('logger -t shareos-apps "job %s/%s finished (exit %d, %d s)"', id, j, r.rc, st.duration));
 	if (!ROOT) {
 		let key = 'appjob-' + id + '-' + j;
@@ -892,7 +971,8 @@ case 'remove': cmd_remove(ARGV[1], ARGV[2]); break;
 case 'status': out(json(readfile(ST + '/job.json') ?? 'null') ?? { state: 'idle' }); break;
 case 'run-job': cmd_run_job(ARGV[1], ARGV[2]); break;
 case 'job-log': cmd_job_log(ARGV[1], ARGV[2]); break;
+case 'notify': cmd_notify(ARGV[1], ARGV[2], ARGV[3], ARGV[4], ARGV[5], ARGV[6]); break;
 default:
-	warn('usage: shareos-apps catalog | cached | list | install <id> [version] | install-file <file> | remove <id> | status | run-job <id> <job> | job-log <id> <job> | services list|boot|stop\n');
+	warn('usage: shareos-apps catalog | cached | list | install <id> [version] | install-file <file> | remove <id> | status | run-job <id> <job> | job-log <id> <job> | notify <id> send|clear … | services list|boot|stop\n');
 	exit(2);
 }

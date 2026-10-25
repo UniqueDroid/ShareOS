@@ -1236,7 +1236,9 @@
 		"Das Ziellaufwerk ist nicht eingehängt.": "Целевой диск не подключён.",
 		"Kurz drücken kopiert die USB-Laufwerke, 3 s halten wirft sie aus": "Короткое нажатие копирует USB-накопители, удержание 3 с извлекает их",
 		"Jedes Mal ein neuer Ordner mit Datum, z. B.": "Каждый раз новая папка с датой, например",
-		"– auf der Box wird nichts überschrieben oder gelöscht. Die USB-Lampe blinkt beim Kopieren; das Ergebnis kommt als Meldung. Ohne Häkchen wirft die Taste wie bisher nur aus.": "– на устройстве ничего не перезаписывается и не удаляется. Индикатор USB мигает при копировании; результат приходит сообщением. Без галочки кнопка, как и раньше, только извлекает."
+		"– auf der Box wird nichts überschrieben oder gelöscht. Die USB-Lampe blinkt beim Kopieren; das Ergebnis kommt als Meldung. Ohne Häkchen wirft die Taste wie bisher nur aus.": "– на устройстве ничего не перезаписывается и не удаляется. Индикатор USB мигает при копировании; результат приходит сообщением. Без галочки кнопка, как и раньше, только извлекает.",
+		"Meldungen senden": "Отправка уведомлений",
+		"Darf Meldungen über die Benachrichtigungen der Box senden (Oberfläche, E-Mail, Push) – höchstens 20 pro Stunde, mit dem Namen der App davor; im Browser nur für Administratoren.": "Может отправлять сообщения через уведомления устройства (интерфейс, e-mail, push) – не более 20 в час, с названием приложения в начале; в браузере только для администраторов."
 	},
 	"patterns": [
 		[

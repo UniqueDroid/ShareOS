@@ -445,6 +445,16 @@ Needs a Tailscale account (free), a phone or computer with Tailscale, the file `
 5. An account without a personal folder: sharing shows "no personal folder"; the shared item is dropped and does not come back at the next login.
 6. File dialog of an app for an account **without** *Dateien* (e.g. Webpad → *Öffnen*): the list of folders shows *App-Daten* first, then *Mein Ordner* and the user's shares; read-only shares are marked and are missing when saving. The app still keeps its own files in *App-Daten*.
 
+## 14y. Permission notify (0.2.0-beta.12)
+
+Needs an app with the permission `notify` (e.g. HomePing in a version that uses it) – or an own test app with a job that calls `shareos-app-notify warn test "Test" "Hello"`.
+
+1. APPS → the app → *Permissions*: the tag *Send notifications* with its explanation.
+2. Run the app's task (APPS → Tasks → *Run now*): System → Messages shows "<App>: Test" with the text; with e-mail or push set up it also arrives there.
+3. A task that calls `shareos-app-notify clear test` marks the message as resolved.
+4. More than 20 messages an hour are refused (`too many messages` in the task's log).
+5. Remove the app: its open messages are marked as resolved.
+
 ## 14u. Permissions sysinfo, netcheck, docker, tuya (0.2.0-beta.11)
 
 Needs the apps SysMon, HomePing and DockerDeck in a version with these permissions (ShareOS-Apps) – or an own test app.
