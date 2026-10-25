@@ -15,17 +15,22 @@
 //   slowly = access reset, off = cancel, blinking fast = factory reset.
 //
 //   USB button (front): safely removes all USB drives (like "Safely remove").
+//     With the USB copy on (shareos.usbcopy.enabled=1): a short press (under
+//     3 s) copies the USB drives into the configured folder (shareos-usb
+//     copy), holding it 3 s or longer removes them.
 //   Power button, on boxes where it is a gpio-key (DNS-320 rev A, DNS-325):
 //     pressed: shut down. (DNS-320L/320 rev B/327L: polled by shareos-board.)
 //
 // The durations come from the kernel's event timestamps.
 //   SHAREOS_BUTTONS_DEV=<file>  read events from this file (tests)
 //   SHAREOS_BUTTONS_DRY=1       print the actions instead of running them
+//   SHAREOS_BUTTONS_CONF=<dir>  UCI config folder (tests)
 //
 'use strict';
 
 import { open, popen, readfile, glob } from 'fs';
 import * as struct from 'struct';
+import { cursor } from 'uci';
 
 const EV_KEY = 1;
 const KEY_RESTART = 0x198;          // reset button
@@ -33,6 +38,7 @@ const KEY_COPY = 0x85;              // USB button (DNS-320L, DNS-327L)
 const KEY_EJECTCD = 0xa1;           // USB button (DNS-320 rev A, DNS-325)
 const KEY_POWER = 0x74;             // power button
 const ACCESS_MIN = 5, ACCESS_MAX = 10, FACTORY_MIN = 15;
+const USB_LONG = 3;                 // s: with the USB copy on, longer = remove
 const DRY = !!getenv('SHAREOS_BUTTONS_DRY');
 // PID of the dd that reads the events (S05board stops it with the program)
 const DDPID = getenv('SHAREOS_BUTTONS_DDPID') ?? '/var/run/shareos-buttons-dd.pid';
@@ -122,6 +128,20 @@ function usb_pressed() {
 	if (!length(keys(seen))) log('no USB drive mounted');
 }
 
+function copy_on() {
+	let d = getenv('SHAREOS_BUTTONS_CONF');
+	let c = d ? cursor(d) : cursor();
+	return c?.get('shareos', 'usbcopy', 'enabled') == '1';
+}
+
+function usb_released(secs) {
+	if (copy_on() && secs < USB_LONG) {
+		log(sprintf('USB button %.1f s – copying the USB drives', secs));
+		run('start-stop-daemon -S -b -x /usr/sbin/shareos-usb -- copy');
+	} else
+		usb_pressed();
+}
+
 let evdev = find_dev();
 // test hook: print the device that was found
 if (getenv('SHAREOS_BUTTONS_FIND')) {
@@ -142,7 +162,7 @@ if (!f) {
 	exit(1);
 }
 
-let pressed_at = null;
+let pressed_at = null, usb_at = null;
 while (true) {
 	let ev = f.read(16);
 	if (ev == null || length(ev) < 16) break;
@@ -159,8 +179,10 @@ while (true) {
 			reset_released(t - pressed_at);
 			pressed_at = null;
 		}
-	} else if ((code == KEY_COPY || code == KEY_EJECTCD) && value == 1) {
-		usb_pressed();
+	} else if (code == KEY_COPY || code == KEY_EJECTCD) {
+		// acted on at release: the duration decides between copy and remove
+		if (value == 1) usb_at = t;
+		else if (usb_at != null) { usb_released(t - usb_at); usb_at = null; }
 	} else if (code == KEY_POWER && value == 1) {
 		log('power button – shutting down');
 		run('/sbin/poweroff');

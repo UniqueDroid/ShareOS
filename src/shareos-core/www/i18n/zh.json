@@ -1147,7 +1147,20 @@
 		"MEIN VERBRAUCH": "我的用量",
 		"BELEGUNG": "占用",
 		"FREI": "可用",
-		"LIMIT": "限额"
+		"LIMIT": "限额",
+		"USB-TASTE": "USB 按钮",
+		"kopiert": "复制",
+		"Jetzt kopieren": "立即复制",
+		"USB-Taste gespeichert.": "USB 按钮已保存。",
+		"USB-Kopie gestartet.": "USB 复制已开始。",
+		"Zuletzt:": "上次：",
+		"Kein USB-Laufwerk eingesteckt.": "未插入 USB 驱动器。",
+		"Kein Ziel eingestellt.": "未设置目标。",
+		"Zu wenig Platz auf dem Ziel – nichts kopiert.": "目标空间不足——未复制任何内容。",
+		"Das Ziellaufwerk ist nicht eingehängt.": "目标驱动器未挂载。",
+		"Kurz drücken kopiert die USB-Laufwerke, 3 s halten wirft sie aus": "短按复制 USB 驱动器，按住 3 秒弹出",
+		"Jedes Mal ein neuer Ordner mit Datum, z. B.": "每次一个带日期的新文件夹，例如",
+		"– auf der Box wird nichts überschrieben oder gelöscht. Die USB-Lampe blinkt beim Kopieren; das Ergebnis kommt als Meldung. Ohne Häkchen wirft die Taste wie bisher nur aus.": "——设备上的内容不会被覆盖或删除。复制时 USB 指示灯闪烁，结果以消息形式发送。不勾选时，按钮和以前一样只弹出。"
 	},
 	"patterns": [
 		[
@@ -2265,6 +2278,14 @@
 		[
 			"^Laufwerk (\\d+) % belegt$",
 			"磁盘已用 $1 %"
+		],
+		[
+			"^USB-Kopie: (.*)$",
+			"USB 复制：$1"
+		],
+		[
+			"^USB-Taste: (.*)$",
+			"USB 按钮：$1"
 		]
 	],
 	"words": [

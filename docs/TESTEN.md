@@ -423,6 +423,15 @@ Braucht ein Tailscale-Konto (kostenlos), ein Handy oder einen Rechner mit Tailsc
 5. Webpad (ohne `embed`) → *Öffnen ↗*: ein eigenes Fenster, kein neuer Tab.
 6. Als Benutzer in „Mein ShareOS“: eine App mit `embed` öffnet sich in der Seite (`#/app/<id>`), ✕ führt zurück.
 
+## 14x. USB-Kopie mit der USB-Taste (0.2.0-beta.12)
+
+1. *Speicher → Einstellungen → USB-Taste*: Häkchen, Ziel-Laufwerk (z. B. `daten`), Ordner `USB-Kopien`, *Speichern*.
+2. USB-Stick mit ein paar Dateien einstecken. USB-Taste kurz drücken: Die USB-Lampe blinkt; danach kommt die Meldung „USB-Kopie fertig“ mit der Zahl der Dateien. `ls /mnt/daten/USB-Kopien/` zeigt `2026-…_…-<Stick-Name>` mit den Dateien. Der Stick bleibt eingehängt.
+3. Noch einmal drücken: ein zweiter Ordner, der erste bleibt unberührt.
+4. Taste 3 s oder länger halten: Der Stick wird ausgeworfen (wie bisher).
+5. *Jetzt kopieren* auf der Seite macht dasselbe. Ein Stick, der größer ist als der freie Platz: Meldung „Zu wenig Platz“, nichts kopiert.
+6. Häkchen weg: Kurz drücken wirft wieder nur aus.
+
 ## 14v. Mein ShareOS, „Teilen mit“, Dateidialog mit Freigaben (0.2.0-beta.11)
 
 1. Als normaler Benutzer anmelden: Die Reiter heißen *MEIN SHAREOS*, (*DATEIEN*,) *EINSTELLUNGEN*. *Einstellungen* zeigt links die Darstellung und rechts *Passwort ändern*; das Ändern funktioniert wie bisher. Die alte Adresse `#/appearance` öffnet *Einstellungen*.

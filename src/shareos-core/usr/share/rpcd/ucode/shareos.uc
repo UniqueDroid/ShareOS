@@ -276,6 +276,18 @@ function lsblk() {
 	return j?.blockdevices ?? [];
 }
 
+// USB copy (USB button / interface): settings and the state of the last run
+function usb_copy_info() {
+	let c = cursor(), st = {};
+	for (let line in split(readfile('/tmp/shareos-usb.copy/state') ?? '', '\n')) {
+		let m = match(line, /^([a-z]+)=(.*)$/);
+		if (m) st[m[1]] = match(m[2], /^[0-9]+$/) ? +m[2] : m[2];
+	}
+	if (st.state == 'running' && !stat('/tmp/shareos-usb.copy.lock')) { st.state = 'error'; st.error ??= 'stopped'; }
+	return { enabled: c.get('shareos', 'usbcopy', 'enabled') == '1', volume: c.get('shareos', 'usbcopy', 'volume') ?? '',
+		path: c.get('shareos', 'usbcopy', 'path') ?? 'USB-Kopien', last: length(st) ? st : null };
+}
+
 function smart_read(disk, refresh) {
 	let cache = SMART_DIR + '/smart-' + disk + '.json';
 	let st = stat(cache);
@@ -2387,6 +2399,7 @@ return {
 					volumes: volumes(),
 					spindown: +(c.get('storage', 'global', 'spindown') ?? 0),
 					usb: usb_mounts(),
+					usb_copy: usb_copy_info(),
 					job: storage_job()
 				};
 			}
@@ -2486,6 +2499,38 @@ return {
 		},
 
 		// erase a USB stick/disk: one partition, fs: exfat (default), vfat, ntfs, ext4
+		// USB button: short press copies the USB drives into volume/path
+		usb_copy_config: {
+			args: { enabled: false, volume: '', path: '' },
+			call: function(req) {
+				let a = req.args, c = cursor();
+				if (type(a.enabled) != 'bool') return { error: 'invalid value' };
+				let path = trim(a.path ?? '') || 'USB-Kopien';
+				for (let part in split(path, '/')) if (!name_ok(part) || substr(part, 0, 1) == '.') return { error: 'invalid folder' };
+				if (a.enabled || a.volume) {
+					if (!valid_name(a.volume) || c.get('storage', a.volume) != 'volume') return { error: 'unknown volume' };
+				}
+				if (c.get('shareos', 'usbcopy') != 'usbcopy') c.set('shareos', 'usbcopy', 'usbcopy');
+				c.set('shareos', 'usbcopy', 'enabled', a.enabled ? '1' : '0');
+				c.set('shareos', 'usbcopy', 'volume', a.volume ?? '');
+				c.set('shareos', 'usbcopy', 'path', path);
+				c.save('shareos'); c.commit('shareos');
+				return usb_copy_info();
+			}
+		},
+
+		// copy now (like a short press of the USB button)
+		usb_copy: {
+			call: function() {
+				let i = usb_copy_info();
+				if (!i.volume) return { error: 'no target set' };
+				if (stat('/tmp/shareos-usb.copy.lock')) return { error: 'already running' };
+				if (!length(usb_mounts())) return { error: 'no USB drive' };
+				system(sprintf('start-stop-daemon -S -b -x %s -- copy', USB));
+				return { started: true };
+			}
+		},
+
 		usb_format: {
 			args: { disk: '', fs: '', name: '', confirm: false },
 			call: function(req) {

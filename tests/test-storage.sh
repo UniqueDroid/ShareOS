@@ -177,6 +177,24 @@ check "usb: internal disks are not touched by mount-all" "! grep -q \" $R/mnt/us
 usb shareos-usb umount-all >/dev/null
 chroot "$R" /usr/bin/env SHAREOS_USB_DISKS="$C" ACTION=add MDEV=${C}p1 /usr/sbin/shareos-usb hotplug; sleep 4
 check "usb: plugged in (mdev hotplug) -> mounted" "grep -q \" $R/mnt/usb-mein_stick \" /proc/mounts"
+# --- USB copy (short press of the USB button) ---------------------------------
+V=$(for v in daten backup; do grep -q " $R/mnt/$v " /proc/mounts && { echo $v; break; }; done)
+if [ -n "$V" ]; then
+	o=$(usb shareos-usb copy; echo rc=$?)
+	check "usb copy: no target set -> error, nothing copied" "echo '$o' | grep -q rc=1 && grep -q 'error=no target set' $R/tmp/shareos-usb.copy/state"
+	run "uci set shareos.usbcopy=usbcopy; uci set shareos.usbcopy.enabled=1; uci set shareos.usbcopy.volume=$V; uci commit shareos" >/dev/null
+	o=$(usb shareos-usb copy; echo rc=$?)
+	check "usb copy: the stick into a new dated folder on $V" "echo '$o' | grep -q rc=0 && grep -qx data $R/mnt/$V/USB-Kopien/*-mein_stick/f && grep -q state=done $R/tmp/shareos-usb.copy/state && grep -q files=1 $R/tmp/shareos-usb.copy/state"
+	usb shareos-usb copy >/dev/null
+	check "usb copy: again -> a second folder, nothing overwritten" "[ \$(ls -d $R/mnt/$V/USB-Kopien/*mein_stick* | wc -l) = 2 ]"
+	check "usb copy: the stick stays mounted" "grep -q \" $R/mnt/usb-mein_stick \" /proc/mounts"
+	run "uci set shareos.usbcopy.path='../x'; uci commit shareos" >/dev/null
+	o=$(usb shareos-usb copy; echo rc=$?)
+	check "usb copy: a target outside the drive is refused" "echo '$o' | grep -q rc=1 && grep -q 'invalid target' $R/tmp/shareos-usb.copy/state"
+	run "uci delete shareos.usbcopy; uci commit shareos" >/dev/null
+else
+	echo "SKIP  usb copy (no volume mounted here)"
+fi
 chroot "$R" /usr/bin/env ACTION=add MDEV=${B}p1 /usr/sbin/shareos-usb hotplug; sleep 3
 check "usb: hotplug ignores internal disks" "! grep -q \"^/dev/${B}p1 $R/mnt/usb-\" /proc/mounts"
 usb shareos-usb eject $C >/dev/null

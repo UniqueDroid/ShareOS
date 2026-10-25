@@ -1464,3 +1464,18 @@ E1141	MI USO
 E1142	OCUPACIÓN
 E1143	LIBRE
 E1144	LÍMITE
+E1145	BOTÓN USB
+E1146	copia
+E1147	Copiar ahora
+E1148	Botón USB guardado.
+E1149	Copia USB iniciada.
+E1150	Última:
+E1151	No hay ninguna unidad USB conectada.
+E1152	No hay destino configurado.
+E1153	No hay espacio suficiente en el destino: no se copió nada.
+E1154	La unidad de destino no está montada.
+E1155	Una pulsación corta copia las unidades USB; mantener 3 s las expulsa
+E1156	Cada vez una carpeta nueva con la fecha, p. ej.
+E1157	: en el equipo no se sobrescribe ni se borra nada. La luz USB parpadea al copiar; el resultado llega como aviso. Sin la casilla, el botón solo expulsa, como antes.
+P279	Copia USB: $1
+P280	Botón USB: $1

@@ -1147,7 +1147,20 @@
 		"MEIN VERBRAUCH": "MY USAGE",
 		"BELEGUNG": "USED",
 		"FREI": "FREE",
-		"LIMIT": "LIMIT"
+		"LIMIT": "LIMIT",
+		"USB-TASTE": "USB BUTTON",
+		"kopiert": "copies",
+		"Jetzt kopieren": "Copy now",
+		"USB-Taste gespeichert.": "USB button saved.",
+		"USB-Kopie gestartet.": "USB copy started.",
+		"Zuletzt:": "Last:",
+		"Kein USB-Laufwerk eingesteckt.": "No USB drive plugged in.",
+		"Kein Ziel eingestellt.": "No target set.",
+		"Zu wenig Platz auf dem Ziel – nichts kopiert.": "Not enough space on the target – nothing copied.",
+		"Das Ziellaufwerk ist nicht eingehängt.": "The target drive is not mounted.",
+		"Kurz drücken kopiert die USB-Laufwerke, 3 s halten wirft sie aus": "A short press copies the USB drives, holding 3 s ejects them",
+		"Jedes Mal ein neuer Ordner mit Datum, z. B.": "A new folder with the date every time, e.g.",
+		"– auf der Box wird nichts überschrieben oder gelöscht. Die USB-Lampe blinkt beim Kopieren; das Ergebnis kommt als Meldung. Ohne Häkchen wirft die Taste wie bisher nur aus.": "– nothing on the box is overwritten or deleted. The USB light blinks while copying; the result comes as a message. Without the tick the button only ejects, as before."
 	},
 	"patterns": [
 		[
@@ -2265,6 +2278,14 @@
 		[
 			"^Laufwerk (\\d+) % belegt$",
 			"Drive $1 % used"
+		],
+		[
+			"^USB-Kopie: (.*)$",
+			"USB copy: $1"
+		],
+		[
+			"^USB-Taste: (.*)$",
+			"USB button: $1"
 		]
 	],
 	"words": [

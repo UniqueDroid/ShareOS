@@ -1147,7 +1147,20 @@
 		"MEIN VERBRAUCH": "MON UTILISATION",
 		"BELEGUNG": "OCCUPATION",
 		"FREI": "LIBRE",
-		"LIMIT": "LIMITE"
+		"LIMIT": "LIMITE",
+		"USB-TASTE": "BOUTON USB",
+		"kopiert": "copie",
+		"Jetzt kopieren": "Copier maintenant",
+		"USB-Taste gespeichert.": "Bouton USB enregistré.",
+		"USB-Kopie gestartet.": "Copie USB lancée.",
+		"Zuletzt:": "Dernière :",
+		"Kein USB-Laufwerk eingesteckt.": "Aucun disque USB branché.",
+		"Kein Ziel eingestellt.": "Aucune cible définie.",
+		"Zu wenig Platz auf dem Ziel – nichts kopiert.": "Pas assez de place sur la cible – rien copié.",
+		"Das Ziellaufwerk ist nicht eingehängt.": "Le disque cible n'est pas monté.",
+		"Kurz drücken kopiert die USB-Laufwerke, 3 s halten wirft sie aus": "Un appui court copie les disques USB, 3 s les éjecte",
+		"Jedes Mal ein neuer Ordner mit Datum, z. B.": "Un nouveau dossier daté à chaque fois, p. ex.",
+		"– auf der Box wird nichts überschrieben oder gelöscht. Die USB-Lampe blinkt beim Kopieren; das Ergebnis kommt als Meldung. Ohne Häkchen wirft die Taste wie bisher nur aus.": "– rien n'est écrasé ni supprimé sur le boîtier. Le voyant USB clignote pendant la copie ; le résultat arrive sous forme de message. Sans la case cochée, le bouton ne fait qu'éjecter, comme avant."
 	},
 	"patterns": [
 		[
@@ -2265,6 +2278,14 @@
 		[
 			"^Laufwerk (\\d+) % belegt$",
 			"Disque utilisé à $1 %"
+		],
+		[
+			"^USB-Kopie: (.*)$",
+			"Copie USB : $1"
+		],
+		[
+			"^USB-Taste: (.*)$",
+			"Bouton USB : $1"
 		]
 	],
 	"words": [

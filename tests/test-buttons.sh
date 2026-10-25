@@ -25,11 +25,13 @@ seqs = {'short': [(100, R, 1), (102.5, R, 0)],
         'cancel': [(100, R, 1), (112, R, 0)],
         'factory': [(100, R, 1), (116, R, 0)],
         'usb': [(100, U, 1), (100.2, U, 0)],
+        'usb-long': [(100, U, 1), (100.5, U, 2), (103.6, U, 0)],
         'release-only': [(100, R, 0)]}
 for n, q in seqs.items():
     open(f'{T}/{n}.ev', 'wb').write(b''.join(ev(*e) + syn(e[0]) for e in q))
 PY
-btn() { SHAREOS_BUTTONS_DDPID=$T/dd.pid SHAREOS_BUTTONS_DEV=$T/$1.ev SHAREOS_BUTTONS_DRY=1 SHAREOS_BUTTONS_USB="${2:-}" \
+mkdir -p $T/conf; : > $T/conf/shareos
+btn() { SHAREOS_BUTTONS_CONF=$T/conf SHAREOS_BUTTONS_DDPID=$T/dd.pid SHAREOS_BUTTONS_DEV=$T/$1.ev SHAREOS_BUTTONS_DRY=1 SHAREOS_BUTTONS_USB="${2:-}" \
 	"$BIN/ucode" -L "$(dirname "$BIN")/lib/ucode" -S "$TOP/src/shareos-core/usr/sbin/shareos-buttons" 2>&1; }
 
 o=$(btn short);   check "reset < 5 s: nothing" "! echo \"\$o\" | grep -q '^run:'" "$o"
@@ -41,6 +43,10 @@ o=$(btn release-only); check "release without press ignored" "[ -z \"\$o\" ]" "$
 o=$(btn usb "$(printf '/dev/sdc1 /mnt/usb-A vfat\n/dev/sdc2 /mnt/usb-B ext4\n/dev/sdd1 /mnt/usb-C exfat')")
 check "USB button ejects every USB disk once" "[ \"\$(echo \"\$o\" | grep -c '^run: /usr/sbin/shareos-usb eject')\" = 2 ] && echo \"\$o\" | grep -q 'eject sdc$' && echo \"\$o\" | grep -q 'eject sdd$'" "$o"
 o=$(btn usb "");  check "USB button without drives: only a log line" "! echo \"\$o\" | grep -q '^run:' && echo \"\$o\" | grep -q 'no USB drive'" "$o"
+printf "config usbcopy 'usbcopy'\n\toption enabled '1'\n" > $T/conf/shareos
+o=$(btn usb "/dev/sdc1 /mnt/usb-A vfat"); check "USB copy on: a short press copies (in the background), removes nothing" "echo \"\$o\" | grep -qx 'run: start-stop-daemon -S -b -x /usr/sbin/shareos-usb -- copy' && ! echo \"\$o\" | grep -q eject" "$o"
+o=$(btn usb-long "/dev/sdc1 /mnt/usb-A vfat"); check "USB copy on: held 3 s or longer removes" "echo \"\$o\" | grep -qx 'run: /usr/sbin/shareos-usb eject sdc' && ! echo \"\$o\" | grep -q copy" "$o"
+: > $T/conf/shareos
 
 # which input device is the buttons' (the kernel names it after the device-tree node)
 find_dev() {   # name of the input device or "-" for none

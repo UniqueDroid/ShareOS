@@ -1464,3 +1464,18 @@ E1141	MON UTILISATION
 E1142	OCCUPATION
 E1143	LIBRE
 E1144	LIMITE
+E1145	BOUTON USB
+E1146	copie
+E1147	Copier maintenant
+E1148	Bouton USB enregistré.
+E1149	Copie USB lancée.
+E1150	Dernière :
+E1151	Aucun disque USB branché.
+E1152	Aucune cible définie.
+E1153	Pas assez de place sur la cible – rien copié.
+E1154	Le disque cible n'est pas monté.
+E1155	Un appui court copie les disques USB, 3 s les éjecte
+E1156	Un nouveau dossier daté à chaque fois, p. ex.
+E1157	– rien n'est écrasé ni supprimé sur le boîtier. Le voyant USB clignote pendant la copie ; le résultat arrive sous forme de message. Sans la case cochée, le bouton ne fait qu'éjecter, comme avant.
+P279	Copie USB : $1
+P280	Bouton USB : $1
