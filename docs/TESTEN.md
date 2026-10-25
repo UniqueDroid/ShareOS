@@ -233,6 +233,7 @@ persönlichen Ordner). Ihre Aufträge laufen mit ihren Rechten.
 - Dateisysteme **ext3**, **ext2** und **FAT32** sind auch für Platten wählbar (FAT32: Dateien höchstens 4 GB).
 - **Spiegel reparieren:** Fehlt eine Platte des Spiegels (Karte: „eine Platte fehlt (U_)“) und steckt eine Platte im freien Schacht, löscht *Spiegel reparieren* diese Platte und nimmt sie auf; die Karte zeigt danach „Wiederherstellung … %“.
 - **Spiegel nach einem Neustart (Platten, die nacheinander anlaufen, z. B. DNS-325):** mit vollständigem Spiegel mehrmals neu starten; jedes Mal zeigt `cat /proc/mdstat` `[2/2] [UU]` und `dmesg | grep md/raid1` „active with 2 out of 2 mirrors“, auch wenn die zweite Platte Sekunden später kommt (`dmesg | grep 'SATA link up'`). Mit einer gezogenen Platte wartet die Box bis zu 40 s, startet dann den Spiegel mit einer Platte und schreibt „RAID incomplete after 40s“ ins Protokoll (`grep shareos-storage /var/log/messages`).
+- **Gesundheit (SMART):** *Speicher → Gesundheit* zeigt je Platte eine Karte. Bei einer gesunden Platte: *GUT*, „Keine Auffälligkeiten“, Temperatur, Betriebszeit, Sektoren 0. *Neu lesen* weckt eine schlafende Platte und liest neu. *Kurztest* startet den Selbsttest: Die Karte zeigt „Läuft – noch … %“ und *Test abbrechen*; nach etwa 2 Minuten (*Neu lesen*) steht beim letzten Test *OK*. Im Terminal: `smartctl -l selftest /dev/sda` zeigt denselben Test. *Alle Werte* öffnet die Tabelle der Attribute. Bei einer SSD: „Lebensdauer der SSD“ mit Balken. Zeitplan *Kurztest jeden Sonntag*: `grep smart-test /etc/crontabs/root` zeigt `30 3 * * 0 … smart-test short`; von Hand mit `shareos-storage smart-test short`, nach wenigen Minuten zeigt `grep shareos-storage /var/log/messages` „SMART short self-test started“.
 
 ## 14. Zeit und Sprachen
 
@@ -403,7 +404,7 @@ Braucht ein Laufwerk mit ext4 oder Btrfs, die Benutzer **anna** und **lisa** (Ro
 10. Per SMB, Zugriff über eine Gruppe: lisa in eine Gruppe `familie` aufnehmen, die Freigabe `fotos` nur der Gruppe (`@familie`) geben und lisa dort als Benutzer entfernen. Am Mac (Finder) als lisa anmelden: die Freigabe öffnet sich (vor ksmbd-tools 3.5.3 meldete der Finder „Das Original wurde nicht gefunden“).
 ## 14n. Tailscale und große System-Apps auf dem Laufwerk (0.2.0-beta.7)
 
-Braucht ein Tailscale-Konto (kostenlos), ein Handy oder einen Rechner mit Tailscale und die Datei `tailscaled-1.98.8.sapp` (Release der Firmware) sowie eine App mit der Berechtigung `tailscale` (ShareOS-Apps).
+Braucht ein Tailscale-Konto (kostenlos), ein Handy oder einen Rechner mit Tailscale und die Datei `tailscaled-<version>.sapp` (Release der Firmware) sowie eine App mit der Berechtigung `tailscale` (ShareOS-Apps).
 
 1. Vor dem Update im Terminal `df -h /` merken. Nach dem Update (Neustart) zieht die Box große System-Apps (FFmpeg, Transmission, MiniDLNA, OpenVPN) aufs Laufwerk: `ls -l /opt/shareos/sysapps` zeigt bei ihnen `-> /mnt/<laufwerk>/.shareos/sysapps/…`, nano/htop/bash bleiben Ordner. `df -h /` zeigt mehr frei. Transmission, Medienserver und VPN laufen wie vorher.
 2. Apps → Store → System-Apps → **tailscaled** installieren: `ls -l /opt/shareos/sysapps/tailscaled` ist ein Link aufs Laufwerk, `df -h /` ändert sich kaum. Ohne weiteres Zutun läuft der Dienst: `ps | grep [t]ailscaled` (ab 0.2.0-beta.9).

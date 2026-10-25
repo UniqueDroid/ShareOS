@@ -1,7 +1,7 @@
 {
 	"id": "tailscaled",
 	"name": "Tailscaled",
-	"version": "1.98.8",
+	"version": "1.104.1",
 	"publisher": "UniqueDroid",
 	"description": {
 		"de": "Fernzugriff auf die Box über Tailscale (WireGuard-Mesh): Weboberfläche, Freigaben und Dienste von unterwegs, ohne Portfreigabe im Router – auch hinter DS-Lite. Schlanke Fassung für die Box (17 MB); gesteuert mit einer App mit der Berechtigung „tailscale“ (nur Administratoren).",

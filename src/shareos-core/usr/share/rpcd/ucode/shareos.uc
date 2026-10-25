@@ -276,6 +276,90 @@ function lsblk() {
 	return j?.blockdevices ?? [];
 }
 
+// SSD wear from the vendor attributes (normalized value = life left in %)
+const WEAR_ATTRS = [ 'Percent_Lifetime_Remain', 'SSD_Life_Left', 'Remaining_Lifetime_Perc', 'Media_Wearout_Indicator', 'Wear_Leveling_Count', 'Percent_Life_Remaining' ];
+// written bytes: attribute name -> bytes per raw unit (LBAs: the logical block size)
+const WRITE_ATTRS = { Total_LBAs_Written: 0, Host_Writes_32MiB: 33554432, Host_Writes_GiB: 1073741824, Lifetime_Writes_GiB: 1073741824, Total_Writes_GB: 1000000000 };
+
+// health of a disk from its SMART values: rating good | warn | bad and the
+// reasons (codes; the interface turns them into text)
+function smart_assess(s) {
+	let bad = [], warn = [];
+	if (s.passed === false) push(bad, 'failed');
+	for (let a in s.attributes ?? []) {
+		if (a.when_failed == 'now') push(bad, 'attr_now:' + a.name);
+		else if (a.when_failed == 'past') push(warn, 'attr_past:' + a.name);
+	}
+	if (s.last_test?.passed === false) push(bad, 'test_failed');
+	if (+s.reallocated > 100) push(bad, 'reallocated'); else if (+s.reallocated > 0) push(warn, 'reallocated');
+	if (+s.pending > 10) push(bad, 'pending'); else if (+s.pending > 0) push(warn, 'pending');
+	if (+s.uncorrectable > 0) push(warn, 'uncorrectable');
+	if (+s.crc_errors > 0) push(warn, 'crc');
+	if (+s.error_count > 0) push(warn, 'errors');
+	if (s.life_left != null) { if (s.life_left <= 10) push(bad, 'worn'); else if (s.life_left <= 20) push(warn, 'wearing'); }
+	if (s.temperature != null) { if (s.temperature >= 60) push(bad, 'hot'); else if (s.temperature >= 55) push(warn, 'warm'); }
+	return { rating: length(bad) ? 'bad' : length(warn) ? 'warn' : 'good', reasons: [ ...bad, ...warn ] };
+}
+
+function smart_parse(j) {
+	let attr = {}, table = [];
+	for (let a in j.ata_smart_attributes?.table ?? []) {
+		attr[a.id] = a.raw?.value;
+		attr[a.name] = a;
+		push(table, { id: a.id, name: a.name, value: a.value, worst: a.worst, thresh: a.thresh,
+			raw: a.raw?.string ?? '' + a.raw?.value, when_failed: a.when_failed ?? '', prefail: !!a.flags?.prefailure });
+	}
+	let ssd = j.rotation_rate === 0 || !!match(j.device?.type ?? '', /nvme/);
+	// life left: the endurance indicator of the device statistics, else the vendor attribute
+	let life = null;
+	for (let p in j.ata_device_statistics?.pages ?? [])
+		for (let e in p.table ?? [])
+			if (e.name == 'Percentage Used Endurance Indicator' && type(e.value) == 'int') life = 100 - e.value;
+	if (life == null && ssd)
+		for (let n in WEAR_ATTRS)
+			if (attr[n] && life == null) life = attr[n].value;
+	if (life != null) life = life < 0 ? 0 : life > 100 ? 100 : life;
+	let written = null;
+	for (let n, u in WRITE_ATTRS)
+		if (attr[n] && written == null) written = +attr[n].raw?.value * (u || +(j.logical_block_size ?? 512));
+	// lifetime maximum temperature: "35 (Min/Max 18/52)" in the raw text of 194 (WD, HGST)
+	let tmax = j.temperature?.lifetime_max;
+	if (tmax == null) { let m = match(attr['Temperature_Celsius']?.raw?.string ?? '', /Min\/Max [0-9]+\/([0-9]+)/); if (m) tmax = +m[1]; }
+	let st = j.ata_smart_data?.self_test, log = j.ata_smart_self_test_log?.standard?.table ?? [];
+	let tests = map(slice(log, 0, 5), (t) => ({ type: t.type?.string ?? '', status: t.status?.string ?? '', passed: t.status?.passed, hours: t.lifetime_hours }));
+	let res = {
+		time: time(),
+		passed: j.smart_status?.passed,
+		temperature: j.temperature?.current,
+		temperature_max: tmax,
+		power_on_hours: j.power_on_time?.hours,
+		power_cycles: j.power_cycle_count,
+		start_stops: attr[4],
+		reallocated: attr[5],
+		pending: attr[197],
+		uncorrectable: attr[198],
+		crc_errors: attr[199],
+		error_count: j.ata_smart_error_log?.summary?.count ?? 0,
+		model: j.model_name,
+		serial: j.serial_number,
+		firmware: j.firmware_version,
+		rpm: j.rotation_rate,
+		ssd,
+		life_left: life,
+		written,
+		capacity: j.user_capacity?.bytes,
+		// a running self-test: remaining_percent; otherwise the last result
+		test_running: st?.status?.remaining_percent != null ? { remaining: st.status.remaining_percent, text: st.status.string } : null,
+		test_minutes: { short: st?.polling_minutes?.short, long: st?.polling_minutes?.extended },
+		last_test: length(tests) ? tests[0] : null,
+		tests,
+		attributes: table
+	};
+	let h = smart_assess(res);
+	res.rating = h.rating; res.reasons = h.reasons;
+	return res;
+}
+
 function smart_read(disk, refresh) {
 	let cache = SMART_DIR + '/smart-' + disk + '.json';
 	let st = stat(cache);
@@ -286,31 +370,18 @@ function smart_read(disk, refresh) {
 	}
 	if (!refresh && !st)
 		return null;
-	// -n standby: do not wake a sleeping disk just for SMART
-	let r = sh('smartctl -j -n standby -H -A -i /dev/' + disk);
+	// -n standby: do not wake a sleeping disk just for SMART; -a: health,
+	// attributes, error and self-test log; devstat: the SSD endurance indicator
+	let r = sh('smartctl -j -n standby -a -l devstat /dev/' + disk);
 	let j = null;
 	try { j = json(r.out); } catch (e) { }
 	if (!j)
 		return { error: 'no SMART data' };
 	if (j.smartctl?.exit_status == 2 && match(r.out, /standby|STANDBY|sleep/))
 		return { standby: true };
-	let attr = {};
-	for (let a in j.ata_smart_attributes?.table ?? [])
-		attr[a.id] = a.raw?.value;
-	let res = {
-		time: time(),
-		passed: j.smart_status?.passed,
-		temperature: j.temperature?.current,
-		power_on_hours: j.power_on_time?.hours,
-		power_cycles: j.power_cycle_count,
-		reallocated: attr[5],
-		pending: attr[197],
-		uncorrectable: attr[198],
-		model: j.model_name,
-		serial: j.serial_number,
-		firmware: j.firmware_version,
-		rpm: j.rotation_rate
-	};
+	if (!j.smart_status && !j.ata_smart_attributes)
+		return { error: 'no SMART data' };
+	let res = smart_parse(j);
 	system('mkdir -p ' + SMART_DIR);
 	writefile(cache, sprintf('%J', res));
 	return res;
@@ -2378,6 +2449,8 @@ return {
 					if (d.type != 'disk' || !match(d.name, /^sd[a-z]$/)) continue;
 					d.usb = is_usb(d.name);
 					d.smart = d.usb ? null : smart_read(d.name, false);
+					// CHECK POWER MODE does not wake a sleeping disk
+					d.standby = d.usb ? null : !!match(sh('hdparm -C /dev/' + d.name).out, /standby/);
 					push(disks, d);
 				}
 				let c = cursor();
@@ -2393,6 +2466,7 @@ return {
 					arrays: mdstat(),
 					volumes: volumes(),
 					spindown: +(c.get('storage', 'global', 'spindown') ?? 0),
+					smart_schedule: c.get('storage', 'global', 'smart_test') ?? '',
 					usb: usb_mounts(),
 					job: storage_job()
 				};
@@ -2405,6 +2479,39 @@ return {
 				if (!valid_disk(req.args.disk))
 					return { error: 'unknown disk' };
 				return smart_read(req.args.disk, true);
+			}
+		},
+
+		// SMART self-test: short (minutes) | long (hours, reads the whole
+		// disk) | abort; the disk wakes up for it. The values are read again
+		// right away, so the running test shows.
+		smart_test: {
+			args: { disk: '', type: '' },
+			call: function(req) {
+				let d = req.args.disk, t = req.args.type;
+				if (!valid_disk(d) || is_usb(d)) return { error: 'unknown disk' };
+				let opt = { short: '-t short', long: '-t long', abort: '-X' }[t];
+				if (!opt) return { error: 'invalid test' };
+				let r = sh('smartctl ' + opt + ' /dev/' + d);
+				// exit bits 0-2: command line, open, SMART command failed (the others are the disk's state)
+				if (r.rc & 7) { let l = filter(split(trim(r.out), '\n'), (x) => length(trim(x))); return { error: trim(l[length(l) - 1] ?? '') || 'failed' }; }
+				return smart_read(d, true);
+			}
+		},
+
+		// self-tests by schedule: '' (none) | short_weekly (Sunday 03:30) |
+		// long_monthly (1st of the month, 03:30) – see shareos-cron
+		smart_schedule: {
+			args: { mode: '' },
+			call: function(req) {
+				let m = req.args.mode ?? '';
+				if (index([ '', 'short_weekly', 'long_monthly' ], m) < 0) return { error: 'invalid value' };
+				let c = cursor();
+				if (c.get('storage', 'global') != 'global') c.set('storage', 'global', 'global');
+				if (m == '') c.delete('storage', 'global', 'smart_test'); else c.set('storage', 'global', 'smart_test', m);
+				c.save('storage'); c.commit('storage');
+				system(CRON + ' sync >/dev/null 2>&1');
+				return { ok: true, mode: m };
 			}
 		},
 

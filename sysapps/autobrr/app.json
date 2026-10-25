@@ -1,7 +1,7 @@
 {
 	"id": "autobrr",
 	"name": "autobrr",
-	"version": "1.84.0",
+	"version": "1.89.0",
 	"publisher": "UniqueDroid",
 	"description": {
 		"de": "Download-Automatik für IRC-Ankündigungen und RSS-Feeds: filtert neue Releases nach deinen Regeln und legt passende Torrents in Transmission. Läuft als Dienst der Box (32 MB, auf dem Apps-Laufwerk), eingerichtet von Administratoren mit einer App mit der Berechtigung „autobrr“ oder in der eigenen Weboberfläche von autobrr.",

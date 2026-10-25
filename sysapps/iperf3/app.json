@@ -1,7 +1,7 @@
 {
 	"id": "iperf3",
 	"name": "iperf3",
-	"version": "3.20.0",
+	"version": "3.21.0",
 	"publisher": "UniqueDroid",
 	"description": {
 		"de": "Misst im Terminal die Netzwerkgeschwindigkeit zwischen Box und Rechner: auf der Box „iperf3 -s“, am Rechner „iperf3 -c <Box>“. Bis ShareOS 0.1 war es fest eingebaut.",

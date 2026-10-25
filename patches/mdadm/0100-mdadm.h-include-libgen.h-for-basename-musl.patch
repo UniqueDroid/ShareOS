@@ -1,12 +1,13 @@
 From: ShareOS <noreply@github.com>
-Subject: [PATCH] mdadm.h: include libgen.h for basename() (musl, GCC 14)
+Subject: [PATCH] mdadm.h: include libgen.h for basename() (musl, GCC 14+)
 
-musl does not declare the GNU basename() in <string.h>; with GCC 14 the
-implicit declaration is an error (Monitor.c, platform-intel.c, super-intel.c).
+musl does not declare the GNU basename() in <string.h>; with GCC 14 and
+later the implicit declaration is an error (Incremental.c, mdmonitor.c,
+platform-intel.c, super-intel.c).
 
 --- a/mdadm.h
 +++ b/mdadm.h
-@@ -36,2 +36,3 @@
+@@ -30,2 +30,3 @@
  #include	<assert.h>
 +#include	<libgen.h>
- #include	<sys/types.h>
+ #include	<asm/byteorder.h>
