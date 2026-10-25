@@ -1544,5 +1544,31 @@ E1198	sans erreur
 E1199	EN VEILLE
 E1200	Le disque est en veille
 E1201	Le disque tourne
-E1202	Envoyer des notifications
-E1203	Peut envoyer des messages via les notifications de la box (interface, e-mail, push) – 20 par heure au maximum, précédés du nom de l'application ; dans le navigateur, réservé aux administrateurs.
+E1202	Corbeille
+E1203	CORBEILLE
+E1204	Supprimer définitivement
+E1205	Vider la corbeille
+E1206	Vider la corbeille ?
+E1207	ORIGINE
+E1208	SUPPRIMÉ
+E1209	Mettre à la corbeille
+E1210	Déplacé dans la corbeille.
+E1211	Vider
+E1212	Corbeille vidée.
+E1213	Supprimé définitivement.
+E1214	Corbeille enregistrée.
+E1215	La corbeille est vide.
+E1216	jamais (vider à la main)
+E1217	Mettre d'abord à la corbeille ce qui est supprimé dans le navigateur de fichiers
+E1218	SUPPRIMER DÉFINITIVEMENT APRÈS
+E1219	Cette action est irréversible.
+E1220	Chaque dossier a sa propre corbeille : le dossier personnel, chaque partage, chaque disque. Elle se trouve sur le même disque et compte dans le quota. Elle s'applique au navigateur de fichiers de cette interface – ce qui est supprimé via SMB depuis un PC ou dans les applications disparaît aussitôt ; pour cela il y a les instantanés.
+P302	$1 jours
+P303	supprime après $1 jours
+P304	Mettre $1 élément(s) à la corbeille ?
+P305	$1 – restaurable depuis la corbeille.
+P306	Supprimer définitivement $1 élément(s) ?
+P307	$1 élément(s) restauré(s).
+P308	Corbeille : $1
+E1221	Envoyer des notifications
+E1222	Peut envoyer des messages via les notifications de la box (interface, e-mail, push) – 20 par heure au maximum, précédés du nom de l'application ; dans le navigateur, réservé aux administrateurs.

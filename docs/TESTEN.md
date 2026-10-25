@@ -424,6 +424,14 @@ Braucht ein Tailscale-Konto (kostenlos), ein Handy oder einen Rechner mit Tailsc
 5. Webpad (ohne `embed`) → *Öffnen ↗*: ein eigenes Fenster, kein neuer Tab.
 6. Als Benutzer in „Mein ShareOS“: eine App mit `embed` öffnet sich in der Seite (`#/app/<id>`), ✕ führt zurück.
 
+## 14w. Papierkorb im Dateibrowser (0.2.0-beta.12)
+
+1. *Freigaben → Dateien* (oder als Benutzer *Mein ShareOS → Dateien*): eine Datei und einen Ordner auswählen, *Löschen* → der Dialog sagt „in den Papierkorb“, die Einträge verschwinden aus der Liste.
+2. *Papierkorb*: beide Einträge mit Herkunft und Zeit. Einen auswählen → *Wiederherstellen*: wieder im ursprünglichen Ordner. Gibt es dort inzwischen eine Datei mit dem Namen, kommt sie als `name (2).ext` zurück.
+3. *Endgültig löschen* / *Papierkorb leeren* löschen für immer. Im Terminal: `ls -la /mnt/<laufwerk>/home/<benutzer>/.shareos-trash/` (persönlicher Ordner) oder `ls -la /mnt/<laufwerk>/<freigabe-ordner>/.shareos-trash/`.
+4. Unter dem Dateibrowser (Admins): Papierkorb ausschalten → *Löschen* löscht wieder sofort (roter Dialog). Tage: 7–90 oder nie; ältere Einträge verschwinden, wenn dieser Papierkorb das nächste Mal geöffnet oder benutzt wird.
+5. Über SMB vom PC gelöschte Dateien sind sofort weg (der Ordner `.shareos-trash` ist versteckt; bitte nicht anfassen).
+
 ## 14v. Mein ShareOS, „Teilen mit“, Dateidialog mit Freigaben (0.2.0-beta.11)
 
 1. Als normaler Benutzer anmelden: Die Reiter heißen *MEIN SHAREOS*, (*DATEIEN*,) *EINSTELLUNGEN*. *Einstellungen* zeigt links die Darstellung und rechts *Passwort ändern*; das Ändern funktioniert wie bisher. Die alte Adresse `#/appearance` öffnet *Einstellungen*.

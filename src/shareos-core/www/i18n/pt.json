@@ -1205,6 +1205,25 @@
 		"SCHLÄFT": "EM REPOUSO",
 		"Die Platte schläft (Ruhezustand)": "O disco está em repouso",
 		"Die Platte läuft": "O disco está em funcionamento",
+		"Papierkorb": "Lixeira",
+		"PAPIERKORB": "LIXEIRA",
+		"Endgültig löschen": "Excluir definitivamente",
+		"Papierkorb leeren": "Esvaziar lixeira",
+		"Papierkorb leeren?": "Esvaziar a lixeira?",
+		"HERKUNFT": "ORIGEM",
+		"GELÖSCHT": "EXCLUÍDO",
+		"In den Papierkorb": "Mover para a lixeira",
+		"In den Papierkorb verschoben.": "Movido para a lixeira.",
+		"Leeren": "Esvaziar",
+		"Papierkorb geleert.": "Lixeira esvaziada.",
+		"Endgültig gelöscht.": "Excluído definitivamente.",
+		"Papierkorb gespeichert.": "Lixeira salva.",
+		"Der Papierkorb ist leer.": "A lixeira está vazia.",
+		"nie (nur von Hand leeren)": "nunca (só esvaziar à mão)",
+		"Gelöschtes im Dateibrowser erst in den Papierkorb legen": "Colocar primeiro na lixeira o que for excluído no navegador de arquivos",
+		"AUTOMATISCH ENDGÜLTIG LÖSCHEN NACH": "EXCLUIR DEFINITIVAMENTE APÓS",
+		"Das lässt sich nicht rückgängig machen.": "Não é possível desfazer.",
+		"Jeder Ordner hat seinen eigenen Papierkorb: der persönliche Ordner, jede Freigabe, jedes Laufwerk. Er liegt auf derselben Platte und zählt zum Speicherlimit. Gilt für den Dateibrowser dieser Oberfläche – über SMB vom PC oder in Apps Gelöschtes ist sofort weg; dafür gibt es die Snapshots.": "Cada pasta tem sua própria lixeira: a pasta pessoal, cada compartilhamento, cada unidade. Ela fica no mesmo disco e conta para o limite de armazenamento. Vale para o navegador de arquivos desta interface – o que for excluído via SMB do PC ou em apps some na hora; para isso existem os snapshots.",
 		"Meldungen senden": "Enviar notificações",
 		"Darf Meldungen über die Benachrichtigungen der Box senden (Oberfläche, E-Mail, Push) – höchstens 20 pro Stunde, mit dem Namen der App davor; im Browser nur für Administratoren.": "Pode enviar mensagens pelas notificações da caixa (interface, e-mail, push) – no máximo 20 por hora, com o nome do app na frente; no navegador, só para administradores."
 	},
@@ -2416,6 +2435,34 @@
 		[
 			"^Selbsttest: (.*)$",
 			"Autoteste: $1"
+		],
+		[
+			"^(\\d+) Tagen$",
+			"$1 dias"
+		],
+		[
+			"^löscht nach (\\d+) Tagen$",
+			"exclui após $1 dias"
+		],
+		[
+			"^(\\d+) Eintrag/Einträge in den Papierkorb\\?$",
+			"Mover $1 item(ns) para a lixeira?"
+		],
+		[
+			"^(.+) – lässt sich im Papierkorb wiederherstellen\\.$",
+			"$1 – pode ser restaurado da lixeira."
+		],
+		[
+			"^Endgültig löschen – (\\d+) Eintrag/Einträge$",
+			"Excluir definitivamente $1 item(ns)?"
+		],
+		[
+			"^(\\d+) Eintrag/Einträge wiederhergestellt\\.$",
+			"$1 item(ns) restaurado(s)."
+		],
+		[
+			"^Papierkorb: (.*)$",
+			"Lixeira: $1"
 		]
 	],
 	"words": [

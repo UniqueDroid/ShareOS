@@ -420,6 +420,14 @@ Needs a Tailscale account (free), a phone or computer with Tailscale, the file `
 5. Webpad (without `embed`) → *Öffnen ↗*: a window of its own, not a new tab.
 6. As a user in "My ShareOS": an app with `embed` opens in the page (`#/app/<id>`), ✕ goes back.
 
+## 14w. Trash in the file browser (0.2.0-beta.12)
+
+1. *Freigaben → Dateien* (or *Mein ShareOS → Dateien* as a user): select a file and a folder, *Löschen* → the dialog says "in den Papierkorb", the entries disappear from the list.
+2. *Papierkorb*: both entries with origin and time. Select one → *Wiederherstellen*: it is back in its folder. If a file with that name exists by then, it comes back as `name (2).ext`.
+3. *Endgültig löschen* / *Papierkorb leeren* remove for good. In the terminal: `ls -la /mnt/<drive>/home/<user>/.shareos-trash/` (personal folder) or `ls -la /mnt/<drive>/<share folder>/.shareos-trash/`.
+4. Below the browser (admins): switch the trash off → *Löschen* deletes at once again (red dialog). Days: 7–90 or never; older entries go when that trash is opened or used next.
+5. Over SMB from a PC a deleted file is gone at once (the `.shareos-trash` folder is hidden; leave it alone).
+
 ## 14v. Mein ShareOS, "Teilen mit", file dialog with shares (0.2.0-beta.11)
 
 1. Log in as a plain user: the tabs read *MEIN SHAREOS*, (*DATEIEN*,) *EINSTELLUNGEN*. *Einstellungen* has the look on the left and *Passwort ändern* on the right; changing the password works as before. The old address `#/appearance` opens *Einstellungen*.

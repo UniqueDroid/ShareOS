@@ -1544,5 +1544,31 @@ E1198	sem erros
 E1199	EM REPOUSO
 E1200	O disco está em repouso
 E1201	O disco está em funcionamento
-E1202	Enviar notificações
-E1203	Pode enviar mensagens pelas notificações da caixa (interface, e-mail, push) – no máximo 20 por hora, com o nome do app na frente; no navegador, só para administradores.
+E1202	Lixeira
+E1203	LIXEIRA
+E1204	Excluir definitivamente
+E1205	Esvaziar lixeira
+E1206	Esvaziar a lixeira?
+E1207	ORIGEM
+E1208	EXCLUÍDO
+E1209	Mover para a lixeira
+E1210	Movido para a lixeira.
+E1211	Esvaziar
+E1212	Lixeira esvaziada.
+E1213	Excluído definitivamente.
+E1214	Lixeira salva.
+E1215	A lixeira está vazia.
+E1216	nunca (só esvaziar à mão)
+E1217	Colocar primeiro na lixeira o que for excluído no navegador de arquivos
+E1218	EXCLUIR DEFINITIVAMENTE APÓS
+E1219	Não é possível desfazer.
+E1220	Cada pasta tem sua própria lixeira: a pasta pessoal, cada compartilhamento, cada unidade. Ela fica no mesmo disco e conta para o limite de armazenamento. Vale para o navegador de arquivos desta interface – o que for excluído via SMB do PC ou em apps some na hora; para isso existem os snapshots.
+P302	$1 dias
+P303	exclui após $1 dias
+P304	Mover $1 item(ns) para a lixeira?
+P305	$1 – pode ser restaurado da lixeira.
+P306	Excluir definitivamente $1 item(ns)?
+P307	$1 item(ns) restaurado(s).
+P308	Lixeira: $1
+E1221	Enviar notificações
+E1222	Pode enviar mensagens pelas notificações da caixa (interface, e-mail, push) – no máximo 20 por hora, com o nome do app na frente; no navegador, só para administradores.

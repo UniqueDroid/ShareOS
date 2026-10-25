@@ -1205,6 +1205,25 @@
 		"SCHLÄFT": "СПИТ",
 		"Die Platte schläft (Ruhezustand)": "Диск спит (режим ожидания)",
 		"Die Platte läuft": "Диск работает",
+		"Papierkorb": "Корзина",
+		"PAPIERKORB": "КОРЗИНА",
+		"Endgültig löschen": "Удалить навсегда",
+		"Papierkorb leeren": "Очистить корзину",
+		"Papierkorb leeren?": "Очистить корзину?",
+		"HERKUNFT": "ОТКУДА",
+		"GELÖSCHT": "УДАЛЕНО",
+		"In den Papierkorb": "В корзину",
+		"In den Papierkorb verschoben.": "Перемещено в корзину.",
+		"Leeren": "Очистить",
+		"Papierkorb geleert.": "Корзина очищена.",
+		"Endgültig gelöscht.": "Удалено навсегда.",
+		"Papierkorb gespeichert.": "Настройки корзины сохранены.",
+		"Der Papierkorb ist leer.": "Корзина пуста.",
+		"nie (nur von Hand leeren)": "никогда (только вручную)",
+		"Gelöschtes im Dateibrowser erst in den Papierkorb legen": "Удалённое в файловом браузере сначала помещать в корзину",
+		"AUTOMATISCH ENDGÜLTIG LÖSCHEN NACH": "АВТОМАТИЧЕСКИ УДАЛЯТЬ ЧЕРЕЗ",
+		"Das lässt sich nicht rückgängig machen.": "Это нельзя отменить.",
+		"Jeder Ordner hat seinen eigenen Papierkorb: der persönliche Ordner, jede Freigabe, jedes Laufwerk. Er liegt auf derselben Platte und zählt zum Speicherlimit. Gilt für den Dateibrowser dieser Oberfläche – über SMB vom PC oder in Apps Gelöschtes ist sofort weg; dafür gibt es die Snapshots.": "У каждой папки своя корзина: личная папка, каждый общий ресурс, каждый диск. Она лежит на том же диске и учитывается в лимите. Действует для файлового браузера этого интерфейса – удалённое по SMB с ПК или в приложениях исчезает сразу; для этого есть снапшоты.",
 		"Meldungen senden": "Отправка уведомлений",
 		"Darf Meldungen über die Benachrichtigungen der Box senden (Oberfläche, E-Mail, Push) – höchstens 20 pro Stunde, mit dem Namen der App davor; im Browser nur für Administratoren.": "Может отправлять сообщения через уведомления устройства (интерфейс, e-mail, push) – не более 20 в час, с названием приложения в начале; в браузере только для администраторов."
 	},
@@ -2416,6 +2435,34 @@
 		[
 			"^Selbsttest: (.*)$",
 			"Самотест: $1"
+		],
+		[
+			"^(\\d+) Tagen$",
+			"$1 дн."
+		],
+		[
+			"^löscht nach (\\d+) Tagen$",
+			"удаляет через $1 дн."
+		],
+		[
+			"^(\\d+) Eintrag/Einträge in den Papierkorb\\?$",
+			"Переместить в корзину: $1?"
+		],
+		[
+			"^(.+) – lässt sich im Papierkorb wiederherstellen\\.$",
+			"$1 – можно восстановить из корзины."
+		],
+		[
+			"^Endgültig löschen – (\\d+) Eintrag/Einträge$",
+			"Удалить навсегда: $1?"
+		],
+		[
+			"^(\\d+) Eintrag/Einträge wiederhergestellt\\.$",
+			"Восстановлено: $1."
+		],
+		[
+			"^Papierkorb: (.*)$",
+			"Корзина: $1"
 		]
 	],
 	"words": [

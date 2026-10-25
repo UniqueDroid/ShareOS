@@ -1205,6 +1205,25 @@
 		"SCHLÄFT": "休眠",
 		"Die Platte schläft (Ruhezustand)": "硬盘正在休眠（待机）",
 		"Die Platte läuft": "硬盘正在运行",
+		"Papierkorb": "回收站",
+		"PAPIERKORB": "回收站",
+		"Endgültig löschen": "永久删除",
+		"Papierkorb leeren": "清空回收站",
+		"Papierkorb leeren?": "清空回收站？",
+		"HERKUNFT": "原位置",
+		"GELÖSCHT": "删除时间",
+		"In den Papierkorb": "移到回收站",
+		"In den Papierkorb verschoben.": "已移到回收站。",
+		"Leeren": "清空",
+		"Papierkorb geleert.": "回收站已清空。",
+		"Endgültig gelöscht.": "已永久删除。",
+		"Papierkorb gespeichert.": "回收站设置已保存。",
+		"Der Papierkorb ist leer.": "回收站为空。",
+		"nie (nur von Hand leeren)": "从不（仅手动清空）",
+		"Gelöschtes im Dateibrowser erst in den Papierkorb legen": "在文件浏览器中删除的内容先放入回收站",
+		"AUTOMATISCH ENDGÜLTIG LÖSCHEN NACH": "自动永久删除时间",
+		"Das lässt sich nicht rückgängig machen.": "此操作无法撤销。",
+		"Jeder Ordner hat seinen eigenen Papierkorb: der persönliche Ordner, jede Freigabe, jedes Laufwerk. Er liegt auf derselben Platte und zählt zum Speicherlimit. Gilt für den Dateibrowser dieser Oberfläche – über SMB vom PC oder in Apps Gelöschtes ist sofort weg; dafür gibt es die Snapshots.": "每个文件夹都有自己的回收站：个人文件夹、每个共享、每个磁盘。它位于同一块硬盘上，计入存储限额。仅适用于本界面的文件浏览器——通过 SMB 从电脑或在应用中删除的内容会立即消失；对此可使用快照。",
 		"Meldungen senden": "发送通知",
 		"Darf Meldungen über die Benachrichtigungen der Box senden (Oberfläche, E-Mail, Push) – höchstens 20 pro Stunde, mit dem Namen der App davor; im Browser nur für Administratoren.": "可通过设备的通知发送消息（界面、电子邮件、推送）——每小时最多 20 条，前面带有应用名称；在浏览器中仅限管理员。"
 	},
@@ -2416,6 +2435,34 @@
 		[
 			"^Selbsttest: (.*)$",
 			"自检：$1"
+		],
+		[
+			"^(\\d+) Tagen$",
+			"$1 天"
+		],
+		[
+			"^löscht nach (\\d+) Tagen$",
+			"$1 天后删除"
+		],
+		[
+			"^(\\d+) Eintrag/Einträge in den Papierkorb\\?$",
+			"将 $1 项移到回收站？"
+		],
+		[
+			"^(.+) – lässt sich im Papierkorb wiederherstellen\\.$",
+			"$1——可从回收站恢复。"
+		],
+		[
+			"^Endgültig löschen – (\\d+) Eintrag/Einträge$",
+			"永久删除 $1 项？"
+		],
+		[
+			"^(\\d+) Eintrag/Einträge wiederhergestellt\\.$",
+			"已恢复 $1 项。"
+		],
+		[
+			"^Papierkorb: (.*)$",
+			"回收站：$1"
 		]
 	],
 	"words": [

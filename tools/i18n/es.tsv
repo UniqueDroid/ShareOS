@@ -1544,5 +1544,31 @@ E1198	sin errores
 E1199	EN REPOSO
 E1200	El disco está en reposo
 E1201	El disco está en marcha
-E1202	Enviar notificaciones
-E1203	Puede enviar mensajes a través de las notificaciones de la caja (interfaz, correo, push): como máximo 20 por hora, con el nombre de la app delante; en el navegador, solo para administradores.
+E1202	Papelera
+E1203	PAPELERA
+E1204	Eliminar definitivamente
+E1205	Vaciar papelera
+E1206	¿Vaciar la papelera?
+E1207	ORIGEN
+E1208	ELIMINADO
+E1209	Mover a la papelera
+E1210	Movido a la papelera.
+E1211	Vaciar
+E1212	Papelera vaciada.
+E1213	Eliminado definitivamente.
+E1214	Papelera guardada.
+E1215	La papelera está vacía.
+E1216	nunca (solo vaciar a mano)
+E1217	Mover primero a la papelera lo eliminado en el explorador de archivos
+E1218	ELIMINAR DEFINITIVAMENTE TRAS
+E1219	No se puede deshacer.
+E1220	Cada carpeta tiene su propia papelera: la carpeta personal, cada recurso compartido, cada unidad. Está en el mismo disco y cuenta para el límite de almacenamiento. Se aplica al explorador de archivos de esta interfaz: lo que se borra por SMB desde un PC o en apps desaparece al momento; para eso están las instantáneas.
+P302	$1 días
+P303	borra tras $1 días
+P304	¿Mover $1 elemento(s) a la papelera?
+P305	$1: se puede restaurar desde la papelera.
+P306	¿Eliminar definitivamente $1 elemento(s)?
+P307	$1 elemento(s) restaurado(s).
+P308	Papelera: $1
+E1221	Enviar notificaciones
+E1222	Puede enviar mensajes a través de las notificaciones de la caja (interfaz, correo, push): como máximo 20 por hora, con el nombre de la app delante; en el navegador, solo para administradores.

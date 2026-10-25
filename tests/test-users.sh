@@ -148,7 +148,23 @@ check "files: list shows the file" "fs list '\"root\":\"home\",\"path\":\"Docs\"
 check "files: rename" "fs rename '\"root\":\"home\",\"path\":\"Docs\",\"name\":\"a b.txt\",\"to\":\"c.txt\"' | js \"d['ok']\" && [ -f $R/mnt/daten/home/lisa/Docs/c.txt ]"
 check "files: copy" "fs move '\"root\":\"home\",\"path\":\"Docs\",\"names\":[\"c.txt\"],\"dest\":\"\",\"copy\":true' | js \"d['ok']\" && [ -f $R/mnt/daten/home/lisa/c.txt ] && [ -f $R/mnt/daten/home/lisa/Docs/c.txt ]"
 check "files: folder cannot go into itself" "fs move '\"root\":\"home\",\"path\":\"\",\"names\":[\"Docs\"],\"dest\":\"Docs\"' | grep -q 'into itself'"
-check "files: delete" "fs delete '\"root\":\"home\",\"path\":\"\",\"names\":[\"c.txt\",\"Docs\"]' | js \"d['ok']\" && [ -z \"\$(ls -A $R/mnt/daten/home/lisa)\" ]"
+# --- trash (on by default): delete moves into <root>/.shareos-trash ---------------
+check "files: delete goes into the trash (hidden in the list)" "fs delete '\"root\":\"home\",\"path\":\"\",\"names\":[\"c.txt\",\"Docs\"]' | js \"d['ok'] and d['trash']\" && [ -z \"\$(ls $R/mnt/daten/home/lisa)\" ] && fs list '\"root\":\"home\",\"path\":\"\",\"hidden\":true' | js \"'.shareos-trash' not in [e['name'] for e in d['entries']]\" && [ \"\$(run 'stat -c %U /mnt/daten/home/lisa/.shareos-trash')\" = lisa ]"
+TL=$(fs trash_list '"root":"home"')
+check "trash: both entries with name, folder and account" "echo '$TL' | js \"d['enabled'] and d['days']==30 and sorted(x['name'] for x in d['items'])==['Docs','c.txt'] and all(x['path']=='' and x['user']=='lisa' for x in d['items']) and [x['size'] for x in d['items'] if x['name']=='c.txt']==[11]\""
+ID1=$(echo "$TL" | python3 -c 'import json,sys; print([x["id"] for x in json.load(sys.stdin)["items"] if x["name"]=="Docs"][0])')
+ID2=$(echo "$TL" | python3 -c 'import json,sys; print([x["id"] for x in json.load(sys.stdin)["items"] if x["name"]=="c.txt"][0])')
+printf 'neu\n' > $R/mnt/daten/home/lisa/c.txt; run 'chown lisa /mnt/daten/home/lisa/c.txt'
+check "trash: restore puts it back; a taken name gets (2)" "fs trash_restore '\"root\":\"home\",\"ids\":[\"$ID1\",\"$ID2\"]' | js \"sorted(x['name'] for x in d['restored'])==['Docs','c (2).txt']\" && [ -f $R/mnt/daten/home/lisa/Docs/c.txt ] && [ \"\$(cat $R/mnt/daten/home/lisa/c\ \(2\).txt)\" = 'hallo welt' ] && fs trash_list '\"root\":\"home\"' | js \"d['items']==[]\""
+check "trash: permanent delete skips it" "fs delete '\"root\":\"home\",\"path\":\"\",\"names\":[\"c.txt\"],\"permanent\":true' | js \"d['ok'] and not d.get('trash')\" && [ ! -e $R/mnt/daten/home/lisa/c.txt ] && fs trash_list '\"root\":\"home\"' | js \"d['items']==[]\""
+fs delete '"root":"home","path":"","names":["c (2).txt","Docs"]' >/dev/null
+check "trash: empty one entry, then all" "I=\$(fs trash_list '\"root\":\"home\"' | python3 -c 'import json,sys; print(json.load(sys.stdin)[\"items\"][0][\"id\"])') && fs trash_empty \"\\\"root\\\":\\\"home\\\",\\\"ids\\\":[\\\"\$I\\\"]\" | js \"d['removed']==1\" && fs trash_empty '\"root\":\"home\"' | js \"d['removed']==1\" && [ -z \"\$(ls -A $R/mnt/daten/home/lisa/.shareos-trash)\" ]"
+check "trash: invalid ids refused" "fs trash_restore '\"root\":\"home\",\"ids\":[\"../x\"]' | grep -q 'nothing selected' && fs trash_empty '\"root\":\"home\",\"ids\":[\"../../etc\"]' | grep -q 'invalid entry'"
+# an entry older than the configured days goes when the trash is used next
+run 'su -s /bin/sh lisa -c "echo alt > /mnt/daten/home/lisa/.shareos-trash/1000-aaaaaaaa"'
+printf '{"name":"alt.txt","path":"","time":1000,"user":"lisa","type":"file","size":4}' > $R/mnt/daten/home/lisa/.shareos-trash/1000-aaaaaaaa.json
+check "trash: entries older than 30 days are purged" "fs trash_list '\"root\":\"home\"' | js \"d['items']==[]\" && [ ! -e $R/mnt/daten/home/lisa/.shareos-trash/1000-aaaaaaaa ]"
+check "trash: settings only for admins" "fs trash_config '\"enabled\":false,\"days\":7' | grep -q 'not allowed'"
 # --- "Teilen mit" of the installed app: into <personal folder>/Geteilt ---------
 st() { rpc shareos.me share_ticket "{\"ubus_rpc_session\":\"${2:-$SL}\",\"name\":\"$1\"}"; }
 S1=$(st 'Foto 1.jpg')
@@ -164,6 +180,8 @@ LJ=$(rpc session login '{"username":"jan","password":"geheim1"}')
 SJ=$(echo "$LJ" | python3 -c 'import json,sys; print(json.load(sys.stdin)["ubus_rpc_session"])' 2>/dev/null)
 rpc shareos.me bind "{\"username\":\"jan\",\"password\":\"geheim1\",\"ubus_rpc_session\":\"$SJ\"}" >/dev/null
 check "files: admins see whole volumes" "rpc shareos.files list '{\"ubus_rpc_session\":\"$SJ\",\"root\":\"daten\",\"path\":\"\"}' | js \"'home' in [e['name'] for e in d['entries']] and d['free']>0\""
+check "trash: admin switches it off, then delete is direct" "rpc shareos.files trash_config '{\"ubus_rpc_session\":\"$SJ\",\"enabled\":false,\"days\":7}' | js \"d=={'enabled':False,'days':7}\" && run 'uci get shareos.files.trash' | grep -qx 0 && printf x > $R/mnt/daten/home/lisa/off.txt && fs delete '\"root\":\"home\",\"path\":\"\",\"names\":[\"off.txt\"]' | js \"d['ok'] and not d.get('trash')\" && [ ! -e $R/mnt/daten/home/lisa/off.txt ] && rpc shareos.files roots '{\"ubus_rpc_session\":\"$SL\"}' | js \"d['trash']['enabled']==False\""
+check "trash: invalid settings refused, on again" "rpc shareos.files trash_config '{\"ubus_rpc_session\":\"$SJ\",\"enabled\":true,\"days\":999}' | grep -q 'invalid value' && rpc shareos.files trash_config '{\"ubus_rpc_session\":\"$SJ\",\"enabled\":true,\"days\":30}' | js \"d['enabled']\""
 # --- shares in the file browser and in apps: by rights, enforced by Linux too ---
 run "shareos-users set anna --files=1" >/dev/null
 fa() { rpc shareos.files "$1" "{\"ubus_rpc_session\":\"$SID\"${2:+,$2}}"; }
