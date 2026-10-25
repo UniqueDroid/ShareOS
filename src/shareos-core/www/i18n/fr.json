@@ -1147,7 +1147,9 @@
 		"MEIN VERBRAUCH": "MON UTILISATION",
 		"BELEGUNG": "OCCUPATION",
 		"FREI": "LIBRE",
-		"LIMIT": "LIMITE"
+		"LIMIT": "LIMITE",
+		"Meldungen senden": "Envoyer des notifications",
+		"Darf Meldungen über die Benachrichtigungen der Box senden (Oberfläche, E-Mail, Push) – höchstens 20 pro Stunde, mit dem Namen der App davor; im Browser nur für Administratoren.": "Peut envoyer des messages via les notifications de la box (interface, e-mail, push) – 20 par heure au maximum, précédés du nom de l'application ; dans le navigateur, réservé aux administrateurs."
 	},
 	"patterns": [
 		[

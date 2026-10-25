@@ -1147,7 +1147,9 @@
 		"MEIN VERBRAUCH": "我的用量",
 		"BELEGUNG": "占用",
 		"FREI": "可用",
-		"LIMIT": "限额"
+		"LIMIT": "限额",
+		"Meldungen senden": "发送通知",
+		"Darf Meldungen über die Benachrichtigungen der Box senden (Oberfläche, E-Mail, Push) – höchstens 20 pro Stunde, mit dem Namen der App davor; im Browser nur für Administratoren.": "可通过设备的通知发送消息（界面、电子邮件、推送）——每小时最多 20 条，前面带有应用名称；在浏览器中仅限管理员。"
 	},
 	"patterns": [
 		[

@@ -3,7 +3,8 @@
 # Tests the app permissions "sysinfo" (the box's values, processes, ending a
 # process), "netcheck" (ping, TCP port, HTTP from the box) and "docker"
 # (Docker hosts through their Engine API; here a fake Docker API on the
-# build host) – rpcd shareos.appsys/appnet/appdocker and the CGIs of the app
+# build host) and "notify" (messages from the SDK and from app jobs)
+# – rpcd shareos.appsys/appnet/appdocker/appnotify and the CGIs of the app
 # web server, admins only. Built ARM userland (qemu-user) in a chroot, in its
 # own network name space.
 #
@@ -157,6 +158,40 @@ if python3 -c 'import tinytuya' 2>/dev/null; then
 else
 	echo "SKIP  tuya (pip install tinytuya for the fake device)"
 fi
+
+# --- notify ------------------------------------------------------------------------------
+N=/etc/shareos/notifications.json
+nmsg() { run "cat $N 2>/dev/null || echo []"; }
+mkdir -p $T/pinger/files/jobs
+echo '<!doctype html><title>ok</title>' > $T/pinger/files/index.html
+echo '<svg xmlns="http://www.w3.org/2000/svg"/>' > $T/pinger/files/icon.svg
+cat > $T/pinger/files/jobs/check.sh <<'SH'
+shareos-app-notify warn nas "NAS offline" "No answer since 10:00" || exit 1
+shareos-app-notify clear old-key
+shareos-app-notify warn 'bad key!' x 2>/dev/null && exit 2
+# a link to a file of root is not read
+ln -s /etc/shadow "$SHAREOS_NOTIFY_DIR/zz.json"
+i=0; while [ $i -lt 12 ]; do shareos-app-notify info n$i "Message $i" 2>/dev/null; i=$((i + 1)); done
+exit 0
+SH
+python3 -c "import json; json.dump({'id':'pinger','name':'Pinger','version':'1.0.0','publisher':'T','type':'webapp','entry':'index.html','icon':'icon.svg','description':{'de':'x','en':'x'},'permissions':['files','notify','cron'],'jobs':[{'id':'check','name':'Check','command':'jobs/check.sh','schedule':'*/5 * * * *','timeout':30}]}, open('$T/pinger/app.json','w'))"
+(cd $T/pinger && tar -czf $R/tmp/pinger.sapp app.json -C files .)
+check "notify: app with notify, files and cron installed" "run 'shareos-apps install-file /tmp/pinger.sapp' | js \"d['ok']\""
+check "notify: the command only works inside a job" "! run 'shareos-app-notify info x y' >/dev/null && run 'shareos-app-notify info x y' | grep -q 'scheduled task'"
+o=$(run 'shareos-apps run-job pinger check')
+check "notify: job ran" "echo '$o' | js \"d['rc']==0\"" || { echo "  $o"; run 'shareos-apps job-log pinger check' | sed 's/^/  /'; }
+check "notify: message of the job stored with the app's name, source apps" "nmsg | js \"any(m['key']=='app-pinger-nas' and m['title_de']=='Pinger: NAS offline' and m['text_de']=='No answer since 10:00' and m['level']=='warn' and m['source']=='apps' for m in d)\""
+check "notify: at most 10 spool files per run, the link to /etc/shadow is skipped" "nmsg | js \"sorted(m['key'] for m in d if m['key'].startswith('app-pinger-'))==['app-pinger-n%d' % i for i in range(7)]+['app-pinger-nas'] and not any('root:' in json.dumps(m) for m in d)\""
+check "notify: spool folder removed after the job" "[ ! -e $R/tmp/shareos-apps/spool/pinger ]"
+GP=$(grant root pinger); GPA=$(grant anna pinger)
+check "notify: SDK – user account and app without the permission get no access" "cgi notify $GPA '{\"op\":\"send\",\"key\":\"k\",\"title\":\"t\"}' | js \"d.get('error')=='no access'\" && cgi notify $GO '{\"op\":\"send\",\"key\":\"k\",\"title\":\"t\"}' | js \"d.get('error')=='no access'\""
+check "notify: SDK – send and clear" "cgi notify $GP '{\"op\":\"send\",\"level\":\"error\",\"key\":\"sdk\",\"title\":\"From the browser\",\"text\":\"line 1\nline 2\"}' | js \"d['ok']\" && nmsg | js \"any(m['key']=='app-pinger-sdk' and m['level']=='error' and m['title_en']=='Pinger: From the browser' and not m['resolved'] for m in d)\" && cgi notify $GP '{\"op\":\"clear\",\"key\":\"sdk\"}' | js \"d['ok']\" && nmsg | js \"all(m['resolved'] for m in d if m['key']=='app-pinger-sdk')\""
+check "notify: invalid input refused" "cgi notify $GP '{\"op\":\"send\",\"level\":\"fatal\",\"key\":\"k\",\"title\":\"t\"}' | grep -q 'invalid level' && cgi notify $GP '{\"op\":\"send\",\"key\":\"a/b\",\"title\":\"t\"}' | grep -q 'invalid key' && cgi notify $GP '{\"op\":\"send\",\"key\":\"k\",\"title\":\"\"}' | grep -q 'invalid title' && cgi notify $GP '{\"op\":\"send\",\"key\":\"k\",\"title\":\"a\u0007b\"}' | grep -q 'invalid title'"
+# 8 from the job, 1 from the browser so far
+for i in 1 2 3 4 5 6 7 8 9 10 11; do cgi notify $GP "{\"op\":\"send\",\"key\":\"r$i\",\"title\":\"t\"}" >/dev/null; done
+check "notify: at most 20 messages an hour per app" "cgi notify $GP '{\"op\":\"send\",\"key\":\"over\",\"title\":\"t\"}' | grep -q 'too many messages' && ! nmsg | grep -q app-pinger-over"
+check "notify: other apps cannot use it (no permission)" "run 'shareos-apps notify homelab send info k t' | grep -q 'no permission'"
+check "notify: removing the app resolves its messages" "run 'shareos-apps remove pinger' | js \"d['ok']\" && nmsg | js \"all(m['resolved'] for m in d if m['key'].startswith('app-pinger-'))\""
 
 echo
 echo "$pass passed, $failed failed"

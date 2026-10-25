@@ -432,6 +432,16 @@ Braucht ein Tailscale-Konto (kostenlos), ein Handy oder einen Rechner mit Tailsc
 5. Konto ohne persönlichen Ordner: Teilen meldet „no personal folder“; das Geteilte wird verworfen und kommt bei der nächsten Anmeldung nicht wieder.
 6. Dateidialog einer App für ein Konto **ohne** *Dateien* (z. B. Webpad → *Öffnen*): Die Ordnerauswahl zeigt zuerst *App-Daten*, dann *Mein Ordner* und die Freigaben des Benutzers; Freigaben nur zum Lesen sind markiert und fehlen beim Speichern. Die App legt ihre eigenen Dateien weiter in *App-Daten* ab.
 
+## 14y. Berechtigung notify (0.2.0-beta.12)
+
+Braucht eine App mit der Berechtigung `notify` (z. B. HomePing in einer Version, die sie nutzt) – oder eine eigene Test-App mit einer Aufgabe, die `shareos-app-notify warn test "Test" "Hallo"` aufruft.
+
+1. APPS → die App → *Berechtigungen*: das Schild *Meldungen senden* mit seiner Erklärung.
+2. Aufgabe der App ausführen (APPS → Aufgaben → *Jetzt ausführen*): Unter System → Meldungen steht „<App>: Test“ mit dem Text; mit eingerichteter E-Mail oder Push kommt sie auch dort an.
+3. Eine Aufgabe, die `shareos-app-notify clear test` aufruft, markiert die Meldung als erledigt.
+4. Mehr als 20 Meldungen pro Stunde werden abgelehnt (`too many messages` im Protokoll der Aufgabe).
+5. App entfernen: ihre offenen Meldungen werden als erledigt markiert.
+
 ## 14u. Berechtigungen sysinfo, netcheck, docker, tuya (0.2.0-beta.11)
 
 Braucht die Apps SysMon, HomePing und DockerDeck in einer Version mit diesen Berechtigungen (ShareOS-Apps) – oder eine eigene Test-App.

@@ -1147,7 +1147,9 @@
 		"MEIN VERBRAUCH": "MEU USO",
 		"BELEGUNG": "OCUPAÇÃO",
 		"FREI": "LIVRE",
-		"LIMIT": "LIMITE"
+		"LIMIT": "LIMITE",
+		"Meldungen senden": "Enviar notificações",
+		"Darf Meldungen über die Benachrichtigungen der Box senden (Oberfläche, E-Mail, Push) – höchstens 20 pro Stunde, mit dem Namen der App davor; im Browser nur für Administratoren.": "Pode enviar mensagens pelas notificações da caixa (interface, e-mail, push) – no máximo 20 por hora, com o nome do app na frente; no navegador, só para administradores."
 	},
 	"patterns": [
 		[

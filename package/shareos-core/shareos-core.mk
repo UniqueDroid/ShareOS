@@ -35,6 +35,7 @@ define SHAREOS_CORE_INSTALL_TARGET_CMDS
 	$(INSTALL) -D -m 0755 $(@D)/etc/init.d/S20storage $(TARGET_DIR)/etc/init.d/S20storage
 	$(INSTALL) -D -m 0755 $(@D)/usr/sbin/shareos-storage $(TARGET_DIR)/usr/sbin/shareos-storage
 	$(INSTALL) -D -m 0755 $(@D)/usr/sbin/shareos-usb $(TARGET_DIR)/usr/sbin/shareos-usb
+	$(INSTALL) -D -m 0755 $(@D)/usr/sbin/shareos-app-notify $(TARGET_DIR)/usr/sbin/shareos-app-notify
 	$(INSTALL) -D -m 0755 $(@D)/etc/init.d/S12ubus $(TARGET_DIR)/etc/init.d/S12ubus
 	$(INSTALL) -D -m 0755 $(@D)/etc/init.d/S13rpcd $(TARGET_DIR)/etc/init.d/S13rpcd
 	$(INSTALL) -D -m 0755 $(@D)/etc/init.d/S50uhttpd $(TARGET_DIR)/etc/init.d/S50uhttpd
@@ -70,6 +71,7 @@ define SHAREOS_CORE_INSTALL_TARGET_CMDS
 	$(INSTALL) -D -m 0755 $(@D)/www-apps/_shareos/cgi/status $(TARGET_DIR)/www-apps/_shareos/cgi/status
 	$(INSTALL) -D -m 0755 $(@D)/www-apps/_shareos/cgi/sysinfo $(TARGET_DIR)/www-apps/_shareos/cgi/sysinfo
 	$(INSTALL) -D -m 0755 $(@D)/www-apps/_shareos/cgi/netcheck $(TARGET_DIR)/www-apps/_shareos/cgi/netcheck
+	$(INSTALL) -D -m 0755 $(@D)/www-apps/_shareos/cgi/notify $(TARGET_DIR)/www-apps/_shareos/cgi/notify
 	$(INSTALL) -D -m 0755 $(@D)/www-apps/_shareos/cgi/docker $(TARGET_DIR)/www-apps/_shareos/cgi/docker
 	$(INSTALL) -D -m 0755 $(@D)/www-apps/_shareos/cgi/tuya $(TARGET_DIR)/www-apps/_shareos/cgi/tuya
 	$(INSTALL) -D -m 0644 $(@D)/etc/config/dockerhosts $(TARGET_DIR)/etc/config/dockerhosts

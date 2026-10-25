@@ -1636,13 +1636,20 @@ function ts_tool(args, input) {
 }
 
 // grant of an app with the permission p (and "files"); vpn, tailscale,
-// autobrr, sysinfo, netcheck, docker, tuya: admin accounts only
-const ADMIN_PERMS = { vpn: 1, tailscale: 1, autobrr: 1, sysinfo: 1, netcheck: 1, docker: 1, tuya: 1 };
+// autobrr, sysinfo, netcheck, docker, tuya, notify: admin accounts only
+const ADMIN_PERMS = { vpn: 1, tailscale: 1, autobrr: 1, sysinfo: 1, netcheck: 1, docker: 1, tuya: 1, notify: 1 };
 function app_grant_perm(grant, p) {
 	let g = app_grant_user(grant);
 	if (!g || index(g.app.permissions ?? [], p) < 0) return null;
 	if (ADMIN_PERMS[p] && acc_role(g.u) != 'admin') return null;
 	return g;
+}
+
+// permission "notify": shareos-apps checks the message and the rate
+function app_notify_tool(args, id) {
+	let r = sh('/usr/sbin/shareos-apps notify ' + shq(id) + ' ' + join(' ', map(args, shq)));
+	let j = json(trim(r.out) || 'null');
+	return type(j) == 'object' ? j : { error: 'failed' };
 }
 
 /* ---------- permission "sysinfo": the box's values for apps (read only) ---------- */
@@ -3220,6 +3227,27 @@ return {
 	// called only by /_shareos/cgi/netcheck: may this app check hosts from the box?
 	'shareos.appnet': {
 		allowed: { args: { grant: '' }, call: function(req) { return app_grant_perm(req.args.grant, 'netcheck') ? { ok: true } : { error: 'no access' }; } }
+	},
+
+	// called only by /_shareos/cgi/notify: messages of an app (permission
+	// "notify", admins) – checked and sent by shareos-apps notify
+	'shareos.appnotify': {
+		send: {
+			args: { grant: '', level: '', key: '', title: '', text: '' },
+			call: function(req) {
+				let g = app_grant_perm(req.args.grant, 'notify'), a = req.args;
+				if (!g) return { error: 'no access' };
+				return app_notify_tool([ 'send', '' + (a.level || 'info'), '' + (a.key ?? ''), '' + (a.title ?? ''), '' + (a.text ?? '') ], g.app.id);
+			}
+		},
+		clear: {
+			args: { grant: '', key: '' },
+			call: function(req) {
+				let g = app_grant_perm(req.args.grant, 'notify');
+				if (!g) return { error: 'no access' };
+				return app_notify_tool([ 'clear', '' + (req.args.key ?? '') ], g.app.id);
+			}
+		}
 	},
 
 	// called only by /_shareos/cgi/tuya: may this app talk to Tuya devices?

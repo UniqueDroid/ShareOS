@@ -7,7 +7,8 @@
 //                                      a message; the same key is one message
 //                                      (counted, sent again after 24 h at most)
 //   shareos-notify clear <key>         the cause is gone (e.g. the mirror is
-//                                      complete again)
+//                                      complete again); "<prefix>-*": all
+//                                      keys starting with "<prefix>-"
 //   shareos-notify check               look at RAID, volumes, temperature,
 //                                      SMART (cached values) and updates (cron)
 //   shareos-notify list                JSON for the web interface
@@ -207,8 +208,11 @@ function cmd_send(level, source, key, tde, ten, xde, xen) {
 }
 
 function cmd_clear(key) {
+	// "<prefix>-*": every message whose key starts with "<prefix>-" (e.g. a removed app's)
+	let pre = match(key ?? '', /^([a-zA-Z0-9._-]+-)\*$/)?.[1];
+	let hit = (k) => pre ? substr(k ?? '', 0, length(pre)) == pre : k == key;
 	let list = load(), n = 0;
-	for (let x in list) if (x.key == key && !x.resolved) { x.resolved = true; x.resolved_at = time(); n++; }
+	for (let x in list) if (hit(x.key) && !x.resolved) { x.resolved = true; x.resolved_at = time(); n++; }
 	if (n) save(list);
 	out({ ok: true, cleared: n });
 }

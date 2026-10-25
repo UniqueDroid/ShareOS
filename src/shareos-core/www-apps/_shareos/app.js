@@ -138,6 +138,18 @@
  *   .containers(host, all)         like /containers/json (all: also stopped)
  *   .inspect(host, id)   .stats(host, id)   .logs(host, id, tail) (text)
  *   .action(host, id, 'start'|'stop'|'restart'|'pause'|'unpause')
+ * ShareOS.notify              messages through the box's notification service
+ *                             (web interface, e-mail, push), for apps with the
+ *                             permissions "files" and "notify" – admin
+ *                             accounts only (ShareOS 0.2.0-beta.12+, null
+ *                             otherwise); scheduled tasks use the command
+ *                             shareos-app-notify instead:
+ *   .send(level, key, title, text)  level info|warn|error; the same key is one
+ *                                  message (counted, sent again after 24 h at
+ *                                  most); key 1–32 characters A-Z a-z 0-9 . _ -,
+ *                                  title ≤ 100 (the app's name is put in
+ *                                  front), text ≤ 1000; at most 20 an hour
+ *   .clear(key)                    the cause is gone
  * ShareOS.tuya                Tuya smart-home devices in the local network
  *                             (protocol 3.3/3.4, no cloud), for apps with the
  *                             permissions "files" and "tuya" – admin accounts
@@ -523,6 +535,11 @@
 		logs: function (host, id, tail) { return dockerCall('logs', { host: host, id: id, tail: tail || 200 }); },
 		action: function (host, id, action) { return dockerCall('action', { host: host, id: id, action: action }); }
 	} : null;
+	/* messages (permissions "files" + "notify", admins) */
+	var notify = fs ? {
+		send: function (level, key, title, text) { return cgiCall('notify', 'send', { level: level || 'info', key: key, title: title, text: text || '' }); },
+		clear: function (key) { return cgiCall('notify', 'clear', { key: key }); }
+	} : null;
 	/* Tuya devices (permissions "files" + "tuya", admins) */
 	function tuyaDev(d) { d = d || {}; return { ip: d.ip, id: d.id, key: d.key, version: d.version || '3.3' }; }
 	var tuya = fs ? {
@@ -640,6 +657,7 @@
 		netcheck: netcheck,
 		docker: docker,
 		tuya: tuya,
+		notify: notify,
 		status: status,
 		menu: menu,
 		on: function (type, fn) { (handlers[type] = handlers[type] || []).push(fn); },

@@ -1464,3 +1464,5 @@ E1141	MON UTILISATION
 E1142	OCCUPATION
 E1143	LIBRE
 E1144	LIMITE
+E1145	Envoyer des notifications
+E1146	Peut envoyer des messages via les notifications de la box (interface, e-mail, push) – 20 par heure au maximum, précédés du nom de l'application ; dans le navigateur, réservé aux administrateurs.

@@ -1464,3 +1464,5 @@ E1141	MI USO
 E1142	OCUPACIÓN
 E1143	LIBRE
 E1144	LÍMITE
+E1145	Enviar notificaciones
+E1146	Puede enviar mensajes a través de las notificaciones de la caja (interfaz, correo, push): como máximo 20 por hora, con el nombre de la app delante; en el navegador, solo para administradores.

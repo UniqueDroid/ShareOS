@@ -1147,7 +1147,9 @@
 		"MEIN VERBRAUCH": "استخدامي",
 		"BELEGUNG": "المستخدم",
 		"FREI": "متاح",
-		"LIMIT": "الحد"
+		"LIMIT": "الحد",
+		"Meldungen senden": "إرسال الإشعارات",
+		"Darf Meldungen über die Benachrichtigungen der Box senden (Oberfläche, E-Mail, Push) – höchstens 20 pro Stunde, mit dem Namen der App davor; im Browser nur für Administratoren.": "يمكنه إرسال رسائل عبر إشعارات الجهاز (الواجهة، البريد الإلكتروني، Push) – 20 رسالة في الساعة كحد أقصى، يسبقها اسم التطبيق؛ في المتصفح للمسؤولين فقط."
 	},
 	"patterns": [
 		[

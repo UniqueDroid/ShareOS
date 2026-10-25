@@ -1147,7 +1147,9 @@
 		"MEIN VERBRAUCH": "МОЁ ИСПОЛЬЗОВАНИЕ",
 		"BELEGUNG": "ЗАНЯТО",
 		"FREI": "СВОБОДНО",
-		"LIMIT": "ЛИМИТ"
+		"LIMIT": "ЛИМИТ",
+		"Meldungen senden": "Отправка уведомлений",
+		"Darf Meldungen über die Benachrichtigungen der Box senden (Oberfläche, E-Mail, Push) – höchstens 20 pro Stunde, mit dem Namen der App davor; im Browser nur für Administratoren.": "Может отправлять сообщения через уведомления устройства (интерфейс, e-mail, push) – не более 20 в час, с названием приложения в начале; в браузере только для администраторов."
 	},
 	"patterns": [
 		[

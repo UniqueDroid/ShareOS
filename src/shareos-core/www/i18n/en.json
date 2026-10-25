@@ -1147,7 +1147,9 @@
 		"MEIN VERBRAUCH": "MY USAGE",
 		"BELEGUNG": "USED",
 		"FREI": "FREE",
-		"LIMIT": "LIMIT"
+		"LIMIT": "LIMIT",
+		"Meldungen senden": "Send notifications",
+		"Darf Meldungen über die Benachrichtigungen der Box senden (Oberfläche, E-Mail, Push) – höchstens 20 pro Stunde, mit dem Namen der App davor; im Browser nur für Administratoren.": "May send messages through the box's notifications (web interface, e-mail, push) – at most 20 an hour, with the app's name in front; in the browser for administrators only."
 	},
 	"patterns": [
 		[

@@ -1147,7 +1147,9 @@
 		"MEIN VERBRAUCH": "আমার ব্যবহার",
 		"BELEGUNG": "ব্যবহৃত",
 		"FREI": "খালি",
-		"LIMIT": "সীমা"
+		"LIMIT": "সীমা",
+		"Meldungen senden": "বিজ্ঞপ্তি পাঠানো",
+		"Darf Meldungen über die Benachrichtigungen der Box senden (Oberfläche, E-Mail, Push) – höchstens 20 pro Stunde, mit dem Namen der App davor; im Browser nur für Administratoren.": "বক্সের বিজ্ঞপ্তির (ইন্টারফেস, ই-মেইল, পুশ) মাধ্যমে বার্তা পাঠাতে পারে – ঘণ্টায় সর্বোচ্চ ২০টি, সামনে অ্যাপের নাম; ব্রাউজারে শুধু প্রশাসকদের জন্য।"
 	},
 	"patterns": [
 		[
