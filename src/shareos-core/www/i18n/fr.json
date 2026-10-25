@@ -1147,7 +1147,26 @@
 		"MEIN VERBRAUCH": "MON UTILISATION",
 		"BELEGUNG": "OCCUPATION",
 		"FREI": "LIBRE",
-		"LIMIT": "LIMITE"
+		"LIMIT": "LIMITE",
+		"Papierkorb": "Corbeille",
+		"PAPIERKORB": "CORBEILLE",
+		"Endgültig löschen": "Supprimer définitivement",
+		"Papierkorb leeren": "Vider la corbeille",
+		"Papierkorb leeren?": "Vider la corbeille ?",
+		"HERKUNFT": "ORIGINE",
+		"GELÖSCHT": "SUPPRIMÉ",
+		"In den Papierkorb": "Mettre à la corbeille",
+		"In den Papierkorb verschoben.": "Déplacé dans la corbeille.",
+		"Leeren": "Vider",
+		"Papierkorb geleert.": "Corbeille vidée.",
+		"Endgültig gelöscht.": "Supprimé définitivement.",
+		"Papierkorb gespeichert.": "Corbeille enregistrée.",
+		"Der Papierkorb ist leer.": "La corbeille est vide.",
+		"nie (nur von Hand leeren)": "jamais (vider à la main)",
+		"Gelöschtes im Dateibrowser erst in den Papierkorb legen": "Mettre d'abord à la corbeille ce qui est supprimé dans le navigateur de fichiers",
+		"AUTOMATISCH ENDGÜLTIG LÖSCHEN NACH": "SUPPRIMER DÉFINITIVEMENT APRÈS",
+		"Das lässt sich nicht rückgängig machen.": "Cette action est irréversible.",
+		"Jeder Ordner hat seinen eigenen Papierkorb: der persönliche Ordner, jede Freigabe, jedes Laufwerk. Er liegt auf derselben Platte und zählt zum Speicherlimit. Gilt für den Dateibrowser dieser Oberfläche – über SMB vom PC oder in Apps Gelöschtes ist sofort weg; dafür gibt es die Snapshots.": "Chaque dossier a sa propre corbeille : le dossier personnel, chaque partage, chaque disque. Elle se trouve sur le même disque et compte dans le quota. Elle s'applique au navigateur de fichiers de cette interface – ce qui est supprimé via SMB depuis un PC ou dans les applications disparaît aussitôt ; pour cela il y a les instantanés."
 	},
 	"patterns": [
 		[
@@ -2265,6 +2284,34 @@
 		[
 			"^Laufwerk (\\d+) % belegt$",
 			"Disque utilisé à $1 %"
+		],
+		[
+			"^(\\d+) Tagen$",
+			"$1 jours"
+		],
+		[
+			"^löscht nach (\\d+) Tagen$",
+			"supprime après $1 jours"
+		],
+		[
+			"^(\\d+) Eintrag/Einträge in den Papierkorb\\?$",
+			"Mettre $1 élément(s) à la corbeille ?"
+		],
+		[
+			"^(.+) – lässt sich im Papierkorb wiederherstellen\\.$",
+			"$1 – restaurable depuis la corbeille."
+		],
+		[
+			"^Endgültig löschen – (\\d+) Eintrag/Einträge$",
+			"Supprimer définitivement $1 élément(s) ?"
+		],
+		[
+			"^(\\d+) Eintrag/Einträge wiederhergestellt\\.$",
+			"$1 élément(s) restauré(s)."
+		],
+		[
+			"^Papierkorb: (.*)$",
+			"Corbeille : $1"
 		]
 	],
 	"words": [

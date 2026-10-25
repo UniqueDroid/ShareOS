@@ -79,7 +79,7 @@ Version in brackets = first release with the feature.
 - SMB 2/3 (ksmbd) and NFS v4 shares with read/write permissions per user and group, guest access optional
 - Users and groups; one account for shares, web interface and apps; storage limit per user (ext4); import of Alt-F users with their passwords
 - "My ShareOS": users with web access manage their own password, look, shares, storage, cloud and Paperless
-- File browser in the web interface: admins for all drives and USB drives, users for their personal folder and the shares they have rights to (enabled per user; read-only shares stay read-only, also for apps); upload/download with progress, drag and drop, large files
+- File browser in the web interface: admins for all drives and USB drives, users for their personal folder and the shares they have rights to (enabled per user; read-only shares stay read-only, also for apps); upload/download with progress, drag and drop, large files; trash per folder with restore and automatic emptying (0.2.0-beta.12)
 
 **Apps and integrations**
 - APPS area with a store from [ShareOS-Apps](https://github.com/UniqueDroid/ShareOS-Apps) – 38 web apps for files and office, media, network, security, development and everyday life: one-click install/update with SHA-256 check, own `.sapp` packages, more catalogs, visibility per user/group; apps run on their own port (8081/8444) (beta.6)

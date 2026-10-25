@@ -86,7 +86,8 @@
 				"shareos.files": [
 					"roots",
 					"list",
-					"openers"
+					"openers",
+					"trash_list"
 				],
 				"shareos.apps": [
 					"installed",
@@ -250,6 +251,9 @@
 					"rename",
 					"move",
 					"delete",
+					"trash_restore",
+					"trash_empty",
+					"trash_config",
 					"ticket",
 					"app_ticket",
 					"app_grant"
@@ -297,7 +301,8 @@
 				"shareos.files": [
 					"roots",
 					"list",
-					"openers"
+					"openers",
+					"trash_list"
 				],
 				"shareos.status": [
 					"chips"
@@ -326,6 +331,8 @@
 					"rename",
 					"move",
 					"delete",
+					"trash_restore",
+					"trash_empty",
 					"ticket",
 					"app_ticket",
 					"app_grant"

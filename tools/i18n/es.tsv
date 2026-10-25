@@ -1464,3 +1464,29 @@ E1141	MI USO
 E1142	OCUPACIÓN
 E1143	LIBRE
 E1144	LÍMITE
+E1145	Papelera
+E1146	PAPELERA
+E1147	Eliminar definitivamente
+E1148	Vaciar papelera
+E1149	¿Vaciar la papelera?
+E1150	ORIGEN
+E1151	ELIMINADO
+E1152	Mover a la papelera
+E1153	Movido a la papelera.
+E1154	Vaciar
+E1155	Papelera vaciada.
+E1156	Eliminado definitivamente.
+E1157	Papelera guardada.
+E1158	La papelera está vacía.
+E1159	nunca (solo vaciar a mano)
+E1160	Mover primero a la papelera lo eliminado en el explorador de archivos
+E1161	ELIMINAR DEFINITIVAMENTE TRAS
+E1162	No se puede deshacer.
+E1163	Cada carpeta tiene su propia papelera: la carpeta personal, cada recurso compartido, cada unidad. Está en el mismo disco y cuenta para el límite de almacenamiento. Se aplica al explorador de archivos de esta interfaz: lo que se borra por SMB desde un PC o en apps desaparece al momento; para eso están las instantáneas.
+P279	$1 días
+P280	borra tras $1 días
+P281	¿Mover $1 elemento(s) a la papelera?
+P282	$1: se puede restaurar desde la papelera.
+P283	¿Eliminar definitivamente $1 elemento(s)?
+P284	$1 elemento(s) restaurado(s).
+P285	Papelera: $1

@@ -1147,7 +1147,26 @@
 		"MEIN VERBRAUCH": "আমার ব্যবহার",
 		"BELEGUNG": "ব্যবহৃত",
 		"FREI": "খালি",
-		"LIMIT": "সীমা"
+		"LIMIT": "সীমা",
+		"Papierkorb": "রিসাইকেল বিন",
+		"PAPIERKORB": "রিসাইকেল বিন",
+		"Endgültig löschen": "স্থায়ীভাবে মুছুন",
+		"Papierkorb leeren": "রিসাইকেল বিন খালি করুন",
+		"Papierkorb leeren?": "রিসাইকেল বিন খালি করবেন?",
+		"HERKUNFT": "উৎস",
+		"GELÖSCHT": "মোছা হয়েছে",
+		"In den Papierkorb": "রিসাইকেল বিনে সরান",
+		"In den Papierkorb verschoben.": "রিসাইকেল বিনে সরানো হয়েছে।",
+		"Leeren": "খালি করুন",
+		"Papierkorb geleert.": "রিসাইকেল বিন খালি হয়েছে।",
+		"Endgültig gelöscht.": "স্থায়ীভাবে মোছা হয়েছে।",
+		"Papierkorb gespeichert.": "রিসাইকেল বিন সংরক্ষিত।",
+		"Der Papierkorb ist leer.": "রিসাইকেল বিন খালি।",
+		"nie (nur von Hand leeren)": "কখনও না (শুধু হাতে খালি করুন)",
+		"Gelöschtes im Dateibrowser erst in den Papierkorb legen": "ফাইল ব্রাউজারে মোছা জিনিস আগে রিসাইকেল বিনে রাখুন",
+		"AUTOMATISCH ENDGÜLTIG LÖSCHEN NACH": "এর পরে স্বয়ংক্রিয়ভাবে স্থায়ীভাবে মুছুন",
+		"Das lässt sich nicht rückgängig machen.": "এটি পূর্বাবস্থায় ফেরানো যাবে না।",
+		"Jeder Ordner hat seinen eigenen Papierkorb: der persönliche Ordner, jede Freigabe, jedes Laufwerk. Er liegt auf derselben Platte und zählt zum Speicherlimit. Gilt für den Dateibrowser dieser Oberfläche – über SMB vom PC oder in Apps Gelöschtes ist sofort weg; dafür gibt es die Snapshots.": "প্রতিটি ফোল্ডারের নিজস্ব রিসাইকেল বিন আছে: ব্যক্তিগত ফোল্ডার, প্রতিটি শেয়ার, প্রতিটি ড্রাইভ। এটি একই ডিস্কে থাকে এবং স্টোরেজ সীমায় গোনা হয়। এটি এই ইন্টারফেসের ফাইল ব্রাউজারে প্রযোজ্য – PC থেকে SMB বা অ্যাপে মোছা জিনিস সঙ্গে সঙ্গে চলে যায়; এর জন্য স্ন্যাপশট আছে।"
 	},
 	"patterns": [
 		[
@@ -2265,6 +2284,34 @@
 		[
 			"^Laufwerk (\\d+) % belegt$",
 			"ড্রাইভ $1 % ব্যবহৃত"
+		],
+		[
+			"^(\\d+) Tagen$",
+			"$1 দিন"
+		],
+		[
+			"^löscht nach (\\d+) Tagen$",
+			"$1 দিন পরে মোছে"
+		],
+		[
+			"^(\\d+) Eintrag/Einträge in den Papierkorb\\?$",
+			"$1টি আইটেম রিসাইকেল বিনে সরাবেন?"
+		],
+		[
+			"^(.+) – lässt sich im Papierkorb wiederherstellen\\.$",
+			"$1 – রিসাইকেল বিন থেকে ফেরানো যায়।"
+		],
+		[
+			"^Endgültig löschen – (\\d+) Eintrag/Einträge$",
+			"$1টি আইটেম স্থায়ীভাবে মুছবেন?"
+		],
+		[
+			"^(\\d+) Eintrag/Einträge wiederhergestellt\\.$",
+			"$1টি আইটেম ফেরানো হয়েছে।"
+		],
+		[
+			"^Papierkorb: (.*)$",
+			"রিসাইকেল বিন: $1"
 		]
 	],
 	"words": [

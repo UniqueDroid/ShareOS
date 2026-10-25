@@ -1147,7 +1147,26 @@
 		"MEIN VERBRAUCH": "MI USO",
 		"BELEGUNG": "OCUPACIÓN",
 		"FREI": "LIBRE",
-		"LIMIT": "LÍMITE"
+		"LIMIT": "LÍMITE",
+		"Papierkorb": "Papelera",
+		"PAPIERKORB": "PAPELERA",
+		"Endgültig löschen": "Eliminar definitivamente",
+		"Papierkorb leeren": "Vaciar papelera",
+		"Papierkorb leeren?": "¿Vaciar la papelera?",
+		"HERKUNFT": "ORIGEN",
+		"GELÖSCHT": "ELIMINADO",
+		"In den Papierkorb": "Mover a la papelera",
+		"In den Papierkorb verschoben.": "Movido a la papelera.",
+		"Leeren": "Vaciar",
+		"Papierkorb geleert.": "Papelera vaciada.",
+		"Endgültig gelöscht.": "Eliminado definitivamente.",
+		"Papierkorb gespeichert.": "Papelera guardada.",
+		"Der Papierkorb ist leer.": "La papelera está vacía.",
+		"nie (nur von Hand leeren)": "nunca (solo vaciar a mano)",
+		"Gelöschtes im Dateibrowser erst in den Papierkorb legen": "Mover primero a la papelera lo eliminado en el explorador de archivos",
+		"AUTOMATISCH ENDGÜLTIG LÖSCHEN NACH": "ELIMINAR DEFINITIVAMENTE TRAS",
+		"Das lässt sich nicht rückgängig machen.": "No se puede deshacer.",
+		"Jeder Ordner hat seinen eigenen Papierkorb: der persönliche Ordner, jede Freigabe, jedes Laufwerk. Er liegt auf derselben Platte und zählt zum Speicherlimit. Gilt für den Dateibrowser dieser Oberfläche – über SMB vom PC oder in Apps Gelöschtes ist sofort weg; dafür gibt es die Snapshots.": "Cada carpeta tiene su propia papelera: la carpeta personal, cada recurso compartido, cada unidad. Está en el mismo disco y cuenta para el límite de almacenamiento. Se aplica al explorador de archivos de esta interfaz: lo que se borra por SMB desde un PC o en apps desaparece al momento; para eso están las instantáneas."
 	},
 	"patterns": [
 		[
@@ -2265,6 +2284,34 @@
 		[
 			"^Laufwerk (\\d+) % belegt$",
 			"Unidad al $1 % de uso"
+		],
+		[
+			"^(\\d+) Tagen$",
+			"$1 días"
+		],
+		[
+			"^löscht nach (\\d+) Tagen$",
+			"borra tras $1 días"
+		],
+		[
+			"^(\\d+) Eintrag/Einträge in den Papierkorb\\?$",
+			"¿Mover $1 elemento(s) a la papelera?"
+		],
+		[
+			"^(.+) – lässt sich im Papierkorb wiederherstellen\\.$",
+			"$1: se puede restaurar desde la papelera."
+		],
+		[
+			"^Endgültig löschen – (\\d+) Eintrag/Einträge$",
+			"¿Eliminar definitivamente $1 elemento(s)?"
+		],
+		[
+			"^(\\d+) Eintrag/Einträge wiederhergestellt\\.$",
+			"$1 elemento(s) restaurado(s)."
+		],
+		[
+			"^Papierkorb: (.*)$",
+			"Papelera: $1"
 		]
 	],
 	"words": [

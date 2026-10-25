@@ -1464,3 +1464,29 @@ E1141	MON UTILISATION
 E1142	OCCUPATION
 E1143	LIBRE
 E1144	LIMITE
+E1145	Corbeille
+E1146	CORBEILLE
+E1147	Supprimer définitivement
+E1148	Vider la corbeille
+E1149	Vider la corbeille ?
+E1150	ORIGINE
+E1151	SUPPRIMÉ
+E1152	Mettre à la corbeille
+E1153	Déplacé dans la corbeille.
+E1154	Vider
+E1155	Corbeille vidée.
+E1156	Supprimé définitivement.
+E1157	Corbeille enregistrée.
+E1158	La corbeille est vide.
+E1159	jamais (vider à la main)
+E1160	Mettre d'abord à la corbeille ce qui est supprimé dans le navigateur de fichiers
+E1161	SUPPRIMER DÉFINITIVEMENT APRÈS
+E1162	Cette action est irréversible.
+E1163	Chaque dossier a sa propre corbeille : le dossier personnel, chaque partage, chaque disque. Elle se trouve sur le même disque et compte dans le quota. Elle s'applique au navigateur de fichiers de cette interface – ce qui est supprimé via SMB depuis un PC ou dans les applications disparaît aussitôt ; pour cela il y a les instantanés.
+P279	$1 jours
+P280	supprime après $1 jours
+P281	Mettre $1 élément(s) à la corbeille ?
+P282	$1 – restaurable depuis la corbeille.
+P283	Supprimer définitivement $1 élément(s) ?
+P284	$1 élément(s) restauré(s).
+P285	Corbeille : $1

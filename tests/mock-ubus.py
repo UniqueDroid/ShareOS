@@ -177,6 +177,8 @@ FS = {   # root -> path -> list of (name, type, size)
              'Paperless': [], 'Dokumente': [('Steuer 2025.pdf', 'file', 1_204_000)], 'Handy-Fotos': [('IMG_2041.jpg', 'file', 3_400_000)]},
 }
 TICKETS = {}
+TRASH_CONF = {'enabled': True, 'days': 30}
+TRASH = {}   # root -> trash entries (file browser)
 SHARED = []   # names given out by shareos.me share_ticket
 
 
@@ -190,7 +192,24 @@ def fs_entries(root, path):
 def files_call(user, method, args):
     roots = [{'name': 'daten', 'home': False}] if user == 'root' or STATE['users'].get(user, {}).get('role') == 'admin' else [{'name': 'home', 'home': True}]
     if method == 'roots':
-        return {'roots': roots}
+        return {'roots': roots, 'trash': dict(TRASH_CONF)}
+    if method == 'trash_config':
+        TRASH_CONF.update(enabled=bool(args.get('enabled')), days=int(args.get('days', 30)))
+        return dict(TRASH_CONF)
+    if method.startswith('trash_'):
+        root = args.get('root')
+        items = TRASH.setdefault(root, [])
+        if method == 'trash_list':
+            return {**TRASH_CONF, 'items': [{k: v for k, v in x.items() if k != 'entry'} for x in items], 'ro': False}
+        sel = [x for x in items if not args.get('ids') or x['id'] in args['ids']]
+        if method == 'trash_restore':
+            for x in sel:
+                FS[root].setdefault(x['path'], FS[root].get(x['path'], [])).append(x['entry'])
+            TRASH[root] = [x for x in items if x not in sel]
+            return {'ok': True, 'restored': [{'name': x['name'], 'path': x['path']} for x in sel]}
+        if method == 'trash_empty':
+            TRASH[root] = [x for x in items if x not in sel]
+            return {'ok': True, 'removed': len(sel)}
     root, path = args.get('root'), (args.get('path') or '').strip('/')
     if root not in [r['name'] for r in roots] or path not in FS[root]:
         return {'error': 'not found'}
@@ -205,7 +224,13 @@ def files_call(user, method, args):
         FS[root][path] = [(args['to'] if n == args['name'] else n, t, sz) for n, t, sz in d]
         return {'ok': True}
     if method == 'delete':
+        gone = [x for x in d if x[0] in args['names']]
         FS[root][path] = [x for x in d if x[0] not in args['names']]
+        if TRASH_CONF['enabled'] and not args.get('permanent'):
+            for x in gone:
+                TRASH.setdefault(root, []).insert(0, {'id': f'{int(time.time())}-{os.urandom(4).hex()}', 'name': x[0], 'path': path, 'time': int(time.time()),
+                                                      'user': user, 'type': x[1], 'size': x[2] if x[1] == 'file' else None, 'entry': x})
+            return {'ok': True, 'trash': True}
         return {'ok': True}
     if method == 'move':
         dest = (args.get('dest') or '').strip('/')

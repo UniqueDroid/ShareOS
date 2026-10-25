@@ -748,7 +748,7 @@ const VIEWS = {
 		const sub = S.route.sub;
 		return html`
 		<nav class="subtabs" aria-label="Freigaben">${SHR_SUBS.map(([id, label]) => html`<a class="st${sub === id ? ' on' : ''}" href="#/shares/${id}">${label}</a>`)}</nav>
-		${sub === 'files' ? filesView() : !S.shares || !S.acc ? html`<div class="panel"><div class="empty"><div class="spin" style="margin:0"></div><span>Lade …</span></div></div>`
+		${sub === 'files' ? html`${filesView()}<div id="fb-trashset">${trashSettings()}</div>` : !S.shares || !S.acc ? html`<div class="panel"><div class="empty"><div class="spin" style="margin:0"></div><span>Lade …</span></div></div>`
 			: sub === 'users' ? usersView() : sub === 'groups' ? groupsView() : sharesView()}`;
 	},
 	apps: () => appsView(),
@@ -3772,7 +3772,8 @@ async function fbLoad(path) {
 	const f = fbInit();
 	try {
 		if (!f.roots) {
-			f.roots = (await rpc('shareos.files', 'roots')).roots || [];
+			const rr = await rpc('shareos.files', 'roots');
+			f.roots = rr.roots || []; f.trashConf = rr.trash || { enabled: false, days: 0 };
 			if (!f.roots.some((r) => r.name === f.root)) { f.root = f.roots[0]?.name || ''; f.path = ''; }
 		}
 		if (f.root) {
@@ -3789,6 +3790,8 @@ async function fbLoad(path) {
 function fbRender() {
 	const box = $('#fb');
 	if (box) box.innerHTML = fbInner().s;
+	const ts = $('#fb-trashset');
+	if (ts) ts.innerHTML = trashSettings().s ?? '';
 }
 
 function filesView() {
@@ -3804,6 +3807,7 @@ function fbInner() {
 	if (!f.roots.length) return html`<div class="panel"><div class="empty">${svg(I.info)}<span>${S.me?.role === 'admin' || !S.me ? 'Kein Laufwerk eingehängt – zuerst unter SPEICHER einrichten.' : 'Weder ein persönlicher Ordner noch eine Freigabe für dich.'}</span></div></div>`;
 	if (!d) return html`<div class="panel"><div class="empty"><div class="spin" style="margin:0"></div><span>Lade …</span></div></div>`;
 	const root = f.roots.find((r) => r.name === f.root) || f.roots[0], ro = !!root.ro;
+	if (f.trash) return fbTrashInner(root);
 	const parts = f.path ? f.path.split('/') : [];
 	const n = f.sel.size, all = d.entries.length && n === d.entries.length;
 	const busy = f.uploads.some((u) => u.pct != null && u.pct < 100 && !u.err);
@@ -3824,6 +3828,7 @@ function fbInner() {
 			<button class="btn sm ghost" type="button" data-act="fb-move" ${n && !ro ? '' : 'disabled'}>${svg(I.move)}Verschieben</button>
 			<button class="btn sm ghost" type="button" data-act="fb-copy" ${n && !ro ? '' : 'disabled'}>${svg(I.copy)}Kopieren</button>
 			<button class="btn sm danger" type="button" data-act="fb-del" ${n && !ro ? '' : 'disabled'}>${svg(I.trash)}Löschen</button>
+			${f.trashConf?.enabled ? html`<button class="btn sm ghost" type="button" data-act="fb-trash">${svg(I.trash)}Papierkorb</button>` : ''}
 			<label class="chk ml"><input type="checkbox" id="fb-hidden"${f.hidden ? raw(' checked') : ''}>Versteckte</label>
 		</div>
 		${f.uploads.length ? html`<div class="fbup">${f.uploads.map((u) => html`<div class="fbuprow"><span class="nm">${u.name}</span>
@@ -3846,6 +3851,54 @@ function fbInner() {
 			: html`<div class="empty">${svg(I.folder)}<span>Dieser Ordner ist leer.</span></div>`}
 		${d.truncated ? html`<p class="note">Es werden nur die ersten 2000 Einträge gezeigt.</p>` : ''}
 		<p class="note">Dateien lassen sich auch einfach hierher ziehen. ${n ? html`<b>${n} ausgewählt.</b>` : ''}</p>
+	</div>`;
+}
+
+// admins: trash on/off and how long it keeps things (below the file browser)
+function trashSettings() {
+	const c = S.fb?.trashConf;
+	if (!c) return '';
+	return html`<section class="sec"><h2 class="gh">PAPIERKORB</h2><div class="g2"><div class="panel">
+		<label class="chk"><input type="checkbox" id="trash-on"${c.enabled ? raw(' checked') : ''}>Gelöschtes im Dateibrowser erst in den Papierkorb legen</label>
+		<div class="fields" style="grid-template-columns:1fr;margin-top:12px"><label class="f"><span>AUTOMATISCH ENDGÜLTIG LÖSCHEN NACH</span><select id="trash-days" ${c.enabled ? '' : 'disabled'}>
+			${[[7, '7 Tagen'], [14, '14 Tagen'], [30, '30 Tagen'], [60, '60 Tagen'], [90, '90 Tagen'], [0, 'nie (nur von Hand leeren)']].map(([v, t]) => html`<option value="${v}"${c.days === v ? raw(' selected') : ''}>${t}</option>`)}
+		</select></label></div>
+		<p class="note">Jeder Ordner hat seinen eigenen Papierkorb: der persönliche Ordner, jede Freigabe, jedes Laufwerk. Er liegt auf derselben Platte und zählt zum Speicherlimit. Gilt für den Dateibrowser dieser Oberfläche – über SMB vom PC oder in Apps Gelöschtes ist sofort weg; dafür gibt es die Snapshots.</p>
+	</div></div></section>`;
+}
+
+// the trash of the current root (personal folder, share, drive)
+async function fbTrashLoad() {
+	try { S.fb.tdata = await rpc('shareos.files', 'trash_list', { root: S.fb.root }); }
+	catch (e) { S.fb.tdata = { items: [], error: e.message }; }
+	fbRender();
+}
+
+function fbTrashInner(root) {
+	const f = S.fb, d = f.tdata, items = d?.items || [], n = f.tsel?.size || 0, ro = !!d?.ro;
+	return html`<div class="panel fb">
+		<div class="fbbar">
+			<nav class="crumbs" aria-label="Pfad"><button type="button" data-act="fb-trash-close">${svg(I.folder)}${fbRootLabel(root)}</button><span>/</span><b>Papierkorb</b></nav>
+			${d?.days ? html`<span class="tag ml">löscht nach ${d.days} Tagen</span>` : ''}
+		</div>
+		<div class="acts fbtools">
+			<button class="btn sm ghost" type="button" data-act="fb-trash-close" title="Zurück" aria-label="Zurück">${svg(I.up)}</button>
+			<button class="btn sm" type="button" data-act="fb-trash-restore" ${n && !ro ? '' : 'disabled'}>${svg(I.reboot)}Wiederherstellen</button>
+			<button class="btn sm danger" type="button" data-act="fb-trash-del" ${n && !ro ? '' : 'disabled'}>${svg(I.trash)}Endgültig löschen</button>
+			<span class="sep"></span>
+			<button class="btn sm danger" type="button" data-act="fb-trash-del" data-all="1" ${items.length && !ro ? '' : 'disabled'}>Papierkorb leeren</button>
+		</div>
+		${!d ? html`<div class="empty"><div class="spin" style="margin:0"></div><span>Lade …</span></div>`
+			: d.error ? html`<div class="empty">${svg(I.warn)}<span>${d.error}</span></div>`
+			: items.length ? html`<div class="tw"><table class="t fbt">
+				<thead><tr><th style="width:34px"></th><th>NAME</th><th>HERKUNFT</th><th class="r">GRÖSSE</th><th>GELÖSCHT</th></tr></thead>
+				<tbody>${items.map((x) => html`<tr class="${f.tsel.has(x.id) ? 'sel' : ''}">
+					<td><input type="checkbox" class="fb-tsel" data-id="${x.id}" aria-label="${x.name} auswählen"${f.tsel.has(x.id) ? raw(' checked') : ''}></td>
+					<td class="nm"><span class="lnk">${svg(x.type === 'dir' ? I.folder : I.doc)}<span>${x.name}</span></span></td>
+					<td class="mut">${x.path ? '/' + x.path : '/'}</td>
+					<td class="r mut">${x.size != null ? fmtBytes(x.size) : ''}</td>
+					<td class="mut">${fmtTime(x.time)}${x.user && x.user !== S.me?.name ? html` · ${x.user}` : ''}</td></tr>`)}</tbody></table></div>`
+			: html`<div class="empty">${svg(I.trash)}<span>Der Papierkorb ist leer.</span></div>`}
 	</div>`;
 }
 
@@ -4013,9 +4066,31 @@ Object.assign(ACTIONS, {
 	'fb-move'() { fbTransfer(false); },
 	'fb-copy'() { fbTransfer(true); },
 	async 'fb-del'() {
-		const names = [...S.fb.sel];
-		if (!await confirmDlg(`${names.length} Eintrag/Einträge löschen?`, `${names.slice(0, 5).join(', ')}${names.length > 5 ? ' …' : ''} – Ordner samt Inhalt. Das lässt sich nicht rückgängig machen.`, 'Löschen', true)) return;
-		try { await rpc('shareos.files', 'delete', { root: S.fb.root, path: S.fb.path, names }); toast('Gelöscht.'); fbLoad(); }
+		const names = [...S.fb.sel], list = `${names.slice(0, 5).join(', ')}${names.length > 5 ? ' …' : ''}`;
+		const trash = S.fb.trashConf?.enabled && !(S.fb.path === '.shareos-trash' || S.fb.path.startsWith('.shareos-trash/'));
+		if (trash) {
+			if (!await confirmDlg(`${names.length} Eintrag/Einträge in den Papierkorb?`, `${list} – lässt sich im Papierkorb wiederherstellen.`, 'In den Papierkorb')) return;
+		} else if (!await confirmDlg(`${names.length} Eintrag/Einträge löschen?`, `${list} – Ordner samt Inhalt. Das lässt sich nicht rückgängig machen.`, 'Löschen', true)) return;
+		try {
+			const r = await rpc('shareos.files', 'delete', { root: S.fb.root, path: S.fb.path, names });
+			toast(r.trash ? 'In den Papierkorb verschoben.' : 'Gelöscht.'); fbLoad();
+		} catch (e) { toast('Löschen: ' + e.message, true); }
+	},
+	async 'fb-trash'() { S.fb.trash = true; S.fb.tsel = new Set(); S.fb.tdata = null; fbRender(); fbTrashLoad(); },
+	'fb-trash-close'() { S.fb.trash = false; fbLoad(); },
+	async 'fb-trash-restore'() {
+		const ids = [...S.fb.tsel];
+		try {
+			const r = await rpc('shareos.files', 'trash_restore', { root: S.fb.root, ids });
+			toast(`${r.restored.length} Eintrag/Einträge wiederhergestellt.`); S.fb.tsel = new Set(); fbTrashLoad();
+		} catch (e) { toast('Wiederherstellen: ' + e.message, true); }
+	},
+	async 'fb-trash-del'(el) {
+		const all = el.dataset.all === '1', ids = all ? [] : [...S.fb.tsel];
+		const n = all ? (S.fb.tdata?.items || []).length : ids.length;
+		const title = `Endgültig löschen – ${n} Eintrag/Einträge`;
+		if (!await confirmDlg(all ? 'Papierkorb leeren?' : title, 'Das lässt sich nicht rückgängig machen.', all ? 'Leeren' : 'Endgültig löschen', true)) return;
+		try { await rpc('shareos.files', 'trash_empty', { root: S.fb.root, ids }); toast(all ? 'Papierkorb geleert.' : 'Endgültig gelöscht.'); S.fb.tsel = new Set(); fbTrashLoad(); }
 		catch (e) { toast('Löschen: ' + e.message, true); }
 	}
 });
@@ -4039,14 +4114,27 @@ document.addEventListener('change', async (e) => {
 	} catch (err) { toast('Anzeige: ' + err.message, true); }
 });
 
+// trash settings (admins, below the file browser)
+document.addEventListener('change', async (e) => {
+	if (e.target.id !== 'trash-on' && e.target.id !== 'trash-days') return;
+	const c = S.fb?.trashConf;
+	if (!c) return;
+	const on = $('#trash-on').checked, days = +$('#trash-days').value;
+	try { S.fb.trashConf = await rpc('shareos.files', 'trash_config', { enabled: on, days }); toast('Papierkorb gespeichert.'); }
+	catch (err) { toast('Papierkorb: ' + err.message, true); }
+	if (!S.fb.trashConf.enabled) S.fb.trash = false;
+	renderMain();
+});
+
 document.addEventListener('change', (e) => {
 	const t = e.target, f = S.fb;
 	if (!f || !t.closest?.('#fb')) return;
-	if (t.id === 'fb-root') { f.root = t.value; f.path = ''; f.data = null; fbRender(); fbLoad(''); }
+	if (t.id === 'fb-root') { f.root = t.value; f.path = ''; f.data = null; f.trash = false; fbRender(); fbLoad(''); }
 	else if (t.id === 'fb-hidden') { f.hidden = t.checked; fbLoad(); }
 	else if (t.id === 'fb-file') fbUpload(t.files);
 	else if (t.classList.contains('fb-sel')) { t.checked ? f.sel.add(t.dataset.name) : f.sel.delete(t.dataset.name); fbRender(); }
 	else if (t.classList.contains('fb-all')) { f.sel = t.checked ? new Set(f.data.entries.map((x) => x.name)) : new Set(); fbRender(); }
+	else if (t.classList.contains('fb-tsel')) { t.checked ? f.tsel.add(t.dataset.id) : f.tsel.delete(t.dataset.id); fbRender(); }
 });
 for (const ev of ['dragover', 'dragleave', 'drop']) {
 	document.addEventListener(ev, (e) => {

@@ -1464,3 +1464,29 @@ E1141	MEU USO
 E1142	OCUPAÇÃO
 E1143	LIVRE
 E1144	LIMITE
+E1145	Lixeira
+E1146	LIXEIRA
+E1147	Excluir definitivamente
+E1148	Esvaziar lixeira
+E1149	Esvaziar a lixeira?
+E1150	ORIGEM
+E1151	EXCLUÍDO
+E1152	Mover para a lixeira
+E1153	Movido para a lixeira.
+E1154	Esvaziar
+E1155	Lixeira esvaziada.
+E1156	Excluído definitivamente.
+E1157	Lixeira salva.
+E1158	A lixeira está vazia.
+E1159	nunca (só esvaziar à mão)
+E1160	Colocar primeiro na lixeira o que for excluído no navegador de arquivos
+E1161	EXCLUIR DEFINITIVAMENTE APÓS
+E1162	Não é possível desfazer.
+E1163	Cada pasta tem sua própria lixeira: a pasta pessoal, cada compartilhamento, cada unidade. Ela fica no mesmo disco e conta para o limite de armazenamento. Vale para o navegador de arquivos desta interface – o que for excluído via SMB do PC ou em apps some na hora; para isso existem os snapshots.
+P279	$1 dias
+P280	exclui após $1 dias
+P281	Mover $1 item(ns) para a lixeira?
+P282	$1 – pode ser restaurado da lixeira.
+P283	Excluir definitivamente $1 item(ns)?
+P284	$1 item(ns) restaurado(s).
+P285	Lixeira: $1
