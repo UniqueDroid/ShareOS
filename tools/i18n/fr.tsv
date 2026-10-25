@@ -1544,18 +1544,44 @@ E1198	sans erreur
 E1199	EN VEILLE
 E1200	Le disque est en veille
 E1201	Le disque tourne
-E1202	BOUTON USB
-E1203	copie
-E1204	Copier maintenant
-E1205	Bouton USB enregistré.
-E1206	Copie USB lancée.
-E1207	Dernière :
-E1208	Aucun disque USB branché.
-E1209	Aucune cible définie.
-E1210	Pas assez de place sur la cible – rien copié.
-E1211	Le disque cible n'est pas monté.
-E1212	Un appui court copie les disques USB, 3 s les éjecte
-E1213	Un nouveau dossier daté à chaque fois, p. ex.
-E1214	– rien n'est écrasé ni supprimé sur le boîtier. Le voyant USB clignote pendant la copie ; le résultat arrive sous forme de message. Sans la case cochée, le bouton ne fait qu'éjecter, comme avant.
-P302	Copie USB : $1
-P303	Bouton USB : $1
+E1202	Corbeille
+E1203	CORBEILLE
+E1204	Supprimer définitivement
+E1205	Vider la corbeille
+E1206	Vider la corbeille ?
+E1207	ORIGINE
+E1208	SUPPRIMÉ
+E1209	Mettre à la corbeille
+E1210	Déplacé dans la corbeille.
+E1211	Vider
+E1212	Corbeille vidée.
+E1213	Supprimé définitivement.
+E1214	Corbeille enregistrée.
+E1215	La corbeille est vide.
+E1216	jamais (vider à la main)
+E1217	Mettre d'abord à la corbeille ce qui est supprimé dans le navigateur de fichiers
+E1218	SUPPRIMER DÉFINITIVEMENT APRÈS
+E1219	Cette action est irréversible.
+E1220	Chaque dossier a sa propre corbeille : le dossier personnel, chaque partage, chaque disque. Elle se trouve sur le même disque et compte dans le quota. Elle s'applique au navigateur de fichiers de cette interface – ce qui est supprimé via SMB depuis un PC ou dans les applications disparaît aussitôt ; pour cela il y a les instantanés.
+P302	$1 jours
+P303	supprime après $1 jours
+P304	Mettre $1 élément(s) à la corbeille ?
+P305	$1 – restaurable depuis la corbeille.
+P306	Supprimer définitivement $1 élément(s) ?
+P307	$1 élément(s) restauré(s).
+P308	Corbeille : $1
+E1221	BOUTON USB
+E1222	copie
+E1223	Copier maintenant
+E1224	Bouton USB enregistré.
+E1225	Copie USB lancée.
+E1226	Dernière :
+E1227	Aucun disque USB branché.
+E1228	Aucune cible définie.
+E1229	Pas assez de place sur la cible – rien copié.
+E1230	Le disque cible n'est pas monté.
+E1231	Un appui court copie les disques USB, 3 s les éjecte
+E1232	Un nouveau dossier daté à chaque fois, p. ex.
+E1233	– rien n'est écrasé ni supprimé sur le boîtier. Le voyant USB clignote pendant la copie ; le résultat arrive sous forme de message. Sans la case cochée, le bouton ne fait qu'éjecter, comme avant.
+P309	Copie USB : $1
+P310	Bouton USB : $1

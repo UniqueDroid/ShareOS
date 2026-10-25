@@ -1544,18 +1544,44 @@ E1198	sin errores
 E1199	EN REPOSO
 E1200	El disco está en reposo
 E1201	El disco está en marcha
-E1202	BOTÓN USB
-E1203	copia
-E1204	Copiar ahora
-E1205	Botón USB guardado.
-E1206	Copia USB iniciada.
-E1207	Última:
-E1208	No hay ninguna unidad USB conectada.
-E1209	No hay destino configurado.
-E1210	No hay espacio suficiente en el destino: no se copió nada.
-E1211	La unidad de destino no está montada.
-E1212	Una pulsación corta copia las unidades USB; mantener 3 s las expulsa
-E1213	Cada vez una carpeta nueva con la fecha, p. ej.
-E1214	: en el equipo no se sobrescribe ni se borra nada. La luz USB parpadea al copiar; el resultado llega como aviso. Sin la casilla, el botón solo expulsa, como antes.
-P302	Copia USB: $1
-P303	Botón USB: $1
+E1202	Papelera
+E1203	PAPELERA
+E1204	Eliminar definitivamente
+E1205	Vaciar papelera
+E1206	¿Vaciar la papelera?
+E1207	ORIGEN
+E1208	ELIMINADO
+E1209	Mover a la papelera
+E1210	Movido a la papelera.
+E1211	Vaciar
+E1212	Papelera vaciada.
+E1213	Eliminado definitivamente.
+E1214	Papelera guardada.
+E1215	La papelera está vacía.
+E1216	nunca (solo vaciar a mano)
+E1217	Mover primero a la papelera lo eliminado en el explorador de archivos
+E1218	ELIMINAR DEFINITIVAMENTE TRAS
+E1219	No se puede deshacer.
+E1220	Cada carpeta tiene su propia papelera: la carpeta personal, cada recurso compartido, cada unidad. Está en el mismo disco y cuenta para el límite de almacenamiento. Se aplica al explorador de archivos de esta interfaz: lo que se borra por SMB desde un PC o en apps desaparece al momento; para eso están las instantáneas.
+P302	$1 días
+P303	borra tras $1 días
+P304	¿Mover $1 elemento(s) a la papelera?
+P305	$1: se puede restaurar desde la papelera.
+P306	¿Eliminar definitivamente $1 elemento(s)?
+P307	$1 elemento(s) restaurado(s).
+P308	Papelera: $1
+E1221	BOTÓN USB
+E1222	copia
+E1223	Copiar ahora
+E1224	Botón USB guardado.
+E1225	Copia USB iniciada.
+E1226	Última:
+E1227	No hay ninguna unidad USB conectada.
+E1228	No hay destino configurado.
+E1229	No hay espacio suficiente en el destino: no se copió nada.
+E1230	La unidad de destino no está montada.
+E1231	Una pulsación corta copia las unidades USB; mantener 3 s las expulsa
+E1232	Cada vez una carpeta nueva con la fecha, p. ej.
+E1233	: en el equipo no se sobrescribe ni se borra nada. La luz USB parpadea al copiar; el resultado llega como aviso. Sin la casilla, el botón solo expulsa, como antes.
+P309	Copia USB: $1
+P310	Botón USB: $1

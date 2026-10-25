@@ -1205,6 +1205,25 @@
 		"SCHLÄFT": "ASLEEP",
 		"Die Platte schläft (Ruhezustand)": "The disk is asleep (standby)",
 		"Die Platte läuft": "The disk is running",
+		"Papierkorb": "Trash",
+		"PAPIERKORB": "TRASH",
+		"Endgültig löschen": "Delete for good",
+		"Papierkorb leeren": "Empty trash",
+		"Papierkorb leeren?": "Empty the trash?",
+		"HERKUNFT": "FROM",
+		"GELÖSCHT": "DELETED",
+		"In den Papierkorb": "Move to trash",
+		"In den Papierkorb verschoben.": "Moved to the trash.",
+		"Leeren": "Empty",
+		"Papierkorb geleert.": "Trash emptied.",
+		"Endgültig gelöscht.": "Deleted for good.",
+		"Papierkorb gespeichert.": "Trash settings saved.",
+		"Der Papierkorb ist leer.": "The trash is empty.",
+		"nie (nur von Hand leeren)": "never (empty by hand only)",
+		"Gelöschtes im Dateibrowser erst in den Papierkorb legen": "Put what is deleted in the file browser into the trash first",
+		"AUTOMATISCH ENDGÜLTIG LÖSCHEN NACH": "DELETE FOR GOOD AUTOMATICALLY AFTER",
+		"Das lässt sich nicht rückgängig machen.": "This cannot be undone.",
+		"Jeder Ordner hat seinen eigenen Papierkorb: der persönliche Ordner, jede Freigabe, jedes Laufwerk. Er liegt auf derselben Platte und zählt zum Speicherlimit. Gilt für den Dateibrowser dieser Oberfläche – über SMB vom PC oder in Apps Gelöschtes ist sofort weg; dafür gibt es die Snapshots.": "Every folder has its own trash: the personal folder, each share, each drive. It lies on the same disk and counts towards the storage limit. It applies to the file browser of this interface – what is deleted over SMB from a PC or in apps is gone at once; for that there are the snapshots.",
 		"USB-TASTE": "USB BUTTON",
 		"kopiert": "copies",
 		"Jetzt kopieren": "Copy now",
@@ -2427,6 +2446,34 @@
 		[
 			"^Selbsttest: (.*)$",
 			"Self-test: $1"
+		],
+		[
+			"^(\\d+) Tagen$",
+			"$1 days"
+		],
+		[
+			"^löscht nach (\\d+) Tagen$",
+			"deletes after $1 days"
+		],
+		[
+			"^(\\d+) Eintrag/Einträge in den Papierkorb\\?$",
+			"Move $1 item(s) to the trash?"
+		],
+		[
+			"^(.+) – lässt sich im Papierkorb wiederherstellen\\.$",
+			"$1 – can be restored from the trash."
+		],
+		[
+			"^Endgültig löschen – (\\d+) Eintrag/Einträge$",
+			"Delete $1 item(s) for good?"
+		],
+		[
+			"^(\\d+) Eintrag/Einträge wiederhergestellt\\.$",
+			"$1 item(s) restored."
+		],
+		[
+			"^Papierkorb: (.*)$",
+			"Trash: $1"
 		],
 		[
 			"^USB-Kopie: (.*)$",

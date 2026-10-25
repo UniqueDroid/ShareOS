@@ -1544,18 +1544,44 @@ E1198	sem erros
 E1199	EM REPOUSO
 E1200	O disco está em repouso
 E1201	O disco está em funcionamento
-E1202	BOTÃO USB
-E1203	copia
-E1204	Copiar agora
-E1205	Botão USB salvo.
-E1206	Cópia USB iniciada.
-E1207	Última:
-E1208	Nenhuma unidade USB conectada.
-E1209	Nenhum destino definido.
-E1210	Espaço insuficiente no destino – nada copiado.
-E1211	A unidade de destino não está montada.
-E1212	Pressionar rápido copia as unidades USB, segurar 3 s as ejeta
-E1213	Sempre uma nova pasta com a data, p. ex.
-E1214	– nada na caixa é sobrescrito ou apagado. A luz USB pisca durante a cópia; o resultado chega como mensagem. Sem a marcação, o botão só ejeta, como antes.
-P302	Cópia USB: $1
-P303	Botão USB: $1
+E1202	Lixeira
+E1203	LIXEIRA
+E1204	Excluir definitivamente
+E1205	Esvaziar lixeira
+E1206	Esvaziar a lixeira?
+E1207	ORIGEM
+E1208	EXCLUÍDO
+E1209	Mover para a lixeira
+E1210	Movido para a lixeira.
+E1211	Esvaziar
+E1212	Lixeira esvaziada.
+E1213	Excluído definitivamente.
+E1214	Lixeira salva.
+E1215	A lixeira está vazia.
+E1216	nunca (só esvaziar à mão)
+E1217	Colocar primeiro na lixeira o que for excluído no navegador de arquivos
+E1218	EXCLUIR DEFINITIVAMENTE APÓS
+E1219	Não é possível desfazer.
+E1220	Cada pasta tem sua própria lixeira: a pasta pessoal, cada compartilhamento, cada unidade. Ela fica no mesmo disco e conta para o limite de armazenamento. Vale para o navegador de arquivos desta interface – o que for excluído via SMB do PC ou em apps some na hora; para isso existem os snapshots.
+P302	$1 dias
+P303	exclui após $1 dias
+P304	Mover $1 item(ns) para a lixeira?
+P305	$1 – pode ser restaurado da lixeira.
+P306	Excluir definitivamente $1 item(ns)?
+P307	$1 item(ns) restaurado(s).
+P308	Lixeira: $1
+E1221	BOTÃO USB
+E1222	copia
+E1223	Copiar agora
+E1224	Botão USB salvo.
+E1225	Cópia USB iniciada.
+E1226	Última:
+E1227	Nenhuma unidade USB conectada.
+E1228	Nenhum destino definido.
+E1229	Espaço insuficiente no destino – nada copiado.
+E1230	A unidade de destino não está montada.
+E1231	Pressionar rápido copia as unidades USB, segurar 3 s as ejeta
+E1232	Sempre uma nova pasta com a data, p. ex.
+E1233	– nada na caixa é sobrescrito ou apagado. A luz USB pisca durante a cópia; o resultado chega como mensagem. Sem a marcação, o botão só ejeta, como antes.
+P309	Cópia USB: $1
+P310	Botão USB: $1
