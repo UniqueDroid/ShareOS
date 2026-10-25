@@ -177,6 +177,16 @@ direkt auf der Box nachgesehen, warum der Webserver nicht lief.
 | 14:17 | Jan veröffentlicht `v0.2.0-beta.10`. |
 | 17:30 | Jan: „Kannst du aus den Apps, die nichts Vernünftiges machen, etwas machen?“ SysMon, HomePing, DockerDeck und TuyaPulse zeigten Beispieldaten. Vier neue Berechtigungen nur für Admins: `sysinfo` (Werte der Box), `netcheck` (Prüfungen von der Box aus), `docker` (Docker-Hosts im Heimnetz) und `tuya` – dafür ein eigenes kleines Programm `shareos-tuya` (C, 13 KB), das Tuya-Geräte lokal ohne Cloud schaltet, geprüft gegen ein nachgebautes Gerät aus dem Code von tinytuya. Dazu ShareVault mit Rubriken, TinyPDF mit echtem PDF-Betrachter, KeyKeeper verschlüsselt, alle UniqueDroid-Apps unter GPL-2.0-only. |
 | 19:20 | Jans Redesign von *Mein ShareOS*: *Darstellung* wird *Einstellungen* mit Passwort, *Speicher* als Tabelle über die ganze Breite, „Teilen mit“ auf dem Handy in den Ordner `Geteilt` und Freigaben im Dateidialog der Apps auch ohne „Dateien“. Jan: „Wir können auch alles zusammen in einem Release machen“ – alles kommt in `v0.2.0-beta.11`. |
+| 22:40 | Jan veröffentlicht `v0.2.0-beta.11`. |
+
+### Sonntag, 25.10.2026
+
+| Zeit | Was passiert ist |
+|---|---|
+| 00:44 | SMB-Zugriff über eine Gruppe funktioniert: ksmbd-tools 3.5.2 gab die Zusatzgruppen eines Benutzers nicht an den Kernel weiter, eine nur für `@family` freigegebene Freigabe wurde abgelehnt (#57). Die Firmware bringt jetzt ein eigenes Paket ksmbd-tools 3.5.3 mit (#66). |
+| 08:36 | Jans DNS-325 startete den Spiegel nach jedem Neustart mit nur einer Platte – der zweite Schacht kommt etwa 10 s später. `shareos-storage boot` wartet jetzt bis zu 40 s auf die Mitglieder der bekannten Verbünde (#65, #67). |
+| 13:02 | Jan: „Kannst du dir die gesamte Firmware nochmal ansehen – Optimierungen, ein Tool zum Prüfen von Festplatten und SSDs und was in Buildroot aktualisiert werden kann.“ Buildroot 2026.08.1, Kernel 6.18.58, GCC 15.3, Tailscale 1.104.1, autobrr 1.89 (#69, auf Jans Box geprüft: 216 MB von 247 MB RAM frei); die Seite Gesundheit mit SMART-Bewertung und Selbsttests (#68). Von Jans Ideenliste waren Protokolle im RAM und `noatime` schon da; zwei echte Probleme wurden behoben: eine bleibende Meldung schrieb alle 10 Minuten den Flash neu, und die Paperless-Eingänge weckten schlafende Platten alle 2 Minuten. |
+| 15:17 | Jan wählt den Rest seiner Liste: Papierkorb im Dateibrowser (#70 – Sambas Papierkorb gibt es für ksmbd nicht), die USB-Taste kopiert USB-Laufwerke in einen Ordner mit Datum (#71), und Apps dürfen über die Benachrichtigungen der Box melden (#72). Alles kommt in `v0.2.0-beta.12`. |
 
 ## Bemerkenswerte Problemlösungen
 

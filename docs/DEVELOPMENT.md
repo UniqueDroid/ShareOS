@@ -176,6 +176,16 @@ the box for why the web server was not running.
 | 14:17 | Jan publishes `v0.2.0-beta.10`. |
 | 17:30 | Jan: "Can you make something out of the apps that do nothing sensible?" SysMon, HomePing, DockerDeck and TuyaPulse showed sample data. Four new permissions for admins only: `sysinfo` (the box's values), `netcheck` (checks from the box), `docker` (Docker hosts in the homelab) and `tuya` – with a small program of its own, `shareos-tuya` (C, 13 KB), that switches Tuya devices locally without the cloud, checked against a fake device built from tinytuya's code. Also ShareVault with categories, TinyPDF with a real PDF viewer, KeyKeeper encrypted, all UniqueDroid apps under GPL-2.0-only. |
 | 19:20 | Jan's redesign of *Mein ShareOS*: *Darstellung* becomes *Einstellungen* with the password, *Speicher* as a full-width table, "share with" on the phone into the folder `Geteilt`, and shares in the apps' file dialog also without "Dateien". Jan: "We can also do everything together in one release" – all of it goes into `v0.2.0-beta.11`. |
+| 22:40 | Jan publishes `v0.2.0-beta.11`. |
+
+### Sunday, 25.10.2026
+
+| Time | What happened |
+|---|---|
+| 00:44 | SMB access through a group works: ksmbd-tools 3.5.2 did not pass a user's supplementary groups to the kernel, so a share given only to `@family` was refused (#57). The firmware now carries its own ksmbd-tools 3.5.3 package (#66). |
+| 08:36 | Jan's DNS-325 started its mirror with one disk after every reboot – the second bay comes up about 10 s later. `shareos-storage boot` now waits up to 40 s for the members of the known arrays (#65, #67). |
+| 13:02 | Jan: "Look at the whole firmware again – optimizations, a tool to check disks and SSDs, and what can be updated in buildroot." Buildroot 2026.08.1, kernel 6.18.58, GCC 15.3, Tailscale 1.104.1, autobrr 1.89 (#69, checked on Jan's box: 216 MB of 247 MB RAM free); the disk health page with SMART ratings and self-tests (#68). Of Jan's list of ideas, logs in RAM and `noatime` were already there; two real problems were fixed: a lasting message rewrote the flash every 10 minutes, and the Paperless inboxes woke sleeping disks every 2 minutes. |
+| 15:17 | Jan picks the rest of his list: a trash in the file browser (#70 – Samba's recycle bin does not exist for ksmbd), the USB button copies USB drives into a dated folder (#71), and apps may send messages through the box's notifications (#72). Everything goes into `v0.2.0-beta.12`. |
 
 ## Notable problems solved
 
