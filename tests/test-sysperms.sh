@@ -70,6 +70,12 @@ GR=$(grant root homelab); GA=$(grant anna homelab); GO=$(grant root other)
 # cgi <name> <grant> <json>: the CGI as the app web server runs it
 cgi() { printf '%s' "$3" > $R/tmp/cgi.in; run "QUERY_STRING=g=$2 REQUEST_METHOD=POST CONTENT_LENGTH=\$(wc -c < /tmp/cgi.in) /www-apps/_shareos/cgi/$1 < /tmp/cgi.in" | sed '1,/^\r\?$/d'; }
 
+# --- ShareOS.openApp: a grant for the other app ---------------------------------------------
+o=$(cgi fs $GR '{"op":"grant_app","app":"other"}')
+G2=$(echo "$o" | python3 -c "import json,sys; print(json.load(sys.stdin).get('grant',''))")
+check "openApp: an app with more permissions gets a grant for an app with fewer" "[ \${#G2} = 32 ] && cgi fs $G2 '{\"op\":\"roots\"}' | js \"d['user']=='root'\""
+check "openApp: no grant for an app that needs more than the opener, none without a grant" "cgi fs $GO '{\"op\":\"grant_app\",\"app\":\"homelab\"}' | grep -q 'more permissions' && cgi fs 00000000000000000000000000000000 '{\"op\":\"grant_app\",\"app\":\"other\"}' | grep -q 'no access'"
+
 # --- sysinfo -----------------------------------------------------------------------------
 check "sysinfo: user account and app without the permission get no access" "cgi sysinfo $GA '{\"op\":\"info\"}' | js \"d.get('error')=='no access'\" && cgi sysinfo $GO '{\"op\":\"info\"}' | js \"d.get('error')=='no access'\""
 check "sysinfo: info with CPU, memory, volumes" "cgi sysinfo $GR '{\"op\":\"info\"}' | js \"d['cpu']['total']>0 and d['memory']['memtotal']>0 and d['uptime']>0 and len(d['load'])==3 and d['cores']>=1 and any(v['name']=='daten' for v in d['volumes'])\""
