@@ -2637,12 +2637,14 @@ const SYS = {
 		if (!S.sysapps) { S.sysapps = []; rpc('shareos.apps', 'installed', {}).then((r) => { S.sysapps = (r.apps || []).filter((a) => a.type === 'system'); if (S.sysapps.length && !S.term) renderMain(); }).catch(() => {}); }
 		return html`<div class="panel">
 			<div class="ph"><span class="pt">TERMINAL</span><span class="tag warn ml">root</span>
-				${t ? html`<a class="btn sm ghost" href="${termUrl(t)}" target="_blank" rel="noopener">In eigenem Fenster ↗</a><button class="btn sm ghost" type="button" data-act="term-close">Beenden</button>` : ''}</div>
-			${t ? html`<iframe class="termframe" src="${termUrl(t)}" title="Terminal" allow="clipboard-read; clipboard-write"></iframe>`
+				${t ? html`<button class="btn sm ghost" type="button" data-act="term-window">In eigenem Fenster ↗</button><button class="btn sm ghost" type="button" data-act="term-close">Beenden</button>` : ''}</div>
+			${t?.window ? html`<p class="mut" style="margin:0 0 12px">Das Terminal läuft in einem eigenen Fenster.</p>
+				<div class="acts"><button class="btn" type="button" data-act="term-open">Hier anzeigen</button></div>`
+			: t ? html`<iframe class="termframe" src="${termUrl(t)}" title="Terminal" allow="clipboard-read; clipboard-write"></iframe>`
 				: html`<p class="mut" style="margin:0 0 12px">Eine Shell als <b>root</b> direkt auf der Box – für Diagnose und Handarbeit (BusyBox, uci, logread, mdadm, smartctl …).</p>
 				${sysApps().length ? html`<p class="mut" style="margin:0 0 12px"><span>Aus System-Apps:</span> ${sysApps().map((a, i) => html`${i ? ' · ' : ''}${sysCmds(a)}`)}</p>` : ''}
-				<div class="acts"><button class="btn primary" type="button" data-act="term-open">Terminal öffnen</button></div>`}
-			<p class="note">Die Sitzung gilt für ein Fenster und endet, wenn es geschlossen wird. Vorsicht: Befehle als root wirken sofort und ohne Papierkorb.</p>
+				<div class="acts"><button class="btn primary" type="button" data-act="term-open">Terminal öffnen</button><button class="btn" type="button" data-act="term-window">In eigenem Fenster ↗</button></div>`}
+			<p class="note">Die Sitzung gilt für ein Fenster und endet, wenn es geschlossen wird – ein eigenes Fenster bekommt eine neue Sitzung. Vorsicht: Befehle als root wirken sofort und ohne Papierkorb.</p>
 		</div>`;
 	},
 
@@ -4194,12 +4196,22 @@ Object.assign(ACTIONS, {
 	},
 	async 'term-open'(el) {
 		el.disabled = true;
-		const css = getComputedStyle($('#app') || document.body), v = (k) => css.getPropertyValue(k).trim();
+		try { S.term = await termStart(); renderMain(); }
+		catch (e) { toast('Terminal: ' + e.message, true); el.disabled = false; }
+	},
+	// the terminal takes one client and ends when it leaves: the window gets a
+	// session of its own (the one shown in the page ends). The window is opened
+	// right away – a pop-up opened after waiting for the box would be blocked.
+	async 'term-window'(el) {
+		const w = window.open('', 'shareos-terminal', 'popup,width=960,height=620');
+		if (!w) { toast('Fenster blockiert – Pop-ups für diese Seite erlauben.', true); return; }
+		el.disabled = true;
 		try {
-			S.term = await rpc('shareos.system', 'terminal', { tls: location.protocol === 'https:',
-				theme: { background: v('--bg'), foreground: v('--text'), cursor: v('--accent'), selectionBackground: v('--dim') } });
+			const t = await termStart();
+			w.location.href = termUrl(t);
+			S.term = { ...t, window: true };
 			renderMain();
-		} catch (e) { toast('Terminal: ' + e.message, true); el.disabled = false; }
+		} catch (e) { w.close(); toast('Terminal: ' + e.message, true); el.disabled = false; }
 	},
 	'term-close'() { S.term = null; renderMain(); },
 	async 'tg-chats'(el) {
@@ -4402,6 +4414,11 @@ const sysApps = () => S.sysapps || [];
 
 // web terminal (ttyd on its own port, secret path)
 const termUrl = (t) => `${location.protocol}//${location.hostname}:${t.port}/${t.path}/`;
+function termStart() {
+	const css = getComputedStyle($('#app') || document.body), v = (k) => css.getPropertyValue(k).trim();
+	return rpc('shareos.system', 'terminal', { tls: location.protocol === 'https:',
+		theme: { background: v('--bg'), foreground: v('--text'), cursor: v('--accent'), selectionBackground: v('--dim') } });
+}
 
 // apps with the permission "files" get a grant for the user's folders (ShareOS.fs)
 async function appGrant(a) {

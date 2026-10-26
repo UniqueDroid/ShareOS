@@ -1239,7 +1239,11 @@
 		"– auf der Box wird nichts überschrieben oder gelöscht. Die USB-Lampe blinkt beim Kopieren; das Ergebnis kommt als Meldung. Ohne Häkchen wirft die Taste wie bisher nur aus.": "– বক্সে কিছুই ওভাররাইট বা মোছা হয় না। কপির সময় USB আলো জ্বলে-নেভে; ফলাফল বার্তা হিসেবে আসে। টিক ছাড়া বোতাম আগের মতো শুধু বের করে।",
 		"Meldungen senden": "বিজ্ঞপ্তি পাঠানো",
 		"Darf Meldungen über die Benachrichtigungen der Box senden (Oberfläche, E-Mail, Push) – höchstens 20 pro Stunde, mit dem Namen der App davor; im Browser nur für Administratoren.": "বক্সের বিজ্ঞপ্তির (ইন্টারফেস, ই-মেইল, পুশ) মাধ্যমে বার্তা পাঠাতে পারে – ঘণ্টায় সর্বোচ্চ ২০টি, সামনে অ্যাপের নাম; ব্রাউজারে শুধু প্রশাসকদের জন্য।",
-		"Neu laden": "আবার লোড করুন"
+		"Neu laden": "আবার লোড করুন",
+		"Fenster blockiert – Pop-ups für diese Seite erlauben.": "উইন্ডো ব্লক হয়েছে – এই পৃষ্ঠার জন্য পপ-আপ অনুমতি দিন।",
+		"Hier anzeigen": "এখানে দেখান",
+		"Das Terminal läuft in einem eigenen Fenster.": "টার্মিনাল নিজের উইন্ডোতে চলছে।",
+		"Die Sitzung gilt für ein Fenster und endet, wenn es geschlossen wird – ein eigenes Fenster bekommt eine neue Sitzung. Vorsicht: Befehle als root wirken sofort und ohne Papierkorb.": "সেশন একটি উইন্ডোর জন্য এবং সেটি বন্ধ হলে শেষ হয় – আলাদা উইন্ডো নতুন সেশন পায়। সাবধান: root হিসেবে কমান্ড সঙ্গে সঙ্গে এবং ট্র্যাশ ছাড়াই কার্যকর হয়।"
 	},
 	"patterns": [
 		[
