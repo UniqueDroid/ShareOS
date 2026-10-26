@@ -4107,6 +4107,25 @@ return {
 	// called only by /_shareos/cgi/fs on the apps web server (as root, over the
 	// local ubus socket); no web session has this object in its ACL
 	'shareos.appfs': {
+		// ShareOS.openApp: an app with "files" opens another app for the same
+		// account (e.g. BeatBox -> WinWeb Player). The other app gets its own
+		// grant, but only if it asks for nothing more than the opening app has
+		// (apps share one origin, so the opener could use that grant itself).
+		grant_app: {
+			args: { grant: '', app: '' },
+			call: function(req) {
+				let g = app_grant_user(req.args.grant, true);
+				if (!g) return { error: 'no access' };
+				let app = filter(apps_for(g.u), (x) => x.id == req.args.app)[0];
+				if (!app) return { error: 'app not available' };
+				if (!app_has_files(app)) return { error: 'the app has no access to files' };
+				let mine = g.app.permissions ?? [];
+				for (let p in app.permissions ?? [])
+					if (p != 'embed' && p != 'cron' && index(mine, p) < 0) return { error: 'the app needs more permissions than the opening app' };
+				return { grant: app_grant_new(g.u, app) };
+			}
+		},
+
 		roots: {
 			args: { grant: '' },
 			call: function(req) {

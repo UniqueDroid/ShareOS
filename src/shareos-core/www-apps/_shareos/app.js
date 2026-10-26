@@ -18,7 +18,10 @@
  * ShareOS.openApp(id, {width, height})
  *                             open another app of the box in its own window
  *                             (the same window ShareOS uses for it), with the
- *                             look, language and account of this one
+ *                             look, language and account of this one; an app
+ *                             with "files" passes the user's folders on to it
+ *                             (if it asks for no more permissions than this
+ *                             one has; ShareOS 0.2.0-beta.13+)
  * ShareOS.on(type, fn) / ShareOS.emit(type, data)
  *                             messages between the apps (BroadcastChannel
  *                             'shareos'; every app hears them – no secrets)
@@ -635,7 +638,17 @@
 		if (adminOrigin) p.set('origin', adminOrigin);
 		var w = Math.max(400, Math.min(+size.width || 1000, screen.availWidth || 4000));
 		var h = Math.max(300, Math.min(+size.height || 700, screen.availHeight || 4000));
-		return window.open('/' + id + '/index.html?' + p.toString(), 'sosapp-' + id, 'popup,width=' + w + ',height=' + h);
+		var url = function () { return '/' + id + '/index.html?' + p.toString(); };
+		var feat = 'popup,width=' + w + ',height=' + h;
+		// with "files": the other app gets the user's folders too (its own grant,
+		// ShareOS 0.2.0-beta.13+). The window opens at once – a pop-up opened
+		// after waiting for the box would be blocked – and loads the app then.
+		if (!fs) return window.open(url(), 'sosapp-' + id, feat);
+		var win = window.open('', 'sosapp-' + id, feat);
+		if (!win) return null;
+		fsCall('grant_app', { app: id }).then(function (j) { p.set('fs', j.grant); }, function () { })
+			.then(function () { try { win.location.href = url(); } catch (e) { } });
+		return win;
 	}
 
 	var api = {
