@@ -6,7 +6,7 @@ pre-releases for test devices only.
 
 ## 0.2.0-beta.13
 
-- **Interface: a page that fails no longer leaves the previous page standing.** Clicking a tab (e.g. *Speicher* or *Freigaben*) sometimes seemed to do nothing – the tab was marked, but the old page stayed. When building a page throws an error, the interface now shows "Diese Seite konnte nicht angezeigt werden: <error>" with *Neu laden*, and writes the error to the browser console, so the cause can be found.
+- **Freigaben did not open after Paperless.** Opening *Paperless* loaded the shares and accounts but not the volumes; *Freigaben* then saw its data as loaded, failed on the missing volumes and the Paperless page stayed ("Cannot read properties of undefined (reading 'length')" in the console). The shares page now also waits for the volumes. And in general: when building a page throws an error, the interface no longer leaves the previous page standing but shows "Diese Seite konnte nicht angezeigt werden: <error>" with *Neu laden* (and the error in the browser console).
 
 ## 0.2.0-beta.12
 

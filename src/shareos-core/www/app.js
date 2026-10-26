@@ -771,7 +771,7 @@ const VIEWS = {
 		const sub = S.route.sub;
 		return html`
 		<nav class="subtabs" aria-label="Freigaben">${SHR_SUBS.map(([id, label]) => html`<a class="st${sub === id ? ' on' : ''}" href="#/shares/${id}">${label}</a>`)}</nav>
-		${sub === 'files' ? html`${filesView()}<div id="fb-trashset">${trashSettings()}</div>` : !S.shares || !S.acc ? html`<div class="panel"><div class="empty"><div class="spin" style="margin:0"></div><span>Lade …</span></div></div>`
+		${sub === 'files' ? html`${filesView()}<div id="fb-trashset">${trashSettings()}</div>` : !S.shares || !S.acc || !S.vols ? html`<div class="panel"><div class="empty"><div class="spin" style="margin:0"></div><span>Lade …</span></div></div>`
 			: sub === 'users' ? usersView() : sub === 'groups' ? groupsView() : sharesView()}`;
 	},
 	apps: () => appsView(),
@@ -3039,7 +3039,8 @@ const VIEWS_AFTER = {
 	},
 	shares() {
 		if (S.route.sub === 'files') return;
-		if (!S.shares || !S.acc) { loadShareData(); return; }
+		// Paperless loads shares and accounts too, but not the volumes
+		if (!S.shares || !S.acc || !S.vols) { loadShareData(); return; }
 		$('#opt-smb')?.addEventListener('change', (e) => shareGlobal({ smb: e.target.checked }));
 		$('#opt-nfs')?.addEventListener('change', (e) => shareGlobal({ nfs: e.target.checked }));
 		$('#opt-wg')?.addEventListener('change', (e) => shareGlobal({ workgroup: e.target.value.trim() }));
