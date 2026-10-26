@@ -186,6 +186,16 @@ the box for why the web server was not running.
 | 08:36 | Jan's DNS-325 started its mirror with one disk after every reboot – the second bay comes up about 10 s later. `shareos-storage boot` now waits up to 40 s for the members of the known arrays (#65, #67). |
 | 13:02 | Jan: "Look at the whole firmware again – optimizations, a tool to check disks and SSDs, and what can be updated in buildroot." Buildroot 2026.08.1, kernel 6.18.58, GCC 15.3, Tailscale 1.104.1, autobrr 1.89 (#69, checked on Jan's box: 216 MB of 247 MB RAM free); the disk health page with SMART ratings and self-tests (#68). Of Jan's list of ideas, logs in RAM and `noatime` were already there; two real problems were fixed: a lasting message rewrote the flash every 10 minutes, and the Paperless inboxes woke sleeping disks every 2 minutes. |
 | 15:17 | Jan picks the rest of his list: a trash in the file browser (#70 – Samba's recycle bin does not exist for ksmbd), the USB button copies USB drives into a dated folder (#71), and apps may send messages through the box's notifications (#72). Everything goes into `v0.2.0-beta.12`. |
+| 17:54 | Jan publishes `v0.2.0-beta.12`. |
+
+### Monday, 26.10.2026
+
+| Time | What happened |
+|---|---|
+| 07:43 | Issue #74: apps do not follow the language. Jan: the demo apps should follow the ShareOS colours and languages without changing their layouts. All 35 own apps now follow light/dark and the accent colour (they had overridden the theme in their own CSS) and show English for every language but German – a small translator in each app, the same scheme as the interface (ShareOS-Apps #33). SmartBudget had not started at all. |
+| 09:21 | Jan: *Freigaben* often does not open. His browser console showed the cause: after *Paperless*, the shares page found shares and accounts but not the volumes (#76). |
+| 10:34 | The terminal in its own window stayed black: the terminal takes one client, and the window used the session of the page (#77). |
+| 10:40 | BeatBox sent its loop to WinWeb Player, but the player had no access to the box: only the interface handed out grants. Now an app passes the user's folders on – if the other app asks for no more permissions (#78). Everything goes into `v0.2.0-beta.13`. |
 
 ## Notable problems solved
 

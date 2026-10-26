@@ -449,6 +449,13 @@ Braucht ein Tailscale-Konto (kostenlos), ein Handy oder einen Rechner mit Tailsc
 5. Konto ohne persönlichen Ordner: Teilen meldet „no personal folder“; das Geteilte wird verworfen und kommt bei der nächsten Anmeldung nicht wieder.
 6. Dateidialog einer App für ein Konto **ohne** *Dateien* (z. B. Webpad → *Öffnen*): Die Ordnerauswahl zeigt zuerst *App-Daten*, dann *Mein Ordner* und die Freigaben des Benutzers; Freigaben nur zum Lesen sind markiert und fehlen beim Speichern. Die App legt ihre eigenen Dateien weiter in *App-Daten* ab.
 
+## 14z. Neu in 0.2.0-beta.13
+
+1. Erst *Paperless*, dann *Freigaben* öffnen: die Freigaben erscheinen (vorher blieb die Paperless-Seite stehen).
+2. System → Terminal → *In eigenem Fenster ↗*: ein Fenster (kein Tab) öffnet sich mit funktionierender Shell; die Seite zeigt „Das Terminal läuft in einem eigenen Fenster“, *Hier anzeigen* holt es zurück.
+3. BeatBox → *⚡ An WinWeb*: WinWeb Player öffnet sich und kann Dateien von der Box öffnen (*+ Von der Box*).
+4. Öffnet eine einfache App eine App mit mehr Rechten (z. B. SysMon, NetTunnel), bekommt diese **keinen** Zugriff (keine Dateien in dem Fenster).
+
 ## 14y. Berechtigung notify (0.2.0-beta.12)
 
 Braucht eine App mit der Berechtigung `notify` (z. B. HomePing in einer Version, die sie nutzt) – oder eine eigene Test-App mit einer Aufgabe, die `shareos-app-notify warn test "Test" "Hallo"` aufruft.
