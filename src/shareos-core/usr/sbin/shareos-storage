@@ -267,7 +267,8 @@ apps_area() {   # first ext4/btrfs volume becomes the app area unless one is set
 	[ -n "$a" ] && [ "$(uci -q get storage.$a)" = volume ] && return 0
 	uci set storage.global.apps="$1"
 	uci commit storage
-	mkdir -p /mnt/$1/.shareos
+	# passable for the app users (autobrr, Transmission …), not listable
+	mkdir -p /mnt/$1/.shareos && chmod 711 /mnt/$1/.shareos
 }
 
 make_fs() {   # dev name fs

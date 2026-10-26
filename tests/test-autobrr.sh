@@ -50,7 +50,8 @@ js() { python3 -c "import json,sys; d=json.load(sys.stdin); sys.exit(0 if ($1) e
 run "ip link set lo up" >/dev/null
 run "uci set storage.daten=volume; uci set storage.daten.uuid=0; uci commit storage" >/dev/null
 run "echo anna1234 | shareos-users add anna user --home=daten --web=1 --files=1" >/dev/null
-run "mkdir -p /mnt/daten/.shareos; uci set storage.global=global; uci set storage.global.apps=daten; uci commit storage" >/dev/null
+# made from the web interface (rpcd, umask 077), .shareos used to be root-only
+run "mkdir -p -m 700 /mnt/daten/.shareos; uci set storage.global=global; uci set storage.global.apps=daten; uci commit storage" >/dev/null
 cp "$SAPP" $R/tmp/ab.sapp
 
 
@@ -63,6 +64,7 @@ check "installing starts autobrr, signs it up and makes the API key" "run '/usr/
 P=$(cat $R/tmp/shareos-autobrr/pid 2>/dev/null)
 check "runs as the user autobrr with a memory limit" "[ \"\$(awk '/^Uid:/{print \$2}' /proc/$P/status)\" = \"\$(grep '^autobrr:' $R/etc/passwd | cut -d: -f3)\" ] && tr '\\0' '\\n' < /proc/$P/environ | grep -q '^GOMEMLIMIT=48MiB'"
 check "listens only on 127.0.0.1:7474" "grep -q ' 0100007F:1D32 00000000:0000 0A' /proc/net/tcp && ! grep -q ' 00000000:1D32 00000000:0000 0A' /proc/net/tcp"
+check "apps drive: .shareos passable for the app users (711)" "[ \"\$(stat -c %a $R/mnt/daten/.shareos)\" = 711 ]"
 check "database on the apps drive (autobrr's, 0700), key and password root only" "[ \"\$(stat -c %a $R/mnt/daten/.shareos/autobrr)\" = 700 ] && [ -f $R/mnt/daten/.shareos/autobrr/autobrr.db ] && [ \"\$(stat -c '%u %a' $R/etc/shareos/autobrr/secret.json)\" = '0 600' ] && [ \"\$(stat -c %a $R/etc/shareos/autobrr)\" = 700 ]"
 echo "INFO  memory of autobrr under qemu-user: $(grep VmRSS /proc/$P/status | tr -s ' ')"
 

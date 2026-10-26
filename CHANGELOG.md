@@ -4,6 +4,10 @@ Changes per release (newest first). The section of a version is added to its
 GitHub release automatically when the release is built. Test versions are
 pre-releases for test devices only.
 
+## 0.2.0-beta.14
+
+- **autobrr did not start: "Permission denied".** The system apps that live on the apps drive (autobrr, and the programs of Transmission, FFmpeg …) are below `/mnt/<drive>/.shareos`. When the drive was set up from the web interface, that folder was created root-only (`0700` – rpcd runs with umask 077), so the user `autobrr` could not reach its own program. `.shareos` is now `0711` (passable, not listable): set when the drive becomes the apps drive, at every app install, at boot (`shareos-apps fix-perms`) and when autobrr starts. `tests/test-autobrr.sh` now starts from a root-only `.shareos`.
+
 ## 0.2.0-beta.13
 
 - **Terminal in its own window works.** *In eigenem Fenster* opened a browser tab with the same address as the terminal in the page – but the terminal takes one client only, so the tab stayed black ("websocket connection closed with code: 1006"). Now it opens a real window with a session of its own (the page then says so and offers *Hier anzeigen*); *In eigenem Fenster* is also offered before a terminal is open.

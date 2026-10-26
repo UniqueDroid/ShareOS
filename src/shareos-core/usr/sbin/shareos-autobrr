@@ -166,6 +166,8 @@ function start() {
 	let data = data_dir();
 	if (!data) die('autobrr needs a drive for apps (Storage)');
 	if (pid()) return;
+	// its program and data are below .shareos on the apps drive
+	sh('chmod 711 ' + shq(apps_base()));
 	let c = conf();
 	sh(sprintf('grep -q "^%s:" /etc/group || addgroup -S %s; grep -q "^%s:" /etc/passwd || adduser -S -D -H -G %s -h %s -s /bin/false %s',
 		USER, USER, USER, USER, shq(data), USER));
