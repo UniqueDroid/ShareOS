@@ -643,9 +643,21 @@ function renderMain() {
 	// an app shown in the page keeps running: no new render of the same app
 	if (S.route.tab === 'apps' && S.route.sub === 'run' && $('#appframe')?.dataset.id === S.route.app) return;
 	const v = VIEWS[S.route.tab] || VIEWS.overview;
-	main.innerHTML = v().s;
-	VIEWS_AFTER[S.route.tab]?.();
+	// a page that fails must not leave the previous page standing (it looked
+	// as if the tab did not react): show the error instead
+	try {
+		main.innerHTML = v().s;
+		VIEWS_AFTER[S.route.tab]?.();
+	} catch (e) {
+		console.error('render ' + location.hash, e);
+		main.innerHTML = renderError(e).s;
+	}
 	appFrameLoad();
+}
+
+function renderError(e) {
+	return html`<div class="panel"><div class="empty">${svg(I.info)}<span>Diese Seite konnte nicht angezeigt werden: ${e?.message || String(e)}</span>
+		<button class="btn" type="button" data-act="page-reload">Neu laden</button></div></div>`;
 }
 
 /* ---------- views ----------------------------------------------------------- */
@@ -3464,6 +3476,7 @@ async function refreshUpdateStatus() {
 /* ---------- actions (delegated clicks) -------------------------------------- */
 
 const ACTIONS = {
+	'page-reload': () => location.reload(),
 	theme() {
 		S.theme = effTheme() === 'light' ? 'dark' : 'light';
 		if (isUser()) S.me.ui = { ...S.me.ui, theme: S.theme };
