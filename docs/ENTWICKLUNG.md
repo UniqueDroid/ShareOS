@@ -197,6 +197,8 @@ direkt auf der Box nachgesehen, warum der Webserver nicht lief.
 | 09:21 | Jan: *Freigaben* öffnet oft nicht. Seine Browser-Konsole zeigte die Ursache: nach *Paperless* fand die Freigaben-Seite Freigaben und Konten, aber keine Laufwerke (#76). |
 | 10:34 | Das Terminal im eigenen Fenster blieb schwarz: das Terminal nimmt nur einen Browser an, und das Fenster nutzte die Sitzung der Seite (#77). |
 | 10:40 | BeatBox schickte seinen Loop an WinWeb Player, aber der Player hatte keinen Zugriff auf die Box: Freigaben verteilte nur die Oberfläche. Jetzt reicht eine App die Ordner des Benutzers weiter – wenn die andere App nicht mehr Rechte verlangt (#78). Alles kommt in `v0.2.0-beta.13`. |
+| 15:26 | Jan veröffentlicht `v0.2.0-beta.13`. |
+| 15:38 | autobrr startete nicht mehr: „Permission denied“ auf sein eigenes Programm. Jans Box zeigte den Grund: `/mnt/daten/.shareos` war nur für root zugänglich (angelegt über die Weboberfläche, rpcd läuft mit umask 077), der Benutzer `autobrr` kam nicht an das Programm auf dem App-Laufwerk. `.shareos` ist jetzt 711 und wird auch beim Start repariert (#80) – `v0.2.0-beta.14`. |
 
 ## Bemerkenswerte Problemlösungen
 
