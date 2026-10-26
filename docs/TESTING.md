@@ -445,12 +445,13 @@ Needs a Tailscale account (free), a phone or computer with Tailscale, the file `
 5. An account without a personal folder: sharing shows "no personal folder"; the shared item is dropped and does not come back at the next login.
 6. File dialog of an app for an account **without** *Dateien* (e.g. Webpad → *Öffnen*): the list of folders shows *App-Daten* first, then *Mein Ordner* and the user's shares; read-only shares are marked and are missing when saving. The app still keeps its own files in *App-Daten*.
 
-## 14z. New in 0.2.0-beta.13
+## 14z. New in 0.2.0-beta.13 / beta.14
 
 1. Open *Paperless*, then *Freigaben*: the shares page appears (before, the Paperless page stayed).
 2. System → Terminal → *In eigenem Fenster ↗*: a window (not a tab) opens with a working shell; the page says "Das Terminal läuft in einem eigenen Fenster", *Hier anzeigen* brings it back into the page.
 3. BeatBox → *⚡ An WinWeb*: WinWeb Player opens and can open files from the box (*+ Von der Box*).
 4. SysMon, NetTunnel or another app with more permissions is **not** given access when a simpler app opens it (no files in that window).
+5. (beta.14) `ls -ld /mnt/*/.shareos` shows `drwx--x--x`; the system app autobrr starts (APPS → autobrr, or `shareos-autobrr start`).
 
 ## 14y. Permission notify (0.2.0-beta.12)
 

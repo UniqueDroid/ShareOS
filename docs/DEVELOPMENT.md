@@ -196,6 +196,8 @@ the box for why the web server was not running.
 | 09:21 | Jan: *Freigaben* often does not open. His browser console showed the cause: after *Paperless*, the shares page found shares and accounts but not the volumes (#76). |
 | 10:34 | The terminal in its own window stayed black: the terminal takes one client, and the window used the session of the page (#77). |
 | 10:40 | BeatBox sent its loop to WinWeb Player, but the player had no access to the box: only the interface handed out grants. Now an app passes the user's folders on – if the other app asks for no more permissions (#78). Everything goes into `v0.2.0-beta.13`. |
+| 15:26 | Jan publishes `v0.2.0-beta.13`. |
+| 15:38 | autobrr no longer started: "Permission denied" on its own program. Jan's box showed why: `/mnt/daten/.shareos` was root-only (created from the web interface, where rpcd runs with umask 077), so the user `autobrr` could not reach the program on the apps drive. `.shareos` is now 711, also repaired at boot (#80) – `v0.2.0-beta.14`. |
 
 ## Notable problems solved
 
