@@ -4,6 +4,10 @@ Changes per release (newest first). The section of a version is added to its
 GitHub release automatically when the release is built. Test versions are
 pre-releases for test devices only.
 
+## 0.2.0-beta.14
+
+- **autobrr did not start: "Permission denied".** The system apps that live on the apps drive (autobrr, and the programs of Transmission, FFmpeg …) are below `/mnt/<drive>/.shareos`. When the drive was set up from the web interface, that folder was created root-only (`0700` – rpcd runs with umask 077), so the user `autobrr` could not reach its own program. `.shareos` is now `0711` (passable, not listable): set when the drive becomes the apps drive, at every app install, at boot (`shareos-apps fix-perms`) and when autobrr starts. `tests/test-autobrr.sh` now starts from a root-only `.shareos`.
+
 ## 0.2.0-beta.13
 
 - **Apps in the store (no firmware needed):** all own apps follow the ShareOS colours (light/dark, accent) and show English when the interface is not in German ([#74](https://github.com/UniqueDroid/ShareOS/issues/74), ShareOS-Apps #33); SpeedCheck shows only real measurements; SmartBudget starts again. They update through APPS.

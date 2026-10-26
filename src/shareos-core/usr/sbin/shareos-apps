@@ -200,6 +200,15 @@ function disk_sys() {
 	if (stat(ROOT + '/mnt/' + area + '/.shareos')?.type != 'directory') return null;
 	return ROOT + '/mnt/' + area + '/.shareos/sysapps';
 }
+// the system apps on the apps drive run as other users too (autobrr,
+// Transmission of every account): .shareos must be passable (711 – not
+// listable), sysapps readable. .shareos was created root-only when the drive
+// was set up from the web interface (rpcd runs with umask 077).
+function sys_area_perms(ds) {
+	if (!ds) return;
+	let base = substr(ds, 0, rindex(ds, '/'));
+	capture(sprintf('chmod 711 %s && mkdir -p %s && chmod 755 %s', shq(base), shq(ds), shq(ds)));
+}
 function du_bytes(dir) { return 1024 * +(match(capture('du -sk ' + shq(dir)).out, /^([0-9]+)/)?.[1] ?? 0); }
 // the folder a link in /opt/shareos/sysapps points to (only inside an apps area)
 function sys_target(link) {
@@ -649,7 +658,7 @@ function install_file(file, verified, source) {
 	mkdir(APPS);
 	// unpacked on the apps drive when there is one (a large system app never touches the flash)
 	let ds = disk_sys();
-	if (ds) capture(sprintf('mkdir -p %s && chmod 755 %s', shq(ds), shq(ds)));
+	sys_area_perms(ds);
 	let tmp = (ds ?? APPS) + '/.new-' + time();
 	capture('rm -rf ' + shq(tmp));
 	mkdir(tmp);
@@ -953,6 +962,7 @@ case 'fix-perms': {
 	opt_dirs();
 	// large system apps still on the flash (older versions): to the apps drive
 	let ds = disk_sys(), moved = [];
+	sys_area_perms(ds);
 	if (ds) for (let id in lsdir(SYS) ?? []) {
 		let d = SYS + '/' + id;
 		if (!match(id, ID_RE) || lstat(d)?.type != 'directory' || du_bytes(d) <= BIG_SYSAPP) continue;
