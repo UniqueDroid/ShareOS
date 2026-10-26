@@ -4,6 +4,10 @@ Changes per release (newest first). The section of a version is added to its
 GitHub release automatically when the release is built. Test versions are
 pre-releases for test devices only.
 
+## 0.2.0-beta.13
+
+- **Freigaben did not open after Paperless.** Opening *Paperless* loaded the shares and accounts but not the volumes; *Freigaben* then saw its data as loaded, failed on the missing volumes and the Paperless page stayed ("Cannot read properties of undefined (reading 'length')" in the console). The shares page now also waits for the volumes. And in general: when building a page throws an error, the interface no longer leaves the previous page standing but shows "Diese Seite konnte nicht angezeigt werden: <error>" with *Neu laden* (and the error in the browser console).
+
 ## 0.2.0-beta.12
 
 - **System: buildroot 2026.08.1** (2026.02 gets no more fixes), **kernel 6.18.58**, GCC 15.3. Newer packages, among them OpenSSL 3.6.5, curl 8.22, dropbear 2026.94, BusyBox 1.38, mdadm 4.6, ntfs-3g 2026.7.7, e2fsprogs 1.47.4, nfs-utils 2.9.1, rsync 3.5.0, SQLite 3.53, expat 2.9, Transmission 4.1.3, time zones 2026e and new CA certificates. System apps: **Tailscale 1.104.1** (1.104.2 needs a newer Go), **autobrr 1.89**, OpenVPN 2.7.8, Transmission 4.1.3, htop 3.5.1, strace 7.1, iperf3 3.21, nano 9.0. The real hdparm is in the firmware now (before: the BusyBox applet). ShareOS patches: mdadm (musl) refreshed, one uhttpd patch dropped (fixed upstream), libgpiod without GLib bindings. ksmbd-tools stays on the own 3.5.3 package (buildroot still has 3.5.2).

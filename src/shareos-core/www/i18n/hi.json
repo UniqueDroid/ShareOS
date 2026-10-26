@@ -1238,7 +1238,8 @@
 		"Jedes Mal ein neuer Ordner mit Datum, z. B.": "हर बार तारीख वाला नया फ़ोल्डर, जैसे",
 		"– auf der Box wird nichts überschrieben oder gelöscht. Die USB-Lampe blinkt beim Kopieren; das Ergebnis kommt als Meldung. Ohne Häkchen wirft die Taste wie bisher nur aus.": "– बॉक्स पर कुछ भी अधिलेखित या हटाया नहीं जाता। कॉपी करते समय USB लाइट झपकती है; परिणाम संदेश के रूप में आता है। टिक के बिना बटन पहले की तरह केवल निकालता है।",
 		"Meldungen senden": "सूचनाएँ भेजना",
-		"Darf Meldungen über die Benachrichtigungen der Box senden (Oberfläche, E-Mail, Push) – höchstens 20 pro Stunde, mit dem Namen der App davor; im Browser nur für Administratoren.": "बॉक्स की सूचनाओं (इंटरफ़ेस, ई-मेल, पुश) के ज़रिए संदेश भेज सकता है – प्रति घंटे अधिकतम 20, आगे ऐप का नाम; ब्राउज़र में केवल व्यवस्थापकों के लिए।"
+		"Darf Meldungen über die Benachrichtigungen der Box senden (Oberfläche, E-Mail, Push) – höchstens 20 pro Stunde, mit dem Namen der App davor; im Browser nur für Administratoren.": "बॉक्स की सूचनाओं (इंटरफ़ेस, ई-मेल, पुश) के ज़रिए संदेश भेज सकता है – प्रति घंटे अधिकतम 20, आगे ऐप का नाम; ब्राउज़र में केवल व्यवस्थापकों के लिए।",
+		"Neu laden": "फिर से लोड करें"
 	},
 	"patterns": [
 		[
@@ -2484,6 +2485,10 @@
 		[
 			"^USB-Taste: (.*)$",
 			"USB बटन: $1"
+		],
+		[
+			"^Diese Seite konnte nicht angezeigt werden: (.+)$",
+			"यह पेज नहीं दिखाया जा सका: $1"
 		]
 	],
 	"words": [

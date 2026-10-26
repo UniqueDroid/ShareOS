@@ -643,9 +643,21 @@ function renderMain() {
 	// an app shown in the page keeps running: no new render of the same app
 	if (S.route.tab === 'apps' && S.route.sub === 'run' && $('#appframe')?.dataset.id === S.route.app) return;
 	const v = VIEWS[S.route.tab] || VIEWS.overview;
-	main.innerHTML = v().s;
-	VIEWS_AFTER[S.route.tab]?.();
+	// a page that fails must not leave the previous page standing (it looked
+	// as if the tab did not react): show the error instead
+	try {
+		main.innerHTML = v().s;
+		VIEWS_AFTER[S.route.tab]?.();
+	} catch (e) {
+		console.error('render ' + location.hash, e);
+		main.innerHTML = renderError(e).s;
+	}
 	appFrameLoad();
+}
+
+function renderError(e) {
+	return html`<div class="panel"><div class="empty">${svg(I.info)}<span>Diese Seite konnte nicht angezeigt werden: ${e?.message || String(e)}</span>
+		<button class="btn" type="button" data-act="page-reload">Neu laden</button></div></div>`;
 }
 
 /* ---------- views ----------------------------------------------------------- */
@@ -759,7 +771,7 @@ const VIEWS = {
 		const sub = S.route.sub;
 		return html`
 		<nav class="subtabs" aria-label="Freigaben">${SHR_SUBS.map(([id, label]) => html`<a class="st${sub === id ? ' on' : ''}" href="#/shares/${id}">${label}</a>`)}</nav>
-		${sub === 'files' ? html`${filesView()}<div id="fb-trashset">${trashSettings()}</div>` : !S.shares || !S.acc ? html`<div class="panel"><div class="empty"><div class="spin" style="margin:0"></div><span>Lade …</span></div></div>`
+		${sub === 'files' ? html`${filesView()}<div id="fb-trashset">${trashSettings()}</div>` : !S.shares || !S.acc || !S.vols ? html`<div class="panel"><div class="empty"><div class="spin" style="margin:0"></div><span>Lade …</span></div></div>`
 			: sub === 'users' ? usersView() : sub === 'groups' ? groupsView() : sharesView()}`;
 	},
 	apps: () => appsView(),
@@ -3027,7 +3039,8 @@ const VIEWS_AFTER = {
 	},
 	shares() {
 		if (S.route.sub === 'files') return;
-		if (!S.shares || !S.acc) { loadShareData(); return; }
+		// Paperless loads shares and accounts too, but not the volumes
+		if (!S.shares || !S.acc || !S.vols) { loadShareData(); return; }
 		$('#opt-smb')?.addEventListener('change', (e) => shareGlobal({ smb: e.target.checked }));
 		$('#opt-nfs')?.addEventListener('change', (e) => shareGlobal({ nfs: e.target.checked }));
 		$('#opt-wg')?.addEventListener('change', (e) => shareGlobal({ workgroup: e.target.value.trim() }));
@@ -3464,6 +3477,7 @@ async function refreshUpdateStatus() {
 /* ---------- actions (delegated clicks) -------------------------------------- */
 
 const ACTIONS = {
+	'page-reload': () => location.reload(),
 	theme() {
 		S.theme = effTheme() === 'light' ? 'dark' : 'light';
 		if (isUser()) S.me.ui = { ...S.me.ui, theme: S.theme };

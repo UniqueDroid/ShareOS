@@ -1238,7 +1238,8 @@
 		"Jedes Mal ein neuer Ordner mit Datum, z. B.": "Sempre uma nova pasta com a data, p. ex.",
 		"– auf der Box wird nichts überschrieben oder gelöscht. Die USB-Lampe blinkt beim Kopieren; das Ergebnis kommt als Meldung. Ohne Häkchen wirft die Taste wie bisher nur aus.": "– nada na caixa é sobrescrito ou apagado. A luz USB pisca durante a cópia; o resultado chega como mensagem. Sem a marcação, o botão só ejeta, como antes.",
 		"Meldungen senden": "Enviar notificações",
-		"Darf Meldungen über die Benachrichtigungen der Box senden (Oberfläche, E-Mail, Push) – höchstens 20 pro Stunde, mit dem Namen der App davor; im Browser nur für Administratoren.": "Pode enviar mensagens pelas notificações da caixa (interface, e-mail, push) – no máximo 20 por hora, com o nome do app na frente; no navegador, só para administradores."
+		"Darf Meldungen über die Benachrichtigungen der Box senden (Oberfläche, E-Mail, Push) – höchstens 20 pro Stunde, mit dem Namen der App davor; im Browser nur für Administratoren.": "Pode enviar mensagens pelas notificações da caixa (interface, e-mail, push) – no máximo 20 por hora, com o nome do app na frente; no navegador, só para administradores.",
+		"Neu laden": "Recarregar"
 	},
 	"patterns": [
 		[
@@ -2484,6 +2485,10 @@
 		[
 			"^USB-Taste: (.*)$",
 			"Botão USB: $1"
+		],
+		[
+			"^Diese Seite konnte nicht angezeigt werden: (.+)$",
+			"Não foi possível mostrar esta página: $1"
 		]
 	],
 	"words": [

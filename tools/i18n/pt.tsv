@@ -1587,3 +1587,5 @@ P309	Cópia USB: $1
 P310	Botão USB: $1
 E1234	Enviar notificações
 E1235	Pode enviar mensagens pelas notificações da caixa (interface, e-mail, push) – no máximo 20 por hora, com o nome do app na frente; no navegador, só para administradores.
+E1236	Recarregar
+P311	Não foi possível mostrar esta página: $1
