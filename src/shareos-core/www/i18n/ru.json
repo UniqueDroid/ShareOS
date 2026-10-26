@@ -1239,7 +1239,11 @@
 		"– auf der Box wird nichts überschrieben oder gelöscht. Die USB-Lampe blinkt beim Kopieren; das Ergebnis kommt als Meldung. Ohne Häkchen wirft die Taste wie bisher nur aus.": "– на устройстве ничего не перезаписывается и не удаляется. Индикатор USB мигает при копировании; результат приходит сообщением. Без галочки кнопка, как и раньше, только извлекает.",
 		"Meldungen senden": "Отправка уведомлений",
 		"Darf Meldungen über die Benachrichtigungen der Box senden (Oberfläche, E-Mail, Push) – höchstens 20 pro Stunde, mit dem Namen der App davor; im Browser nur für Administratoren.": "Может отправлять сообщения через уведомления устройства (интерфейс, e-mail, push) – не более 20 в час, с названием приложения в начале; в браузере только для администраторов.",
-		"Neu laden": "Перезагрузить"
+		"Neu laden": "Перезагрузить",
+		"Fenster blockiert – Pop-ups für diese Seite erlauben.": "Окно заблокировано – разрешите всплывающие окна для этой страницы.",
+		"Hier anzeigen": "Показать здесь",
+		"Das Terminal läuft in einem eigenen Fenster.": "Терминал работает в отдельном окне.",
+		"Die Sitzung gilt für ein Fenster und endet, wenn es geschlossen wird – ein eigenes Fenster bekommt eine neue Sitzung. Vorsicht: Befehle als root wirken sofort und ohne Papierkorb.": "Сеанс действует для одного окна и завершается при его закрытии – отдельное окно получает новый сеанс. Осторожно: команды от root выполняются сразу и без корзины."
 	},
 	"patterns": [
 		[

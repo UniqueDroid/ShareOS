@@ -1239,7 +1239,11 @@
 		"– auf der Box wird nichts überschrieben oder gelöscht. Die USB-Lampe blinkt beim Kopieren; das Ergebnis kommt als Meldung. Ohne Häkchen wirft die Taste wie bisher nur aus.": "– बॉक्स पर कुछ भी अधिलेखित या हटाया नहीं जाता। कॉपी करते समय USB लाइट झपकती है; परिणाम संदेश के रूप में आता है। टिक के बिना बटन पहले की तरह केवल निकालता है।",
 		"Meldungen senden": "सूचनाएँ भेजना",
 		"Darf Meldungen über die Benachrichtigungen der Box senden (Oberfläche, E-Mail, Push) – höchstens 20 pro Stunde, mit dem Namen der App davor; im Browser nur für Administratoren.": "बॉक्स की सूचनाओं (इंटरफ़ेस, ई-मेल, पुश) के ज़रिए संदेश भेज सकता है – प्रति घंटे अधिकतम 20, आगे ऐप का नाम; ब्राउज़र में केवल व्यवस्थापकों के लिए।",
-		"Neu laden": "फिर से लोड करें"
+		"Neu laden": "फिर से लोड करें",
+		"Fenster blockiert – Pop-ups für diese Seite erlauben.": "विंडो ब्लॉक हो गई – इस पेज के लिए पॉप-अप की अनुमति दें।",
+		"Hier anzeigen": "यहाँ दिखाएँ",
+		"Das Terminal läuft in einem eigenen Fenster.": "टर्मिनल अपनी अलग विंडो में चल रहा है।",
+		"Die Sitzung gilt für ein Fenster und endet, wenn es geschlossen wird – ein eigenes Fenster bekommt eine neue Sitzung. Vorsicht: Befehle als root wirken sofort und ohne Papierkorb.": "सत्र एक विंडो के लिए है और उसके बंद होने पर खत्म हो जाता है – अलग विंडो को नया सत्र मिलता है। सावधान: root के रूप में कमांड तुरंत और बिना ट्रैश के लागू होते हैं।"
 	},
 	"patterns": [
 		[
