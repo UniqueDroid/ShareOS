@@ -1589,3 +1589,7 @@ E1234	Enviar notificaciones
 E1235	Puede enviar mensajes a través de las notificaciones de la caja (interfaz, correo, push): como máximo 20 por hora, con el nombre de la app delante; en el navegador, solo para administradores.
 E1236	Recargar
 P311	No se pudo mostrar esta página: $1
+E1237	Ventana bloqueada: permite las ventanas emergentes para esta página.
+E1238	Mostrar aquí
+E1239	El terminal se ejecuta en su propia ventana.
+E1240	La sesión es para una ventana y termina al cerrarla; una ventana propia recibe una sesión nueva. Cuidado: los comandos como root actúan al instante y sin papelera.

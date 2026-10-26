@@ -1239,7 +1239,11 @@
 		"– auf der Box wird nichts überschrieben oder gelöscht. Die USB-Lampe blinkt beim Kopieren; das Ergebnis kommt als Meldung. Ohne Häkchen wirft die Taste wie bisher nur aus.": "– nada na caixa é sobrescrito ou apagado. A luz USB pisca durante a cópia; o resultado chega como mensagem. Sem a marcação, o botão só ejeta, como antes.",
 		"Meldungen senden": "Enviar notificações",
 		"Darf Meldungen über die Benachrichtigungen der Box senden (Oberfläche, E-Mail, Push) – höchstens 20 pro Stunde, mit dem Namen der App davor; im Browser nur für Administratoren.": "Pode enviar mensagens pelas notificações da caixa (interface, e-mail, push) – no máximo 20 por hora, com o nome do app na frente; no navegador, só para administradores.",
-		"Neu laden": "Recarregar"
+		"Neu laden": "Recarregar",
+		"Fenster blockiert – Pop-ups für diese Seite erlauben.": "Janela bloqueada – permita pop-ups para esta página.",
+		"Hier anzeigen": "Mostrar aqui",
+		"Das Terminal läuft in einem eigenen Fenster.": "O terminal está a correr na sua própria janela.",
+		"Die Sitzung gilt für ein Fenster und endet, wenn es geschlossen wird – ein eigenes Fenster bekommt eine neue Sitzung. Vorsicht: Befehle als root wirken sofort und ohne Papierkorb.": "A sessão vale para uma janela e termina quando ela é fechada – uma janela própria recebe uma nova sessão. Cuidado: comandos como root têm efeito imediato e sem lixeira."
 	},
 	"patterns": [
 		[

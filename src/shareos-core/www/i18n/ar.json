@@ -1239,7 +1239,11 @@
 		"– auf der Box wird nichts überschrieben oder gelöscht. Die USB-Lampe blinkt beim Kopieren; das Ergebnis kommt als Meldung. Ohne Häkchen wirft die Taste wie bisher nur aus.": "– لا يُستبدل ولا يُحذف شيء على الجهاز. يومض مصباح USB أثناء النسخ؛ وتصل النتيجة كرسالة. دون علامة الاختيار يُخرج الزر الأقراص فقط كما كان.",
 		"Meldungen senden": "إرسال الإشعارات",
 		"Darf Meldungen über die Benachrichtigungen der Box senden (Oberfläche, E-Mail, Push) – höchstens 20 pro Stunde, mit dem Namen der App davor; im Browser nur für Administratoren.": "يمكنه إرسال رسائل عبر إشعارات الجهاز (الواجهة، البريد الإلكتروني، Push) – 20 رسالة في الساعة كحد أقصى، يسبقها اسم التطبيق؛ في المتصفح للمسؤولين فقط.",
-		"Neu laden": "إعادة التحميل"
+		"Neu laden": "إعادة التحميل",
+		"Fenster blockiert – Pop-ups für diese Seite erlauben.": "تم حظر النافذة – اسمح بالنوافذ المنبثقة لهذه الصفحة.",
+		"Hier anzeigen": "عرض هنا",
+		"Das Terminal läuft in einem eigenen Fenster.": "تعمل الطرفية في نافذة خاصة بها.",
+		"Die Sitzung gilt für ein Fenster und endet, wenn es geschlossen wird – ein eigenes Fenster bekommt eine neue Sitzung. Vorsicht: Befehle als root wirken sofort und ohne Papierkorb.": "الجلسة لنافذة واحدة وتنتهي عند إغلاقها – النافذة المستقلة تحصل على جلسة جديدة. انتبه: أوامر root تُنفَّذ فورًا وبدون سلة مهملات."
 	},
 	"patterns": [
 		[

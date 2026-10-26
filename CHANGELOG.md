@@ -6,6 +6,7 @@ pre-releases for test devices only.
 
 ## 0.2.0-beta.13
 
+- **Terminal in its own window works.** *In eigenem Fenster* opened a browser tab with the same address as the terminal in the page – but the terminal takes one client only, so the tab stayed black ("websocket connection closed with code: 1006"). Now it opens a real window with a session of its own (the page then says so and offers *Hier anzeigen*); *In eigenem Fenster* is also offered before a terminal is open.
 - **Freigaben did not open after Paperless.** Opening *Paperless* loaded the shares and accounts but not the volumes; *Freigaben* then saw its data as loaded, failed on the missing volumes and the Paperless page stayed ("Cannot read properties of undefined (reading 'length')" in the console). The shares page now also waits for the volumes. And in general: when building a page throws an error, the interface no longer leaves the previous page standing but shows "Diese Seite konnte nicht angezeigt werden: <error>" with *Neu laden* (and the error in the browser console).
 
 ## 0.2.0-beta.12
