@@ -187,6 +187,16 @@ direkt auf der Box nachgesehen, warum der Webserver nicht lief.
 | 08:36 | Jans DNS-325 startete den Spiegel nach jedem Neustart mit nur einer Platte – der zweite Schacht kommt etwa 10 s später. `shareos-storage boot` wartet jetzt bis zu 40 s auf die Mitglieder der bekannten Verbünde (#65, #67). |
 | 13:02 | Jan: „Kannst du dir die gesamte Firmware nochmal ansehen – Optimierungen, ein Tool zum Prüfen von Festplatten und SSDs und was in Buildroot aktualisiert werden kann.“ Buildroot 2026.08.1, Kernel 6.18.58, GCC 15.3, Tailscale 1.104.1, autobrr 1.89 (#69, auf Jans Box geprüft: 216 MB von 247 MB RAM frei); die Seite Gesundheit mit SMART-Bewertung und Selbsttests (#68). Von Jans Ideenliste waren Protokolle im RAM und `noatime` schon da; zwei echte Probleme wurden behoben: eine bleibende Meldung schrieb alle 10 Minuten den Flash neu, und die Paperless-Eingänge weckten schlafende Platten alle 2 Minuten. |
 | 15:17 | Jan wählt den Rest seiner Liste: Papierkorb im Dateibrowser (#70 – Sambas Papierkorb gibt es für ksmbd nicht), die USB-Taste kopiert USB-Laufwerke in einen Ordner mit Datum (#71), und Apps dürfen über die Benachrichtigungen der Box melden (#72). Alles kommt in `v0.2.0-beta.12`. |
+| 17:54 | Jan veröffentlicht `v0.2.0-beta.12`. |
+
+### Montag, 26.10.2026
+
+| Zeit | Was passiert ist |
+|---|---|
+| 07:43 | Issue #74: Apps folgen nicht der Sprache. Jan: die Demo-Apps sollen Farben und Sprachen von ShareOS übernehmen, ohne die Layouts umzubauen. Alle 35 eigenen Apps folgen jetzt hell/dunkel und der Akzentfarbe (sie hatten das Theme in ihrem eigenen CSS überschrieben) und zeigen in jeder Sprache außer Deutsch Englisch – ein kleiner Übersetzer in jeder App nach dem Schema der Oberfläche (ShareOS-Apps #33). SmartBudget war gar nicht gestartet. |
+| 09:21 | Jan: *Freigaben* öffnet oft nicht. Seine Browser-Konsole zeigte die Ursache: nach *Paperless* fand die Freigaben-Seite Freigaben und Konten, aber keine Laufwerke (#76). |
+| 10:34 | Das Terminal im eigenen Fenster blieb schwarz: das Terminal nimmt nur einen Browser an, und das Fenster nutzte die Sitzung der Seite (#77). |
+| 10:40 | BeatBox schickte seinen Loop an WinWeb Player, aber der Player hatte keinen Zugriff auf die Box: Freigaben verteilte nur die Oberfläche. Jetzt reicht eine App die Ordner des Benutzers weiter – wenn die andere App nicht mehr Rechte verlangt (#78). Alles kommt in `v0.2.0-beta.13`. |
 
 ## Bemerkenswerte Problemlösungen
 
