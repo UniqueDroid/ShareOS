@@ -194,6 +194,11 @@ function app_user(id) { return 'app-' + substr(id, 0, 28); }
 // is a link there – the flash (about 40 MB for settings and system apps) stays
 // free; small ones (nano, bash …) stay on the flash and work without a drive
 const BIG_SYSAPP = 2 * 1048576;     // services (FFmpeg, Transmission, MiniDLNA, OpenVPN, Tailscale) – they work on the drive anyway
+// "flash": true in app.json – a system app that must keep working when the
+// apps drive fails (the Zabbix agent reports exactly that) stays on the flash
+// up to this size
+const FLASH_SYSAPP = 8 * 1048576;
+function sys_limit(a) { return a?.flash === true ? FLASH_SYSAPP : BIG_SYSAPP; }
 function disk_sys() {
 	let area = conf().c.get('storage', 'global', 'apps');
 	if (!area || index(readfile('/proc/mounts') ?? '', ' /mnt/' + area + ' ') < 0 && !getenv('SHAREOS_ROOT')) return null;
@@ -585,6 +590,7 @@ function check_system(a, dir) {
 	}
 	for (let k in [ 'permissions', 'jobs', 'opens', 'window' ])
 		if (a[k] != null && !(type(a[k]) == 'array' && !length(a[k]))) return 'system app: "' + k + '" is only for web apps';
+	if (a.flash != null && type(a.flash) != 'bool') return 'system app: "flash" is true or false';
 	return check_service(a.service);
 }
 
@@ -674,7 +680,7 @@ function install_file(file, verified, source) {
 		opt_dirs();
 		capture(sprintf('chmod 755 %s/bin/* %s/lib/* 2>/dev/null', shq(tmp), shq(tmp)));
 		// large: stays on the apps drive (a link in /opt), small: to /opt on the flash
-		on_disk = ds && du_bytes(tmp) > BIG_SYSAPP ? ds : null;
+		on_disk = ds && du_bytes(tmp) > sys_limit(a) ? ds : null;
 		if (!on_disk) {
 			let t2 = SYS + '/.new-' + time();
 			let r2 = capture(sprintf('rm -rf %s; mv %s %s', shq(t2), shq(tmp), shq(t2)));
@@ -965,7 +971,7 @@ case 'fix-perms': {
 	sys_area_perms(ds);
 	if (ds) for (let id in lsdir(SYS) ?? []) {
 		let d = SYS + '/' + id;
-		if (!match(id, ID_RE) || lstat(d)?.type != 'directory' || du_bytes(d) <= BIG_SYSAPP) continue;
+		if (!match(id, ID_RE) || lstat(d)?.type != 'directory' || du_bytes(d) <= sys_limit(sysapp_json(id))) continue;
 		let t = ds + '/' + id;
 		let r = capture(sprintf('mkdir -p %s && chmod 755 %s && rm -rf %s.new && cp -a %s %s.new && rm -rf %s && mv %s.new %s && mv %s %s.old && ln -s %s %s && rm -rf %s.old',
 			shq(ds), shq(ds), shq(t), shq(d), shq(t), shq(t), shq(t), shq(t), shq(d), shq(d), shq(substr(t, length(ROOT))), shq(d), shq(d)));

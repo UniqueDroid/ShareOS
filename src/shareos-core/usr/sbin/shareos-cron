@@ -12,7 +12,8 @@
 # apps (apps.<job>=appjob, see shareos-apps), snapshots (snapshots.<job>:
 # every hour/6h/day/week at its time); every 10 minutes the checks of
 # shareos-notify; SMART self-tests (storage.global.smart_test); the power
-# schedule (shareos.power, shareos-power). Areas
+# schedule (shareos.power, shareos-power); SMART values for the Zabbix agent
+# (zabbix.main.disk_interval, shareos-zabbix collect). Areas
 # switched off under System -> Appearance
 # (shareos.ui.area_apps/area_cloud/area_paperless = 0) get no entries.
 #
@@ -61,6 +62,15 @@ entries() {
 		short_weekly) echo "30 3 * * 0 /usr/sbin/shareos-storage smart-test short >/dev/null 2>&1" ;;
 		long_monthly) echo "30 3 1 * * /usr/sbin/shareos-storage smart-test long >/dev/null 2>&1" ;;
 	esac
+	# Zabbix agent (system app zabbix-agent): SMART values of the disks for its
+	# items, every zabbix.main.disk_interval minutes while the agent runs
+	if [ "$(uci -q get zabbix.main.enabled)" = 1 ] && [ -x /opt/shareos/bin/zabbix-agentd ]; then
+		case "$(uci -q get zabbix.main.disk_interval)" in
+			10|15|20) i=$(uci -q get zabbix.main.disk_interval); echo "*/$i * * * * /usr/sbin/shareos-zabbix collect >/dev/null 2>&1" ;;
+			60) echo "7 * * * * /usr/sbin/shareos-zabbix collect >/dev/null 2>&1" ;;
+			*) echo "*/30 * * * * /usr/sbin/shareos-zabbix collect >/dev/null 2>&1" ;;
+		esac
+	fi
 	# snapshots: every hour / 6 hours / day / week (Sunday) at the job's time
 	for j in $(uci -q show snapshots | sed -n "s/^snapshots\.\([^.=]*\)=job$/\1/p"); do
 		[ "$(uci -q get snapshots."$j".enabled)" = 0 ] && continue

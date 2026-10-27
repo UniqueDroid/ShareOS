@@ -445,6 +445,19 @@ Needs a Tailscale account (free), a phone or computer with Tailscale, the file `
 5. An account without a personal folder: sharing shows "no personal folder"; the shared item is dropped and does not come back at the next login.
 6. File dialog of an app for an account **without** *Dateien* (e.g. Webpad → *Öffnen*): the list of folders shows *App-Daten* first, then *Mein Ordner* and the user's shares; read-only shares are marked and are missing when saving. The app still keeps its own files in *App-Daten*.
 
+## 14za. Zabbix agent (0.2.0-beta.15)
+
+Needs a Zabbix server 7.0 or newer in the network (e.g. the one at work or a test server in Proxmox).
+
+1. Apps → Store → system apps → install **Zabbix Agent**. `ls -l /opt/shareos/sysapps/` shows `zabbix-agent` as a folder on the flash (no link to the drive). `shareos-zabbix status`: `"installed": true`, `"running": false` – without a server it does not start.
+2. `echo '{"enabled": true, "server": "<zabbix-server>"}' | shareos-zabbix set` → `"running": true`. `ps | grep [z]abbix` shows three processes of the user `zabbix` (main, collector, active checks), `netstat -tln | grep 10050` is empty.
+3. Memory: `for p in $(pgrep zabbix-agentd); do grep VmRSS /proc/$p/status; done` – only a few MB together (please note the numbers).
+4. In the Zabbix server import the template `docs/zabbix/shareos_template.yaml`, add a host with the box's name (templates *Linux by Zabbix agent active* and *ShareOS by Zabbix agent active*). After 1–2 minutes *Latest data* shows CPU, memory, network and `Box: temperature`. *Discovery rules → Disks in the bays / RAID arrays → Execute now*: the disks (without USB sticks) and the RAID appear, with temperature and rating as under *Storage → Health*.
+5. Encrypted: `openssl rand -hex 32` (on the PC), then `echo '{"psk_identity": "<box> PSK", "psk": "<key>"}' | shareos-zabbix set`; on the host in Zabbix *Encryption → PSK* with the same values. The values keep coming, `shareos-zabbix log` shows no TLS errors.
+6. Let a disk sleep (`hdparm -y /dev/sdb`), wait 30 minutes: `shareos-zabbix get disk sdb standby` → `1`, the temperature stays the last value, `hdparm -C /dev/sdb` still says *standby*.
+7. `grep zabbix /etc/crontabs/root` shows `*/30 … shareos-zabbix collect`. Restart the box: the agent runs again (Services → Status: "Monitoring (Zabbix agent)"). `echo '{"enabled": false}' | shareos-zabbix set`: stopped, no cron line, stays off after a restart.
+8. Remove the system app: the agent stops.
+
 ## 14z. New in 0.2.0-beta.13 / beta.14
 
 1. Open *Paperless*, then *Freigaben*: the shares page appears (before, the Paperless page stayed).

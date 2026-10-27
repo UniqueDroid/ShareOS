@@ -1260,7 +1260,9 @@
 		"Nächstes Ausschalten:": "Próximo desligamento:",
 		"· Nächstes Ausschalten:": "· Próximo desligamento:",
 		"Leere Felder: an diesem Tag nichts. Ausgeschaltet wird sauber (wie mit dem Knopf); läuft gerade ein Speicher-Auftrag (z. B. RAID-Aufbau), bleibt die Box an. Zum Einschalten stellt ShareOS die Weckzeit der Gerätesteuerung – den Stecker nicht ziehen.": "Campos vazios: nada nesse dia. A caixa desliga de forma limpa (como com o botão); enquanto uma tarefa de armazenamento estiver em curso (ex.: reconstrução RAID), fica ligada. Para ligar, o ShareOS define a hora de despertar do controlador – não desligue da tomada.",
-		"Diese Box kann sich nicht selbst einschalten (keine Weckfunktion) – nur das Ausschalten nach Zeitplan geht. Einschalten über den Power-Taster.": "Esta caixa não consegue ligar-se sozinha (sem função de despertar) – só funciona o desligamento por horário. Ligue-a com o botão de energia."
+		"Diese Box kann sich nicht selbst einschalten (keine Weckfunktion) – nur das Ausschalten nach Zeitplan geht. Einschalten über den Power-Taster.": "Esta caixa não consegue ligar-se sozinha (sem função de despertar) – só funciona o desligamento por horário. Ligue-a com o botão de energia.",
+		"Überwachung (Zabbix-Agent)": "Monitorização (agente Zabbix)",
+		"zabbix_agentd, Aktiv-Modus": "zabbix_agentd, modo ativo"
 	},
 	"patterns": [
 		[

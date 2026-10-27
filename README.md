@@ -93,6 +93,7 @@ Version in brackets = first release with the feature.
 - Installable as an app (PWA), status address for widget apps (beta.4)
 - "Share with" on Android: the installed app saves shared photos, files and links into `Geteilt` in the personal folder (0.2.0-beta.11)
 - Remote access with Tailscale (system app `tailscaled`, starts by itself, admins only, permission `tailscale` for apps): the box in a tailnet without port forwarding, also behind DS-Lite (0.2.0-beta.7)
+- Monitoring with Zabbix (system app `zabbix-agent`): the classic C agent in active mode, a few MB of memory, no open port, encrypted with PSK; SMART of every disk, RAID state, box temperature and fan as items with a Zabbix template – see [docs/MONITORING.md](docs/MONITORING.md) (0.2.0-beta.15)
 - Download automation with autobrr (system app, one for the box, admins only, permission `autobrr` for apps): IRC announces and RSS feeds, matching torrents go to the Transmission of a chosen account (0.2.0-beta.9)
 - Apps keep their data on the box also for accounts without file access: a private folder per app and account (0.2.0-beta.9)
 - Admins get a personal folder for apps too (their home, for root `home/root` on the apps drive), so app data no longer lands at the top of a drive (0.2.0-beta.10)

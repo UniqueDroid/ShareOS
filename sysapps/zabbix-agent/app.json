@@ -1,0 +1,19 @@
+{
+	"id": "zabbix-agent",
+	"name": "Zabbix Agent",
+	"version": "7.0.32",
+	"publisher": "UniqueDroid",
+	"description": {
+		"de": "Überwachung mit Zabbix: der klassische Agent (in C, nicht Agent 2) meldet Auslastung, Speicher, Netzwerk und Laufwerke der Box an deinen Zabbix-Server – mit wenigen MB Arbeitsspeicher, im Aktiv-Modus ohne offenen Port. Dazu Werte der Box für Vorlagen: Temperatur und Lüfter, SMART und Temperatur jeder Platte, Zustand jedes RAIDs. Einrichtung auf der Kommandozeile: shareos-zabbix set.",
+		"en": "Monitoring with Zabbix: the classic agent (written in C, not agent 2) reports load, memory, network and drives of the box to your Zabbix server – with a few MB of memory, in active mode without an open port. Plus values of the box for templates: temperature and fan, SMART and temperature of every disk, the state of every RAID. Set up on the command line: shareos-zabbix set."
+	},
+	"type": "system",
+	"commands": [ "zabbix-agentd" ],
+	"service": { "control": "zabbix", "delay": 10 },
+	"flash": true,
+	"icon": "icon.svg",
+	"category": "system",
+	"license": "AGPL-3.0-only",
+	"homepage": "https://www.zabbix.com/",
+	"min_shareos": "0.2.0-beta.15"
+}

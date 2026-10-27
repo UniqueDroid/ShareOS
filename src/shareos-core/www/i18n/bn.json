@@ -1260,7 +1260,9 @@
 		"Nächstes Ausschalten:": "পরবর্তী বন্ধ:",
 		"· Nächstes Ausschalten:": "· পরবর্তী বন্ধ:",
 		"Leere Felder: an diesem Tag nichts. Ausgeschaltet wird sauber (wie mit dem Knopf); läuft gerade ein Speicher-Auftrag (z. B. RAID-Aufbau), bleibt die Box an. Zum Einschalten stellt ShareOS die Weckzeit der Gerätesteuerung – den Stecker nicht ziehen.": "খালি ঘর: সেদিন কিছু নয়। বক্স ঠিকভাবে বন্ধ হয় (বোতামের মতো); কোনো স্টোরেজ কাজ চললে (যেমন RAID পুনর্গঠন) এটি চালু থাকে। চালু করতে ShareOS ডিভাইস নিয়ন্ত্রকের জাগানোর সময় ঠিক করে – প্লাগ খুলবেন না।",
-		"Diese Box kann sich nicht selbst einschalten (keine Weckfunktion) – nur das Ausschalten nach Zeitplan geht. Einschalten über den Power-Taster.": "এই বক্স নিজে চালু হতে পারে না (জাগানোর ফাংশন নেই) – শুধু সময়সূচি অনুযায়ী বন্ধ করা যায়। পাওয়ার বোতাম দিয়ে চালু করুন।"
+		"Diese Box kann sich nicht selbst einschalten (keine Weckfunktion) – nur das Ausschalten nach Zeitplan geht. Einschalten über den Power-Taster.": "এই বক্স নিজে চালু হতে পারে না (জাগানোর ফাংশন নেই) – শুধু সময়সূচি অনুযায়ী বন্ধ করা যায়। পাওয়ার বোতাম দিয়ে চালু করুন।",
+		"Überwachung (Zabbix-Agent)": "মনিটরিং (Zabbix এজেন্ট)",
+		"zabbix_agentd, Aktiv-Modus": "zabbix_agentd, সক্রিয় মোড"
 	},
 	"patterns": [
 		[

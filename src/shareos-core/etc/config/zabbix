@@ -1,0 +1,4 @@
+config zabbix 'main'
+	option enabled '0'
+	option metadata 'ShareOS'
+	option disk_interval '30'

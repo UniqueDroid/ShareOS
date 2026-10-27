@@ -48,6 +48,8 @@ jobs:
         run: tests/test-bootlog.sh
       - name: Power schedule (shareos-power)
         run: LD_LIBRARY_PATH="$HOME/hostroot/lib" tests/test-power.sh "$HOME/hostroot/bin"
+      - name: Zabbix agent controller (settings, disk/RAID items)
+        run: LD_LIBRARY_PATH="$HOME/hostroot/lib" tests/test-zabbix-items.sh "$HOME/hostroot/bin"
       - name: SMART evaluation (disk health)
         run: LD_LIBRARY_PATH="$HOME/hostroot/lib" tests/test-smart.sh "$HOME/hostroot/bin/ucode"
       - name: rpcd plugin compiles, no forward references
