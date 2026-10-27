@@ -1593,6 +1593,7 @@ E1237	Janela bloqueada – permita pop-ups para esta página.
 E1238	Mostrar aqui
 E1239	O terminal está a correr na sua própria janela.
 E1240	A sessão vale para uma janela e termina quando ela é fechada – uma janela própria recebe uma nova sessão. Cuidado: comandos como root têm efeito imediato e sem lixeira.
+P312	Registo de arranque $1
 E1241	DESLIGAR E LIGAR POR HORÁRIO
 E1242	Ativar o horário
 E1243	DIA
@@ -1610,4 +1611,4 @@ E1254	Próximo desligamento:
 E1255	· Próximo desligamento:
 E1256	Campos vazios: nada nesse dia. A caixa desliga de forma limpa (como com o botão); enquanto uma tarefa de armazenamento estiver em curso (ex.: reconstrução RAID), fica ligada. Para ligar, o ShareOS define a hora de despertar do controlador – não desligue da tomada.
 E1257	Esta caixa não consegue ligar-se sozinha (sem função de despertar) – só funciona o desligamento por horário. Ligue-a com o botão de energia.
-P312	Horário: $1
+P313	Horário: $1

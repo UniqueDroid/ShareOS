@@ -2653,7 +2653,7 @@ const SYS = {
 	logs() {
 		return html`<div class="panel">
 			<div class="ph"><span class="pt">PROTOKOLL</span>
-				<div class="acts ml"><select id="log-src" class="btn sm ghost" aria-label="Quelle"><option value="system">System (syslog)</option><option value="kernel">Kernel (dmesg)</option></select>
+				<div class="acts ml"><select id="log-src" class="btn sm ghost" aria-label="Quelle">${[['system', 'System (syslog)'], ['kernel', 'Kernel (dmesg)'], ...(S.bootlogs || []).map((l) => ['boot:' + l.name, 'Start-Protokoll ' + bootlogTime(l.name)])].map(([v, t]) => html`<option value="${v}"${S.logSrc === v ? raw(' selected') : ''}>${t}</option>`)}</select>
 				<button class="btn sm" type="button" data-act="log">Aktualisieren</button></div></div>
 			<pre class="logbox" id="logbox">lade …</pre>
 		</div>`;
@@ -2730,7 +2730,12 @@ const VIEWS_AFTER = {
 	apps() { appsAfter(); },
 	system() {
 		const sub = S.route.sub;
-		if (sub === 'logs') loadLog();
+		if (sub === 'logs') {
+			loadLog();
+			$('#log-src')?.addEventListener('change', (e) => { S.logSrc = e.target.value; loadLog(); });
+			// snapshots of the last starts (kept across a power cut)
+			if (!S.bootlogs) rpc('shareos.system', 'bootlogs').then((r) => { S.bootlogs = r.logs || []; if (S.bootlogs.length && S.route.sub === 'logs') renderMain(); }).catch(() => { S.bootlogs = []; });
+		}
 		if (sub !== 'terminal') { if (S.term) S.term = null; S.sysapps = null; }
 		if (sub === 'notifications') {
 			if (!S.noteCfg) loadNoteCfg();
@@ -3433,6 +3438,8 @@ async function webSet(v) {
 	} catch (e) { toast('HTTPS: ' + e.message, true); }
 }
 
+// 20261027-071400 -> local date and time of the snapshot (taken 5 min after the start)
+const bootlogTime = (n) => { const m = n.match(/^(\d{4})(\d\d)(\d\d)-(\d\d)(\d\d)/); return m ? new Date(+m[1], m[2] - 1, +m[3], +m[4], +m[5]).toLocaleString(LOC, { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }) : n; };
 // power schedule (shareos-power): switch-off by cron, switch-on by the MCU's wake-up alarm
 const PWR_DAYS = [['mon', 'Montag'], ['tue', 'Dienstag'], ['wed', 'Mittwoch'], ['thu', 'Donnerstag'], ['fri', 'Freitag'], ['sat', 'Samstag'], ['sun', 'Sonntag']];
 const fmtPwr = (t) => (t ? new Date(t.replace(' ', 'T')).toLocaleString(LOC, { weekday: 'short', day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }) : '–');

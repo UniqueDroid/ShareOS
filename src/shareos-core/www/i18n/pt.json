@@ -2512,6 +2512,10 @@
 			"Não foi possível mostrar esta página: $1"
 		],
 		[
+			"^Start-Protokoll (.+)$",
+			"Registo de arranque $1"
+		],
+		[
 			"^Zeitplan: (.+)$",
 			"Horário: $1"
 		]

@@ -1,0 +1,68 @@
+#!/bin/sh
+#
+# shareos-bootlog – what happened at the last starts, kept across a power cut
+#
+#   shareos-bootlog save          a snapshot now: system log, kernel log,
+#                                 addresses, routes, listening ports,
+#                                 processes, mounts (gzip, newest 3 kept)
+#   shareos-bootlog list          the kept snapshots (JSON)
+#   shareos-bootlog show <name>   one of them as text
+#
+# The logs of the box are in RAM and are gone after a restart. rcS saves a
+# snapshot 5 minutes after every start – also when the start hangs in a
+# service –, so after a box was unreachable and had to be restarted, the
+# start that went wrong can still be read (System → Protokolle). One small
+# write to the flash per start.
+#
+PATH=/usr/sbin:/usr/bin:/sbin:/bin
+DIR=${SHAREOS_ROOT:-}/etc/shareos/bootlog
+KEEP=3
+
+section() { echo; echo "===== $1"; shift; "$@" 2>&1; }
+
+save() {
+	mkdir -p "$DIR" || exit 1
+	n=$(date +%Y%m%d-%H%M%S)
+	{
+		echo "ShareOS start snapshot $(date '+%Y-%m-%d %H:%M:%S %Z')"
+		[ -r /etc/shareos-release ] && cat /etc/shareos-release
+		section "uptime" cat /proc/uptime
+		section "addresses" ip addr
+		section "routes" ip route
+		section "dns" cat /etc/resolv.conf
+		section "listening" netstat -tlnu
+		section "mounts" cat /proc/mounts
+		section "raid" cat /proc/mdstat
+		section "memory" free -m
+		section "processes" ps w
+		section "system log" sh -c 'logread 2>/dev/null || tail -n 1500 /var/log/messages'
+		section "kernel log" dmesg
+	} | gzip -c > "$DIR/.$n.tmp" && mv "$DIR/.$n.tmp" "$DIR/$n.txt.gz"
+	# the newest KEEP stay
+	ls -1 "$DIR"/*.txt.gz 2>/dev/null | sort -r | tail -n +$((KEEP + 1)) | while read -r f; do rm -f "$f"; done
+	echo "$n"
+}
+
+list() {
+	printf '{"logs":['
+	sep=
+	for f in $(ls -1 "$DIR"/*.txt.gz 2>/dev/null | sort -r); do
+		b=${f##*/}; b=${b%.txt.gz}
+		printf '%s{"name":"%s","size":%s}' "$sep" "$b" "$(wc -c < "$f")"
+		sep=,
+	done
+	printf ']}\n'
+}
+
+show() {
+	echo "$1" | grep -qE '^[0-9]{8}-[0-9]{6}$' || { echo "invalid name" >&2; exit 2; }
+	[ -f "$DIR/$1.txt.gz" ] || { echo "no such log" >&2; exit 1; }
+	gzip -dc "$DIR/$1.txt.gz"
+}
+
+case "$1" in
+	save) save ;;
+	list) list ;;
+	show) show "$2" ;;
+	*) sed -n '3,15s/^# \{0,1\}//p' "$0"; exit 2 ;;
+esac

@@ -5,6 +5,10 @@
 #
 disabled=" $(uci -q get shareos.autostart.disabled) "
 
+# a snapshot of the logs 5 minutes after the start, also when a service hangs
+# below (shareos-bootlog: read after an unreachable box had to be restarted)
+( sleep 300; /usr/sbin/shareos-bootlog save ) </dev/null >/dev/null 2>&1 &
+
 for i in /etc/init.d/S??*; do
 	# Ignore dangling symlinks (if any).
 	[ ! -f "$i" ] && continue

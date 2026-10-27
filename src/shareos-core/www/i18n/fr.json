@@ -2512,6 +2512,10 @@
 			"Impossible d’afficher cette page : $1"
 		],
 		[
+			"^Start-Protokoll (.+)$",
+			"Journal de démarrage $1"
+		],
+		[
 			"^Zeitplan: (.+)$",
 			"Programme : $1"
 		]

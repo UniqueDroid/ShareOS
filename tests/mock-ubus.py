@@ -719,6 +719,10 @@ def call(obj, method, args):
             return {'port': 7681, 'path': '0123456789abcdef0123456789abcdef'}
         if method == 'info':
             return info()
+        if method == 'bootlogs':
+            return {'logs': [{'name': '20261027-071900', 'size': 14210}, {'name': '20261026-220500', 'size': 13980}]}
+        if method == 'log' and str(args.get('source', '')).startswith('boot:'):
+            return {'lines': ['ShareOS start snapshot ' + args['source'][5:], '', '===== addresses', '2: eth0: <BROADCAST,MULTICAST,UP> mtu 1500', '    inet 192.168.0.32/24 scope global eth0:fb']}
         if method == 'log':
             return {'lines': ['Oct 17 16:00:01 skynet-nas syslog.info syslogd started', 'Oct 17 16:00:05 skynet-nas user.notice shareos: ready']}
         return {'ok': True}

@@ -16,6 +16,7 @@
 				"shareos.system": [
 					"info",
 					"log",
+					"bootlogs",
 					"power_schedule"
 				],
 				"shareos.service": [

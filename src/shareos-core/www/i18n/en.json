@@ -2512,6 +2512,10 @@
 			"This page could not be shown: $1"
 		],
 		[
+			"^Start-Protokoll (.+)$",
+			"Start log $1"
+		],
+		[
 			"^Zeitplan: (.+)$",
 			"Schedule: $1"
 		]

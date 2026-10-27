@@ -6,6 +6,7 @@ pre-releases for test devices only.
 
 ## 0.2.0-beta.15
 
+- **Logs of the last starts are kept** ([#83](https://github.com/UniqueDroid/ShareOS/issues/83)). The logs of the box live in RAM and were gone after a restart – after a box was unreachable and had to be restarted, nothing showed what went wrong. Now a snapshot is saved 5 minutes after every start (also when the start hangs in a service): system and kernel log, addresses, routes, listening ports, processes, mounts, RAID. The newest 3 stay on the flash (gzip, a few KB, one write per start). System → Protokolle → *Start-Protokoll …*; on the command line `shareos-bootlog list|show`. New host test `tests/test-bootlog.sh` (also in CI).
 - **Switch off and on by schedule** ([#82](https://github.com/UniqueDroid/ShareOS/issues/82)). System → Energie & Reset → *Zeitplan*: a switch-off and a switch-on time per weekday, as in the D-Link firmware. Switching off is a clean shutdown by cron (skipped while a storage job such as a RAID rebuild runs); switching on uses the wake-up alarm of the device controller (Weltrend MCU of the DNS-320L, DNS-320 rev B and DNS-327L, through dns320l-daemon) – the "internal RTC not ticking" message of the Kirkwood RTC is expected, that clock is not used on these boxes. The alarm holds one time, so ShareOS sets the next switch-on at boot, every hour, after saving and before every shutdown. Boxes without the MCU (DNS-325, DNS-320 rev A) can only switch off by schedule. New tool `shareos-power`, host test `tests/test-power.sh` (also in CI).
 
 ## 0.2.0-beta.14
