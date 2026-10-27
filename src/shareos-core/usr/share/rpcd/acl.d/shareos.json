@@ -15,7 +15,8 @@
 			"ubus": {
 				"shareos.system": [
 					"info",
-					"log"
+					"log",
+					"power_schedule"
 				],
 				"shareos.service": [
 					"list"
@@ -125,7 +126,8 @@
 					"factory_reset",
 					"set_password",
 					"set_hostname",
-					"terminal"
+					"terminal",
+					"power_schedule_set"
 				],
 				"shareos.service": [
 					"action",

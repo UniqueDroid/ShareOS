@@ -1243,7 +1243,24 @@
 		"Fenster blockiert – Pop-ups für diese Seite erlauben.": "Janela bloqueada – permita pop-ups para esta página.",
 		"Hier anzeigen": "Mostrar aqui",
 		"Das Terminal läuft in einem eigenen Fenster.": "O terminal está a correr na sua própria janela.",
-		"Die Sitzung gilt für ein Fenster und endet, wenn es geschlossen wird – ein eigenes Fenster bekommt eine neue Sitzung. Vorsicht: Befehle als root wirken sofort und ohne Papierkorb.": "A sessão vale para uma janela e termina quando ela é fechada – uma janela própria recebe uma nova sessão. Cuidado: comandos como root têm efeito imediato e sem lixeira."
+		"Die Sitzung gilt für ein Fenster und endet, wenn es geschlossen wird – ein eigenes Fenster bekommt eine neue Sitzung. Vorsicht: Befehle als root wirken sofort und ohne Papierkorb.": "A sessão vale para uma janela e termina quando ela é fechada – uma janela própria recebe uma nova sessão. Cuidado: comandos como root têm efeito imediato e sem lixeira.",
+		"AUS- UND EINSCHALTEN NACH ZEITPLAN": "DESLIGAR E LIGAR POR HORÁRIO",
+		"Zeitplan einschalten": "Ativar o horário",
+		"TAG": "DIA",
+		"EINSCHALTEN": "LIGAR",
+		"AUSSCHALTEN": "DESLIGAR",
+		"Montag": "Segunda-feira",
+		"Dienstag": "Terça-feira",
+		"Mittwoch": "Quarta-feira",
+		"Donnerstag": "Quinta-feira",
+		"Freitag": "Sexta-feira",
+		"Samstag": "Sábado",
+		"Sonntag": "Domingo",
+		"Nächstes Einschalten:": "Próxima ligação:",
+		"Nächstes Ausschalten:": "Próximo desligamento:",
+		"· Nächstes Ausschalten:": "· Próximo desligamento:",
+		"Leere Felder: an diesem Tag nichts. Ausgeschaltet wird sauber (wie mit dem Knopf); läuft gerade ein Speicher-Auftrag (z. B. RAID-Aufbau), bleibt die Box an. Zum Einschalten stellt ShareOS die Weckzeit der Gerätesteuerung – den Stecker nicht ziehen.": "Campos vazios: nada nesse dia. A caixa desliga de forma limpa (como com o botão); enquanto uma tarefa de armazenamento estiver em curso (ex.: reconstrução RAID), fica ligada. Para ligar, o ShareOS define a hora de despertar do controlador – não desligue da tomada.",
+		"Diese Box kann sich nicht selbst einschalten (keine Weckfunktion) – nur das Ausschalten nach Zeitplan geht. Einschalten über den Power-Taster.": "Esta caixa não consegue ligar-se sozinha (sem função de despertar) – só funciona o desligamento por horário. Ligue-a com o botão de energia."
 	},
 	"patterns": [
 		[
@@ -2493,6 +2510,10 @@
 		[
 			"^Diese Seite konnte nicht angezeigt werden: (.+)$",
 			"Não foi possível mostrar esta página: $1"
+		],
+		[
+			"^Zeitplan: (.+)$",
+			"Horário: $1"
 		]
 	],
 	"words": [

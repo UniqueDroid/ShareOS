@@ -1243,7 +1243,24 @@
 		"Fenster blockiert – Pop-ups für diese Seite erlauben.": "विंडो ब्लॉक हो गई – इस पेज के लिए पॉप-अप की अनुमति दें।",
 		"Hier anzeigen": "यहाँ दिखाएँ",
 		"Das Terminal läuft in einem eigenen Fenster.": "टर्मिनल अपनी अलग विंडो में चल रहा है।",
-		"Die Sitzung gilt für ein Fenster und endet, wenn es geschlossen wird – ein eigenes Fenster bekommt eine neue Sitzung. Vorsicht: Befehle als root wirken sofort und ohne Papierkorb.": "सत्र एक विंडो के लिए है और उसके बंद होने पर खत्म हो जाता है – अलग विंडो को नया सत्र मिलता है। सावधान: root के रूप में कमांड तुरंत और बिना ट्रैश के लागू होते हैं।"
+		"Die Sitzung gilt für ein Fenster und endet, wenn es geschlossen wird – ein eigenes Fenster bekommt eine neue Sitzung. Vorsicht: Befehle als root wirken sofort und ohne Papierkorb.": "सत्र एक विंडो के लिए है और उसके बंद होने पर खत्म हो जाता है – अलग विंडो को नया सत्र मिलता है। सावधान: root के रूप में कमांड तुरंत और बिना ट्रैश के लागू होते हैं।",
+		"AUS- UND EINSCHALTEN NACH ZEITPLAN": "शेड्यूल से बंद और चालू करें",
+		"Zeitplan einschalten": "शेड्यूल चालू करें",
+		"TAG": "दिन",
+		"EINSCHALTEN": "चालू करें",
+		"AUSSCHALTEN": "बंद करें",
+		"Montag": "सोमवार",
+		"Dienstag": "मंगलवार",
+		"Mittwoch": "बुधवार",
+		"Donnerstag": "गुरुवार",
+		"Freitag": "शुक्रवार",
+		"Samstag": "शनिवार",
+		"Sonntag": "रविवार",
+		"Nächstes Einschalten:": "अगली बार चालू:",
+		"Nächstes Ausschalten:": "अगली बार बंद:",
+		"· Nächstes Ausschalten:": "· अगली बार बंद:",
+		"Leere Felder: an diesem Tag nichts. Ausgeschaltet wird sauber (wie mit dem Knopf); läuft gerade ein Speicher-Auftrag (z. B. RAID-Aufbau), bleibt die Box an. Zum Einschalten stellt ShareOS die Weckzeit der Gerätesteuerung – den Stecker nicht ziehen.": "खाली फ़ील्ड: उस दिन कुछ नहीं। बॉक्स ठीक से बंद होता है (बटन की तरह); अगर कोई स्टोरेज कार्य चल रहा हो (जैसे RAID रीबिल्ड), तो यह चालू रहता है। चालू करने के लिए ShareOS डिवाइस कंट्रोलर का वेक-अप समय सेट करता है – प्लग न निकालें।",
+		"Diese Box kann sich nicht selbst einschalten (keine Weckfunktion) – nur das Ausschalten nach Zeitplan geht. Einschalten über den Power-Taster.": "यह बॉक्स खुद चालू नहीं हो सकता (कोई वेक-अप फ़ंक्शन नहीं) – केवल शेड्यूल से बंद करना काम करता है। पावर बटन से चालू करें।"
 	},
 	"patterns": [
 		[
@@ -2493,6 +2510,10 @@
 		[
 			"^Diese Seite konnte nicht angezeigt werden: (.+)$",
 			"यह पेज नहीं दिखाया जा सका: $1"
+		],
+		[
+			"^Zeitplan: (.+)$",
+			"शेड्यूल: $1"
 		]
 	],
 	"words": [

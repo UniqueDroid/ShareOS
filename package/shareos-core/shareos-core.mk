@@ -85,6 +85,7 @@ define SHAREOS_CORE_INSTALL_TARGET_CMDS
 	$(INSTALL) -D -m 0755 $(@D)/etc/init.d/S40network $(TARGET_DIR)/etc/init.d/S40network
 	$(INSTALL) -D -m 0644 $(@D)/etc/config/network $(TARGET_DIR)/etc/config/network
 	$(INSTALL) -D -m 0755 $(@D)/etc/init.d/rcS $(TARGET_DIR)/etc/init.d/rcS
+	$(INSTALL) -D -m 0755 $(@D)/usr/sbin/shareos-power $(TARGET_DIR)/usr/sbin/shareos-power
 	$(INSTALL) -D -m 0755 $(@D)/usr/sbin/shareos-users $(TARGET_DIR)/usr/sbin/shareos-users
 	$(INSTALL) -D -m 0755 $(@D)/usr/sbin/shareos-shares $(TARGET_DIR)/usr/sbin/shareos-shares
 	$(INSTALL) -D -m 0755 $(@D)/usr/sbin/shareos-quota $(TARGET_DIR)/usr/sbin/shareos-quota

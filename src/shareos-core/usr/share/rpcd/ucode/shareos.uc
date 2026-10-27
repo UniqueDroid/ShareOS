@@ -2182,8 +2182,40 @@ return {
 			call: function(req) {
 				if (req.args.confirm !== true)
 					return { error: 'confirm must be true' };
-				system('(sleep 2; poweroff) >/dev/null 2>&1 &');
+				// the next switch-on of the power schedule first (wake-up alarm)
+				system('(sleep 2; /usr/sbin/shareos-power arm; poweroff) >/dev/null 2>&1 &');
 				return { poweroff: true };
+			}
+		},
+
+		// power schedule: switch off and on by weekday (shareos-power)
+		power_schedule: {
+			call: function() {
+				let j = json(trim(sh('/usr/sbin/shareos-power status').out) || 'null');
+				return type(j) == 'object' ? j : { error: 'failed' };
+			}
+		},
+
+		power_schedule_set: {
+			args: { enabled: false, days: {} },
+			call: function(req) {
+				let a = req.args, days = type(a.days) == 'object' ? a.days : {}, c = cursor();
+				const T = /^([01][0-9]|2[0-3]):[0-5][0-9]$/;
+				if (!c.get('shareos', 'power')) c.set('shareos', 'power', 'power');
+				for (let d in [ 'mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun' ]) {
+					let x = type(days[d]) == 'object' ? days[d] : {};
+					for (let k in [ 'on', 'off' ]) {
+						let v = '' + (x[k] ?? '');
+						if (v != '' && !match(v, T)) return { error: 'invalid time ' + v + ' (HH:MM)' };
+						if (v == '') c.delete('shareos', 'power', k + '_' + d);
+						else c.set('shareos', 'power', k + '_' + d, v);
+					}
+				}
+				c.set('shareos', 'power', 'enabled', a.enabled ? '1' : '0');
+				c.commit('shareos');
+				system('/usr/sbin/shareos-cron sync >/dev/null 2>&1; /usr/sbin/shareos-power arm >/dev/null 2>&1');
+				let j = json(trim(sh('/usr/sbin/shareos-power status').out) || 'null');
+				return type(j) == 'object' ? j : { ok: true };
 			}
 		},
 

@@ -4,6 +4,10 @@ Changes per release (newest first). The section of a version is added to its
 GitHub release automatically when the release is built. Test versions are
 pre-releases for test devices only.
 
+## 0.2.0-beta.15
+
+- **Switch off and on by schedule** ([#82](https://github.com/UniqueDroid/ShareOS/issues/82)). System → Energie & Reset → *Zeitplan*: a switch-off and a switch-on time per weekday, as in the D-Link firmware. Switching off is a clean shutdown by cron (skipped while a storage job such as a RAID rebuild runs); switching on uses the wake-up alarm of the device controller (Weltrend MCU of the DNS-320L, DNS-320 rev B and DNS-327L, through dns320l-daemon) – the "internal RTC not ticking" message of the Kirkwood RTC is expected, that clock is not used on these boxes. The alarm holds one time, so ShareOS sets the next switch-on at boot, every hour, after saving and before every shutdown. Boxes without the MCU (DNS-325, DNS-320 rev A) can only switch off by schedule. New tool `shareos-power`, host test `tests/test-power.sh` (also in CI).
+
 ## 0.2.0-beta.14
 
 - **autobrr did not start: "Permission denied".** The system apps that live on the apps drive (autobrr, and the programs of Transmission, FFmpeg …) are below `/mnt/<drive>/.shareos`. When the drive was set up from the web interface, that folder was created root-only (`0700` – rpcd runs with umask 077), so the user `autobrr` could not reach its own program. `.shareos` is now `0711` (passable, not listable): set when the drive becomes the apps drive, at every app install, at boot (`shareos-apps fix-perms`) and when autobrr starts. `tests/test-autobrr.sh` now starts from a root-only `.shareos`.

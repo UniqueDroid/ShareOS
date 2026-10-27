@@ -30,3 +30,6 @@ for i in /etc/init.d/S??*; do
 			;;
 	esac
 done
+
+# the next switch-on of the power schedule into the wake-up alarm
+/usr/sbin/shareos-power arm </dev/null >/dev/null 2>&1 &

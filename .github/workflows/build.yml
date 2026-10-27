@@ -44,6 +44,8 @@ jobs:
         run: LD_LIBRARY_PATH="$HOME/hostroot/lib" tests/test-notify.sh "$HOME/hostroot/bin"
       - name: RAID members that come up late at boot
         run: tests/test-raid-wait.sh
+      - name: Power schedule (shareos-power)
+        run: LD_LIBRARY_PATH="$HOME/hostroot/lib" tests/test-power.sh "$HOME/hostroot/bin"
       - name: SMART evaluation (disk health)
         run: LD_LIBRARY_PATH="$HOME/hostroot/lib" tests/test-smart.sh "$HOME/hostroot/bin/ucode"
       - name: rpcd plugin compiles, no forward references

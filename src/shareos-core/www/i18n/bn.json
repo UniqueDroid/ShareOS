@@ -1243,7 +1243,24 @@
 		"Fenster blockiert – Pop-ups für diese Seite erlauben.": "উইন্ডো ব্লক হয়েছে – এই পৃষ্ঠার জন্য পপ-আপ অনুমতি দিন।",
 		"Hier anzeigen": "এখানে দেখান",
 		"Das Terminal läuft in einem eigenen Fenster.": "টার্মিনাল নিজের উইন্ডোতে চলছে।",
-		"Die Sitzung gilt für ein Fenster und endet, wenn es geschlossen wird – ein eigenes Fenster bekommt eine neue Sitzung. Vorsicht: Befehle als root wirken sofort und ohne Papierkorb.": "সেশন একটি উইন্ডোর জন্য এবং সেটি বন্ধ হলে শেষ হয় – আলাদা উইন্ডো নতুন সেশন পায়। সাবধান: root হিসেবে কমান্ড সঙ্গে সঙ্গে এবং ট্র্যাশ ছাড়াই কার্যকর হয়।"
+		"Die Sitzung gilt für ein Fenster und endet, wenn es geschlossen wird – ein eigenes Fenster bekommt eine neue Sitzung. Vorsicht: Befehle als root wirken sofort und ohne Papierkorb.": "সেশন একটি উইন্ডোর জন্য এবং সেটি বন্ধ হলে শেষ হয় – আলাদা উইন্ডো নতুন সেশন পায়। সাবধান: root হিসেবে কমান্ড সঙ্গে সঙ্গে এবং ট্র্যাশ ছাড়াই কার্যকর হয়।",
+		"AUS- UND EINSCHALTEN NACH ZEITPLAN": "সময়সূচি অনুযায়ী বন্ধ ও চালু",
+		"Zeitplan einschalten": "সময়সূচি চালু করুন",
+		"TAG": "দিন",
+		"EINSCHALTEN": "চালু",
+		"AUSSCHALTEN": "বন্ধ",
+		"Montag": "সোমবার",
+		"Dienstag": "মঙ্গলবার",
+		"Mittwoch": "বুধবার",
+		"Donnerstag": "বৃহস্পতিবার",
+		"Freitag": "শুক্রবার",
+		"Samstag": "শনিবার",
+		"Sonntag": "রবিবার",
+		"Nächstes Einschalten:": "পরবর্তী চালু:",
+		"Nächstes Ausschalten:": "পরবর্তী বন্ধ:",
+		"· Nächstes Ausschalten:": "· পরবর্তী বন্ধ:",
+		"Leere Felder: an diesem Tag nichts. Ausgeschaltet wird sauber (wie mit dem Knopf); läuft gerade ein Speicher-Auftrag (z. B. RAID-Aufbau), bleibt die Box an. Zum Einschalten stellt ShareOS die Weckzeit der Gerätesteuerung – den Stecker nicht ziehen.": "খালি ঘর: সেদিন কিছু নয়। বক্স ঠিকভাবে বন্ধ হয় (বোতামের মতো); কোনো স্টোরেজ কাজ চললে (যেমন RAID পুনর্গঠন) এটি চালু থাকে। চালু করতে ShareOS ডিভাইস নিয়ন্ত্রকের জাগানোর সময় ঠিক করে – প্লাগ খুলবেন না।",
+		"Diese Box kann sich nicht selbst einschalten (keine Weckfunktion) – nur das Ausschalten nach Zeitplan geht. Einschalten über den Power-Taster.": "এই বক্স নিজে চালু হতে পারে না (জাগানোর ফাংশন নেই) – শুধু সময়সূচি অনুযায়ী বন্ধ করা যায়। পাওয়ার বোতাম দিয়ে চালু করুন।"
 	},
 	"patterns": [
 		[
@@ -2493,6 +2510,10 @@
 		[
 			"^Diese Seite konnte nicht angezeigt werden: (.+)$",
 			"এই পৃষ্ঠাটি দেখানো যায়নি: $1"
+		],
+		[
+			"^Zeitplan: (.+)$",
+			"সময়সূচি: $1"
 		]
 	],
 	"words": [

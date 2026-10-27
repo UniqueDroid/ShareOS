@@ -1593,3 +1593,21 @@ E1237	Fenêtre bloquée – autorisez les fenêtres pop-up pour cette page.
 E1238	Afficher ici
 E1239	Le terminal s’exécute dans sa propre fenêtre.
 E1240	La session vaut pour une fenêtre et se termine à sa fermeture – une fenêtre séparée reçoit une nouvelle session. Attention : les commandes en root agissent immédiatement et sans corbeille.
+E1241	ARRÊT ET MISE EN MARCHE PROGRAMMÉS
+E1242	Activer le programme
+E1243	JOUR
+E1244	MISE EN MARCHE
+E1245	ARRÊT
+E1246	Lundi
+E1247	Mardi
+E1248	Mercredi
+E1249	Jeudi
+E1250	Vendredi
+E1251	Samedi
+E1252	Dimanche
+E1253	Prochaine mise en marche :
+E1254	Prochain arrêt :
+E1255	· Prochain arrêt :
+E1256	Champs vides : rien ce jour-là. La box s’arrête proprement (comme avec le bouton) ; pendant une tâche de stockage (p. ex. reconstruction RAID), elle reste allumée. Pour la mise en marche, ShareOS règle l’heure de réveil du contrôleur – ne débranchez pas la prise.
+E1257	Cette box ne peut pas s’allumer seule (pas de fonction de réveil) – seul l’arrêt programmé fonctionne. Allumez-la avec le bouton d’alimentation.
+P312	Programme : $1
