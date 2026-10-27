@@ -1612,3 +1612,5 @@ E1255	· Prochain arrêt :
 E1256	Champs vides : rien ce jour-là. La box s’arrête proprement (comme avec le bouton) ; pendant une tâche de stockage (p. ex. reconstruction RAID), elle reste allumée. Pour la mise en marche, ShareOS règle l’heure de réveil du contrôleur – ne débranchez pas la prise.
 E1257	Cette box ne peut pas s’allumer seule (pas de fonction de réveil) – seul l’arrêt programmé fonctionne. Allumez-la avec le bouton d’alimentation.
 P313	Programme : $1
+E1258	Supervision (agent Zabbix)
+E1259	zabbix_agentd, mode actif

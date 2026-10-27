@@ -1,0 +1,488 @@
+#!/usr/bin/ucode -S
+//
+// shareos-zabbix – monitoring with the classic Zabbix agent (system app "zabbix-agent")
+//
+//   shareos-zabbix status            settings and state (JSON)
+//   shareos-zabbix set               stdin JSON, all fields optional:
+//                                    {enabled, server, hostname, metadata,
+//                                     psk_identity, psk, passive, allow, port,
+//                                     disk_interval}; psk "" removes the key
+//   shareos-zabbix start | boot      start now / at boot (when switched on)
+//   shareos-zabbix stop-all          stop (system app removed, shutdown)
+//   shareos-zabbix restart
+//   shareos-zabbix log               the last lines of the agent's log
+//   shareos-zabbix collect           (root, cron while switched on) read the
+//                                    disks' SMART values
+//   shareos-zabbix discovery disk|raid          low-level discovery (JSON)
+//   shareos-zabbix get box <key>                values for the agent's items:
+//   shareos-zabbix get disk <disk> <key>        see "Items of the box" below
+//   shareos-zabbix get raid <md> <key>
+//
+// shareos-service: boot start stop-all
+//
+// Settings: UCI zabbix.main – enabled, server (ServerActive: host[:port],
+// several separated by ","), hostname (default: the box's name), metadata
+// (HostMetadata for auto-registration, default "ShareOS"), psk_identity,
+// passive + allow + port (also answer the server's requests: listen on port,
+// default 10050, for the addresses in allow – off by default), disk_interval
+// (minutes between SMART reads: 10, 15, 20, 30 or 60). The pre-shared key
+// lives in /etc/shareos/zabbix.psk (root only; in the settings backup).
+//
+// The agent runs as the user "zabbix" in active mode: it connects to the
+// server and sends its values at its own pace – no open port, no listener
+// processes (StartAgents=0), a few MB of memory. Its configuration is written
+// to /tmp/shareos-zabbix at every start, from the settings.
+//
+// Items of the box (UserParameters, for templates):
+//   shareos.box[temperature|fan_rpm|fan_pwm|version|board]
+//   shareos.disk.discovery            {#DISK} {#MODEL} {#SERIAL}
+//   shareos.disk[<disk>,<key>]        rating (0 good, 1 warning, 2 critical),
+//       passed, standby, temperature, temperature_max, reallocated, pending,
+//       uncorrectable, crc_errors, power_on_hours, power_cycles, life_left,
+//       error_count, age (seconds since the values were read), model, serial
+//   shareos.raid.discovery            {#RAID} {#LEVEL}
+//   shareos.raid[<md>,<key>]          active (1/0), level, disks, working,
+//       missing, health ("UU", "U_"), syncing (1/0), sync_percent, sync_action
+// A value that is missing (life_left of a hard disk, a disk not read yet) is
+// empty, an unknown key or disk gives "error: …"; both make a numeric item
+// unsupported. The values of the disks are read by root every disk_interval minutes (the
+// same SMART cache as Storage → Health; a sleeping disk is not woken up – its
+// last values stay, standby says 1); RAID and temperatures are read live.
+//
+import { readfile, writefile, unlink, stat, popen, lsdir, realpath } from 'fs';
+import { cursor } from 'uci';
+
+// tests: SHAREOS_ROOT=<dir> (a fake root), SHAREOS_TEST_SYSBLOCK (fake disks),
+// SHAREOS_TEST_UBUS (a fake ubus)
+const ROOT = getenv('SHAREOS_ROOT') ?? '';
+const BIN = ROOT + '/opt/shareos/bin/zabbix-agentd';
+const SELF = '/usr/sbin/shareos-zabbix';
+const RUN = ROOT + '/tmp/shareos-zabbix';
+const CONF = RUN + '/zabbix_agentd.conf';
+const PID = RUN + '/pid';
+const LOG = RUN + '/log';
+const DATA = RUN + '/disks.json';
+const PSK_RUN = RUN + '/psk';
+const PSK = ROOT + '/etc/shareos/zabbix.psk';
+const SMART_DIR = ROOT + '/tmp/shareos-storage';
+const SYSBLOCK = getenv('SHAREOS_TEST_SYSBLOCK') ?? ROOT + '/sys/block';
+const UBUS = getenv('SHAREOS_TEST_UBUS') ?? 'ubus';
+const USER = 'zabbix';
+const INTERVALS = { '10': 1, '15': 1, '20': 1, '30': 1, '60': 1 };
+const HOST_RE = /^[A-Za-z0-9._ -]{1,128}$/;
+// one server: name, IPv4 or [IPv6], optional :port
+const SERVER_RE = /^([A-Za-z0-9.-]{1,253}|\[[0-9A-Fa-f:.]{2,45}\])(:[0-9]{1,5})?$/;
+// allowed addresses for passive checks: IPv4/IPv6 with optional prefix, or a name
+const ALLOW_RE = /^([0-9A-Fa-f:.]{2,45}(\/[0-9]{1,3})?|[A-Za-z0-9.-]{1,253})$/;
+const DISK_KEYS = { rating: 1, passed: 1, standby: 1, temperature: 1, temperature_max: 1, reallocated: 1, pending: 1,
+	uncorrectable: 1, crc_errors: 1, power_on_hours: 1, power_cycles: 1, life_left: 1, error_count: 1, age: 1, model: 1, serial: 1 };
+const RAID_KEYS = { active: 1, level: 1, disks: 1, working: 1, missing: 1, health: 1, syncing: 1, sync_percent: 1, sync_action: 1 };
+const RATING = { good: 0, warn: 1, bad: 2 };
+
+function shq(s) { return "'" + replace(s, "'", "'\\''") + "'"; }
+function sh(cmd) {
+	let p = popen(cmd + ' 2>&1', 'r');
+	if (!p) return { rc: -1, out: '' };
+	let o = p.read('all') ?? '';
+	return { rc: p.close(), out: o };
+}
+function out(o) { print(sprintf('%J\n', o)); }
+function die(msg) { out({ error: msg }); exit(1); }
+function stdin_json() { let j = null; try { j = json(readfile('/dev/stdin') ?? 'null'); } catch (e) { } return type(j) == 'object' ? j : null; }
+function installed() { return stat(BIN)?.type == 'file'; }
+function read_trim(p) { let t = readfile(p); return t == null ? null : trim(t); }
+function read_int(p) { let v = read_trim(p); return v != null && match(v, /^-?[0-9]+$/) ? +v : null; }
+function box_name() { return read_trim('/proc/sys/kernel/hostname') ?? 'shareos'; }
+function list_of(v) {
+	if (v == null) return [];
+	if (type(v) == 'array') return v;
+	return filter(map(split(v, ','), (x) => trim(x)), (x) => x != '');
+}
+
+// answers for the agent: a UserParameter cannot report "not supported" (its
+// output is the value), so a missing value is empty and a wrong key gives the
+// error as text – both make a numeric item unsupported on the server, with
+// that text as the reason
+function unsupported(msg) { print('error: ' + msg + '\n'); exit(0); }
+function value(v) {
+	if (v == null) { print('\n'); exit(0); }
+	print(type(v) == 'bool' ? (v ? '1' : '0') : '' + v);
+	print('\n');
+	exit(0);
+}
+
+function uci() { return ROOT ? cursor(ROOT + '/etc/config') : cursor(); }
+function cron_sync() { if (!ROOT) sh('/usr/sbin/shareos-cron sync >/dev/null 2>&1'); }
+
+function conf() {
+	let c = uci();
+	let g = (k) => c.get('zabbix', 'main', k);
+	let iv = g('disk_interval') ?? '30';
+	return {
+		enabled: g('enabled') == '1',
+		server: list_of(g('server')),
+		hostname: g('hostname') ?? '',
+		metadata: g('metadata') ?? 'ShareOS',
+		psk_identity: g('psk_identity') ?? '',
+		passive: g('passive') == '1',
+		allow: list_of(g('allow')),
+		port: +(g('port') ?? 10050),
+		disk_interval: INTERVALS[iv] ? +iv : 30
+	};
+}
+
+function set_conf(k, v) {
+	let c = uci();
+	c.set('zabbix', 'main', 'zabbix');
+	if (v == null) c.delete('zabbix', 'main', k); else c.set('zabbix', 'main', k, v);
+	c.commit('zabbix');
+}
+
+// 32 … 512 hex digits, an even number (musl's regex allows at most {…,255})
+function valid_psk(k) { return type(k) == 'string' && length(k) >= 32 && length(k) <= 512 && !(length(k) % 2) && !!match(k, /^[0-9a-fA-F]+$/); }
+
+function psk() {
+	let k = read_trim(PSK);
+	return k && valid_psk(k) ? k : null;
+}
+
+function pid() {
+	let p = +trim(readfile(PID) ?? '0');
+	return p > 1 && index(readfile('/proc/' + p + '/cmdline') ?? '', 'zabbix') >= 0 ? p : null;
+}
+
+/* ---------- values of the box (also read as the user zabbix) ---------- */
+
+function board() {
+	for (let line in split(readfile(ROOT + '/tmp/sys/board.env') ?? '', '\n')) {
+		let m = match(line, /^BOARD_NAME="?([^"]*)"?$/);
+		if (m) return m[1];
+	}
+	return null;
+}
+
+function version() {
+	for (let line in split(readfile(ROOT + '/etc/shareos-release') ?? '', '\n')) {
+		let m = match(line, /^SHAREOS_VERSION="?([^"]*)"?$/);
+		if (m) return m[1];
+	}
+	return null;
+}
+
+function box_values() {
+	let t = read_int(ROOT + '/tmp/sys/temp1_input');
+	return {
+		temperature: t == null ? null : t >= 1000 ? t / 1000.0 : t,
+		fan_rpm: read_int(ROOT + '/tmp/sys/fan1_input'),
+		fan_pwm: read_int(ROOT + '/tmp/sys/pwm1'),
+		version: version(),
+		board: board()
+	};
+}
+
+function mdstat() {
+	let arrays = {}, cur = null;
+	for (let line in split(readfile(ROOT + '/proc/mdstat') ?? '', '\n')) {
+		let m = match(line, /^(md[0-9]+) : (\S+) (.*)$/);
+		if (m) {
+			let rest = split(trim(m[3]), ' ');
+			// "active raid1 sda2[0] sdb2[1]" – an inactive array has no level
+			let level = length(rest) && match(rest[0], /^(raid[0-9]+|linear)$/) ? rest[0] : null;
+			cur = { name: m[1], active: m[2] == 'active', level, disks: null, working: null, health: null, sync: null };
+			arrays[m[1]] = cur;
+			continue;
+		}
+		if (!cur) continue;
+		let h = match(line, /\[([0-9]+)\/([0-9]+)\] \[([U_]+)\]/);
+		if (h) { cur.disks = +h[1]; cur.working = +h[2]; cur.health = h[3]; }
+		let p = match(line, /(resync|recovery|check|reshape|repair) *= *([0-9.]+)%/);
+		if (p) cur.sync = { action: p[1], percent: +p[2] };
+		let d = match(line, /(resync|recovery)=DELAYED/);
+		if (d) cur.sync = { action: d[1], percent: 0 };
+	}
+	return arrays;
+}
+
+function disks_data() {
+	let j = null;
+	try { j = json(readfile(DATA) ?? 'null'); } catch (e) { }
+	return type(j) == 'object' && type(j.disks) == 'object' ? j : { time: 0, disks: {} };
+}
+
+/* ---------- collecting the disks' values (root) ---------- */
+
+// the disks in the bays: sd? that are not below a USB host
+function bay_disks() {
+	let l = [];
+	for (let d in sort(lsdir(SYSBLOCK) ?? []))
+		if (match(d, /^sd[a-z]$/) && index(realpath(SYSBLOCK + '/' + d) ?? '', '/usb') < 0)
+			push(l, d);
+	return l;
+}
+
+// the cached SMART values of Storage → Health (rpcd), refreshed through rpcd
+// when older than max_age: smartctl -n standby does not wake a sleeping disk
+function smart_of(disk, max_age) {
+	let cache = SMART_DIR + '/smart-' + disk + '.json', st = stat(cache);
+	if (st && time() - st.mtime < max_age) {
+		let c = null;
+		try { c = json(readfile(cache)); } catch (e) { }
+		if (type(c) == 'object' && c.time) return c;
+	}
+	let r = sh(sprintf('%s -t 120 call shareos.storage smart %s', UBUS, shq(sprintf('{"disk":"%s"}', disk))));
+	let j = null;
+	try { j = json(r.out); } catch (e) { }
+	return type(j) == 'object' ? j : null;
+}
+
+function collect() {
+	let c = conf(), old = disks_data().disks, disks = {};
+	// a little less than the interval, so a cron run always reads anew
+	let max_age = c.disk_interval * 60 - 60;
+	for (let d in bay_disks()) {
+		let s = smart_of(d, max_age), prev = old[d];
+		if (s?.standby) {
+			// asleep: the last values stay
+			disks[d] = prev ? { ...prev, standby: true } : { standby: true, time: null };
+			continue;
+		}
+		if (type(s) != 'object' || s.error || !s.time) {
+			if (prev) disks[d] = prev;
+			continue;
+		}
+		disks[d] = {
+			time: s.time, standby: false, rating: RATING[s.rating] ?? null, passed: s.passed,
+			temperature: s.temperature, temperature_max: s.temperature_max,
+			reallocated: s.reallocated, pending: s.pending, uncorrectable: s.uncorrectable, crc_errors: s.crc_errors,
+			power_on_hours: s.power_on_hours, power_cycles: s.power_cycles, life_left: s.life_left,
+			error_count: s.error_count, model: s.model, serial: s.serial
+		};
+	}
+	sh(sprintf('mkdir -p %s', shq(RUN)));
+	let tmp = DATA + '.new';
+	writefile(tmp, sprintf('%J', { time: time(), disks }));
+	// readable for the agent (group zabbix), not for everybody
+	sh(sprintf('chown root:%s %s 2>/dev/null; chmod 640 %s && mv %s %s', USER, shq(tmp), shq(tmp), shq(tmp), shq(DATA)));
+	return disks;
+}
+
+/* ---------- the agent ---------- */
+
+function write_conf(c) {
+	let name = c.hostname != '' ? c.hostname : box_name();
+	if (!match(name, HOST_RE)) name = replace(name, /[^A-Za-z0-9._ -]/g, '-');
+	let l = [
+		'# written by shareos-zabbix at every start – change the settings with',
+		'# "shareos-zabbix set" (UCI /etc/config/zabbix), not here',
+		'PidFile=' + RUN + '/agentd.pid',
+		'LogType=file',
+		'LogFile=' + LOG,
+		'LogFileSize=1',
+		'Hostname=' + name,
+		'HostMetadata=' + c.metadata,
+		'RefreshActiveChecks=120',
+		'BufferSize=100',
+		'Timeout=15',
+		'DenyKey=system.run[*]'
+	];
+	if (length(c.server)) push(l, 'ServerActive=' + join(',', c.server));
+	if (c.passive) {
+		push(l, 'Server=' + join(',', c.allow), 'ListenPort=' + c.port, 'StartAgents=2');
+	}
+	else
+		push(l, 'StartAgents=0');
+	let k = psk();
+	if (k && c.psk_identity != '') {
+		push(l, 'TLSConnect=psk', 'TLSAccept=psk', 'TLSPSKIdentity=' + c.psk_identity, 'TLSPSKFile=' + PSK_RUN);
+		writefile(PSK_RUN + '.new', k + '\n');
+		sh(sprintf('chown root:%s %s && chmod 640 %s && mv %s %s', USER, shq(PSK_RUN + '.new'), shq(PSK_RUN + '.new'), shq(PSK_RUN + '.new'), shq(PSK_RUN)));
+	}
+	else {
+		push(l, 'TLSConnect=unencrypted', 'TLSAccept=unencrypted');
+		unlink(PSK_RUN);
+	}
+	push(l,
+		'UserParameter=shareos.box[*],' + SELF + ' get box "$1"',
+		'UserParameter=shareos.disk.discovery,' + SELF + ' discovery disk',
+		'UserParameter=shareos.disk[*],' + SELF + ' get disk "$1" "$2"',
+		'UserParameter=shareos.raid.discovery,' + SELF + ' discovery raid',
+		'UserParameter=shareos.raid[*],' + SELF + ' get raid "$1" "$2"');
+	writefile(CONF + '.new', join('\n', l) + '\n');
+	sh(sprintf('chown root:%s %s && chmod 640 %s && mv %s %s', USER, shq(CONF + '.new'), shq(CONF + '.new'), shq(CONF + '.new'), shq(CONF)));
+}
+
+function start() {
+	if (!installed()) die('the Zabbix agent is not installed (system app "zabbix-agent" in the store)');
+	let c = conf();
+	if (!length(c.server) && !c.passive) die('no Zabbix server set (shareos-zabbix set {"server": "…"})');
+	if (pid()) return;
+	sh(sprintf('grep -q "^%s:" /etc/group || addgroup -S %s; grep -q "^%s:" /etc/passwd || adduser -S -D -H -G %s -h %s -s /bin/false %s',
+		USER, USER, USER, USER, RUN, USER));
+	// the folder: the agent writes its log and pid file there, root the configuration
+	sh(sprintf('mkdir -p %s && chown %s:%s %s && chmod 750 %s && touch %s && chown %s:%s %s',
+		shq(RUN), USER, USER, shq(RUN), shq(RUN), shq(LOG), USER, USER, shq(LOG)));
+	write_conf(c);
+	collect();
+	// -f: stays in the foreground, so start-stop-daemon keeps its pid
+	// its own log goes to LOG; stderr too, for errors before the log is open
+	let cmd = sprintf('exec %s -f -c %s >/dev/null 2>>%s', shq(BIN), shq(CONF), shq(LOG));
+	let r = sh(sprintf('start-stop-daemon -S -b -m -p %s -c %s -x /bin/sh -- -c %s', shq(PID), USER, shq(cmd)));
+	for (let i = 0; i < 25 && !pid(); i++) sh('sleep 0.2');
+	// a wrong setting ends the agent at once: wait a moment and look again
+	sh('sleep 1');
+	if (!pid()) die('the Zabbix agent did not start: ' + trim(sh('tail -n 3 ' + shq(LOG)).out || r.out));
+	cron_sync();
+}
+
+function stop() {
+	let p = pid();
+	if (p) {
+		sh('kill ' + p);
+		for (let i = 0; i < 50 && pid(); i++) sh('sleep 0.2');
+		if (pid()) sh('kill -9 ' + p);
+	}
+	unlink(PID);
+	unlink(PSK_RUN);
+	cron_sync();
+}
+
+function status() {
+	let c = conf();
+	return { installed: installed(), enabled: c.enabled, running: !!pid(),
+		server: c.server, hostname: c.hostname, hostname_used: c.hostname != '' ? c.hostname : box_name(),
+		metadata: c.metadata, psk_identity: c.psk_identity, psk: !!psk(),
+		passive: c.passive, allow: c.allow, port: c.port, disk_interval: c.disk_interval };
+}
+
+function cmd_set() {
+	let a = stdin_json();
+	if (!a) die('expected a JSON object on stdin');
+	// everything is checked first; nothing is saved when one value is wrong
+	let chg = {}, key = null;
+	if (a.server != null) {
+		let l = list_of(a.server);
+		if (type(l) != 'array' || length(l) > 8) die('server: at most 8 addresses');
+		for (let s in l) {
+			if (type(s) != 'string' || !match(s, SERVER_RE)) die('invalid server: ' + s);
+			let p = match(s, /\]?:([0-9]+)$/);
+			if (p && (+p[1] < 1 || +p[1] > 65535)) die('invalid port: ' + s);
+		}
+		chg.server = length(l) ? join(',', l) : null;
+	}
+	if (a.hostname != null) {
+		if (type(a.hostname) != 'string' || (a.hostname != '' && !match(a.hostname, HOST_RE))) die('hostname: 1 to 128 of A-Z a-z 0-9 . _ - and space');
+		chg.hostname = a.hostname != '' ? a.hostname : null;
+	}
+	if (a.metadata != null) {
+		if (type(a.metadata) != 'string' || length(a.metadata) > 255 || match(a.metadata, /[[:cntrl:]]/)) die('metadata: at most 255 characters, one line');
+		chg.metadata = a.metadata;
+	}
+	if (a.psk_identity != null) {
+		if (type(a.psk_identity) != 'string' || length(a.psk_identity) > 128 || match(a.psk_identity, /[[:cntrl:]]/)) die('psk_identity: at most 128 characters, one line');
+		chg.psk_identity = a.psk_identity != '' ? a.psk_identity : null;
+	}
+	if (a.psk != null) {
+		if (type(a.psk) != 'string' || (a.psk != '' && !valid_psk(a.psk)))
+			die('psk: 32 to 512 hex digits (e.g. openssl rand -hex 32)');
+		key = lc(a.psk);
+	}
+	if (a.allow != null) {
+		let l = list_of(a.allow);
+		if (type(l) != 'array' || length(l) > 16) die('allow: at most 16 addresses');
+		for (let s in l) if (type(s) != 'string' || !match(s, ALLOW_RE)) die('invalid address in allow: ' + s);
+		chg.allow = length(l) ? join(',', l) : null;
+	}
+	if (a.port != null) {
+		if (type(a.port) != 'int' || a.port < 1024 || a.port > 65535) die('port: 1024 … 65535');
+		chg.port = '' + a.port;
+	}
+	if (a.passive != null) chg.passive = a.passive ? '1' : '0';
+	if (a.disk_interval != null) {
+		if (!INTERVALS['' + a.disk_interval]) die('disk_interval: 10, 15, 20, 30 or 60 (minutes)');
+		chg.disk_interval = '' + a.disk_interval;
+	}
+	if (a.enabled != null) chg.enabled = a.enabled ? '1' : '0';
+	// the settings as they would be
+	let c = conf();
+	let passive = exists(chg, 'passive') ? chg.passive == '1' : c.passive;
+	let allow = exists(chg, 'allow') ? list_of(chg.allow) : c.allow;
+	let ident = exists(chg, 'psk_identity') ? chg.psk_identity ?? '' : c.psk_identity;
+	let has_key = key != null ? key != '' : !!psk();
+	if (passive && !length(allow)) die('passive checks need the server addresses in "allow"');
+	if (ident != '' && !has_key) die('psk_identity is set, but no key (psk)');
+	if (has_key && ident == '') die('a key (psk) needs a psk_identity');
+	for (let k, v in chg) set_conf(k, v);
+	if (key === '') unlink(PSK);
+	else if (key != null) {
+		sh(sprintf('mkdir -p %s && umask 077 && : > %s', shq(ROOT + '/etc/shareos'), shq(PSK)));
+		writefile(PSK, key + '\n');
+		sh('chmod 600 ' + shq(PSK));
+	}
+	// changes apply with a restart
+	stop();
+	if (conf().enabled) start();
+	out(status());
+}
+
+function discovery(what) {
+	let l = [];
+	if (what == 'disk') {
+		let d = disks_data().disks;
+		for (let n in sort(keys(d)))
+			push(l, { '{#DISK}': n, '{#MODEL}': d[n].model ?? '', '{#SERIAL}': d[n].serial ?? '' });
+	}
+	else if (what == 'raid') {
+		let a = mdstat();
+		for (let n in sort(keys(a)))
+			push(l, { '{#RAID}': n, '{#LEVEL}': a[n].level ?? '' });
+	}
+	else unsupported('discovery: disk or raid');
+	print(sprintf('%J\n', l));
+}
+
+function get(args) {
+	let what = args[0], key = what == 'box' ? args[1] : args[2], name = args[1];
+	if (what == 'box') {
+		let b = box_values();
+		if (!exists(b, key)) unsupported('unknown key ' + key);
+		value(b[key]);
+	}
+	if (what == 'disk') {
+		if (!match(name ?? '', /^sd[a-z]$/)) unsupported('invalid disk');
+		if (!DISK_KEYS[key]) unsupported('unknown key ' + key);
+		let d = disks_data().disks[name];
+		if (!d) unsupported('no values of ' + name + ' (yet)');
+		if (key == 'age') value(d.time ? time() - d.time : null);
+		value(d[key]);
+	}
+	if (what == 'raid') {
+		if (!match(name ?? '', /^md[0-9]+$/)) unsupported('invalid array');
+		if (!RAID_KEYS[key]) unsupported('unknown key ' + key);
+		let a = mdstat()[name];
+		if (!a) unsupported('no array ' + name);
+		switch (key) {
+		case 'missing': value(a.disks != null ? a.disks - a.working : null);
+		case 'syncing': value(a.sync != null);
+		case 'sync_percent': value(a.sync ? a.sync.percent : 0);
+		case 'sync_action': value(a.sync ? a.sync.action : 'idle');
+		default: value(a[key]);
+		}
+	}
+	unsupported('get box|disk|raid');
+}
+
+switch (ARGV[0]) {
+case 'status': out(status()); break;
+case 'start': set_conf('enabled', '1'); start(); out(status()); break;
+case 'boot': if (installed() && conf().enabled) { start(); out(status()); } else out({ started: false }); break;
+case 'stop-all': stop(); out({ ok: true }); break;
+case 'restart': stop(); if (conf().enabled) start(); out(status()); break;
+case 'set': cmd_set(); break;
+case 'collect': out({ disks: collect() }); break;
+case 'discovery': discovery(ARGV[1]); break;
+case 'get': get(slice(ARGV, 1)); break;
+case 'log': { let t = readfile(LOG) ?? ''; out({ log: length(t) > 16384 ? substr(t, length(t) - 16384) : t }); break; }
+default:
+	print('usage: shareos-zabbix status|set|start|boot|stop-all|restart|log|collect|discovery|get\n');
+	exit(2);
+}

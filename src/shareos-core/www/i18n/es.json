@@ -1260,7 +1260,9 @@
 		"Nächstes Ausschalten:": "Próximo apagado:",
 		"· Nächstes Ausschalten:": "· Próximo apagado:",
 		"Leere Felder: an diesem Tag nichts. Ausgeschaltet wird sauber (wie mit dem Knopf); läuft gerade ein Speicher-Auftrag (z. B. RAID-Aufbau), bleibt die Box an. Zum Einschalten stellt ShareOS die Weckzeit der Gerätesteuerung – den Stecker nicht ziehen.": "Campos vacíos: nada ese día. La caja se apaga de forma limpia (como con el botón); mientras haya una tarea de almacenamiento (p. ej. reconstrucción RAID), sigue encendida. Para encenderla, ShareOS fija la hora de activación del controlador; no la desenchufes.",
-		"Diese Box kann sich nicht selbst einschalten (keine Weckfunktion) – nur das Ausschalten nach Zeitplan geht. Einschalten über den Power-Taster.": "Esta caja no puede encenderse sola (sin función de activación): solo funciona el apagado programado. Enciéndela con el botón de encendido."
+		"Diese Box kann sich nicht selbst einschalten (keine Weckfunktion) – nur das Ausschalten nach Zeitplan geht. Einschalten über den Power-Taster.": "Esta caja no puede encenderse sola (sin función de activación): solo funciona el apagado programado. Enciéndela con el botón de encendido.",
+		"Überwachung (Zabbix-Agent)": "Monitorización (agente Zabbix)",
+		"zabbix_agentd, Aktiv-Modus": "zabbix_agentd, modo activo"
 	},
 	"patterns": [
 		[

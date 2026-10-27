@@ -36,7 +36,10 @@ and writes a starter for every entry of `"commands"` to `/opt/shareos/bin`
 (in `PATH`). The starter sets `LD_LIBRARY_PATH` to the app's `lib/` and
 `TERMINFO_DIRS` to its `share/terminfo` if present. System apps over 2 MB go
 to the apps drive (`/mnt/<drive>/.shareos/sysapps/<id>`, linked from
-`/opt/shareos/sysapps/<id>`), small ones stay on the flash.
+`/opt/shareos/sysapps/<id>`), small ones stay on the flash. A system app that
+has to work when the apps drive fails says `"flash": true` in its `app.json`
+(ShareOS 0.2.0-beta.15+): it stays on the flash up to 8 MB (the Zabbix agent,
+which reports exactly such a failure).
 
 **In the store:** CI attaches the `.sapp` files to every ShareOS release;
 the catalog of ShareOS-Apps lists them from there (metadata from
@@ -144,7 +147,11 @@ The settings page in the interface, if any, comes with the firmware too
 | `transmission-daemon` | `transmission` | `shareos-transmission` (one daemon per account) | app Transmission (permission `torrent`) |
 | `minidlna` | `dlna` | `shareos-dlna` | *Services → Media server* |
 | `ffmpeg` | `media` (`"boot": false`, only `stop-all`) | `shareos-media` | app MediaTranscoder (permission `media`) |
+| `zabbix-agent` | `zabbix` | `shareos-zabbix` (user `zabbix`, active mode) | `shareos-zabbix set` on the command line, see [docs/MONITORING.md](../docs/MONITORING.md) |
 | `autobrr` | `autobrr` | `shareos-autobrr` (one for the box, user `autobrr`) | an app with the permission `autobrr` (admins), or autobrr's own web interface on port 7474 |
+
+`zabbix-agent` is built from `package/shareos-zabbix-agent` (the classic
+agent only; buildroot's `zabbix` needs glibc).
 
 Packages of these apps built before 0.2.0-beta.9 have no `"service"` yet;
 `shareos-apps` knows their entries (`LEGACY_SERVICE`) until they are updated.

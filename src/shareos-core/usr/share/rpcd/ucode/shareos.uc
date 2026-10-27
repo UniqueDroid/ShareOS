@@ -51,7 +51,8 @@ const SYS_SVC_TEXT = {
 	tailscale:    { label: 'Fernzugriff (Tailscale)', desc: 'tailscaled, WireGuard-Mesh' },
 	vpn:          { label: 'VPN (OpenVPN)', desc: 'Client und Server, App NetTunnel' },
 	transmission: { label: 'Torrents (Transmission)', desc: 'ein Dienst pro Konto' },
-	autobrr:      { label: 'Download-Automatik (autobrr)', desc: 'autobrr, Port 7474' }
+	autobrr:      { label: 'Download-Automatik (autobrr)', desc: 'autobrr, Port 7474' },
+	zabbix:       { label: 'Überwachung (Zabbix-Agent)', desc: 'zabbix_agentd, Aktiv-Modus' }
 };
 // services that must not be stopped from the UI (it would cut itself off)
 const ESSENTIAL = { uhttpd: true, rpcd: true, ubus: true, board: true };
@@ -839,8 +840,8 @@ function default_password() {
 /* ---------- settings backup ---------- */
 
 const CRYPT = '/usr/sbin/shareos-crypt';
-const BACKUP_CONFIGS = [ 'shareos', 'storage', 'network', 'accounts', 'shares', 'paperless', 'cloud', 'apps', 'snapshots', 'dlna', 'dockerhosts' ];
-const BACKUP_FILES = [ '/etc/ksmbd/ksmbdpwd.db', '/etc/ssl/shareos/server.crt', '/etc/ssl/shareos/server.key', '/etc/hostname', '/etc/timezone' ];
+const BACKUP_CONFIGS = [ 'shareos', 'storage', 'network', 'accounts', 'shares', 'paperless', 'cloud', 'apps', 'snapshots', 'dlna', 'dockerhosts', 'zabbix' ];
+const BACKUP_FILES = [ '/etc/ksmbd/ksmbdpwd.db', '/etc/ssl/shareos/server.crt', '/etc/ssl/shareos/server.key', '/etc/hostname', '/etc/timezone', '/etc/shareos/zabbix.psk' ];
 
 function lines_of(path) { return filter(split(readfile(path) ?? '', '\n'), (l) => l != ''); }
 function field(l, i) { return split(l, ':')[i]; }
@@ -905,7 +906,7 @@ function backup_restore(b) {
 		if (index(BACKUP_FILES, f) < 0 || type(v) != 'string') continue;
 		system('mkdir -p ' + shq(replace(f, /\/[^\/]+$/, '')));
 		writefile(f, v);
-		if (match(f, /\.key$|ksmbdpwd/)) system('chmod 600 ' + shq(f));
+		if (match(f, /\.key$|\.psk$|ksmbdpwd/)) system('chmod 600 ' + shq(f));
 	}
 	if (b.files?.['/etc/hostname']) system('hostname ' + shq(trim(b.files['/etc/hostname'])));
 	// accounts: replace everything with uid/gid >= 1000, keep system accounts

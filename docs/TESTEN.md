@@ -449,6 +449,19 @@ Braucht ein Tailscale-Konto (kostenlos), ein Handy oder einen Rechner mit Tailsc
 5. Konto ohne persönlichen Ordner: Teilen meldet „no personal folder“; das Geteilte wird verworfen und kommt bei der nächsten Anmeldung nicht wieder.
 6. Dateidialog einer App für ein Konto **ohne** *Dateien* (z. B. Webpad → *Öffnen*): Die Ordnerauswahl zeigt zuerst *App-Daten*, dann *Mein Ordner* und die Freigaben des Benutzers; Freigaben nur zum Lesen sind markiert und fehlen beim Speichern. Die App legt ihre eigenen Dateien weiter in *App-Daten* ab.
 
+## 14za. Zabbix-Agent (0.2.0-beta.15)
+
+Braucht einen Zabbix-Server 7.0 oder neuer im Netz (z. B. den auf der Arbeit oder einen Test-Server im Proxmox).
+
+1. Apps → Store → System-Apps → **Zabbix Agent** installieren. `ls -l /opt/shareos/sysapps/` zeigt `zabbix-agent` als Ordner im Flash (kein Link aufs Laufwerk). `shareos-zabbix status`: `"installed": true`, `"running": false` – ohne Server startet er nicht.
+2. `echo '{"enabled": true, "server": "<zabbix-server>"}' | shareos-zabbix set` → `"running": true`. `ps | grep [z]abbix` zeigt drei Prozesse des Benutzers `zabbix` (main, collector, active checks), `netstat -tln | grep 10050` ist leer.
+3. Arbeitsspeicher: `for p in $(pgrep zabbix-agentd); do grep VmRSS /proc/$p/status; done` – zusammen nur wenige MB (bitte die Zahlen notieren).
+4. Im Zabbix-Server die Vorlage `docs/zabbix/shareos_template.yaml` importieren, einen Host mit dem Namen der Box anlegen (Vorlagen *Linux by Zabbix agent active* und *ShareOS by Zabbix agent active*). Nach 1–2 Minuten: *Neueste Daten* zeigt CPU, Speicher, Netzwerk und `Box: temperature`. *Erkennungsregeln → Disks in the bays / RAID arrays → Jetzt ausführen*: die Platten (ohne USB-Stick) und das RAID erscheinen, mit Temperatur und Bewertung wie unter *Speicher → Gesundheit*.
+5. Verschlüsselt: `openssl rand -hex 32` (auf dem PC), dann `echo '{"psk_identity": "<box> PSK", "psk": "<schlüssel>"}' | shareos-zabbix set`; im Host in Zabbix *Verschlüsselung → PSK* mit denselben Werten. Die Werte kommen weiter, `shareos-zabbix log` zeigt keine TLS-Fehler.
+6. Eine Platte schlafen lassen (`hdparm -y /dev/sdb`), 30 Minuten warten: `shareos-zabbix get disk sdb standby` → `1`, die Temperatur bleibt der letzte Wert, `hdparm -C /dev/sdb` zeigt weiter *standby*.
+7. `grep zabbix /etc/crontabs/root` zeigt `*/30 … shareos-zabbix collect`. Box neu starten: der Agent läuft wieder (Dienste → Status: „Überwachung (Zabbix-Agent)“). `echo '{"enabled": false}' | shareos-zabbix set`: gestoppt, keine Cron-Zeile mehr, bleibt nach einem Neustart aus.
+8. System-App entfernen: der Agent hält an.
+
 ## 14z. Neu in 0.2.0-beta.13 / beta.14
 
 1. Erst *Paperless*, dann *Freigaben* öffnen: die Freigaben erscheinen (vorher blieb die Paperless-Seite stehen).

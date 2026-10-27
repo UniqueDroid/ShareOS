@@ -1612,3 +1612,5 @@ E1255	· Próximo apagado:
 E1256	Campos vacíos: nada ese día. La caja se apaga de forma limpia (como con el botón); mientras haya una tarea de almacenamiento (p. ej. reconstrucción RAID), sigue encendida. Para encenderla, ShareOS fija la hora de activación del controlador; no la desenchufes.
 E1257	Esta caja no puede encenderse sola (sin función de activación): solo funciona el apagado programado. Enciéndela con el botón de encendido.
 P313	Programación: $1
+E1258	Monitorización (agente Zabbix)
+E1259	zabbix_agentd, modo activo

@@ -1,0 +1,4 @@
+# From https://cdn.zabbix.com/zabbix/sources/stable/7.0/zabbix-7.0.32.tar.gz.sha256
+sha256  ead5b0723ad965eb0e79f98d5d2b89088e7c898ae194eeba767e5d1fb2d50a96  zabbix-7.0.32.tar.gz
+# Locally computed
+sha256  0d96a4ff68ad6d4b6f1f30f713b18d5184912ba8dd389f86aa7710db079abcb0  COPYING

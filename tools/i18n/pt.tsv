@@ -1612,3 +1612,5 @@ E1255	· Próximo desligamento:
 E1256	Campos vazios: nada nesse dia. A caixa desliga de forma limpa (como com o botão); enquanto uma tarefa de armazenamento estiver em curso (ex.: reconstrução RAID), fica ligada. Para ligar, o ShareOS define a hora de despertar do controlador – não desligue da tomada.
 E1257	Esta caixa não consegue ligar-se sozinha (sem função de despertar) – só funciona o desligamento por horário. Ligue-a com o botão de energia.
 P313	Horário: $1
+E1258	Monitorização (agente Zabbix)
+E1259	zabbix_agentd, modo ativo

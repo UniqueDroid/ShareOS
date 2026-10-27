@@ -1260,7 +1260,9 @@
 		"Nächstes Ausschalten:": "下次关机：",
 		"· Nächstes Ausschalten:": "· 下次关机：",
 		"Leere Felder: an diesem Tag nichts. Ausgeschaltet wird sauber (wie mit dem Knopf); läuft gerade ein Speicher-Auftrag (z. B. RAID-Aufbau), bleibt die Box an. Zum Einschalten stellt ShareOS die Weckzeit der Gerätesteuerung – den Stecker nicht ziehen.": "留空：当天不执行。设备会正常关机（与按键相同）；若存储任务正在运行（例如 RAID 重建），设备保持开机。开机时，ShareOS 会设置设备控制器的唤醒时间——请勿拔掉电源。",
-		"Diese Box kann sich nicht selbst einschalten (keine Weckfunktion) – nur das Ausschalten nach Zeitplan geht. Einschalten über den Power-Taster.": "此设备无法自行开机（没有唤醒功能）——只能按计划关机。请用电源键开机。"
+		"Diese Box kann sich nicht selbst einschalten (keine Weckfunktion) – nur das Ausschalten nach Zeitplan geht. Einschalten über den Power-Taster.": "此设备无法自行开机（没有唤醒功能）——只能按计划关机。请用电源键开机。",
+		"Überwachung (Zabbix-Agent)": "监控（Zabbix 代理）",
+		"zabbix_agentd, Aktiv-Modus": "zabbix_agentd，主动模式"
 	},
 	"patterns": [
 		[
