@@ -708,6 +708,13 @@ def call(obj, method, args):
             'subject': 'CN=skynet-nas, O=ShareOS', 'issuer': 'CN=skynet-nas, O=ShareOS', 'from': '2026-10-17 00:00:00',
             'until': '2036-10-17 23:59:59', 'san': ['dNSName:skynet-nas', 'dNSName:skynet-nas.local', 'iPAddress:10.241.1.106'], 'selfsigned': True}}
     if obj == 'shareos.system':
+        if method == 'power_schedule':
+            return STATE.setdefault('power', {'supported': True, 'enabled': False, 'days': {d: {'on': '', 'off': ''} for d in ('sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat')}, 'next_on': None, 'next_off': None, 'alarm': 'Wakeup alarm disabled'})
+        if method == 'power_schedule_set':
+            p = STATE['power']
+            p['enabled'] = bool(args.get('enabled')); p['days'].update(args.get('days') or {})
+            p['next_on'] = '2026-10-31 09:15' if p['enabled'] else None; p['next_off'] = '2026-10-30 22:00' if p['enabled'] else None
+            return p
         if method == 'terminal':
             return {'port': 7681, 'path': '0123456789abcdef0123456789abcdef'}
         if method == 'info':

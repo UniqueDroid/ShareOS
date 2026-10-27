@@ -1243,7 +1243,24 @@
 		"Fenster blockiert – Pop-ups für diese Seite erlauben.": "تم حظر النافذة – اسمح بالنوافذ المنبثقة لهذه الصفحة.",
 		"Hier anzeigen": "عرض هنا",
 		"Das Terminal läuft in einem eigenen Fenster.": "تعمل الطرفية في نافذة خاصة بها.",
-		"Die Sitzung gilt für ein Fenster und endet, wenn es geschlossen wird – ein eigenes Fenster bekommt eine neue Sitzung. Vorsicht: Befehle als root wirken sofort und ohne Papierkorb.": "الجلسة لنافذة واحدة وتنتهي عند إغلاقها – النافذة المستقلة تحصل على جلسة جديدة. انتبه: أوامر root تُنفَّذ فورًا وبدون سلة مهملات."
+		"Die Sitzung gilt für ein Fenster und endet, wenn es geschlossen wird – ein eigenes Fenster bekommt eine neue Sitzung. Vorsicht: Befehle als root wirken sofort und ohne Papierkorb.": "الجلسة لنافذة واحدة وتنتهي عند إغلاقها – النافذة المستقلة تحصل على جلسة جديدة. انتبه: أوامر root تُنفَّذ فورًا وبدون سلة مهملات.",
+		"AUS- UND EINSCHALTEN NACH ZEITPLAN": "الإيقاف والتشغيل حسب الجدول",
+		"Zeitplan einschalten": "تفعيل الجدول",
+		"TAG": "اليوم",
+		"EINSCHALTEN": "التشغيل",
+		"AUSSCHALTEN": "الإيقاف",
+		"Montag": "الاثنين",
+		"Dienstag": "الثلاثاء",
+		"Mittwoch": "الأربعاء",
+		"Donnerstag": "الخميس",
+		"Freitag": "الجمعة",
+		"Samstag": "السبت",
+		"Sonntag": "الأحد",
+		"Nächstes Einschalten:": "التشغيل التالي:",
+		"Nächstes Ausschalten:": "الإيقاف التالي:",
+		"· Nächstes Ausschalten:": "· الإيقاف التالي:",
+		"Leere Felder: an diesem Tag nichts. Ausgeschaltet wird sauber (wie mit dem Knopf); läuft gerade ein Speicher-Auftrag (z. B. RAID-Aufbau), bleibt die Box an. Zum Einschalten stellt ShareOS die Weckzeit der Gerätesteuerung – den Stecker nicht ziehen.": "الحقول الفارغة: لا شيء في ذلك اليوم. يتم الإيقاف بشكل سليم (كما بالزر)؛ إذا كانت مهمة تخزين قيد التشغيل (مثل إعادة بناء RAID) يبقى الجهاز يعمل. للتشغيل يضبط ShareOS وقت الإيقاظ في وحدة التحكم – لا تفصل القابس.",
+		"Diese Box kann sich nicht selbst einschalten (keine Weckfunktion) – nur das Ausschalten nach Zeitplan geht. Einschalten über den Power-Taster.": "لا يمكن لهذا الجهاز تشغيل نفسه (لا توجد وظيفة إيقاظ) – يعمل الإيقاف حسب الجدول فقط. شغّله بزر الطاقة."
 	},
 	"patterns": [
 		[
@@ -2497,6 +2514,10 @@
 		[
 			"^Start-Protokoll (.+)$",
 			"سجل التشغيل $1"
+		],
+		[
+			"^Zeitplan: (.+)$",
+			"الجدول: $1"
 		]
 	],
 	"words": [

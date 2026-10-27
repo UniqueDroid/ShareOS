@@ -1243,7 +1243,24 @@
 		"Fenster blockiert – Pop-ups für diese Seite erlauben.": "窗口被阻止 – 请允许此页面弹出窗口。",
 		"Hier anzeigen": "在此显示",
 		"Das Terminal läuft in einem eigenen Fenster.": "终端在单独的窗口中运行。",
-		"Die Sitzung gilt für ein Fenster und endet, wenn es geschlossen wird – ein eigenes Fenster bekommt eine neue Sitzung. Vorsicht: Befehle als root wirken sofort und ohne Papierkorb.": "会话仅用于一个窗口，关闭窗口即结束——单独的窗口会获得新会话。注意：以 root 执行的命令会立即生效，且没有回收站。"
+		"Die Sitzung gilt für ein Fenster und endet, wenn es geschlossen wird – ein eigenes Fenster bekommt eine neue Sitzung. Vorsicht: Befehle als root wirken sofort und ohne Papierkorb.": "会话仅用于一个窗口，关闭窗口即结束——单独的窗口会获得新会话。注意：以 root 执行的命令会立即生效，且没有回收站。",
+		"AUS- UND EINSCHALTEN NACH ZEITPLAN": "按计划关机和开机",
+		"Zeitplan einschalten": "启用计划",
+		"TAG": "日期",
+		"EINSCHALTEN": "开机",
+		"AUSSCHALTEN": "关机",
+		"Montag": "星期一",
+		"Dienstag": "星期二",
+		"Mittwoch": "星期三",
+		"Donnerstag": "星期四",
+		"Freitag": "星期五",
+		"Samstag": "星期六",
+		"Sonntag": "星期日",
+		"Nächstes Einschalten:": "下次开机：",
+		"Nächstes Ausschalten:": "下次关机：",
+		"· Nächstes Ausschalten:": "· 下次关机：",
+		"Leere Felder: an diesem Tag nichts. Ausgeschaltet wird sauber (wie mit dem Knopf); läuft gerade ein Speicher-Auftrag (z. B. RAID-Aufbau), bleibt die Box an. Zum Einschalten stellt ShareOS die Weckzeit der Gerätesteuerung – den Stecker nicht ziehen.": "留空：当天不执行。设备会正常关机（与按键相同）；若存储任务正在运行（例如 RAID 重建），设备保持开机。开机时，ShareOS 会设置设备控制器的唤醒时间——请勿拔掉电源。",
+		"Diese Box kann sich nicht selbst einschalten (keine Weckfunktion) – nur das Ausschalten nach Zeitplan geht. Einschalten über den Power-Taster.": "此设备无法自行开机（没有唤醒功能）——只能按计划关机。请用电源键开机。"
 	},
 	"patterns": [
 		[
@@ -2497,6 +2514,10 @@
 		[
 			"^Start-Protokoll (.+)$",
 			"启动日志 $1"
+		],
+		[
+			"^Zeitplan: (.+)$",
+			"计划：$1"
 		]
 	],
 	"words": [

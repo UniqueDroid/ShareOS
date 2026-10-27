@@ -1243,7 +1243,24 @@
 		"Fenster blockiert – Pop-ups für diese Seite erlauben.": "Window blocked – allow pop-ups for this page.",
 		"Hier anzeigen": "Show here",
 		"Das Terminal läuft in einem eigenen Fenster.": "The terminal runs in its own window.",
-		"Die Sitzung gilt für ein Fenster und endet, wenn es geschlossen wird – ein eigenes Fenster bekommt eine neue Sitzung. Vorsicht: Befehle als root wirken sofort und ohne Papierkorb.": "The session is for one window and ends when it is closed – a window of its own gets a new session. Careful: commands as root take effect at once and without a trash."
+		"Die Sitzung gilt für ein Fenster und endet, wenn es geschlossen wird – ein eigenes Fenster bekommt eine neue Sitzung. Vorsicht: Befehle als root wirken sofort und ohne Papierkorb.": "The session is for one window and ends when it is closed – a window of its own gets a new session. Careful: commands as root take effect at once and without a trash.",
+		"AUS- UND EINSCHALTEN NACH ZEITPLAN": "SWITCH OFF AND ON BY SCHEDULE",
+		"Zeitplan einschalten": "Switch the schedule on",
+		"TAG": "DAY",
+		"EINSCHALTEN": "SWITCH ON",
+		"AUSSCHALTEN": "SWITCH OFF",
+		"Montag": "Monday",
+		"Dienstag": "Tuesday",
+		"Mittwoch": "Wednesday",
+		"Donnerstag": "Thursday",
+		"Freitag": "Friday",
+		"Samstag": "Saturday",
+		"Sonntag": "Sunday",
+		"Nächstes Einschalten:": "Next switch-on:",
+		"Nächstes Ausschalten:": "Next switch-off:",
+		"· Nächstes Ausschalten:": "· Next switch-off:",
+		"Leere Felder: an diesem Tag nichts. Ausgeschaltet wird sauber (wie mit dem Knopf); läuft gerade ein Speicher-Auftrag (z. B. RAID-Aufbau), bleibt die Box an. Zum Einschalten stellt ShareOS die Weckzeit der Gerätesteuerung – den Stecker nicht ziehen.": "Empty fields: nothing on that day. The box shuts down cleanly (as with the button); while a storage job runs (e.g. a RAID rebuild) it stays on. To switch on, ShareOS sets the wake-up time of the device controller – do not unplug it.",
+		"Diese Box kann sich nicht selbst einschalten (keine Weckfunktion) – nur das Ausschalten nach Zeitplan geht. Einschalten über den Power-Taster.": "This box cannot switch itself on (no wake-up function) – only switching off by schedule works. Switch it on with the power button."
 	},
 	"patterns": [
 		[
@@ -2497,6 +2514,10 @@
 		[
 			"^Start-Protokoll (.+)$",
 			"Start log $1"
+		],
+		[
+			"^Zeitplan: (.+)$",
+			"Schedule: $1"
 		]
 	],
 	"words": [

@@ -1594,3 +1594,21 @@ E1238	Mostrar aquí
 E1239	El terminal se ejecuta en su propia ventana.
 E1240	La sesión es para una ventana y termina al cerrarla; una ventana propia recibe una sesión nueva. Cuidado: los comandos como root actúan al instante y sin papelera.
 P312	Registro de arranque $1
+E1241	APAGADO Y ENCENDIDO PROGRAMADOS
+E1242	Activar la programación
+E1243	DÍA
+E1244	ENCENDER
+E1245	APAGAR
+E1246	Lunes
+E1247	Martes
+E1248	Miércoles
+E1249	Jueves
+E1250	Viernes
+E1251	Sábado
+E1252	Domingo
+E1253	Próximo encendido:
+E1254	Próximo apagado:
+E1255	· Próximo apagado:
+E1256	Campos vacíos: nada ese día. La caja se apaga de forma limpia (como con el botón); mientras haya una tarea de almacenamiento (p. ej. reconstrucción RAID), sigue encendida. Para encenderla, ShareOS fija la hora de activación del controlador; no la desenchufes.
+E1257	Esta caja no puede encenderse sola (sin función de activación): solo funciona el apagado programado. Enciéndela con el botón de encendido.
+P313	Programación: $1

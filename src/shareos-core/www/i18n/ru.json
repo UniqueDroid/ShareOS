@@ -1243,7 +1243,24 @@
 		"Fenster blockiert – Pop-ups für diese Seite erlauben.": "Окно заблокировано – разрешите всплывающие окна для этой страницы.",
 		"Hier anzeigen": "Показать здесь",
 		"Das Terminal läuft in einem eigenen Fenster.": "Терминал работает в отдельном окне.",
-		"Die Sitzung gilt für ein Fenster und endet, wenn es geschlossen wird – ein eigenes Fenster bekommt eine neue Sitzung. Vorsicht: Befehle als root wirken sofort und ohne Papierkorb.": "Сеанс действует для одного окна и завершается при его закрытии – отдельное окно получает новый сеанс. Осторожно: команды от root выполняются сразу и без корзины."
+		"Die Sitzung gilt für ein Fenster und endet, wenn es geschlossen wird – ein eigenes Fenster bekommt eine neue Sitzung. Vorsicht: Befehle als root wirken sofort und ohne Papierkorb.": "Сеанс действует для одного окна и завершается при его закрытии – отдельное окно получает новый сеанс. Осторожно: команды от root выполняются сразу и без корзины.",
+		"AUS- UND EINSCHALTEN NACH ZEITPLAN": "ВЫКЛЮЧЕНИЕ И ВКЛЮЧЕНИЕ ПО РАСПИСАНИЮ",
+		"Zeitplan einschalten": "Включить расписание",
+		"TAG": "ДЕНЬ",
+		"EINSCHALTEN": "ВКЛЮЧЕНИЕ",
+		"AUSSCHALTEN": "ВЫКЛЮЧЕНИЕ",
+		"Montag": "Понедельник",
+		"Dienstag": "Вторник",
+		"Mittwoch": "Среда",
+		"Donnerstag": "Четверг",
+		"Freitag": "Пятница",
+		"Samstag": "Суббота",
+		"Sonntag": "Воскресенье",
+		"Nächstes Einschalten:": "Следующее включение:",
+		"Nächstes Ausschalten:": "Следующее выключение:",
+		"· Nächstes Ausschalten:": "· Следующее выключение:",
+		"Leere Felder: an diesem Tag nichts. Ausgeschaltet wird sauber (wie mit dem Knopf); läuft gerade ein Speicher-Auftrag (z. B. RAID-Aufbau), bleibt die Box an. Zum Einschalten stellt ShareOS die Weckzeit der Gerätesteuerung – den Stecker nicht ziehen.": "Пустые поля: в этот день ничего. Устройство выключается корректно (как кнопкой); пока идёт задача хранилища (например, перестроение RAID), оно остаётся включённым. Для включения ShareOS задаёт время пробуждения контроллера – не отключайте питание.",
+		"Diese Box kann sich nicht selbst einschalten (keine Weckfunktion) – nur das Ausschalten nach Zeitplan geht. Einschalten über den Power-Taster.": "Это устройство не может включаться само (нет функции пробуждения) – работает только выключение по расписанию. Включайте кнопкой питания."
 	},
 	"patterns": [
 		[
@@ -2497,6 +2514,10 @@
 		[
 			"^Start-Protokoll (.+)$",
 			"Журнал запуска $1"
+		],
+		[
+			"^Zeitplan: (.+)$",
+			"Расписание: $1"
 		]
 	],
 	"words": [

@@ -1243,7 +1243,24 @@
 		"Fenster blockiert – Pop-ups für diese Seite erlauben.": "Ventana bloqueada: permite las ventanas emergentes para esta página.",
 		"Hier anzeigen": "Mostrar aquí",
 		"Das Terminal läuft in einem eigenen Fenster.": "El terminal se ejecuta en su propia ventana.",
-		"Die Sitzung gilt für ein Fenster und endet, wenn es geschlossen wird – ein eigenes Fenster bekommt eine neue Sitzung. Vorsicht: Befehle als root wirken sofort und ohne Papierkorb.": "La sesión es para una ventana y termina al cerrarla; una ventana propia recibe una sesión nueva. Cuidado: los comandos como root actúan al instante y sin papelera."
+		"Die Sitzung gilt für ein Fenster und endet, wenn es geschlossen wird – ein eigenes Fenster bekommt eine neue Sitzung. Vorsicht: Befehle als root wirken sofort und ohne Papierkorb.": "La sesión es para una ventana y termina al cerrarla; una ventana propia recibe una sesión nueva. Cuidado: los comandos como root actúan al instante y sin papelera.",
+		"AUS- UND EINSCHALTEN NACH ZEITPLAN": "APAGADO Y ENCENDIDO PROGRAMADOS",
+		"Zeitplan einschalten": "Activar la programación",
+		"TAG": "DÍA",
+		"EINSCHALTEN": "ENCENDER",
+		"AUSSCHALTEN": "APAGAR",
+		"Montag": "Lunes",
+		"Dienstag": "Martes",
+		"Mittwoch": "Miércoles",
+		"Donnerstag": "Jueves",
+		"Freitag": "Viernes",
+		"Samstag": "Sábado",
+		"Sonntag": "Domingo",
+		"Nächstes Einschalten:": "Próximo encendido:",
+		"Nächstes Ausschalten:": "Próximo apagado:",
+		"· Nächstes Ausschalten:": "· Próximo apagado:",
+		"Leere Felder: an diesem Tag nichts. Ausgeschaltet wird sauber (wie mit dem Knopf); läuft gerade ein Speicher-Auftrag (z. B. RAID-Aufbau), bleibt die Box an. Zum Einschalten stellt ShareOS die Weckzeit der Gerätesteuerung – den Stecker nicht ziehen.": "Campos vacíos: nada ese día. La caja se apaga de forma limpia (como con el botón); mientras haya una tarea de almacenamiento (p. ej. reconstrucción RAID), sigue encendida. Para encenderla, ShareOS fija la hora de activación del controlador; no la desenchufes.",
+		"Diese Box kann sich nicht selbst einschalten (keine Weckfunktion) – nur das Ausschalten nach Zeitplan geht. Einschalten über den Power-Taster.": "Esta caja no puede encenderse sola (sin función de activación): solo funciona el apagado programado. Enciéndela con el botón de encendido."
 	},
 	"patterns": [
 		[
@@ -2497,6 +2514,10 @@
 		[
 			"^Start-Protokoll (.+)$",
 			"Registro de arranque $1"
+		],
+		[
+			"^Zeitplan: (.+)$",
+			"Programación: $1"
 		]
 	],
 	"words": [
