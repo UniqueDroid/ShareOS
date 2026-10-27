@@ -462,6 +462,14 @@ Braucht einen Zabbix-Server 7.0 oder neuer im Netz (z. B. den auf der Arbeit ode
 7. `grep zabbix /etc/crontabs/root` zeigt `*/30 … shareos-zabbix collect`. Box neu starten: der Agent läuft wieder (Dienste → Status: „Überwachung (Zabbix-Agent)“). `echo '{"enabled": false}' | shareos-zabbix set`: gestoppt, keine Cron-Zeile mehr, bleibt nach einem Neustart aus.
 8. System-App entfernen: der Agent hält an.
 
+## 14zb. Start-Protokoll und Zeitplan (0.2.0-beta.15)
+
+1. Box neu starten, 6 Minuten warten. System → Protokolle → *Start-Protokoll …*: der Start erscheint mit Datum; Auswahl zeigt Systemprotokoll, Kernel, Adressen, Routen, Ports, Prozesse, Laufwerke und RAID. Im Terminal: `shareos-bootlog list`, `ls -l /etc/shareos/bootlog` (je wenige KB).
+2. Noch drei Mal neu starten: `shareos-bootlog list` zeigt nur die neuesten 3.
+3. System → Energie & Reset → *Zeitplan*: einschalten, für heute Ausschalten in 5 Minuten und Einschalten 10 Minuten danach eintragen, *Speichern*. Die Seite zeigt das nächste Aus- und Einschalten; `shareos-power status` zeigt dieselben Zeiten und unter `alarm` den Weckalarm.
+4. Zum Ausschalten fährt die Box sauber herunter; zur Einschaltzeit geht sie von selbst an (DNS-320L, DNS-320 rev B, DNS-327L). `grep shareos-power /var/log/messages` bzw. das Start-Protokoll zeigt „scheduled switch-off, back on …“.
+5. Läuft ein RAID-Aufbau, wird das Ausschalten übersprungen (Meldung im Protokoll). Zeitplan ausschalten: `shareos-power status` → kein nächstes Ein-/Ausschalten, `grep shareos-power /etc/crontabs/root` ist leer.
+
 ## 14z. Neu in 0.2.0-beta.13 / beta.14
 
 1. Erst *Paperless*, dann *Freigaben* öffnen: die Freigaben erscheinen (vorher blieb die Paperless-Seite stehen).

@@ -458,6 +458,14 @@ Needs a Zabbix server 7.0 or newer in the network (e.g. the one at work or a tes
 7. `grep zabbix /etc/crontabs/root` shows `*/30 … shareos-zabbix collect`. Restart the box: the agent runs again (Services → Status: "Monitoring (Zabbix agent)"). `echo '{"enabled": false}' | shareos-zabbix set`: stopped, no cron line, stays off after a restart.
 8. Remove the system app: the agent stops.
 
+## 14zb. Start log and power schedule (0.2.0-beta.15)
+
+1. Restart the box, wait 6 minutes. System → Protokolle → *Start-Protokoll …*: the start is listed with its date; it shows system log, kernel, addresses, routes, ports, processes, mounts and RAID. In the terminal: `shareos-bootlog list`, `ls -l /etc/shareos/bootlog` (a few KB each).
+2. Restart three more times: `shareos-bootlog list` shows only the newest 3.
+3. System → Energie & Reset → *Zeitplan*: switch it on, set switching off today in 5 minutes and switching on 10 minutes later, *Speichern*. The page shows the next switch-off and switch-on; `shareos-power status` shows the same times and the wake-up alarm under `alarm`.
+4. At the switch-off time the box shuts down cleanly; at the switch-on time it comes on by itself (DNS-320L, DNS-320 rev B, DNS-327L). `grep shareos-power /var/log/messages` or the start log shows "scheduled switch-off, back on …".
+5. While a RAID rebuild runs the switch-off is skipped (noted in the log). Switch the schedule off: `shareos-power status` has no next switch-on/off, `grep shareos-power /etc/crontabs/root` is empty.
+
 ## 14z. New in 0.2.0-beta.13 / beta.14
 
 1. Open *Paperless*, then *Freigaben*: the shares page appears (before, the Paperless page stayed).
