@@ -37,6 +37,8 @@ if [ ! -e /proc/sys/fs/binfmt_misc/qemu-arm ]; then
 fi
 
 "$UNSQ" -q -d "$R" "$SQFS" >/dev/null
+# testing a changed controller with an older image: SHAREOS_TEST_CONTROLLER=<file>
+[ -n "${SHAREOS_TEST_CONTROLLER:-}" ] && cp "$SHAREOS_TEST_CONTROLLER" "$R/usr/sbin/shareos-zabbix"
 mount -t proc proc "$R/proc"
 mount --bind /dev "$R/dev"
 mount -t tmpfs tmpfs "$R/tmp"
@@ -91,7 +93,7 @@ C=$R/tmp/shareos-zabbix/zabbix_agentd.conf
 check "active mode: no listener (StartAgents=0), no Server line" "grep -q '^StartAgents=0$' $C && grep -q '^ServerActive=127.0.0.1:$PORT$' $C && ! grep -q '^Server=' $C"
 check "configuration and data not readable for everybody" "[ \$(stat -c %a $C) = 640 ] && [ \$(stat -c %a $R/tmp/shareos-zabbix) = 750 ] && [ \$(stat -c %a $R/tmp/shareos-zabbix/disks.json) = 640 ]"
 p=$(cat $R/tmp/shareos-zabbix/pid 2>/dev/null)
-check "the agent runs as the user zabbix, not root" "[ -n '$p' ] && [ \"\$(stat -c %U /proc/$p)\" = zabbix ]"
+check "the agent runs as the user zabbix, not root" "[ -n '$p' ] && [ \"\$(awk '/^Uid:/ {print \$2}' /proc/$p/status)\" = \"\$(run 'id -u zabbix')\" ] && [ \"\$(run 'id -u zabbix')\" != 0 ]"
 check "no TCP port opened" "! grep -qi ':2742 ' /proc/net/tcp"   # 10050 = 0x2742
 check "the cron job reads the disks every 30 minutes" "grep -q '^\*/30 \* \* \* \* /usr/sbin/shareos-zabbix collect' $R/etc/crontabs/root"
 wait_srv "d['values'].get('shareos.disk[sdb,life_left]') is not None and d['values'].get('agent.ping')" 90
@@ -108,7 +110,7 @@ check "a sleeping disk keeps its values (standby 1)" "rm -f $R/tmp/shareos-stora
 check "PSK without identity refused" "z '{\"psk\":\"00112233445566778899aabbccddeeff\"}' | js \"'psk_identity' in d.get('error','')\""
 check "PSK too short refused" "z '{\"psk\":\"abcd\",\"psk_identity\":\"x\"}' | js \"'psk:' in d.get('error','')\""
 z '{"psk":"00112233445566778899AABBCCDDEEFF00112233445566778899aabbccddeeff","psk_identity":"nas-test PSK"}' >/dev/null
-check "PSK: encrypted connections, key root-only, for the agent group-readable" "grep -q '^TLSConnect=psk$' $C && grep -q '^TLSPSKIdentity=nas-test PSK$' $C && [ \$(stat -c %a $R/etc/shareos/zabbix.psk) = 600 ] && [ \$(stat -c '%a %G' $R/tmp/shareos-zabbix/psk) = '640 zabbix' ] && grep -qx '00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff' $R/etc/shareos/zabbix.psk"
+check "PSK: encrypted connections, key root-only, for the agent group-readable" "grep -q '^TLSConnect=psk$' $C && grep -q '^TLSPSKIdentity=nas-test PSK$' $C && [ \$(stat -c %a $R/etc/shareos/zabbix.psk) = 600 ] && [ \$(stat -c %a $R/tmp/shareos-zabbix/psk) = 640 ] && [ \$(stat -c %g $R/tmp/shareos-zabbix/psk) = \$(run 'id -g zabbix') ] && grep -qx '00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff' $R/etc/shareos/zabbix.psk"
 # a second fake server that takes only TLS with this key
 ZBX_PSK_IDENTITY="nas-test PSK" ZBX_PSK=00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff \
 	python3 "$TOP/tests/zabbix-fake-server.py" $((PORT + 1)) "$T/server-psk.json" agent.ping 'shareos.disk[sda,temperature]' &

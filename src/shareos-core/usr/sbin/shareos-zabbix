@@ -138,9 +138,12 @@ function set_conf(k, v) {
 	c.commit('zabbix');
 }
 
+// 32 … 512 hex digits, an even number (musl's regex allows at most {…,255})
+function valid_psk(k) { return type(k) == 'string' && length(k) >= 32 && length(k) <= 512 && !(length(k) % 2) && !!match(k, /^[0-9a-fA-F]+$/); }
+
 function psk() {
 	let k = read_trim(PSK);
-	return k && match(k, /^[0-9a-fA-F]{32,512}$/) ? k : null;
+	return k && valid_psk(k) ? k : null;
 }
 
 function pid() {
@@ -379,7 +382,7 @@ function cmd_set() {
 		chg.psk_identity = a.psk_identity != '' ? a.psk_identity : null;
 	}
 	if (a.psk != null) {
-		if (type(a.psk) != 'string' || (a.psk != '' && (!match(a.psk, /^[0-9a-fA-F]{32,512}$/) || length(a.psk) % 2)))
+		if (type(a.psk) != 'string' || (a.psk != '' && !valid_psk(a.psk)))
 			die('psk: 32 to 512 hex digits (e.g. openssl rand -hex 32)');
 		key = lc(a.psk);
 	}
