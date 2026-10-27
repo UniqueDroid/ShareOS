@@ -2493,6 +2493,10 @@
 		[
 			"^Diese Seite konnte nicht angezeigt werden: (.+)$",
 			"This page could not be shown: $1"
+		],
+		[
+			"^Start-Protokoll (.+)$",
+			"Start log $1"
 		]
 	],
 	"words": [

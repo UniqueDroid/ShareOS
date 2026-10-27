@@ -15,7 +15,8 @@
 			"ubus": {
 				"shareos.system": [
 					"info",
-					"log"
+					"log",
+					"bootlogs"
 				],
 				"shareos.service": [
 					"list"

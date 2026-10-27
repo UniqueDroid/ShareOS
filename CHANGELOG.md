@@ -4,6 +4,10 @@ Changes per release (newest first). The section of a version is added to its
 GitHub release automatically when the release is built. Test versions are
 pre-releases for test devices only.
 
+## 0.2.0-beta.15
+
+- **Logs of the last starts are kept** ([#83](https://github.com/UniqueDroid/ShareOS/issues/83)). The logs of the box live in RAM and were gone after a restart – after a box was unreachable and had to be restarted, nothing showed what went wrong. Now a snapshot is saved 5 minutes after every start (also when the start hangs in a service): system and kernel log, addresses, routes, listening ports, processes, mounts, RAID. The newest 3 stay on the flash (gzip, a few KB, one write per start). System → Protokolle → *Start-Protokoll …*; on the command line `shareos-bootlog list|show`. New host test `tests/test-bootlog.sh` (also in CI).
+
 ## 0.2.0-beta.14
 
 - **autobrr did not start: "Permission denied".** The system apps that live on the apps drive (autobrr, and the programs of Transmission, FFmpeg …) are below `/mnt/<drive>/.shareos`. When the drive was set up from the web interface, that folder was created root-only (`0700` – rpcd runs with umask 077), so the user `autobrr` could not reach its own program. `.shareos` is now `0711` (passable, not listable): set when the drive becomes the apps drive, at every app install, at boot (`shareos-apps fix-perms`) and when autobrr starts. `tests/test-autobrr.sh` now starts from a root-only `.shareos`.

@@ -1593,3 +1593,4 @@ E1237	Fenêtre bloquée – autorisez les fenêtres pop-up pour cette page.
 E1238	Afficher ici
 E1239	Le terminal s’exécute dans sa propre fenêtre.
 E1240	La session vaut pour une fenêtre et se termine à sa fermeture – une fenêtre séparée reçoit une nouvelle session. Attention : les commandes en root agissent immédiatement et sans corbeille.
+P312	Journal de démarrage $1

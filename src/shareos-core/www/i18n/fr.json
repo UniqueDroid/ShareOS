@@ -2493,6 +2493,10 @@
 		[
 			"^Diese Seite konnte nicht angezeigt werden: (.+)$",
 			"Impossible d’afficher cette page : $1"
+		],
+		[
+			"^Start-Protokoll (.+)$",
+			"Journal de démarrage $1"
 		]
 	],
 	"words": [

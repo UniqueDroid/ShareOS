@@ -2163,10 +2163,21 @@ return {
 			call: function(req) {
 				let n = +(req.args.lines ?? 200);
 				if (n < 1 || n > 2000) n = 200;
-				let r = req.args.source == 'kernel'
+				let src = req.args.source ?? 'system', m = match(src, /^boot:([0-9]{8}-[0-9]{6})$/);
+				// a kept start snapshot (shareos-bootlog): all of it
+				if (m) return { lines: split(rtrim(sh('/usr/sbin/shareos-bootlog show ' + m[1]).out), '\n') };
+				let r = src == 'kernel'
 					? sh('dmesg | tail -n ' + n)
 					: sh('tail -n ' + n + ' /var/log/messages');
 				return { lines: split(rtrim(r.out), '\n') };
+			}
+		},
+
+		// the kept snapshots of the last starts (shareos-bootlog)
+		bootlogs: {
+			call: function() {
+				let j = json(trim(sh('/usr/sbin/shareos-bootlog list').out) || 'null');
+				return type(j) == 'object' ? j : { logs: [] };
 			}
 		},
 
