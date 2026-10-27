@@ -207,6 +207,9 @@ the box for why the web server was not running.
 | 09:23 | After a power loss a box was unreachable, and after the restart the logs were gone – they live in RAM (#83). Now ShareOS saves a snapshot of the logs to the flash 5 minutes after every start; the newest 3 stay (#85). |
 | 10:53 | Switching off and on by schedule as in the D-Link firmware (#82): switching on through the wake-up alarm of the Weltrend MCU. Jan checked it on his DNS-320L – switched off, it came back on by itself about 3 minutes later (#86). |
 | 12:05 | Zabbix agent as a system app (#84): the classic C agent in active mode, installed only when wanted, with a template for SMART, RAID, temperature and fan (#89). Everything goes into `v0.2.0-beta.15`. |
+| 18:23 | Jan publishes `v0.2.0-beta.15`. |
+| 18:25 | Two reports about OneDrive (#91, #92): after signing in, `rclone.conf` lacked `drive_id` and `drive_type` – rclone asks for the drive only in its interactive setup. Now ShareOS looks it up at Microsoft Graph. A failed "Add" also used up the sign-in. |
+| 20:38 | The reporter's output showed why users could not open the downloads: his shares point into the personal folders, which get no share rights – the admin job's files belonged to root. They now belong to the user of the folder (#93) – `v0.2.0-beta.16`. |
 
 ## Notable problems solved
 

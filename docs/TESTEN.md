@@ -449,6 +449,14 @@ Braucht ein Tailscale-Konto (kostenlos), ein Handy oder einen Rechner mit Tailsc
 5. Konto ohne persönlichen Ordner: Teilen meldet „no personal folder“; das Geteilte wird verworfen und kommt bei der nächsten Anmeldung nicht wieder.
 6. Dateidialog einer App für ein Konto **ohne** *Dateien* (z. B. Webpad → *Öffnen*): Die Ordnerauswahl zeigt zuerst *App-Daten*, dann *Mein Ordner* und die Freigaben des Benutzers; Freigaben nur zum Lesen sind markiert und fehlen beim Speichern. Die App legt ihre eigenen Dateien weiter in *App-Daten* ab.
 
+## 14zc. OneDrive (0.2.0-beta.16)
+
+Braucht ein Microsoft-Konto mit OneDrive und rclone (Cloud → rclone installieren).
+
+1. Cloud → *Konto hinzufügen* → Microsoft OneDrive: anmelden, Adresse einfügen, *Hinzufügen*. `grep -A6 '^\[<name>\]' /etc/shareos/cloud/rclone.conf` zeigt `drive_id` und `drive_type`. *Testen* zeigt die Ordner; ein Download-Auftrag läuft ohne SSH.
+2. Dasselbe als Benutzer unter *Mein ShareOS* → Cloud: das Konto landet in `~/.config/rclone/rclone.conf` des Benutzers.
+3. Freigabe mit Pfad im persönlichen Ordner eines Benutzers (z. B. `home/anna`), Admin-Auftrag *Herunterladen* dorthin, *Jetzt starten*: `ls -la /mnt/<laufwerk>/home/anna` zeigt die neuen Dateien als `anna users`; der Benutzer öffnet sie über SMB.
+
 ## 14za. Zabbix-Agent (0.2.0-beta.15)
 
 Braucht einen Zabbix-Server 7.0 oder neuer im Netz (z. B. den auf der Arbeit oder einen Test-Server im Proxmox).
