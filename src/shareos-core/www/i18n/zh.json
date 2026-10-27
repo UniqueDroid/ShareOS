@@ -2493,6 +2493,10 @@
 		[
 			"^Diese Seite konnte nicht angezeigt werden: (.+)$",
 			"无法显示此页面：$1"
+		],
+		[
+			"^Start-Protokoll (.+)$",
+			"启动日志 $1"
 		]
 	],
 	"words": [

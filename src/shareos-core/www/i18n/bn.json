@@ -2493,6 +2493,10 @@
 		[
 			"^Diese Seite konnte nicht angezeigt werden: (.+)$",
 			"এই পৃষ্ঠাটি দেখানো যায়নি: $1"
+		],
+		[
+			"^Start-Protokoll (.+)$",
+			"স্টার্ট লগ $1"
 		]
 	],
 	"words": [

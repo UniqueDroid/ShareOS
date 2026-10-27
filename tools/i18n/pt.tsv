@@ -1593,3 +1593,4 @@ E1237	Janela bloqueada – permita pop-ups para esta página.
 E1238	Mostrar aqui
 E1239	O terminal está a correr na sua própria janela.
 E1240	A sessão vale para uma janela e termina quando ela é fechada – uma janela própria recebe uma nova sessão. Cuidado: comandos como root têm efeito imediato e sem lixeira.
+P312	Registo de arranque $1
