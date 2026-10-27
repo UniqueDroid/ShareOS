@@ -49,7 +49,7 @@ echo "nameserver 127.0.0.1" > "$R/etc/resolv.conf.test"; [ -L "$R/etc/resolv.con
 
 run() { chroot "$R" /usr/bin/env -i PATH=/usr/sbin:/usr/bin:/sbin:/bin HOME=/root /bin/sh -c "$*" 2>&1; }
 pass=0; failed=0
-check() { if eval "$2"; then echo "PASS  $1"; pass=$((pass+1)); else echo "FAIL  $1"; failed=$((failed+1)); fi; }
+check() { if eval "$2"; then echo "PASS  $1"; pass=$((pass+1)); else echo "FAIL  $1"; [ -n "$3" ] && echo "      $3" | head -5; failed=$((failed+1)); fi; }
 js() { python3 -c "import json,sys; d=json.load(sys.stdin); sys.exit(0 if ($1) else 1)"; }
 
 # --- fake Paperless --------------------------------------------------------------
@@ -169,6 +169,24 @@ if [ -n "$RDL" ] && [ -d "$RDL" ]; then
 	rm $R/mnt/daten/Fotos/b.jpg
 	run "uci set cloud.fotos.mode=mirror_up; uci commit cloud; shareos-cloud run fotos" >/dev/null
 	check "job: mirror deletes in the cloud what is gone here" "[ ! -e $R/mnt/daten/cloud/fotos/b.jpg ] && [ -f $R/mnt/daten/cloud/fotos/2026/a.jpg ]"
+	# a system job downloading into a share: the users of the share can open
+	# what came down, also when started from the web interface (rpcd: umask 077) (#91)
+	run "uci set shares.fotos.rw=anna; uci commit shares; SHAREOS_ACL_WAIT=1 shareos-shares apply" >/dev/null
+	mkdir -p $R/mnt/daten/cloud/dl/sub; echo neu > $R/mnt/daten/cloud/dl/sub/x.txt; chmod -R a+rX $R/mnt/daten/cloud
+	run "uci set cloud.fotodl=job; uci set cloud.fotodl.owner=''; uci set cloud.fotodl.remote=target; uci set cloud.fotodl.remote_path=/mnt/daten/cloud/dl; uci set cloud.fotodl.local=share:fotos; uci set cloud.fotodl.mode=download; uci commit cloud" >/dev/null
+	run "umask 077; shareos-cloud run fotodl" >/dev/null
+	o=$(run "su -s /bin/sh anna -c 'ls /mnt/daten/Fotos/sub && cat /mnt/daten/Fotos/sub/x.txt'")
+	check "system download into a share: its users open folders and files" "echo \"\$o\" | grep -q '^neu'" "$o; $(run ls -la /mnt/daten/Fotos/sub; run getfacl -p /mnt/daten/Fotos/sub 2>&1)"
+	run "uci delete cloud.fotodl; uci commit cloud; uci delete shares.fotos.rw; uci commit shares" >/dev/null
+	# OneDrive: the drive of the account goes into the remote (#92); Microsoft
+	# Graph is a file here
+	mkdir -p $R/tmp/graph/me; echo '{"id":"b!Xy_1","driveType":"personal","owner":{"user":{"id":"other"}}}' > $R/tmp/graph/me/drive
+	mkdir -p $R/tmp/shareos-cloud; printf - > $R/tmp/shareos-cloud/auth.owner; printf onedrive > $R/tmp/shareos-cloud/auth.type
+	printf '{"access_token":"at","token_type":"Bearer","refresh_token":"rt","expiry":"2030-01-01T00:00:00Z"}' > $R/tmp/shareos-cloud/auth.token
+	o=$(run "SHAREOS_GRAPH_URL=file:///tmp/nothing shareos-cloud remote-add - od onedrive </dev/null")
+	check "OneDrive: no drive – no remote, the sign-in stays" "echo \"\$o\" | grep -q 'could not be read' && [ -s $R/tmp/shareos-cloud/auth.token ] && ! grep -q '^\[od\]' $R/etc/shareos/cloud/rclone.conf" "$o"
+	o=$(run "SHAREOS_GRAPH_URL=file:///tmp/graph shareos-cloud remote-add - od onedrive </dev/null")
+	check "OneDrive: remote with drive_id and drive_type" "grep -A6 '^\[od\]' $R/etc/shareos/cloud/rclone.conf | grep -q '^drive_id = b!Xy_1' && grep -A6 '^\[od\]' $R/etc/shareos/cloud/rclone.conf | grep -q '^drive_type = personal' && [ ! -e $R/tmp/shareos-cloud/auth.token ]" "$o; $(grep -A6 '^\[od\]' $R/etc/shareos/cloud/rclone.conf)"
 	run "shareos-cron sync" >/dev/null
 	check "cron entry for the scheduled job" "grep -q '^30 2 \* \* \* /usr/sbin/shareos-cloud run fotos' $R/etc/crontabs/root"
 	# a user's job runs as that user

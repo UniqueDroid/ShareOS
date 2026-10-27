@@ -135,15 +135,37 @@ cmd_remote_add() {   # owner name type [k=v...]; secrets on stdin
 		case "$type" in gdrive|gphotos|onedrive|dropbox|box|pcloud|yandex)
 			[ -s $ST/auth.token ] && [ "$(cat $ST/auth.owner 2>/dev/null)" = "$o" ] && [ "$(cat $ST/auth.type 2>/dev/null)" = "$type" ] \
 				|| die "sign in first (the sign-in is missing or for another service)"
-			set -- "$@" "token=$(cat $ST/auth.token)"
-			rm -f $ST/auth.token ;;
+			tok=$(cat $ST/auth.token)
+			set -- "$@" "token=$tok"
+			# OneDrive: rclone only asks for the drive interactively, and
+			# without drive_id/drive_type the remote does not work (#92)
+			if [ "$type" = onedrive ]; then
+				case " $* " in *" drive_id="*) ;; *)
+					od_drive "$tok" || die "OneDrive: the drive of the account could not be read – sign in again"
+					set -- "$@" "drive_id=$OD_ID" "drive_type=$OD_TYPE" ;;
+				esac
+			fi ;;
 		esac
 		as_owner "$o" "$rc" config create "$n" "$btype" "$@" --obscure --non-interactive --config "$c" >/dev/null 2>$ST.err \
 			|| { e=$(tail -n1 $ST.err); rm -f $ST.err; die "${e:-rclone config failed}"; }
 		rm -f $ST.err
+		# the sign-in is used up only now: after a failure "Add" can be tried again
+		rm -f $ST/auth.token
 	fi
 	[ "$o" = - ] || chown "$o":users "$c"
 	echo "ok"
+}
+
+# a value of a JSON object on stdin
+json_get() { K=$1 ucode -l fs -e 'let d = json(fs.stdin.read("all") || "null"); print(d?.[getenv("K")] ?? "")' 2>/dev/null; }
+
+# the OneDrive of a signed-in account (Microsoft Graph /me/drive): OD_ID, OD_TYPE
+od_drive() {   # token JSON
+	at=$(printf '%s' "$1" | json_get access_token)
+	[ -n "$at" ] || return 1
+	d=$(printf 'Authorization: Bearer %s\n' "$at" | curl -fsS --max-time 30 -H @- "${SHAREOS_GRAPH_URL:-https://graph.microsoft.com/v1.0}/me/drive") || return 1
+	OD_ID=$(printf '%s' "$d" | json_get id); OD_TYPE=$(printf '%s' "$d" | json_get driveType)
+	echo "$OD_ID" | grep -qE '^[A-Za-z0-9!._-]+$' && echo "$OD_TYPE" | grep -qE '^(personal|business|documentLibrary)$'
 }
 
 # --- OAuth sign-in (rclone authorize on the box) -------------------------------------
