@@ -290,6 +290,16 @@ cmd_run() {
 	echo $! > $ST/$J.pid
 	wait $!; rc_exit=$?
 	cat "$lf.run" >> "$lf"
+	# a system job that downloaded into a personal folder (also a share with
+	# its path in one): what came down belongs to that user, not to root –
+	# personal folders get no share ACLs, so root's files were closed to the
+	# user and outside their storage limit (#91)
+	case "$o:$(job mode):$src" in
+		-:download:/mnt/*/home/*|-:mirror_down:/mnt/*/home/*)
+			u=${src#/mnt/*/home/}; u=${u%%/*}
+			[ "$(uci -q get accounts."$u")" = user ] && [ "$(owner_home "$u")" = "${src%%/home/*}/home/$u" ] \
+				&& find "$src" -xdev -user root -exec chown -h "$u":users {} + 2>/dev/null ;;
+	esac
 	summary=$(grep -E 'Transferred:' "$lf.run" | tail -n1 | sed 's/.*Transferred: *//' | cut -c1-120)
 	err=$(grep -E ' ERROR ' "$lf.run" | tail -n1 | sed 's/.* ERROR : *//' | cut -c1-200)
 	rm -f "$lf.run"

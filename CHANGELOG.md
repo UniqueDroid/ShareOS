@@ -8,7 +8,8 @@ pre-releases for test devices only.
 
 - **OneDrive works right after signing in** ([#92](https://github.com/UniqueDroid/ShareOS/issues/92)). rclone asks for the drive of a OneDrive account only in its interactive setup; the web interface creates the remote non-interactively, so `rclone.conf` got the token but no `drive_id`/`drive_type`, and every job failed until `rclone config reconnect` over SSH. Now ShareOS reads the drive of the signed-in account from Microsoft Graph (`/me/drive`) and writes both values. Accounts added before still need that reconnect, or remove and add them again.
 - **"Sign in first" after a failed "Add"** ([#91](https://github.com/UniqueDroid/ShareOS/issues/91)). The sign-in was used up before rclone had created the remote, so when that failed (for a user before beta.14: rclone on the apps drive was not reachable for users, see beta.14), every further "Add" said "sign in first". The sign-in is now kept until the remote exists.
-- Tests: `tests/test-cloud-paperless.sh` checks a OneDrive remote with a faked Microsoft Graph and that the users of a share can open what a system job downloaded into it.
+- **Downloads of an admin cloud job into a personal folder belong to its user** ([#91](https://github.com/UniqueDroid/ShareOS/issues/91)). A share can point into a personal folder (`home/<user>`); such folders keep their own rights (no share ACLs), so files that an admin job downloaded there belonged to root, were closed to the user (`drwx------ root`) and did not count towards the user's storage limit. After a download or mirror into `/mnt/<volume>/home/<user>/…` the files root created are now handed to that user. Files downloaded before are fixed by the next run of the job.
+- Tests: `tests/test-cloud-paperless.sh` checks a OneDrive remote with a faked Microsoft Graph, that the users of a share can open what a system job downloaded into it, and that a download into a personal folder belongs to its user.
 
 ## 0.2.0-beta.15
 

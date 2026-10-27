@@ -178,6 +178,14 @@ if [ -n "$RDL" ] && [ -d "$RDL" ]; then
 	o=$(run "su -s /bin/sh anna -c 'ls /mnt/daten/Fotos/sub && cat /mnt/daten/Fotos/sub/x.txt'")
 	check "system download into a share: its users open folders and files" "echo \"\$o\" | grep -q '^neu'" "$o; $(run ls -la /mnt/daten/Fotos/sub; run getfacl -p /mnt/daten/Fotos/sub 2>&1)"
 	run "uci delete cloud.fotodl; uci commit cloud; uci delete shares.fotos.rw; uci commit shares" >/dev/null
+	# ... and into a share inside a personal folder (no ACLs there): the files
+	# belong to that user (#91)
+	run "uci set shares.annah=share; uci set shares.annah.volume=daten; uci set shares.annah.path=home/anna; uci commit shares" >/dev/null
+	run "uci set cloud.annadl=job; uci set cloud.annadl.owner=''; uci set cloud.annadl.remote=target; uci set cloud.annadl.remote_path=/mnt/daten/cloud/dl; uci set cloud.annadl.local=share:annah; uci set cloud.annadl.mode=download; uci commit cloud" >/dev/null
+	run "umask 077; shareos-cloud run annadl" >/dev/null
+	o=$(run "su -s /bin/sh anna -c 'ls /mnt/daten/home/anna/sub && cat /mnt/daten/home/anna/sub/x.txt'")
+	check "system download into a personal folder: the files belong to the user" "echo \"\$o\" | grep -q '^neu' && [ \"\$(run stat -c %U /mnt/daten/home/anna/sub/x.txt)\" = anna ]" "$o"
+	run "uci delete cloud.annadl; uci delete shares.annah; uci commit cloud; uci commit shares; rm -rf /mnt/daten/home/anna/sub" >/dev/null
 	# OneDrive: the drive of the account goes into the remote (#92); Microsoft
 	# Graph is a file here
 	mkdir -p $R/tmp/graph/me; echo '{"id":"b!Xy_1","driveType":"personal","owner":{"user":{"id":"other"}}}' > $R/tmp/graph/me/drive
