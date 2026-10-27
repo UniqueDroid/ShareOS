@@ -200,6 +200,15 @@ direkt auf der Box nachgesehen, warum der Webserver nicht lief.
 | 15:26 | Jan veröffentlicht `v0.2.0-beta.13`. |
 | 15:38 | autobrr startete nicht mehr: „Permission denied“ auf sein eigenes Programm. Jans Box zeigte den Grund: `/mnt/daten/.shareos` war nur für root zugänglich (angelegt über die Weboberfläche, rpcd läuft mit umask 077), der Benutzer `autobrr` kam nicht an das Programm auf dem App-Laufwerk. `.shareos` ist jetzt 711 und wird auch beim Start repariert (#80) – `v0.2.0-beta.14`. |
 
+### Dienstag, 27.10.2026
+
+| Zeit | Was passiert ist |
+|---|---|
+| 07:03 | Jan veröffentlicht `v0.2.0-beta.14`. |
+| 09:23 | Nach einem Stromausfall war eine Box nicht erreichbar, und nach dem Neustart waren die Protokolle weg – sie liegen im RAM (#83). Jetzt sichert ShareOS 5 Minuten nach jedem Start einen Schnappschuss der Protokolle im Flash, die letzten 3 bleiben (#85). |
+| 10:53 | Aus- und Einschalten nach Zeitplan wie in der D-Link-Firmware (#82): Einschalten über den Weckalarm des Weltrend-MCU. Jan hat es auf seiner DNS-320L geprüft – ausgeschaltet, etwa 3 Minuten später ging sie von selbst wieder an (#86). |
+| 12:05 | Zabbix-Agent als System-App (#84): der klassische C-Agent im aktiven Modus, nur bei Bedarf installiert, mit Vorlage für SMART, RAID, Temperatur und Lüfter (#89). Alles kommt in `v0.2.0-beta.15`. |
+
 ## Bemerkenswerte Problemlösungen
 
 - **3-MB-Grenze des Bootloaders:** Der Kernel ist von 4,2 auf 2,4 MB geschrumpft, Treiber wurden in Module ausgelagert. Das Start-System umfasst nur 0,9 MB.
