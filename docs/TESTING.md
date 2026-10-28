@@ -445,6 +445,14 @@ Needs a Tailscale account (free), a phone or computer with Tailscale, the file `
 5. An account without a personal folder: sharing shows "no personal folder"; the shared item is dropped and does not come back at the next login.
 6. File dialog of an app for an account **without** *Dateien* (e.g. Webpad → *Öffnen*): the list of folders shows *App-Daten* first, then *Mein Ordner* and the user's shares; read-only shares are marked and are missing when saving. The app still keeps its own files in *App-Daten*.
 
+## 14zc. OneDrive (0.2.0-beta.16)
+
+Needs a Microsoft account with OneDrive and rclone (Cloud → rclone installieren).
+
+1. Cloud → *Konto hinzufügen* → Microsoft OneDrive: sign in, paste the address, *Hinzufügen*. `grep -A6 '^\[<name>\]' /etc/shareos/cloud/rclone.conf` shows `drive_id` and `drive_type`. *Testen* lists the folders; a download job runs without SSH.
+2. The same as a user under *Mein ShareOS* → Cloud: the account goes into the user's `~/.config/rclone/rclone.conf`.
+3. A share with its path in a user's personal folder (e.g. `home/anna`), an admin job *Herunterladen* into it, *Jetzt starten*: `ls -la /mnt/<volume>/home/anna` shows the new files as `anna users`; the user opens them over SMB.
+
 ## 14za. Zabbix agent (0.2.0-beta.15)
 
 Needs a Zabbix server 7.0 or newer in the network (e.g. the one at work or a test server in Proxmox).

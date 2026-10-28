@@ -208,6 +208,9 @@ direkt auf der Box nachgesehen, warum der Webserver nicht lief.
 | 09:23 | Nach einem Stromausfall war eine Box nicht erreichbar, und nach dem Neustart waren die Protokolle weg – sie liegen im RAM (#83). Jetzt sichert ShareOS 5 Minuten nach jedem Start einen Schnappschuss der Protokolle im Flash, die letzten 3 bleiben (#85). |
 | 10:53 | Aus- und Einschalten nach Zeitplan wie in der D-Link-Firmware (#82): Einschalten über den Weckalarm des Weltrend-MCU. Jan hat es auf seiner DNS-320L geprüft – ausgeschaltet, etwa 3 Minuten später ging sie von selbst wieder an (#86). |
 | 12:05 | Zabbix-Agent als System-App (#84): der klassische C-Agent im aktiven Modus, nur bei Bedarf installiert, mit Vorlage für SMART, RAID, Temperatur und Lüfter (#89). Alles kommt in `v0.2.0-beta.15`. |
+| 18:23 | Jan veröffentlicht `v0.2.0-beta.15`. |
+| 18:25 | Zwei Meldungen zu OneDrive (#91, #92): Nach der Anmeldung fehlten in der `rclone.conf` `drive_id` und `drive_type` – rclone fragt das Laufwerk nur bei der interaktiven Einrichtung ab. Jetzt liest ShareOS es bei Microsoft Graph nach. Ein fehlgeschlagenes „Hinzufügen“ verbrauchte außerdem die Anmeldung. |
+| 20:38 | Die Ausgaben des Melders zeigten, warum Benutzer die Downloads nicht öffnen konnten: Seine Freigaben zeigen in die persönlichen Ordner, und die bekommen keine Freigabe-Rechte – die Dateien des Admin-Auftrags gehörten root. Sie gehören jetzt dem Benutzer des Ordners (#93) – `v0.2.0-beta.16`. |
 
 ## Bemerkenswerte Problemlösungen
 
