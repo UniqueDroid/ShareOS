@@ -1616,3 +1616,8 @@ E1258	Monitorización (agente Zabbix)
 E1259	zabbix_agentd, modo activo
 E1260	Modo de compatibilidad (SMB 2.1 como máximo)
 E1261	Más rápido con Windows 11, que firma cada conexión: la firma de SMB 2.1 cuesta a este equipo aproximadamente la mitad de tiempo de cálculo que la de SMB 3 (medido unos 9–14 en lugar de 4–10 MB/s al escribir). Sin firma son posibles unos 35 MB/s. A cambio no hay SMB 3: sin cifrado ni multicanal. Las conexiones abiertas se cortan al cambiarlo.
+E1262	El asistente borra los discos elegidos y los vuelve a configurar. Un disco suelto también puede formatearse directamente en «Unidades». Los discos con datos (p. ej. de Alt-F o del firmware de D-Link) se añaden sin borrar con «… adoptar» en el disco.
+P314	Adoptar $1
+P315	Adoptar $1: $2
+P316	$1 ($2, $3) se añade tal cual como unidad: no se borra nada. Nombre de la unidad (a–z, 0–9, - y _, máx. 16 caracteres):
+P317	$1 es ahora la unidad «$2»: los datos se conservan. Cree recursos compartidos para las carpetas existentes en «Compartidos».

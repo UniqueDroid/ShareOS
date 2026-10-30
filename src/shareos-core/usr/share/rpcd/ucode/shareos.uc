@@ -2702,6 +2702,22 @@ return {
 			}
 		},
 
+		// a partition that already has a file system (Alt-F, D-Link) becomes
+		// a volume as it is – nothing is erased
+		adopt: {
+			args: { name: '', part: '' },
+			call: function(req) {
+				let n = req.args.name, p = req.args.part;
+				if (!valid_name(n)) return { error: 'invalid name' };
+				if (!match(p ?? '', /^(sd[a-z]+[0-9]+|md[0-9]+)$/)) return { error: 'invalid partition' };
+				if (storage_job()?.state == 'running') return { error: 'a storage job is running' };
+				let r = sh(STORAGE + ' adopt ' + shq(n) + ' ' + shq(p));
+				if (r.rc != 0) return { error: trim(replace(r.out, /^.*ERROR: /s, '')) || 'adopt failed' };
+				system(USERS + ' sync >/dev/null 2>&1');
+				return { ok: true };
+			}
+		},
+
 		volume: {
 			args: { name: '', action: '' },
 			call: function(req) {
