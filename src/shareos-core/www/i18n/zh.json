@@ -1264,7 +1264,8 @@
 		"Überwachung (Zabbix-Agent)": "监控（Zabbix 代理）",
 		"zabbix_agentd, Aktiv-Modus": "zabbix_agentd，主动模式",
 		"Kompatibilitätsmodus (höchstens SMB 2.1)": "兼容模式（最高 SMB 2.1）",
-		"Schneller mit Windows 11, das jede Verbindung signiert: Die Signatur von SMB 2.1 kostet diese Box etwa halb so viel Rechenzeit wie die von SMB 3 (gemessen etwa 9–14 statt 4–10 MB/s beim Schreiben). Ohne Signatur sind etwa 35 MB/s möglich. Dafür gibt es kein SMB 3: keine Verschlüsselung, kein Multichannel. Bestehende Verbindungen werden dabei getrennt.": "在每个连接都签名的 Windows 11 下更快：SMB 2.1 的签名在此设备上所需的计算时间约为 SMB 3 的一半（写入实测约 9–14 MB/s，而非 4–10 MB/s）。不签名时约可达 35 MB/s。代价是没有 SMB 3：没有加密，没有多通道。更改时会断开现有连接。"
+		"Schneller mit Windows 11, das jede Verbindung signiert: Die Signatur von SMB 2.1 kostet diese Box etwa halb so viel Rechenzeit wie die von SMB 3 (gemessen etwa 9–14 statt 4–10 MB/s beim Schreiben). Ohne Signatur sind etwa 35 MB/s möglich. Dafür gibt es kein SMB 3: keine Verschlüsselung, kein Multichannel. Bestehende Verbindungen werden dabei getrennt.": "在每个连接都签名的 Windows 11 下更快：SMB 2.1 的签名在此设备上所需的计算时间约为 SMB 3 的一半（写入实测约 9–14 MB/s，而非 4–10 MB/s）。不签名时约可达 35 MB/s。代价是没有 SMB 3：没有加密，没有多通道。更改时会断开现有连接。",
+		"Der Assistent löscht die ausgewählten Platten und richtet sie neu ein. Einzelne Platten lassen sich auch direkt an der Platte unter „Laufwerke“ formatieren. Platten mit Daten (z. B. von Alt-F oder der D-Link-Firmware) bindet „… übernehmen“ an der Platte ohne Löschen ein.": "向导会清除所选磁盘并重新设置。单个磁盘也可以直接在“驱动器”下格式化。带有数据的磁盘（例如来自 Alt-F 或 D-Link 固件）可在磁盘处用“… 接管”添加，不会清除。"
 	},
 	"patterns": [
 		[
@@ -2522,6 +2523,22 @@
 		[
 			"^Zeitplan: (.+)$",
 			"计划：$1"
+		],
+		[
+			"^(\\S+) übernehmen$",
+			"接管 $1"
+		],
+		[
+			"^(\\S+) übernehmen: (.*)$",
+			"接管 $1：$2"
+		],
+		[
+			"^(\\S+) \\((.+), (.+)\\) wird so, wie es ist, als Laufwerk eingebunden – es wird nichts gelöscht\\. Name des Laufwerks \\(a–z, 0–9, - und _, max\\. 16 Zeichen\\):$",
+			"$1（$2，$3）将按原样作为驱动器添加——不会清除任何内容。驱动器名称（a–z、0–9、- 和 _，最多 16 个字符）："
+		],
+		[
+			"^(\\S+) ist jetzt das Laufwerk „(.+)“ – die Daten sind erhalten\\. Freigaben für vorhandene Ordner unter „Freigaben“ anlegen\\.$",
+			"$1 现在是驱动器“$2”——数据已保留。请在“共享”下为现有文件夹创建共享。"
 		]
 	],
 	"words": [

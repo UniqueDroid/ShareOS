@@ -18,6 +18,11 @@
 #                                              a mirror with a missing disk: erase <disk>,
 #                                              add it to the mirror; the rebuild runs in
 #                                              the background (see the RAID status)
+#   shareos-storage adopt <name> <partition>  take over a partition (or RAID array)
+#                                              that already has a file system –
+#                                              e.g. a data disk of Alt-F or the D-Link
+#                                              firmware – as volume <name>, WITHOUT
+#                                              erasing it (sda2, sdb1, md0 …)
 #   shareos-storage mount <name> | umount <name>
 #   shareos-storage forget <name>              unmount and remove from the config
 #   shareos-storage spindown <minutes>         0 = never
@@ -502,6 +507,47 @@ cmd_smart_test() {
 	return 0
 }
 
+# a partition with a file system becomes a volume as it is (nothing erased)
+# like die, but without marking the setup job as failed
+adie() { log "ERROR: $*"; exit 1; }
+cmd_adopt() {   # name partition
+	n=$1 p=${2#/dev/}
+	valid_name "$n" || adie "invalid name (a-z, 0-9, - and _, at most 16 characters)"
+	[ -z "$(uci -q get storage.$n)" ] || adie "a volume named $n exists"
+	echo "$p" | grep -qE "^(sd[a-z]+[0-9]+|md[0-9]+${SHAREOS_STORAGE_DISKS:+|($SHAREOS_STORAGE_DISKS)p[0-9]+})\$" || adie "invalid partition $2"
+	[ -b /dev/$p ] || adie "/dev/$p not found"
+	grep -q "^/dev/$p " /proc/mounts && adie "/dev/$p is mounted already"
+	fs=$(blkid -s TYPE -o value /dev/$p)
+	valid_fs "$fs" || adie "no supported file system on /dev/$p (${fs:-none})"
+	uuid=$(blkid -s UUID -o value /dev/$p)
+	[ -n "$uuid" ] || adie "no UUID on /dev/$p"
+	for v in $(uci -q show storage | sed -n "s/^storage\.\([^.=]*\)=volume$/\1/p"); do
+		[ "$(uci -q get storage.$v.uuid)" = "$uuid" ] && adie "/dev/$p is volume $v already"
+	done
+	layout=single
+	case "$p" in md*)
+		case "$(cat /sys/block/$p/md/level 2>/dev/null)" in
+			raid1) layout=mirror ;; raid0) layout=stripe ;; linear) layout=span ;;
+			*) adie "/dev/$p: only RAID 1, RAID 0 and linear arrays can be taken over" ;;
+		esac ;;
+	esac
+	uci set storage.$n=volume
+	uci set storage.$n.uuid="$uuid"
+	uci set storage.$n.fstype="$fs"
+	uci set storage.$n.layout=$layout
+	uci set storage.$n.enabled=1
+	uci commit storage
+	if ! mount_volume "$n"; then
+		uci -q delete storage.$n; uci commit storage
+		adie "mounting /dev/$p failed"
+	fi
+	uci set storage.global=global
+	apps_area "$n"
+	# the array is assembled at boot from mdadm.conf
+	case "$p" in md*) write_mdconf ;; esac
+	log "volume $n taken over from /dev/$p ($fs), nothing erased"
+}
+
 cmd_shutdown() {
 	for sw in $(find_dev LABEL=shareos-swap); do swapoff $sw 2>/dev/null; done
 	for n in $(uci -q show storage | sed -n "s/^storage\.\([^.=]*\)=volume$/\1/p"); do
@@ -516,6 +562,7 @@ case "$1" in
 	repair) shift; cmd_repair "$@" ;;
 	shutdown) cmd_shutdown ;;
 	setup) shift; cmd_setup "$@" ;;
+	adopt) cmd_adopt "$2" "$3" ;;
 	mount)
 		valid_name "$2" || exit 2
 		uci set storage.$2.enabled=1 && uci commit storage
@@ -537,5 +584,5 @@ case "$1" in
 		uci set storage.global.spindown="$2" && uci commit storage
 		apply_spindown ;;
 	job) cat $JOB 2>/dev/null ;;
-	*) sed -n '3,27s/^# \{0,1\}//p' "$0"; exit 2 ;;
+	*) sed -n '3,32s/^# \{0,1\}//p' "$0"; exit 2 ;;
 esac

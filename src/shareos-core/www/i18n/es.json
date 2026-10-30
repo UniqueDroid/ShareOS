@@ -1264,7 +1264,8 @@
 		"Überwachung (Zabbix-Agent)": "Monitorización (agente Zabbix)",
 		"zabbix_agentd, Aktiv-Modus": "zabbix_agentd, modo activo",
 		"Kompatibilitätsmodus (höchstens SMB 2.1)": "Modo de compatibilidad (SMB 2.1 como máximo)",
-		"Schneller mit Windows 11, das jede Verbindung signiert: Die Signatur von SMB 2.1 kostet diese Box etwa halb so viel Rechenzeit wie die von SMB 3 (gemessen etwa 9–14 statt 4–10 MB/s beim Schreiben). Ohne Signatur sind etwa 35 MB/s möglich. Dafür gibt es kein SMB 3: keine Verschlüsselung, kein Multichannel. Bestehende Verbindungen werden dabei getrennt.": "Más rápido con Windows 11, que firma cada conexión: la firma de SMB 2.1 cuesta a este equipo aproximadamente la mitad de tiempo de cálculo que la de SMB 3 (medido unos 9–14 en lugar de 4–10 MB/s al escribir). Sin firma son posibles unos 35 MB/s. A cambio no hay SMB 3: sin cifrado ni multicanal. Las conexiones abiertas se cortan al cambiarlo."
+		"Schneller mit Windows 11, das jede Verbindung signiert: Die Signatur von SMB 2.1 kostet diese Box etwa halb so viel Rechenzeit wie die von SMB 3 (gemessen etwa 9–14 statt 4–10 MB/s beim Schreiben). Ohne Signatur sind etwa 35 MB/s möglich. Dafür gibt es kein SMB 3: keine Verschlüsselung, kein Multichannel. Bestehende Verbindungen werden dabei getrennt.": "Más rápido con Windows 11, que firma cada conexión: la firma de SMB 2.1 cuesta a este equipo aproximadamente la mitad de tiempo de cálculo que la de SMB 3 (medido unos 9–14 en lugar de 4–10 MB/s al escribir). Sin firma son posibles unos 35 MB/s. A cambio no hay SMB 3: sin cifrado ni multicanal. Las conexiones abiertas se cortan al cambiarlo.",
+		"Der Assistent löscht die ausgewählten Platten und richtet sie neu ein. Einzelne Platten lassen sich auch direkt an der Platte unter „Laufwerke“ formatieren. Platten mit Daten (z. B. von Alt-F oder der D-Link-Firmware) bindet „… übernehmen“ an der Platte ohne Löschen ein.": "El asistente borra los discos elegidos y los vuelve a configurar. Un disco suelto también puede formatearse directamente en «Unidades». Los discos con datos (p. ej. de Alt-F o del firmware de D-Link) se añaden sin borrar con «… adoptar» en el disco."
 	},
 	"patterns": [
 		[
@@ -2522,6 +2523,22 @@
 		[
 			"^Zeitplan: (.+)$",
 			"Programación: $1"
+		],
+		[
+			"^(\\S+) übernehmen$",
+			"Adoptar $1"
+		],
+		[
+			"^(\\S+) übernehmen: (.*)$",
+			"Adoptar $1: $2"
+		],
+		[
+			"^(\\S+) \\((.+), (.+)\\) wird so, wie es ist, als Laufwerk eingebunden – es wird nichts gelöscht\\. Name des Laufwerks \\(a–z, 0–9, - und _, max\\. 16 Zeichen\\):$",
+			"$1 ($2, $3) se añade tal cual como unidad: no se borra nada. Nombre de la unidad (a–z, 0–9, - y _, máx. 16 caracteres):"
+		],
+		[
+			"^(\\S+) ist jetzt das Laufwerk „(.+)“ – die Daten sind erhalten\\. Freigaben für vorhandene Ordner unter „Freigaben“ anlegen\\.$",
+			"$1 es ahora la unidad «$2»: los datos se conservan. Cree recursos compartidos para las carpetas existentes en «Compartidos»."
 		]
 	],
 	"words": [
