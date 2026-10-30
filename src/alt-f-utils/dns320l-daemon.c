@@ -48,6 +48,9 @@
 #include <sys/un.h>
 #include <sys/uio.h>
 #include <syslog.h>
+
+/* longest argument string of a -x command (see main) */
+#define XOPT_MAX 256
 #include <ctype.h>
 
 #include "dns320l.h"
@@ -765,10 +768,25 @@ int read_str_from_file(const char *filename, char *str, int sz) {
 	return 0;
 }
 
+/* write all of buf, also when write() returns less or is interrupted */
+static int write_all(int fd, const char *buf, size_t len) {
+	while (len) {
+		ssize_t n = write(fd, buf, len);
+		if (n < 0 && errno == EINTR)
+			continue;
+		if (n <= 0)
+			return -1;
+		buf += n;
+		len -= (size_t) n;
+	}
+	return 0;
+}
+
 int write_str_to_file(const char *filename, char *str) {
-	int fd, len;
-	char buf[64];
-	
+	int fd, rc;
+
+	if (str == NULL)
+		return -1;
 	if ((fd = open(filename, O_WRONLY | O_TRUNC)) == -1) {
 		fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (fd == -1) {
@@ -776,12 +794,11 @@ int write_str_to_file(const char *filename, char *str) {
 			return -1;
 		}
 	}
-	strcpy(buf, str);
-	len = strlen(buf);
-	buf[len]='\n';
-	write(fd, buf, len+1);
-	close(fd);
-	return 0;
+	/* no fixed-size copy: the string is written as it is, then a newline */
+	rc = write_all(fd, str, strlen(str)) || write_all(fd, "\n", 1) ? -1 : 0;
+	if (close(fd) != 0)
+		rc = -1;
+	return rc;
 }
 
 int read_int_from_file(const char *filename, int *u) {
@@ -997,7 +1014,7 @@ int client_cmd(char *xcmd, char *opt) {
 		syslog(LOG_INFO, "No server, send cmd directly to MCU");
 		set_serial();
 		if (opt != NULL)
-			strcpy(msg, opt);
+			snprintf(msg, sizeof(msg), "%s", opt);
 		st = HandleCommand(xcmd, strlen(xcmd), msg, sizeof(msg));
 
 		if (strncmp("ERR", msg, 3) == 0)
@@ -1012,10 +1029,13 @@ int client_cmd(char *xcmd, char *opt) {
 	}
 
 	/* send command to running server */
-	if (opt == NULL)
-		sprintf(msg, "%s\n", xcmd);
-	else
-		sprintf(msg, "%s %s\n", xcmd, opt);
+	if ((opt == NULL ? snprintf(msg, sizeof(msg), "%s\n", xcmd)
+			: snprintf(msg, sizeof(msg), "%s %s\n", xcmd, opt)) >= (int) sizeof(msg)) {
+		fprintf(stderr, "command too long\n");
+		cleanup(1, ls, SHUT_RDWR);
+		closelog();
+		return EXIT_FAILURE;
+	}
 	
 	if (write(ls, msg, strlen(msg)) < 0) {
 		syslog(LOG_DEBUG, "client write error: %s", strerror(errno));
@@ -1024,7 +1044,8 @@ int client_cmd(char *xcmd, char *opt) {
 		return EXIT_FAILURE;
 	}
 
-	n = read(ls, msg, sizeof(msg));
+	/* room for the terminating zero */
+	n = read(ls, msg, sizeof(msg) - 1);
 	if (n < 0) {
 		syslog(LOG_DEBUG, "client read error: %s", strerror(errno));
 	} else
@@ -1178,8 +1199,8 @@ int main(int argc, char *argv[]) {
 				break;
 				
 			case 'x':
-				if (optarg)
-					strcpy(xcmd,optarg);
+				if (optarg && strlen(optarg) < sizeof(xcmd))
+					strcpy(xcmd, optarg);
 				else
 					usage(argv);
 				
@@ -1192,10 +1213,27 @@ int main(int argc, char *argv[]) {
 		}
 	}
 	if (optind < argc) { /* eventual args to command */
-		int n = 0;
-		xopt = (char *) malloc(64);
-		for (i = optind; i < argc && n < 64; i++)
-			n += sprintf(&xopt[n], "%s ", argv[i]);
+		/* the arguments, separated by spaces; they end up in a 512-byte
+		 * message to the server or the MCU, so more than XOPT_MAX is refused
+		 * (the commands take a few short numbers) */
+		size_t n = 0;
+		xopt = (char *) malloc(XOPT_MAX + 1);
+		if (xopt == NULL) {
+			perror("malloc");
+			exit(EXIT_FAILURE);
+		}
+		xopt[0] = '\0';
+		for (i = optind; i < argc; i++) {
+			size_t len = strlen(argv[i]);
+			if (len + 1 > XOPT_MAX - n) {
+				fprintf(stderr, "arguments too long\n");
+				exit(EXIT_FAILURE);
+			}
+			memcpy(xopt + n, argv[i], len);
+			n += len;
+			xopt[n++] = ' ';
+			xopt[n] = '\0';
+		}
 	}
 //	printf("xcmd=%s xop=\"%s\" optind=%d argc=%d\n", xcmd, xopt, optind, argc);
 	
