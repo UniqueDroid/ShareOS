@@ -1616,3 +1616,4 @@ E1258	Supervision (agent Zabbix)
 E1259	zabbix_agentd, mode actif
 E1260	Mode compatibilité (SMB 2.1 au plus)
 E1261	Plus rapide avec Windows 11, qui signe chaque connexion : la signature de SMB 2.1 coûte à ce boîtier environ deux fois moins de temps de calcul que celle de SMB 3 (mesuré environ 9–14 au lieu de 4–10 Mo/s en écriture). Sans signature, environ 35 Mo/s sont possibles. En contrepartie, pas de SMB 3 : pas de chiffrement, pas de multicanal. Les connexions ouvertes sont coupées lors du changement.
+E1262	Uniquement pour les appareils qui ont des problèmes avec SMB 3. La signature que Windows 11 exige à chaque connexion est calculée en SMB 3 par le moteur cryptographique du boîtier (mesuré environ 19–23 Mo/s en écriture, environ 35 sans signature) ; SMB 2.1 la calcule sur le processeur (environ 9–14 Mo/s) et n’a ni chiffrement ni multicanal. Les connexions ouvertes sont coupées lors du changement.

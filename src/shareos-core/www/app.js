@@ -903,7 +903,7 @@ function sharesView() {
 				<label class="chk"><input type="checkbox" id="opt-smb"${d.smb_enabled ? raw(' checked') : ''}>SMB-Freigaben anbieten</label>
 				<div class="fields" style="grid-template-columns:1fr;margin-top:12px"><label class="f"><span>ARBEITSGRUPPE</span><input id="opt-wg" value="${d.workgroup}" maxlength="15"></label></div>
 				<label class="chk" style="margin-top:12px"><input type="checkbox" id="opt-smbcompat"${d.smb_compat ? raw(' checked') : ''}>Kompatibilitätsmodus (höchstens SMB 2.1)</label>
-				<p class="note">Schneller mit Windows 11, das jede Verbindung signiert: Die Signatur von SMB 2.1 kostet diese Box etwa halb so viel Rechenzeit wie die von SMB 3 (gemessen etwa 9–14 statt 4–10 MB/s beim Schreiben). Ohne Signatur sind etwa 35 MB/s möglich. Dafür gibt es kein SMB 3: keine Verschlüsselung, kein Multichannel. Bestehende Verbindungen werden dabei getrennt.</p>
+				<p class="note">Nur für Geräte, die mit SMB 3 nicht zurechtkommen. Die Signatur, die Windows 11 bei jeder Verbindung verlangt, rechnet bei SMB 3 die Krypto-Einheit der Box (gemessen etwa 19–23 MB/s beim Schreiben, ohne Signatur etwa 35); SMB 2.1 rechnet sie auf dem Prozessor (etwa 9–14 MB/s) und hat keine Verschlüsselung und kein Multichannel. Bestehende Verbindungen werden beim Umschalten getrennt.</p>
 				<dl class="kv" style="margin-top:12px">
 					<dt>Windows</dt><dd><code>\\\\${host}\\&lt;freigabe&gt;</code></dd>
 					<dt>macOS / Linux</dt><dd><code>smb://${ip}/&lt;freigabe&gt;</code></dd>

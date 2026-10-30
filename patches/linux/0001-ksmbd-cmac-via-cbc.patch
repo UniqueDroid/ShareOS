@@ -16,7 +16,8 @@ and the last block use the AES library. The first result is compared with
 
 Tested (UML, generic cbc): Samba 4.19 smbclient with signing required,
 50 MB put/get with AES-CMAC, checksums equal; without CRYPTO_CBC the
-fallback is used.
+fallback is used. On a DNS-320L (Kirkwood 88F6702, CESA): signed SMB 3.1.1
+writes from Windows 11 went from 4-10 to 19-23 MB/s.
 
 ---
 diff --git a/fs/smb/server/auth.c b/fs/smb/server/auth.c
