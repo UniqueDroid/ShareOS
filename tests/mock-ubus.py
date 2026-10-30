@@ -129,7 +129,7 @@ def accounts():
 
 def shares():
     return {'shares': [{'name': n, **x, 'fullpath': f"/mnt/{x['volume']}/{x['path']}", 'mounted': True} for n, x in sorted(STATE['shares'].items())],
-            'workgroup': 'WORKGROUP', 'smb_enabled': True, 'nfs_enabled': True, 'smb_running': True, 'nfs_running': True}
+            'workgroup': 'WORKGROUP', 'smb_enabled': True, 'smb_compat': False, 'nfs_enabled': True, 'smb_running': True, 'nfs_running': True}
 
 
 def me(user):

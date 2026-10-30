@@ -449,6 +449,12 @@ Braucht ein Tailscale-Konto (kostenlos), ein Handy oder einen Rechner mit Tailsc
 5. Konto ohne persönlichen Ordner: Teilen meldet „no personal folder“; das Geteilte wird verworfen und kommt bei der nächsten Anmeldung nicht wieder.
 6. Dateidialog einer App für ein Konto **ohne** *Dateien* (z. B. Webpad → *Öffnen*): Die Ordnerauswahl zeigt zuerst *App-Daten*, dann *Mein Ordner* und die Freigaben des Benutzers; Freigaben nur zum Lesen sind markiert und fehlen beim Speichern. Die App legt ihre eigenen Dateien weiter in *App-Daten* ab.
 
+## 14zd. SMB-Kompatibilitätsmodus (0.2.0-beta.17)
+
+1. Freigaben → Dienste → SMB: *Kompatibilitätsmodus (höchstens SMB 2.1)* einschalten. `grep protocol /etc/ksmbd/ksmbd.conf` zeigt `server max protocol = SMB2_10`.
+2. Unter Windows alle Explorer-Fenster zur Box schließen, `net use * /delete /y`, Freigabe neu öffnen. `Get-SmbConnection | Select-Object ServerName,Dialect,Signed` zeigt `2.1`. Eine große Datei kopieren: mit Signatur etwa 9–14 MB/s (DNS-320L), vorher 4–10.
+3. Ausschalten: die Zeile verschwindet, nach dem Neuverbinden wieder `3.1.1`.
+
 ## 14zc. OneDrive (0.2.0-beta.16)
 
 Braucht ein Microsoft-Konto mit OneDrive und rclone (Cloud → rclone installieren).

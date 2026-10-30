@@ -802,6 +802,7 @@ function share_list() {
 		shares: sort(list, (a, b) => a.name < b.name ? -1 : 1),
 		workgroup: c.get('shares', 'global', 'workgroup') ?? 'WORKGROUP',
 		smb_enabled: (c.get('shares', 'global', 'smb') ?? '1') != '0',
+		smb_compat: c.get('shares', 'global', 'smb_compat') == '1',
 		nfs_enabled: (c.get('shares', 'global', 'nfs') ?? '1') != '0',
 		smb_running: !!match(svc, /smb=1/), nfs_running: !!match(svc, /nfs=1/)
 	};
@@ -2924,7 +2925,7 @@ return {
 		},
 
 		global: {
-			args: { workgroup: '', smb: true, nfs: true },
+			args: { workgroup: '', smb: true, nfs: true, smb_compat: true },
 			call: function(req) {
 				let a = req.args, c = cursor();
 				c.set('shares', 'global', 'global');
@@ -2934,6 +2935,7 @@ return {
 				}
 				if (a.smb != null) c.set('shares', 'global', 'smb', a.smb ? '1' : '0');
 				if (a.nfs != null) c.set('shares', 'global', 'nfs', a.nfs ? '1' : '0');
+				if (a.smb_compat != null) c.set('shares', 'global', 'smb_compat', a.smb_compat ? '1' : '0');
 				c.commit('shares');
 				sh(SHARES + ' apply');
 				return { ok: true, ...share_list() };

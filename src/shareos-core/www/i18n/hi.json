@@ -1262,7 +1262,9 @@
 		"Leere Felder: an diesem Tag nichts. Ausgeschaltet wird sauber (wie mit dem Knopf); läuft gerade ein Speicher-Auftrag (z. B. RAID-Aufbau), bleibt die Box an. Zum Einschalten stellt ShareOS die Weckzeit der Gerätesteuerung – den Stecker nicht ziehen.": "खाली फ़ील्ड: उस दिन कुछ नहीं। बॉक्स ठीक से बंद होता है (बटन की तरह); अगर कोई स्टोरेज कार्य चल रहा हो (जैसे RAID रीबिल्ड), तो यह चालू रहता है। चालू करने के लिए ShareOS डिवाइस कंट्रोलर का वेक-अप समय सेट करता है – प्लग न निकालें।",
 		"Diese Box kann sich nicht selbst einschalten (keine Weckfunktion) – nur das Ausschalten nach Zeitplan geht. Einschalten über den Power-Taster.": "यह बॉक्स खुद चालू नहीं हो सकता (कोई वेक-अप फ़ंक्शन नहीं) – केवल शेड्यूल से बंद करना काम करता है। पावर बटन से चालू करें।",
 		"Überwachung (Zabbix-Agent)": "निगरानी (Zabbix एजेंट)",
-		"zabbix_agentd, Aktiv-Modus": "zabbix_agentd, सक्रिय मोड"
+		"zabbix_agentd, Aktiv-Modus": "zabbix_agentd, सक्रिय मोड",
+		"Kompatibilitätsmodus (höchstens SMB 2.1)": "संगतता मोड (अधिकतम SMB 2.1)",
+		"Schneller mit Windows 11, das jede Verbindung signiert: Die Signatur von SMB 2.1 kostet diese Box etwa halb so viel Rechenzeit wie die von SMB 3 (gemessen etwa 9–14 statt 4–10 MB/s beim Schreiben). Ohne Signatur sind etwa 35 MB/s möglich. Dafür gibt es kein SMB 3: keine Verschlüsselung, kein Multichannel. Bestehende Verbindungen werden dabei getrennt.": "Windows 11 के साथ तेज़, जो हर कनेक्शन पर हस्ताक्षर करता है: SMB 2.1 का हस्ताक्षर इस बॉक्स पर SMB 3 की तुलना में लगभग आधा प्रोसेसिंग समय लेता है (लिखते समय लगभग 4–10 की जगह 9–14 MB/s मापा गया)। बिना हस्ताक्षर लगभग 35 MB/s संभव है। बदले में SMB 3 नहीं: न एन्क्रिप्शन, न मल्टीचैनल। बदलने पर खुले कनेक्शन टूट जाते हैं।"
 	},
 	"patterns": [
 		[

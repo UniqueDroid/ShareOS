@@ -1614,3 +1614,5 @@ E1257	Cette box ne peut pas s’allumer seule (pas de fonction de réveil) – s
 P313	Programme : $1
 E1258	Supervision (agent Zabbix)
 E1259	zabbix_agentd, mode actif
+E1260	Mode compatibilité (SMB 2.1 au plus)
+E1261	Plus rapide avec Windows 11, qui signe chaque connexion : la signature de SMB 2.1 coûte à ce boîtier environ deux fois moins de temps de calcul que celle de SMB 3 (mesuré environ 9–14 au lieu de 4–10 Mo/s en écriture). Sans signature, environ 35 Mo/s sont possibles. En contrepartie, pas de SMB 3 : pas de chiffrement, pas de multicanal. Les connexions ouvertes sont coupées lors du changement.
