@@ -4,6 +4,10 @@ Changes per release (newest first). The section of a version is added to its
 GitHub release automatically when the release is built. Test versions are
 pre-releases for test devices only.
 
+## 0.2.0-beta.17
+
+- **SMB: compatibility mode for faster signed transfers** ([#94](https://github.com/UniqueDroid/ShareOS/issues/94)). Windows 11 signs every SMB connection, and on the 800 MHz Kirkwood the signature is what limits writing: measured on a DNS-320L, about 35 MB/s without signing (the disks), 4–10 MB/s with SMB 3.1.1 (AES-CMAC). AES-GMAC was tried as well and is not faster here (GHASH in C on ARMv5). Freigaben → Dienste → SMB → *Kompatibilitätsmodus (höchstens SMB 2.1)* limits ksmbd to SMB 2.1, whose HMAC-SHA256 signature runs in ARM assembly: 9–14 MB/s with signing. Without SMB 3 there is no encryption and no multichannel; off by default. Full speed needs a client that does not sign (on Windows: `Set-SmbClientConfiguration -RequireSecuritySignature $false`, a security trade-off). The kernel now also has AES in ARM assembly (`CONFIG_CRYPTO_AES_ARM`). Changing the mode restarts ksmbd (the protocol range is only read at start); a `ksmbd.mountd` left over without the kernel module is restarted instead of being taken for a running SMB server. `tests/test-users.sh` checks the setting.
+
 ## 0.2.0-beta.16
 
 - **OneDrive works right after signing in** ([#92](https://github.com/UniqueDroid/ShareOS/issues/92)). rclone asks for the drive of a OneDrive account only in its interactive setup; the web interface creates the remote non-interactively, so `rclone.conf` got the token but no `drive_id`/`drive_type`, and every job failed until `rclone config reconnect` over SSH. Now ShareOS reads the drive of the signed-in account from Microsoft Graph (`/me/drive`) and writes both values. Accounts added before still need that reconnect, or remove and add them again.

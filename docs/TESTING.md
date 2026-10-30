@@ -445,6 +445,12 @@ Needs a Tailscale account (free), a phone or computer with Tailscale, the file `
 5. An account without a personal folder: sharing shows "no personal folder"; the shared item is dropped and does not come back at the next login.
 6. File dialog of an app for an account **without** *Dateien* (e.g. Webpad → *Öffnen*): the list of folders shows *App-Daten* first, then *Mein Ordner* and the user's shares; read-only shares are marked and are missing when saving. The app still keeps its own files in *App-Daten*.
 
+## 14zd. SMB compatibility mode (0.2.0-beta.17)
+
+1. Freigaben → Dienste → SMB: switch on *Kompatibilitätsmodus (höchstens SMB 2.1)*. `grep protocol /etc/ksmbd/ksmbd.conf` shows `server max protocol = SMB2_10`.
+2. On Windows close all Explorer windows of the box, `net use * /delete /y`, open the share again. `Get-SmbConnection | Select-Object ServerName,Dialect,Signed` shows `2.1`. Copy a large file: with signing about 9–14 MB/s (DNS-320L), 4–10 before.
+3. Switch it off: the line is gone, after reconnecting `3.1.1` again.
+
 ## 14zc. OneDrive (0.2.0-beta.16)
 
 Needs a Microsoft account with OneDrive and rclone (Cloud → rclone installieren).
