@@ -45,8 +45,13 @@ das System im Flash.
 6. Im Browser `http://<IP-der-Box>/` öffnen (oder `http://<Gerätename>.local/`).
    Anmelden mit **root** und dem Passwort **shareos**.
 7. Der Einrichtungsassistent führt durch Sprache, Übernahme aus Alt-F,
-   Passwort, Name und Zeit und Updates. Danach die Platten unter **Speicher**
-   einbinden – die Daten bleiben erhalten.
+   Passwort, Name und Zeit und Updates. Danach die Platten mit den Daten
+   übernehmen: **Speicher → Laufwerke**, an der Platte **„sda2 übernehmen“** (ein
+   Knopf je Partition mit Dateisystem) – es wird nichts gelöscht. **Den
+   Einrichtungsassistenten nicht für Platten mit Daten nehmen: er löscht sie.**
+   Danach unter **Freigaben** Freigaben für die vorhandenen Ordner anlegen. (Ab
+   0.2.0-beta.17; bei älteren Versionen siehe
+   [Platten von Hand übernehmen](#platten-von-hand-übernehmen).)
 
 Ab jetzt laufen Updates über **System → Firmware** (aus dem Internet oder als
 Datei).
@@ -82,6 +87,27 @@ Wie oben unter „Alt-F → ShareOS“: die ShareOS-`.bin` in Alt-F flashen.
 
 Am einfachsten über Alt-F: erst zurück zu Alt-F (siehe oben), dann von dort die
 D-Link-Firmware flashen.
+
+## Platten von Hand übernehmen
+
+Vor 0.2.0-beta.17 gibt es den Knopf noch nicht; über SSH geht dasselbe (hier
+die Partition `sda2` als Laufwerk `data`, das auch der App-Bereich wird):
+
+```sh
+blkid /dev/sda2                     # TYPE="ext4" und eine UUID
+uci set storage.data=volume
+uci set storage.data.uuid=$(blkid -s UUID -o value /dev/sda2)
+uci set storage.data.fstype=ext4
+uci set storage.data.layout=single
+uci set storage.data.enabled=1
+uci set storage.global=global
+uci set storage.global.apps=data
+uci commit storage
+shareos-storage mount data
+mkdir -p /mnt/data/.shareos && chmod 711 /mnt/data/.shareos
+```
+
+Ab 0.2.0-beta.17: `shareos-storage adopt data sda2`.
 
 ## Wenn gar nichts mehr geht
 

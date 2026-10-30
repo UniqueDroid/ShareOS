@@ -1264,7 +1264,8 @@
 		"Überwachung (Zabbix-Agent)": "Monitoring (Zabbix agent)",
 		"zabbix_agentd, Aktiv-Modus": "zabbix_agentd, active mode",
 		"Kompatibilitätsmodus (höchstens SMB 2.1)": "Compatibility mode (SMB 2.1 at most)",
-		"Schneller mit Windows 11, das jede Verbindung signiert: Die Signatur von SMB 2.1 kostet diese Box etwa halb so viel Rechenzeit wie die von SMB 3 (gemessen etwa 9–14 statt 4–10 MB/s beim Schreiben). Ohne Signatur sind etwa 35 MB/s möglich. Dafür gibt es kein SMB 3: keine Verschlüsselung, kein Multichannel. Bestehende Verbindungen werden dabei getrennt.": "Faster with Windows 11, which signs every connection: the signature of SMB 2.1 costs this box about half the computing time of the one of SMB 3 (measured about 9–14 instead of 4–10 MB/s when writing). Without signing about 35 MB/s are possible. In exchange there is no SMB 3: no encryption, no multichannel. Open connections are dropped when this is changed."
+		"Schneller mit Windows 11, das jede Verbindung signiert: Die Signatur von SMB 2.1 kostet diese Box etwa halb so viel Rechenzeit wie die von SMB 3 (gemessen etwa 9–14 statt 4–10 MB/s beim Schreiben). Ohne Signatur sind etwa 35 MB/s möglich. Dafür gibt es kein SMB 3: keine Verschlüsselung, kein Multichannel. Bestehende Verbindungen werden dabei getrennt.": "Faster with Windows 11, which signs every connection: the signature of SMB 2.1 costs this box about half the computing time of the one of SMB 3 (measured about 9–14 instead of 4–10 MB/s when writing). Without signing about 35 MB/s are possible. In exchange there is no SMB 3: no encryption, no multichannel. Open connections are dropped when this is changed.",
+		"Der Assistent löscht die ausgewählten Platten und richtet sie neu ein. Einzelne Platten lassen sich auch direkt an der Platte unter „Laufwerke“ formatieren. Platten mit Daten (z. B. von Alt-F oder der D-Link-Firmware) bindet „… übernehmen“ an der Platte ohne Löschen ein.": "The wizard erases the selected disks and sets them up again. Single disks can also be formatted directly at the disk under “Drives”. Disks with data (e.g. from Alt-F or the D-Link firmware) are added without erasing with “… take over” at the disk."
 	},
 	"patterns": [
 		[
@@ -2522,6 +2523,22 @@
 		[
 			"^Zeitplan: (.+)$",
 			"Schedule: $1"
+		],
+		[
+			"^(\\S+) übernehmen$",
+			"Take over $1"
+		],
+		[
+			"^(\\S+) übernehmen: (.*)$",
+			"Take over $1: $2"
+		],
+		[
+			"^(\\S+) \\((.+), (.+)\\) wird so, wie es ist, als Laufwerk eingebunden – es wird nichts gelöscht\\. Name des Laufwerks \\(a–z, 0–9, - und _, max\\. 16 Zeichen\\):$",
+			"$1 ($2, $3) is added as a drive as it is – nothing is erased. Name of the drive (a–z, 0–9, - and _, at most 16 characters):"
+		],
+		[
+			"^(\\S+) ist jetzt das Laufwerk „(.+)“ – die Daten sind erhalten\\. Freigaben für vorhandene Ordner unter „Freigaben“ anlegen\\.$",
+			"$1 is now the drive “$2” – the data is kept. Create shares for existing folders under “Shares”."
 		]
 	],
 	"words": [

@@ -1264,7 +1264,8 @@
 		"Überwachung (Zabbix-Agent)": "Monitorização (agente Zabbix)",
 		"zabbix_agentd, Aktiv-Modus": "zabbix_agentd, modo ativo",
 		"Kompatibilitätsmodus (höchstens SMB 2.1)": "Modo de compatibilidade (no máximo SMB 2.1)",
-		"Schneller mit Windows 11, das jede Verbindung signiert: Die Signatur von SMB 2.1 kostet diese Box etwa halb so viel Rechenzeit wie die von SMB 3 (gemessen etwa 9–14 statt 4–10 MB/s beim Schreiben). Ohne Signatur sind etwa 35 MB/s möglich. Dafür gibt es kein SMB 3: keine Verschlüsselung, kein Multichannel. Bestehende Verbindungen werden dabei getrennt.": "Mais rápido com o Windows 11, que assina cada conexão: a assinatura do SMB 2.1 custa a este equipamento cerca de metade do tempo de processamento da do SMB 3 (medido cerca de 9–14 em vez de 4–10 MB/s ao gravar). Sem assinatura são possíveis cerca de 35 MB/s. Em troca não há SMB 3: sem criptografia, sem multicanal. As conexões abertas são interrompidas ao alterar."
+		"Schneller mit Windows 11, das jede Verbindung signiert: Die Signatur von SMB 2.1 kostet diese Box etwa halb so viel Rechenzeit wie die von SMB 3 (gemessen etwa 9–14 statt 4–10 MB/s beim Schreiben). Ohne Signatur sind etwa 35 MB/s möglich. Dafür gibt es kein SMB 3: keine Verschlüsselung, kein Multichannel. Bestehende Verbindungen werden dabei getrennt.": "Mais rápido com o Windows 11, que assina cada conexão: a assinatura do SMB 2.1 custa a este equipamento cerca de metade do tempo de processamento da do SMB 3 (medido cerca de 9–14 em vez de 4–10 MB/s ao gravar). Sem assinatura são possíveis cerca de 35 MB/s. Em troca não há SMB 3: sem criptografia, sem multicanal. As conexões abertas são interrompidas ao alterar.",
+		"Der Assistent löscht die ausgewählten Platten und richtet sie neu ein. Einzelne Platten lassen sich auch direkt an der Platte unter „Laufwerke“ formatieren. Platten mit Daten (z. B. von Alt-F oder der D-Link-Firmware) bindet „… übernehmen“ an der Platte ohne Löschen ein.": "O assistente apaga os discos escolhidos e os configura de novo. Um disco avulso também pode ser formatado diretamente em “Unidades”. Discos com dados (p. ex. do Alt-F ou do firmware D-Link) são adicionados sem apagar com “… assumir” no disco."
 	},
 	"patterns": [
 		[
@@ -2522,6 +2523,22 @@
 		[
 			"^Zeitplan: (.+)$",
 			"Horário: $1"
+		],
+		[
+			"^(\\S+) übernehmen$",
+			"Assumir $1"
+		],
+		[
+			"^(\\S+) übernehmen: (.*)$",
+			"Assumir $1: $2"
+		],
+		[
+			"^(\\S+) \\((.+), (.+)\\) wird so, wie es ist, als Laufwerk eingebunden – es wird nichts gelöscht\\. Name des Laufwerks \\(a–z, 0–9, - und _, max\\. 16 Zeichen\\):$",
+			"$1 ($2, $3) é adicionado como unidade do jeito que está – nada é apagado. Nome da unidade (a–z, 0–9, - e _, máx. 16 caracteres):"
+		],
+		[
+			"^(\\S+) ist jetzt das Laufwerk „(.+)“ – die Daten sind erhalten\\. Freigaben für vorhandene Ordner unter „Freigaben“ anlegen\\.$",
+			"$1 agora é a unidade “$2” – os dados são mantidos. Crie compartilhamentos para as pastas existentes em “Compartilhamentos”."
 		]
 	],
 	"words": [

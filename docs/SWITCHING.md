@@ -42,8 +42,12 @@ flash change.
 6. Open `http://<box-IP>/` in the browser (or `http://<device-name>.local/`).
    Sign in as **root** with the password **shareos**.
 7. The setup wizard guides through language, taking over from Alt-F,
-   password, name and time, and updates. Then add the disks under **Storage** –
-   the data stays.
+   password, name and time, and updates. Then take over the disks with your
+   data: **Storage → Drives**, at the disk **„sda2 übernehmen“** (one button per
+   partition with a file system) – nothing is erased. **Do not use the setup
+   wizard for disks with data: it erases them.** Then create shares for the
+   existing folders under **Freigaben**. (From 0.2.0-beta.17; with older
+   versions see [Taking over disks by hand](#taking-over-disks-by-hand).)
 
 From now on updates go through **System → Firmware** (from the internet or as
 a file).
@@ -79,6 +83,27 @@ As above under "Alt-F → ShareOS": flash the ShareOS `.bin` in Alt-F.
 
 Easiest through Alt-F: first back to Alt-F (see above), then flash the D-Link
 firmware from there.
+
+## Taking over disks by hand
+
+Before 0.2.0-beta.17 there is no button; over SSH it is the same (here the
+partition `sda2` as volume `data`, which also becomes the apps area):
+
+```sh
+blkid /dev/sda2                     # TYPE="ext4" and a UUID
+uci set storage.data=volume
+uci set storage.data.uuid=$(blkid -s UUID -o value /dev/sda2)
+uci set storage.data.fstype=ext4
+uci set storage.data.layout=single
+uci set storage.data.enabled=1
+uci set storage.global=global
+uci set storage.global.apps=data
+uci commit storage
+shareos-storage mount data
+mkdir -p /mnt/data/.shareos && chmod 711 /mnt/data/.shareos
+```
+
+From 0.2.0-beta.17: `shareos-storage adopt data sda2`.
 
 ## When nothing works any more
 
