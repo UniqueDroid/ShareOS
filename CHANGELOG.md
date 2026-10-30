@@ -4,6 +4,10 @@ Changes per release (newest first). The section of a version is added to its
 GitHub release automatically when the release is built. Test versions are
 pre-releases for test devices only.
 
+## 0.2.0-beta.17
+
+- **DNS-320 rev A: no more reboot loop after flashing** ([#96](https://github.com/UniqueDroid/ShareOS/issues/96)). The stock U-Boot copies the initramfs to its load address before the kernel starts; on the DNS-325 0x800000 lies in memory the kernel uses, so the kernel dropped the initramfs, found no `/init` and restarted every minute (fixed for the DNS-325 in 0.2.0-beta.9). The DNS-320 rev A – the same SoC (88F6281) and U-Boot family – showed the same kind of loop (LEDs on, restart about every minute, no network), so its initramfs is now loaded at 0x1000000 as on the DNS-325. A box already in the loop needs a serial console once to start the new image from RAM (see the issue). `tests/check-initrd-address.sh` checks the new address.
+
 ## 0.2.0-beta.16
 
 - **OneDrive works right after signing in** ([#92](https://github.com/UniqueDroid/ShareOS/issues/92)). rclone asks for the drive of a OneDrive account only in its interactive setup; the web interface creates the remote non-interactively, so `rclone.conf` got the token but no `drive_id`/`drive_type`, and every job failed until `rclone config reconnect` over SSH. Now ShareOS reads the drive of the signed-in account from Microsoft Graph (`/me/drive`) and writes both values. Accounts added before still need that reconnect, or remove and add them again.
