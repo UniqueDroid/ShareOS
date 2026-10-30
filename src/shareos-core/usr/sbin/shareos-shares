@@ -17,6 +17,7 @@
 #
 PATH=/usr/sbin:/usr/bin:/sbin:/bin
 SMBCONF=/etc/ksmbd/ksmbd.conf
+SMBPROTO=/tmp/shareos-shares.smbcompat   # compatibility mode ksmbd was started with
 ACLSTATE=/etc/shareos/share-acl
 EXPORTS=/etc/exports
 AVAHI_SMB=/etc/avahi/services/smb.service
@@ -96,6 +97,10 @@ write_smb() {
 		echo "	map to guest = bad user"
 		echo "	guest account = nobody"
 		echo "	server min protocol = SMB2_10"
+		# compatibility mode: at most SMB 2.1. Clients that must sign (Windows
+		# 11) then sign with HMAC-SHA256 (ARM assembly in the kernel) instead
+		# of AES-CMAC: about twice as fast on the 800 MHz Kirkwood (#94)
+		[ "$(global smb_compat)" = 1 ] && echo "	server max protocol = SMB2_10"
 		echo "	smb2 leases = yes"
 		# home folders: \\box\<user> for the logged-in user only
 		if uci -q show accounts | grep -q "\.home='[^']\+'"; then
@@ -157,7 +162,12 @@ nfs_wanted() { [ "$(global nfs || echo 1)" = 1 ] && grep -q '^/' $EXPORTS 2>/dev
 
 smb_start() {
 	modprobe ksmbd 2>/dev/null
-	pidof ksmbd.mountd >/dev/null && return 0
+	# a mountd left over without the kernel module serves nobody
+	if pidof ksmbd.mountd >/dev/null; then
+		[ -d /sys/module/ksmbd ] && return 0
+		killall ksmbd.mountd 2>/dev/null; sleep 1
+		modprobe ksmbd 2>/dev/null
+	fi
 	ksmbd.mountd >/dev/null 2>&1 || log "ksmbd.mountd failed"
 }
 smb_stop() {
@@ -212,7 +222,14 @@ cmd_apply() {
 	done
 	write_smb
 	write_nfs
-	if smb_wanted; then pidof ksmbd.mountd >/dev/null && smb_reload || smb_start; smb_announce 1; else smb_stop; smb_announce 0; fi
+	if smb_wanted; then
+		# the protocol range is read only when ksmbd starts: restart on a change
+		proto=$(global smb_compat || echo 0)
+		if pidof ksmbd.mountd >/dev/null && [ "$(cat $SMBPROTO 2>/dev/null || echo 0)" != "$proto" ]; then smb_stop; fi
+		pidof ksmbd.mountd >/dev/null && smb_reload || smb_start
+		echo "$proto" > $SMBPROTO
+		smb_announce 1
+	else smb_stop; smb_announce 0; fi
 	if nfs_wanted; then nfs_start; else nfs_stop; fi
 	return 0
 }

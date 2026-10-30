@@ -109,6 +109,11 @@ check "share folder: rights as ACL (jan rwx, @familie r-x, others nothing)" "run
 check "ksmbd share section" "grep -q '^\[fotos\]' $R/etc/ksmbd/ksmbd.conf && grep -q 'path = /mnt/daten/Fotos' $R/etc/ksmbd/ksmbd.conf"
 check "ksmbd access lists" "grep -q 'valid users = jan @familie' $R/etc/ksmbd/ksmbd.conf && grep -q 'write list = jan' $R/etc/ksmbd/ksmbd.conf && grep -q 'read list = @familie' $R/etc/ksmbd/ksmbd.conf"
 check "ksmbd home folders" "grep -q '^\[homes\]' $R/etc/ksmbd/ksmbd.conf"
+check "SMB 3 by default (no max protocol)" "! grep -q 'server max protocol' $R/etc/ksmbd/ksmbd.conf"
+G=$(rpc shareos.shares global '{"smb_compat":true}')
+check "compatibility mode: at most SMB 2.1" "echo '$G' | js \"d['smb_compat']\" && grep -q 'server max protocol = SMB2_10' $R/etc/ksmbd/ksmbd.conf"
+G=$(rpc shareos.shares global '{"smb_compat":false}')
+check "compatibility mode off again" "echo '$G' | js \"not d['smb_compat']\" && ! grep -q 'server max protocol' $R/etc/ksmbd/ksmbd.conf"
 check "unknown user in a share rejected" "rpc shareos.shares set '{\"name\":\"x\",\"volume\":\"daten\",\"rw\":[\"ghost\"]}' | grep -q 'unknown user'"
 check "path escaping the volume rejected" "rpc shareos.shares set '{\"name\":\"x\",\"volume\":\"daten\",\"path\":\"../etc\"}' | grep -q 'invalid folder'"
 S2=$(rpc shareos.shares set '{"name":"medien","volume":"daten","smb":true,"guest":true,"nfs":true,"nfs_rw":false,"nfs_hosts":["10.0.0.0/24"]}')

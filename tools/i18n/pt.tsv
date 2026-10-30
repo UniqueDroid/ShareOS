@@ -1614,3 +1614,5 @@ E1257	Esta caixa não consegue ligar-se sozinha (sem função de despertar) – 
 P313	Horário: $1
 E1258	Monitorização (agente Zabbix)
 E1259	zabbix_agentd, modo ativo
+E1260	Modo de compatibilidade (no máximo SMB 2.1)
+E1261	Mais rápido com o Windows 11, que assina cada conexão: a assinatura do SMB 2.1 custa a este equipamento cerca de metade do tempo de processamento da do SMB 3 (medido cerca de 9–14 em vez de 4–10 MB/s ao gravar). Sem assinatura são possíveis cerca de 35 MB/s. Em troca não há SMB 3: sem criptografia, sem multicanal. As conexões abertas são interrompidas ao alterar.

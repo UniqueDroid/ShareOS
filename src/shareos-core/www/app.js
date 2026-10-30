@@ -902,6 +902,8 @@ function sharesView() {
 				<div class="ph"><span class="pt">SMB (WINDOWS, MACOS, LINUX)</span><span class="tag ml ${d.smb_running ? 'ok' : ''}">${d.smb_running ? 'läuft' : 'aus'}</span></div>
 				<label class="chk"><input type="checkbox" id="opt-smb"${d.smb_enabled ? raw(' checked') : ''}>SMB-Freigaben anbieten</label>
 				<div class="fields" style="grid-template-columns:1fr;margin-top:12px"><label class="f"><span>ARBEITSGRUPPE</span><input id="opt-wg" value="${d.workgroup}" maxlength="15"></label></div>
+				<label class="chk" style="margin-top:12px"><input type="checkbox" id="opt-smbcompat"${d.smb_compat ? raw(' checked') : ''}>Kompatibilitätsmodus (höchstens SMB 2.1)</label>
+				<p class="note">Schneller mit Windows 11, das jede Verbindung signiert: Die Signatur von SMB 2.1 kostet diese Box etwa halb so viel Rechenzeit wie die von SMB 3 (gemessen etwa 9–14 statt 4–10 MB/s beim Schreiben). Ohne Signatur sind etwa 35 MB/s möglich. Dafür gibt es kein SMB 3: keine Verschlüsselung, kein Multichannel. Bestehende Verbindungen werden dabei getrennt.</p>
 				<dl class="kv" style="margin-top:12px">
 					<dt>Windows</dt><dd><code>\\\\${host}\\&lt;freigabe&gt;</code></dd>
 					<dt>macOS / Linux</dt><dd><code>smb://${ip}/&lt;freigabe&gt;</code></dd>
@@ -3061,6 +3063,7 @@ const VIEWS_AFTER = {
 		$('#opt-smb')?.addEventListener('change', (e) => shareGlobal({ smb: e.target.checked }));
 		$('#opt-nfs')?.addEventListener('change', (e) => shareGlobal({ nfs: e.target.checked }));
 		$('#opt-wg')?.addEventListener('change', (e) => shareGlobal({ workgroup: e.target.value.trim() }));
+		$('#opt-smbcompat')?.addEventListener('change', (e) => shareGlobal({ smb_compat: e.target.checked }));
 		$('#f-user select[name=role]')?.addEventListener('change', (e) => { $('#u-web-row').hidden = e.target.value !== 'user'; });
 		$('#f-share')?.addEventListener('submit', async (e) => {
 			e.preventDefault();

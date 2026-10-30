@@ -1262,7 +1262,9 @@
 		"Leere Felder: an diesem Tag nichts. Ausgeschaltet wird sauber (wie mit dem Knopf); läuft gerade ein Speicher-Auftrag (z. B. RAID-Aufbau), bleibt die Box an. Zum Einschalten stellt ShareOS die Weckzeit der Gerätesteuerung – den Stecker nicht ziehen.": "الحقول الفارغة: لا شيء في ذلك اليوم. يتم الإيقاف بشكل سليم (كما بالزر)؛ إذا كانت مهمة تخزين قيد التشغيل (مثل إعادة بناء RAID) يبقى الجهاز يعمل. للتشغيل يضبط ShareOS وقت الإيقاظ في وحدة التحكم – لا تفصل القابس.",
 		"Diese Box kann sich nicht selbst einschalten (keine Weckfunktion) – nur das Ausschalten nach Zeitplan geht. Einschalten über den Power-Taster.": "لا يمكن لهذا الجهاز تشغيل نفسه (لا توجد وظيفة إيقاظ) – يعمل الإيقاف حسب الجدول فقط. شغّله بزر الطاقة.",
 		"Überwachung (Zabbix-Agent)": "المراقبة (وكيل Zabbix)",
-		"zabbix_agentd, Aktiv-Modus": "zabbix_agentd، الوضع النشط"
+		"zabbix_agentd, Aktiv-Modus": "zabbix_agentd، الوضع النشط",
+		"Kompatibilitätsmodus (höchstens SMB 2.1)": "وضع التوافق (SMB 2.1 كحد أقصى)",
+		"Schneller mit Windows 11, das jede Verbindung signiert: Die Signatur von SMB 2.1 kostet diese Box etwa halb so viel Rechenzeit wie die von SMB 3 (gemessen etwa 9–14 statt 4–10 MB/s beim Schreiben). Ohne Signatur sind etwa 35 MB/s möglich. Dafür gibt es kein SMB 3: keine Verschlüsselung, kein Multichannel. Bestehende Verbindungen werden dabei getrennt.": "أسرع مع Windows 11 الذي يوقّع كل اتصال: توقيع SMB 2.1 يكلّف هذا الجهاز نحو نصف وقت المعالجة الذي يكلّفه توقيع SMB 3 (قيس نحو 9–14 بدلاً من 4–10 ميغابايت/ث عند الكتابة). بدون توقيع يمكن بلوغ نحو 35 ميغابايت/ث. في المقابل لا يوجد SMB 3: لا تشفير ولا تعدد قنوات. تُقطع الاتصالات المفتوحة عند التغيير."
 	},
 	"patterns": [
 		[

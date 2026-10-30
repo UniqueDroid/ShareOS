@@ -1614,3 +1614,5 @@ E1257	Esta caja no puede encenderse sola (sin función de activación): solo fun
 P313	Programación: $1
 E1258	Monitorización (agente Zabbix)
 E1259	zabbix_agentd, modo activo
+E1260	Modo de compatibilidad (SMB 2.1 como máximo)
+E1261	Más rápido con Windows 11, que firma cada conexión: la firma de SMB 2.1 cuesta a este equipo aproximadamente la mitad de tiempo de cálculo que la de SMB 3 (medido unos 9–14 en lugar de 4–10 MB/s al escribir). Sin firma son posibles unos 35 MB/s. A cambio no hay SMB 3: sin cifrado ni multicanal. Las conexiones abiertas se cortan al cambiarlo.
