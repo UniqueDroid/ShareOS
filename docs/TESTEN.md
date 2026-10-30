@@ -449,6 +449,13 @@ Braucht ein Tailscale-Konto (kostenlos), ein Handy oder einen Rechner mit Tailsc
 5. Konto ohne persönlichen Ordner: Teilen meldet „no personal folder“; das Geteilte wird verworfen und kommt bei der nächsten Anmeldung nicht wieder.
 6. Dateidialog einer App für ein Konto **ohne** *Dateien* (z. B. Webpad → *Öffnen*): Die Ordnerauswahl zeigt zuerst *App-Daten*, dann *Mein Ordner* und die Freigaben des Benutzers; Freigaben nur zum Lesen sind markiert und fehlen beim Speichern. Die App legt ihre eigenen Dateien weiter in *App-Daten* ab.
 
+## 14ze. Vorhandenes Laufwerk übernehmen (0.2.0-beta.17)
+
+1. Eine Platte mit Daten (z. B. von Alt-F, ext4) einsetzen, die ShareOS noch nicht kennt. Speicher → Laufwerke: an der Platte erscheint **„sdX2 übernehmen“**.
+2. Klicken, Namen eingeben (z. B. `daten`): das Laufwerk erscheint eingehängt, `ls /mnt/daten` zeigt die alten Ordner, nichts wurde gelöscht. War noch kein App-Bereich da, liegt er jetzt auf diesem Laufwerk (`APPS`).
+3. Freigaben → neue Freigabe auf einen vorhandenen Ordner: die Dateien sind über SMB sichtbar.
+4. Neustart: das Laufwerk wird wieder eingehängt. Der Knopf erscheint nicht mehr für diese Partition.
+
 ## 14zd. SMB-Kompatibilitätsmodus (0.2.0-beta.17)
 
 1. Freigaben → Dienste → SMB: *Kompatibilitätsmodus (höchstens SMB 2.1)* einschalten. `grep protocol /etc/ksmbd/ksmbd.conf` zeigt `server max protocol = SMB2_10`.

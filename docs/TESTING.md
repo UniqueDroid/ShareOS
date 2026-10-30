@@ -445,6 +445,13 @@ Needs a Tailscale account (free), a phone or computer with Tailscale, the file `
 5. An account without a personal folder: sharing shows "no personal folder"; the shared item is dropped and does not come back at the next login.
 6. File dialog of an app for an account **without** *Dateien* (e.g. Webpad → *Öffnen*): the list of folders shows *App-Daten* first, then *Mein Ordner* and the user's shares; read-only shares are marked and are missing when saving. The app still keeps its own files in *App-Daten*.
 
+## 14ze. Take over an existing drive (0.2.0-beta.17)
+
+1. Put in a disk with data (e.g. from Alt-F, ext4) that ShareOS does not know yet. Speicher → Laufwerke: the disk shows **„sdX2 übernehmen“**.
+2. Click it, enter a name (e.g. `daten`): the drive appears mounted, `ls /mnt/daten` shows the old folders, nothing was erased. If there was no apps area yet, it is on this drive now (`APPS`).
+3. Freigaben → new share on an existing folder: the files are visible over SMB.
+4. Restart: the drive is mounted again. The button is gone for this partition.
+
 ## 14zd. SMB compatibility mode (0.2.0-beta.17)
 
 1. Freigaben → Dienste → SMB: switch on *Kompatibilitätsmodus (höchstens SMB 2.1)*. `grep protocol /etc/ksmbd/ksmbd.conf` shows `server max protocol = SMB2_10`.

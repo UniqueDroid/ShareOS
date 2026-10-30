@@ -96,8 +96,21 @@ check "boot mounts enabled volumes and swap" "mounted daten && mounted backup &&
 o=$(run shareos-storage setup single "neu=$B" --swap=0 --yes)
 check "re-setup of a used disk releases the old volume (no swap now)" "run shareos-storage job | grep -q 'state=done' && ! run uci -q get storage.backup >/dev/null && mounted neu && ! mounted backup && ! swapping ${B}p1"
 
+echo keep > $R/mnt/neu/keep
 o=$(run shareos-storage forget neu)
 check "forget removes from config" "! run uci -q get storage.neu >/dev/null && ! mounted neu"
+# take over a partition that already has a file system (e.g. from Alt-F)
+P=$(run blkid -L neu | tr -d '\r')
+o=$(run shareos-storage adopt alt "${P#/dev/}")
+check "adopt: existing file system taken over, data kept" "mounted alt && grep -qx keep $R/mnt/alt/keep && run uci get storage.alt.layout | grep -qx single && run uci get storage.alt.fstype | grep -qx ext4" "$o"
+o=$(run shareos-storage adopt alt2 "${P#/dev/}")
+check "adopt: a mounted partition is refused" "echo \"\$o\" | grep -q 'mounted already'" "$o"
+run shareos-storage umount alt >/dev/null
+o=$(run shareos-storage adopt alt2 "${P#/dev/}")
+check "adopt: the same file system twice is refused" "echo \"\$o\" | grep -q 'is volume alt already'" "$o"
+o=$(run shareos-storage adopt alt3 sdz9)
+check "adopt: unknown partition refused" "echo \"\$o\" | grep -q 'not found'" "$o"
+run shareos-storage forget alt >/dev/null
 o=$(run shareos-storage spindown 30)
 check "spindown stored" "run uci get storage.global.spindown | grep -qx 30"
 

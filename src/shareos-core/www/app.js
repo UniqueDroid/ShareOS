@@ -1919,7 +1919,7 @@ function storageView() {
 			${usbCopyPanel(st)}
 			<div class="panel">
 				<div class="ph"><span class="pt">NEU EINRICHTEN</span></div>
-				<p class="mut" style="margin:0 0 12px;font-size:13px">Der Assistent löscht die ausgewählten Platten und richtet sie neu ein. Einzelne Platten lassen sich auch direkt an der Platte unter „Laufwerke“ formatieren.</p>
+				<p class="mut" style="margin:0 0 12px;font-size:13px">Der Assistent löscht die ausgewählten Platten und richtet sie neu ein. Einzelne Platten lassen sich auch direkt an der Platte unter „Laufwerke“ formatieren. Platten mit Daten (z. B. von Alt-F oder der D-Link-Firmware) bindet „… übernehmen“ an der Platte ohne Löschen ein.</p>
 				<button class="btn" type="button" data-act="wiz-start" ${running || !st.disks.length || S.wiz ? 'disabled' : ''}>Assistent starten</button>
 			</div>
 		</div>
@@ -2103,10 +2103,25 @@ function fmtMin(s) {
 	return m >= 90 ? `${(m / 60).toLocaleString(LOC, { maximumFractionDigits: 1 })} h` : `${Math.round(m)} min`;
 }
 
+// partitions (or RAID arrays) of a disk with a file system ShareOS does not
+// know yet – a data disk of Alt-F or the D-Link firmware: they can be taken
+// over as they are
+const ADOPT_FS = ['ext4', 'ext3', 'ext2', 'btrfs', 'exfat', 'ntfs', 'vfat'];
+function adoptable(st, d) {
+	const known = new Set((st.volumes || []).map((v) => v.uuid));
+	const out = [];
+	for (const p of d.children || []) {
+		const t = p.fstype === 'linux_raid_member' ? (p.children || [])[0] : p;
+		if (t && ADOPT_FS.includes(t.fstype) && t.uuid && !known.has(t.uuid) && !t.mountpoint && !out.some((x) => x.name === t.name)) out.push(t);
+	}
+	return out;
+}
+
 function diskActions(d, running) {
 	if (d.usb) return html`<button class="btn sm" type="button" data-act="usb-eject" data-disk="${d.name}" ${running ? 'disabled' : ''}>Sicher entfernen</button>
 		<button class="btn sm danger" type="button" data-act="usb-format" data-disk="${d.name}" ${running ? 'disabled' : ''}>Formatieren</button>`;
-	return html`<button class="btn sm" type="button" data-act="smart" data-disk="${d.name}">SMART lesen</button>
+	return html`${adoptable(S.storage, d).map((p) => html`<button class="btn sm primary" type="button" data-act="adopt" data-part="${p.name}" data-fs="${p.fstype}" data-size="${p.size}" ${running || S.wiz ? 'disabled' : ''}>${p.name} übernehmen</button>`)}
+		<button class="btn sm" type="button" data-act="smart" data-disk="${d.name}">SMART lesen</button>
 		<button class="btn sm danger" type="button" data-act="format" data-disk="${d.name}" ${running || S.wiz ? 'disabled' : ''}>Löschen & formatieren</button>`;
 }
 
@@ -3786,6 +3801,18 @@ const ACTIONS = {
 			: { layout: 'single', volumes: w.disks.map((d) => ({ name: w.names[d], disk: d, fs: w.fs[d] || 'ext4' })), swap: w.swap, confirm: true };
 		try { await rpc('shareos.storage', 'setup', args); S.wiz = null; toast('Einrichtung gestartet.'); setTimeout(loadStorage, 1000); }
 		catch (e) { toast('Einrichten: ' + e.message, true); }
+	},
+	async adopt(el) {
+		const { part, fs, size } = el.dataset;
+		const name = await promptDlg(`${part} übernehmen`, `${part} (${FS_NAME[fs] || fs}, ${fmtBytes(+size)}) wird so, wie es ist, als Laufwerk eingebunden – es wird nichts gelöscht. Name des Laufwerks (a–z, 0–9, - und _, max. 16 Zeichen):`, 'daten', 'Übernehmen', 'text', 16);
+		if (!name) return;
+		if (!NAME_RE.test(name.toLowerCase())) { toast('Ungültiger Name.', true); return; }
+		el.disabled = true;
+		try {
+			await rpc('shareos.storage', 'adopt', { name: name.toLowerCase(), part });
+			toast(`${part} ist jetzt das Laufwerk „${name.toLowerCase()}“ – die Daten sind erhalten. Freigaben für vorhandene Ordner unter „Freigaben“ anlegen.`);
+		} catch (e) { toast(`${part} übernehmen: ${e.message}`, true); el.disabled = false; }
+		loadStorage();
 	},
 	async format(el) {
 		const disk = el.dataset.disk;
