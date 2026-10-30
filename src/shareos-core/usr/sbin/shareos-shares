@@ -161,6 +161,9 @@ smb_wanted() { [ "$(global smb || echo 1)" = 1 ] && grep -q '^\[' $SMBCONF 2>/de
 nfs_wanted() { [ "$(global nfs || echo 1)" = 1 ] && grep -q '^/' $EXPORTS 2>/dev/null; }
 
 smb_start() {
+	# the Kirkwood crypto engine (CESA) computes the AES-CMAC signatures of
+	# large SMB 3 messages (kernel patch 0001-ksmbd-cmac-via-cbc, #94)
+	modprobe marvell-cesa 2>/dev/null
 	modprobe ksmbd 2>/dev/null
 	# a mountd left over without the kernel module serves nobody
 	if pidof ksmbd.mountd >/dev/null; then
