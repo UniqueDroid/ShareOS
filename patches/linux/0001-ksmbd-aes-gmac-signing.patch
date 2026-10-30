@@ -1,0 +1,232 @@
+From: ShareOS <noreply@anthropic.com>
+Subject: [PATCH] ksmbd: AES-GMAC packet signing for SMB 3.1.1
+
+ksmbd only accepts HMAC-SHA256 and AES-CMAC in the signing capabilities
+context, so Windows signs with AES-CMAC: one AES block per 16 bytes of
+every packet. On an 800 MHz ARMv5 (Kirkwood, no AES instructions) that
+limits signed SMB writes to about 5-10 MB/s.
+
+AES-GMAC (MS-SMB2 3.1.4.1) needs one AES block per message plus GHASH.
+Offer it first when the client lists it; module parameter gmac_signing=0
+falls back to AES-CMAC (for comparisons and as a way out).
+
+Also fix the signing negotiation itself: init_smb3_11_server() ran after
+the negotiate contexts were decoded and reset the algorithm to AES-CMAC, so
+the chosen algorithm never reached the negotiate response; and HMAC-SHA256
+was accepted there although SMB 3.x signing here is AES-CMAC only.
+
+Tested with Samba 4.19 smbclient (signing required, AES-128-GMAC offered
+first): 50/200 MB put and get, checksums equal; gmac_signing=0 -> AES-CMAC;
+a client listing HMAC-SHA256 first gets AES-CMAC.
+
+---
+diff --git a/fs/smb/server/auth.c b/fs/smb/server/auth.c
+index 9844aaa..3da301c 100644
+--- a/fs/smb/server/auth.c
++++ b/fs/smb/server/auth.c
+@@ -18,6 +18,7 @@
+ #include <crypto/utils.h>
+ #include <linux/random.h>
+ #include <linux/scatterlist.h>
++#include <linux/unaligned.h>
+ 
+ #include "auth.h"
+ #include "glob.h"
+@@ -502,12 +503,128 @@ void ksmbd_sign_smb2_pdu(struct ksmbd_conn *conn, char *key, struct kvec *iov,
+  * @sig:	signature value generated for client request packet
+  *
+  */
++/*
++ * AES-128-GMAC signing (SMB 3.1.1, MS-SMB2 3.1.4.1): AES-GCM over no plain
++ * text with the whole message as associated data; the tag is the signature.
++ * The nonce is the MessageId, then a 32-bit field with bit 0 set for a
++ * response and bit 1 for a CANCEL request. Much cheaper than AES-CMAC on
++ * CPUs without AES instructions (one AES block per message instead of one
++ * per 16 bytes).
++ */
++static int ksmbd_sign_smb3_pdu_gmac(char *key, struct kvec *iov, int n_vec,
++				    char *sig)
++{
++	struct smb2_hdr *hdr = iov[0].iov_base;
++	struct ksmbd_crypto_ctx *ctx;
++	struct crypto_aead *tfm;
++	struct aead_request *req;
++	struct scatterlist *sg;
++	DECLARE_CRYPTO_WAIT(wait);
++	u8 *tag, *iv;
++	unsigned int nents = 1, assoc_len = 0, idx = 0;
++	u32 role = 0;
++	int rc, i;
++
++	if (iov[0].iov_len < sizeof(struct smb2_hdr))
++		return -EINVAL;
++
++	for (i = 0; i < n_vec; i++) {
++		unsigned long kaddr = (unsigned long)iov[i].iov_base;
++
++		if (!iov[i].iov_len)
++			continue;
++		if (is_vmalloc_addr(iov[i].iov_base))
++			nents += ((kaddr + iov[i].iov_len + PAGE_SIZE - 1) >>
++				  PAGE_SHIFT) - (kaddr >> PAGE_SHIFT);
++		else
++			nents++;
++		assoc_len += iov[i].iov_len;
++	}
++
++	if (hdr->Flags & SMB2_FLAGS_SERVER_TO_REDIR)
++		role |= 1;
++	if (hdr->Command == SMB2_CANCEL)
++		role |= 2;
++
++	ctx = ksmbd_crypto_ctx_find_gcm();
++	if (!ctx)
++		return -ENOMEM;
++	tfm = CRYPTO_GCM(ctx);
++
++	rc = crypto_aead_setkey(tfm, key, SMB2_CMACAES_SIZE);
++	if (rc)
++		goto out_ctx;
++	rc = crypto_aead_setauthsize(tfm, SMB2_SIGNATURE_SIZE);
++	if (rc)
++		goto out_ctx;
++
++	/* scatterlist, tag and nonce in one buffer (not on the stack) */
++	sg = kmalloc(nents * sizeof(*sg) + SMB2_SIGNATURE_SIZE + 12,
++		     KSMBD_DEFAULT_GFP);
++	if (!sg) {
++		rc = -ENOMEM;
++		goto out_ctx;
++	}
++	tag = (u8 *)(sg + nents);
++	iv = tag + SMB2_SIGNATURE_SIZE;
++	memcpy(iv, &hdr->MessageId, 8);
++	put_unaligned_le32(role, iv + 8);
++	sg_init_table(sg, nents);
++	for (i = 0; i < n_vec; i++) {
++		void *data = iov[i].iov_base;
++		unsigned int len = iov[i].iov_len;
++
++		if (!len)
++			continue;
++		if (!is_vmalloc_addr(data)) {
++			sg_set_page(&sg[idx++], virt_to_page(data), len,
++				    offset_in_page(data));
++			continue;
++		}
++		while (len) {
++			unsigned int bytes = min_t(unsigned int, len,
++						   PAGE_SIZE - offset_in_page(data));
++
++			sg_set_page(&sg[idx++], vmalloc_to_page(data), bytes,
++				    offset_in_page(data));
++			data += bytes;
++			len -= bytes;
++		}
++	}
++	sg_set_buf(&sg[idx++], tag, SMB2_SIGNATURE_SIZE);
++	sg_mark_end(&sg[idx - 1]);
++
++	req = aead_request_alloc(tfm, KSMBD_DEFAULT_GFP);
++	if (!req) {
++		rc = -ENOMEM;
++		goto out_sg;
++	}
++	aead_request_set_crypt(req, sg, sg, 0, iv);
++	aead_request_set_ad(req, assoc_len);
++	aead_request_set_callback(req, CRYPTO_TFM_REQ_MAY_BACKLOG |
++				  CRYPTO_TFM_REQ_MAY_SLEEP,
++				  crypto_req_done, &wait);
++	rc = crypto_wait_req(crypto_aead_encrypt(req), &wait);
++	if (!rc)
++		memcpy(sig, tag, SMB2_SIGNATURE_SIZE);
++	aead_request_free(req);
++out_sg:
++	kfree(sg);
++out_ctx:
++	ksmbd_release_crypto_ctx(ctx);
++	return rc;
++}
++
+ int ksmbd_sign_smb3_pdu(struct ksmbd_conn *conn, char *key, struct kvec *iov,
+ 			int n_vec, char *sig)
+ {
+ 	struct ksmbd_crypto_ctx *ctx;
+ 	int rc, i;
+ 
++	if (conn->signing_negotiated &&
++	    conn->signing_algorithm == SIGNING_ALG_AES_GMAC_LE)
++		return ksmbd_sign_smb3_pdu_gmac(key, iov, n_vec, sig);
++
+ 	ctx = ksmbd_crypto_ctx_find_cmacaes();
+ 	if (!ctx) {
+ 		ksmbd_debug(AUTH, "could not crypto alloc cmac\n");
+diff --git a/fs/smb/server/smb2ops.c b/fs/smb/server/smb2ops.c
+index 4c50b7f..72d3f82 100644
+--- a/fs/smb/server/smb2ops.c
++++ b/fs/smb/server/smb2ops.c
+@@ -279,7 +279,13 @@ int init_smb3_11_server(struct ksmbd_conn *conn)
+ 	conn->ops = &smb3_11_server_ops;
+ 	conn->cmds = smb2_0_server_cmds;
+ 	conn->max_cmds = ARRAY_SIZE(smb2_0_server_cmds);
+-	conn->signing_algorithm = SIGNING_ALG_AES_CMAC_LE;
++	/*
++	 * Keep the algorithm chosen from the client's signing capabilities
++	 * context (decoded before this): overwriting it here made the
++	 * negotiate response always announce AES-CMAC.
++	 */
++	if (!conn->signing_negotiated)
++		conn->signing_algorithm = SIGNING_ALG_AES_CMAC_LE;
+ 
+ 	if (server_conf.flags & KSMBD_GLOBAL_FLAG_SMB2_LEASES)
+ 		conn->vals->req_capabilities |= SMB2_GLOBAL_CAP_LEASING |
+diff --git a/fs/smb/server/smb2pdu.c b/fs/smb/server/smb2pdu.c
+index 27a6e47..1644276 100644
+--- a/fs/smb/server/smb2pdu.c
++++ b/fs/smb/server/smb2pdu.c
+@@ -6,6 +6,7 @@
+ 
+ #include <crypto/utils.h>
+ #include <linux/inetdevice.h>
++#include <linux/moduleparam.h>
+ #include <net/addrconf.h>
+ #include <linux/syscalls.h>
+ #include <linux/namei.h>
+@@ -980,6 +981,11 @@ static void decode_compress_ctxt(struct ksmbd_conn *conn,
+ 	conn->compress_algorithm = SMB3_COMPRESS_NONE;
+ }
+ 
++/* AES-GMAC packet signing for SMB 3.1.1 (off: AES-CMAC as before) */
++static bool ksmbd_gmac_signing = true;
++module_param_named(gmac_signing, ksmbd_gmac_signing, bool, 0644);
++MODULE_PARM_DESC(gmac_signing, "Offer AES-GMAC packet signing to SMB 3.1.1 clients (default: on)");
++
+ static void decode_sign_cap_ctxt(struct ksmbd_conn *conn,
+ 				 struct smb2_signing_capabilities *pneg_ctxt,
+ 				 int ctxt_len)
+@@ -1002,9 +1008,23 @@ static void decode_sign_cap_ctxt(struct ksmbd_conn *conn,
+ 		return;
+ 	}
+ 
++	/* AES-GMAC first when the client offers it: far cheaper than AES-CMAC */
++	for (i = 0; ksmbd_gmac_signing && i < sign_algo_cnt; i++) {
++		if (pneg_ctxt->SigningAlgorithms[i] == SIGNING_ALG_AES_GMAC_LE) {
++			ksmbd_debug(SMB, "Signing Algorithm ID = AES-GMAC\n");
++			conn->signing_negotiated = true;
++			conn->signing_algorithm = SIGNING_ALG_AES_GMAC_LE;
++			return;
++		}
++	}
++
++	/*
++	 * SMB 3.x signing below is AES-CMAC (or AES-GMAC above) only, so
++	 * announce nothing else: HMAC-SHA256 here made the response name an
++	 * algorithm the server does not sign with.
++	 */
+ 	for (i = 0; i < sign_algo_cnt; i++) {
+-		if (pneg_ctxt->SigningAlgorithms[i] == SIGNING_ALG_HMAC_SHA256_LE ||
+-		    pneg_ctxt->SigningAlgorithms[i] == SIGNING_ALG_AES_CMAC_LE) {
++		if (pneg_ctxt->SigningAlgorithms[i] == SIGNING_ALG_AES_CMAC_LE) {
+ 			ksmbd_debug(SMB, "Signing Algorithm ID = 0x%x\n",
+ 				    pneg_ctxt->SigningAlgorithms[i]);
+ 			conn->signing_negotiated = true;
