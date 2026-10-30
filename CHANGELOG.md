@@ -6,7 +6,11 @@ pre-releases for test devices only.
 
 ## 0.2.0-beta.17
 
+<<<<<<< HEAD
 - **SMB: compatibility mode for faster signed transfers** ([#94](https://github.com/UniqueDroid/ShareOS/issues/94)). Windows 11 signs every SMB connection, and on the 800 MHz Kirkwood the signature is what limits writing: measured on a DNS-320L, about 35 MB/s without signing (the disks), 4–10 MB/s with SMB 3.1.1 (AES-CMAC). AES-GMAC was tried as well and is not faster here (GHASH in C on ARMv5). Freigaben → Dienste → SMB → *Kompatibilitätsmodus (höchstens SMB 2.1)* limits ksmbd to SMB 2.1, whose HMAC-SHA256 signature runs in ARM assembly: 9–14 MB/s with signing. Without SMB 3 there is no encryption and no multichannel; off by default. Full speed needs a client that does not sign (on Windows: `Set-SmbClientConfiguration -RequireSecuritySignature $false`, a security trade-off). The kernel now also has AES in ARM assembly (`CONFIG_CRYPTO_AES_ARM`). Changing the mode restarts ksmbd (the protocol range is only read at start); a `ksmbd.mountd` left over without the kernel module is restarted instead of being taken for a running SMB server. `tests/test-users.sh` checks the setting.
+=======
+- **DNS-320 rev A: no more reboot loop after flashing** ([#96](https://github.com/UniqueDroid/ShareOS/issues/96)). The stock U-Boot copies the initramfs to its load address before the kernel starts; on the DNS-325 0x800000 lies in memory the kernel uses, so the kernel dropped the initramfs, found no `/init` and restarted every minute (fixed for the DNS-325 in 0.2.0-beta.9). The DNS-320 rev A – the same SoC (88F6281) and U-Boot family – showed the same kind of loop (LEDs on, restart about every minute, no network), so its initramfs is now loaded at 0x1000000 as on the DNS-325. A box already in the loop needs a serial console once to start the new image from RAM (see the issue). `tests/check-initrd-address.sh` checks the new address.
+>>>>>>> origin/main
 
 ## 0.2.0-beta.16
 
