@@ -1269,7 +1269,8 @@
 		"Nur für Geräte, die mit SMB 3 nicht zurechtkommen. Die Signatur, die Windows 11 bei jeder Verbindung verlangt, rechnet bei SMB 3 die Krypto-Einheit der Box (gemessen etwa 19–23 MB/s beim Schreiben, ohne Signatur etwa 35); SMB 2.1 rechnet sie auf dem Prozessor (etwa 9–14 MB/s) und hat keine Verschlüsselung und kein Multichannel. Bestehende Verbindungen werden beim Umschalten getrennt.": "Solo para dispositivos que tienen problemas con SMB 3. La firma que Windows 11 exige en cada conexión la calcula con SMB 3 el motor criptográfico del equipo (medido unos 19–23 MB/s al escribir, unos 35 sin firma); SMB 2.1 la calcula en el procesador (unos 9–14 MB/s) y no tiene cifrado ni multicanal. Las conexiones abiertas se cortan al cambiarlo.",
 		"Der Zeitplan ist aus – die eingetragenen Zeiten gelten erst mit dem Haken bei „Zeitplan einschalten“.": "El horario está desactivado: las horas introducidas solo se aplican con la casilla «activar horario» marcada.",
 		"Zeitplan gespeichert (ausgeschaltet).": "Horario guardado (desactivado).",
-		"Zeitplan gespeichert – kein Einschalten geplant.": "Horario guardado: no hay encendido previsto."
+		"Zeitplan gespeichert – kein Einschalten geplant.": "Horario guardado: no hay encendido previsto.",
+		"Einschalten danach nur am Gerät.": "Después solo se enciende en el equipo."
 	},
 	"patterns": [
 		[
@@ -2551,6 +2552,14 @@
 		[
 			"^ShareOS fährt herunter und die Box schaltet sich aus\\. Nach Zeitplan schaltet sie sich am (.+) wieder ein\\.$",
 			"ShareOS se apaga y el equipo se desconecta. Según el horario vuelve a encenderse el $1."
+		],
+		[
+			"^Nach Zeitplan schaltet sie sich am (.+) wieder ein\\.$",
+			"Según el horario vuelve a encenderse el $1."
+		],
+		[
+			"^ShareOS fährt herunter und die Box schaltet sich aus\\. (.+)$",
+			"ShareOS se apaga y el equipo se desconecta. $1"
 		]
 	],
 	"words": [

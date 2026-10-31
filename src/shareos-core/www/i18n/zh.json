@@ -1269,7 +1269,8 @@
 		"Nur für Geräte, die mit SMB 3 nicht zurechtkommen. Die Signatur, die Windows 11 bei jeder Verbindung verlangt, rechnet bei SMB 3 die Krypto-Einheit der Box (gemessen etwa 19–23 MB/s beim Schreiben, ohne Signatur etwa 35); SMB 2.1 rechnet sie auf dem Prozessor (etwa 9–14 MB/s) und hat keine Verschlüsselung und kein Multichannel. Bestehende Verbindungen werden beim Umschalten getrennt.": "仅适用于不能正常使用 SMB 3 的设备。Windows 11 对每个连接要求的签名，在 SMB 3 下由本设备的加密引擎计算（写入实测约 19–23 MB/s，不签名约 35）；SMB 2.1 在处理器上计算（约 9–14 MB/s），且没有加密和多通道。切换时会断开现有连接。",
 		"Der Zeitplan ist aus – die eingetragenen Zeiten gelten erst mit dem Haken bei „Zeitplan einschalten“.": "计划已关闭——勾选“启用计划”后填写的时间才会生效。",
 		"Zeitplan gespeichert (ausgeschaltet).": "计划已保存（已关闭）。",
-		"Zeitplan gespeichert – kein Einschalten geplant.": "计划已保存——没有计划开机。"
+		"Zeitplan gespeichert – kein Einschalten geplant.": "计划已保存——没有计划开机。",
+		"Einschalten danach nur am Gerät.": "之后只能在设备上开机。"
 	},
 	"patterns": [
 		[
@@ -2551,6 +2552,14 @@
 		[
 			"^ShareOS fährt herunter und die Box schaltet sich aus\\. Nach Zeitplan schaltet sie sich am (.+) wieder ein\\.$",
 			"ShareOS 关机，设备断电。按计划将于 $1 再次开机。"
+		],
+		[
+			"^Nach Zeitplan schaltet sie sich am (.+) wieder ein\\.$",
+			"按计划将于 $1 再次开机。"
+		],
+		[
+			"^ShareOS fährt herunter und die Box schaltet sich aus\\. (.+)$",
+			"ShareOS 关机，设备断电。$1"
 		]
 	],
 	"words": [

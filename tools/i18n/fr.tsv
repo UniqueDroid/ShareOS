@@ -1627,3 +1627,6 @@ E1265	Planning enregistré (désactivé).
 E1266	Planning enregistré – aucune mise en marche prévue.
 P318	Planning enregistré – le boîtier s’allume le $1.
 P319	ShareOS s’arrête et le boîtier s’éteint. Selon le planning, il se rallume le $1.
+E1267	Rallumage ensuite uniquement sur l’appareil.
+P320	Selon le planning, il se rallume le $1.
+P321	ShareOS s’arrête et le boîtier s’éteint. $1

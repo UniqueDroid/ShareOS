@@ -1269,7 +1269,8 @@
 		"Nur für Geräte, die mit SMB 3 nicht zurechtkommen. Die Signatur, die Windows 11 bei jeder Verbindung verlangt, rechnet bei SMB 3 die Krypto-Einheit der Box (gemessen etwa 19–23 MB/s beim Schreiben, ohne Signatur etwa 35); SMB 2.1 rechnet sie auf dem Prozessor (etwa 9–14 MB/s) und hat keine Verschlüsselung und kein Multichannel. Bestehende Verbindungen werden beim Umschalten getrennt.": "Только для устройств, у которых проблемы с SMB 3. Подпись, которую Windows 11 требует для каждого соединения, при SMB 3 вычисляет криптографический модуль устройства (измерено около 19–23 МБ/с при записи, около 35 без подписи); SMB 2.1 вычисляет её на процессоре (около 9–14 МБ/с) и не имеет шифрования и многоканальности. Открытые соединения при переключении разрываются.",
 		"Der Zeitplan ist aus – die eingetragenen Zeiten gelten erst mit dem Haken bei „Zeitplan einschalten“.": "Расписание выключено – введённое время действует только с отметкой «включить расписание».",
 		"Zeitplan gespeichert (ausgeschaltet).": "Расписание сохранено (выключено).",
-		"Zeitplan gespeichert – kein Einschalten geplant.": "Расписание сохранено – включение не запланировано."
+		"Zeitplan gespeichert – kein Einschalten geplant.": "Расписание сохранено – включение не запланировано.",
+		"Einschalten danach nur am Gerät.": "Включить затем можно только на устройстве."
 	},
 	"patterns": [
 		[
@@ -2551,6 +2552,14 @@
 		[
 			"^ShareOS fährt herunter und die Box schaltet sich aus\\. Nach Zeitplan schaltet sie sich am (.+) wieder ein\\.$",
 			"ShareOS завершает работу, и устройство выключается. По расписанию оно снова включится $1."
+		],
+		[
+			"^Nach Zeitplan schaltet sie sich am (.+) wieder ein\\.$",
+			"По расписанию оно снова включится $1."
+		],
+		[
+			"^ShareOS fährt herunter und die Box schaltet sich aus\\. (.+)$",
+			"ShareOS завершает работу, и устройство выключается. $1"
 		]
 	],
 	"words": [

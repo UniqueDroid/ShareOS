@@ -1627,3 +1627,6 @@ E1265	Programação salva (desligada).
 E1266	Programação salva – nenhuma ligação prevista.
 P318	Programação salva – o equipamento liga em $1.
 P319	O ShareOS desliga e o equipamento se desliga. Pela programação, ele liga de novo em $1.
+E1267	Depois, ligar só no equipamento.
+P320	Pela programação, ele liga de novo em $1.
+P321	O ShareOS desliga e o equipamento se desliga. $1

@@ -1627,3 +1627,6 @@ E1265	Horario guardado (desactivado).
 E1266	Horario guardado: no hay encendido previsto.
 P318	Horario guardado: el equipo se enciende el $1.
 P319	ShareOS se apaga y el equipo se desconecta. Según el horario vuelve a encenderse el $1.
+E1267	Después solo se enciende en el equipo.
+P320	Según el horario vuelve a encenderse el $1.
+P321	ShareOS se apaga y el equipo se desconecta. $1
