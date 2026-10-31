@@ -459,6 +459,16 @@ Needs a Tailscale account (free), a phone or computer with Tailscale, the file `
 3. Switch it off: the line is gone, after reconnecting `3.1.1` again.
 4. Crypto engine: `lsmod | grep cesa` shows `marvell_cesa`; after a signed copy `dmesg | grep AES-CMAC` shows "AES-CMAC signatures through cbc(aes)", `top` while copying shows `irq/…-f1030000` instead of a ksmbd thread at over 60 %.
 
+## 14zd. SMB, taking over disks, schedule, header (0.2.0-beta.17)
+
+1. SMB signing through the crypto engine: `lsmod | grep marvell_cesa` shows the module, `cat /sys/module/ksmbd/parameters/cbc_cmac` shows `Y`. Copy a big file from a Windows PC: about 18–23 MB/s (6–11 before). In PowerShell `Get-SmbConnection | fl Dialect,Signed` shows `3.1.1` and `True`.
+2. Freigaben → Dienste → SMB → switch on *Kompatibilitätsmodus (höchstens SMB 2.1)*, *Speichern*; reconnect on the PC: `Dialect` is `2.1`. Switch it off again: `3.1.1`.
+3. Put in a disk with data from Alt-F or the D-Link firmware: Speicher → Laufwerke shows **„<partition> übernehmen“**. Click it: the volume appears, the files are there, nothing was erased. A RAID 1 from Alt-F shows up as a mirror.
+4. System → Energie & Reset: without times it shows *Keine Zeiten eingerichtet.* and *aus*. *Einrichten* opens the table; enter today *aus* 3 minutes and *an* 6 minutes ahead, *Speichern*: the overview shows the day with *an … · aus …*, the next switch-on with its date and *aktiv*. The box switches itself off at the off time and on again at the on time. *Ausschalten* at the top right names the next switch-on in its dialog.
+5. Header with several notices (update, message, VPN, apps) in a narrow window: everything stays on one line, the rest is behind **+N**; a click opens the list, a click elsewhere closes it. The "update available" message is not counted in *MELDUNG* while *UPDATE* is shown.
+6. As a user: *Mein ShareOS* has the tab **APPS** with all apps; the start page shows only the favourites. As admin: System → Allgemein shows *Gerät & Zugang* between *App & Widgets* and *Über*.
+7. DNS-320 rev A (testers wanted): after flashing the box starts and stays up.
+
 ## 14zc. OneDrive (0.2.0-beta.16)
 
 Needs a Microsoft account with OneDrive and rclone (Cloud → rclone installieren).
