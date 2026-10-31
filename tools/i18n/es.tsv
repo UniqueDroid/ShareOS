@@ -1624,3 +1624,4 @@ P317	$1 es ahora la unidad «$2»: los datos se conservan. Cree recursos compart
 E1263	Solo para dispositivos que tienen problemas con SMB 3. La firma que Windows 11 exige en cada conexión la calcula con SMB 3 el motor criptográfico del equipo (medido unos 19–23 MB/s al escribir, unos 35 sin firma); SMB 2.1 la calcula en el procesador (unos 9–14 MB/s) y no tiene cifrado ni multicanal. Las conexiones abiertas se cortan al cambiarlo.
 E1264	EQUIPO Y ACCESO
 E1265	La estrella convierte una app en favorita: las favoritas aparecen arriba en «Mi ShareOS».
+E1266	Mostrar todos los avisos

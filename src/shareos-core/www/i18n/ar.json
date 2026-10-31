@@ -1268,7 +1268,8 @@
 		"Der Assistent löscht die ausgewählten Platten und richtet sie neu ein. Einzelne Platten lassen sich auch direkt an der Platte unter „Laufwerke“ formatieren. Platten mit Daten (z. B. von Alt-F oder der D-Link-Firmware) bindet „… übernehmen“ an der Platte ohne Löschen ein.": "يمسح المعالج الأقراص المختارة ويعيد إعدادها. يمكن أيضاً تهيئة قرص منفرد مباشرة تحت «محركات الأقراص». الأقراص التي تحوي بيانات (مثلاً من Alt-F أو برنامج D-Link الثابت) تُضاف دون مسح عبر «… استلام» عند القرص.",
 		"Nur für Geräte, die mit SMB 3 nicht zurechtkommen. Die Signatur, die Windows 11 bei jeder Verbindung verlangt, rechnet bei SMB 3 die Krypto-Einheit der Box (gemessen etwa 19–23 MB/s beim Schreiben, ohne Signatur etwa 35); SMB 2.1 rechnet sie auf dem Prozessor (etwa 9–14 MB/s) und hat keine Verschlüsselung und kein Multichannel. Bestehende Verbindungen werden beim Umschalten getrennt.": "فقط للأجهزة التي تواجه مشاكل مع SMB 3. التوقيع الذي يطلبه Windows 11 في كل اتصال يحسبه في SMB 3 محرك التشفير في الجهاز (قيس نحو 19–23 ميغابايت/ث عند الكتابة، ونحو 35 بدون توقيع)؛ أما SMB 2.1 فيحسبه على المعالج (نحو 9–14 ميغابايت/ث) ولا يدعم التشفير ولا تعدد القنوات. تُقطع الاتصالات المفتوحة عند التبديل.",
 		"GERÄT & ZUGANG": "الجهاز والوصول",
-		"Mit dem Stern wird eine App zum Favoriten – Favoriten stehen oben auf „Mein ShareOS“.": "النجمة تجعل التطبيق مفضلاً – تظهر المفضلة أعلى «ShareOS الخاص بي»."
+		"Mit dem Stern wird eine App zum Favoriten – Favoriten stehen oben auf „Mein ShareOS“.": "النجمة تجعل التطبيق مفضلاً – تظهر المفضلة أعلى «ShareOS الخاص بي».",
+		"Alle Hinweise anzeigen": "عرض كل التنبيهات"
 	},
 	"patterns": [
 		[

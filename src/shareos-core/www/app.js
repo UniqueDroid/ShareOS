@@ -604,18 +604,53 @@ function renderHeader(offline = false) {
 				${S.notes?.unread ? html`<a class="chip ${S.notes.items.some((x) => !x.read && !x.resolved && x.level === 'error') ? 'err' : 'warn'}" href="#/system/notifications"><i></i>${S.notes.unread === 1 ? '1 MELDUNG' : S.notes.unread + ' MELDUNGEN'}</a>` : ''}
 				${upd ? html`<a class="chip warn" href="#/system/firmware"><i></i>UPDATE ${upd.replace(/^v/, '')} <small>verfügbar</small></a>` : ''}
 				${chipsHtml()}
-				${offline ? html`<span class="chip warn"><i></i>OFFLINE</span>`
-					: html`<span class="chip"><i></i>ONLINE <small>seit ${fmtUptime(i.uptime)}</small></span>`}
+				<button class="chip more" type="button" data-act="chips-more" hidden></button>
+				${offline ? html`<span class="chip warn keep"><i></i>OFFLINE</span>`
+					: html`<span class="chip keep"><i></i>ONLINE <small>seit ${fmtUptime(i.uptime)}</small></span>`}
 				<button class="ib" type="button" data-act="theme" aria-label="Hell/Dunkel umschalten" title="Hell/Dunkel umschalten">${svg(I.moon)}</button>
 				<button class="ib" type="button" data-act="logout" aria-label="Abmelden">${svg(I.power)}</button>
 			</div>
 			<div class="clock">${now.toLocaleTimeString(LOC, { hour: '2-digit', minute: '2-digit' })}</div>
 			<div class="meta">${now.toLocaleDateString(LOC, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</div>
 		</div>`.s;
+	fitChips();
 	const ft = $('#ft');
 	if (ft) ft.innerHTML = html`<span><b>ShareOS</b> ${r.version || ''} · Linux ${i.kernel || ''} · GPLv2</span>
 		<span>Last ${(i.load || []).map((x) => x.toFixed(2)).join(' ')} · <a href="https://github.com/UniqueDroid/ShareOS" target="_blank" rel="noopener">github.com/UniqueDroid/ShareOS</a></span>`.s;
 }
+
+// header chips stay on one line: the ones that do not fit go behind "+N"
+// (from the end, so messages and the update stay visible); "+N" shows all of them
+function fitChips() {
+	const row = $('#hd .side .row'), more = row?.querySelector('.more');
+	if (!row || !more) return;
+	row.parentElement.querySelector('.chippop')?.remove();
+	const chips = [...row.querySelectorAll('.chip:not(.keep):not(.more)')];
+	chips.forEach((c) => { c.hidden = false; });
+	more.hidden = true;
+	// with justify-content:flex-end an overflow goes left and scrollWidth does not see it
+	const need = () => { const v = [...row.children].filter((x) => !x.hidden); return v.reduce((a, x) => a + x.offsetWidth, 0) + 10 * (v.length - 1); };
+	const room = row.parentElement.clientWidth;
+	let n = 0;
+	while (need() > room && n < chips.length) {
+		chips[chips.length - 1 - n].hidden = true;
+		n++;
+		more.hidden = false; more.textContent = '+' + n;
+	}
+	more.title = more.ariaLabel = 'Alle Hinweise anzeigen';
+	more.classList.toggle('warn', chips.slice(chips.length - n).some((c) => c.matches('.warn, .err')));
+	more.setAttribute('aria-expanded', String(!!S.chipsAll && n > 0));
+	if (!S.chipsAll || !n) { S.chipsAll = false; return; }
+	// the hidden ones open as a list under the row; the header keeps its height
+	const pop = document.createElement('div');
+	pop.className = 'chippop';
+	chips.slice(chips.length - n).forEach((c) => { const x = c.cloneNode(true); x.hidden = false; pop.append(x); });
+	row.after(pop);
+}
+addEventListener('resize', () => fitChips());
+document.addEventListener('click', (e) => {
+	if (S.chipsAll && !e.target.closest?.('.chip.more')) { S.chipsAll = false; fitChips(); }
+});
 
 // areas switched off under System -> Appearance are not shown
 const tabOn = (id) => !S.areas || S.areas[id] !== false;
@@ -1649,12 +1684,14 @@ function renderUserHeader() {
 		<div class="side">
 			<div class="row">
 				${chipsHtml()}
+				<button class="chip more" type="button" data-act="chips-more" hidden></button>
 				<button class="ib" type="button" data-act="theme" aria-label="Hell/Dunkel umschalten" title="Hell/Dunkel umschalten">${svg(I.moon)}</button>
 				<button class="ib" type="button" data-act="logout" aria-label="Abmelden" title="Abmelden">${svg(I.power)}</button>
 			</div>
 			<div class="clock">${now.toLocaleTimeString(LOC, { hour: '2-digit', minute: '2-digit' })}</div>
 			<div class="meta">${now.toLocaleDateString(LOC, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</div>
 		</div>`.s;
+	fitChips();
 	$('#ft').innerHTML = html`<span><b>ShareOS</b> · Mein ShareOS</span><span><a href="https://github.com/UniqueDroid/ShareOS" target="_blank" rel="noopener">github.com/UniqueDroid/ShareOS</a></span>`.s;
 }
 
@@ -3544,6 +3581,7 @@ async function refreshUpdateStatus() {
 /* ---------- actions (delegated clicks) -------------------------------------- */
 
 const ACTIONS = {
+	'chips-more'() { S.chipsAll = !S.chipsAll; fitChips(); },
 	'page-reload': () => location.reload(),
 	theme() {
 		S.theme = effTheme() === 'light' ? 'dark' : 'light';

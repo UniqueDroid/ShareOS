@@ -1624,3 +1624,4 @@ P317	$1 est maintenant le lecteur « $2 » – les données sont conservées. Cr
 E1263	Uniquement pour les appareils qui ont des problèmes avec SMB 3. La signature que Windows 11 exige à chaque connexion est calculée en SMB 3 par le moteur cryptographique du boîtier (mesuré environ 19–23 Mo/s en écriture, environ 35 sans signature) ; SMB 2.1 la calcule sur le processeur (environ 9–14 Mo/s) et n’a ni chiffrement ni multicanal. Les connexions ouvertes sont coupées lors du changement.
 E1264	APPAREIL & ACCÈS
 E1265	L’étoile fait d’une app un favori – les favoris apparaissent en haut de « Mon ShareOS ».
+E1266	Afficher toutes les notifications
