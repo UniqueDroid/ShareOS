@@ -28,6 +28,9 @@ const ROOT = getenv('SHAREOS_ROOT') ?? '';
 const DAYS = [ 'sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat' ];   // localtime().wday % 7
 const DAEMON = getenv('SHAREOS_POWER_DAEMON') ?? '/usr/sbin/dns320l-daemon';
 const TIME_RE = /^([01][0-9]|2[0-3]):([0-5][0-9])$/;
+// the alarm counts whole minutes and the MCU cuts the power 3 s after the
+// shutdown: a switch-on at least one minute ahead is still reached
+const MARGIN = 60;
 
 function out(o) { print(sprintf('%J\n', o)); }
 function shq(s) { return "'" + replace('' + s, "'", "'\\''") + "'"; }
@@ -84,14 +87,13 @@ function status() {
 	let cf = conf(), t = now(), sup = supported();
 	let alarm = sup ? capture(DAEMON + ' -x ReadAlarm') : null;
 	return { supported: sup, enabled: cf.enabled, days: cf.days,
-		next_on: sup ? fmt(next_time(cf, 'on', t)) : null, next_off: fmt(next_time(cf, 'off', t)), alarm };
+		next_on: sup ? fmt(next_time(cf, 'on', t + MARGIN)) : null, next_off: fmt(next_time(cf, 'off', t)), alarm };
 }
 
-// the next switch-on into the MCU; at least 3 minutes ahead, so it is not
-// set for the minute the box goes off in
+// the next switch-on into the MCU
 function arm() {
 	if (!supported()) return { ok: true, armed: null };
-	let cf = conf(), at = next_time(cf, 'on', now() + 180);
+	let cf = conf(), at = next_time(cf, 'on', now() + MARGIN);
 	let r;
 	if (at == null) r = capture(DAEMON + ' -x WriteAlarm disable');
 	else {

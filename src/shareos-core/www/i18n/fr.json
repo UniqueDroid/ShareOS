@@ -1266,7 +1266,10 @@
 		"Kompatibilitätsmodus (höchstens SMB 2.1)": "Mode compatibilité (SMB 2.1 au plus)",
 		"Schneller mit Windows 11, das jede Verbindung signiert: Die Signatur von SMB 2.1 kostet diese Box etwa halb so viel Rechenzeit wie die von SMB 3 (gemessen etwa 9–14 statt 4–10 MB/s beim Schreiben). Ohne Signatur sind etwa 35 MB/s möglich. Dafür gibt es kein SMB 3: keine Verschlüsselung, kein Multichannel. Bestehende Verbindungen werden dabei getrennt.": "Plus rapide avec Windows 11, qui signe chaque connexion : la signature de SMB 2.1 coûte à ce boîtier environ deux fois moins de temps de calcul que celle de SMB 3 (mesuré environ 9–14 au lieu de 4–10 Mo/s en écriture). Sans signature, environ 35 Mo/s sont possibles. En contrepartie, pas de SMB 3 : pas de chiffrement, pas de multicanal. Les connexions ouvertes sont coupées lors du changement.",
 		"Der Assistent löscht die ausgewählten Platten und richtet sie neu ein. Einzelne Platten lassen sich auch direkt an der Platte unter „Laufwerke“ formatieren. Platten mit Daten (z. B. von Alt-F oder der D-Link-Firmware) bindet „… übernehmen“ an der Platte ohne Löschen ein.": "L’assistant efface les disques choisis et les configure à nouveau. Un disque seul peut aussi être formaté directement sous « Lecteurs ». Les disques contenant des données (p. ex. d’Alt-F ou du firmware D-Link) s’ajoutent sans effacement avec « … reprendre » sur le disque.",
-		"Nur für Geräte, die mit SMB 3 nicht zurechtkommen. Die Signatur, die Windows 11 bei jeder Verbindung verlangt, rechnet bei SMB 3 die Krypto-Einheit der Box (gemessen etwa 19–23 MB/s beim Schreiben, ohne Signatur etwa 35); SMB 2.1 rechnet sie auf dem Prozessor (etwa 9–14 MB/s) und hat keine Verschlüsselung und kein Multichannel. Bestehende Verbindungen werden beim Umschalten getrennt.": "Uniquement pour les appareils qui ont des problèmes avec SMB 3. La signature que Windows 11 exige à chaque connexion est calculée en SMB 3 par le moteur cryptographique du boîtier (mesuré environ 19–23 Mo/s en écriture, environ 35 sans signature) ; SMB 2.1 la calcule sur le processeur (environ 9–14 Mo/s) et n’a ni chiffrement ni multicanal. Les connexions ouvertes sont coupées lors du changement."
+		"Nur für Geräte, die mit SMB 3 nicht zurechtkommen. Die Signatur, die Windows 11 bei jeder Verbindung verlangt, rechnet bei SMB 3 die Krypto-Einheit der Box (gemessen etwa 19–23 MB/s beim Schreiben, ohne Signatur etwa 35); SMB 2.1 rechnet sie auf dem Prozessor (etwa 9–14 MB/s) und hat keine Verschlüsselung und kein Multichannel. Bestehende Verbindungen werden beim Umschalten getrennt.": "Uniquement pour les appareils qui ont des problèmes avec SMB 3. La signature que Windows 11 exige à chaque connexion est calculée en SMB 3 par le moteur cryptographique du boîtier (mesuré environ 19–23 Mo/s en écriture, environ 35 sans signature) ; SMB 2.1 la calcule sur le processeur (environ 9–14 Mo/s) et n’a ni chiffrement ni multicanal. Les connexions ouvertes sont coupées lors du changement.",
+		"Der Zeitplan ist aus – die eingetragenen Zeiten gelten erst mit dem Haken bei „Zeitplan einschalten“.": "Le planning est désactivé – les heures saisies ne s’appliquent qu’avec la case « activer le planning » cochée.",
+		"Zeitplan gespeichert (ausgeschaltet).": "Planning enregistré (désactivé).",
+		"Zeitplan gespeichert – kein Einschalten geplant.": "Planning enregistré – aucune mise en marche prévue."
 	},
 	"patterns": [
 		[
@@ -2540,6 +2543,14 @@
 		[
 			"^(\\S+) ist jetzt das Laufwerk „(.+)“ – die Daten sind erhalten\\. Freigaben für vorhandene Ordner unter „Freigaben“ anlegen\\.$",
 			"$1 est maintenant le lecteur « $2 » – les données sont conservées. Créez des partages pour les dossiers existants sous « Partages »."
+		],
+		[
+			"^Zeitplan gespeichert – die Box schaltet sich am (.+) ein\\.$",
+			"Planning enregistré – le boîtier s’allume le $1."
+		],
+		[
+			"^ShareOS fährt herunter und die Box schaltet sich aus\\. Nach Zeitplan schaltet sie sich am (.+) wieder ein\\.$",
+			"ShareOS s’arrête et le boîtier s’éteint. Selon le planning, il se rallume le $1."
 		]
 	],
 	"words": [
