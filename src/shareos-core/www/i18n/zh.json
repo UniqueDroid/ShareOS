@@ -1271,7 +1271,10 @@
 		"Zeitplan gespeichert (ausgeschaltet).": "计划已保存（已关闭）。",
 		"Zeitplan gespeichert – kein Einschalten geplant.": "计划已保存——没有计划开机。",
 		"Einschalten danach nur am Gerät.": "之后只能在设备上开机。",
-		"Keine Zeiten eingerichtet.": "未设置时间。"
+		"Keine Zeiten eingerichtet.": "未设置时间。",
+		"GERÄT & ZUGANG": "设备与访问",
+		"Mit dem Stern wird eine App zum Favoriten – Favoriten stehen oben auf „Mein ShareOS“.": "星标可将应用设为收藏——收藏显示在“我的 ShareOS”顶部。",
+		"Alle Hinweise anzeigen": "显示所有提示"
 	},
 	"patterns": [
 		[

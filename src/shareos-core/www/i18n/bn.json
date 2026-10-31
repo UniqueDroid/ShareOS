@@ -1271,7 +1271,10 @@
 		"Zeitplan gespeichert (ausgeschaltet).": "সময়সূচি সংরক্ষিত (বন্ধ)।",
 		"Zeitplan gespeichert – kein Einschalten geplant.": "সময়সূচি সংরক্ষিত – চালু হওয়ার কোনো পরিকল্পনা নেই।",
 		"Einschalten danach nur am Gerät.": "এরপর শুধু ডিভাইসেই চালু করা যাবে।",
-		"Keine Zeiten eingerichtet.": "কোনো সময় সেট করা নেই।"
+		"Keine Zeiten eingerichtet.": "কোনো সময় সেট করা নেই।",
+		"GERÄT & ZUGANG": "ডিভাইস ও অ্যাক্সেস",
+		"Mit dem Stern wird eine App zum Favoriten – Favoriten stehen oben auf „Mein ShareOS“.": "তারকা দিয়ে অ্যাপ প্রিয় হয় – প্রিয়গুলি \"আমার ShareOS\"-এর উপরে দেখায়।",
+		"Alle Hinweise anzeigen": "সব বিজ্ঞপ্তি দেখান"
 	},
 	"patterns": [
 		[

@@ -1271,7 +1271,10 @@
 		"Zeitplan gespeichert (ausgeschaltet).": "Horario guardado (desactivado).",
 		"Zeitplan gespeichert – kein Einschalten geplant.": "Horario guardado: no hay encendido previsto.",
 		"Einschalten danach nur am Gerät.": "Después solo se enciende en el equipo.",
-		"Keine Zeiten eingerichtet.": "No hay horas configuradas."
+		"Keine Zeiten eingerichtet.": "No hay horas configuradas.",
+		"GERÄT & ZUGANG": "EQUIPO Y ACCESO",
+		"Mit dem Stern wird eine App zum Favoriten – Favoriten stehen oben auf „Mein ShareOS“.": "La estrella convierte una app en favorita: las favoritas aparecen arriba en «Mi ShareOS».",
+		"Alle Hinweise anzeigen": "Mostrar todos los avisos"
 	},
 	"patterns": [
 		[

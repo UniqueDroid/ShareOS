@@ -1271,7 +1271,10 @@
 		"Zeitplan gespeichert (ausgeschaltet).": "Schedule saved (switched off).",
 		"Zeitplan gespeichert – kein Einschalten geplant.": "Schedule saved – no switch-on planned.",
 		"Einschalten danach nur am Gerät.": "Switching on afterwards only at the device.",
-		"Keine Zeiten eingerichtet.": "No times set up."
+		"Keine Zeiten eingerichtet.": "No times set up.",
+		"GERÄT & ZUGANG": "DEVICE & ACCESS",
+		"Mit dem Stern wird eine App zum Favoriten – Favoriten stehen oben auf „Mein ShareOS“.": "The star makes an app a favourite – favourites are shown at the top of “My ShareOS”.",
+		"Alle Hinweise anzeigen": "Show all notices"
 	},
 	"patterns": [
 		[

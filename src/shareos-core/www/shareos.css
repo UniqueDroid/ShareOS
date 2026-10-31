@@ -23,8 +23,12 @@
 .light .brand,.light .clock{text-shadow:none}
 .sub{margin-top:8px;color:var(--muted);font-size:13px}
 .sub b{color:var(--soft);font-weight:600}
-.side{display:flex;flex-direction:column;align-items:flex-end;gap:10px}
-.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.side{position:relative;flex:1 1 300px;min-width:0;margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:nowrap;justify-content:flex-end;max-width:100%}
+.row>*{flex-shrink:0}
+.chip[hidden]{display:none}
+.chippop{position:absolute;right:0;top:46px;z-index:20;display:flex;flex-direction:column;align-items:flex-end;gap:8px;padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--bg);box-shadow:0 8px 24px rgba(0,0,0,.35)}
+.chip.more{cursor:pointer;font:inherit;font-size:11px;font-weight:600;color:var(--soft);justify-content:center;min-width:36px}
 .clock{font-size:28px;font-weight:600;color:var(--accent);text-shadow:var(--glow);font-variant-numeric:tabular-nums;line-height:1}
 .meta{color:var(--muted);font-size:12px;text-align:right}
 .chip{display:inline-flex;align-items:center;gap:8px;min-height:36px;font-size:11px;font-weight:600;letter-spacing:.08em;border:1px solid var(--line);border-radius:8px;background:var(--panel);padding:0 12px;color:var(--accent);text-decoration:none}

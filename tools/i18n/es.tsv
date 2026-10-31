@@ -1625,11 +1625,14 @@ E1263	Solo para dispositivos que tienen problemas con SMB 3. La firma que Window
 E1264	El horario está desactivado: las horas introducidas solo se aplican con la casilla «activar horario» marcada.
 E1265	Horario guardado (desactivado).
 E1266	Horario guardado: no hay encendido previsto.
+E1267	Después solo se enciende en el equipo.
+E1268	No hay horas configuradas.
 P318	Horario guardado: el equipo se enciende el $1.
 P319	ShareOS se apaga y el equipo se desconecta. Según el horario vuelve a encenderse el $1.
-E1267	Después solo se enciende en el equipo.
 P320	Según el horario vuelve a encenderse el $1.
 P321	ShareOS se apaga y el equipo se desconecta. $1
 P322	encendido $1
 P323	apagado $1
-E1268	No hay horas configuradas.
+E1269	EQUIPO Y ACCESO
+E1270	La estrella convierte una app en favorita: las favoritas aparecen arriba en «Mi ShareOS».
+E1271	Mostrar todos los avisos

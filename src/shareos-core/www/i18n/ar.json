@@ -1271,7 +1271,10 @@
 		"Zeitplan gespeichert (ausgeschaltet).": "تم حفظ الجدول (متوقف).",
 		"Zeitplan gespeichert – kein Einschalten geplant.": "تم حفظ الجدول – لا يوجد تشغيل مخطط.",
 		"Einschalten danach nur am Gerät.": "التشغيل بعد ذلك من الجهاز فقط.",
-		"Keine Zeiten eingerichtet.": "لم تُضبط أوقات."
+		"Keine Zeiten eingerichtet.": "لم تُضبط أوقات.",
+		"GERÄT & ZUGANG": "الجهاز والوصول",
+		"Mit dem Stern wird eine App zum Favoriten – Favoriten stehen oben auf „Mein ShareOS“.": "النجمة تجعل التطبيق مفضلاً – تظهر المفضلة أعلى «ShareOS الخاص بي».",
+		"Alle Hinweise anzeigen": "عرض كل التنبيهات"
 	},
 	"patterns": [
 		[

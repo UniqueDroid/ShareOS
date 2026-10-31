@@ -1271,7 +1271,10 @@
 		"Zeitplan gespeichert (ausgeschaltet).": "शेड्यूल सहेजा गया (बंद)।",
 		"Zeitplan gespeichert – kein Einschalten geplant.": "शेड्यूल सहेजा गया – कोई चालू होना तय नहीं।",
 		"Einschalten danach nur am Gerät.": "इसके बाद केवल डिवाइस पर ही चालू करें।",
-		"Keine Zeiten eingerichtet.": "कोई समय सेट नहीं है।"
+		"Keine Zeiten eingerichtet.": "कोई समय सेट नहीं है।",
+		"GERÄT & ZUGANG": "डिवाइस और पहुँच",
+		"Mit dem Stern wird eine App zum Favoriten – Favoriten stehen oben auf „Mein ShareOS“.": "स्टार से ऐप पसंदीदा बनता है – पसंदीदा \"मेरा ShareOS\" के ऊपर दिखते हैं।",
+		"Alle Hinweise anzeigen": "सभी सूचनाएँ दिखाएँ"
 	},
 	"patterns": [
 		[

@@ -1625,11 +1625,14 @@ E1263	Só para dispositivos que têm problemas com o SMB 3. A assinatura que o W
 E1264	A programação está desligada – os horários informados só valem com a caixa “ativar programação” marcada.
 E1265	Programação salva (desligada).
 E1266	Programação salva – nenhuma ligação prevista.
+E1267	Depois, ligar só no equipamento.
+E1268	Nenhum horário configurado.
 P318	Programação salva – o equipamento liga em $1.
 P319	O ShareOS desliga e o equipamento se desliga. Pela programação, ele liga de novo em $1.
-E1267	Depois, ligar só no equipamento.
 P320	Pela programação, ele liga de novo em $1.
 P321	O ShareOS desliga e o equipamento se desliga. $1
 P322	liga $1
 P323	desliga $1
-E1268	Nenhum horário configurado.
+E1269	EQUIPAMENTO E ACESSO
+E1270	A estrela torna um app favorito – os favoritos aparecem no topo de “Meu ShareOS”.
+E1271	Mostrar todos os avisos

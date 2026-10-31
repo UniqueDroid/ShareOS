@@ -1271,7 +1271,10 @@
 		"Zeitplan gespeichert (ausgeschaltet).": "Planning enregistré (désactivé).",
 		"Zeitplan gespeichert – kein Einschalten geplant.": "Planning enregistré – aucune mise en marche prévue.",
 		"Einschalten danach nur am Gerät.": "Rallumage ensuite uniquement sur l’appareil.",
-		"Keine Zeiten eingerichtet.": "Aucune heure définie."
+		"Keine Zeiten eingerichtet.": "Aucune heure définie.",
+		"GERÄT & ZUGANG": "APPAREIL & ACCÈS",
+		"Mit dem Stern wird eine App zum Favoriten – Favoriten stehen oben auf „Mein ShareOS“.": "L’étoile fait d’une app un favori – les favoris apparaissent en haut de « Mon ShareOS ».",
+		"Alle Hinweise anzeigen": "Afficher toutes les notifications"
 	},
 	"patterns": [
 		[

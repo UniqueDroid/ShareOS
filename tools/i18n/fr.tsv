@@ -1625,11 +1625,14 @@ E1263	Uniquement pour les appareils qui ont des problèmes avec SMB 3. La signat
 E1264	Le planning est désactivé – les heures saisies ne s’appliquent qu’avec la case « activer le planning » cochée.
 E1265	Planning enregistré (désactivé).
 E1266	Planning enregistré – aucune mise en marche prévue.
+E1267	Rallumage ensuite uniquement sur l’appareil.
+E1268	Aucune heure définie.
 P318	Planning enregistré – le boîtier s’allume le $1.
 P319	ShareOS s’arrête et le boîtier s’éteint. Selon le planning, il se rallume le $1.
-E1267	Rallumage ensuite uniquement sur l’appareil.
 P320	Selon le planning, il se rallume le $1.
 P321	ShareOS s’arrête et le boîtier s’éteint. $1
 P322	marche $1
 P323	arrêt $1
-E1268	Aucune heure définie.
+E1269	APPAREIL & ACCÈS
+E1270	L’étoile fait d’une app un favori – les favoris apparaissent en haut de « Mon ShareOS ».
+E1271	Afficher toutes les notifications

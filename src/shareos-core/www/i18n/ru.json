@@ -1271,7 +1271,10 @@
 		"Zeitplan gespeichert (ausgeschaltet).": "Расписание сохранено (выключено).",
 		"Zeitplan gespeichert – kein Einschalten geplant.": "Расписание сохранено – включение не запланировано.",
 		"Einschalten danach nur am Gerät.": "Включить затем можно только на устройстве.",
-		"Keine Zeiten eingerichtet.": "Время не задано."
+		"Keine Zeiten eingerichtet.": "Время не задано.",
+		"GERÄT & ZUGANG": "УСТРОЙСТВО И ДОСТУП",
+		"Mit dem Stern wird eine App zum Favoriten – Favoriten stehen oben auf „Mein ShareOS“.": "Звёздочка делает приложение избранным – избранные показаны вверху «Мой ShareOS».",
+		"Alle Hinweise anzeigen": "Показать все уведомления"
 	},
 	"patterns": [
 		[

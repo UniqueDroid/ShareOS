@@ -1271,7 +1271,10 @@
 		"Zeitplan gespeichert (ausgeschaltet).": "Programação salva (desligada).",
 		"Zeitplan gespeichert – kein Einschalten geplant.": "Programação salva – nenhuma ligação prevista.",
 		"Einschalten danach nur am Gerät.": "Depois, ligar só no equipamento.",
-		"Keine Zeiten eingerichtet.": "Nenhum horário configurado."
+		"Keine Zeiten eingerichtet.": "Nenhum horário configurado.",
+		"GERÄT & ZUGANG": "EQUIPAMENTO E ACESSO",
+		"Mit dem Stern wird eine App zum Favoriten – Favoriten stehen oben auf „Mein ShareOS“.": "A estrela torna um app favorito – os favoritos aparecem no topo de “Meu ShareOS”.",
+		"Alle Hinweise anzeigen": "Mostrar todos os avisos"
 	},
 	"patterns": [
 		[
