@@ -1,0 +1,221 @@
+From: ShareOS <noreply@anthropic.com>
+Subject: [PATCH] ksmbd: AES-CMAC signatures of large messages through cbc(aes)
+
+ksmbd signs SMB 3.x messages with the synchronous "cmac(aes)" hash, which
+always runs on the CPU. On an 800 MHz Kirkwood (DNS-320L) AES manages about
+12 MB/s there, so signed SMB writes stop at 4-10 MB/s. The Marvell CESA
+engine of the same SoC does AES-CBC at about 38 MB/s with DMA, but only as
+an asynchronous "cbc(aes)" skcipher.
+
+AES-CMAC (RFC 4493) is a CBC-MAC, so compute it for messages of 8 KiB and
+more through "cbc(aes)": the message is copied in page-sized chunks into a
+scratch page and encrypted there, keeping only the chaining value; subkeys
+and the last block use the AES library. The first result is compared with
+"cmac(aes)" (a mismatch disables the path), any error falls back to
+"cmac(aes)". Module parameter cbc_cmac=0 switches it off.
+
+Tested (UML, generic cbc): Samba 4.19 smbclient with signing required,
+50 MB put/get with AES-CMAC, checksums equal; without CRYPTO_CBC the
+fallback is used. On a DNS-320L (Kirkwood 88F6702, CESA): signed SMB 3.1.1
+writes from Windows 11 went from 4-10 to 19-23 MB/s.
+
+---
+diff --git a/fs/smb/server/auth.c b/fs/smb/server/auth.c
+index 9844aaa..5281068 100644
+--- a/fs/smb/server/auth.c
++++ b/fs/smb/server/auth.c
+@@ -18,6 +18,9 @@
+ #include <crypto/utils.h>
+ #include <linux/random.h>
+ #include <linux/scatterlist.h>
++#include <crypto/aes.h>
++#include <crypto/skcipher.h>
++#include <linux/moduleparam.h>
+ 
+ #include "auth.h"
+ #include "glob.h"
+@@ -502,8 +505,184 @@ void ksmbd_sign_smb2_pdu(struct ksmbd_conn *conn, char *key, struct kvec *iov,
+  * @sig:	signature value generated for client request packet
+  *
+  */
++/*
++ * AES-CMAC (RFC 4493) of large messages through the "cbc(aes)" skcipher.
++ *
++ * CMAC is a CBC-MAC: the CBC encryption of all blocks but the last, the
++ * last block XORed with a subkey and encrypted once more. "cmac(aes)" is a
++ * synchronous hash that encrypts block by block on the CPU; "cbc(aes)" can be
++ * a crypto engine instead (Marvell CESA on Kirkwood NAS boxes: about three
++ * times the speed of the CPU, with DMA, so the CPU is free for the rest of
++ * SMB). The message is copied in page-sized chunks into one scratch page and
++ * encrypted there; only the chaining value is kept. The subkeys and the last
++ * block are done on the CPU with the AES library.
++ *
++ * The first result is checked against "cmac(aes)"; on a mismatch or any
++ * error the caller falls back to "cmac(aes)".
++ */
++static bool ksmbd_cbc_cmac = true;
++module_param_named(cbc_cmac, ksmbd_cbc_cmac, bool, 0644);
++MODULE_PARM_DESC(cbc_cmac, "Compute AES-CMAC signatures of large messages with cbc(aes), e.g. a crypto engine (default: on)");
++static bool ksmbd_cbc_cmac_checked;
++
++#define KSMBD_CBC_CMAC_MIN	8192
++
++struct ksmbd_cbc_cmac_state {
++	struct crypto_aes_ctx aes;
++	u8 k[AES_BLOCK_SIZE];		/* subkey K1 or K2 */
++	u8 last[AES_BLOCK_SIZE];	/* last block of the message */
++	u8 iv[AES_BLOCK_SIZE];
++};
++
++static void ksmbd_cmac_dbl(u8 *b)	/* multiply by x in GF(2^128) */
++{
++	u8 carry = b[0] & 0x80;
++	int i;
++
++	for (i = 0; i < AES_BLOCK_SIZE - 1; i++)
++		b[i] = (b[i] << 1) | (b[i + 1] >> 7);
++	b[AES_BLOCK_SIZE - 1] <<= 1;
++	if (carry)
++		b[AES_BLOCK_SIZE - 1] ^= 0x87;
++}
++
++/* copy len bytes of the message, starting at *pos, into dst */
++static void ksmbd_iov_copy(struct kvec *iov, int n_vec, size_t *pos, u8 *dst,
++			   size_t len)
++{
++	size_t off = *pos;
++	int i;
++
++	*pos += len;
++	for (i = 0; i < n_vec && len; i++) {
++		size_t n;
++
++		if (off >= iov[i].iov_len) {
++			off -= iov[i].iov_len;
++			continue;
++		}
++		n = min(len, iov[i].iov_len - off);
++		memcpy(dst, (u8 *)iov[i].iov_base + off, n);
++		dst += n;
++		len -= n;
++		off = 0;
++	}
++}
++
++static int ksmbd_sign_smb3_pdu_cbc(char *key, struct kvec *iov, int n_vec,
++				   size_t total, char *sig)
++{
++	struct ksmbd_cbc_cmac_state *st;
++	struct crypto_skcipher *tfm;
++	struct skcipher_request *req;
++	struct scatterlist sg;
++	DECLARE_CRYPTO_WAIT(wait);
++	size_t prefix, pos = 0, tail;
++	u8 *buf;
++	int rc, i;
++
++	/* all blocks but the last go through CBC; the last one is 1..16 bytes */
++	prefix = total ? (total - 1) / AES_BLOCK_SIZE * AES_BLOCK_SIZE : 0;
++	tail = total - prefix;
++
++	st = kzalloc(sizeof(*st), KSMBD_DEFAULT_GFP);
++	buf = (u8 *)__get_free_page(KSMBD_DEFAULT_GFP);
++	if (!st || !buf) {
++		rc = -ENOMEM;
++		goto out_mem;
++	}
++	tfm = crypto_alloc_skcipher("cbc(aes)", 0, 0);
++	if (IS_ERR(tfm)) {
++		rc = PTR_ERR(tfm);
++		goto out_mem;
++	}
++	req = skcipher_request_alloc(tfm, KSMBD_DEFAULT_GFP);
++	if (!req) {
++		rc = -ENOMEM;
++		goto out_tfm;
++	}
++	rc = crypto_skcipher_setkey(tfm, key, SMB2_CMACAES_SIZE);
++	if (rc)
++		goto out_req;
++	rc = aes_expandkey(&st->aes, key, SMB2_CMACAES_SIZE);
++	if (rc)
++		goto out_req;
++
++	while (pos < prefix) {
++		size_t n = min_t(size_t, prefix - pos, PAGE_SIZE);
++
++		ksmbd_iov_copy(iov, n_vec, &pos, buf, n);
++		sg_init_one(&sg, buf, n);
++		skcipher_request_set_callback(req, CRYPTO_TFM_REQ_MAY_BACKLOG |
++					      CRYPTO_TFM_REQ_MAY_SLEEP,
++					      crypto_req_done, &wait);
++		skcipher_request_set_crypt(req, &sg, &sg, n, st->iv);
++		rc = crypto_wait_req(crypto_skcipher_encrypt(req), &wait);
++		if (rc)
++			goto out_req;
++		/* chaining value: the last cipher block (not req->iv, drivers differ) */
++		memcpy(st->iv, buf + n - AES_BLOCK_SIZE, AES_BLOCK_SIZE);
++	}
++
++	/* subkeys: L = AES(0), K1 = dbl(L), K2 = dbl(K1) */
++	aes_encrypt(&st->aes, st->k, st->k);
++	ksmbd_cmac_dbl(st->k);
++	ksmbd_iov_copy(iov, n_vec, &pos, st->last, tail);
++	if (tail < AES_BLOCK_SIZE) {
++		ksmbd_cmac_dbl(st->k);
++		st->last[tail] = 0x80;
++	}
++	for (i = 0; i < AES_BLOCK_SIZE; i++)
++		st->iv[i] ^= st->last[i] ^ st->k[i];
++	aes_encrypt(&st->aes, (u8 *)sig, st->iv);
++	rc = 0;
++out_req:
++	skcipher_request_free(req);
++out_tfm:
++	crypto_free_skcipher(tfm);
++out_mem:
++	if (buf)
++		free_page((unsigned long)buf);
++	kfree_sensitive(st);
++	return rc;
++}
++
++static int ksmbd_sign_smb3_pdu_shash(char *key, struct kvec *iov, int n_vec,
++				     char *sig);
++
+ int ksmbd_sign_smb3_pdu(struct ksmbd_conn *conn, char *key, struct kvec *iov,
+ 			int n_vec, char *sig)
++{
++	size_t total = 0;
++	int i;
++
++	for (i = 0; i < n_vec; i++)
++		total += iov[i].iov_len;
++
++	if (ksmbd_cbc_cmac && total >= KSMBD_CBC_CMAC_MIN &&
++	    !ksmbd_sign_smb3_pdu_cbc(key, iov, n_vec, total, sig)) {
++		char ref[SMB2_CMACAES_SIZE];
++
++		if (likely(READ_ONCE(ksmbd_cbc_cmac_checked)))
++			return 0;
++		/* the first time: the same as cmac(aes)? */
++		if (ksmbd_sign_smb3_pdu_shash(key, iov, n_vec, ref))
++			return 0;
++		if (!memcmp(ref, sig, SMB2_CMACAES_SIZE)) {
++			pr_info("AES-CMAC signatures through %s\n", "cbc(aes)");
++			WRITE_ONCE(ksmbd_cbc_cmac_checked, true);
++			return 0;
++		}
++		pr_warn("AES-CMAC through cbc(aes) differs from cmac(aes), not used\n");
++		ksmbd_cbc_cmac = false;
++		memcpy(sig, ref, SMB2_CMACAES_SIZE);
++		return 0;
++	}
++	return ksmbd_sign_smb3_pdu_shash(key, iov, n_vec, sig);
++}
++
++static int ksmbd_sign_smb3_pdu_shash(char *key, struct kvec *iov, int n_vec,
++				     char *sig)
+ {
+ 	struct ksmbd_crypto_ctx *ctx;
+ 	int rc, i;

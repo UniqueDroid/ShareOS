@@ -459,8 +459,9 @@ Braucht ein Tailscale-Konto (kostenlos), ein Handy oder einen Rechner mit Tailsc
 ## 14zd. SMB-Kompatibilitätsmodus (0.2.0-beta.17)
 
 1. Freigaben → Dienste → SMB: *Kompatibilitätsmodus (höchstens SMB 2.1)* einschalten. `grep protocol /etc/ksmbd/ksmbd.conf` zeigt `server max protocol = SMB2_10`.
-2. Unter Windows alle Explorer-Fenster zur Box schließen, `net use * /delete /y`, Freigabe neu öffnen. `Get-SmbConnection | Select-Object ServerName,Dialect,Signed` zeigt `2.1`. Eine große Datei kopieren: mit Signatur etwa 9–14 MB/s (DNS-320L), vorher 4–10.
+2. Unter Windows alle Explorer-Fenster zur Box schließen, `net use * /delete /y`, Freigabe neu öffnen. `Get-SmbConnection | Select-Object ServerName,Dialect,Signed` zeigt `2.1`. Eine große Datei kopieren: mit Signatur etwa 9–14 MB/s (DNS-320L), mit SMB 3 und Krypto-Einheit (Standard) etwa 19–23.
 3. Ausschalten: die Zeile verschwindet, nach dem Neuverbinden wieder `3.1.1`.
+4. Krypto-Einheit: `lsmod | grep cesa` zeigt `marvell_cesa`; nach einer signierten Kopie zeigt `dmesg | grep AES-CMAC` „AES-CMAC signatures through cbc(aes)“, `top` beim Kopieren `irq/…-f1030000` statt eines ksmbd-Threads mit über 60 %.
 
 ## 14zc. OneDrive (0.2.0-beta.16)
 
