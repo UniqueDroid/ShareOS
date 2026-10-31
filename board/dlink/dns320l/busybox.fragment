@@ -12,3 +12,7 @@ CONFIG_STAT=y
 CONFIG_FEATURE_STAT_FORMAT=y
 # snapshots: rsync at the lowest disk priority
 CONFIG_IONICE=y
+# crond reads <dir>/crontabs: /etc/crontabs, where shareos-cron writes root's
+# crontab (buildroot's default "/etc/cron" made crond read an empty
+# /etc/cron/crontabs – no scheduled job of ShareOS ran)
+CONFIG_FEATURE_CROND_DIR="/etc"
