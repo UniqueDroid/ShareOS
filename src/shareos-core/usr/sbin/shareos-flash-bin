@@ -80,6 +80,16 @@ cmd_write() {
 	if [ -f $ROOT/tmp/shareos-update/state.json ] && grep -qE '"state": *"(downloading|verifying|flashing)"' $ROOT/tmp/shareos-update/state.json; then
 		die "a firmware update is running"
 	fi
+	# one write at a time (the lock is released on exit, also after an error;
+	# one left by a killed run is taken over)
+	LOCK=$ROOT/tmp/shareos-flash-bin.lock
+	if ! mkdir "$LOCK" 2>/dev/null; then
+		p=$(cat "$LOCK/pid" 2>/dev/null)
+		[ -n "$p" ] && kill -0 "$p" 2>/dev/null && die "another firmware write is running"
+		rm -rf "$LOCK"; mkdir "$LOCK" 2>/dev/null || die "another firmware write is running"
+	fi
+	echo $$ > "$LOCK/pid"
+	trap 'rm -rf "$LOCK"' EXIT
 	split_bin "$1"
 	logger -t shareos-flash-bin "writing $KN" 2>/dev/null
 	# initramfs first: with a new initramfs and the old kernel the box still boots

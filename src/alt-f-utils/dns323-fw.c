@@ -25,6 +25,7 @@
 #include <string.h>
 #include <libgen.h>
 #include <stdint.h>
+#include <errno.h>
 
 typedef unsigned long ulong;
 typedef unsigned char uchar;
@@ -151,6 +152,22 @@ int nsig = sizeof(signatures)/sizeof(sig_t);
 char *kernel = NULL, *initramfs = NULL, *sqimage = NULL, *defaults = NULL, *fw = NULL;
 uchar product = 1, custom = 2, model = 3, sub = 4, version = 5, type = 0, quiet = 0;
 
+/* write all of buf, also when write() returns less or is interrupted */
+static int write_all(int fd, const void *data, size_t len) {
+	const char *p = data;
+
+	while (len) {
+		ssize_t n = write(fd, p, len);
+		if (n < 0 && errno == EINTR)
+			continue;
+		if (n <= 0)
+			return -1;
+		p += n;
+		len -= (size_t) n;
+	}
+	return 0;
+}
+
 int readwrite(int fdo, int fdi, ulong off, ulong sz, uint32_t *chk) {
 	static char *buf = NULL;
 
@@ -202,7 +219,7 @@ int readwrite(int fdo, int fdi, ulong off, ulong sz, uint32_t *chk) {
 			n = k;
 		}
 
-		if (write(fdo, buf, n) < 0)
+		if (write_all(fdo, buf, n) < 0)
 			return -1;
 
 		bp = (uint32_t *) buf;
@@ -350,11 +367,17 @@ void save_header(int fdo, MY_CONTROL_HEADER *myhd) {
 	if (myhd->type == 64) {
 		CONTROL_HEADER_64 hd64;
 		set_header64(myhd, &hd64);
-		write(fdo, &hd64, sizeof(hd64));
+		if (write_all(fdo, &hd64, sizeof(hd64)) < 0) {
+			perror("writing the header");
+			exit(1);
+		}
 	} else if (myhd->type == 128) {
 		CONTROL_HEADER_128 hd128;
 		set_header128(myhd, &hd128);
-		write(fdo, &hd128, sizeof(hd128));
+		if (write_all(fdo, &hd128, sizeof(hd128)) < 0) {
+			perror("writing the header");
+			exit(1);
+		}
 	} else {
 		printf("Error on header type, exiting.\n");
 		exit(1);
@@ -373,7 +396,11 @@ void save_header(int fdo, MY_CONTROL_HEADER *myhd) {
  */
 int size_ok(int fd, MY_CONTROL_HEADER * hd) {
 	ulong fsize = lseek(fd, 0, SEEK_END);
-		
+
+	/* Not checked on purpose: some D-Link firmware files (DNS-320/325) have
+	 * inconsistent component sizes (see readwrite()). A damaged or truncated
+	 * file still fails the component checksums, and shareos-flash-bin
+	 * refuses it before anything is erased. */
 	return 1;
 
 	if (hd->kernel_len + hd->initramfs_len + hd->defaults_len + 
@@ -544,7 +571,10 @@ int merge() {
 	}
 
 	// kernel
-	write(fdo, &myhd, hd_size); /* fake write, updated at the end */
+	if (write_all(fdo, &myhd, hd_size) < 0) { /* fake write, updated at the end */
+		perror("writing the header");
+		exit(1);
+	}
 	savecomp(kernel, fdo, 1,
 		&myhd.kernel_off, &myhd.kernel_len,
 		&myhd.kernel_checksum, signatures[type].kernel_max);

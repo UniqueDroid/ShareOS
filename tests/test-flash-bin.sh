@@ -88,6 +88,15 @@ mkdir -p $R/tmp/shareos-update; echo '{ "state": "flashing" }' > $R/tmp/shareos-
 rc=$(run write $T/altf.bin --yes)
 check "write refused while an update runs" "[ $rc = 1 ] && grep -q 'update is running' $T/out && [ ! -s $CALLS ]"
 rm -rf $R/tmp/shareos-update
+# one write at a time: a running one (its pid lives) blocks, a stale lock is taken over
+sleep 30 & SP=$!
+mkdir -p $R/tmp/shareos-flash-bin.lock; echo $SP > $R/tmp/shareos-flash-bin.lock/pid
+rc=$(run write $T/altf.bin --yes)
+check "write refused while another write runs" "[ $rc = 1 ] && grep -q 'another firmware write' $T/out && [ ! -s $CALLS ]"
+kill $SP 2>/dev/null; wait $SP 2>/dev/null
+rc=$(run write $T/altf.bin --yes)
+check "write: stale lock taken over, lock released afterwards" "[ $rc = 0 ] && [ ! -e $R/tmp/shareos-flash-bin.lock ]"
+fresh
 printf 'D-Link DNS-325\0' > $R/proc/device-tree/model
 rc=$(run write $T/altf.bin --yes)
 check "write: a DNS-320L file refused on a DNS-325" "[ $rc = 1 ] && grep -q 'another device' $T/out && [ ! -s $CALLS ]"
