@@ -1267,6 +1267,11 @@
 		"Schneller mit Windows 11, das jede Verbindung signiert: Die Signatur von SMB 2.1 kostet diese Box etwa halb so viel Rechenzeit wie die von SMB 3 (gemessen etwa 9–14 statt 4–10 MB/s beim Schreiben). Ohne Signatur sind etwa 35 MB/s möglich. Dafür gibt es kein SMB 3: keine Verschlüsselung, kein Multichannel. Bestehende Verbindungen werden dabei getrennt.": "Más rápido con Windows 11, que firma cada conexión: la firma de SMB 2.1 cuesta a este equipo aproximadamente la mitad de tiempo de cálculo que la de SMB 3 (medido unos 9–14 en lugar de 4–10 MB/s al escribir). Sin firma son posibles unos 35 MB/s. A cambio no hay SMB 3: sin cifrado ni multicanal. Las conexiones abiertas se cortan al cambiarlo.",
 		"Der Assistent löscht die ausgewählten Platten und richtet sie neu ein. Einzelne Platten lassen sich auch direkt an der Platte unter „Laufwerke“ formatieren. Platten mit Daten (z. B. von Alt-F oder der D-Link-Firmware) bindet „… übernehmen“ an der Platte ohne Löschen ein.": "El asistente borra los discos elegidos y los vuelve a configurar. Un disco suelto también puede formatearse directamente en «Unidades». Los discos con datos (p. ej. de Alt-F o del firmware de D-Link) se añaden sin borrar con «… adoptar» en el disco.",
 		"Nur für Geräte, die mit SMB 3 nicht zurechtkommen. Die Signatur, die Windows 11 bei jeder Verbindung verlangt, rechnet bei SMB 3 die Krypto-Einheit der Box (gemessen etwa 19–23 MB/s beim Schreiben, ohne Signatur etwa 35); SMB 2.1 rechnet sie auf dem Prozessor (etwa 9–14 MB/s) und hat keine Verschlüsselung und kein Multichannel. Bestehende Verbindungen werden beim Umschalten getrennt.": "Solo para dispositivos que tienen problemas con SMB 3. La firma que Windows 11 exige en cada conexión la calcula con SMB 3 el motor criptográfico del equipo (medido unos 19–23 MB/s al escribir, unos 35 sin firma); SMB 2.1 la calcula en el procesador (unos 9–14 MB/s) y no tiene cifrado ni multicanal. Las conexiones abiertas se cortan al cambiarlo.",
+		"Der Zeitplan ist aus – die eingetragenen Zeiten gelten erst mit dem Haken bei „Zeitplan einschalten“.": "El horario está desactivado: las horas introducidas solo se aplican con la casilla «activar horario» marcada.",
+		"Zeitplan gespeichert (ausgeschaltet).": "Horario guardado (desactivado).",
+		"Zeitplan gespeichert – kein Einschalten geplant.": "Horario guardado: no hay encendido previsto.",
+		"Einschalten danach nur am Gerät.": "Después solo se enciende en el equipo.",
+		"Keine Zeiten eingerichtet.": "No hay horas configuradas.",
 		"GERÄT & ZUGANG": "EQUIPO Y ACCESO",
 		"Mit dem Stern wird eine App zum Favoriten – Favoriten stehen oben auf „Mein ShareOS“.": "La estrella convierte una app en favorita: las favoritas aparecen arriba en «Mi ShareOS».",
 		"Alle Hinweise anzeigen": "Mostrar todos los avisos"
@@ -2543,6 +2548,30 @@
 		[
 			"^(\\S+) ist jetzt das Laufwerk „(.+)“ – die Daten sind erhalten\\. Freigaben für vorhandene Ordner unter „Freigaben“ anlegen\\.$",
 			"$1 es ahora la unidad «$2»: los datos se conservan. Cree recursos compartidos para las carpetas existentes en «Compartidos»."
+		],
+		[
+			"^Zeitplan gespeichert – die Box schaltet sich am (.+) ein\\.$",
+			"Horario guardado: el equipo se enciende el $1."
+		],
+		[
+			"^ShareOS fährt herunter und die Box schaltet sich aus\\. Nach Zeitplan schaltet sie sich am (.+) wieder ein\\.$",
+			"ShareOS se apaga y el equipo se desconecta. Según el horario vuelve a encenderse el $1."
+		],
+		[
+			"^Nach Zeitplan schaltet sie sich am (.+) wieder ein\\.$",
+			"Según el horario vuelve a encenderse el $1."
+		],
+		[
+			"^ShareOS fährt herunter und die Box schaltet sich aus\\. (.+)$",
+			"ShareOS se apaga y el equipo se desconecta. $1"
+		],
+		[
+			"^an ([0-9:]+)$",
+			"encendido $1"
+		],
+		[
+			"^aus ([0-9:]+)$",
+			"apagado $1"
 		]
 	],
 	"words": [

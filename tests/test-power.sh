@@ -37,11 +37,13 @@ export SHAREOS_POWER_NOW=$(date -d '2026-10-27 08:00' +%s)
 check "status: next switch-on Saturday 09:15, next switch-off Friday 22:00" "run status | js \"d['supported'] and d['enabled'] and d['next_on']=='2026-10-31 09:15' and d['next_off']=='2026-10-30 22:00'\""
 : > $T/daemon.log
 check "arm: wake-up alarm Saturday 31 Oct 09:15 (local time)" "run arm | js \"d['armed']=='2026-10-31 09:15'\" && grep -qx -- '-x WriteAlarm 10 31 9 15' $T/daemon.log"
-# Sunday 1 Nov 06:58: the switch-on Monday 07:00 is 2 minutes away – too close, the next one
-export SHAREOS_POWER_NOW=$(date -d '2026-11-01 06:58' +%s)
-check "arm: a switch-on less than 3 minutes ahead is skipped" "run arm | js \"d['armed']=='2026-11-02 07:00'\""
+# Monday 2 Nov 06:58: the switch-on 07:00 is 2 minutes away – still reached
 export SHAREOS_POWER_NOW=$(date -d '2026-11-02 06:58' +%s)
-check "arm: not 2 minutes ahead – the week after" "run arm | js \"d['armed']=='2026-11-07 09:15'\""
+check "arm: a switch-on 2 minutes ahead is armed" "run arm | js \"d['armed']=='2026-11-02 07:00'\""
+check "status: next switch-on the same as armed" "run status | js \"d['next_on']=='2026-11-02 07:00'\""
+# 06:59:30: less than a minute – the next one (the week after)
+export SHAREOS_POWER_NOW=$(date -d '2026-11-02 06:59:30' +%s)
+check "arm: less than a minute ahead – the next switch-on" "run arm | js \"d['armed']=='2026-11-07 09:15'\""
 # across the change to winter time (25 Oct 2026): Saturday 24 Oct 23:00 -> Monday 26 Oct 07:00
 export SHAREOS_POWER_NOW=$(date -d '2026-10-24 23:00' +%s)
 check "arm: across the change of summer time" "run arm | js \"d['armed']=='2026-10-26 07:00'\""

@@ -1622,6 +1622,17 @@ P315	Reprendre $1 : $2
 P316	$1 ($2, $3) est ajouté tel quel comme lecteur – rien n’est effacé. Nom du lecteur (a–z, 0–9, - et _, 16 caractères max.) :
 P317	$1 est maintenant le lecteur « $2 » – les données sont conservées. Créez des partages pour les dossiers existants sous « Partages ».
 E1263	Uniquement pour les appareils qui ont des problèmes avec SMB 3. La signature que Windows 11 exige à chaque connexion est calculée en SMB 3 par le moteur cryptographique du boîtier (mesuré environ 19–23 Mo/s en écriture, environ 35 sans signature) ; SMB 2.1 la calcule sur le processeur (environ 9–14 Mo/s) et n’a ni chiffrement ni multicanal. Les connexions ouvertes sont coupées lors du changement.
-E1264	APPAREIL & ACCÈS
-E1265	L’étoile fait d’une app un favori – les favoris apparaissent en haut de « Mon ShareOS ».
-E1266	Afficher toutes les notifications
+E1264	Le planning est désactivé – les heures saisies ne s’appliquent qu’avec la case « activer le planning » cochée.
+E1265	Planning enregistré (désactivé).
+E1266	Planning enregistré – aucune mise en marche prévue.
+E1267	Rallumage ensuite uniquement sur l’appareil.
+E1268	Aucune heure définie.
+P318	Planning enregistré – le boîtier s’allume le $1.
+P319	ShareOS s’arrête et le boîtier s’éteint. Selon le planning, il se rallume le $1.
+P320	Selon le planning, il se rallume le $1.
+P321	ShareOS s’arrête et le boîtier s’éteint. $1
+P322	marche $1
+P323	arrêt $1
+E1269	APPAREIL & ACCÈS
+E1270	L’étoile fait d’une app un favori – les favoris apparaissent en haut de « Mon ShareOS ».
+E1271	Afficher toutes les notifications

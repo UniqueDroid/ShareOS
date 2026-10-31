@@ -1267,6 +1267,11 @@
 		"Schneller mit Windows 11, das jede Verbindung signiert: Die Signatur von SMB 2.1 kostet diese Box etwa halb so viel Rechenzeit wie die von SMB 3 (gemessen etwa 9–14 statt 4–10 MB/s beim Schreiben). Ohne Signatur sind etwa 35 MB/s möglich. Dafür gibt es kein SMB 3: keine Verschlüsselung, kein Multichannel. Bestehende Verbindungen werden dabei getrennt.": "Windows 11 के साथ तेज़, जो हर कनेक्शन पर हस्ताक्षर करता है: SMB 2.1 का हस्ताक्षर इस बॉक्स पर SMB 3 की तुलना में लगभग आधा प्रोसेसिंग समय लेता है (लिखते समय लगभग 4–10 की जगह 9–14 MB/s मापा गया)। बिना हस्ताक्षर लगभग 35 MB/s संभव है। बदले में SMB 3 नहीं: न एन्क्रिप्शन, न मल्टीचैनल। बदलने पर खुले कनेक्शन टूट जाते हैं।",
 		"Der Assistent löscht die ausgewählten Platten und richtet sie neu ein. Einzelne Platten lassen sich auch direkt an der Platte unter „Laufwerke“ formatieren. Platten mit Daten (z. B. von Alt-F oder der D-Link-Firmware) bindet „… übernehmen“ an der Platte ohne Löschen ein.": "विज़ार्ड चुनी गई डिस्क मिटाकर उन्हें फिर से सेट करता है। अकेली डिस्क को \"ड्राइव\" में सीधे फ़ॉर्मेट भी किया जा सकता है। डेटा वाली डिस्क (जैसे Alt-F या D-Link फ़र्मवेयर से) डिस्क पर \"… अपनाएँ\" से बिना मिटाए जोड़ी जाती हैं।",
 		"Nur für Geräte, die mit SMB 3 nicht zurechtkommen. Die Signatur, die Windows 11 bei jeder Verbindung verlangt, rechnet bei SMB 3 die Krypto-Einheit der Box (gemessen etwa 19–23 MB/s beim Schreiben, ohne Signatur etwa 35); SMB 2.1 rechnet sie auf dem Prozessor (etwa 9–14 MB/s) und hat keine Verschlüsselung und kein Multichannel. Bestehende Verbindungen werden beim Umschalten getrennt.": "केवल उन उपकरणों के लिए जिन्हें SMB 3 से दिक्कत है। Windows 11 हर कनेक्शन पर जो हस्ताक्षर माँगता है, उसे SMB 3 में बॉक्स का क्रिप्टो इंजन गणना करता है (लिखते समय लगभग 19–23 MB/s मापा गया, बिना हस्ताक्षर लगभग 35); SMB 2.1 इसे प्रोसेसर पर गणना करता है (लगभग 9–14 MB/s) और इसमें न एन्क्रिप्शन है न मल्टीचैनल। बदलने पर खुले कनेक्शन टूट जाते हैं।",
+		"Der Zeitplan ist aus – die eingetragenen Zeiten gelten erst mit dem Haken bei „Zeitplan einschalten“.": "शेड्यूल बंद है – दर्ज समय \"शेड्यूल चालू करें\" पर टिक लगाने पर ही लागू होते हैं।",
+		"Zeitplan gespeichert (ausgeschaltet).": "शेड्यूल सहेजा गया (बंद)।",
+		"Zeitplan gespeichert – kein Einschalten geplant.": "शेड्यूल सहेजा गया – कोई चालू होना तय नहीं।",
+		"Einschalten danach nur am Gerät.": "इसके बाद केवल डिवाइस पर ही चालू करें।",
+		"Keine Zeiten eingerichtet.": "कोई समय सेट नहीं है।",
 		"GERÄT & ZUGANG": "डिवाइस और पहुँच",
 		"Mit dem Stern wird eine App zum Favoriten – Favoriten stehen oben auf „Mein ShareOS“.": "स्टार से ऐप पसंदीदा बनता है – पसंदीदा \"मेरा ShareOS\" के ऊपर दिखते हैं।",
 		"Alle Hinweise anzeigen": "सभी सूचनाएँ दिखाएँ"
@@ -2543,6 +2548,30 @@
 		[
 			"^(\\S+) ist jetzt das Laufwerk „(.+)“ – die Daten sind erhalten\\. Freigaben für vorhandene Ordner unter „Freigaben“ anlegen\\.$",
 			"$1 अब ड्राइव \"$2\" है – डेटा सुरक्षित है। मौजूदा फ़ोल्डरों के लिए \"शेयर\" में शेयर बनाएँ।"
+		],
+		[
+			"^Zeitplan gespeichert – die Box schaltet sich am (.+) ein\\.$",
+			"शेड्यूल सहेजा गया – बॉक्स $1 को चालू होगा।"
+		],
+		[
+			"^ShareOS fährt herunter und die Box schaltet sich aus\\. Nach Zeitplan schaltet sie sich am (.+) wieder ein\\.$",
+			"ShareOS बंद होता है और बॉक्स बंद हो जाता है। शेड्यूल के अनुसार यह $1 को फिर चालू होगा।"
+		],
+		[
+			"^Nach Zeitplan schaltet sie sich am (.+) wieder ein\\.$",
+			"शेड्यूल के अनुसार यह $1 को फिर चालू होगा।"
+		],
+		[
+			"^ShareOS fährt herunter und die Box schaltet sich aus\\. (.+)$",
+			"ShareOS बंद होता है और बॉक्स बंद हो जाता है। $1"
+		],
+		[
+			"^an ([0-9:]+)$",
+			"चालू $1"
+		],
+		[
+			"^aus ([0-9:]+)$",
+			"बंद $1"
 		]
 	],
 	"words": [

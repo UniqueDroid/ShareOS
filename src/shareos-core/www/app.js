@@ -2855,7 +2855,12 @@ const VIEWS_AFTER = {
 				e.preventDefault();
 				const f = e.target, days = {};
 				for (const [d] of PWR_DAYS) days[d] = { on: f['on_' + d]?.value || '', off: f['off_' + d].value || '' };
-				try { S.pwr = await rpc('shareos.system', 'power_schedule_set', { enabled: f.enabled.checked, days }); toast('Zeitplan gespeichert.'); renderMain(); }
+				try {
+					S.pwr = await rpc('shareos.system', 'power_schedule_set', { enabled: f.enabled.checked, days });
+					S.pwrEdit = false;
+					toast(!S.pwr.enabled ? 'Zeitplan gespeichert (ausgeschaltet).' : S.pwr.next_on ? `Zeitplan gespeichert – die Box schaltet sich am ${fmtPwr(S.pwr.next_on)} ein.` : 'Zeitplan gespeichert – kein Einschalten geplant.');
+					renderMain();
+				}
 				catch (err) { toast('Zeitplan: ' + err.message, true); }
 			});
 			document.querySelectorAll('#f-fan input[name=preset]').forEach((r) => r.addEventListener('change', () => { $('#fan-custom').hidden = r.value !== 'custom'; }));
@@ -3507,11 +3512,26 @@ async function webSet(v) {
 const bootlogTime = (n) => { const m = n.match(/^(\d{4})(\d\d)(\d\d)-(\d\d)(\d\d)/); return m ? new Date(+m[1], m[2] - 1, +m[3], +m[4], +m[5]).toLocaleString(LOC, { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }) : n; };
 // power schedule (shareos-power): switch-off by cron, switch-on by the MCU's wake-up alarm
 const PWR_DAYS = [['mon', 'Montag'], ['tue', 'Dienstag'], ['wed', 'Mittwoch'], ['thu', 'Donnerstag'], ['fri', 'Freitag'], ['sat', 'Samstag'], ['sun', 'Sonntag']];
-const fmtPwr = (t) => (t ? new Date(t.replace(' ', 'T')).toLocaleString(LOC, { weekday: 'short', day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }) : '–');
+const fmtPwr = (t) => (t ? new Date(t.replace(' ', 'T')).toLocaleString(LOC, { weekday: 'short', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '–');
+// any time entered in the schedule?
+const pwrHasTimes = (p) => Object.values(p?.days || {}).some((d) => d.on || d.off);
 function powerSchedule() {
 	const p = S.pwr;
 	if (!p) return html`<div class="panel"><div class="empty"><div class="spin" style="margin:0"></div><span>Lade …</span></div></div>`;
 	if (p.error) return html`<div class="panel"><p class="mut">${p.error}</p></div>`;
+	const head = html`<div class="ph"><span class="pt">AUS- UND EINSCHALTEN NACH ZEITPLAN</span>
+			${p.enabled ? html`<span class="tag ok ml">aktiv</span>` : html`<span class="tag ml">aus</span>`}</div>`;
+	// first a short overview; the table only after "Einrichten"/"Bearbeiten"
+	if (!S.pwrEdit) {
+		const set = PWR_DAYS.filter(([d]) => p.days?.[d]?.on || p.days?.[d]?.off);
+		return html`<div class="panel">${head}
+			${!set.length ? html`<p class="mut" style="margin:0">Keine Zeiten eingerichtet.</p>`
+				: html`<dl class="kv">${set.map(([d, n]) => html`<dt>${n}</dt><dd>${p.days[d].on ? html`an ${p.days[d].on}` : ''}${p.days[d].on && p.days[d].off ? ' · ' : ''}${p.days[d].off ? html`aus ${p.days[d].off}` : ''}</dd>`)}</dl>`}
+			${p.enabled && set.length ? html`<p style="margin:10px 0 0">${p.supported ? html`Nächstes Einschalten: <b>${fmtPwr(p.next_on)}</b> · ` : ''}Nächstes Ausschalten: <b>${fmtPwr(p.next_off)}</b></p>`
+				: !p.enabled && set.length ? html`<div class="banner" style="margin-top:10px">${svg(I.warn)}<span>Der Zeitplan ist aus – die eingetragenen Zeiten gelten erst mit dem Haken bei „Zeitplan einschalten“.</span></div>` : ''}
+			<div class="acts" style="margin-top:12px"><button class="btn" type="button" data-act="pwr-edit">${set.length ? 'Bearbeiten' : 'Einrichten'}</button></div>
+		</div>`;
+	}
 	return html`<form class="panel" id="f-power">
 		<div class="ph"><span class="pt">AUS- UND EINSCHALTEN NACH ZEITPLAN</span>
 			${p.enabled ? html`<span class="tag ok ml">aktiv</span>` : html`<span class="tag ml">aus</span>`}</div>
@@ -3520,8 +3540,9 @@ function powerSchedule() {
 			<tbody>${PWR_DAYS.map(([d, n]) => html`<tr><td>${n}</td>
 				${p.supported ? html`<td><input type="time" name="on_${d}" value="${p.days?.[d]?.on || ''}" aria-label="${n} einschalten"></td>` : ''}
 				<td><input type="time" name="off_${d}" value="${p.days?.[d]?.off || ''}" aria-label="${n} ausschalten"></td></tr>`)}</tbody></table></div>
-		${p.enabled ? html`<p class="mut" style="margin:10px 0 0">${p.supported ? html`Nächstes Einschalten: <b>${fmtPwr(p.next_on)}</b> · ` : ''}Nächstes Ausschalten: <b>${fmtPwr(p.next_off)}</b></p>` : ''}
-		<div class="acts" style="margin-top:12px"><button class="btn primary" type="submit">Speichern</button></div>
+		${p.enabled ? html`<p style="margin:10px 0 0">${p.supported ? html`Nächstes Einschalten: <b>${fmtPwr(p.next_on)}</b> · ` : ''}Nächstes Ausschalten: <b>${fmtPwr(p.next_off)}</b></p>`
+			: pwrHasTimes(p) ? html`<div class="banner" style="margin-top:10px">${svg(I.warn)}<span>Der Zeitplan ist aus – die eingetragenen Zeiten gelten erst mit dem Haken bei „Zeitplan einschalten“.</span></div>` : ''}
+		<div class="acts" style="margin-top:12px"><button class="btn primary" type="submit">Speichern</button><button class="btn ghost" type="button" data-act="pwr-cancel">Abbrechen</button></div>
 		<p class="note">${p.supported ? 'Leere Felder: an diesem Tag nichts. Ausgeschaltet wird sauber (wie mit dem Knopf); läuft gerade ein Speicher-Auftrag (z. B. RAID-Aufbau), bleibt die Box an. Zum Einschalten stellt ShareOS die Weckzeit der Gerätesteuerung – den Stecker nicht ziehen.'
 			: 'Diese Box kann sich nicht selbst einschalten (keine Weckfunktion) – nur das Ausschalten nach Zeitplan geht. Einschalten über den Power-Taster.'}</p>
 	</form>`;
@@ -4007,8 +4028,14 @@ const ACTIONS = {
 		waitForBox('Neustart läuft', 'ShareOS startet neu');
 	},
 
+	'pwr-edit'() { S.pwrEdit = true; renderMain(); },
+	'pwr-cancel'() { S.pwrEdit = false; renderMain(); },
 	async poweroff() {
-		if (!await confirmDlg('Ausschalten?', 'ShareOS fährt herunter und die Box schaltet sich aus. Einschalten danach nur am Gerät.', 'Ausschalten', true)) return;
+		// with a power schedule: when the box will come on again
+		let p = null;
+		try { p = await rpc('shareos.system', 'power_schedule'); } catch (e) { p = null; }
+		const back = p?.supported && p.enabled && p.next_on ? `Nach Zeitplan schaltet sie sich am ${fmtPwr(p.next_on)} wieder ein.` : 'Einschalten danach nur am Gerät.';
+		if (!await confirmDlg('Ausschalten?', `ShareOS fährt herunter und die Box schaltet sich aus. ${back}`, 'Ausschalten', true)) return;
 		try { await rpc('shareos.system', 'poweroff', { confirm: true }); } catch (e) { toast(e.message, true); return; }
 		stopPolling();
 		cover('Box wird ausgeschaltet', 'Du kannst dieses Fenster schließen.');
