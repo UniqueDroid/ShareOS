@@ -1622,3 +1622,6 @@ P315	Assumir $1: $2
 P316	$1 ($2, $3) é adicionado como unidade do jeito que está – nada é apagado. Nome da unidade (a–z, 0–9, - e _, máx. 16 caracteres):
 P317	$1 agora é a unidade “$2” – os dados são mantidos. Crie compartilhamentos para as pastas existentes em “Compartilhamentos”.
 E1263	Só para dispositivos que têm problemas com o SMB 3. A assinatura que o Windows 11 exige em cada conexão é calculada no SMB 3 pelo mecanismo criptográfico do equipamento (medido cerca de 19–23 MB/s ao gravar, cerca de 35 sem assinatura); o SMB 2.1 a calcula no processador (cerca de 9–14 MB/s) e não tem criptografia nem multicanal. As conexões abertas são interrompidas ao alterar.
+E1264	EQUIPAMENTO E ACESSO
+E1265	A estrela torna um app favorito – os favoritos aparecem no topo de “Meu ShareOS”.
+E1266	Mostrar todos os avisos

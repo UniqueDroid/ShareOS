@@ -594,6 +594,8 @@ function renderHeader(offline = false) {
 	const i = S.info || {}, r = i.release || {}, ip = i.network?.eth0?.ipv4?.address;
 	const now = new Date();
 	const upd = S.check?.update_available ? S.check.latest : null;
+	// unread messages; the update one is left out while the UPDATE chip shows it anyway
+	const nu = (S.notes?.items || []).filter((x) => !x.read && !x.resolved && !(upd && x.source === 'update'));
 	hd.innerHTML = html`
 		<div>
 			${brand()}
@@ -601,21 +603,56 @@ function renderHeader(offline = false) {
 		</div>
 		<div class="side">
 			<div class="row">
-				${S.notes?.unread ? html`<a class="chip ${S.notes.items.some((x) => !x.read && !x.resolved && x.level === 'error') ? 'err' : 'warn'}" href="#/system/notifications"><i></i>${S.notes.unread === 1 ? '1 MELDUNG' : S.notes.unread + ' MELDUNGEN'}</a>` : ''}
+				${nu.length ? html`<a class="chip ${nu.some((x) => x.level === 'error') ? 'err' : 'warn'}" href="#/system/notifications"><i></i>${nu.length === 1 ? '1 MELDUNG' : nu.length + ' MELDUNGEN'}</a>` : ''}
 				${upd ? html`<a class="chip warn" href="#/system/firmware"><i></i>UPDATE ${upd.replace(/^v/, '')} <small>verfügbar</small></a>` : ''}
 				${chipsHtml()}
-				${offline ? html`<span class="chip warn"><i></i>OFFLINE</span>`
-					: html`<span class="chip"><i></i>ONLINE <small>seit ${fmtUptime(i.uptime)}</small></span>`}
+				<button class="chip more" type="button" data-act="chips-more" hidden></button>
+				${offline ? html`<span class="chip warn keep"><i></i>OFFLINE</span>`
+					: html`<span class="chip keep"><i></i>ONLINE <small>seit ${fmtUptime(i.uptime)}</small></span>`}
 				<button class="ib" type="button" data-act="theme" aria-label="Hell/Dunkel umschalten" title="Hell/Dunkel umschalten">${svg(I.moon)}</button>
 				<button class="ib" type="button" data-act="logout" aria-label="Abmelden">${svg(I.power)}</button>
 			</div>
 			<div class="clock">${now.toLocaleTimeString(LOC, { hour: '2-digit', minute: '2-digit' })}</div>
 			<div class="meta">${now.toLocaleDateString(LOC, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</div>
 		</div>`.s;
+	fitChips();
 	const ft = $('#ft');
 	if (ft) ft.innerHTML = html`<span><b>ShareOS</b> ${r.version || ''} · Linux ${i.kernel || ''} · GPLv2</span>
 		<span>Last ${(i.load || []).map((x) => x.toFixed(2)).join(' ')} · <a href="https://github.com/UniqueDroid/ShareOS" target="_blank" rel="noopener">github.com/UniqueDroid/ShareOS</a></span>`.s;
 }
+
+// header chips stay on one line: the ones that do not fit go behind "+N"
+// (from the end, so messages and the update stay visible); "+N" shows all of them
+function fitChips() {
+	const row = $('#hd .side .row'), more = row?.querySelector('.more');
+	if (!row || !more) return;
+	row.parentElement.querySelector('.chippop')?.remove();
+	const chips = [...row.querySelectorAll('.chip:not(.keep):not(.more)')];
+	chips.forEach((c) => { c.hidden = false; });
+	more.hidden = true;
+	// with justify-content:flex-end an overflow goes left and scrollWidth does not see it
+	const need = () => { const v = [...row.children].filter((x) => !x.hidden); return v.reduce((a, x) => a + x.offsetWidth, 0) + 10 * (v.length - 1); };
+	const room = row.parentElement.clientWidth;
+	let n = 0;
+	while (need() > room && n < chips.length) {
+		chips[chips.length - 1 - n].hidden = true;
+		n++;
+		more.hidden = false; more.textContent = '+' + n;
+	}
+	more.title = more.ariaLabel = 'Alle Hinweise anzeigen';
+	more.classList.toggle('warn', chips.slice(chips.length - n).some((c) => c.matches('.warn, .err')));
+	more.setAttribute('aria-expanded', String(!!S.chipsAll && n > 0));
+	if (!S.chipsAll || !n) { S.chipsAll = false; return; }
+	// the hidden ones open as a list under the row; the header keeps its height
+	const pop = document.createElement('div');
+	pop.className = 'chippop';
+	chips.slice(chips.length - n).forEach((c) => { const x = c.cloneNode(true); x.hidden = false; pop.append(x); });
+	row.after(pop);
+}
+addEventListener('resize', () => fitChips());
+document.addEventListener('click', (e) => {
+	if (S.chipsAll && !e.target.closest?.('.chip.more')) { S.chipsAll = false; fitChips(); }
+});
 
 // areas switched off under System -> Appearance are not shown
 const tabOn = (id) => !S.areas || S.areas[id] !== false;
@@ -1580,7 +1617,7 @@ function snapAfter() {
 /* ---------- "Mein ShareOS" for plain users ------------------------------------ */
 
 function userTabs() {
-	return [['me', 'MEIN SHAREOS'], ...(S.me?.files ? [['files', 'DATEIEN']] : []), ['settings', 'EINSTELLUNGEN']];
+	return [['me', 'MEIN SHAREOS'], ...(S.me?.files ? [['files', 'DATEIEN']] : []), ...((S.me?.apps || []).length ? [['apps', 'APPS']] : []), ['settings', 'EINSTELLUNGEN']];
 }
 
 function parseUserRoute() {
@@ -1649,12 +1686,14 @@ function renderUserHeader() {
 		<div class="side">
 			<div class="row">
 				${chipsHtml()}
+				<button class="chip more" type="button" data-act="chips-more" hidden></button>
 				<button class="ib" type="button" data-act="theme" aria-label="Hell/Dunkel umschalten" title="Hell/Dunkel umschalten">${svg(I.moon)}</button>
 				<button class="ib" type="button" data-act="logout" aria-label="Abmelden" title="Abmelden">${svg(I.power)}</button>
 			</div>
 			<div class="clock">${now.toLocaleTimeString(LOC, { hour: '2-digit', minute: '2-digit' })}</div>
 			<div class="meta">${now.toLocaleDateString(LOC, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</div>
 		</div>`.s;
+	fitChips();
 	$('#ft').innerHTML = html`<span><b>ShareOS</b> · Mein ShareOS</span><span><a href="https://github.com/UniqueDroid/ShareOS" target="_blank" rel="noopener">github.com/UniqueDroid/ShareOS</a></span>`.s;
 }
 
@@ -1695,6 +1734,7 @@ function renderUserMain() {
 		appFrameLoad();
 		return;
 	}
+	if (S.utab === 'apps') { main.innerHTML = userAppsView().s; return; }
 	if (S.utab === 'settings') {
 		main.innerHTML = userLookView().s;
 		$('#f-mypass').addEventListener('submit', async (e) => {
@@ -1740,6 +1780,18 @@ function myStorage(m, host, ip) {
 		${paths}</div>`;
 }
 
+// "APPS" of Mein ShareOS: all apps of the user; the star puts one into "FAV APPS" on the start page
+function userAppsView() {
+	const m = S.me || {}, apps = m.apps || [];
+	return html`<section class="sec">
+		<h2 class="gh">MEINE APPS <span>${apps.length}</span></h2>
+		<div class="grid">${apps.map((a) => html`<div class="favwrap"><a class="card applink" href="${appHref(a, m.apps_server)}" data-act="app-launch" data-id="${a.id}">
+			<div class="icon">${appIcon(a, m.apps_server)}</div>
+			<div class="info"><div class="name">${a.name}${appMode(a) === 'page' ? '' : ' ↗'}</div><div class="desc">${txtOf(a.description)}</div></div></a>${favStar(a)}</div>`)}</div>
+		<p class="note">Mit dem Stern wird eine App zum Favoriten – Favoriten stehen oben auf „Mein ShareOS“.</p>
+	</section>`;
+}
+
 function renderUserHome() {
 	const m = S.me || {}, host = m.host || location.hostname, ip = location.hostname;
 	$('#main').innerHTML = html`
@@ -1757,12 +1809,6 @@ function renderUserHome() {
 				<div class="ip">\\\\${host}\\${x.name}</div></div></div>`)}</div>`
 			: html`<div class="panel"><div class="empty">${svg(I.info)}<span>Dir wurde noch keine Freigabe zugewiesen.</span></div></div>`}
 	</section>
-	${(m.apps || []).length ? html`<section class="sec">
-		<h2 class="gh">MEINE APPS <span>${m.apps.length}</span></h2>
-		<div class="grid">${m.apps.map((a) => html`<div class="favwrap"><a class="card applink" href="${appHref(a, m.apps_server)}" data-act="app-launch" data-id="${a.id}">
-			<div class="icon">${appIcon(a, m.apps_server)}</div>
-			<div class="info"><div class="name">${a.name}${appMode(a) === 'page' ? '' : ' ↗'}</div><div class="desc">${txtOf(a.description)}</div></div></a>${favStar(a)}</div>`)}</div>
-	</section>` : ''}
 	${m.paperless ? myPaperless() : ''}
 	${m.cloud ? cloudSection('me') : ''}`.s;
 	if (m.paperless && !S.myPl) loadMyPaperless();
@@ -2358,23 +2404,6 @@ const SYS = {
 	general() {
 		const i = S.info || {};
 		return html`<div class="acts" style="margin-bottom:16px"><button class="btn ghost" type="button" data-act="fr-again">Ersteinrichtung erneut starten</button></div>
-		<div class="g2">
-			<form class="panel" id="f-host">
-				<div class="ph"><span class="pt">GERÄTENAME</span></div>
-				<div class="fields" style="grid-template-columns:1fr"><label class="f"><span>HOSTNAME</span><input name="hostname" value="${i.hostname || ''}" pattern="[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?" required></label></div>
-				<p class="note">Buchstaben, Ziffern und Bindestrich. Gilt sofort, der DHCP-Server sieht ihn bei der nächsten Verlängerung.</p>
-				<div class="acts" style="margin-top:14px"><button class="btn primary" type="submit">Speichern</button></div>
-			</form>
-			<form class="panel" id="f-pass">
-				<div class="ph"><span class="pt">ZUGANG · ${S.user}</span></div>
-				<div class="fields" style="grid-template-columns:1fr">
-					<label class="f"><span>NEUES PASSWORT</span><input name="p1" type="password" minlength="6" autocomplete="new-password" required></label>
-					<label class="f"><span>WIEDERHOLEN</span><input name="p2" type="password" minlength="6" autocomplete="new-password" required></label>
-				</div>
-				<p class="note">Gilt für die Weboberfläche und SSH. Mindestens 6 Zeichen.</p>
-				<div class="acts" style="margin-top:14px"><button class="btn primary" type="submit">Passwort ändern</button></div>
-			</form>
-		</div>
 		<h2 class="gh" style="margin-top:22px">EINSTELLUNGEN SICHERN & WIEDERHERSTELLEN</h2>
 		<div class="g2">
 			<form class="panel" id="f-backup">
@@ -2395,6 +2424,24 @@ const SYS = {
 		</div>
 		<h2 class="gh" style="margin-top:22px">APP & WIDGETS</h2>
 		<div class="g2">${appPanel()}${widgetPanel()}</div>
+		<h2 class="gh" style="margin-top:22px">GERÄT & ZUGANG</h2>
+		<div class="g2">
+			<form class="panel" id="f-host">
+				<div class="ph"><span class="pt">GERÄTENAME</span></div>
+				<div class="fields" style="grid-template-columns:1fr"><label class="f"><span>HOSTNAME</span><input name="hostname" value="${i.hostname || ''}" pattern="[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?" required></label></div>
+				<p class="note">Buchstaben, Ziffern und Bindestrich. Gilt sofort, der DHCP-Server sieht ihn bei der nächsten Verlängerung.</p>
+				<div class="acts" style="margin-top:14px"><button class="btn primary" type="submit">Speichern</button></div>
+			</form>
+			<form class="panel" id="f-pass">
+				<div class="ph"><span class="pt">ZUGANG · ${S.user}</span></div>
+				<div class="fields" style="grid-template-columns:1fr">
+					<label class="f"><span>NEUES PASSWORT</span><input name="p1" type="password" minlength="6" autocomplete="new-password" required></label>
+					<label class="f"><span>WIEDERHOLEN</span><input name="p2" type="password" minlength="6" autocomplete="new-password" required></label>
+				</div>
+				<p class="note">Gilt für die Weboberfläche und SSH. Mindestens 6 Zeichen.</p>
+				<div class="acts" style="margin-top:14px"><button class="btn primary" type="submit">Passwort ändern</button></div>
+			</form>
+		</div>
 		<h2 class="gh" style="margin-top:22px">ÜBER</h2>
 		${SYS.about()}`;
 	},
@@ -3536,6 +3583,7 @@ async function refreshUpdateStatus() {
 /* ---------- actions (delegated clicks) -------------------------------------- */
 
 const ACTIONS = {
+	'chips-more'() { S.chipsAll = !S.chipsAll; fitChips(); },
 	'page-reload': () => location.reload(),
 	theme() {
 		S.theme = effTheme() === 'light' ? 'dark' : 'light';
