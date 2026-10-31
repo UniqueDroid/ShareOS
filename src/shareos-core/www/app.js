@@ -594,6 +594,8 @@ function renderHeader(offline = false) {
 	const i = S.info || {}, r = i.release || {}, ip = i.network?.eth0?.ipv4?.address;
 	const now = new Date();
 	const upd = S.check?.update_available ? S.check.latest : null;
+	// unread messages; the update one is left out while the UPDATE chip shows it anyway
+	const nu = (S.notes?.items || []).filter((x) => !x.read && !x.resolved && !(upd && x.source === 'update'));
 	hd.innerHTML = html`
 		<div>
 			${brand()}
@@ -601,7 +603,7 @@ function renderHeader(offline = false) {
 		</div>
 		<div class="side">
 			<div class="row">
-				${S.notes?.unread ? html`<a class="chip ${S.notes.items.some((x) => !x.read && !x.resolved && x.level === 'error') ? 'err' : 'warn'}" href="#/system/notifications"><i></i>${S.notes.unread === 1 ? '1 MELDUNG' : S.notes.unread + ' MELDUNGEN'}</a>` : ''}
+				${nu.length ? html`<a class="chip ${nu.some((x) => x.level === 'error') ? 'err' : 'warn'}" href="#/system/notifications"><i></i>${nu.length === 1 ? '1 MELDUNG' : nu.length + ' MELDUNGEN'}</a>` : ''}
 				${upd ? html`<a class="chip warn" href="#/system/firmware"><i></i>UPDATE ${upd.replace(/^v/, '')} <small>verfügbar</small></a>` : ''}
 				${chipsHtml()}
 				<button class="chip more" type="button" data-act="chips-more" hidden></button>
