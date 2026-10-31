@@ -463,6 +463,16 @@ Braucht ein Tailscale-Konto (kostenlos), ein Handy oder einen Rechner mit Tailsc
 3. Ausschalten: die Zeile verschwindet, nach dem Neuverbinden wieder `3.1.1`.
 4. Krypto-Einheit: `lsmod | grep cesa` zeigt `marvell_cesa`; nach einer signierten Kopie zeigt `dmesg | grep AES-CMAC` „AES-CMAC signatures through cbc(aes)“, `top` beim Kopieren `irq/…-f1030000` statt eines ksmbd-Threads mit über 60 %.
 
+## 14zd. SMB, Platten übernehmen, Zeitplan, Kopf (0.2.0-beta.17)
+
+1. SMB-Signatur über die Krypto-Einheit: `lsmod | grep marvell_cesa` zeigt das Modul, `cat /sys/module/ksmbd/parameters/cbc_cmac` zeigt `Y`. Vom Windows-PC eine große Datei kopieren: etwa 18–23 MB/s (vorher 6–11). In PowerShell zeigt `Get-SmbConnection | fl Dialect,Signed` `3.1.1` und `True`.
+2. Freigaben → Dienste → SMB → *Kompatibilitätsmodus (höchstens SMB 2.1)* einschalten, *Speichern*; am PC neu verbinden: `Dialect` ist `2.1`. Wieder ausschalten: `3.1.1`.
+3. Eine Platte mit Daten von Alt-F oder der D-Link-Firmware einbauen: Speicher → Laufwerke zeigt **„<partition> übernehmen“**. Klicken: das Laufwerk erscheint, die Dateien sind da, nichts wurde gelöscht. Ein RAID 1 von Alt-F erscheint als Spiegel.
+4. System → Energie & Reset: ohne Zeiten steht *Keine Zeiten eingerichtet.* und *aus*. *Einrichten* öffnet die Tabelle; heute *aus* 3 Minuten und *an* 6 Minuten voraus eintragen, *Speichern*: die Übersicht zeigt den Tag mit *an … · aus …*, das nächste Einschalten mit Datum und *aktiv*. Die Box schaltet sich zur Aus-Zeit von selbst aus und zur An-Zeit wieder ein. *Ausschalten* oben rechts nennt im Dialog das nächste Einschalten.
+5. Kopf mit mehreren Hinweisen (Update, Meldung, VPN, Apps) im schmalen Fenster: alles bleibt in einer Zeile, der Rest steht hinter **+N**; ein Klick öffnet die Liste, ein Klick daneben schließt sie. Die Meldung „Update verfügbar“ zählt nicht zu *MELDUNG*, solange *UPDATE* angezeigt wird.
+6. Als Benutzer: *Mein ShareOS* hat den Reiter **APPS** mit allen Apps; auf der Startseite stehen nur die Favoriten. Als Admin: System → Allgemein zeigt *Gerät & Zugang* zwischen *App & Widgets* und *Über*.
+7. DNS-320 rev A (Tester gesucht): Nach dem Flashen startet die Box durch und bleibt an.
+
 ## 14zc. OneDrive (0.2.0-beta.16)
 
 Braucht ein Microsoft-Konto mit OneDrive und rclone (Cloud → rclone installieren).

@@ -67,6 +67,7 @@ Version in brackets = first release with the feature.
 
 **Storage**
 - Setup wizard: one disk, two separate disks, a mirror (RAID 1), RAID 0 or JBOD (mdadm; RAID 0/JBOD from beta.9), optional swap partition per disk
+- Take over disks with data from Alt-F or the D-Link firmware as they are, nothing erased (Speicher → Laufwerke → *übernehmen*, 0.2.0-beta.17)
 - File system per volume: **ext4** (recommended: owners, storage limit per user, personal folders, apps), **Btrfs**, **exFAT**, **NTFS** (beta.7), **ext3**, **ext2**, **FAT32** (beta.9)
 - Share rights are also set as POSIX ACLs on the share folders (ext4, Btrfs), so every program of a user is held to them, not only SMB (0.2.0-beta.6)
 - **Snapshots:** dated states of shares, personal folders or whole drives on another drive (hourly to weekly, hard links like rsnapshot, keep the last N plus days/weeks/months), restore with the file browser (0.2.0-beta.6)
@@ -75,7 +76,7 @@ Version in brackets = first release with the feature.
 - **USB sticks and disks:** mounted at `/mnt/usb-<name>` when plugged in (FAT32, exFAT, NTFS, ext4, Btrfs), **Safely remove**, **Format** with exFAT, FAT32, NTFS or ext4 (beta.7)
 
 **Shares, users, files**
-- SMB 2/3 (ksmbd) and NFS v4 shares with read/write permissions per user and group, guest access optional
+- SMB 2/3 (ksmbd) and NFS v4 shares with read/write permissions per user and group, guest access optional; the crypto engine of the SoC computes the SMB 3 signatures (about three times as fast, 0.2.0-beta.17); compatibility mode up to SMB 2.1 for difficult clients (0.2.0-beta.17)
 - Users and groups; one account for shares, web interface and apps; storage limit per user (ext4); import of Alt-F users with their passwords
 - "My ShareOS": users with web access manage their own password, look, shares, storage, cloud and Paperless
 - File browser in the web interface: admins for all drives and USB drives, users for their personal folder and the shares they have rights to (enabled per user; read-only shares stay read-only, also for apps); upload/download with progress, drag and drop, large files; trash per folder with restore and automatic emptying (0.2.0-beta.12)
@@ -113,7 +114,7 @@ Version in brackets = first release with the feature.
 - Back to Alt-F (or any D-Link `.bin`) from the firmware page, checked and read back (beta.7)
 - First-run assistant, network settings with automatic rollback, name via mDNS (`<name>.local`), fallback address `192.168.0.32` without DHCP
 - HTTPS with a self-signed certificate that follows name and IP, own certificate possible
-- Power schedule: switch off and on per weekday (switching on through the wake-up alarm of the DNS-320L/320 rev B/327L; 0.2.0-beta.15)
+- Power schedule: switch off and on per weekday (switching on through the wake-up alarm of the DNS-320L/320 rev B/327L; 0.2.0-beta.15; switching off works from 0.2.0-beta.17, the overview shows the date of the next switch-on)
 - Start log: the logs of the last 3 starts are kept on the flash (System → Protokolle → *Start-Protokoll*), so a box that was unreachable after a start can be looked into afterwards (0.2.0-beta.15)
 - Reset button: access reset (5–10 s: network, root password, certificate) or factory reset (≥ 15 s), USB button removes USB drives (beta.9) or copies them into a dated folder (0.2.0-beta.12); the buttons work again on the DNS-320L and DNS-325 (0.2.0-beta.10)
 - Messages: RAID, volumes, temperature, SMART, updates, failed cloud jobs and app tasks – in the interface, by e-mail (SMTP) and push (ntfy, Gotify, webhook) (beta.9), Telegram bot (beta.12)
