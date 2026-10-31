@@ -211,6 +211,28 @@ the box for why the web server was not running.
 | 18:25 | Two reports about OneDrive (#91, #92): after signing in, `rclone.conf` lacked `drive_id` and `drive_type` – rclone asks for the drive only in its interactive setup. Now ShareOS looks it up at Microsoft Graph. A failed "Add" also used up the sign-in. |
 | 20:38 | The reporter's output showed why users could not open the downloads: his shares point into the personal folders, which get no share rights – the admin job's files belonged to root. They now belong to the user of the folder (#93) – `v0.2.0-beta.16`. |
 
+### Wednesday, 28.10.2026
+
+| Time | What happened |
+|---|---|
+| 09:10 | Jan publishes `v0.2.0-beta.16`. |
+
+### Friday, 30.10.2026
+
+| Time | What happened |
+|---|---|
+| 20:53 | A DNS-320 rev A restarted in a loop after flashing (#96): its U-Boot copies the initramfs to an address the kernel then overwrote. The image now loads it at 0x01000000 (#98). |
+| 22:02 | SMB was slow (#94): signed SMB 3 at 4–10 MB/s, the CPU busy with AES-CMAC. Jan's measurements on the box: unsigned 32–40 MB/s. First step: a compatibility mode up to SMB 2.1 (#99). |
+
+### Saturday, 31.10.2026
+
+| Time | What happened |
+|---|---|
+| 00:08 | A tester switching from Alt-F asked how to keep the data on his disks – the setup wizard erases them. Now *übernehmen* takes a disk with data as it is (#100). He followed the SSH steps and both disks run on ShareOS. |
+| 08:39 | ksmbd computes the SMB 3 signatures (AES-CMAC) through `cbc(aes)` of the Marvell crypto engine: Jan measured 18–22 MB/s instead of 6–11 (#101). The same morning: hardening after an external code review (#102). |
+| 12:34 | Switching off by schedule never happened (#82): BusyBox `crond` read the empty `/etc/cron/crontabs`, so no ShareOS cron job had ever run (#104). |
+| 15:14 | The schedule is a short overview with the date of the next switch-on (#105); *Mein ShareOS* gets its own APPS tab and the header stays on one line, the rest behind **+N** (#106). Everything goes into `v0.2.0-beta.17`. |
+
 ## Notable problems solved
 
 - **The bootloader's 3 MB limit:** the kernel shrank from 4.2 to 2.4 MB, with drivers moved to modules. The initramfs is only 0.9 MB.

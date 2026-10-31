@@ -212,6 +212,28 @@ direkt auf der Box nachgesehen, warum der Webserver nicht lief.
 | 18:25 | Zwei Meldungen zu OneDrive (#91, #92): Nach der Anmeldung fehlten in der `rclone.conf` `drive_id` und `drive_type` – rclone fragt das Laufwerk nur bei der interaktiven Einrichtung ab. Jetzt liest ShareOS es bei Microsoft Graph nach. Ein fehlgeschlagenes „Hinzufügen“ verbrauchte außerdem die Anmeldung. |
 | 20:38 | Die Ausgaben des Melders zeigten, warum Benutzer die Downloads nicht öffnen konnten: Seine Freigaben zeigen in die persönlichen Ordner, und die bekommen keine Freigabe-Rechte – die Dateien des Admin-Auftrags gehörten root. Sie gehören jetzt dem Benutzer des Ordners (#93) – `v0.2.0-beta.16`. |
 
+### Mittwoch, 28.10.2026
+
+| Zeit | Was passiert ist |
+|---|---|
+| 09:10 | Jan veröffentlicht `v0.2.0-beta.16`. |
+
+### Freitag, 30.10.2026
+
+| Zeit | Was passiert ist |
+|---|---|
+| 20:53 | Eine DNS-320 rev A startete nach dem Flashen immer wieder neu (#96): Ihr U-Boot kopiert das Initramfs an eine Adresse, die der Kernel danach überschrieb. Das Image lädt es jetzt nach 0x01000000 (#98). |
+| 22:02 | SMB war langsam (#94): signiertes SMB 3 mit 4–10 MB/s, die CPU mit AES-CMAC beschäftigt. Jans Messungen auf der Box: ohne Signatur 32–40 MB/s. Erster Schritt: ein Kompatibilitätsmodus bis SMB 2.1 (#99). |
+
+### Samstag, 31.10.2026
+
+| Zeit | Was passiert ist |
+|---|---|
+| 00:08 | Ein Tester beim Umstieg von Alt-F fragte, wie die Daten auf seinen Platten bleiben – der Einrichtungsassistent löscht sie. Jetzt übernimmt *übernehmen* eine Platte mit Daten, wie sie ist (#100). Er hat die SSH-Schritte befolgt, beide Platten laufen unter ShareOS. |
+| 08:39 | ksmbd berechnet die SMB-3-Signaturen (AES-CMAC) über `cbc(aes)` der Marvell-Krypto-Einheit: Jan hat 18–22 MB/s statt 6–11 gemessen (#101). Am selben Morgen: Härtung nach einer externen Code-Prüfung (#102). |
+| 12:34 | Das Ausschalten nach Zeitplan passierte nie (#82): BusyBox-`crond` las das leere `/etc/cron/crontabs`, kein Cron-Auftrag von ShareOS war je gelaufen (#104). |
+| 15:14 | Der Zeitplan ist eine kurze Übersicht mit dem Datum des nächsten Einschaltens (#105); *Mein ShareOS* bekommt einen eigenen Reiter APPS, und der Kopf bleibt einzeilig, der Rest hinter **+N** (#106). Alles kommt in `v0.2.0-beta.17`. |
+
 ## Bemerkenswerte Problemlösungen
 
 - **3-MB-Grenze des Bootloaders:** Der Kernel ist von 4,2 auf 2,4 MB geschrumpft, Treiber wurden in Module ausgelagert. Das Start-System umfasst nur 0,9 MB.
