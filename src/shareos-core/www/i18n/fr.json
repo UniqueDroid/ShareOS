@@ -1270,7 +1270,8 @@
 		"Der Zeitplan ist aus – die eingetragenen Zeiten gelten erst mit dem Haken bei „Zeitplan einschalten“.": "Le planning est désactivé – les heures saisies ne s’appliquent qu’avec la case « activer le planning » cochée.",
 		"Zeitplan gespeichert (ausgeschaltet).": "Planning enregistré (désactivé).",
 		"Zeitplan gespeichert – kein Einschalten geplant.": "Planning enregistré – aucune mise en marche prévue.",
-		"Einschalten danach nur am Gerät.": "Rallumage ensuite uniquement sur l’appareil."
+		"Einschalten danach nur am Gerät.": "Rallumage ensuite uniquement sur l’appareil.",
+		"Keine Zeiten eingerichtet.": "Aucune heure définie."
 	},
 	"patterns": [
 		[
@@ -2560,6 +2561,14 @@
 		[
 			"^ShareOS fährt herunter und die Box schaltet sich aus\\. (.+)$",
 			"ShareOS s’arrête et le boîtier s’éteint. $1"
+		],
+		[
+			"^an ([0-9:]+)$",
+			"marche $1"
+		],
+		[
+			"^aus ([0-9:]+)$",
+			"arrêt $1"
 		]
 	],
 	"words": [

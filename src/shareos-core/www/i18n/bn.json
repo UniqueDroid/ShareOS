@@ -1270,7 +1270,8 @@
 		"Der Zeitplan ist aus – die eingetragenen Zeiten gelten erst mit dem Haken bei „Zeitplan einschalten“.": "সময়সূচি বন্ধ – \"সময়সূচি চালু করুন\"-এ টিক দিলেই লেখা সময়গুলি কার্যকর হয়।",
 		"Zeitplan gespeichert (ausgeschaltet).": "সময়সূচি সংরক্ষিত (বন্ধ)।",
 		"Zeitplan gespeichert – kein Einschalten geplant.": "সময়সূচি সংরক্ষিত – চালু হওয়ার কোনো পরিকল্পনা নেই।",
-		"Einschalten danach nur am Gerät.": "এরপর শুধু ডিভাইসেই চালু করা যাবে।"
+		"Einschalten danach nur am Gerät.": "এরপর শুধু ডিভাইসেই চালু করা যাবে।",
+		"Keine Zeiten eingerichtet.": "কোনো সময় সেট করা নেই।"
 	},
 	"patterns": [
 		[
@@ -2560,6 +2561,14 @@
 		[
 			"^ShareOS fährt herunter und die Box schaltet sich aus\\. (.+)$",
 			"ShareOS বন্ধ হয় এবং বক্স বন্ধ হয়ে যায়। $1"
+		],
+		[
+			"^an ([0-9:]+)$",
+			"চালু $1"
+		],
+		[
+			"^aus ([0-9:]+)$",
+			"বন্ধ $1"
 		]
 	],
 	"words": [

@@ -1270,7 +1270,8 @@
 		"Der Zeitplan ist aus – die eingetragenen Zeiten gelten erst mit dem Haken bei „Zeitplan einschalten“.": "计划已关闭——勾选“启用计划”后填写的时间才会生效。",
 		"Zeitplan gespeichert (ausgeschaltet).": "计划已保存（已关闭）。",
 		"Zeitplan gespeichert – kein Einschalten geplant.": "计划已保存——没有计划开机。",
-		"Einschalten danach nur am Gerät.": "之后只能在设备上开机。"
+		"Einschalten danach nur am Gerät.": "之后只能在设备上开机。",
+		"Keine Zeiten eingerichtet.": "未设置时间。"
 	},
 	"patterns": [
 		[
@@ -2560,6 +2561,14 @@
 		[
 			"^ShareOS fährt herunter und die Box schaltet sich aus\\. (.+)$",
 			"ShareOS 关机，设备断电。$1"
+		],
+		[
+			"^an ([0-9:]+)$",
+			"开 $1"
+		],
+		[
+			"^aus ([0-9:]+)$",
+			"关 $1"
 		]
 	],
 	"words": [

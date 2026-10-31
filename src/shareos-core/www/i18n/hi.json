@@ -1270,7 +1270,8 @@
 		"Der Zeitplan ist aus – die eingetragenen Zeiten gelten erst mit dem Haken bei „Zeitplan einschalten“.": "शेड्यूल बंद है – दर्ज समय \"शेड्यूल चालू करें\" पर टिक लगाने पर ही लागू होते हैं।",
 		"Zeitplan gespeichert (ausgeschaltet).": "शेड्यूल सहेजा गया (बंद)।",
 		"Zeitplan gespeichert – kein Einschalten geplant.": "शेड्यूल सहेजा गया – कोई चालू होना तय नहीं।",
-		"Einschalten danach nur am Gerät.": "इसके बाद केवल डिवाइस पर ही चालू करें।"
+		"Einschalten danach nur am Gerät.": "इसके बाद केवल डिवाइस पर ही चालू करें।",
+		"Keine Zeiten eingerichtet.": "कोई समय सेट नहीं है।"
 	},
 	"patterns": [
 		[
@@ -2560,6 +2561,14 @@
 		[
 			"^ShareOS fährt herunter und die Box schaltet sich aus\\. (.+)$",
 			"ShareOS बंद होता है और बॉक्स बंद हो जाता है। $1"
+		],
+		[
+			"^an ([0-9:]+)$",
+			"चालू $1"
+		],
+		[
+			"^aus ([0-9:]+)$",
+			"बंद $1"
 		]
 	],
 	"words": [

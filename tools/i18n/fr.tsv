@@ -1630,3 +1630,6 @@ P319	ShareOS s’arrête et le boîtier s’éteint. Selon le planning, il se ra
 E1267	Rallumage ensuite uniquement sur l’appareil.
 P320	Selon le planning, il se rallume le $1.
 P321	ShareOS s’arrête et le boîtier s’éteint. $1
+P322	marche $1
+P323	arrêt $1
+E1268	Aucune heure définie.

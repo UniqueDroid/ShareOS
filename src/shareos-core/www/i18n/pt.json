@@ -1270,7 +1270,8 @@
 		"Der Zeitplan ist aus – die eingetragenen Zeiten gelten erst mit dem Haken bei „Zeitplan einschalten“.": "A programação está desligada – os horários informados só valem com a caixa “ativar programação” marcada.",
 		"Zeitplan gespeichert (ausgeschaltet).": "Programação salva (desligada).",
 		"Zeitplan gespeichert – kein Einschalten geplant.": "Programação salva – nenhuma ligação prevista.",
-		"Einschalten danach nur am Gerät.": "Depois, ligar só no equipamento."
+		"Einschalten danach nur am Gerät.": "Depois, ligar só no equipamento.",
+		"Keine Zeiten eingerichtet.": "Nenhum horário configurado."
 	},
 	"patterns": [
 		[
@@ -2560,6 +2561,14 @@
 		[
 			"^ShareOS fährt herunter und die Box schaltet sich aus\\. (.+)$",
 			"O ShareOS desliga e o equipamento se desliga. $1"
+		],
+		[
+			"^an ([0-9:]+)$",
+			"liga $1"
+		],
+		[
+			"^aus ([0-9:]+)$",
+			"desliga $1"
 		]
 	],
 	"words": [

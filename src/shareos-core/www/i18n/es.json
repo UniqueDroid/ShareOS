@@ -1270,7 +1270,8 @@
 		"Der Zeitplan ist aus – die eingetragenen Zeiten gelten erst mit dem Haken bei „Zeitplan einschalten“.": "El horario está desactivado: las horas introducidas solo se aplican con la casilla «activar horario» marcada.",
 		"Zeitplan gespeichert (ausgeschaltet).": "Horario guardado (desactivado).",
 		"Zeitplan gespeichert – kein Einschalten geplant.": "Horario guardado: no hay encendido previsto.",
-		"Einschalten danach nur am Gerät.": "Después solo se enciende en el equipo."
+		"Einschalten danach nur am Gerät.": "Después solo se enciende en el equipo.",
+		"Keine Zeiten eingerichtet.": "No hay horas configuradas."
 	},
 	"patterns": [
 		[
@@ -2560,6 +2561,14 @@
 		[
 			"^ShareOS fährt herunter und die Box schaltet sich aus\\. (.+)$",
 			"ShareOS se apaga y el equipo se desconecta. $1"
+		],
+		[
+			"^an ([0-9:]+)$",
+			"encendido $1"
+		],
+		[
+			"^aus ([0-9:]+)$",
+			"apagado $1"
 		]
 	],
 	"words": [

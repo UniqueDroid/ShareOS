@@ -1630,3 +1630,6 @@ P319	O ShareOS desliga e o equipamento se desliga. Pela programação, ele liga 
 E1267	Depois, ligar só no equipamento.
 P320	Pela programação, ele liga de novo em $1.
 P321	O ShareOS desliga e o equipamento se desliga. $1
+P322	liga $1
+P323	desliga $1
+E1268	Nenhum horário configurado.

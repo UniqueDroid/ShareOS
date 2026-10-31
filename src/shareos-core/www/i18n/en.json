@@ -1270,7 +1270,8 @@
 		"Der Zeitplan ist aus – die eingetragenen Zeiten gelten erst mit dem Haken bei „Zeitplan einschalten“.": "The schedule is off – the times entered only apply with the tick at “Switch the schedule on”.",
 		"Zeitplan gespeichert (ausgeschaltet).": "Schedule saved (switched off).",
 		"Zeitplan gespeichert – kein Einschalten geplant.": "Schedule saved – no switch-on planned.",
-		"Einschalten danach nur am Gerät.": "Switching on afterwards only at the device."
+		"Einschalten danach nur am Gerät.": "Switching on afterwards only at the device.",
+		"Keine Zeiten eingerichtet.": "No times set up."
 	},
 	"patterns": [
 		[
@@ -2560,6 +2561,14 @@
 		[
 			"^ShareOS fährt herunter und die Box schaltet sich aus\\. (.+)$",
 			"ShareOS shuts down and the box switches off. $1"
+		],
+		[
+			"^an ([0-9:]+)$",
+			"on $1"
+		],
+		[
+			"^aus ([0-9:]+)$",
+			"off $1"
 		]
 	],
 	"words": [

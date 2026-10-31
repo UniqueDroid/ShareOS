@@ -1270,7 +1270,8 @@
 		"Der Zeitplan ist aus – die eingetragenen Zeiten gelten erst mit dem Haken bei „Zeitplan einschalten“.": "Расписание выключено – введённое время действует только с отметкой «включить расписание».",
 		"Zeitplan gespeichert (ausgeschaltet).": "Расписание сохранено (выключено).",
 		"Zeitplan gespeichert – kein Einschalten geplant.": "Расписание сохранено – включение не запланировано.",
-		"Einschalten danach nur am Gerät.": "Включить затем можно только на устройстве."
+		"Einschalten danach nur am Gerät.": "Включить затем можно только на устройстве.",
+		"Keine Zeiten eingerichtet.": "Время не задано."
 	},
 	"patterns": [
 		[
@@ -2560,6 +2561,14 @@
 		[
 			"^ShareOS fährt herunter und die Box schaltet sich aus\\. (.+)$",
 			"ShareOS завершает работу, и устройство выключается. $1"
+		],
+		[
+			"^an ([0-9:]+)$",
+			"вкл. $1"
+		],
+		[
+			"^aus ([0-9:]+)$",
+			"выкл. $1"
 		]
 	],
 	"words": [

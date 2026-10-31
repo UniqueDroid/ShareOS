@@ -1630,3 +1630,6 @@ P319	ShareOS se apaga y el equipo se desconecta. Según el horario vuelve a ence
 E1267	Después solo se enciende en el equipo.
 P320	Según el horario vuelve a encenderse el $1.
 P321	ShareOS se apaga y el equipo se desconecta. $1
+P322	encendido $1
+P323	apagado $1
+E1268	No hay horas configuradas.

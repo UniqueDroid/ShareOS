@@ -1270,7 +1270,8 @@
 		"Der Zeitplan ist aus – die eingetragenen Zeiten gelten erst mit dem Haken bei „Zeitplan einschalten“.": "الجدول متوقف – لا تسري الأوقات المدخلة إلا بتحديد «تفعيل الجدول».",
 		"Zeitplan gespeichert (ausgeschaltet).": "تم حفظ الجدول (متوقف).",
 		"Zeitplan gespeichert – kein Einschalten geplant.": "تم حفظ الجدول – لا يوجد تشغيل مخطط.",
-		"Einschalten danach nur am Gerät.": "التشغيل بعد ذلك من الجهاز فقط."
+		"Einschalten danach nur am Gerät.": "التشغيل بعد ذلك من الجهاز فقط.",
+		"Keine Zeiten eingerichtet.": "لم تُضبط أوقات."
 	},
 	"patterns": [
 		[
@@ -2560,6 +2561,14 @@
 		[
 			"^ShareOS fährt herunter und die Box schaltet sich aus\\. (.+)$",
 			"يتوقف ShareOS وينطفئ الجهاز. $1"
+		],
+		[
+			"^an ([0-9:]+)$",
+			"تشغيل $1"
+		],
+		[
+			"^aus ([0-9:]+)$",
+			"إيقاف $1"
 		]
 	],
 	"words": [
