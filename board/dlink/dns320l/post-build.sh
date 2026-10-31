@@ -9,6 +9,14 @@ TARGET_DIR="$1"
 BOARD_DIR="$(dirname "$0")"
 TOP_DIR="$(cd "$BOARD_DIR/../../.." && pwd)"
 
+# crond must read /etc/crontabs (shareos-cron writes /etc/crontabs/root);
+# with another directory every scheduled job of ShareOS silently never runs
+BB_CONFIG=$(ls -d "$BUILD_DIR"/busybox-*/.config 2>/dev/null | head -1)
+if [ -n "$BB_CONFIG" ] && ! grep -qx 'CONFIG_FEATURE_CROND_DIR="/etc"' "$BB_CONFIG"; then
+	echo "post-build: busybox crond does not read /etc/crontabs ($(grep CROND_DIR "$BB_CONFIG"))" >&2
+	exit 1
+fi
+
 VERSION="$("$TOP_DIR/scripts/version.sh")"
 case "$VERSION" in
 	0.0-*) STAGE=dev ;;          # untagged build
