@@ -1580,7 +1580,7 @@ function snapAfter() {
 /* ---------- "Mein ShareOS" for plain users ------------------------------------ */
 
 function userTabs() {
-	return [['me', 'MEIN SHAREOS'], ...(S.me?.files ? [['files', 'DATEIEN']] : []), ['settings', 'EINSTELLUNGEN']];
+	return [['me', 'MEIN SHAREOS'], ...(S.me?.files ? [['files', 'DATEIEN']] : []), ...((S.me?.apps || []).length ? [['apps', 'APPS']] : []), ['settings', 'EINSTELLUNGEN']];
 }
 
 function parseUserRoute() {
@@ -1695,6 +1695,7 @@ function renderUserMain() {
 		appFrameLoad();
 		return;
 	}
+	if (S.utab === 'apps') { main.innerHTML = userAppsView().s; return; }
 	if (S.utab === 'settings') {
 		main.innerHTML = userLookView().s;
 		$('#f-mypass').addEventListener('submit', async (e) => {
@@ -1740,6 +1741,18 @@ function myStorage(m, host, ip) {
 		${paths}</div>`;
 }
 
+// "APPS" of Mein ShareOS: all apps of the user; the star puts one into "FAV APPS" on the start page
+function userAppsView() {
+	const m = S.me || {}, apps = m.apps || [];
+	return html`<section class="sec">
+		<h2 class="gh">MEINE APPS <span>${apps.length}</span></h2>
+		<div class="grid">${apps.map((a) => html`<div class="favwrap"><a class="card applink" href="${appHref(a, m.apps_server)}" data-act="app-launch" data-id="${a.id}">
+			<div class="icon">${appIcon(a, m.apps_server)}</div>
+			<div class="info"><div class="name">${a.name}${appMode(a) === 'page' ? '' : ' ↗'}</div><div class="desc">${txtOf(a.description)}</div></div></a>${favStar(a)}</div>`)}</div>
+		<p class="note">Mit dem Stern wird eine App zum Favoriten – Favoriten stehen oben auf „Mein ShareOS“.</p>
+	</section>`;
+}
+
 function renderUserHome() {
 	const m = S.me || {}, host = m.host || location.hostname, ip = location.hostname;
 	$('#main').innerHTML = html`
@@ -1757,12 +1770,6 @@ function renderUserHome() {
 				<div class="ip">\\\\${host}\\${x.name}</div></div></div>`)}</div>`
 			: html`<div class="panel"><div class="empty">${svg(I.info)}<span>Dir wurde noch keine Freigabe zugewiesen.</span></div></div>`}
 	</section>
-	${(m.apps || []).length ? html`<section class="sec">
-		<h2 class="gh">MEINE APPS <span>${m.apps.length}</span></h2>
-		<div class="grid">${m.apps.map((a) => html`<div class="favwrap"><a class="card applink" href="${appHref(a, m.apps_server)}" data-act="app-launch" data-id="${a.id}">
-			<div class="icon">${appIcon(a, m.apps_server)}</div>
-			<div class="info"><div class="name">${a.name}${appMode(a) === 'page' ? '' : ' ↗'}</div><div class="desc">${txtOf(a.description)}</div></div></a>${favStar(a)}</div>`)}</div>
-	</section>` : ''}
 	${m.paperless ? myPaperless() : ''}
 	${m.cloud ? cloudSection('me') : ''}`.s;
 	if (m.paperless && !S.myPl) loadMyPaperless();
@@ -2358,23 +2365,6 @@ const SYS = {
 	general() {
 		const i = S.info || {};
 		return html`<div class="acts" style="margin-bottom:16px"><button class="btn ghost" type="button" data-act="fr-again">Ersteinrichtung erneut starten</button></div>
-		<div class="g2">
-			<form class="panel" id="f-host">
-				<div class="ph"><span class="pt">GERÄTENAME</span></div>
-				<div class="fields" style="grid-template-columns:1fr"><label class="f"><span>HOSTNAME</span><input name="hostname" value="${i.hostname || ''}" pattern="[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?" required></label></div>
-				<p class="note">Buchstaben, Ziffern und Bindestrich. Gilt sofort, der DHCP-Server sieht ihn bei der nächsten Verlängerung.</p>
-				<div class="acts" style="margin-top:14px"><button class="btn primary" type="submit">Speichern</button></div>
-			</form>
-			<form class="panel" id="f-pass">
-				<div class="ph"><span class="pt">ZUGANG · ${S.user}</span></div>
-				<div class="fields" style="grid-template-columns:1fr">
-					<label class="f"><span>NEUES PASSWORT</span><input name="p1" type="password" minlength="6" autocomplete="new-password" required></label>
-					<label class="f"><span>WIEDERHOLEN</span><input name="p2" type="password" minlength="6" autocomplete="new-password" required></label>
-				</div>
-				<p class="note">Gilt für die Weboberfläche und SSH. Mindestens 6 Zeichen.</p>
-				<div class="acts" style="margin-top:14px"><button class="btn primary" type="submit">Passwort ändern</button></div>
-			</form>
-		</div>
 		<h2 class="gh" style="margin-top:22px">EINSTELLUNGEN SICHERN & WIEDERHERSTELLEN</h2>
 		<div class="g2">
 			<form class="panel" id="f-backup">
@@ -2395,6 +2385,24 @@ const SYS = {
 		</div>
 		<h2 class="gh" style="margin-top:22px">APP & WIDGETS</h2>
 		<div class="g2">${appPanel()}${widgetPanel()}</div>
+		<h2 class="gh" style="margin-top:22px">GERÄT & ZUGANG</h2>
+		<div class="g2">
+			<form class="panel" id="f-host">
+				<div class="ph"><span class="pt">GERÄTENAME</span></div>
+				<div class="fields" style="grid-template-columns:1fr"><label class="f"><span>HOSTNAME</span><input name="hostname" value="${i.hostname || ''}" pattern="[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?" required></label></div>
+				<p class="note">Buchstaben, Ziffern und Bindestrich. Gilt sofort, der DHCP-Server sieht ihn bei der nächsten Verlängerung.</p>
+				<div class="acts" style="margin-top:14px"><button class="btn primary" type="submit">Speichern</button></div>
+			</form>
+			<form class="panel" id="f-pass">
+				<div class="ph"><span class="pt">ZUGANG · ${S.user}</span></div>
+				<div class="fields" style="grid-template-columns:1fr">
+					<label class="f"><span>NEUES PASSWORT</span><input name="p1" type="password" minlength="6" autocomplete="new-password" required></label>
+					<label class="f"><span>WIEDERHOLEN</span><input name="p2" type="password" minlength="6" autocomplete="new-password" required></label>
+				</div>
+				<p class="note">Gilt für die Weboberfläche und SSH. Mindestens 6 Zeichen.</p>
+				<div class="acts" style="margin-top:14px"><button class="btn primary" type="submit">Passwort ändern</button></div>
+			</form>
+		</div>
 		<h2 class="gh" style="margin-top:22px">ÜBER</h2>
 		${SYS.about()}`;
 	},

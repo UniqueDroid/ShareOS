@@ -1622,3 +1622,5 @@ P315	Adoptar $1: $2
 P316	$1 ($2, $3) se añade tal cual como unidad: no se borra nada. Nombre de la unidad (a–z, 0–9, - y _, máx. 16 caracteres):
 P317	$1 es ahora la unidad «$2»: los datos se conservan. Cree recursos compartidos para las carpetas existentes en «Compartidos».
 E1263	Solo para dispositivos que tienen problemas con SMB 3. La firma que Windows 11 exige en cada conexión la calcula con SMB 3 el motor criptográfico del equipo (medido unos 19–23 MB/s al escribir, unos 35 sin firma); SMB 2.1 la calcula en el procesador (unos 9–14 MB/s) y no tiene cifrado ni multicanal. Las conexiones abiertas se cortan al cambiarlo.
+E1264	EQUIPO Y ACCESO
+E1265	La estrella convierte una app en favorita: las favoritas aparecen arriba en «Mi ShareOS».
