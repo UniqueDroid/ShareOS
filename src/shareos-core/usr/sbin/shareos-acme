@@ -1,0 +1,132 @@
+#!/bin/sh
+#
+# shareos-acme – certificate from Let's Encrypt for the DynDNS name
+#
+#   shareos-acme issue [staging]   get a certificate for the DynDNS name
+#                                  (shareos.ddns.host) and install it for the
+#                                  web interface; staging: the test CA
+#   shareos-acme renew             renew it when less than 30 days are left
+#                                  (cron, daily) and install the new one
+#   shareos-acme status            JSON: name, valid until, last error
+#   shareos-acme off               back to the self-signed certificate
+#
+# The check runs over DNS (DNS-01): the TXT record _acme-challenge.<name> is
+# set at the DynDNS provider (shareos-ddns txt-set) – no port has to be open
+# to the internet. Works with DuckDNS and Cloudflare. uacme keeps the account
+# and the certificates in /etc/shareos/acme. Settings: UCI shareos.acme
+# (email: optional, for expiry mails of Let's Encrypt; staging '1').
+#
+PATH=/usr/sbin:/usr/bin:/sbin:/bin
+DIR=/etc/shareos/acme
+LOG=/tmp/shareos-acme.log
+HOOK=/usr/libexec/shareos-acme-hook
+
+die() { echo "shareos-acme: $*" >&2; echo "$*" > /tmp/shareos-acme.error; exit 1; }
+host() { uci -q get shareos.ddns.host | tr A-Z a-z; }
+name() {
+	h=$(host)
+	[ "$(uci -q get shareos.ddns.provider)" = duckdns ] && ! echo "$h" | grep -q '\.duckdns\.org$' && h="$h.duckdns.org"
+	echo "$h"
+}
+uacme_run() {
+	s=; [ "$(uci -q get shareos.acme.staging)" = 1 ] && s=-s
+	uacme -v -c "$DIR" -t EC -b 256 $s -h "$HOOK" "$@" >>$LOG 2>&1
+}
+restart_web() { (sleep 1; killall uhttpd) >/dev/null 2>&1 & }
+
+check() {
+	command -v uacme >/dev/null || die "uacme missing in this firmware"
+	[ "$(uci -q get shareos.ddns.enabled)" = 1 ] || die "switch on DynDNS first"
+	case "$(uci -q get shareos.ddns.provider)" in
+		duckdns|cloudflare) ;;
+		*) die "Let's Encrypt over DNS needs DuckDNS or Cloudflare as DynDNS provider" ;;
+	esac
+	[ -n "$(host)" ] || die "no DynDNS name"
+}
+
+account() {
+	[ -s "$DIR/private/key.pem" ] && return 0
+	mkdir -p "$DIR"; chmod 700 "$DIR"
+	m=$(uci -q get shareos.acme.email)
+	uacme_run -y new $m || die "Let's Encrypt account could not be created (see $LOG)"
+}
+
+install() {
+	n=$(name)
+	[ -s "$DIR/$n/cert.pem" ] && [ -s "$DIR/private/$n/key.pem" ] || die "no certificate from Let's Encrypt"
+	/usr/sbin/shareos-cert install "$DIR/$n/cert.pem" "$DIR/private/$n/key.pem" >/dev/null || die "the web server did not take the certificate"
+	uci -q get shareos.web >/dev/null || uci -q set shareos.web=web
+	uci -q get shareos.acme >/dev/null || uci -q set shareos.acme=acme
+	uci -q set shareos.web.source=acme
+	uci -q set shareos.acme.name="$n"
+	uci -q commit shareos
+	/usr/sbin/shareos-cron sync >/dev/null 2>&1
+	restart_web
+}
+
+issue() {
+	check
+	: > $LOG
+	rm -f /tmp/shareos-acme.error
+	uci -q get shareos.acme >/dev/null || uci -q set shareos.acme=acme
+	if [ "$1" = staging ]; then uci -q set shareos.acme.staging=1; else uci -q delete shareos.acme.staging; fi
+	uci -q commit shareos
+	# the account belongs to one CA: a new one when switching between test and real
+	ca=$( [ "$1" = staging ] && echo staging || echo prod )
+	[ "$(cat "$DIR/ca" 2>/dev/null)" = "$ca" ] || rm -rf "$DIR"
+	account
+	echo "$ca" > "$DIR/ca"
+	uacme_run -f issue "$(name)"
+	rc=$?
+	[ $rc = 0 ] || die "Let's Encrypt did not issue the certificate (see $LOG)"
+	install
+	logger -t shareos-acme "certificate for $(name) issued" 2>/dev/null
+	echo "certificate for $(name) issued and installed"
+}
+
+renew() {
+	[ "$(uci -q get shareos.web.source)" = acme ] || return 0
+	check
+	: > $LOG
+	uacme_run -d 30 issue "$(name)"
+	case $? in
+		0) install; rm -f /tmp/shareos-acme.error
+		   /usr/sbin/shareos-notify clear acme-error >/dev/null 2>&1
+		   logger -t shareos-acme "certificate for $(name) renewed" 2>/dev/null; echo renewed ;;
+		1) echo "still valid" ;;
+		*) echo "renewal failed" > /tmp/shareos-acme.error
+		   /usr/sbin/shareos-notify send warn network acme-error "Let's-Encrypt-Zertifikat nicht erneuert" \
+			"Let's Encrypt certificate not renewed" "Neuer Versuch morgen. Protokoll: $LOG" "Next try tomorrow. Log: $LOG" >/dev/null 2>&1
+		   exit 1 ;;
+	esac
+}
+
+status() {
+	n=$(uci -q get shareos.acme.name); on=false
+	[ "$(uci -q get shareos.web.source)" = acme ] && on=true
+	u=
+	[ -n "$n" ] && [ -s "$DIR/$n/cert.pem" ] && u=$( (mbedtls_cert_app mode=file filename="$DIR/$n/cert.pem" 2>/dev/null \
+		|| cert_app mode=file filename="$DIR/$n/cert.pem" 2>/dev/null) | sed -n 's/^ *expires on *: *//p' | head -1)
+	e=$(cat /tmp/shareos-acme.error 2>/dev/null | head -1 | sed 's/\\/\\\\/g;s/"/\\"/g')
+	staging=false; [ "$(uci -q get shareos.acme.staging)" = 1 ] && staging=true
+	printf '{"active":%s,"name":"%s","until":"%s","staging":%s,"email":"%s","error":"%s"}\n' \
+		$on "$n" "$u" $staging "$(uci -q get shareos.acme.email)" "$e"
+}
+
+off() {
+	[ "$(uci -q get shareos.web.source)" = acme ] || { echo "not active"; return; }
+	/usr/sbin/shareos-cert selfsigned >/dev/null || die "self-signed certificate failed"
+	uci -q delete shareos.web.source
+	uci -q commit shareos
+	/usr/sbin/shareos-cron sync >/dev/null 2>&1
+	restart_web
+	echo "back to the self-signed certificate"
+}
+
+case "$1" in
+	issue) issue "$2" ;;
+	renew) renew ;;
+	status) status ;;
+	off) off ;;
+	*) sed -n '3,17s/^# \{0,1\}//p' "$0"; exit 2 ;;
+esac

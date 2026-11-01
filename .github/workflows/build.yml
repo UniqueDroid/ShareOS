@@ -48,6 +48,8 @@ jobs:
         run: tests/test-bootlog.sh
       - name: Power schedule (shareos-power)
         run: LD_LIBRARY_PATH="$HOME/hostroot/lib" tests/test-power.sh "$HOME/hostroot/bin"
+      - name: Dynamic DNS (shareos-ddns, all providers with a fake curl)
+        run: LD_LIBRARY_PATH="$HOME/hostroot/lib" tests/test-ddns.sh "$HOME/hostroot/bin"
       - name: Zabbix agent controller (settings, disk/RAID items)
         run: LD_LIBRARY_PATH="$HOME/hostroot/lib" tests/test-zabbix-items.sh "$HOME/hostroot/bin"
       - name: SMART evaluation (disk health)
@@ -57,6 +59,7 @@ jobs:
           tests/check-ucode-order.py src/shareos-core/usr/share/rpcd/ucode/shareos.uc
           tests/check-ucode-order.py src/shareos-core/usr/sbin/shareos-apps
           tests/check-ucode-order.py src/shareos-core/usr/sbin/shareos-notify
+          tests/check-ucode-order.py src/shareos-core/usr/sbin/shareos-ddns
           tests/check-ucode-regex.py
           tests/check-acl.py
           tests/check-i18n.py
@@ -81,7 +84,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
             build-essential bc bison flex cpio rsync unzip file wget \
-            libssl-dev libncurses-dev python3
+            libssl-dev libncurses-dev python3 qemu-user-static
 
       - name: Cache downloads
         uses: actions/cache@v4
@@ -95,6 +98,15 @@ jobs:
 
       - name: Test writing .bin files (rollback to Alt-F)
         run: tests/test-flash-bin.sh output/${{ matrix.board }}/host/bin
+
+      - name: Own certificate authority (shareos-ca with the firmware's mbedtls and uci in qemu)
+        run: |
+          T=$PWD/output/${{ matrix.board }}/target W=$(mktemp -d)
+          for p in gen_key cert_write cert_app uci; do
+            f=$T/usr/bin/$p; [ -e "$f" ] || f=$T/sbin/$p
+            printf '#!/bin/sh\nexec qemu-arm-static -L %s %s "$@"\n' "$T" "$f" > $W/$p; chmod 755 $W/$p
+          done
+          tests/test-ca.sh $W $W
 
       - name: Initramfs load address of every model
         run: tests/check-initrd-address.sh output/${{ matrix.board }}/images

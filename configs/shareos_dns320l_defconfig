@@ -73,6 +73,7 @@ BR2_PACKAGE_LIBCURL=y
 BR2_PACKAGE_LIBCURL_CURL=y
 BR2_PACKAGE_LIBCURL_MBEDTLS=y
 BR2_PACKAGE_CA_CERTIFICATES=y
+BR2_PACKAGE_UACME=y
 
 # --- Images ---
 # Full system as squashfs (goes into the UBI volume "rootfs"); the small

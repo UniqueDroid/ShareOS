@@ -1,0 +1,29 @@
+#!/bin/sh
+#
+# uacme hook of shareos-acme: answers only the DNS check (dns-01) through the
+# TXT record at the DynDNS provider (shareos-ddns).
+#
+#   shareos-acme-hook begin|done|failed <type> <ident> <token> <key_auth>
+#
+# uacme hands over the TXT value for dns-01 as key_auth. Exit 1 declines a
+# check type (http-01, tls-alpn-01: no port of the box is open to the internet).
+#
+PATH=/usr/sbin:/usr/bin:/sbin:/bin
+method=$1 type=$2 ident=$3 auth=$5
+[ "$type" = dns-01 ] || exit 1
+name="_acme-challenge.${ident#\*.}"
+case "$method" in
+	begin)
+		/usr/sbin/shareos-ddns txt-set "$name" "$auth" >/dev/null || exit 1
+		# wait until a public resolver sees the value (at most about 2 minutes)
+		for i in 1 2 3 4 5 6 7 8 9 10 11 12; do
+			sleep 10
+			nslookup -type=txt "$name" 1.1.1.1 2>/dev/null | grep -qF -- "$auth" && break
+		done
+		sleep 5
+		exit 0 ;;
+	done|failed)
+		/usr/sbin/shareos-ddns txt-clear "$name" "$auth" >/dev/null
+		exit 0 ;;
+esac
+exit 1

@@ -1,0 +1,289 @@
+#!/usr/bin/ucode -S
+//
+// shareos-ddns – dynamic DNS: keep a name on the internet pointing at this box
+//
+//   shareos-ddns update [force]   send the public address to the provider when
+//                                 it changed (cron every 5 minutes); force: now
+//   shareos-ddns status           settings (without secrets) and last result (JSON)
+//   shareos-ddns txt-set <name> <value>
+//   shareos-ddns txt-clear <name> <value>
+//                                 TXT record for the DNS-01 check of Let's Encrypt
+//                                 (shareos-acme; DuckDNS and Cloudflare)
+//
+// Settings: UCI shareos.ddns – enabled '1', provider duckdns|dynv6|cloudflare|
+// noip|custom, host (full name; DuckDNS also just the sub-domain), token
+// (DuckDNS/dynv6 token, Cloudflare API token, No-IP/custom password), user
+// (No-IP/custom), url (custom: https URL with {host} {ip} {ip6} {user} {token}),
+// ipv4 '1' (default) and ipv6 '0'. The public IPv4 address is asked from
+// api.ipify.org (icanhazip.com as fallback); IPv6 is the global address of eth0.
+// The provider is asked again when an address changed, after a failure at
+// most every 30 minutes and otherwise once a day. A failure becomes a message
+// (shareos-notify, key ddns-error), a success clears it.
+//
+//   SHAREOS_ROOT=<dir>         fake root (tests)
+//   SHAREOS_DDNS_CURL=<cmd>    instead of curl (tests)
+//   SHAREOS_DDNS_NOW=<epoch>   the current time (tests)
+//   SHAREOS_DDNS_IP6=<addr>    instead of the address of eth0 (tests)
+//
+'use strict';
+
+import { readfile, writefile, stat, popen, mkdir } from 'fs';
+import { cursor } from 'uci';
+
+const ROOT = getenv('SHAREOS_ROOT') ?? '';
+const STATE = ROOT + '/tmp/shareos-ddns.json';
+const CA = '/etc/ssl/certs/ca-certificates.crt';
+const CURL = getenv('SHAREOS_DDNS_CURL') ?? 'curl';
+const PROVIDERS = { duckdns: 1, dynv6: 1, cloudflare: 1, noip: 1, custom: 1 };
+const CF = 'https://api.cloudflare.com/client/v4';
+const RETRY = 1800, DAILY = 86400;
+
+function out(o) { print(sprintf('%J\n', o)); }
+function shq(s) { return "'" + replace('' + s, "'", "'\\''") + "'"; }
+function now() { let n = getenv('SHAREOS_DDNS_NOW'); return n ? +n : time(); }
+function log(msg) { system('logger -t shareos-ddns ' + shq(msg) + ' 2>/dev/null'); }
+function enc(s) {
+	return join('', map(split('' + s, ''), (c) => match(c, /^[A-Za-z0-9._~-]$/) ? c : sprintf('%%%02X', ord(c))));
+}
+function version() {
+	let m = match(readfile(ROOT + '/etc/os-release') ?? '', /VERSION_ID="?([^"\n]+)/);
+	return m ? m[1] : 'dev';
+}
+
+// curl: { code, body }; headers as [ 'Name: value' ], secrets travel on stdin
+// (-H @- / -u through --config) so they do not show up in ps
+function http(method, url, opt) {
+	opt ??= {};
+	let cfg = [];
+	for (let h in opt.headers ?? []) push(cfg, 'header = ' + sprintf('%J', h));
+	if (opt.auth) push(cfg, 'user = ' + sprintf('%J', opt.auth));
+	let cmd = sprintf('%s -sS -m 30 -X %s %s -w %s -K - -A %s', CURL, method,
+		stat(CA) ? '--cacert ' + CA : '', shq('\n%{http_code}'), shq('ShareOS/' + version() + ' ddns'));
+	if (opt.ipv) cmd += ' -' + opt.ipv;
+	if (opt.json != null) cmd += ' -H ' + shq('Content-Type: application/json') + ' --data ' + shq(sprintf('%J', opt.json));
+	cmd += ' ' + shq(url);
+	let f = popen('printf %s ' + shq(join('\n', cfg) + '\n') + ' | ' + cmd + ' 2>&1', 'r');
+	if (!f) return { code: 0, body: 'curl missing' };
+	let o = f.read('all') ?? '';
+	f.close();
+	// the last line is the HTTP status (-w)
+	let i = rindex(o, '\n'), c = substr(o, i + 1);
+	return i >= 0 && match(c, /^[0-9][0-9][0-9]$/) ? { code: +c, body: trim(substr(o, 0, i)) } : { code: 0, body: trim(o) };
+}
+
+function conf() {
+	let c = ROOT ? cursor(ROOT + '/etc/config') : cursor();
+	let d = c.get_all('shareos', 'ddns') ?? {};
+	return {
+		enabled: d.enabled == '1', provider: d.provider ?? '', host: lc(trim(d.host ?? '')),
+		token: d.token ?? '', user: d.user ?? '', url: d.url ?? '',
+		ipv4: d.ipv4 != '0', ipv6: d.ipv6 == '1'
+	};
+}
+
+function state() { let s = null; try { s = json(readfile(STATE) ?? 'null'); } catch (e) { } return type(s) == 'object' ? s : {}; }
+function save(s) { mkdir(ROOT + '/tmp'); writefile(STATE, sprintf('%J', s)); }
+
+const IP4 = /^(25[0-5]|2[0-4][0-9]|1?[0-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1?[0-9]?[0-9])){3}$/;
+function private4(a) {
+	return !!match(a, /^(10\.|127\.|169\.254\.|192\.168\.|172\.(1[6-9]|2[0-9]|3[01])\.|100\.(6[4-9]|[7-9][0-9]|1[01][0-9]|12[0-7])\.)/);
+}
+
+function public4() {
+	for (let u in [ 'https://api.ipify.org', 'https://ipv4.icanhazip.com' ]) {
+		let r = http('GET', u, { ipv: 4 });
+		let a = trim(r.body);
+		if (r.code == 200 && match(a, IP4) && !private4(a)) return a;
+	}
+	return null;
+}
+
+function public6() {
+	let t = getenv('SHAREOS_DDNS_IP6');
+	if (t != null) return t || null;
+	let f = popen('ip -6 -o addr show dev eth0 scope global 2>/dev/null', 'r');
+	let o = f ? (f.read('all') ?? '') : '';
+	f?.close();
+	let best = null;
+	for (let l in split(o, '\n')) {
+		if (match(l, /deprecated|tentative/)) continue;
+		let m = match(l, /inet6 ([0-9a-f:]+)\//);
+		if (!m || match(m[1], /^f[cd]/)) continue;   // no ULA
+		// a stable address (no "temporary") is better for a name
+		if (!best || (!match(l, /temporary/) && best.tmp)) best = { a: m[1], tmp: !!match(l, /temporary/) };
+	}
+	return best?.a;
+}
+
+function duck_name(h) { return replace(h, /\.duckdns\.org$/, ''); }
+
+// first word of a dyndns2 answer
+function dyn2(r) {
+	let w = split(trim(r.body), ' ')[0];
+	if (r.code >= 200 && r.code < 300 && (w == 'good' || w == 'nochg')) return null;
+	let msgs = { badauth: 'user name or password wrong', nohost: 'host name unknown to the provider',
+		notfqdn: 'not a full host name', abuse: 'blocked by the provider (abuse)', '911': 'provider has a problem, try later',
+		dnserr: 'provider has a problem, try later', badagent: 'client refused by the provider' };
+	if (msgs[w]) return msgs[w];
+	if (r.code >= 200 && r.code < 300) return null;
+	return 'HTTP ' + r.code + (r.body ? ': ' + substr(r.body, 0, 120) : '');
+}
+
+// Cloudflare: zone of a name (the longest suffix that is a zone)
+function cf_hdr(c) { return [ 'Authorization: Bearer ' + c.token ]; }
+function cf_get(c, path) {
+	let r = http('GET', CF + path, { headers: cf_hdr(c) }), j = null;
+	try { j = json(r.body); } catch (e) { }
+	return j;
+}
+function cf_err(j) { return j?.errors?.[0]?.message ?? 'Cloudflare: no answer'; }
+function cf_zone(c, name) {
+	let p = split(name, '.');
+	for (let i = 0; i < length(p) - 1; i++) {
+		let z = join('.', slice(p, i));
+		let j = cf_get(c, '/zones?name=' + enc(z));
+		if (j && !j.success) return { error: cf_err(j) };
+		if (j?.result?.[0]?.id) return { id: j.result[0].id };
+	}
+	return { error: 'no Cloudflare zone for ' + name + ' (token needs Zone:Read and DNS:Edit)' };
+}
+function cf_set(c, zone, type, name, content) {
+	let j = cf_get(c, sprintf('/zones/%s/dns_records?type=%s&name=%s', zone, type, enc(name)));
+	if (!j?.success) return cf_err(j);
+	let rec = j.result?.[0];
+	if (rec && rec.content == content) return null;
+	let body = { type, name, content, ttl: 120, proxied: false };
+	let r = rec ? http('PUT', sprintf('%s/zones/%s/dns_records/%s', CF, zone, rec.id), { headers: cf_hdr(c), json: body })
+		: http('POST', sprintf('%s/zones/%s/dns_records', CF, zone), { headers: cf_hdr(c), json: body });
+	let k = null;
+	try { k = json(r.body); } catch (e) { }
+	return k?.success ? null : cf_err(k);
+}
+
+// send the addresses; null or an error text
+function send(c, ip4, ip6) {
+	let p = c.provider, h = c.host;
+	if (p == 'duckdns') {
+		let r = http('GET', sprintf('https://www.duckdns.org/update?domains=%s&token=%s&ip=%s%s',
+			enc(duck_name(h)), enc(c.token), ip4 ?? '', ip6 ? '&ipv6=' + ip6 : ''));
+		return trim(r.body) == 'OK' ? null : r.code == 200 ? 'DuckDNS refused it (KO: name or token wrong)' : 'HTTP ' + r.code;
+	}
+	if (p == 'dynv6') {
+		let r = http('GET', sprintf('https://dynv6.com/api/update?hostname=%s&token=%s%s%s',
+			enc(h), enc(c.token), ip4 ? '&ipv4=' + ip4 : '', ip6 ? '&ipv6=' + ip6 : ''));
+		return r.code >= 200 && r.code < 300 ? null : r.code == 401 || r.code == 403 ? 'dynv6: token wrong' :
+			r.code == 404 ? 'dynv6: zone unknown' : 'HTTP ' + r.code + (r.body ? ': ' + substr(r.body, 0, 120) : '');
+	}
+	if (p == 'noip') {
+		let r = http('GET', sprintf('https://dynupdate.no-ip.com/nic/update?hostname=%s%s%s',
+			enc(h), ip4 ? '&myip=' + ip4 : '', ip6 ? '&myipv6=' + ip6 : ''), { auth: c.user + ':' + c.token });
+		return dyn2(r);
+	}
+	if (p == 'cloudflare') {
+		let z = cf_zone(c, h);
+		if (z.error) return z.error;
+		let e = ip4 ? cf_set(c, z.id, 'A', h, ip4) : null;
+		if (!e && ip6) e = cf_set(c, z.id, 'AAAA', h, ip6);
+		return e;
+	}
+	if (p == 'custom') {
+		if (!match(c.url, /^https?:\/\//)) return 'no update URL';
+		let u = c.url;
+		for (let k, v in { host: enc(h), ip: ip4 ?? '', ip6: ip6 ?? '', user: enc(c.user), token: enc(c.token) })
+			u = replace(u, '{' + k + '}', v);
+		let r = http('GET', u, c.user != '' && !match(c.url, /\{(user|token)\}/) ? { auth: c.user + ':' + c.token } : null);
+		return dyn2(r);
+	}
+	return 'unknown provider';
+}
+
+function valid(c) {
+	if (!PROVIDERS[c.provider]) return 'no provider chosen';
+	if (!match(c.host, /^[a-z0-9]([a-z0-9.-]{0,251}[a-z0-9])?$/)) return 'no host name';
+	if (c.provider != 'duckdns' && !match(c.host, /\./)) return 'host name without domain';
+	if (c.provider != 'custom' && c.token == '') return 'no token or password';
+	if (c.provider == 'noip' && c.user == '') return 'no user name';
+	if (!c.ipv4 && !c.ipv6) return 'neither IPv4 nor IPv6 chosen';
+	return null;
+}
+
+function notify(err) {
+	if (getenv('SHAREOS_DDNS_CURL')) return;
+	if (err)
+		system(sprintf('/usr/sbin/shareos-notify send warn network ddns-error %s %s %s %s >/dev/null 2>&1',
+			shq('DynDNS-Aktualisierung fehlgeschlagen'), shq('Dynamic DNS update failed'),
+			shq('System → Netzwerk → DynDNS: ' + err), shq('System → Network → DynDNS: ' + err)));
+	else system('/usr/sbin/shareos-notify clear ddns-error >/dev/null 2>&1');
+}
+
+function update(force) {
+	let c = conf(), s = state(), t = now();
+	if (!c.enabled) return { skipped: 'off' };
+	let e = valid(c);
+	if (e) { save({ ...s, ok: false, error: e, checked: t }); return { error: e }; }
+	let ip4 = c.ipv4 ? public4() : null, ip6 = c.ipv6 ? public6() : null;
+	if (!ip4 && !ip6) {
+		e = c.ipv4 ? 'no public IPv4 address found (offline, or the line has no own IPv4 address – try IPv6)' : 'no global IPv6 address on eth0';
+		save({ ...s, ok: false, error: e, checked: t });
+		return { error: e };
+	}
+	let same = s.ip4 == ip4 && s.ip6 == ip6 && s.host == c.host && s.provider == c.provider;
+	if (!force && same && ((s.ok && t - (s.sent ?? 0) < DAILY) || (!s.ok && t - (s.checked ?? 0) < RETRY)))
+		return { skipped: 'unchanged', ip4, ip6 };
+	e = send(c, ip4, ip6);
+	let n = { provider: c.provider, host: c.host, ip4, ip6, checked: t, ok: !e, error: e,
+		sent: e ? s.sent : t, changed: !e && !same ? t : s.changed };
+	save(n);
+	if (e) log('update of ' + c.host + ' failed: ' + e);
+	else if (!same) log(c.host + ' -> ' + join(' ', filter([ ip4, ip6 ], length)));
+	if (e || !s.ok) notify(e);
+	return e ? { error: e } : { ok: true, ip4, ip6 };
+}
+
+function status() {
+	let c = conf(), s = state();
+	return { enabled: c.enabled, provider: c.provider, host: c.host, user: c.user, url: c.url,
+		token_set: c.token != '', ipv4: c.ipv4, ipv6: c.ipv6, last: length(s) ? s : null };
+}
+
+// Let's Encrypt DNS-01: _acme-challenge.<host> TXT <value>
+function txt(set, name, value) {
+	let c = conf();
+	if (!match(name ?? '', /^_acme-challenge\./) || !value) return { error: 'usage: txt-set|txt-clear _acme-challenge.<host> <value>' };
+	if (c.provider == 'duckdns') {
+		// DuckDNS keeps one TXT value for the whole domain
+		let r = http('GET', sprintf('https://www.duckdns.org/update?domains=%s&token=%s&txt=%s%s',
+			enc(duck_name(c.host)), enc(c.token), set ? enc(value) : '', set ? '' : '&clear=true'));
+		return trim(r.body) == 'OK' ? { ok: true } : { error: 'DuckDNS refused the TXT record' };
+	}
+	if (c.provider == 'cloudflare') {
+		let z = cf_zone(c, substr(name, length('_acme-challenge.')));
+		if (z.error) return { error: z.error };
+		if (set) {
+			let r = http('POST', sprintf('%s/zones/%s/dns_records', CF, z.id), { headers: cf_hdr(c),
+				json: { type: 'TXT', name, content: value, ttl: 120 } });
+			let j = null; try { j = json(r.body); } catch (e) { }
+			return j?.success ? { ok: true } : { error: cf_err(j) };
+		}
+		let j = cf_get(c, sprintf('/zones/%s/dns_records?type=TXT&name=%s', z.id, enc(name)));
+		for (let rec in j?.result ?? [])
+			if (trim(rec.content, '"') == value)
+				http('DELETE', sprintf('%s/zones/%s/dns_records/%s', CF, z.id, rec.id), { headers: cf_hdr(c) });
+		return { ok: true };
+	}
+	return { error: 'Let\'s Encrypt over DNS needs DuckDNS or Cloudflare' };
+}
+
+const ARGS = ARGV;
+switch (ARGS[0]) {
+case 'update': out(update(ARGS[1] == 'force')); break;
+case 'status': out(status()); break;
+case 'txt-set': case 'txt-clear': {
+	let r = txt(ARGS[0] == 'txt-set', ARGS[1], ARGS[2]);
+	out(r);
+	exit(r.error ? 1 : 0);
+}
+default:
+	warn('usage: shareos-ddns update [force] | status | txt-set|txt-clear <name> <value>\n');
+	exit(2);
+}
