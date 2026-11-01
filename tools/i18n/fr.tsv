@@ -1636,27 +1636,84 @@ P323	arrêt $1
 E1269	APPAREIL & ACCÈS
 E1270	L’étoile fait d’une app un favori – les favoris apparaissent en haut de « Mon ShareOS ».
 E1271	Afficher toutes les notifications
-E1272	IMPRIMANTES
-E1273	Chargement des imprimantes …
-E1274	Les imprimantes en réseau sont une application système : les imprimantes et appareils multifonctions récents impriment et numérisent alors sans pilote (AirPrint, Mopria, Windows 10/11), les plus anciens via le port 9100 avec le pilote sur l'ordinateur.
-E1275	Installer depuis le store (ipp-usb + p910nd)
-E1276	dans le réseau
-E1277	injoignable
-E1278	Sans pilote (IPP over USB)
-E1279	Avec le pilote sur l'ordinateur (port 9100)
-E1280	Numérisation
-E1281	via le réseau (eSCL), si l'appareil a un scanner
-E1282	Adresse
-E1283	Page de l'appareil
-E1284	Windows 10/11, macOS, iPhone/iPad et Android trouvent l'imprimante tout seuls (« Ajouter une imprimante »). À la main : saisir l'adresse ci-dessus comme imprimante IPP.
-E1285	Windows : « Ajouter une imprimante » → « Adresse TCP/IP » →
-E1286	, port
-E1287	, pilote du fabricant. macOS/Linux : « HP JetDirect – Socket » ou AppSocket.
-E1288	Page de test
-E1289	Aucune imprimante USB branchée. Branchez-en une – elle apparaît ici après quelques secondes.
-E1290	Partager les imprimantes sur le réseau (démarre aussi après un redémarrage)
-E1291	Automatique – sans pilote quand l'imprimante le permet
-E1292	Toujours le port 9100 (pilote sur l'ordinateur)
-E1293	Tout le monde sur le réseau peut imprimer, sans connexion. « Toujours le port 9100 » seulement si une imprimante n'imprime pas correctement sans pilote.
-E1294	Imprimantes enregistrées.
-E1295	Page de test envoyée.
+E1272	CERTIFICATS PROPRES
+E1273	Mettre à jour le DNS dynamique
+E1274	JETON API (ZONE:LECTURE, DNS:MODIFICATION)
+E1275	URL DE MISE À JOUR ({host} {ip} {ip6})
+E1276	URL personnalisée (dyndns2)
+E1277	– choisir –
+E1278	enregistré – laisser vide pour le conserver
+E1279	La box signale son adresse publique toutes les 5 minutes lorsqu'elle a changé. Beaucoup de connexions (DS-Lite, fibre, mobile) n'ont pas d'adresse IPv4 propre – utilisez alors IPv6. Pour un accès depuis l'extérieur, le routeur doit rediriger le port (ou l'ouvrir en IPv6).
+E1280	Dernier signalement
+E1281	Dernière vérification
+E1282	Pas encore signalé – cela arrive.
+E1283	Le DNS dynamique est désactivé.
+E1284	AUTORITÉ DE CERTIFICATION (CA)
+E1285	utilisée par cette box
+E1286	Empreinte
+E1287	Certificat racine
+E1288	Réémettre le certificat de la box
+E1289	Utiliser pour cette box
+E1290	Installez une fois le certificat racine comme fiable sur le PC et le téléphone (Windows : double-clic → « Autorités de certification racines de confiance », Android/iOS : Réglages → Sécurité). Ensuite, tous les certificats de cette CA fonctionnent sans avertissement – pour la box et les autres appareils du réseau domestique.
+E1291	Une autorité de certification propre émet des certificats pour la box et les autres appareils du réseau domestique (p. ex.
+E1292	). Son certificat racine est installé une fois sur les appareils – ensuite, plus d'avertissements de certificat.
+E1293	Créer l'autorité de certification
+E1294	Obtention du certificat – cela prend jusqu'à 3 minutes …
+E1295	Vérifié chaque jour et renouvelé 30 jours avant expiration.
+E1296	Désactiver
+E1297	Un certificat pour
+E1298	, reconnu par tous les navigateurs. La vérification passe par un enregistrement DNS chez le fournisseur DNS dynamique – aucun port ne doit être ouvert.
+E1299	E-MAIL (FACULTATIF, POUR LES AVIS DE LET'S ENCRYPT)
+E1300	Mode test (CA de test, les navigateurs avertissent)
+E1301	Obtenir le certificat
+E1302	Nécessite le DNS dynamique avec DuckDNS ou Cloudflare (ci-dessus).
+E1303	CERTIFICAT POUR UN AUTRE APPAREIL
+E1304	NOMS D'HÔTE ET ADRESSES IP (SÉPARÉS PAR DES VIRGULES)
+E1305	Valable 825 jours. Les jokers comme
+E1306	sont aussi possibles. Téléchargez le certificat et la clé et saisissez-les dans l'appareil.
+E1307	Émettre
+E1308	NOMS D'HÔTE
+E1309	VALABLE JUSQU'AU
+E1310	Clé
+E1311	CA propre
+E1312	actif (test)
+E1313	Veuillez indiquer le fournisseur et le nom.
+E1314	Veuillez indiquer le nom et les noms d'hôte.
+E1315	Enregistré – l'adresse est signalée.
+E1316	Signalement …
+E1317	Autorité de certification créée.
+E1318	Certificat émis.
+E1319	Utiliser un certificat de la CA propre ?
+E1320	La box reçoit un certificat de sa propre CA pour le nom de l'appareil, le nom .local et l'adresse IP ; il remplace l'actuel. Sans certificat racine installé, le navigateur continue d'avertir.
+E1321	Utiliser
+E1322	Certificat installé – la page se reconnecte.
+E1323	Supprimer le certificat ?
+P324	Le certificat « $1 » et sa clé sont supprimés de la box. Les appareils qui l'utilisent déjà gardent leur copie.
+E1324	Désactiver Let's Encrypt ?
+E1325	La box utilise ensuite de nouveau un certificat auto-signé.
+E1326	Désactivé – la page se reconnecte.
+E1327	Certificat Let's Encrypt actif – la page se reconnecte.
+E1328	IMPRIMANTES
+E1329	Chargement des imprimantes …
+E1330	Les imprimantes en réseau sont une application système : les imprimantes et appareils multifonctions récents impriment et numérisent alors sans pilote (AirPrint, Mopria, Windows 10/11), les plus anciens via le port 9100 avec le pilote sur l'ordinateur.
+E1331	Installer depuis le store (ipp-usb + p910nd)
+E1332	dans le réseau
+E1333	injoignable
+E1334	Sans pilote (IPP over USB)
+E1335	Avec le pilote sur l'ordinateur (port 9100)
+E1336	Numérisation
+E1337	via le réseau (eSCL), si l'appareil a un scanner
+E1338	Adresse
+E1339	Page de l'appareil
+E1340	Windows 10/11, macOS, iPhone/iPad et Android trouvent l'imprimante tout seuls (« Ajouter une imprimante »). À la main : saisir l'adresse ci-dessus comme imprimante IPP.
+E1341	Windows : « Ajouter une imprimante » → « Adresse TCP/IP » →
+E1342	, port
+E1343	, pilote du fabricant. macOS/Linux : « HP JetDirect – Socket » ou AppSocket.
+E1344	Page de test
+E1345	Aucune imprimante USB branchée. Branchez-en une – elle apparaît ici après quelques secondes.
+E1346	Partager les imprimantes sur le réseau (démarre aussi après un redémarrage)
+E1347	Automatique – sans pilote quand l'imprimante le permet
+E1348	Toujours le port 9100 (pilote sur l'ordinateur)
+E1349	Tout le monde sur le réseau peut imprimer, sans connexion. « Toujours le port 9100 » seulement si une imprimante n'imprime pas correctement sans pilote.
+E1350	Imprimantes enregistrées.
+E1351	Page de test envoyée.

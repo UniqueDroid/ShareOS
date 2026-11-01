@@ -1,0 +1,208 @@
+#!/bin/sh
+#
+# shareos-ca – own certificate authority for the home network
+#
+#   shareos-ca init                 create the CA (once; 10 years, EC P-256)
+#   shareos-ca info                 the CA: subject, valid until, SHA-256 fingerprint
+#   shareos-ca root                 the CA certificate (PEM) – install it once on
+#                                   PCs and phones as a trusted root
+#   shareos-ca issue <name> <host|ip>...
+#                                   key and certificate for another device or
+#                                   service (825 days, server authentication);
+#                                   names may be wildcards (*.home.lan)
+#   shareos-ca list                 issued certificates (name, names, valid until)
+#   shareos-ca show <name> crt|key  the certificate (with the CA after it) or key
+#   shareos-ca delete <name>
+#   shareos-ca web [check]          certificate for this box's web interface:
+#                                   hostname, hostname.local, IPv4 address and
+#                                   shareos.web.host; installed through
+#                                   shareos-cert, shareos.web.source = ca.
+#                                   check: only when the names changed or less
+#                                   than 30 days are left (prints "renewed")
+#
+# Files: /etc/shareos/ca (ca.key, ca.crt, certs/<name>.key|.crt), root only.
+# Uses the mbedtls programs gen_key, cert_write and cert_app of the firmware.
+#   SHAREOS_ROOT=<dir>  fake root (tests)   SHAREOS_CA_NOW=<epoch> the time (tests)
+#   SHAREOS_CA_BIN=<dir>  mbedtls programs (tests)
+#
+[ -n "$SHAREOS_ROOT" ] || PATH=/usr/sbin:/usr/bin:/sbin:/bin
+DIR=${SHAREOS_ROOT:-}/etc/shareos/ca
+DAYS=825
+
+die() { echo "shareos-ca: $*" >&2; exit 1; }
+prog() {
+	for p in "${SHAREOS_CA_BIN:+$SHAREOS_CA_BIN/}mbedtls_$1" "${SHAREOS_CA_BIN:+$SHAREOS_CA_BIN/}$1"; do
+		[ -x "$p" ] || command -v "$p" >/dev/null && { echo "$p"; return; }
+	done
+	die "mbedtls program $1 missing"
+}
+now() { echo "${SHAREOS_CA_NOW:-$(date +%s)}"; }
+stamp() { date -u -d "@$1" +%Y%m%d%H%M%S; }
+serial() { echo "01$(od -An -tx1 -N15 /dev/urandom | tr -d ' \n')"; }
+host() { if [ -n "$SHAREOS_ROOT" ]; then echo testbox; else cat /proc/sys/kernel/hostname; fi; }
+ip4() { [ -n "$SHAREOS_ROOT" ] && { echo "${SHAREOS_CA_IP-192.0.2.10}"; return; }; ip -4 -o addr show dev eth0 2>/dev/null | sed -n 's/.*inet \([0-9.]*\).*/\1/p' | head -1; }
+uget() { if [ -n "$SHAREOS_ROOT" ]; then uci -q -c "$SHAREOS_ROOT/etc/config" get "$1"; else uci -q get "$1"; fi; }
+# set an option of shareos.web (the section is created when missing)
+uset() {
+	u="uci -q${SHAREOS_ROOT:+ -c $SHAREOS_ROOT/etc/config}"
+	$u get shareos.web >/dev/null || $u set shareos.web=web
+	$u set "shareos.web.$1" && $u commit shareos
+}
+
+# lines of cert_app for one certificate file
+details() {
+	$(prog cert_app) mode=file filename="$1" 2>/dev/null | sed -n \
+		-e 's/^ *subject name *: */subject=/p' \
+		-e 's/^ *issuer name *: */issuer=/p' \
+		-e 's/^ *expires on *: */until=/p' \
+		-e 's/^ *\(dNSName\|iPAddress\) *: */san=/p'
+}
+# expiry of the first certificate in a file as seconds since 1970
+expires() {
+	u=$(details "$1" | sed -n 's/^until=//p' | head -1)
+	[ -n "$u" ] && date -u -d "$u" +%s 2>/dev/null || echo 0
+}
+fingerprint() {
+	sed -n '/-----BEGIN CERTIFICATE-----/,/-----END CERTIFICATE-----/{/-----/d;p}' "$1" | head -c 100000 \
+		| base64 -d 2>/dev/null | sha256sum | cut -d' ' -f1 | sed 's/../&:/g;s/:$//' | tr a-f A-F
+}
+json_str() { printf '"%s"' "$(printf '%s' "$1" | sed 's/\\/\\\\/g;s/"/\\"/g')"; }
+
+init() {
+	[ -s "$DIR/ca.crt" ] && [ -s "$DIR/ca.key" ] && { echo "CA exists"; return; }
+	umask 077
+	mkdir -p "$DIR/certs"
+	n=$(now)
+	t=$(mktemp -d)
+	$(prog gen_key) type=ec ec_curve=secp256r1 format=pem filename=$t/key >/dev/null || { rm -rf $t; die "key generation failed"; }
+	$(prog cert_write) selfsign=1 issuer_key=$t/key issuer_name="CN=ShareOS CA $(host),O=ShareOS" \
+		serial_hex=$(serial) not_before=$(stamp $((n - 3600))) not_after=$(stamp $((n + 3653 * 86400))) \
+		is_ca=1 max_pathlen=0 key_usage=key_cert_sign,crl_sign output_file=$t/crt >/dev/null \
+		|| { rm -rf $t; die "CA certificate failed"; }
+	mv $t/key "$DIR/ca.key" && mv $t/crt "$DIR/ca.crt"
+	rm -rf $t
+	chmod 600 "$DIR/ca.key"; chmod 644 "$DIR/ca.crt"
+	echo "CA created"
+}
+
+info() {
+	if ! [ -s "$DIR/ca.crt" ]; then echo '{"exists":false}'; return; fi
+	d=$(details "$DIR/ca.crt")
+	printf '{"exists":true,"subject":%s,"until":%s,"fingerprint":%s,"count":%d}\n' \
+		"$(json_str "$(echo "$d" | sed -n 's/^subject=//p' | head -1)")" \
+		"$(json_str "$(echo "$d" | sed -n 's/^until=//p' | head -1)")" \
+		"$(json_str "$(fingerprint "$DIR/ca.crt")")" \
+		"$(ls "$DIR/certs/"*.crt 2>/dev/null | wc -l)"
+}
+
+valid_name() { echo "$1" | grep -qE '^[a-zA-Z0-9][a-zA-Z0-9._-]{0,62}$'; }
+san_of() {
+	s=
+	for h; do
+		if echo "$h" | grep -qE '^([0-9]{1,3}\.){3}[0-9]{1,3}$'; then s="$s;IP:$h"
+		elif echo "$h" | grep -qE '^(\*\.)?[a-zA-Z0-9]([a-zA-Z0-9.-]{0,251}[a-zA-Z0-9])?$'; then s="$s;DNS:$(echo "$h" | tr A-Z a-z)"
+		else die "not a host name or IPv4 address: $h"; fi
+	done
+	echo "${s#;}"
+}
+
+# issue <file base> <name> <hosts...>
+issue_to() {
+	base=$1; cn=$2; shift 2
+	[ $# -ge 1 ] || die "no host names"
+	[ -s "$DIR/ca.key" ] || init >/dev/null
+	san=$(san_of "$@") || exit 1
+	umask 077
+	n=$(now)
+	t=$(mktemp -d)
+	$(prog gen_key) type=ec ec_curve=secp256r1 format=pem filename=$t/key >/dev/null || { rm -rf $t; die "key generation failed"; }
+	$(prog cert_write) subject_key=$t/key subject_name="CN=$cn,O=ShareOS" issuer_crt="$DIR/ca.crt" issuer_key="$DIR/ca.key" \
+		serial_hex=$(serial) not_before=$(stamp $((n - 3600))) not_after=$(stamp $((n + DAYS * 86400))) \
+		san="$san" key_usage=digital_signature ext_key_usage=serverAuth output_file=$t/crt >/dev/null \
+		|| { rm -rf $t; die "certificate failed"; }
+	mv $t/key "$base.key" && mv $t/crt "$base.crt"
+	rm -rf $t
+	chmod 600 "$base.key"; chmod 644 "$base.crt"
+}
+
+issue() {
+	name=$1; shift
+	valid_name "$name" || die "invalid name (letters, digits, . _ -)"
+	[ "$name" = web ] && die "the name web is used for the web interface"
+	mkdir -p "$DIR/certs"
+	issue_to "$DIR/certs/$name" "$1" "$@"
+	echo "certificate $name issued"
+}
+
+list() {
+	printf '['
+	sep=
+	for c in "$DIR/certs/"*.crt; do
+		[ -s "$c" ] || continue
+		name=$(basename "$c" .crt)
+		d=$(details "$c")
+		hosts=$(echo "$d" | sed -n 's/^san=//p' | while read -r h; do printf '%s,' "$(json_str "$h")"; done)
+		printf '%s{"name":%s,"hosts":[%s],"until":%s,"expires":%s}' "$sep" "$(json_str "$name")" "${hosts%,}" \
+			"$(json_str "$(echo "$d" | sed -n 's/^until=//p' | head -1)")" "$(expires "$c")"
+		sep=,
+	done
+	printf ']\n'
+}
+
+show() {
+	valid_name "$1" || die "invalid name"
+	f="$DIR/certs/$1"
+	[ "$1" = web ] && f="$DIR/web"
+	case "$2" in
+		crt) [ -s "$f.crt" ] || die "no certificate $1"; cat "$f.crt" "$DIR/ca.crt" ;;
+		key) [ -s "$f.key" ] || die "no certificate $1"; cat "$f.key" ;;
+		*) die "show <name> crt|key" ;;
+	esac
+}
+
+delete() {
+	valid_name "$1" || die "invalid name"
+	[ -e "$DIR/certs/$1.crt" ] || die "no certificate $1"
+	rm -f "$DIR/certs/$1.crt" "$DIR/certs/$1.key"
+	echo "deleted"
+}
+
+# names of the box's web certificate
+web_names() {
+	h=$(host)
+	echo "$h"; echo "$h.local"
+	w=$(uget shareos.web.host); [ -n "$w" ] && [ "$w" != "$h" ] && echo "$w"
+	i=$(ip4); [ -n "$i" ] && echo "$i"
+}
+
+web() {
+	names=$(web_names | tr '\n' ' ')
+	if [ "$1" = check ]; then
+		[ "$(uget shareos.web.source)" = ca ] || return 0
+		if [ -s "$DIR/web.crt" ]; then
+			have=$(details "$DIR/web.crt" | sed -n 's/^san=//p' | sort | tr '\n' ' ')
+			want=$(echo $names | tr ' ' '\n' | tr A-Z a-z | sort | tr '\n' ' ')
+			left=$(( $(expires "$DIR/web.crt") - $(now) ))
+			[ "$have" = "$want" ] && [ $left -gt $((30 * 86400)) ] && return 0
+		fi
+	fi
+	issue_to "$DIR/web" "$(host)" $names
+	cat "$DIR/web.crt" "$DIR/ca.crt" > "$DIR/web.chain"
+	if [ -n "$SHAREOS_ROOT" ]; then echo "web certificate issued"; uset source=ca; return; fi
+	/usr/sbin/shareos-cert install "$DIR/web.chain" "$DIR/web.key" >/dev/null || die "the web server did not take the certificate"
+	rm -f "$DIR/web.chain"
+	uset source=ca
+	[ "$1" = check ] && echo renewed || echo "web certificate issued and installed"
+}
+
+case "$1" in
+	init) init ;;
+	info) info ;;
+	root) [ -s "$DIR/ca.crt" ] || die "no CA yet"; cat "$DIR/ca.crt" ;;
+	issue) shift; [ $# -ge 2 ] || die "issue <name> <host|ip>..."; issue "$@" ;;
+	list) list ;;
+	show) show "$2" "$3" ;;
+	delete) delete "$2" ;;
+	web) web "$2" ;;
+	*) sed -n '3,27s/^# \{0,1\}//p' "$0"; exit 2 ;;
+esac

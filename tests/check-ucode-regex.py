@@ -9,7 +9,7 @@ import re
 import sys
 
 FILES = sys.argv[1:] or ['src/shareos-core/usr/share/rpcd/ucode/shareos.uc', 'src/shareos-core/usr/sbin/shareos-apps',
-                         'src/shareos-core/usr/sbin/shareos-notify', 'src/shareos-core/usr/sbin/shareos-buttons',
+                         'src/shareos-core/usr/sbin/shareos-notify', 'src/shareos-core/usr/sbin/shareos-buttons', 'src/shareos-core/usr/sbin/shareos-ddns',
                          'src/shareos-core/www-apps/_shareos/cgi/fs']
 bad = []
 for f in FILES:

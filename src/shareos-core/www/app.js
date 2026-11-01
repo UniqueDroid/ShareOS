@@ -2666,7 +2666,7 @@ const SYS = {
 				<p class="note">Nach einer Änderung startet der Webserver neu; die Seite ist für einen Moment nicht erreichbar.</p>
 			</div>
 			<div class="panel">
-				<div class="ph"><span class="pt">ZERTIFIKAT</span>${c.none ? '' : c.selfsigned ? html`<span class="tag warn ml">selbstsigniert</span>` : html`<span class="tag ok ml">eigenes Zertifikat</span>`}</div>
+				<div class="ph"><span class="pt">ZERTIFIKAT</span>${c.none ? '' : c.selfsigned ? html`<span class="tag warn ml">selbstsigniert</span>` : w.source === 'ca' ? html`<span class="tag ok ml">eigene CA</span>` : w.source === 'acme' ? html`<span class="tag ok ml">Let's Encrypt</span>` : html`<span class="tag ok ml">eigenes Zertifikat</span>`}</div>
 				${c.none ? html`<p class="mut" style="margin:0;font-size:13px">Noch kein Zertifikat – es wird beim Einschalten von HTTPS automatisch erstellt.</p>` : html`
 				<dl class="kv">
 					<dt>Ausgestellt für</dt><dd>${c.subject || '–'}</dd>
@@ -2754,7 +2754,106 @@ const SYS = {
 			</div>
 		</div>
 		<h2 class="gh" style="margin-top:22px">HTTPS & ZERTIFIKAT</h2>
-		${SYS.https()}`;
+		${SYS.https()}
+		<h2 class="gh" style="margin-top:22px">DYNDNS</h2>
+		${SYS.ddns()}
+		<h2 class="gh" style="margin-top:22px">EIGENE ZERTIFIKATE</h2>
+		${SYS.ca()}`;
+	},
+
+	// dynamic DNS: a name on the internet for the box (shareos-ddns)
+	ddns() {
+		const d = S.ddns;
+		if (!d) return html`<div class="panel"><div class="empty"><div class="spin" style="margin:0"></div><span>Lade …</span></div></div>`;
+		const p = S.ddnsProv ?? d.provider ?? '', l = d.last;
+		const ok = d.enabled && l?.ok, err = d.enabled && l && !l.ok;
+		const opt = (v, t) => html`<option value="${v}"${p === v ? raw(' selected') : ''}>${t}</option>`;
+		const hostPh = { duckdns: 'meinebox.duckdns.org', dynv6: 'meinebox.dynv6.net', cloudflare: 'nas.example.org', noip: 'meinebox.ddns.net', custom: 'nas.example.org' }[p] || 'meinebox.duckdns.org';
+		return html`<div class="g2">
+			<form class="panel" id="f-ddns">
+				<div class="ph"><span class="pt">ANBIETER</span><span class="tag ml ${d.enabled ? 'ok' : ''}">${d.enabled ? 'aktiv' : 'aus'}</span></div>
+				<label class="chk"><input type="checkbox" name="enabled"${d.enabled ? raw(' checked') : ''}>DynDNS aktualisieren</label>
+				<div class="fields" style="grid-template-columns:1fr;margin-top:12px">
+					<label class="f"><span>ANBIETER</span><select name="provider" id="ddns-prov">
+						${opt('', '– wählen –')}${opt('duckdns', 'DuckDNS')}${opt('dynv6', 'dynv6')}${opt('cloudflare', 'Cloudflare')}${opt('noip', 'No-IP')}${opt('custom', 'Eigene Adresse (dyndns2)')}</select></label>
+					<label class="f"><span>NAME</span><input name="host" value="${d.host || ''}" placeholder="${hostPh}" autocomplete="off" spellcheck="false"></label>
+					<label class="f"${p === 'noip' || p === 'custom' ? '' : raw(' hidden')}><span>BENUTZER</span><input name="user" value="${d.user || ''}" autocomplete="off" spellcheck="false"></label>
+					<label class="f"><span>${p === 'cloudflare' ? 'API-TOKEN (ZONE:LESEN, DNS:BEARBEITEN)' : p === 'noip' || p === 'custom' ? 'PASSWORT' : 'TOKEN'}</span>${d.token_set ? html`<input name="token" type="password" placeholder="gespeichert – leer lassen behält ihn" autocomplete="new-password">` : html`<input name="token" type="password" autocomplete="new-password">`}</label>
+					<label class="f"${p === 'custom' ? '' : raw(' hidden')}><span>UPDATE-ADRESSE ({host} {ip} {ip6})</span><input name="url" value="${d.url || ''}" placeholder="https://dyndns.example.net/nic/update?hostname={host}&amp;myip={ip}" autocomplete="off" spellcheck="false"></label>
+				</div>
+				<div style="display:flex;gap:16px;margin-top:10px;flex-wrap:wrap">
+					<label class="chk"><input type="checkbox" name="ipv4"${d.ipv4 !== false ? raw(' checked') : ''}>IPv4</label>
+					<label class="chk"><input type="checkbox" name="ipv6"${d.ipv6 ? raw(' checked') : ''}>IPv6</label>
+				</div>
+				<p class="note">Die Box meldet ihre öffentliche Adresse alle 5 Minuten, wenn sie sich geändert hat. Viele Anschlüsse (DS-Lite, Glasfaser, Mobilfunk) haben keine eigene IPv4-Adresse – dann IPv6 nehmen. Für Zugriff von außen muss der Router den Port weiterleiten (bzw. bei IPv6 freigeben).</p>
+				<div class="acts" style="margin-top:12px"><button class="btn primary" type="submit">Speichern</button>
+					${d.enabled ? html`<button class="btn" type="button" data-act="ddns-now">Jetzt aktualisieren</button>` : ''}</div>
+			</form>
+			<div class="panel">
+				<div class="ph"><span class="pt">ZUSTAND</span>${ok ? html`<span class="tag ok ml">aktuell</span>` : err ? html`<span class="tag err ml">Fehler</span>` : ''}</div>
+				${d.enabled && l ? html`<dl class="kv">
+					<dt>Name</dt><dd>${l.host || d.host || '–'}</dd>
+					<dt>IPv4</dt><dd>${l.ip4 || '–'}</dd>
+					<dt>IPv6</dt><dd style="word-break:break-all">${l.ip6 || '–'}</dd>
+					<dt>Zuletzt gemeldet</dt><dd>${fmtTime(l.sent)}</dd>
+					<dt>Zuletzt geprüft</dt><dd>${fmtTime(l.checked)}</dd>
+				</dl>
+				${err ? html`<p class="note" style="color:var(--red)">${l.error}</p>` : ''}`
+				: html`<p class="mut" style="margin:0;font-size:13px">${d.enabled ? 'Noch keine Meldung – kommt gleich.' : 'DynDNS ist aus.'}</p>`}
+			</div>
+		</div>`;
+	},
+
+	// own certificate authority and Let's Encrypt
+	ca() {
+		const c = S.ca, a = S.acme || {}, d = S.ddns || {};
+		if (!c) return html`<div class="panel"><div class="empty"><div class="spin" style="margin:0"></div><span>Lade …</span></div></div>`;
+		const leOk = d.enabled && (d.provider === 'duckdns' || d.provider === 'cloudflare') && d.host;
+		return html`<div class="g2">
+			<div class="panel">
+				<div class="ph"><span class="pt">ZERTIFIZIERUNGSSTELLE (CA)</span>${c.web ? html`<span class="tag ok ml">diese Box nutzt sie</span>` : ''}</div>
+				${c.exists ? html`<dl class="kv">
+					<dt>Name</dt><dd>${c.subject || '–'}</dd>
+					<dt>Gültig bis</dt><dd>${c.until || '–'}</dd>
+					<dt>Fingerabdruck</dt><dd style="word-break:break-all;font-size:11px">${c.fingerprint || '–'}</dd>
+				</dl>
+				<div class="acts" style="margin-top:14px">
+					<button class="btn" type="button" data-act="ca-root">${svg(I.dl)}Stammzertifikat</button>
+					<button class="btn${c.web ? '' : ' primary'}" type="button" data-act="ca-web">${c.web ? 'Zertifikat der Box neu ausstellen' : 'Für diese Box verwenden'}</button>
+				</div>
+				<p class="note">Das Stammzertifikat einmal auf PC und Handy als vertrauenswürdig installieren (Windows: Doppelklick → „Vertrauenswürdige Stammzertifizierungsstellen“, Android/iOS: Einstellungen → Sicherheit). Danach sind alle Zertifikate dieser CA ohne Warnung – für die Box und andere Geräte im Heimnetz.</p>`
+				: html`<p class="mut" style="margin:0 0 12px;font-size:13px">Eine eigene Zertifizierungsstelle stellt Zertifikate für die Box und andere Geräte im Heimnetz aus (z. B. <code>*.home.lan</code>). Ihr Stammzertifikat wird einmal auf den Geräten installiert – danach gibt es keine Zertifikatswarnungen mehr.</p>
+				<div class="acts"><button class="btn primary" type="button" data-act="ca-init">Zertifizierungsstelle anlegen</button></div>`}
+			</div>
+			<div class="panel">
+				<div class="ph"><span class="pt">LET'S ENCRYPT</span>${a.active ? html`<span class="tag ok ml">aktiv${a.staging ? ' (Test)' : ''}</span>` : ''}</div>
+				${a.running ? html`<div class="empty" style="padding:8px 0"><div class="spin" style="margin:0"></div><span>Zertifikat wird geholt – das dauert bis zu 3 Minuten …</span></div>`
+				: a.active ? html`<dl class="kv"><dt>Name</dt><dd>${a.name || '–'}</dd><dt>Gültig bis</dt><dd>${a.until || '–'}</dd></dl>
+					<p class="note">Wird täglich geprüft und 30 Tage vor Ablauf erneuert.</p>
+					<div class="acts" style="margin-top:12px"><button class="btn" type="button" data-act="acme-off">Abschalten</button></div>`
+				: leOk ? html`<form id="f-acme">
+					<p class="mut" style="margin:0 0 12px;font-size:13px">Ein Zertifikat für <b>${d.provider === 'duckdns' && !/\.duckdns\.org$/.test(d.host) ? d.host + '.duckdns.org' : d.host}</b>, dem alle Browser vertrauen. Die Prüfung läuft über einen DNS-Eintrag beim DynDNS-Anbieter – kein Port muss offen sein.</p>
+					<label class="f"><span>E-MAIL (OPTIONAL, FÜR HINWEISE VON LET'S ENCRYPT)</span><input name="email" type="email" value="${a.email || ''}" autocomplete="off"></label>
+					<label class="chk" style="margin-top:10px"><input type="checkbox" name="staging">Testmodus (Test-CA, Browser warnen)</label>
+					<div class="acts" style="margin-top:12px"><button class="btn primary" type="submit">Zertifikat holen</button></div>
+				</form>`
+				: html`<p class="mut" style="margin:0;font-size:13px">Braucht DynDNS mit DuckDNS oder Cloudflare (oben).</p>`}
+				${a.error && !a.running ? html`<p class="note" style="color:var(--red)">${a.error}</p>` : ''}
+			</div>
+		</div>
+		${c.exists ? html`<form class="panel" id="f-ca-issue" style="margin-top:16px">
+			<div class="ph"><span class="pt">ZERTIFIKAT FÜR EIN ANDERES GERÄT</span></div>
+			<div class="fields">
+				<label class="f"><span>NAME</span><input name="name" placeholder="router" autocomplete="off" spellcheck="false" maxlength="63"></label>
+				<label class="f"><span>HOSTNAMEN UND IP-ADRESSEN (KOMMA-GETRENNT)</span><input name="hosts" placeholder="router.home.lan, 192.168.1.1" autocomplete="off" spellcheck="false"></label>
+			</div>
+			<p class="note">Gültig 825 Tage. Auch Platzhalter wie <code>*.home.lan</code> sind möglich. Zertifikat und Schlüssel herunterladen und im Gerät eintragen.</p>
+			<div class="acts" style="margin-top:12px"><button class="btn primary" type="submit">Ausstellen</button></div>
+			${c.certs?.length ? html`<div class="tw" style="margin-top:16px"><table class="t" style="min-width:560px"><thead><tr><th>NAME</th><th>HOSTNAMEN</th><th>GÜLTIG BIS</th><th></th></tr></thead><tbody>
+				${c.certs.map((x) => html`<tr><td>${x.name}</td><td style="word-break:break-all">${x.hosts.join(', ')}</td><td>${x.until}</td>
+					<td style="white-space:nowrap"><button class="btn sm ghost" type="button" data-act="ca-dl" data-id="${x.name}" data-kind="crt">Zertifikat</button><button class="btn sm ghost" type="button" data-act="ca-dl" data-id="${x.name}" data-kind="key">Schlüssel</button><button class="btn sm ghost" type="button" data-act="ca-del" data-id="${x.name}">Löschen</button></td></tr>`)}
+			</tbody></table></div>` : ''}
+		</form>` : ''}`;
 	},
 
 	terminal() {
@@ -2939,6 +3038,33 @@ const VIEWS_AFTER = {
 		}
 		if (sub === 'network') {
 			if (!S.web) loadWeb();
+			$('#ddns-prov')?.addEventListener('change', (e) => { S.ddnsProv = e.target.value; renderMain(); });
+			$('#f-ddns')?.addEventListener('submit', async (e) => {
+				e.preventDefault();
+				const f = e.target;
+				const v = { enabled: f.enabled.checked, provider: f.provider.value, host: f.host.value.trim(), token: f.token.value, user: f.user.value.trim(), url: f.url.value.trim(), ipv4: f.ipv4.checked, ipv6: f.ipv6.checked };
+				if (v.enabled && (!v.provider || !v.host)) { toast('Bitte Anbieter und Namen angeben.', true); return; }
+				try {
+					const r = await rpc('shareos.web', 'ddns_set', v);
+					S.ddnsProv = null;
+					toast(r.pending ? 'Gespeichert – die Adresse wird gemeldet.' : 'Gespeichert.');
+					await loadNetExtra(); renderMain();
+					if (r.pending) setTimeout(async () => { await loadNetExtra(); if (S.route.sub === 'network') renderMain(); }, 6000);
+				} catch (err) { toast('DynDNS: ' + err.message, true); }
+			});
+			$('#f-ca-issue')?.addEventListener('submit', async (e) => {
+				e.preventDefault();
+				const f = e.target, hosts = f.hosts.value.split(/[\s,;]+/).filter(Boolean);
+				if (!f.name.value.trim() || !hosts.length) { toast('Bitte Name und Hostnamen angeben.', true); return; }
+				try { await rpc('shareos.web', 'ca_issue', { name: f.name.value.trim(), hosts }); toast('Zertifikat ausgestellt.'); await loadNetExtra(); renderMain(); }
+				catch (err) { toast('Zertifikat: ' + err.message, true); }
+			});
+			$('#f-acme')?.addEventListener('submit', async (e) => {
+				e.preventDefault();
+				const f = e.target;
+				try { await rpc('shareos.web', 'acme_issue', { email: f.email.value.trim(), staging: f.staging.checked }); await loadNetExtra(); renderMain(); }
+				catch (err) { toast('Let\'s Encrypt: ' + err.message, true); }
+			});
 			$('#opt-https')?.addEventListener('change', (e) => webSet({ https: e.target.checked }));
 			$('#opt-redirect')?.addEventListener('change', (e) => webSet({ redirect: e.target.checked }));
 			$('#f-webhost')?.addEventListener('submit', async (e) => {
@@ -3545,7 +3671,27 @@ async function copyText(t) {
 
 async function loadWeb() {
 	try { S.web = await rpc('shareos.web', 'get'); } catch (e) { toast('HTTPS: ' + e.message, true); }
+	await loadNetExtra();
 	if (S.route.sub === 'network') renderMain();
+}
+
+// DynDNS, own CA, Let's Encrypt (System -> Netzwerk)
+async function loadNetExtra() {
+	const [d, c, a] = await Promise.all([rpc('shareos.web', 'ddns_get').catch(() => null), rpc('shareos.web', 'ca_get').catch(() => null), rpc('shareos.web', 'acme_get').catch(() => null)]);
+	if (d) S.ddns = d;
+	if (c) S.ca = c;
+	if (a) S.acme = a;
+	// Let's Encrypt runs in the background: look again until it is done
+	clearTimeout(S.acmeTimer);
+	if (S.acme?.running) S.acmeTimer = setTimeout(async () => { if (S.route.sub !== 'network') return; const was = S.acme.running; await loadNetExtra(); if (was && !S.acme.running) { toast(S.acme.active ? 'Let\'s-Encrypt-Zertifikat aktiv – die Seite verbindet sich neu.' : 'Let\'s Encrypt: ' + (S.acme.error || 'fehlgeschlagen'), !S.acme.active); if (S.acme.active) afterWebRestart(); } renderMain(); }, 5000);
+}
+
+function pemDownload(pem, name) {
+	const a = document.createElement('a');
+	a.href = URL.createObjectURL(new Blob([pem], { type: 'application/x-pem-file' }));
+	a.download = name;
+	document.body.append(a); a.click(); a.remove();
+	setTimeout(() => URL.revokeObjectURL(a.href), 5000);
 }
 
 // the web server restarts after HTTPS changes: wait for it, keep the page
@@ -4078,6 +4224,44 @@ const ACTIONS = {
 	async 'prn-test'(el) {
 		try { await rpc('shareos.printer', 'test', { lp: el.dataset.id }); toast('Testseite geschickt.'); }
 		catch (e) { toast('Testseite: ' + e.message, true); }
+	},
+
+	async 'ddns-now'() {
+		try { await rpc('shareos.web', 'ddns_update'); toast('Wird gemeldet …'); setTimeout(async () => { await loadNetExtra(); if (S.route.sub === 'network') renderMain(); }, 5000); }
+		catch (e) { toast('DynDNS: ' + e.message, true); }
+	},
+
+	async 'ca-init'() {
+		try { await rpc('shareos.web', 'ca_init'); toast('Zertifizierungsstelle angelegt.'); await loadNetExtra(); renderMain(); }
+		catch (e) { toast('CA: ' + e.message, true); }
+	},
+
+	async 'ca-root'() {
+		try { const r = await rpc('shareos.web', 'ca_pem', { kind: 'root' }); pemDownload(r.pem, 'shareos-ca.crt'); }
+		catch (e) { toast('CA: ' + e.message, true); }
+	},
+
+	async 'ca-web'() {
+		if (!await confirmDlg('Zertifikat der eigenen CA verwenden?', 'Die Box bekommt ein Zertifikat ihrer eigenen Zertifizierungsstelle für Gerätenamen, .local-Namen und IP-Adresse; es ersetzt das bisherige. Ohne installiertes Stammzertifikat warnt der Browser weiter.', 'Verwenden')) return;
+		try { await rpc('shareos.web', 'ca_web'); toast('Zertifikat installiert – die Seite verbindet sich neu.'); afterWebRestart(); }
+		catch (e) { toast('CA: ' + e.message, true); }
+	},
+
+	async 'ca-dl'(el) {
+		try { const r = await rpc('shareos.web', 'ca_pem', { name: el.dataset.id, kind: el.dataset.kind }); pemDownload(r.pem, el.dataset.id + (el.dataset.kind === 'key' ? '.key' : '.crt')); }
+		catch (e) { toast('Zertifikat: ' + e.message, true); }
+	},
+
+	async 'ca-del'(el) {
+		if (!await confirmDlg('Zertifikat löschen?', `Das Zertifikat „${el.dataset.id}“ und sein Schlüssel werden von der Box gelöscht. Geräte, die es schon nutzen, behalten ihre Kopie.`, 'Löschen', true)) return;
+		try { await rpc('shareos.web', 'ca_delete', { name: el.dataset.id }); toast('Gelöscht.'); await loadNetExtra(); renderMain(); }
+		catch (e) { toast('Zertifikat: ' + e.message, true); }
+	},
+
+	async 'acme-off'() {
+		if (!await confirmDlg('Let\'s Encrypt abschalten?', 'Die Box nutzt danach wieder ein selbstsigniertes Zertifikat.', 'Abschalten')) return;
+		try { await rpc('shareos.web', 'acme_off'); toast('Abgeschaltet – die Seite verbindet sich neu.'); await loadNetExtra(); afterWebRestart(); }
+		catch (e) { toast('Let\'s Encrypt: ' + e.message, true); }
 	},
 
 	async 'cert-self'() {

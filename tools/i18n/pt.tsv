@@ -1636,27 +1636,84 @@ P323	desliga $1
 E1269	EQUIPAMENTO E ACESSO
 E1270	A estrela torna um app favorito – os favoritos aparecem no topo de “Meu ShareOS”.
 E1271	Mostrar todos os avisos
-E1272	IMPRESSORAS
-E1273	A carregar impressoras …
-E1274	As impressoras em rede são uma app de sistema: impressoras e multifunções atuais imprimem e digitalizam sem controladores (AirPrint, Mopria, Windows 10/11); as mais antigas pela porta 9100 com o controlador no computador.
-E1275	Instalar a partir da loja (ipp-usb + p910nd)
-E1276	na rede
-E1277	inacessível
-E1278	Sem controlador (IPP over USB)
-E1279	Com o controlador no computador (porta 9100)
-E1280	Digitalização
-E1281	pela rede (eSCL), se o dispositivo tiver scanner
-E1282	Endereço
-E1283	Página do dispositivo
-E1284	Windows 10/11, macOS, iPhone/iPad e Android encontram a impressora sozinhos («Adicionar impressora»). À mão: introduza o endereço acima como impressora IPP.
-E1285	Windows: «Adicionar impressora» → «Endereço TCP/IP» →
-E1286	, porta
-E1287	, controlador do fabricante. macOS/Linux: «HP JetDirect – Socket» ou AppSocket.
-E1288	Página de teste
-E1289	Nenhuma impressora USB ligada. Ligue uma – aparece aqui após alguns segundos.
-E1290	Partilhar impressoras na rede (também arranca após reiniciar)
-E1291	Automático – sem controlador quando a impressora o permite
-E1292	Sempre porta 9100 (controlador no computador)
-E1293	Qualquer pessoa na rede pode imprimir, sem iniciar sessão. «Sempre porta 9100» só se uma impressora não imprimir bem sem controlador.
-E1294	Impressoras guardadas.
-E1295	Página de teste enviada.
+E1272	CERTIFICADOS PRÓPRIOS
+E1273	Atualizar DNS dinâmico
+E1274	TOKEN DA API (ZONA:LER, DNS:EDITAR)
+E1275	URL DE ATUALIZAÇÃO ({host} {ip} {ip6})
+E1276	URL própria (dyndns2)
+E1277	– escolher –
+E1278	guardado – deixe vazio para mantê-lo
+E1279	A caixa comunica o seu endereço público a cada 5 minutos quando este mudou. Muitas ligações (DS-Lite, fibra, móvel) não têm endereço IPv4 próprio – use então IPv6. Para acesso a partir de fora, o router tem de encaminhar a porta (ou abri-la em IPv6).
+E1280	Último envio
+E1281	Última verificação
+E1282	Ainda sem envio – já a seguir.
+E1283	O DNS dinâmico está desligado.
+E1284	AUTORIDADE DE CERTIFICAÇÃO (CA)
+E1285	esta caixa usa-a
+E1286	Impressão digital
+E1287	Certificado raiz
+E1288	Reemitir o certificado da caixa
+E1289	Usar para esta caixa
+E1290	Instale uma vez o certificado raiz como fidedigno no PC e no telemóvel (Windows: duplo clique → «Autoridades de Certificação de Raiz Fidedigna», Android/iOS: Definições → Segurança). Depois, todos os certificados desta CA funcionam sem aviso – para a caixa e outros dispositivos da rede doméstica.
+E1291	Uma autoridade de certificação própria emite certificados para a caixa e outros dispositivos da rede doméstica (p. ex.
+E1292	). O seu certificado raiz é instalado uma vez nos dispositivos – depois deixa de haver avisos de certificado.
+E1293	Criar autoridade de certificação
+E1294	A obter o certificado – demora até 3 minutos …
+E1295	Verificado diariamente e renovado 30 dias antes de expirar.
+E1296	Desligar
+E1297	Um certificado para
+E1298	, em que todos os navegadores confiam. A verificação é feita através de um registo DNS no fornecedor de DNS dinâmico – nenhuma porta precisa de estar aberta.
+E1299	E-MAIL (OPCIONAL, PARA AVISOS DA LET'S ENCRYPT)
+E1300	Modo de teste (CA de teste, os navegadores avisam)
+E1301	Obter certificado
+E1302	Precisa de DNS dinâmico com DuckDNS ou Cloudflare (acima).
+E1303	CERTIFICADO PARA OUTRO DISPOSITIVO
+E1304	NOMES DE ANFITRIÃO E ENDEREÇOS IP (SEPARADOS POR VÍRGULAS)
+E1305	Válido 825 dias. Também curingas como
+E1306	também são possíveis. Transfira o certificado e a chave e introduza-os no dispositivo.
+E1307	Emitir
+E1308	NOMES DE ANFITRIÃO
+E1309	VÁLIDO ATÉ
+E1310	Chave
+E1311	CA própria
+E1312	ativo (teste)
+E1313	Indique o fornecedor e o nome.
+E1314	Indique o nome e os nomes de anfitrião.
+E1315	Guardado – o endereço está a ser enviado.
+E1316	A enviar …
+E1317	Autoridade de certificação criada.
+E1318	Certificado emitido.
+E1319	Usar um certificado da CA própria?
+E1320	A caixa recebe um certificado da sua própria CA para o nome do dispositivo, o nome .local e o endereço IP; substitui o atual. Sem o certificado raiz instalado, o navegador continua a avisar.
+E1321	Usar
+E1322	Certificado instalado – a página volta a ligar-se.
+E1323	Eliminar o certificado?
+P324	O certificado «$1» e a sua chave são eliminados da caixa. Os dispositivos que já o usam mantêm a sua cópia.
+E1324	Desligar o Let's Encrypt?
+E1325	A caixa volta a usar um certificado autoassinado.
+E1326	Desligado – a página volta a ligar-se.
+E1327	Certificado Let's Encrypt ativo – a página volta a ligar-se.
+E1328	IMPRESSORAS
+E1329	A carregar impressoras …
+E1330	As impressoras em rede são uma app de sistema: impressoras e multifunções atuais imprimem e digitalizam sem controladores (AirPrint, Mopria, Windows 10/11); as mais antigas pela porta 9100 com o controlador no computador.
+E1331	Instalar a partir da loja (ipp-usb + p910nd)
+E1332	na rede
+E1333	inacessível
+E1334	Sem controlador (IPP over USB)
+E1335	Com o controlador no computador (porta 9100)
+E1336	Digitalização
+E1337	pela rede (eSCL), se o dispositivo tiver scanner
+E1338	Endereço
+E1339	Página do dispositivo
+E1340	Windows 10/11, macOS, iPhone/iPad e Android encontram a impressora sozinhos («Adicionar impressora»). À mão: introduza o endereço acima como impressora IPP.
+E1341	Windows: «Adicionar impressora» → «Endereço TCP/IP» →
+E1342	, porta
+E1343	, controlador do fabricante. macOS/Linux: «HP JetDirect – Socket» ou AppSocket.
+E1344	Página de teste
+E1345	Nenhuma impressora USB ligada. Ligue uma – aparece aqui após alguns segundos.
+E1346	Partilhar impressoras na rede (também arranca após reiniciar)
+E1347	Automático – sem controlador quando a impressora o permite
+E1348	Sempre porta 9100 (controlador no computador)
+E1349	Qualquer pessoa na rede pode imprimir, sem iniciar sessão. «Sempre porta 9100» só se uma impressora não imprimir bem sem controlador.
+E1350	Impressoras guardadas.
+E1351	Página de teste enviada.
