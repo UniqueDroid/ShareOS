@@ -226,6 +226,15 @@ direkt auf der Box nachgesehen, warum der Webserver nicht lief.
 | 22:02 | SMB war langsam (#94): signiertes SMB 3 mit 4–10 MB/s, die CPU mit AES-CMAC beschäftigt. Jans Messungen auf der Box: ohne Signatur 32–40 MB/s. Erster Schritt: ein Kompatibilitätsmodus bis SMB 2.1 (#99). |
 
 ### Samstag, 31.10.2026
+| 19:27 | Jan veröffentlicht `v0.2.0-beta.17`. |
+
+### Sonntag, 01.11.2026
+
+| Zeit | Was passiert ist |
+|---|---|
+| 15:22 | System → Netzwerk bekommt DynDNS (DuckDNS, dynv6, Cloudflare, No-IP, jede dyndns2-Adresse; IPv4 und IPv6), eine eigene Zertifizierungsstelle für die Box und andere Geräte im Heimnetz und Let's Encrypt über DNS – kein Port muss offen sein (#108). |
+| 16:17 | USB-Drucker im Netzwerk (#109): ipp-usb für aktuelle Drucker – Drucken und Scannen ohne Treiber; das avahi der Firmware hat kein D-Bus, deshalb kündigt ipp-usb die Geräte per Patch über statische Service-Dateien an. Ältere Drucker über Port 9100 mit p910nd. |
+| 17:23 | USV über USB mit Network UPS Tools (#110): Akkustand und Restlaufzeit, Meldungen bei Stromausfall, sauberes Herunterfahren auf Akku, und die USV schaltet die Box mit dem Strom wieder ein. Alles kommt in `v0.2.0-beta.18`. |
 
 | Zeit | Was passiert ist |
 |---|---|

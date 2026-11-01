@@ -225,6 +225,15 @@ the box for why the web server was not running.
 | 22:02 | SMB was slow (#94): signed SMB 3 at 4–10 MB/s, the CPU busy with AES-CMAC. Jan's measurements on the box: unsigned 32–40 MB/s. First step: a compatibility mode up to SMB 2.1 (#99). |
 
 ### Saturday, 31.10.2026
+| 19:27 | Jan publishes `v0.2.0-beta.17`. |
+
+### Sunday, 01.11.2026
+
+| Time | What happened |
+|---|---|
+| 15:22 | System → Netzwerk gets dynamic DNS (DuckDNS, dynv6, Cloudflare, No-IP, any dyndns2 address; IPv4 and IPv6), an own certificate authority for the box and other devices in the home network, and Let's Encrypt over DNS – no port has to be open (#108). |
+| 16:17 | USB printers in the network (#109): ipp-usb for current printers – driverless printing and scanning; the firmware's avahi has no D-Bus, so a patch makes ipp-usb announce the devices through static service files. Older printers over port 9100 with p910nd. |
+| 17:23 | UPS over USB with Network UPS Tools (#110): charge and runtime, messages on a power failure, a clean shutdown on battery and the UPS switching the box on again with the power. Everything goes into `v0.2.0-beta.18`. |
 
 | Time | What happened |
 |---|---|

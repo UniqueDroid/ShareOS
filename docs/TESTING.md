@@ -445,6 +445,14 @@ Needs a Tailscale account (free), a phone or computer with Tailscale, the file `
 5. An account without a personal folder: sharing shows "no personal folder"; the shared item is dropped and does not come back at the next login.
 6. File dialog of an app for an account **without** *Dateien* (e.g. Webpad → *Öffnen*): the list of folders shows *App-Daten* first, then *Mein Ordner* and the user's shares; read-only shares are marked and are missing when saving. The app still keeps its own files in *App-Daten*.
 
+## 14zf. Dynamic DNS, certificates, printers, UPS (0.2.0-beta.18)
+
+1. **Dynamic DNS:** create a name at duckdns.org. System → Netzwerk → DynDNS: *DuckDNS*, name and token, *Speichern*. After a few seconds the right side shows *aktuell* with the public address; `nslookup <name>.duckdns.org 1.1.1.1` shows it. A wrong token: *Fehler* and a message.
+2. **Own CA:** *Zertifizierungsstelle anlegen*, *Für diese Box verwenden* (the page reconnects), download *Stammzertifikat* and install it on the PC as a trusted root CA: `https://<box>/` opens without a warning. Issue a certificate for another device (e.g. `router.home.lan, 192.168.1.1`), download certificate and key.
+3. **Let's Encrypt** (dynamic DNS with DuckDNS or Cloudflare): *Zertifikat holen* with *Testmodus* – after up to 3 minutes *aktiv (Test)*. Then without test mode. On errors: `cat /tmp/shareos-acme.log`. *Abschalten* goes back to the self-signed certificate.
+4. **Printers:** install the system app *ipp-usb + p910nd*, connect the printer over USB, Dienste → Drucker → *Drucker im Netzwerk freigeben*. A current printer shows *Ohne Treiber (IPP over USB)*; Windows 10/11 finds it under "Add printer", a multifunction device scans with the "Scan" app or "Mopria Scan". An older printer shows port 9100; *Testseite*. Unplug the printer: it disappears after a few seconds.
+5. **UPS:** install the system app *Network UPS Tools*, connect the UPS over USB, Dienste → USV → *USV überwachen*, shutdown *Nach einer Zeit auf Akku*, 2 minutes. Charge and model show up. Pull the UPS's mains plug: message "Stromausfall", after 2 minutes the box shuts down, then the UPS switches off; plug it back in: UPS and box come on. On problems: `shareos-ups status`, `cat /tmp/shareos-ups/driver.log`.
+
 ## 14ze. Take over an existing drive (0.2.0-beta.17)
 
 1. Put in a disk with data (e.g. from Alt-F, ext4) that ShareOS does not know yet. Speicher → Laufwerke: the disk shows **„sdX2 übernehmen“**.
