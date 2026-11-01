@@ -20,3 +20,8 @@ LIBEVENT_CONF_OPTS += --disable-openssl
 # (post-build.sh); rsync only uses them for faster checksums
 RSYNC_CONF_OPTS += --disable-openssl
 RSYNC_DEPENDENCIES := $(filter-out openssl,$(RSYNC_DEPENDENCIES))
+
+# Network UPS Tools (system app "nut") without OpenSSL: upsd only talks to
+# upsmon on the box and plain NUT clients – 4.4 MB of libraries less
+NUT_CONF_OPTS += --without-ssl
+NUT_DEPENDENCIES := $(filter-out openssl,$(NUT_DEPENDENCIES))

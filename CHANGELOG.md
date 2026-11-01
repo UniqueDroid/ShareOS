@@ -4,6 +4,14 @@ Changes per release (newest first). The section of a version is added to its
 GitHub release automatically when the release is built. Test versions are
 pre-releases for test devices only.
 
+## 0.2.0-beta.18
+
+- **UPS over USB** (Dienste → USV, new system app **"nut"** in the store: Network UPS Tools 2.8.5 with the drivers usbhid-ups, nutdrv_qx and blazer_usb – APC, Eaton, CyberPower, most Megatec/Q1 boxes; 0.7 MB, kept on the flash so it works when a disk fails).
+  - Charge, runtime, load and model of the UPS; a power failure, the power coming back, a low or worn battery and a lost connection become messages (e-mail/push as set up) and are listed under *Ereignisse*.
+  - The box shuts down cleanly while on battery – when the UPS reports a low battery, below a charge of your choice or after some minutes on battery – and only then; if the power comes back first, nothing happens. Afterwards the UPS switches its output off and on again when the power is back, so the box starts by itself (can be switched off).
+  - Other computers can read the UPS over the network (NUT, port 3493, user `monitor` with a password) and shut down before the box.
+  - NUT without OpenSSL (`external.mk`: 4.4 MB of libraries less). `shareos-ups`, rpcd `shareos.ups`, the last step of the shutdown in `S05board`, `tests/test-ups.sh` (20 checks with fake NUT programs).
+
 ## 0.2.0-beta.17
 
 - **SMB 3 with signing about three times as fast: the crypto engine computes the signatures** ([#94](https://github.com/UniqueDroid/ShareOS/issues/94)). Windows 11 signs every SMB connection, and on the 800 MHz Kirkwood the signature limited writing: measured on a DNS-320L, about 35 MB/s without signing (the disks), only 4–10 MB/s with SMB 3.1.1 – ksmbd computes AES-CMAC on the CPU, where AES manages about 12 MB/s. The Kirkwood has a crypto engine (Marvell CESA) that does AES-CBC at about 38 MB/s with DMA, but ksmbd could not use it. A kernel patch (`0001-ksmbd-cmac-via-cbc`) computes the AES-CMAC of messages from 8 KiB through `cbc(aes)` – the engine – (CMAC is a CBC-MAC; the last block and the subkeys on the CPU), checks the first result against the old way and falls back to it on any error. Measured: **19–23 MB/s** signed, the CPU load of ksmbd went from about 64 % to under 10 %. `shareos-shares` loads `marvell-cesa` before ksmbd; module parameter `ksmbd.cbc_cmac=0` switches it off. Tested before on a UML kernel with Samba's smbclient (signing required, checksums equal). Tried as well and dropped: AES-GMAC signing (GHASH in C on ARMv5 is not faster, 3–8 MB/s).

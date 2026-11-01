@@ -94,6 +94,9 @@ stop() {
 	rm -f "$BUTTONDDPID"
 	start-stop-daemon -K -q -p "$PIDFILE" 2>/dev/null
 	sleep 1
+	# shut down on UPS battery: the UPS switches its output off now and on
+	# again when the power is back – and the box starts with it
+	[ -f /tmp/.poweroff ] && [ -x /usr/sbin/shareos-ups ] && /usr/sbin/shareos-ups killpower
 	if [ -f /tmp/.poweroff ] && [ "$BOARD_CONTROL" = mcu ]; then
 		# ask the MCU to cut power 3 seconds from now (other boxes: gpio-poweroff in the kernel)
 		sync

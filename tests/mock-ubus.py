@@ -699,6 +699,22 @@ def call(obj, method, args):
             STATE['led'].update({k: v for k, v in args.items() if v})
         return {'fan': STATE['fan'], 'led': STATE['led'], 'temperature': 41000, 'fan_pwm': 100,
                 'presets': {'quiet': {'off_temp': 40, 'full_temp': 55, 'half_temp': 50}}}
+    if obj == 'shareos.ups':
+        u = STATE.setdefault('ups', {'installed': True, 'enabled': False, 'running': False, 'detected': '051d:0002', 'driver': 'usbhid-ups',
+            'status': None, 'charge': None, 'runtime': None, 'load': None, 'voltage': None, 'mfr': None, 'model': None, 'charge_low': None, 'battery_date': None,
+            'events': [], 'settings': {'driver': 'auto', 'shutdown': 'low', 'percent': 30, 'minutes': 5, 'killpower': True, 'server': False, 'password_set': False}})
+        if method == 'set':
+            u['enabled'] = bool(args.get('enabled'))
+            for k in ('driver', 'shutdown', 'percent', 'minutes', 'killpower', 'server'):
+                if args.get(k) not in (None, '', 0): u['settings'][k] = args[k]
+            u['settings']['killpower'] = bool(args.get('killpower')); u['settings']['server'] = bool(args.get('server'))
+            if args.get('password'): u['settings']['password_set'] = True
+            if u['enabled']:
+                u.update({'running': True, 'status': 'OB DISCHRG', 'charge': 87, 'runtime': 1260, 'load': 18, 'voltage': 0, 'mfr': 'APC', 'model': 'Back-UPS ES 700G', 'battery_date': '2024/03/11',
+                          'events': [{'time': 1793530000, 'type': 'ONBATT'}, {'time': 1793520000, 'type': 'ONLINE'}, {'time': 1793519000, 'type': 'ONBATT'}]})
+            else:
+                u.update({'running': False, 'status': None})
+        return u
     if obj == 'shareos.web':
         if method == 'set':
             STATE.update({k: v for k, v in args.items() if k in ('https', 'redirect')})

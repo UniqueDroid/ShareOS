@@ -1,0 +1,1 @@
+{ "bin": [ "usr/bin/usbhid-ups", "usr/bin/nutdrv_qx", "usr/bin/blazer_usb", "usr/sbin/upsd", "usr/sbin/upsmon", "usr/bin/upsc" ] }

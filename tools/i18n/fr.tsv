@@ -1636,3 +1636,48 @@ P323	arrêt $1
 E1269	APPAREIL & ACCÈS
 E1270	L’étoile fait d’une app un favori – les favoris apparaissent en haut de « Mon ShareOS ».
 E1271	Afficher toutes les notifications
+E1272	ONDULEUR
+E1273	Chargement de l'onduleur …
+E1274	Installer depuis le store (Network UPS Tools)
+E1275	La prise en charge de l'onduleur est une application système : la box affiche alors la charge et l'autonomie, signale une coupure de courant et s'arrête proprement à temps.
+E1276	Batterie presque vide
+E1277	sur batterie
+E1278	sur secteur
+E1279	pas de données
+E1280	BATTERIE
+E1281	AUTONOMIE
+E1282	CHARGE
+E1283	Tension secteur
+E1284	Batterie depuis
+E1285	Pilote
+E1286	Connexion à l'onduleur …
+E1287	Détecté :
+E1288	Activez-le ci-dessous.
+E1289	ÉVÉNEMENTS
+E1290	Aucun pour l'instant – une coupure de courant s'affiche ici et comme message.
+E1291	Coupure de courant – sur onduleur
+E1292	Courant rétabli
+E1293	Arrêt déclenché
+E1294	La box s'arrête
+E1295	Connexion à l'onduleur perdue
+E1296	Pas de connexion à l'onduleur
+E1297	Connexion à l'onduleur rétablie
+E1298	Remplacer la batterie
+E1299	Surveiller l'onduleur (démarre aussi après un redémarrage)
+E1300	ARRÊT
+E1301	Quand l'onduleur signale « batterie faible »
+E1302	Sous un niveau de charge
+E1303	Après un temps sur batterie
+E1304	CHARGE DE LA BATTERIE (%)
+E1305	MINUTES SUR BATTERIE
+E1306	PILOTE
+E1307	Automatique
+E1308	blazer_usb (anciens Megatec)
+E1309	Ensuite éteindre l'onduleur – la box redémarre au retour du courant
+E1310	D'autres ordinateurs peuvent lire l'onduleur via le réseau (port 3493)
+E1311	MOT DE PASSE POUR « MONITOR »
+E1312	enregistré – laisser vide pour le conserver
+E1313	Sur l'autre ordinateur (NUT, upsmon) :
+E1314	– il s'arrête alors avant la box.
+E1315	La box ne s'arrête que tant qu'elle est sur batterie. Si le courant revient avant, rien ne se passe.
+E1316	Onduleur enregistré.

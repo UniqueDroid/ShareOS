@@ -1636,3 +1636,48 @@ P323	desliga $1
 E1269	EQUIPAMENTO E ACESSO
 E1270	A estrela torna um app favorito – os favoritos aparecem no topo de “Meu ShareOS”.
 E1271	Mostrar todos os avisos
+E1272	UPS
+E1273	A carregar UPS …
+E1274	Instalar a partir da loja (Network UPS Tools)
+E1275	O suporte a UPS é uma app de sistema: a caixa mostra a carga e a autonomia, avisa de um corte de energia e desliga-se a tempo de forma limpa.
+E1276	Bateria quase vazia
+E1277	em bateria
+E1278	na rede elétrica
+E1279	sem dados
+E1280	BATERIA
+E1281	AUTONOMIA
+E1282	CARGA
+E1283	Tensão da rede
+E1284	Bateria desde
+E1285	Controlador
+E1286	A ligar à UPS …
+E1287	Detetado:
+E1288	Ligue-o abaixo.
+E1289	EVENTOS
+E1290	Nenhum ainda – um corte de energia aparece aqui e como mensagem.
+E1291	Corte de energia – a funcionar com a UPS
+E1292	Energia reposta
+E1293	Encerramento iniciado
+E1294	A caixa está a desligar
+E1295	Ligação à UPS perdida
+E1296	Sem ligação à UPS
+E1297	Ligação à UPS restabelecida
+E1298	Substituir a bateria
+E1299	Monitorizar a UPS (também arranca após reiniciar)
+E1300	ENCERRAR
+E1301	Quando a UPS indica «bateria fraca»
+E1302	Abaixo de uma carga
+E1303	Após algum tempo em bateria
+E1304	CARGA DA BATERIA (%)
+E1305	MINUTOS EM BATERIA
+E1306	CONTROLADOR
+E1307	Automático
+E1308	blazer_usb (Megatec antigos)
+E1309	Depois desligar a UPS – a caixa volta a arrancar quando a energia regressar
+E1310	Outros computadores podem ler a UPS pela rede (porta 3493)
+E1311	PALAVRA-PASSE PARA «MONITOR»
+E1312	guardada – deixe vazio para a manter
+E1313	No outro computador (NUT, upsmon):
+E1314	– então desliga-se antes da caixa.
+E1315	A caixa só se desliga enquanto estiver em bateria. Se a energia voltar antes, nada acontece.
+E1316	UPS guardada.

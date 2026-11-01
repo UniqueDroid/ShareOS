@@ -156,7 +156,7 @@ const TABS = [
 	['apps', 'APPS'], ['cloud', 'CLOUD'], ['paperless', 'PAPERLESS'], ['system', 'SYSTEM']
 ];
 const SYS_SUBS = [['general', 'ALLGEMEIN'], ['appearance', 'DARSTELLUNG'], ['network', 'NETZWERK'], ['notifications', 'MELDUNGEN'], ['logs', 'PROTOKOLLE'], ['terminal', 'TERMINAL'], ['time', 'ZEIT'], ['power', 'ENERGIE & RESET'], ['firmware', 'FIRMWARE']];
-const SVC_SUBS = [['status', 'STATUS'], ['autostart', 'AUTOSTART'], ['dlna', 'MEDIENSERVER']];
+const SVC_SUBS = [['status', 'STATUS'], ['autostart', 'AUTOSTART'], ['dlna', 'MEDIENSERVER'], ['ups', 'USV']];
 const SHR_SUBS = [['shares', 'FREIGABEN'], ['files', 'DATEIEN'], ['users', 'BENUTZER'], ['groups', 'GRUPPEN']];
 const STO_SUBS = [['volumes', 'LAUFWERKE'], ['health', 'GESUNDHEIT'], ['snapshots', 'SNAPSHOTS']];
 const ROLE_TXT = { admin: 'Administrator', user: 'Benutzer', share: 'Nur Freigaben' };
@@ -819,7 +819,7 @@ const VIEWS = {
 		const sub = S.route.sub;
 		return html`
 		<nav class="subtabs" aria-label="Dienste">${SVC_SUBS.map(([id, label]) => html`<a class="st${sub === id ? ' on' : ''}" href="#/services/${id}">${label}</a>`)}</nav>
-		${sub === 'dlna' ? dlnaView() : sub === 'autostart' ? autostartView()
+		${sub === 'dlna' ? dlnaView() : sub === 'ups' ? upsView() : sub === 'autostart' ? autostartView()
 			: html`<section class="sec">${secHead('services', 'DIENSTE', 'Start, Stopp, Neustart')}${serviceCards(true, isTable('services'))}</section>`}`;
 	},
 
@@ -1591,6 +1591,93 @@ function dlnaAfter() {
 		try { S.dlna = await rpc('shareos.dlna', 'set', { enabled: f.enabled.checked, name: f.name.value.trim(), media }); toast('Medienserver gespeichert.'); }
 		catch (err) { toast('Medienserver: ' + err.message, true); }
 		loadDlna();
+	});
+}
+
+/* ---------- UPS (Services -> UPS, system app "nut") ------------------- */
+
+const UPS_EVENTS = { ONBATT: 'Stromausfall – läuft über die USV', ONLINE: 'Strom wieder da', LOWBATT: 'Akku fast leer', FSD: 'Herunterfahren ausgelöst', SHUTDOWN: 'Box fährt herunter', COMMBAD: 'Verbindung zur USV verloren', NOCOMM: 'Keine Verbindung zur USV', COMMOK: 'Verbindung zur USV wieder da', REPLBATT: 'Akku tauschen' };
+
+async function loadUps() {
+	clearTimeout(S.upsTimer);
+	try { S.ups = await rpc('shareos.ups', 'status'); } catch (e) { toast('USV: ' + e.message, true); }
+	if (S.route.tab === 'services' && S.route.sub === 'ups') {
+		if (!document.activeElement?.matches('input,select')) renderMain();
+		S.upsTimer = setTimeout(loadUps, S.ups?.running ? 5000 : 15000);
+	}
+}
+
+function upsView() {
+	const d = S.ups;
+	if (!d) return html`<div class="panel"><div class="empty"><div class="spin" style="margin:0"></div><span>Lade USV …</span></div></div>`;
+	if (!d.installed) return html`<section class="sec"><div class="panel"><div class="empty">${svg(I.info)}<div>
+		<span>Die USV-Unterstützung ist eine System-App: Die Box zeigt dann Akkustand und Restlaufzeit, meldet einen Stromausfall und fährt rechtzeitig sauber herunter.</span>
+		<div class="acts" style="margin-top:12px"><a class="btn primary" href="#/apps/store">Im Store installieren (Network UPS Tools)</a></div></div></div></div></section>`;
+	const st = (d.status || '').split(' ');
+	const ob = st.includes('OB'), lb = st.includes('LB');
+	const s = d.settings, mode = s.shutdown;
+	const host = location.hostname;
+	return html`<section class="sec">
+		<div class="g2">
+			<div class="panel">
+				<div class="ph"><span class="pt">USV</span>${!d.running ? html`<span class="tag ml">aus</span>` : lb ? html`<span class="tag err ml">Akku fast leer</span>` : ob ? html`<span class="tag warn ml">läuft über Akku</span>` : d.status ? html`<span class="tag ok ml">am Netz</span>` : html`<span class="tag warn ml">keine Daten</span>`}</div>
+				${d.running && d.status ? html`<div class="tiles" style="margin:0">
+					<div class="tile"><div class="k">AKKU</div><div class="v">${d.charge != null ? d.charge + ' %' : '–'}</div></div>
+					<div class="tile"><div class="k">RESTLAUFZEIT</div><div class="v">${d.runtime != null ? Math.round(d.runtime / 60) + ' min' : '–'}</div></div>
+					<div class="tile"><div class="k">LAST</div><div class="v">${d.load != null ? d.load + ' %' : '–'}</div></div></div>
+					<dl class="kv" style="margin-top:12px">
+						<dt>Gerät</dt><dd>${[d.mfr, d.model].filter(Boolean).join(' ') || '–'}</dd>
+						${d.voltage != null ? html`<dt>Netzspannung</dt><dd>${d.voltage} V</dd>` : ''}
+						${d.battery_date ? html`<dt>Akku seit</dt><dd>${d.battery_date}</dd>` : ''}
+						<dt>Treiber</dt><dd>${d.driver || '–'}</dd>
+					</dl>`
+				: d.running ? html`<p class="mut" style="margin:0;font-size:13px">Verbinde mit der USV …</p>`
+				: html`<p class="mut" style="margin:0;font-size:13px">${d.detected ? html`<span>Erkannt:</span> <code>${d.detected}</code>. ` : ''}<span>Unten einschalten.</span></p>`}
+			</div>
+			<div class="panel">
+				<div class="ph"><span class="pt">EREIGNISSE</span></div>
+				${d.events.length ? html`<div style="display:grid;gap:6px;font-size:13px">${d.events.map((e) => html`<div><span class="mut">${fmtTime(e.time)}</span> · ${UPS_EVENTS[e.type] || e.type}</div>`)}</div>`
+				: html`<p class="mut" style="margin:0;font-size:13px">Noch keine – ein Stromausfall wird hier und als Meldung angezeigt.</p>`}
+			</div>
+		</div>
+	</section>
+	<section class="sec"><form class="panel" id="f-ups" style="max-width:820px">
+		<div class="ph"><span class="pt">EINSTELLUNGEN</span></div>
+		<label class="chk"><input type="checkbox" name="enabled"${d.enabled ? raw(' checked') : ''}>USV überwachen (startet auch nach einem Neustart)</label>
+		<div class="fields" style="margin-top:12px">
+			<label class="f"><span>HERUNTERFAHREN</span><select name="shutdown" id="ups-mode">
+				<option value="low"${mode === 'low' ? raw(' selected') : ''}>Wenn die USV „Akku fast leer“ meldet</option>
+				<option value="percent"${mode === 'percent' ? raw(' selected') : ''}>Unter einem Akkustand</option>
+				<option value="minutes"${mode === 'minutes' ? raw(' selected') : ''}>Nach einer Zeit auf Akku</option></select></label>
+			<label class="f" id="ups-pct"${mode === 'percent' ? '' : raw(' hidden')}><span>AKKUSTAND (%)</span><input name="percent" type="number" min="10" max="90" value="${s.percent}"></label>
+			<label class="f" id="ups-min"${mode === 'minutes' ? '' : raw(' hidden')}><span>MINUTEN AUF AKKU</span><input name="minutes" type="number" min="1" max="120" value="${s.minutes}"></label>
+			<label class="f"><span>TREIBER</span><select name="driver">${[['auto', 'Automatisch'], ['usbhid-ups', 'usbhid-ups (APC, Eaton, CyberPower …)'], ['nutdrv_qx', 'nutdrv_qx (Megatec/Q1)'], ['blazer_usb', 'blazer_usb (ältere Megatec)']].map(([v, t]) => html`<option value="${v}"${s.driver === v ? raw(' selected') : ''}>${t}</option>`)}</select></label>
+		</div>
+		<label class="chk" style="margin-top:12px"><input type="checkbox" name="killpower"${s.killpower ? raw(' checked') : ''}>Danach die USV ausschalten – die Box startet wieder, wenn der Strom zurück ist</label>
+		<label class="chk" style="margin-top:8px"><input type="checkbox" name="server" id="ups-server"${s.server ? raw(' checked') : ''}>Andere Rechner dürfen die USV über das Netzwerk lesen (Port 3493)</label>
+		<div class="fields" id="ups-net"${s.server ? '' : raw(' hidden')} style="margin-top:10px">
+			<label class="f"><span>PASSWORT FÜR „MONITOR“</span>${s.password_set ? html`<input name="password" type="password" placeholder="gespeichert – leer lassen behält es" autocomplete="new-password">` : html`<input name="password" type="password" autocomplete="new-password">`}</label>
+		</div>
+		${s.server ? html`<p class="note"><span>Auf dem anderen Rechner (NUT, upsmon):</span> <code data-i18n-skip>MONITOR ups@${host} 1 monitor ••• secondary</code> <span>– er fährt dann vor der Box herunter.</span></p>` : ''}
+		<p class="note">Die Box fährt nur herunter, solange sie über Akku läuft. Kommt der Strom vorher zurück, passiert nichts.</p>
+		<div class="acts" style="margin-top:14px"><button class="btn primary" type="submit">Speichern</button></div>
+	</form></section>`;
+}
+
+function upsAfter() {
+	if (!S.ups) { loadUps(); return; }
+	if (!S.upsTimer) S.upsTimer = setTimeout(loadUps, 5000);
+	$('#ups-mode')?.addEventListener('change', (e) => { $('#ups-pct').hidden = e.target.value !== 'percent'; $('#ups-min').hidden = e.target.value !== 'minutes'; });
+	$('#ups-server')?.addEventListener('change', (e) => { $('#ups-net').hidden = !e.target.checked; });
+	$('#f-ups')?.addEventListener('submit', async (e) => {
+		e.preventDefault();
+		const f = e.target, b = $('button[type=submit]', f); b.disabled = true;
+		const v = { enabled: f.enabled.checked, shutdown: f.shutdown.value, driver: f.driver.value, killpower: f.killpower.checked, server: f.server.checked, password: f.password.value };
+		if (v.shutdown === 'percent') v.percent = +f.percent.value;
+		if (v.shutdown === 'minutes') v.minutes = +f.minutes.value;
+		try { S.ups = await rpc('shareos.ups', 'set', v); toast('USV gespeichert.'); }
+		catch (err) { toast('USV: ' + err.message, true); }
+		loadUps();
 	});
 }
 
@@ -3159,6 +3246,7 @@ const VIEWS_AFTER = {
 	},
 	services() {
 		if (S.route.sub === 'dlna') { dlnaAfter(); return; }
+		if (S.route.sub === 'ups') { upsAfter(); return; }
 		if (!S.services) loadServices();
 		document.querySelectorAll('.as-toggle').forEach((c) => c.addEventListener('change', async () => {
 			c.disabled = true;
@@ -4075,6 +4163,7 @@ window.addEventListener('hashchange', () => {
 	if (S.route.tab !== 'storage' || S.route.sub !== 'snapshots') { clearTimeout(S.snapTimer); if (S.snap) { S.snap.edit = null; S.snap.log = null; } }
 	if (S.route.tab !== 'shares') { S.shEdit = null; S.uEdit = null; }
 	if (S.route.tab !== 'services' || S.route.sub !== 'dlna') clearTimeout(S.dlnaTimer);
+	if (S.route.tab !== 'services' || S.route.sub !== 'ups') { clearTimeout(S.upsTimer); S.upsTimer = null; }
 	if (S.fb && S.route.sub === 'files') S.fb.roots = null;   // volumes may have changed
 	if (S.route.tab !== 'paperless') { S.plEdit = null; S.plLog = null; } else if (S.pl) loadPaperless();
 	if (S.route.tab !== 'cloud') { clearTimeout(S.cloudTimer); if (S.cloud?.scope === 'admin') { S.cloud.remoteEdit = null; S.cloud.jobEdit = null; S.cloud.log = null; } }

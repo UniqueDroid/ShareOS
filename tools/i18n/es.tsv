@@ -1636,3 +1636,48 @@ P323	apagado $1
 E1269	EQUIPO Y ACCESO
 E1270	La estrella convierte una app en favorita: las favoritas aparecen arriba en «Mi ShareOS».
 E1271	Mostrar todos los avisos
+E1272	SAI
+E1273	Cargando SAI …
+E1274	Instalar desde la tienda (Network UPS Tools)
+E1275	El soporte de SAI es una app del sistema: la caja muestra la carga y la autonomía, avisa de un corte de luz y se apaga a tiempo de forma limpia.
+E1276	Batería casi vacía
+E1277	con batería
+E1278	con red eléctrica
+E1279	sin datos
+E1280	BATERÍA
+E1281	AUTONOMÍA
+E1282	CARGA
+E1283	Tensión de red
+E1284	Batería desde
+E1285	Controlador
+E1286	Conectando con el SAI …
+E1287	Detectado:
+E1288	Actívalo abajo.
+E1289	EVENTOS
+E1290	Ninguno aún – un corte de luz se muestra aquí y como mensaje.
+E1291	Corte de luz – funcionando con el SAI
+E1292	Vuelve la luz
+E1293	Apagado iniciado
+E1294	La caja se apaga
+E1295	Conexión con el SAI perdida
+E1296	Sin conexión con el SAI
+E1297	Conexión con el SAI restablecida
+E1298	Cambiar la batería
+E1299	Supervisar el SAI (también arranca tras reiniciar)
+E1300	APAGADO
+E1301	Cuando el SAI avisa de «batería baja»
+E1302	Por debajo de una carga
+E1303	Tras un tiempo con batería
+E1304	CARGA DE LA BATERÍA (%)
+E1305	MINUTOS CON BATERÍA
+E1306	CONTROLADOR
+E1307	Automático
+E1308	blazer_usb (Megatec antiguos)
+E1309	Después apagar el SAI – la caja arranca de nuevo al volver la luz
+E1310	Otros ordenadores pueden leer el SAI por la red (puerto 3493)
+E1311	CONTRASEÑA PARA «MONITOR»
+E1312	guardada – déjala vacía para conservarla
+E1313	En el otro ordenador (NUT, upsmon):
+E1314	– entonces se apaga antes que la caja.
+E1315	La caja solo se apaga mientras funciona con batería. Si la luz vuelve antes, no pasa nada.
+E1316	SAI guardado.

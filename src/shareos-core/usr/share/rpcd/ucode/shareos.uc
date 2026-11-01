@@ -841,7 +841,7 @@ function default_password() {
 /* ---------- settings backup ---------- */
 
 const CRYPT = '/usr/sbin/shareos-crypt';
-const BACKUP_CONFIGS = [ 'shareos', 'storage', 'network', 'accounts', 'shares', 'paperless', 'cloud', 'apps', 'snapshots', 'dlna', 'dockerhosts', 'zabbix' ];
+const BACKUP_CONFIGS = [ 'shareos', 'storage', 'network', 'accounts', 'shares', 'paperless', 'cloud', 'apps', 'snapshots', 'dlna', 'dockerhosts', 'zabbix', 'ups' ];
 const BACKUP_FILES = [ '/etc/ksmbd/ksmbdpwd.db', '/etc/ssl/shareos/server.crt', '/etc/ssl/shareos/server.key', '/etc/hostname', '/etc/timezone', '/etc/shareos/zabbix.psk' ];
 
 function lines_of(path) { return filter(split(readfile(path) ?? '', '\n'), (l) => l != ''); }
@@ -1164,6 +1164,27 @@ function dlna_status() {
 		audio: +(st.audio || 0), video: +(st.video || 0), image: +(st.image || 0), db: st.db ?? null, clients,
 		name: c.get('dlna', 'main', 'name') ?? '', hostname: trim(readfile('/proc/sys/kernel/hostname') ?? ''), media,
 		shares: map(filter(share_list().shares, (x) => x.volume), (x) => x.name) };
+}
+
+/* ---------- UPS (system app "nut", shareos-ups) ---------- */
+
+const UPS = '/usr/sbin/shareos-ups';
+function ups_status() {
+	let st = {}, events = [];
+	for (let l in split(sh(UPS + ' status').out, '\n')) {
+		let m = match(l, /^([a-z_]+)=(.*)$/);
+		if (!m) continue;
+		if (m[1] == 'event') { let f = split(m[2], ' '); push(events, { time: +f[0], type: f[1] }); }
+		else st[m[1]] = m[2];
+	}
+	let c = cursor(), g = (k, d) => c.get('ups', 'main', k) ?? d;
+	return { installed: st.installed == '1', enabled: st.enabled == '1', running: st.running == '1', detected: st.detected || null,
+		driver: st.driver ?? null, status: st.status ?? null, charge: st.charge != null ? +st.charge : null,
+		runtime: st.runtime != null ? +st.runtime : null, load: st.load != null ? +st.load : null, voltage: st.voltage != null ? +st.voltage : null,
+		mfr: st.mfr ?? null, model: st.model ?? null, charge_low: st.charge_low != null ? +st.charge_low : null, battery_date: st.battery_date ?? null,
+		events: reverse(events),
+		settings: { driver: g('driver', 'auto'), shutdown: g('shutdown', 'low'), percent: +g('percent', '30'), minutes: +g('minutes', '5'),
+			killpower: g('killpower', '1') != '0', server: g('server', '0') == '1', password_set: !!g('password', '') } };
 }
 
 /* ---------- snapshots (rsync with hard links, shareos-snapshot) ---------- */
@@ -3684,6 +3705,38 @@ return {
 				let r = sh(DLNA + ' rescan');
 				let m = match(r.out, /error: ([^\n]*)/);
 				return m ? { error: m[1] } : dlna_status();
+			}
+		}
+	},
+
+	'shareos.ups': {
+		status: { call: function() { return ups_status(); } },
+
+		set: {
+			args: { enabled: false, driver: '', shutdown: '', percent: 0, minutes: 0, killpower: true, server: false, password: '' },
+			call: function(req) {
+				let a = req.args, c = cursor();
+				if (a.driver && !(a.driver in { auto: 1, 'usbhid-ups': 1, nutdrv_qx: 1, blazer_usb: 1 })) return { error: 'invalid driver' };
+				if (a.shutdown && !(a.shutdown in { low: 1, percent: 1, minutes: 1 })) return { error: 'invalid shutdown' };
+				if (a.percent != null && a.percent != 0 && (a.percent < 10 || a.percent > 90)) return { error: 'percent: 10 … 90' };
+				if (a.minutes != null && a.minutes != 0 && (a.minutes < 1 || a.minutes > 120)) return { error: 'minutes: 1 … 120' };
+				let pw = a.password ?? '';
+				if (pw != '' && !match(pw, /^[A-Za-z0-9._-]{6,64}$/)) return { error: 'password: 6 … 64 letters, digits, . _ -' };
+				c.set('ups', 'main', 'ups');
+				c.set('ups', 'main', 'enabled', a.enabled === true ? '1' : '0');
+				if (a.driver) c.set('ups', 'main', 'driver', a.driver);
+				if (a.shutdown) c.set('ups', 'main', 'shutdown', a.shutdown);
+				if (a.percent) c.set('ups', 'main', 'percent', '' + a.percent);
+				if (a.minutes) c.set('ups', 'main', 'minutes', '' + a.minutes);
+				if (a.killpower != null) c.set('ups', 'main', 'killpower', a.killpower ? '1' : '0');
+				if (a.server != null) c.set('ups', 'main', 'server', a.server ? '1' : '0');
+				if (pw != '') c.set('ups', 'main', 'password', pw);
+				if (a.server && !c.get('ups', 'main', 'password')) return { error: 'the network needs a password' };
+				c.commit('ups');
+				let r = sh(UPS + (a.enabled === true ? ' restart' : ' stop'));
+				let m = match(r.out, /error: ([^\n]*)/);
+				if (m || r.rc != 0) return { error: m ? m[1] : (trim(r.out) || 'failed') };
+				return ups_status();
 			}
 		}
 	},

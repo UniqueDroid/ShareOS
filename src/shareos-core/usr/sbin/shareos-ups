@@ -1,0 +1,233 @@
+#!/bin/sh
+#
+# shareos-ups – uninterruptible power supply over USB (system app "nut")
+#
+#   shareos-ups start | stop | restart
+#   shareos-ups status        key=value lines for the web interface
+#   shareos-ups boot          start at boot when it is switched on
+#   shareos-ups stop-all      stop (system app removed, shutdown)
+#   shareos-ups event         upsmon's NOTIFYCMD (NOTIFYTYPE in the environment)
+#   shareos-ups timer         (internal) minutes on battery are over
+#   shareos-ups shutdown      upsmon's SHUTDOWNCMD: power the box off
+#   shareos-ups killpower     (S05board, last step of a shutdown on battery)
+#                             tell the UPS to switch its output off; it
+#                             switches on again when the power is back,
+#                             and so does the box
+#
+# shareos-service: boot start stop-all
+#
+# Settings: UCI ups.main – enabled, driver auto|usbhid-ups|nutdrv_qx|
+# blazer_usb, shutdown low|percent|minutes (when the box shuts down while on
+# battery: when the UPS reports a low battery / below <percent> % / after
+# <minutes> on battery), percent, minutes, killpower '1' (switch the UPS
+# output off afterwards, default on), server '1' + password (other computers
+# may read the UPS as "monitor" on port 3493 and shut down with the box).
+# Network UPS Tools run as root with their files in /tmp/shareos-ups
+# (NUT_CONFPATH/NUT_STATEPATH); messages go to shareos-notify.
+#   SHAREOS_ROOT=<dir>   fake root (tests)   SHAREOS_UPS_BIN=<dir> the programs (tests)
+#
+[ -n "$SHAREOS_ROOT" ] || PATH=/usr/sbin:/usr/bin:/sbin:/bin:/opt/shareos/bin
+R=${SHAREOS_ROOT:-}
+BIN=${SHAREOS_UPS_BIN:-/opt/shareos/bin}
+RUN=$R/tmp/shareos-ups
+export NUT_CONFPATH=$RUN/conf NUT_STATEPATH=$RUN/state NUT_ALTPIDPATH=$RUN/state
+
+die() { echo "error: $*"; exit 1; }
+uget() { if [ -n "$SHAREOS_ROOT" ]; then uci -q -c "$R/etc/config" get "$1"; else uci -q get "$1"; fi; }
+enabled() { [ "$(uget ups.main.enabled)" = 1 ]; }
+installed() { [ -x "$BIN/upsd" ] && [ -x "$BIN/upsmon" ] && [ -x "$BIN/usbhid-ups" ]; }
+num() { echo "$1" | grep -qE '^[0-9]+$' && [ "$1" -ge "$2" ] && [ "$1" -le "$3" ] && echo "$1" || echo "$4"; }
+notify() {   # <level> <key> <de> <en> [<text de> <text en>]
+	[ -n "$SHAREOS_ROOT" ] && { echo "notify $*" >> $RUN/notify.log; return; }
+	/usr/sbin/shareos-notify send "$1" ups "$2" "$3" "$4" "${5:-}" "${6:-}" >/dev/null 2>&1
+}
+clear_note() { [ -n "$SHAREOS_ROOT" ] && { echo "clear $1" >> $RUN/notify.log; return; }; /usr/sbin/shareos-notify clear "$1" >/dev/null 2>&1; }
+
+# the USB UPS: <vendor:product> of the first one known to usbhid-ups (HID
+# power device) or another USB device the driver list names
+detect() {
+	for d in ${SHAREOS_UPS_SYS:-/sys}/bus/usb/devices/*; do
+		[ -f "$d/idVendor" ] || continue
+		v=$(cat "$d/idVendor"); p=$(cat "$d/idProduct")
+		case "$v" in
+			051d|0463|0764|09ae|050d|0d9f|06da|2b2d|0665|ffff|0001|0925|10af|047c|1cb0|04d8|2e51|3016) echo "$v:$p"; return ;;
+		esac
+		# HID power devices of other makers: interface class 3 with "UPS" in the name
+		grep -qi 'ups\|usv\|power' "$d/product" 2>/dev/null && ls "$d"/*:*/bInterfaceClass >/dev/null 2>&1 \
+			&& grep -q 03 "$d"/*:*/bInterfaceClass 2>/dev/null && { echo "$v:$p"; return; }
+	done
+}
+
+driver() {
+	d=$(uget ups.main.driver)
+	case "$d" in usbhid-ups|nutdrv_qx|blazer_usb) echo "$d"; return ;; esac
+	# auto: Megatec/Q1 boxes (cheap UPSs) use nutdrv_qx, everything else HID
+	case "$(detect)" in 0665:5161|ffff:0000|0001:0000|0925:1234|06da:0003) echo nutdrv_qx ;; *) echo usbhid-ups ;; esac
+}
+
+secret() {
+	[ -s $RUN/secret ] || { mkdir -p $RUN; head -c 12 /dev/urandom | od -An -tx1 | tr -d ' \n' > $RUN/secret; chmod 600 $RUN/secret; }
+	cat $RUN/secret
+}
+
+write_conf() {
+	mkdir -p $RUN/conf $RUN/state
+	chmod 700 $RUN/conf $RUN/state
+	mode=$(uget ups.main.shutdown)
+	pct=$(num "$(uget ups.main.percent)" 10 90 30)
+	pw=$(secret)
+	{
+		echo "# written by shareos-ups at every start"
+		echo "maxretry = 3"
+		echo "user = root"
+		echo "[ups]"
+		echo "  driver = $(driver)"
+		echo "  port = auto"
+		echo "  desc = \"ShareOS\""
+		echo "  pollinterval = 5"
+		echo "  offdelay = 30"
+		echo "  ondelay = 40"
+		if [ "$mode" = percent ]; then
+			# the driver reports a low battery itself below that charge
+			echo "  ignorelb"
+			echo "  override.battery.charge.low = $pct"
+		fi
+	} > $RUN/conf/ups.conf
+	{
+		echo "LISTEN 127.0.0.1 3493"
+		if [ "$(uget ups.main.server)" = 1 ]; then echo "LISTEN 0.0.0.0 3493"; echo "LISTEN :: 3493"; fi
+	} > $RUN/conf/upsd.conf
+	{
+		printf '[shareos]\n  password = %s\n  upsmon primary\n' "$pw"
+		mp=$(uget ups.main.password)
+		[ "$(uget ups.main.server)" = 1 ] && [ -n "$mp" ] && printf '[monitor]\n  password = %s\n  upsmon secondary\n' "$mp"
+	} > $RUN/conf/upsd.users
+	{
+		echo "RUN_AS_USER root"
+		echo "MONITOR ups@localhost 1 shareos $pw primary"
+		echo "MINSUPPLIES 1"
+		echo "SHUTDOWNCMD \"/usr/sbin/shareos-ups shutdown\""
+		echo "NOTIFYCMD /usr/sbin/shareos-ups"
+		for e in ONLINE ONBATT LOWBATT FSD COMMOK COMMBAD SHUTDOWN REPLBATT NOCOMM; do echo "NOTIFYFLAG $e SYSLOG+EXEC"; done
+		echo "POLLFREQ 5"
+		echo "POLLFREQALERT 5"
+		echo "HOSTSYNC 15"
+		echo "DEADTIME 25"
+		echo "FINALDELAY 5"
+		[ "$(uget ups.main.killpower)" = 0 ] || echo "POWERDOWNFLAG $RUN/killpower"
+	} > $RUN/conf/upsmon.conf
+	chmod 600 $RUN/conf/*
+}
+
+# upsd and upsmon keep their pid in /run (as root), the drivers in the state folder
+pid() { for f in "$R/run/$1.pid" "$R/var/run/$1.pid" "$RUN/state/$1.pid"; do p=$(cat "$f" 2>/dev/null); [ -n "$p" ] && kill -0 "$p" 2>/dev/null && { echo "$p"; return; }; done; }
+drv_pid() { for f in $RUN/state/*-ups.pid; do p=$(cat "$f" 2>/dev/null); [ -n "$p" ] && kill -0 "$p" 2>/dev/null && { echo "$p"; return; }; done; }
+
+start() {
+	installed || die "the system app \"nut\" is not installed (store)"
+	[ -n "$(pid upsmon)" ] && return 0
+	write_conf
+	rm -f $RUN/killpower
+	d=$(driver)
+	"$BIN/$d" -a ups -u root >$RUN/driver.log 2>&1 || {
+		[ "$(uget ups.main.driver)" = auto ] || [ -z "$(uget ups.main.driver)" ] || die "no UPS found ($d): $(tail -n1 $RUN/driver.log)"
+		# auto: the other driver family
+		alt=nutdrv_qx; [ "$d" = nutdrv_qx ] && alt=usbhid-ups
+		sed -i "s/^  driver = .*/  driver = $alt/" $RUN/conf/ups.conf
+		"$BIN/$alt" -a ups -u root >$RUN/driver.log 2>&1 || die "no UPS found: $(tail -n1 $RUN/driver.log)"
+	}
+	"$BIN/upsd" -u root >$RUN/upsd.log 2>&1 || die "upsd did not start: $(tail -n1 $RUN/upsd.log)"
+	"$BIN/upsmon" >$RUN/upsmon.log 2>&1 || die "upsmon did not start: $(tail -n1 $RUN/upsmon.log)"
+}
+
+stop() {
+	timer_stop
+	"$BIN/upsmon" -c stop >/dev/null 2>&1
+	"$BIN/upsd" -c stop >/dev/null 2>&1
+	p=$(drv_pid); [ -n "$p" ] && kill "$p" 2>/dev/null
+	i=0; while [ $i -lt 25 ] && { [ -n "$(pid upsmon)" ] || [ -n "$(pid upsd)" ] || [ -n "$(drv_pid)" ]; }; do sleep 0.2; i=$((i + 1)); done
+	return 0
+}
+
+timer_stop() { p=$(cat $RUN/timer.pid 2>/dev/null); [ -n "$p" ] && kill "$p" 2>/dev/null; rm -f $RUN/timer.pid; }
+
+# upsmon calls us with the message as argument, NOTIFYTYPE says what happened
+event() {
+	mkdir -p $RUN
+	echo "$(date +%s) $NOTIFYTYPE" >> $RUN/events
+	tail -n 50 $RUN/events > $RUN/events.tmp && mv $RUN/events.tmp $RUN/events
+	case "$NOTIFYTYPE" in
+		ONBATT)
+			m=$(uget ups.main.minutes)
+			notify warn ups-onbatt "Stromausfall – die Box läuft über die USV" "Power failure – the box runs on the UPS" \
+				"$( [ "$(uget ups.main.shutdown)" = minutes ] && echo "Sie fährt nach $(num "$m" 1 120 5) Minuten herunter, wenn der Strom nicht zurückkommt." )" \
+				"$( [ "$(uget ups.main.shutdown)" = minutes ] && echo "It shuts down after $(num "$m" 1 120 5) minutes unless the power comes back." )"
+			if [ "$(uget ups.main.shutdown)" = minutes ]; then
+				timer_stop
+				( sleep $(( $(num "$m" 1 120 5) * 60 )); "$0" timer ) >/dev/null 2>&1 &
+				echo $! > $RUN/timer.pid
+			fi ;;
+		ONLINE)
+			timer_stop
+			clear_note ups-onbatt
+			notify info ups-online "Strom wieder da" "Power is back" ;;
+		LOWBATT) notify error ups-lowbatt "USV-Akku fast leer – die Box fährt herunter" "UPS battery low – the box shuts down" ;;
+		FSD|SHUTDOWN) notify error ups-shutdown "Die Box fährt wegen der USV herunter" "The box shuts down because of the UPS" ;;
+		COMMBAD|NOCOMM) notify warn ups-comm "Keine Verbindung zur USV" "No connection to the UPS" "USB-Kabel prüfen." "Check the USB cable." ;;
+		COMMOK) clear_note ups-comm ;;
+		REPLBATT) notify warn ups-replbatt "USV-Akku tauschen" "Replace the UPS battery" "Die USV meldet einen verbrauchten Akku." "The UPS reports a worn battery." ;;
+	esac
+}
+
+# minutes on battery are over: still on battery? then shut down (all secondaries too)
+timer() {
+	rm -f $RUN/timer.pid
+	"$BIN/upsc" ups@localhost ups.status 2>/dev/null | grep -qw OB || return 0
+	"$BIN/upsmon" -c fsd >/dev/null 2>&1
+}
+
+shutdown_box() {
+	logger -t shareos-ups "shutting down on UPS battery" 2>/dev/null
+	[ -n "$SHAREOS_ROOT" ] && { echo poweroff >> $RUN/notify.log; return; }
+	# the next switch-on of the power schedule into the wake-up alarm first
+	/usr/sbin/shareos-power arm >/dev/null 2>&1
+	poweroff
+}
+
+killpower() {
+	[ -f $RUN/killpower ] || return 0
+	d=$(sed -n 's/^  driver = //p' $RUN/conf/ups.conf)
+	[ -n "$d" ] && [ -x "$BIN/$d" ] || return 0
+	echo "UPS: output off in 30 s, on again when the power is back"
+	"$BIN/$d" -a ups -u root -k >/dev/null 2>&1
+}
+
+status() {
+	echo "installed=$(installed && echo 1 || echo 0)"
+	echo "enabled=$(enabled && echo 1 || echo 0)"
+	echo "running=$([ -n "$(pid upsmon)" ] && echo 1 || echo 0)"
+	echo "detected=$(detect)"
+	echo "driver=$(driver)"
+	[ -n "$(pid upsd)" ] || return 0
+	"$BIN/upsc" ups@localhost 2>/dev/null | sed -n \
+		-e 's/^ups\.status: /status=/p' -e 's/^battery\.charge: /charge=/p' -e 's/^battery\.runtime: /runtime=/p' \
+		-e 's/^ups\.load: /load=/p' -e 's/^device\.mfr: /mfr=/p' -e 's/^device\.model: /model=/p' \
+		-e 's/^input\.voltage: /voltage=/p' -e 's/^battery\.charge\.low: /charge_low=/p' -e 's/^battery\.date: /battery_date=/p'
+	tail -n 10 $RUN/events 2>/dev/null | sed 's/^/event=/'
+}
+
+case "$1" in
+	start) enabled || die "switched off"; start ;;
+	boot) enabled && installed && start; exit 0 ;;
+	stop|stop-all) stop ;;
+	restart) stop; enabled && start ;;
+	status) status ;;
+	event) event ;;
+	timer) timer ;;
+	shutdown) shutdown_box ;;
+	killpower) killpower ;;
+	*) # upsmon's NOTIFYCMD passes the message text as first argument
+		if [ -n "$NOTIFYTYPE" ]; then event; exit 0; fi
+		sed -n '3,30s/^# \{0,1\}//p' "$0"; exit 2 ;;
+esac
+exit 0

@@ -107,6 +107,9 @@
 				],
 				"shareos.status": [
 					"chips"
+				],
+				"shareos.ups": [
+					"status"
 				]
 			},
 			"uci": [
@@ -287,6 +290,9 @@
 					"set",
 					"test",
 					"telegram_chats"
+				],
+				"shareos.ups": [
+					"set"
 				]
 			},
 			"uci": [
