@@ -167,7 +167,19 @@
 				"shareos.web": [
 					"set",
 					"selfsigned",
-					"install"
+					"install",
+					"ddns_get",
+					"ddns_set",
+					"ddns_update",
+					"ca_get",
+					"ca_init",
+					"ca_issue",
+					"ca_pem",
+					"ca_delete",
+					"ca_web",
+					"acme_get",
+					"acme_issue",
+					"acme_off"
 				],
 				"uci": [
 					"set",

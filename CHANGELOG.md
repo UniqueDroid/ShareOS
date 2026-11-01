@@ -4,6 +4,14 @@ Changes per release (newest first). The section of a version is added to its
 GitHub release automatically when the release is built. Test versions are
 pre-releases for test devices only.
 
+## 0.2.0-beta.18
+
+- **DynDNS, own certificate authority and Let's Encrypt** (System → Netzwerk).
+  - *DynDNS*: DuckDNS, dynv6, Cloudflare, No-IP or any dyndns2 address (Strato, IONOS, …), IPv4 and/or IPv6 (for lines without their own IPv4 address: DS-Lite, fibre, mobile). The box reports its public address every 5 minutes when it changed, otherwise once a day; a failure becomes a message. Token and password go to curl through stdin, not the command line, and are never sent back to the browser. `shareos-ddns`, `tests/test-ddns.sh` (24 checks with a fake curl).
+  - *Own CA*: a certificate authority on the box (EC P-256, 10 years) issues certificates for the box and other devices in the home network (825 days, server authentication, wildcards like `*.home.lan`, IP addresses); its root certificate is installed once on PCs and phones, after that there are no certificate warnings. The box's own certificate follows name and IP address and is renewed 30 days before it runs out. The CA is part of the settings backup. `shareos-ca` (mbedtls of the firmware), `tests/test-ca.sh` (18 checks, in CI with the firmware's programs in qemu).
+  - *Let's Encrypt* for the DynDNS name with DuckDNS or Cloudflare: the check runs over DNS (TXT record at the provider), no port has to be open; renewed daily when less than 30 days are left. `shareos-acme` with uacme (105 KB, mbedtls), test mode with the staging CA.
+  - `shareos-cert` no longer replaces a certificate of the own CA with a self-signed one when the IP address changes (it only renews its own self-signed one).
+
 ## 0.2.0-beta.17
 
 - **SMB 3 with signing about three times as fast: the crypto engine computes the signatures** ([#94](https://github.com/UniqueDroid/ShareOS/issues/94)). Windows 11 signs every SMB connection, and on the 800 MHz Kirkwood the signature limited writing: measured on a DNS-320L, about 35 MB/s without signing (the disks), only 4–10 MB/s with SMB 3.1.1 – ksmbd computes AES-CMAC on the CPU, where AES manages about 12 MB/s. The Kirkwood has a crypto engine (Marvell CESA) that does AES-CBC at about 38 MB/s with DMA, but ksmbd could not use it. A kernel patch (`0001-ksmbd-cmac-via-cbc`) computes the AES-CMAC of messages from 8 KiB through `cbc(aes)` – the engine – (CMAC is a CBC-MAC; the last block and the subkeys on the CPU), checks the first result against the old way and falls back to it on any error. Measured: **19–23 MB/s** signed, the CPU load of ksmbd went from about 64 % to under 10 %. `shareos-shares` loads `marvell-cesa` before ksmbd; module parameter `ksmbd.cbc_cmac=0` switches it off. Tested before on a UML kernel with Samba's smbclient (signing required, checksums equal). Tried as well and dropped: AES-GMAC signing (GHASH in C on ARMv5 is not faster, 3–8 MB/s).

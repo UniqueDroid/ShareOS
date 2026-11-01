@@ -113,7 +113,8 @@ Version in brackets = first release with the feature.
 - First installation from the Alt-F or D-Link web interface: the `.bin` fetches the system from a USB stick or from GitHub (beta.7; tested on real hardware, step by step: [SWITCHING.md](docs/SWITCHING.md) · [UMSTIEG.md](docs/UMSTIEG.md))
 - Back to Alt-F (or any D-Link `.bin`) from the firmware page, checked and read back (beta.7)
 - First-run assistant, network settings with automatic rollback, name via mDNS (`<name>.local`), fallback address `192.168.0.32` without DHCP
-- HTTPS with a self-signed certificate that follows name and IP, own certificate possible
+- HTTPS with a self-signed certificate that follows name and IP, own certificate possible; own certificate authority for the home network and Let's Encrypt over DNS (0.2.0-beta.18)
+- Dynamic DNS: DuckDNS, dynv6, Cloudflare, No-IP or any dyndns2 address, IPv4 and IPv6 (0.2.0-beta.18)
 - Power schedule: switch off and on per weekday (switching on through the wake-up alarm of the DNS-320L/320 rev B/327L; 0.2.0-beta.15; switching off works from 0.2.0-beta.17, the overview shows the date of the next switch-on)
 - Start log: the logs of the last 3 starts are kept on the flash (System → Protokolle → *Start-Protokoll*), so a box that was unreachable after a start can be looked into afterwards (0.2.0-beta.15)
 - Reset button: access reset (5–10 s: network, root password, certificate) or factory reset (≥ 15 s), USB button removes USB drives (beta.9) or copies them into a dated folder (0.2.0-beta.12); the buttons work again on the DNS-320L and DNS-325 (0.2.0-beta.10)

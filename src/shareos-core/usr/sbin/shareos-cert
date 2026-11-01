@@ -10,6 +10,9 @@
 #                                    follow the certificate); tested before use
 #   shareos-cert info                details of the current certificate
 #
+# shareos.web.source: where the installed certificate comes from – ca (own CA,
+# shareos-ca), acme (Let's Encrypt, shareos-acme), empty (self-signed or own).
+#
 # Files: shareos.web.cert / shareos.web.key (UCI), default /etc/ssl/shareos/.
 # The self-signed certificate is valid for 10 years and names the hostname,
 # <hostname>.local and the current IPv4 address.
@@ -52,7 +55,9 @@ selfsigned() {
 # our own self-signed certificate that no longer names this box
 outdated() {
 	i=$(info)
-	echo "$i" | grep -q '^issuer=.*O=ShareOS' && echo "$i" | grep -q '^subject=.*O=ShareOS' || return 1
+	iss=$(echo "$i" | sed -n 's/^issuer=//p'); sub=$(echo "$i" | sed -n 's/^subject=//p')
+	# only self-signed (issuer = subject), not one of the own CA (shareos-ca)
+	[ "$iss" = "$sub" ] && echo "$sub" | grep -q 'O=ShareOS' || return 1
 	host=$(cat /proc/sys/kernel/hostname); ip=$(ip4)
 	echo "$i" | grep -qx "san=dNSName:$host" || return 0
 	[ -z "$ip" ] || echo "$i" | grep -qx "san=iPAddress:$ip" || return 0
@@ -60,6 +65,11 @@ outdated() {
 }
 
 ensure() {
+	# a certificate of the own CA follows the names itself (shareos-ca web check)
+	if [ "$(uci -q get shareos.web.source)" = ca ] && [ -s "$CRT" ] && [ -x /usr/sbin/shareos-ca ]; then
+		/usr/sbin/shareos-ca web check 2>/dev/null | grep -q renewed && echo renewed
+		return 0
+	fi
 	if ! [ -s "$CRT" ] || ! [ -s "$KEY" ]; then selfsigned
 	elif outdated; then selfsigned >/dev/null && echo renewed
 	fi
