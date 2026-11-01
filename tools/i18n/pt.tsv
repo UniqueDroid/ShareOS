@@ -1636,48 +1636,105 @@ P323	desliga $1
 E1269	EQUIPAMENTO E ACESSO
 E1270	A estrela torna um app favorito – os favoritos aparecem no topo de “Meu ShareOS”.
 E1271	Mostrar todos os avisos
-E1272	UPS
-E1273	A carregar UPS …
-E1274	Instalar a partir da loja (Network UPS Tools)
-E1275	O suporte a UPS é uma app de sistema: a caixa mostra a carga e a autonomia, avisa de um corte de energia e desliga-se a tempo de forma limpa.
-E1276	Bateria quase vazia
-E1277	em bateria
-E1278	na rede elétrica
-E1279	sem dados
-E1280	BATERIA
-E1281	AUTONOMIA
-E1282	CARGA
-E1283	Tensão da rede
-E1284	Bateria desde
-E1285	Controlador
-E1286	A ligar à UPS …
-E1287	Detetado:
-E1288	Ligue-o abaixo.
-E1289	EVENTOS
-E1290	Nenhum ainda – um corte de energia aparece aqui e como mensagem.
-E1291	Corte de energia – a funcionar com a UPS
-E1292	Energia reposta
-E1293	Encerramento iniciado
-E1294	A caixa está a desligar
-E1295	Ligação à UPS perdida
-E1296	Sem ligação à UPS
-E1297	Ligação à UPS restabelecida
-E1298	Substituir a bateria
-E1299	Monitorizar a UPS (também arranca após reiniciar)
-E1300	ENCERRAR
-E1301	Quando a UPS indica «bateria fraca»
-E1302	Abaixo de uma carga
-E1303	Após algum tempo em bateria
-E1304	CARGA DA BATERIA (%)
-E1305	MINUTOS EM BATERIA
-E1306	CONTROLADOR
-E1307	Automático
-E1308	blazer_usb (Megatec antigos)
-E1309	Depois desligar a UPS – a caixa volta a arrancar quando a energia regressar
-E1310	Outros computadores podem ler a UPS pela rede (porta 3493)
-E1311	PALAVRA-PASSE PARA «MONITOR»
-E1312	guardada – deixe vazio para a manter
-E1313	No outro computador (NUT, upsmon):
-E1314	– então desliga-se antes da caixa.
-E1315	A caixa só se desliga enquanto estiver em bateria. Se a energia voltar antes, nada acontece.
-E1316	UPS guardada.
+E1272	CERTIFICADOS PRÓPRIOS
+E1273	Atualizar DNS dinâmico
+E1274	TOKEN DA API (ZONA:LER, DNS:EDITAR)
+E1275	URL DE ATUALIZAÇÃO ({host} {ip} {ip6})
+E1276	URL própria (dyndns2)
+E1277	– escolher –
+E1278	guardado – deixe vazio para mantê-lo
+E1279	A caixa comunica o seu endereço público a cada 5 minutos quando este mudou. Muitas ligações (DS-Lite, fibra, móvel) não têm endereço IPv4 próprio – use então IPv6. Para acesso a partir de fora, o router tem de encaminhar a porta (ou abri-la em IPv6).
+E1280	Último envio
+E1281	Última verificação
+E1282	Ainda sem envio – já a seguir.
+E1283	O DNS dinâmico está desligado.
+E1284	AUTORIDADE DE CERTIFICAÇÃO (CA)
+E1285	esta caixa usa-a
+E1286	Impressão digital
+E1287	Certificado raiz
+E1288	Reemitir o certificado da caixa
+E1289	Usar para esta caixa
+E1290	Instale uma vez o certificado raiz como fidedigno no PC e no telemóvel (Windows: duplo clique → «Autoridades de Certificação de Raiz Fidedigna», Android/iOS: Definições → Segurança). Depois, todos os certificados desta CA funcionam sem aviso – para a caixa e outros dispositivos da rede doméstica.
+E1291	Uma autoridade de certificação própria emite certificados para a caixa e outros dispositivos da rede doméstica (p. ex.
+E1292	). O seu certificado raiz é instalado uma vez nos dispositivos – depois deixa de haver avisos de certificado.
+E1293	Criar autoridade de certificação
+E1294	A obter o certificado – demora até 3 minutos …
+E1295	Verificado diariamente e renovado 30 dias antes de expirar.
+E1296	Desligar
+E1297	Um certificado para
+E1298	, em que todos os navegadores confiam. A verificação é feita através de um registo DNS no fornecedor de DNS dinâmico – nenhuma porta precisa de estar aberta.
+E1299	E-MAIL (OPCIONAL, PARA AVISOS DA LET'S ENCRYPT)
+E1300	Modo de teste (CA de teste, os navegadores avisam)
+E1301	Obter certificado
+E1302	Precisa de DNS dinâmico com DuckDNS ou Cloudflare (acima).
+E1303	CERTIFICADO PARA OUTRO DISPOSITIVO
+E1304	NOMES DE ANFITRIÃO E ENDEREÇOS IP (SEPARADOS POR VÍRGULAS)
+E1305	Válido 825 dias. Também curingas como
+E1306	também são possíveis. Transfira o certificado e a chave e introduza-os no dispositivo.
+E1307	Emitir
+E1308	NOMES DE ANFITRIÃO
+E1309	VÁLIDO ATÉ
+E1310	Chave
+E1311	CA própria
+E1312	ativo (teste)
+E1313	Indique o fornecedor e o nome.
+E1314	Indique o nome e os nomes de anfitrião.
+E1315	Guardado – o endereço está a ser enviado.
+E1316	A enviar …
+E1317	Autoridade de certificação criada.
+E1318	Certificado emitido.
+E1319	Usar um certificado da CA própria?
+E1320	A caixa recebe um certificado da sua própria CA para o nome do dispositivo, o nome .local e o endereço IP; substitui o atual. Sem o certificado raiz instalado, o navegador continua a avisar.
+E1321	Usar
+E1322	Certificado instalado – a página volta a ligar-se.
+E1323	Eliminar o certificado?
+P324	O certificado «$1» e a sua chave são eliminados da caixa. Os dispositivos que já o usam mantêm a sua cópia.
+E1324	Desligar o Let's Encrypt?
+E1325	A caixa volta a usar um certificado autoassinado.
+E1326	Desligado – a página volta a ligar-se.
+E1327	Certificado Let's Encrypt ativo – a página volta a ligar-se.
+E1328	UPS
+E1329	A carregar UPS …
+E1330	Instalar a partir da loja (Network UPS Tools)
+E1331	O suporte a UPS é uma app de sistema: a caixa mostra a carga e a autonomia, avisa de um corte de energia e desliga-se a tempo de forma limpa.
+E1332	Bateria quase vazia
+E1333	em bateria
+E1334	na rede elétrica
+E1335	sem dados
+E1336	BATERIA
+E1337	AUTONOMIA
+E1338	CARGA
+E1339	Tensão da rede
+E1340	Bateria desde
+E1341	Controlador
+E1342	A ligar à UPS …
+E1343	Detetado:
+E1344	Ligue-o abaixo.
+E1345	EVENTOS
+E1346	Nenhum ainda – um corte de energia aparece aqui e como mensagem.
+E1347	Corte de energia – a funcionar com a UPS
+E1348	Energia reposta
+E1349	Encerramento iniciado
+E1350	A caixa está a desligar
+E1351	Ligação à UPS perdida
+E1352	Sem ligação à UPS
+E1353	Ligação à UPS restabelecida
+E1354	Substituir a bateria
+E1355	Monitorizar a UPS (também arranca após reiniciar)
+E1356	ENCERRAR
+E1357	Quando a UPS indica «bateria fraca»
+E1358	Abaixo de uma carga
+E1359	Após algum tempo em bateria
+E1360	CARGA DA BATERIA (%)
+E1361	MINUTOS EM BATERIA
+E1362	CONTROLADOR
+E1363	Automático
+E1364	blazer_usb (Megatec antigos)
+E1365	Depois desligar a UPS – a caixa volta a arrancar quando a energia regressar
+E1366	Outros computadores podem ler a UPS pela rede (porta 3493)
+E1367	PALAVRA-PASSE PARA «MONITOR»
+E1368	guardada – deixe vazio para a manter
+E1369	No outro computador (NUT, upsmon):
+E1370	– então desliga-se antes da caixa.
+E1371	A caixa só se desliga enquanto estiver em bateria. Se a energia voltar antes, nada acontece.
+E1372	UPS guardada.

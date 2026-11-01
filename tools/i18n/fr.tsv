@@ -1636,48 +1636,105 @@ P323	arrêt $1
 E1269	APPAREIL & ACCÈS
 E1270	L’étoile fait d’une app un favori – les favoris apparaissent en haut de « Mon ShareOS ».
 E1271	Afficher toutes les notifications
-E1272	ONDULEUR
-E1273	Chargement de l'onduleur …
-E1274	Installer depuis le store (Network UPS Tools)
-E1275	La prise en charge de l'onduleur est une application système : la box affiche alors la charge et l'autonomie, signale une coupure de courant et s'arrête proprement à temps.
-E1276	Batterie presque vide
-E1277	sur batterie
-E1278	sur secteur
-E1279	pas de données
-E1280	BATTERIE
-E1281	AUTONOMIE
-E1282	CHARGE
-E1283	Tension secteur
-E1284	Batterie depuis
-E1285	Pilote
-E1286	Connexion à l'onduleur …
-E1287	Détecté :
-E1288	Activez-le ci-dessous.
-E1289	ÉVÉNEMENTS
-E1290	Aucun pour l'instant – une coupure de courant s'affiche ici et comme message.
-E1291	Coupure de courant – sur onduleur
-E1292	Courant rétabli
-E1293	Arrêt déclenché
-E1294	La box s'arrête
-E1295	Connexion à l'onduleur perdue
-E1296	Pas de connexion à l'onduleur
-E1297	Connexion à l'onduleur rétablie
-E1298	Remplacer la batterie
-E1299	Surveiller l'onduleur (démarre aussi après un redémarrage)
-E1300	ARRÊT
-E1301	Quand l'onduleur signale « batterie faible »
-E1302	Sous un niveau de charge
-E1303	Après un temps sur batterie
-E1304	CHARGE DE LA BATTERIE (%)
-E1305	MINUTES SUR BATTERIE
-E1306	PILOTE
-E1307	Automatique
-E1308	blazer_usb (anciens Megatec)
-E1309	Ensuite éteindre l'onduleur – la box redémarre au retour du courant
-E1310	D'autres ordinateurs peuvent lire l'onduleur via le réseau (port 3493)
-E1311	MOT DE PASSE POUR « MONITOR »
-E1312	enregistré – laisser vide pour le conserver
-E1313	Sur l'autre ordinateur (NUT, upsmon) :
-E1314	– il s'arrête alors avant la box.
-E1315	La box ne s'arrête que tant qu'elle est sur batterie. Si le courant revient avant, rien ne se passe.
-E1316	Onduleur enregistré.
+E1272	CERTIFICATS PROPRES
+E1273	Mettre à jour le DNS dynamique
+E1274	JETON API (ZONE:LECTURE, DNS:MODIFICATION)
+E1275	URL DE MISE À JOUR ({host} {ip} {ip6})
+E1276	URL personnalisée (dyndns2)
+E1277	– choisir –
+E1278	enregistré – laisser vide pour le conserver
+E1279	La box signale son adresse publique toutes les 5 minutes lorsqu'elle a changé. Beaucoup de connexions (DS-Lite, fibre, mobile) n'ont pas d'adresse IPv4 propre – utilisez alors IPv6. Pour un accès depuis l'extérieur, le routeur doit rediriger le port (ou l'ouvrir en IPv6).
+E1280	Dernier signalement
+E1281	Dernière vérification
+E1282	Pas encore signalé – cela arrive.
+E1283	Le DNS dynamique est désactivé.
+E1284	AUTORITÉ DE CERTIFICATION (CA)
+E1285	utilisée par cette box
+E1286	Empreinte
+E1287	Certificat racine
+E1288	Réémettre le certificat de la box
+E1289	Utiliser pour cette box
+E1290	Installez une fois le certificat racine comme fiable sur le PC et le téléphone (Windows : double-clic → « Autorités de certification racines de confiance », Android/iOS : Réglages → Sécurité). Ensuite, tous les certificats de cette CA fonctionnent sans avertissement – pour la box et les autres appareils du réseau domestique.
+E1291	Une autorité de certification propre émet des certificats pour la box et les autres appareils du réseau domestique (p. ex.
+E1292	). Son certificat racine est installé une fois sur les appareils – ensuite, plus d'avertissements de certificat.
+E1293	Créer l'autorité de certification
+E1294	Obtention du certificat – cela prend jusqu'à 3 minutes …
+E1295	Vérifié chaque jour et renouvelé 30 jours avant expiration.
+E1296	Désactiver
+E1297	Un certificat pour
+E1298	, reconnu par tous les navigateurs. La vérification passe par un enregistrement DNS chez le fournisseur DNS dynamique – aucun port ne doit être ouvert.
+E1299	E-MAIL (FACULTATIF, POUR LES AVIS DE LET'S ENCRYPT)
+E1300	Mode test (CA de test, les navigateurs avertissent)
+E1301	Obtenir le certificat
+E1302	Nécessite le DNS dynamique avec DuckDNS ou Cloudflare (ci-dessus).
+E1303	CERTIFICAT POUR UN AUTRE APPAREIL
+E1304	NOMS D'HÔTE ET ADRESSES IP (SÉPARÉS PAR DES VIRGULES)
+E1305	Valable 825 jours. Les jokers comme
+E1306	sont aussi possibles. Téléchargez le certificat et la clé et saisissez-les dans l'appareil.
+E1307	Émettre
+E1308	NOMS D'HÔTE
+E1309	VALABLE JUSQU'AU
+E1310	Clé
+E1311	CA propre
+E1312	actif (test)
+E1313	Veuillez indiquer le fournisseur et le nom.
+E1314	Veuillez indiquer le nom et les noms d'hôte.
+E1315	Enregistré – l'adresse est signalée.
+E1316	Signalement …
+E1317	Autorité de certification créée.
+E1318	Certificat émis.
+E1319	Utiliser un certificat de la CA propre ?
+E1320	La box reçoit un certificat de sa propre CA pour le nom de l'appareil, le nom .local et l'adresse IP ; il remplace l'actuel. Sans certificat racine installé, le navigateur continue d'avertir.
+E1321	Utiliser
+E1322	Certificat installé – la page se reconnecte.
+E1323	Supprimer le certificat ?
+P324	Le certificat « $1 » et sa clé sont supprimés de la box. Les appareils qui l'utilisent déjà gardent leur copie.
+E1324	Désactiver Let's Encrypt ?
+E1325	La box utilise ensuite de nouveau un certificat auto-signé.
+E1326	Désactivé – la page se reconnecte.
+E1327	Certificat Let's Encrypt actif – la page se reconnecte.
+E1328	ONDULEUR
+E1329	Chargement de l'onduleur …
+E1330	Installer depuis le store (Network UPS Tools)
+E1331	La prise en charge de l'onduleur est une application système : la box affiche alors la charge et l'autonomie, signale une coupure de courant et s'arrête proprement à temps.
+E1332	Batterie presque vide
+E1333	sur batterie
+E1334	sur secteur
+E1335	pas de données
+E1336	BATTERIE
+E1337	AUTONOMIE
+E1338	CHARGE
+E1339	Tension secteur
+E1340	Batterie depuis
+E1341	Pilote
+E1342	Connexion à l'onduleur …
+E1343	Détecté :
+E1344	Activez-le ci-dessous.
+E1345	ÉVÉNEMENTS
+E1346	Aucun pour l'instant – une coupure de courant s'affiche ici et comme message.
+E1347	Coupure de courant – sur onduleur
+E1348	Courant rétabli
+E1349	Arrêt déclenché
+E1350	La box s'arrête
+E1351	Connexion à l'onduleur perdue
+E1352	Pas de connexion à l'onduleur
+E1353	Connexion à l'onduleur rétablie
+E1354	Remplacer la batterie
+E1355	Surveiller l'onduleur (démarre aussi après un redémarrage)
+E1356	ARRÊT
+E1357	Quand l'onduleur signale « batterie faible »
+E1358	Sous un niveau de charge
+E1359	Après un temps sur batterie
+E1360	CHARGE DE LA BATTERIE (%)
+E1361	MINUTES SUR BATTERIE
+E1362	PILOTE
+E1363	Automatique
+E1364	blazer_usb (anciens Megatec)
+E1365	Ensuite éteindre l'onduleur – la box redémarre au retour du courant
+E1366	D'autres ordinateurs peuvent lire l'onduleur via le réseau (port 3493)
+E1367	MOT DE PASSE POUR « MONITOR »
+E1368	enregistré – laisser vide pour le conserver
+E1369	Sur l'autre ordinateur (NUT, upsmon) :
+E1370	– il s'arrête alors avant la box.
+E1371	La box ne s'arrête que tant qu'elle est sur batterie. Si le courant revient avant, rien ne se passe.
+E1372	Onduleur enregistré.

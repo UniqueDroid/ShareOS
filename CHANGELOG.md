@@ -11,6 +11,11 @@ pre-releases for test devices only.
   - The box shuts down cleanly while on battery – when the UPS reports a low battery, below a charge of your choice or after some minutes on battery – and only then; if the power comes back first, nothing happens. Afterwards the UPS switches its output off and on again when the power is back, so the box starts by itself (can be switched off).
   - Other computers can read the UPS over the network (NUT, port 3493, user `monitor` with a password) and shut down before the box.
   - NUT without OpenSSL (`external.mk`: 4.4 MB of libraries less). `shareos-ups`, rpcd `shareos.ups`, the last step of the shutdown in `S05board`, `tests/test-ups.sh` (20 checks with fake NUT programs).
+- **DynDNS, own certificate authority and Let's Encrypt** (System → Netzwerk).
+  - *DynDNS*: DuckDNS, dynv6, Cloudflare, No-IP or any dyndns2 address (Strato, IONOS, …), IPv4 and/or IPv6 (for lines without their own IPv4 address: DS-Lite, fibre, mobile). The box reports its public address every 5 minutes when it changed, otherwise once a day; a failure becomes a message. Token and password go to curl through stdin, not the command line, and are never sent back to the browser. `shareos-ddns`, `tests/test-ddns.sh` (24 checks with a fake curl).
+  - *Own CA*: a certificate authority on the box (EC P-256, 10 years) issues certificates for the box and other devices in the home network (825 days, server authentication, wildcards like `*.home.lan`, IP addresses); its root certificate is installed once on PCs and phones, after that there are no certificate warnings. The box's own certificate follows name and IP address and is renewed 30 days before it runs out. The CA is part of the settings backup. `shareos-ca` (mbedtls of the firmware), `tests/test-ca.sh` (18 checks, in CI with the firmware's programs in qemu).
+  - *Let's Encrypt* for the DynDNS name with DuckDNS or Cloudflare: the check runs over DNS (TXT record at the provider), no port has to be open; renewed daily when less than 30 days are left. `shareos-acme` with uacme (105 KB, mbedtls), test mode with the staging CA.
+  - `shareos-cert` no longer replaces a certificate of the own CA with a self-signed one when the IP address changes (it only renews its own self-signed one).
 
 ## 0.2.0-beta.17
 

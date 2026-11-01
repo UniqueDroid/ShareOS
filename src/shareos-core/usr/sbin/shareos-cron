@@ -13,7 +13,9 @@
 # every hour/6h/day/week at its time); every 10 minutes the checks of
 # shareos-notify; SMART self-tests (storage.global.smart_test); the power
 # schedule (shareos.power, shareos-power); SMART values for the Zabbix agent
-# (zabbix.main.disk_interval, shareos-zabbix collect). Areas
+# (zabbix.main.disk_interval, shareos-zabbix collect); DynDNS (shareos.ddns,
+# every 5 minutes) and the renewal of the web certificate (own CA or Let's
+# Encrypt, daily). Areas
 # switched off under System -> Appearance
 # (shareos.ui.area_apps/area_cloud/area_paperless = 0) get no entries.
 #
@@ -57,6 +59,13 @@ entries() {
 		done
 		echo "1 * * * * /usr/sbin/shareos-power arm >/dev/null 2>&1"
 	fi
+	# dynamic DNS (shareos.ddns): every 5 minutes, sent only when the address changed
+	[ "$(uci -q get shareos.ddns.enabled)" = 1 ] && echo "*/5 * * * * /usr/sbin/shareos-ddns update >/dev/null 2>&1"
+	# web certificate: of the own CA (renewed before it runs out) or Let's Encrypt
+	case "$(uci -q get shareos.web.source)" in
+		ca) echo "23 4 * * * /usr/sbin/shareos-ca web check | grep -q renewed && killall uhttpd >/dev/null 2>&1" ;;
+		acme) echo "41 4 * * * /usr/sbin/shareos-acme renew >/dev/null 2>&1" ;;
+	esac
 	# SMART self-tests of the disks in the bays (storage.global.smart_test)
 	case "$(uci -q get storage.global.smart_test)" in
 		short_weekly) echo "30 3 * * 0 /usr/sbin/shareos-storage smart-test short >/dev/null 2>&1" ;;

@@ -715,6 +715,42 @@ def call(obj, method, args):
             else:
                 u.update({'running': False, 'status': None})
         return u
+    if obj == 'shareos.web' and method.startswith(('ddns', 'ca_', 'acme')):
+        d = STATE.setdefault('ddns', {'enabled': False, 'provider': '', 'host': '', 'user': '', 'url': '', 'token_set': False, 'ipv4': True, 'ipv6': False, 'last': None})
+        ca = STATE.setdefault('ca', {'exists': False, 'certs': [], 'web': False})
+        if method == 'ddns_get':
+            return d
+        if method == 'ddns_set':
+            d.update({k: v for k, v in args.items() if k != 'token'})
+            d['token_set'] = d['token_set'] or bool(args.get('token'))
+            d['last'] = {'provider': d['provider'], 'host': d['host'], 'ip4': '203.0.113.7', 'ip6': None, 'checked': 1793530000, 'sent': 1793530000, 'ok': True, 'error': None} if d['enabled'] else None
+            return {'ok': True, 'pending': d['enabled']}
+        if method == 'ddns_update':
+            return {'ok': True, 'pending': True}
+        if method == 'ca_get':
+            return ca
+        if method == 'ca_init':
+            ca.update({'exists': True, 'subject': 'CN=ShareOS CA skynet-nas, O=ShareOS', 'until': '2036-11-01 12:00:00', 'fingerprint': ':'.join(['A1'] * 32), 'count': 0})
+            return {'ok': True}
+        if method == 'ca_issue':
+            ca['certs'].append({'name': args['name'], 'hosts': args['hosts'], 'until': '2029-02-04 12:00:00', 'expires': 1864816233})
+            return {'ok': True}
+        if method == 'ca_delete':
+            ca['certs'] = [c for c in ca['certs'] if c['name'] != args['name']]
+            return {'ok': True}
+        if method == 'ca_pem':
+            return {'pem': '-----BEGIN CERTIFICATE-----\nMOCK\n-----END CERTIFICATE-----\n'}
+        if method == 'ca_web':
+            ca['web'] = True
+            return {'ok': True}
+        if method == 'acme_get':
+            return STATE.setdefault('acme', {'active': False, 'name': '', 'until': '', 'staging': False, 'email': '', 'error': '', 'running': False})
+        if method == 'acme_issue':
+            STATE['acme'] = {'active': True, 'name': d['host'], 'until': '2027-01-30 10:00:00', 'staging': bool(args.get('staging')), 'email': args.get('email', ''), 'error': '', 'running': False}
+            return {'ok': True}
+        if method == 'acme_off':
+            STATE['acme']['active'] = False
+            return {'ok': True}
     if obj == 'shareos.web':
         if method == 'set':
             STATE.update({k: v for k, v in args.items() if k in ('https', 'redirect')})

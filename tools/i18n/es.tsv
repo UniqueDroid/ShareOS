@@ -1636,48 +1636,105 @@ P323	apagado $1
 E1269	EQUIPO Y ACCESO
 E1270	La estrella convierte una app en favorita: las favoritas aparecen arriba en «Mi ShareOS».
 E1271	Mostrar todos los avisos
-E1272	SAI
-E1273	Cargando SAI …
-E1274	Instalar desde la tienda (Network UPS Tools)
-E1275	El soporte de SAI es una app del sistema: la caja muestra la carga y la autonomía, avisa de un corte de luz y se apaga a tiempo de forma limpia.
-E1276	Batería casi vacía
-E1277	con batería
-E1278	con red eléctrica
-E1279	sin datos
-E1280	BATERÍA
-E1281	AUTONOMÍA
-E1282	CARGA
-E1283	Tensión de red
-E1284	Batería desde
-E1285	Controlador
-E1286	Conectando con el SAI …
-E1287	Detectado:
-E1288	Actívalo abajo.
-E1289	EVENTOS
-E1290	Ninguno aún – un corte de luz se muestra aquí y como mensaje.
-E1291	Corte de luz – funcionando con el SAI
-E1292	Vuelve la luz
-E1293	Apagado iniciado
-E1294	La caja se apaga
-E1295	Conexión con el SAI perdida
-E1296	Sin conexión con el SAI
-E1297	Conexión con el SAI restablecida
-E1298	Cambiar la batería
-E1299	Supervisar el SAI (también arranca tras reiniciar)
-E1300	APAGADO
-E1301	Cuando el SAI avisa de «batería baja»
-E1302	Por debajo de una carga
-E1303	Tras un tiempo con batería
-E1304	CARGA DE LA BATERÍA (%)
-E1305	MINUTOS CON BATERÍA
-E1306	CONTROLADOR
-E1307	Automático
-E1308	blazer_usb (Megatec antiguos)
-E1309	Después apagar el SAI – la caja arranca de nuevo al volver la luz
-E1310	Otros ordenadores pueden leer el SAI por la red (puerto 3493)
-E1311	CONTRASEÑA PARA «MONITOR»
-E1312	guardada – déjala vacía para conservarla
-E1313	En el otro ordenador (NUT, upsmon):
-E1314	– entonces se apaga antes que la caja.
-E1315	La caja solo se apaga mientras funciona con batería. Si la luz vuelve antes, no pasa nada.
-E1316	SAI guardado.
+E1272	CERTIFICADOS PROPIOS
+E1273	Actualizar DNS dinámico
+E1274	TOKEN DE API (ZONA:LEER, DNS:EDITAR)
+E1275	URL DE ACTUALIZACIÓN ({host} {ip} {ip6})
+E1276	URL propia (dyndns2)
+E1277	– elegir –
+E1278	guardado – déjalo vacío para conservarlo
+E1279	La caja comunica su dirección pública cada 5 minutos cuando ha cambiado. Muchas conexiones (DS-Lite, fibra, móvil) no tienen dirección IPv4 propia – usa entonces IPv6. Para acceder desde fuera, el router debe reenviar el puerto (o abrirlo en IPv6).
+E1280	Último aviso
+E1281	Última comprobación
+E1282	Aún sin aviso – llega en breve.
+E1283	El DNS dinámico está desactivado.
+E1284	AUTORIDAD DE CERTIFICACIÓN (CA)
+E1285	esta caja la usa
+E1286	Huella
+E1287	Certificado raíz
+E1288	Reemitir el certificado de la caja
+E1289	Usar para esta caja
+E1290	Instala una vez el certificado raíz como de confianza en el PC y el móvil (Windows: doble clic → «Entidades de certificación raíz de confianza», Android/iOS: Ajustes → Seguridad). Después, todos los certificados de esta CA funcionan sin aviso – para la caja y otros dispositivos de la red doméstica.
+E1291	Una autoridad de certificación propia emite certificados para la caja y otros dispositivos de la red doméstica (p. ej.
+E1292	). Su certificado raíz se instala una vez en los dispositivos – después ya no hay avisos de certificado.
+E1293	Crear autoridad de certificación
+E1294	Obteniendo el certificado – tarda hasta 3 minutos …
+E1295	Se comprueba a diario y se renueva 30 días antes de caducar.
+E1296	Desactivar
+E1297	Un certificado para
+E1298	, en el que confían todos los navegadores. La comprobación se hace con un registro DNS en el proveedor de DNS dinámico – no hace falta abrir ningún puerto.
+E1299	CORREO (OPCIONAL, PARA AVISOS DE LET'S ENCRYPT)
+E1300	Modo de prueba (CA de prueba, los navegadores avisan)
+E1301	Obtener certificado
+E1302	Necesita DNS dinámico con DuckDNS o Cloudflare (arriba).
+E1303	CERTIFICADO PARA OTRO DISPOSITIVO
+E1304	NOMBRES DE HOST Y DIRECCIONES IP (SEPARADOS POR COMAS)
+E1305	Válido 825 días. También comodines como
+E1306	también son posibles. Descarga el certificado y la clave e introdúcelos en el dispositivo.
+E1307	Emitir
+E1308	NOMBRES DE HOST
+E1309	VÁLIDO HASTA
+E1310	Clave
+E1311	CA propia
+E1312	activo (prueba)
+E1313	Indica el proveedor y el nombre.
+E1314	Indica el nombre y los nombres de host.
+E1315	Guardado – se está comunicando la dirección.
+E1316	Comunicando …
+E1317	Autoridad de certificación creada.
+E1318	Certificado emitido.
+E1319	¿Usar un certificado de la CA propia?
+E1320	La caja recibe un certificado de su propia CA para el nombre del dispositivo, el nombre .local y la dirección IP; sustituye al actual. Sin el certificado raíz instalado, el navegador sigue avisando.
+E1321	Usar
+E1322	Certificado instalado – la página se reconecta.
+E1323	¿Eliminar el certificado?
+P324	El certificado «$1» y su clave se eliminan de la caja. Los dispositivos que ya lo usan conservan su copia.
+E1324	¿Desactivar Let's Encrypt?
+E1325	La caja vuelve a usar un certificado autofirmado.
+E1326	Desactivado – la página se reconecta.
+E1327	Certificado de Let's Encrypt activo – la página se reconecta.
+E1328	SAI
+E1329	Cargando SAI …
+E1330	Instalar desde la tienda (Network UPS Tools)
+E1331	El soporte de SAI es una app del sistema: la caja muestra la carga y la autonomía, avisa de un corte de luz y se apaga a tiempo de forma limpia.
+E1332	Batería casi vacía
+E1333	con batería
+E1334	con red eléctrica
+E1335	sin datos
+E1336	BATERÍA
+E1337	AUTONOMÍA
+E1338	CARGA
+E1339	Tensión de red
+E1340	Batería desde
+E1341	Controlador
+E1342	Conectando con el SAI …
+E1343	Detectado:
+E1344	Actívalo abajo.
+E1345	EVENTOS
+E1346	Ninguno aún – un corte de luz se muestra aquí y como mensaje.
+E1347	Corte de luz – funcionando con el SAI
+E1348	Vuelve la luz
+E1349	Apagado iniciado
+E1350	La caja se apaga
+E1351	Conexión con el SAI perdida
+E1352	Sin conexión con el SAI
+E1353	Conexión con el SAI restablecida
+E1354	Cambiar la batería
+E1355	Supervisar el SAI (también arranca tras reiniciar)
+E1356	APAGADO
+E1357	Cuando el SAI avisa de «batería baja»
+E1358	Por debajo de una carga
+E1359	Tras un tiempo con batería
+E1360	CARGA DE LA BATERÍA (%)
+E1361	MINUTOS CON BATERÍA
+E1362	CONTROLADOR
+E1363	Automático
+E1364	blazer_usb (Megatec antiguos)
+E1365	Después apagar el SAI – la caja arranca de nuevo al volver la luz
+E1366	Otros ordenadores pueden leer el SAI por la red (puerto 3493)
+E1367	CONTRASEÑA PARA «MONITOR»
+E1368	guardada – déjala vacía para conservarla
+E1369	En el otro ordenador (NUT, upsmon):
+E1370	– entonces se apaga antes que la caja.
+E1371	La caja solo se apaga mientras funciona con batería. Si la luz vuelve antes, no pasa nada.
+E1372	SAI guardado.
