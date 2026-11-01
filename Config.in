@@ -10,6 +10,7 @@ source "$BR2_EXTERNAL_SHAREOS_PATH/package/shareos-tailscale/Config.in"
 source "$BR2_EXTERNAL_SHAREOS_PATH/package/shareos-autobrr/Config.in"
 source "$BR2_EXTERNAL_SHAREOS_PATH/package/shareos-tuya/Config.in"
 source "$BR2_EXTERNAL_SHAREOS_PATH/package/shareos-zabbix-agent/Config.in"
+source "$BR2_EXTERNAL_SHAREOS_PATH/package/shareos-ipp-usb/Config.in"
 
 endmenu
 

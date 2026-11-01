@@ -77,6 +77,7 @@ define SHAREOS_CORE_INSTALL_TARGET_CMDS
 	$(INSTALL) -D -m 0644 $(@D)/etc/config/dockerhosts $(TARGET_DIR)/etc/config/dockerhosts
 	$(INSTALL) -D -m 0755 $(@D)/usr/sbin/shareos-dlna $(TARGET_DIR)/usr/sbin/shareos-dlna
 	$(INSTALL) -D -m 0644 $(@D)/etc/config/dlna $(TARGET_DIR)/etc/config/dlna
+	$(INSTALL) -D -m 0644 $(@D)/etc/config/printer $(TARGET_DIR)/etc/config/printer
 	$(INSTALL) -D -m 0755 $(@D)/usr/sbin/shareos-zabbix $(TARGET_DIR)/usr/sbin/shareos-zabbix
 	$(INSTALL) -D -m 0644 $(@D)/etc/config/zabbix $(TARGET_DIR)/etc/config/zabbix
 	$(INSTALL) -D -m 0755 $(@D)/usr/sbin/shareos-reset-access $(TARGET_DIR)/usr/sbin/shareos-reset-access
@@ -89,6 +90,7 @@ define SHAREOS_CORE_INSTALL_TARGET_CMDS
 	$(INSTALL) -D -m 0755 $(@D)/etc/init.d/rcS $(TARGET_DIR)/etc/init.d/rcS
 	$(INSTALL) -D -m 0755 $(@D)/usr/sbin/shareos-bootlog $(TARGET_DIR)/usr/sbin/shareos-bootlog
 	$(INSTALL) -D -m 0755 $(@D)/usr/sbin/shareos-power $(TARGET_DIR)/usr/sbin/shareos-power
+	$(INSTALL) -D -m 0755 $(@D)/usr/sbin/shareos-printer $(TARGET_DIR)/usr/sbin/shareos-printer
 	$(INSTALL) -D -m 0755 $(@D)/usr/sbin/shareos-users $(TARGET_DIR)/usr/sbin/shareos-users
 	$(INSTALL) -D -m 0755 $(@D)/usr/sbin/shareos-shares $(TARGET_DIR)/usr/sbin/shareos-shares
 	$(INSTALL) -D -m 0755 $(@D)/usr/sbin/shareos-quota $(TARGET_DIR)/usr/sbin/shareos-quota

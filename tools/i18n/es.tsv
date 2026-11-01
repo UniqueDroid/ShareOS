@@ -1636,3 +1636,27 @@ P323	apagado $1
 E1269	EQUIPO Y ACCESO
 E1270	La estrella convierte una app en favorita: las favoritas aparecen arriba en «Mi ShareOS».
 E1271	Mostrar todos los avisos
+E1272	IMPRESORAS
+E1273	Cargando impresoras …
+E1274	Las impresoras en red son una app del sistema: las impresoras y equipos multifunción actuales imprimen y escanean sin controladores (AirPrint, Mopria, Windows 10/11); las antiguas por el puerto 9100 con el controlador en el ordenador.
+E1275	Instalar desde la tienda (ipp-usb + p910nd)
+E1276	en la red
+E1277	no accesible
+E1278	Sin controlador (IPP over USB)
+E1279	Con el controlador en el ordenador (puerto 9100)
+E1280	Escaneo
+E1281	por la red (eSCL), si el equipo tiene escáner
+E1282	Dirección
+E1283	Página del equipo
+E1284	Windows 10/11, macOS, iPhone/iPad y Android encuentran la impresora solos («Agregar impresora»). A mano: introduce la dirección de arriba como impresora IPP.
+E1285	Windows: «Agregar impresora» → «Dirección TCP/IP» →
+E1286	, puerto
+E1287	, controlador del fabricante. macOS/Linux: «HP JetDirect – Socket» o AppSocket.
+E1288	Página de prueba
+E1289	No hay ninguna impresora USB conectada. Conéctala – aparece aquí en unos segundos.
+E1290	Compartir impresoras en la red (también arranca tras reiniciar)
+E1291	Automático – sin controlador cuando la impresora lo permite
+E1292	Siempre puerto 9100 (controlador en el ordenador)
+E1293	Cualquiera en la red puede imprimir, sin iniciar sesión. «Siempre puerto 9100» solo si una impresora no imprime bien sin controlador.
+E1294	Impresoras guardadas.
+E1295	Página de prueba enviada.

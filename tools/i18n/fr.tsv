@@ -1636,3 +1636,27 @@ P323	arrêt $1
 E1269	APPAREIL & ACCÈS
 E1270	L’étoile fait d’une app un favori – les favoris apparaissent en haut de « Mon ShareOS ».
 E1271	Afficher toutes les notifications
+E1272	IMPRIMANTES
+E1273	Chargement des imprimantes …
+E1274	Les imprimantes en réseau sont une application système : les imprimantes et appareils multifonctions récents impriment et numérisent alors sans pilote (AirPrint, Mopria, Windows 10/11), les plus anciens via le port 9100 avec le pilote sur l'ordinateur.
+E1275	Installer depuis le store (ipp-usb + p910nd)
+E1276	dans le réseau
+E1277	injoignable
+E1278	Sans pilote (IPP over USB)
+E1279	Avec le pilote sur l'ordinateur (port 9100)
+E1280	Numérisation
+E1281	via le réseau (eSCL), si l'appareil a un scanner
+E1282	Adresse
+E1283	Page de l'appareil
+E1284	Windows 10/11, macOS, iPhone/iPad et Android trouvent l'imprimante tout seuls (« Ajouter une imprimante »). À la main : saisir l'adresse ci-dessus comme imprimante IPP.
+E1285	Windows : « Ajouter une imprimante » → « Adresse TCP/IP » →
+E1286	, port
+E1287	, pilote du fabricant. macOS/Linux : « HP JetDirect – Socket » ou AppSocket.
+E1288	Page de test
+E1289	Aucune imprimante USB branchée. Branchez-en une – elle apparaît ici après quelques secondes.
+E1290	Partager les imprimantes sur le réseau (démarre aussi après un redémarrage)
+E1291	Automatique – sans pilote quand l'imprimante le permet
+E1292	Toujours le port 9100 (pilote sur l'ordinateur)
+E1293	Tout le monde sur le réseau peut imprimer, sans connexion. « Toujours le port 9100 » seulement si une imprimante n'imprime pas correctement sans pilote.
+E1294	Imprimantes enregistrées.
+E1295	Page de test envoyée.

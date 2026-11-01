@@ -4,6 +4,13 @@ Changes per release (newest first). The section of a version is added to its
 GitHub release automatically when the release is built. Test versions are
 pre-releases for test devices only.
 
+## 0.2.0-beta.18
+
+- **USB printers in the network** (Dienste → Drucker, new system app **"printer"** in the store: ipp-usb 0.9.34 + p910nd 0.97, 3 MB).
+  - *Current printers and multifunction devices* that speak IPP over USB (most since about 2015, e.g. HP Smart Tank, OfficeJet, Canon PIXMA, Epson EcoTank) print **without a driver**: Windows 10/11, macOS, iPhone/iPad and Android find them by themselves (IPP Everywhere, AirPrint, Mopria) – and their **scanner** works over the network as well (eSCL). ipp-usb (OpenPrinting) does the work; ShareOS's avahi-daemon has no D-Bus, so a patch makes ipp-usb announce the devices through static avahi service files. The port of each device stays the same (kept on the flash).
+  - *Older printers* (usblp, `/dev/usb/lpN`): p910nd on port 9100 + N, announced as `_pdl-datastream`; the computer uses the maker's driver ("Standard TCP/IP port" in Windows, AppSocket/JetDirect). *Testseite* sends a plain-text/PCL page.
+  - Printers are followed when plugged in or pulled (mdev rule for `lp*`, ipp-usb watches USB itself). Mode *Immer Port 9100* for printers whose driverless printing misbehaves. `shareos-printer`, rpcd `shareos.printer`, `tests/test-printer.sh` (14 checks with a fake /sys).
+
 ## 0.2.0-beta.17
 
 - **SMB 3 with signing about three times as fast: the crypto engine computes the signatures** ([#94](https://github.com/UniqueDroid/ShareOS/issues/94)). Windows 11 signs every SMB connection, and on the 800 MHz Kirkwood the signature limited writing: measured on a DNS-320L, about 35 MB/s without signing (the disks), only 4–10 MB/s with SMB 3.1.1 – ksmbd computes AES-CMAC on the CPU, where AES manages about 12 MB/s. The Kirkwood has a crypto engine (Marvell CESA) that does AES-CBC at about 38 MB/s with DMA, but ksmbd could not use it. A kernel patch (`0001-ksmbd-cmac-via-cbc`) computes the AES-CMAC of messages from 8 KiB through `cbc(aes)` – the engine – (CMAC is a CBC-MAC; the last block and the subkeys on the CPU), checks the first result against the old way and falls back to it on any error. Measured: **19–23 MB/s** signed, the CPU load of ksmbd went from about 64 % to under 10 %. `shareos-shares` loads `marvell-cesa` before ksmbd; module parameter `ksmbd.cbc_cmac=0` switches it off. Tested before on a UML kernel with Samba's smbclient (signing required, checksums equal). Tried as well and dropped: AES-GMAC signing (GHASH in C on ARMv5 is not faster, 3–8 MB/s).

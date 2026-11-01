@@ -1,0 +1,8 @@
+# USB printers (system app "printer": ipp-usb, p910nd) – managed by
+# shareos-printer (web interface: Services -> Printers).
+#
+#	option mode 'auto'   # auto: IPP over USB where the printer can | raw: port 9100 for all
+
+config printer 'main'
+	option enabled '0'
+	option mode 'auto'

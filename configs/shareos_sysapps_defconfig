@@ -49,6 +49,11 @@ BR2_PACKAGE_SHAREOS_AUTOBRR=y
 # Zabbix agent, classic C version (system app "zabbix-agent"), see
 # package/shareos-zabbix-agent
 BR2_PACKAGE_SHAREOS_ZABBIX_AGENT=y
+# printer (system app "printer"): IPP over USB for current printers and
+# scanners (driverless), p910nd (port 9100, raw) for older ones, see
+# package/shareos-ipp-usb
+BR2_PACKAGE_SHAREOS_IPP_USB=y
+BR2_PACKAGE_P910ND=y
 BR2_PACKAGE_HTOP=y
 BR2_PACKAGE_STRACE=y
 BR2_PACKAGE_IPERF3=y
