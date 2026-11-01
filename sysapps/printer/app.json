@@ -1,0 +1,18 @@
+{
+	"id": "printer",
+	"name": "ipp-usb + p910nd",
+	"version": "0.9.34",
+	"publisher": "UniqueDroid",
+	"description": {
+		"de": "USB-Drucker im Netzwerk: Aktuelle Drucker und Multifunktionsgeräte mit IPP over USB (die meisten seit etwa 2015) drucken und scannen ohne Treiber – AirPrint, Mopria, IPP Everywhere, Windows 10/11 findet sie von selbst (ipp-usb). Ältere Drucker über Port 9100 mit dem Treiber am Rechner (p910nd). Einstellungen unter Dienste → Drucker.",
+		"en": "USB printers in the network: current printers and multifunction devices with IPP over USB (most since about 2015) print and scan without drivers – AirPrint, Mopria, IPP Everywhere, Windows 10/11 finds them by itself (ipp-usb). Older printers over port 9100 with the driver on the computer (p910nd). Settings under Services → Printers."
+	},
+	"type": "system",
+	"commands": [ "ipp-usb", "p910nd" ],
+	"service": { "control": "printer", "delay": 5 },
+	"icon": "icon.svg",
+	"category": "system",
+	"license": "BSD-2-Clause, GPL-2.0-only",
+	"homepage": "https://github.com/OpenPrinting/ipp-usb",
+	"min_shareos": "0.2.0-beta.18"
+}

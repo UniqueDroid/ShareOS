@@ -1693,48 +1693,72 @@ E1324	Désactiver Let's Encrypt ?
 E1325	La box utilise ensuite de nouveau un certificat auto-signé.
 E1326	Désactivé – la page se reconnecte.
 E1327	Certificat Let's Encrypt actif – la page se reconnecte.
-E1328	ONDULEUR
-E1329	Chargement de l'onduleur …
-E1330	Installer depuis le store (Network UPS Tools)
-E1331	La prise en charge de l'onduleur est une application système : la box affiche alors la charge et l'autonomie, signale une coupure de courant et s'arrête proprement à temps.
-E1332	Batterie presque vide
-E1333	sur batterie
-E1334	sur secteur
-E1335	pas de données
-E1336	BATTERIE
-E1337	AUTONOMIE
-E1338	CHARGE
-E1339	Tension secteur
-E1340	Batterie depuis
-E1341	Pilote
-E1342	Connexion à l'onduleur …
-E1343	Détecté :
-E1344	Activez-le ci-dessous.
-E1345	ÉVÉNEMENTS
-E1346	Aucun pour l'instant – une coupure de courant s'affiche ici et comme message.
-E1347	Coupure de courant – sur onduleur
-E1348	Courant rétabli
-E1349	Arrêt déclenché
-E1350	La box s'arrête
-E1351	Connexion à l'onduleur perdue
-E1352	Pas de connexion à l'onduleur
-E1353	Connexion à l'onduleur rétablie
-E1354	Remplacer la batterie
-E1355	Surveiller l'onduleur (démarre aussi après un redémarrage)
-E1356	ARRÊT
-E1357	Quand l'onduleur signale « batterie faible »
-E1358	Sous un niveau de charge
-E1359	Après un temps sur batterie
-E1360	CHARGE DE LA BATTERIE (%)
-E1361	MINUTES SUR BATTERIE
-E1362	PILOTE
-E1363	Automatique
-E1364	blazer_usb (anciens Megatec)
-E1365	Ensuite éteindre l'onduleur – la box redémarre au retour du courant
-E1366	D'autres ordinateurs peuvent lire l'onduleur via le réseau (port 3493)
-E1367	MOT DE PASSE POUR « MONITOR »
-E1368	enregistré – laisser vide pour le conserver
-E1369	Sur l'autre ordinateur (NUT, upsmon) :
-E1370	– il s'arrête alors avant la box.
-E1371	La box ne s'arrête que tant qu'elle est sur batterie. Si le courant revient avant, rien ne se passe.
-E1372	Onduleur enregistré.
+E1328	IMPRIMANTES
+E1329	Chargement des imprimantes …
+E1330	Les imprimantes en réseau sont une application système : les imprimantes et appareils multifonctions récents impriment et numérisent alors sans pilote (AirPrint, Mopria, Windows 10/11), les plus anciens via le port 9100 avec le pilote sur l'ordinateur.
+E1331	Installer depuis le store (ipp-usb + p910nd)
+E1332	dans le réseau
+E1333	injoignable
+E1334	Sans pilote (IPP over USB)
+E1335	Avec le pilote sur l'ordinateur (port 9100)
+E1336	Numérisation
+E1337	via le réseau (eSCL), si l'appareil a un scanner
+E1338	Adresse
+E1339	Page de l'appareil
+E1340	Windows 10/11, macOS, iPhone/iPad et Android trouvent l'imprimante tout seuls (« Ajouter une imprimante »). À la main : saisir l'adresse ci-dessus comme imprimante IPP.
+E1341	Windows : « Ajouter une imprimante » → « Adresse TCP/IP » →
+E1342	, port
+E1343	, pilote du fabricant. macOS/Linux : « HP JetDirect – Socket » ou AppSocket.
+E1344	Page de test
+E1345	Aucune imprimante USB branchée. Branchez-en une – elle apparaît ici après quelques secondes.
+E1346	Partager les imprimantes sur le réseau (démarre aussi après un redémarrage)
+E1347	Automatique – sans pilote quand l'imprimante le permet
+E1348	Toujours le port 9100 (pilote sur l'ordinateur)
+E1349	Tout le monde sur le réseau peut imprimer, sans connexion. « Toujours le port 9100 » seulement si une imprimante n'imprime pas correctement sans pilote.
+E1350	Imprimantes enregistrées.
+E1351	Page de test envoyée.
+E1352	ONDULEUR
+E1353	Chargement de l'onduleur …
+E1354	Installer depuis le store (Network UPS Tools)
+E1355	La prise en charge de l'onduleur est une application système : la box affiche alors la charge et l'autonomie, signale une coupure de courant et s'arrête proprement à temps.
+E1356	Batterie presque vide
+E1357	sur batterie
+E1358	sur secteur
+E1359	pas de données
+E1360	BATTERIE
+E1361	AUTONOMIE
+E1362	CHARGE
+E1363	Tension secteur
+E1364	Batterie depuis
+E1365	Pilote
+E1366	Connexion à l'onduleur …
+E1367	Détecté :
+E1368	Activez-le ci-dessous.
+E1369	ÉVÉNEMENTS
+E1370	Aucun pour l'instant – une coupure de courant s'affiche ici et comme message.
+E1371	Coupure de courant – sur onduleur
+E1372	Courant rétabli
+E1373	Arrêt déclenché
+E1374	La box s'arrête
+E1375	Connexion à l'onduleur perdue
+E1376	Pas de connexion à l'onduleur
+E1377	Connexion à l'onduleur rétablie
+E1378	Remplacer la batterie
+E1379	Surveiller l'onduleur (démarre aussi après un redémarrage)
+E1380	ARRÊT
+E1381	Quand l'onduleur signale « batterie faible »
+E1382	Sous un niveau de charge
+E1383	Après un temps sur batterie
+E1384	CHARGE DE LA BATTERIE (%)
+E1385	MINUTES SUR BATTERIE
+E1386	PILOTE
+E1387	Automatique
+E1388	blazer_usb (anciens Megatec)
+E1389	Ensuite éteindre l'onduleur – la box redémarre au retour du courant
+E1390	D'autres ordinateurs peuvent lire l'onduleur via le réseau (port 3493)
+E1391	MOT DE PASSE POUR « MONITOR »
+E1392	enregistré – laisser vide pour le conserver
+E1393	Sur l'autre ordinateur (NUT, upsmon) :
+E1394	– il s'arrête alors avant la box.
+E1395	La box ne s'arrête que tant qu'elle est sur batterie. Si le courant revient avant, rien ne se passe.
+E1396	Onduleur enregistré.

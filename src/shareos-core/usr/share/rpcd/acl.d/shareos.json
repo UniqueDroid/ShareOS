@@ -108,6 +108,9 @@
 				"shareos.status": [
 					"chips"
 				],
+				"shareos.printer": [
+					"status"
+				],
 				"shareos.ups": [
 					"status"
 				]
@@ -302,6 +305,10 @@
 					"set",
 					"test",
 					"telegram_chats"
+				],
+				"shareos.printer": [
+					"set",
+					"test"
 				],
 				"shareos.ups": [
 					"set"

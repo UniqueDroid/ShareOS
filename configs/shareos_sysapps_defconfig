@@ -49,6 +49,11 @@ BR2_PACKAGE_SHAREOS_AUTOBRR=y
 # Zabbix agent, classic C version (system app "zabbix-agent"), see
 # package/shareos-zabbix-agent
 BR2_PACKAGE_SHAREOS_ZABBIX_AGENT=y
+# printer (system app "printer"): IPP over USB for current printers and
+# scanners (driverless), p910nd (port 9100, raw) for older ones, see
+# package/shareos-ipp-usb
+BR2_PACKAGE_SHAREOS_IPP_USB=y
+BR2_PACKAGE_P910ND=y
 # UPS (system app "nut"): Network UPS Tools with the USB drivers of most
 # UPSs (usbhid-ups: APC, Eaton, CyberPower …; nutdrv_qx/blazer_usb: Megatec)
 BR2_PACKAGE_LIBUSB=y

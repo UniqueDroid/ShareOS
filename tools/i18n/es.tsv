@@ -1693,48 +1693,72 @@ E1324	¿Desactivar Let's Encrypt?
 E1325	La caja vuelve a usar un certificado autofirmado.
 E1326	Desactivado – la página se reconecta.
 E1327	Certificado de Let's Encrypt activo – la página se reconecta.
-E1328	SAI
-E1329	Cargando SAI …
-E1330	Instalar desde la tienda (Network UPS Tools)
-E1331	El soporte de SAI es una app del sistema: la caja muestra la carga y la autonomía, avisa de un corte de luz y se apaga a tiempo de forma limpia.
-E1332	Batería casi vacía
-E1333	con batería
-E1334	con red eléctrica
-E1335	sin datos
-E1336	BATERÍA
-E1337	AUTONOMÍA
-E1338	CARGA
-E1339	Tensión de red
-E1340	Batería desde
-E1341	Controlador
-E1342	Conectando con el SAI …
-E1343	Detectado:
-E1344	Actívalo abajo.
-E1345	EVENTOS
-E1346	Ninguno aún – un corte de luz se muestra aquí y como mensaje.
-E1347	Corte de luz – funcionando con el SAI
-E1348	Vuelve la luz
-E1349	Apagado iniciado
-E1350	La caja se apaga
-E1351	Conexión con el SAI perdida
-E1352	Sin conexión con el SAI
-E1353	Conexión con el SAI restablecida
-E1354	Cambiar la batería
-E1355	Supervisar el SAI (también arranca tras reiniciar)
-E1356	APAGADO
-E1357	Cuando el SAI avisa de «batería baja»
-E1358	Por debajo de una carga
-E1359	Tras un tiempo con batería
-E1360	CARGA DE LA BATERÍA (%)
-E1361	MINUTOS CON BATERÍA
-E1362	CONTROLADOR
-E1363	Automático
-E1364	blazer_usb (Megatec antiguos)
-E1365	Después apagar el SAI – la caja arranca de nuevo al volver la luz
-E1366	Otros ordenadores pueden leer el SAI por la red (puerto 3493)
-E1367	CONTRASEÑA PARA «MONITOR»
-E1368	guardada – déjala vacía para conservarla
-E1369	En el otro ordenador (NUT, upsmon):
-E1370	– entonces se apaga antes que la caja.
-E1371	La caja solo se apaga mientras funciona con batería. Si la luz vuelve antes, no pasa nada.
-E1372	SAI guardado.
+E1328	IMPRESORAS
+E1329	Cargando impresoras …
+E1330	Las impresoras en red son una app del sistema: las impresoras y equipos multifunción actuales imprimen y escanean sin controladores (AirPrint, Mopria, Windows 10/11); las antiguas por el puerto 9100 con el controlador en el ordenador.
+E1331	Instalar desde la tienda (ipp-usb + p910nd)
+E1332	en la red
+E1333	no accesible
+E1334	Sin controlador (IPP over USB)
+E1335	Con el controlador en el ordenador (puerto 9100)
+E1336	Escaneo
+E1337	por la red (eSCL), si el equipo tiene escáner
+E1338	Dirección
+E1339	Página del equipo
+E1340	Windows 10/11, macOS, iPhone/iPad y Android encuentran la impresora solos («Agregar impresora»). A mano: introduce la dirección de arriba como impresora IPP.
+E1341	Windows: «Agregar impresora» → «Dirección TCP/IP» →
+E1342	, puerto
+E1343	, controlador del fabricante. macOS/Linux: «HP JetDirect – Socket» o AppSocket.
+E1344	Página de prueba
+E1345	No hay ninguna impresora USB conectada. Conéctala – aparece aquí en unos segundos.
+E1346	Compartir impresoras en la red (también arranca tras reiniciar)
+E1347	Automático – sin controlador cuando la impresora lo permite
+E1348	Siempre puerto 9100 (controlador en el ordenador)
+E1349	Cualquiera en la red puede imprimir, sin iniciar sesión. «Siempre puerto 9100» solo si una impresora no imprime bien sin controlador.
+E1350	Impresoras guardadas.
+E1351	Página de prueba enviada.
+E1352	SAI
+E1353	Cargando SAI …
+E1354	Instalar desde la tienda (Network UPS Tools)
+E1355	El soporte de SAI es una app del sistema: la caja muestra la carga y la autonomía, avisa de un corte de luz y se apaga a tiempo de forma limpia.
+E1356	Batería casi vacía
+E1357	con batería
+E1358	con red eléctrica
+E1359	sin datos
+E1360	BATERÍA
+E1361	AUTONOMÍA
+E1362	CARGA
+E1363	Tensión de red
+E1364	Batería desde
+E1365	Controlador
+E1366	Conectando con el SAI …
+E1367	Detectado:
+E1368	Actívalo abajo.
+E1369	EVENTOS
+E1370	Ninguno aún – un corte de luz se muestra aquí y como mensaje.
+E1371	Corte de luz – funcionando con el SAI
+E1372	Vuelve la luz
+E1373	Apagado iniciado
+E1374	La caja se apaga
+E1375	Conexión con el SAI perdida
+E1376	Sin conexión con el SAI
+E1377	Conexión con el SAI restablecida
+E1378	Cambiar la batería
+E1379	Supervisar el SAI (también arranca tras reiniciar)
+E1380	APAGADO
+E1381	Cuando el SAI avisa de «batería baja»
+E1382	Por debajo de una carga
+E1383	Tras un tiempo con batería
+E1384	CARGA DE LA BATERÍA (%)
+E1385	MINUTOS CON BATERÍA
+E1386	CONTROLADOR
+E1387	Automático
+E1388	blazer_usb (Megatec antiguos)
+E1389	Después apagar el SAI – la caja arranca de nuevo al volver la luz
+E1390	Otros ordenadores pueden leer el SAI por la red (puerto 3493)
+E1391	CONTRASEÑA PARA «MONITOR»
+E1392	guardada – déjala vacía para conservarla
+E1393	En el otro ordenador (NUT, upsmon):
+E1394	– entonces se apaga antes que la caja.
+E1395	La caja solo se apaga mientras funciona con batería. Si la luz vuelve antes, no pasa nada.
+E1396	SAI guardado.

@@ -1,0 +1,1 @@
+{ "bin": [ "usr/bin/ipp-usb", "usr/sbin/p910nd" ], "share": [ "usr/share/ipp-usb" ] }

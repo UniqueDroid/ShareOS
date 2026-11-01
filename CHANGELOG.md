@@ -6,6 +6,10 @@ pre-releases for test devices only.
 
 ## 0.2.0-beta.18
 
+- **USB printers in the network** (Dienste → Drucker, new system app **"printer"** in the store: ipp-usb 0.9.34 + p910nd 0.97, 3 MB).
+  - *Current printers and multifunction devices* that speak IPP over USB (most since about 2015, e.g. HP Smart Tank, OfficeJet, Canon PIXMA, Epson EcoTank) print **without a driver**: Windows 10/11, macOS, iPhone/iPad and Android find them by themselves (IPP Everywhere, AirPrint, Mopria) – and their **scanner** works over the network as well (eSCL). ipp-usb (OpenPrinting) does the work; ShareOS's avahi-daemon has no D-Bus, so a patch makes ipp-usb announce the devices through static avahi service files. The port of each device stays the same (kept on the flash).
+  - *Older printers* (usblp, `/dev/usb/lpN`): p910nd on port 9100 + N, announced as `_pdl-datastream`; the computer uses the maker's driver ("Standard TCP/IP port" in Windows, AppSocket/JetDirect). *Testseite* sends a plain-text/PCL page.
+  - Printers are followed when plugged in or pulled (mdev rule for `lp*`, ipp-usb watches USB itself). Mode *Immer Port 9100* for printers whose driverless printing misbehaves. `shareos-printer`, rpcd `shareos.printer`, `tests/test-printer.sh` (14 checks with a fake /sys).
 - **UPS over USB** (Dienste → USV, new system app **"nut"** in the store: Network UPS Tools 2.8.5 with the drivers usbhid-ups, nutdrv_qx and blazer_usb – APC, Eaton, CyberPower, most Megatec/Q1 boxes; 0.7 MB, kept on the flash so it works when a disk fails).
   - Charge, runtime, load and model of the UPS; a power failure, the power coming back, a low or worn battery and a lost connection become messages (e-mail/push as set up) and are listed under *Ereignisse*.
   - The box shuts down cleanly while on battery – when the UPS reports a low battery, below a charge of your choice or after some minutes on battery – and only then; if the power comes back first, nothing happens. Afterwards the UPS switches its output off and on again when the power is back, so the box starts by itself (can be switched off).
