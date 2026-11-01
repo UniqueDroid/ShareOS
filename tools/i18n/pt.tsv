@@ -1693,3 +1693,27 @@ E1324	Desligar o Let's Encrypt?
 E1325	A caixa volta a usar um certificado autoassinado.
 E1326	Desligado – a página volta a ligar-se.
 E1327	Certificado Let's Encrypt ativo – a página volta a ligar-se.
+E1328	IMPRESSORAS
+E1329	A carregar impressoras …
+E1330	As impressoras em rede são uma app de sistema: impressoras e multifunções atuais imprimem e digitalizam sem controladores (AirPrint, Mopria, Windows 10/11); as mais antigas pela porta 9100 com o controlador no computador.
+E1331	Instalar a partir da loja (ipp-usb + p910nd)
+E1332	na rede
+E1333	inacessível
+E1334	Sem controlador (IPP over USB)
+E1335	Com o controlador no computador (porta 9100)
+E1336	Digitalização
+E1337	pela rede (eSCL), se o dispositivo tiver scanner
+E1338	Endereço
+E1339	Página do dispositivo
+E1340	Windows 10/11, macOS, iPhone/iPad e Android encontram a impressora sozinhos («Adicionar impressora»). À mão: introduza o endereço acima como impressora IPP.
+E1341	Windows: «Adicionar impressora» → «Endereço TCP/IP» →
+E1342	, porta
+E1343	, controlador do fabricante. macOS/Linux: «HP JetDirect – Socket» ou AppSocket.
+E1344	Página de teste
+E1345	Nenhuma impressora USB ligada. Ligue uma – aparece aqui após alguns segundos.
+E1346	Partilhar impressoras na rede (também arranca após reiniciar)
+E1347	Automático – sem controlador quando a impressora o permite
+E1348	Sempre porta 9100 (controlador no computador)
+E1349	Qualquer pessoa na rede pode imprimir, sem iniciar sessão. «Sempre porta 9100» só se uma impressora não imprimir bem sem controlador.
+E1350	Impressoras guardadas.
+E1351	Página de teste enviada.

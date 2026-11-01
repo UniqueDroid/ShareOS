@@ -156,7 +156,7 @@ const TABS = [
 	['apps', 'APPS'], ['cloud', 'CLOUD'], ['paperless', 'PAPERLESS'], ['system', 'SYSTEM']
 ];
 const SYS_SUBS = [['general', 'ALLGEMEIN'], ['appearance', 'DARSTELLUNG'], ['network', 'NETZWERK'], ['notifications', 'MELDUNGEN'], ['logs', 'PROTOKOLLE'], ['terminal', 'TERMINAL'], ['time', 'ZEIT'], ['power', 'ENERGIE & RESET'], ['firmware', 'FIRMWARE']];
-const SVC_SUBS = [['status', 'STATUS'], ['autostart', 'AUTOSTART'], ['dlna', 'MEDIENSERVER']];
+const SVC_SUBS = [['status', 'STATUS'], ['autostart', 'AUTOSTART'], ['dlna', 'MEDIENSERVER'], ['printer', 'DRUCKER']];
 const SHR_SUBS = [['shares', 'FREIGABEN'], ['files', 'DATEIEN'], ['users', 'BENUTZER'], ['groups', 'GRUPPEN']];
 const STO_SUBS = [['volumes', 'LAUFWERKE'], ['health', 'GESUNDHEIT'], ['snapshots', 'SNAPSHOTS']];
 const ROLE_TXT = { admin: 'Administrator', user: 'Benutzer', share: 'Nur Freigaben' };
@@ -819,7 +819,7 @@ const VIEWS = {
 		const sub = S.route.sub;
 		return html`
 		<nav class="subtabs" aria-label="Dienste">${SVC_SUBS.map(([id, label]) => html`<a class="st${sub === id ? ' on' : ''}" href="#/services/${id}">${label}</a>`)}</nav>
-		${sub === 'dlna' ? dlnaView() : sub === 'autostart' ? autostartView()
+		${sub === 'dlna' ? dlnaView() : sub === 'printer' ? printerView() : sub === 'autostart' ? autostartView()
 			: html`<section class="sec">${secHead('services', 'DIENSTE', 'Start, Stopp, Neustart')}${serviceCards(true, isTable('services'))}</section>`}`;
 	},
 
@@ -1591,6 +1591,65 @@ function dlnaAfter() {
 		try { S.dlna = await rpc('shareos.dlna', 'set', { enabled: f.enabled.checked, name: f.name.value.trim(), media }); toast('Medienserver gespeichert.'); }
 		catch (err) { toast('Medienserver: ' + err.message, true); }
 		loadDlna();
+	});
+}
+
+/* ---------- printers (Services -> Printers, system app "printer") ------------------- */
+
+async function loadPrinter() {
+	clearTimeout(S.prnTimer);
+	try { S.prn = await rpc('shareos.printer', 'status'); } catch (e) { toast('Drucker: ' + e.message, true); }
+	if (S.route.tab === 'services' && S.route.sub === 'printer') {
+		if (!document.activeElement?.matches('input,select')) renderMain();
+		// printers come and go: look again now and then
+		S.prnTimer = setTimeout(loadPrinter, 10000);
+	}
+}
+
+function printerView() {
+	const d = S.prn;
+	if (!d) return html`<div class="panel"><div class="empty"><div class="spin" style="margin:0"></div><span>Lade Drucker …</span></div></div>`;
+	if (!d.installed) return html`<section class="sec"><div class="panel"><div class="empty">${svg(I.info)}<div>
+		<span>Drucker im Netzwerk sind eine System-App: Aktuelle Drucker und Multifunktionsgeräte drucken und scannen dann ohne Treiber (AirPrint, Mopria, Windows 10/11), ältere über Port 9100 mit dem Treiber am Rechner.</span>
+		<div class="acts" style="margin-top:12px"><a class="btn primary" href="#/apps/store">Im Store installieren (ipp-usb + p910nd)</a></div></div></div></div></section>`;
+	const host = location.hostname;
+	const card = (p) => html`<div class="panel">
+		<div class="ph"><span class="pt">${(p.maker + ' ' + p.model).trim() || p.id}</span>${p.port ? html`<span class="tag ok ml">im Netzwerk</span>` : d.enabled ? html`<span class="tag warn ml">nicht erreichbar</span>` : html`<span class="tag ml">aus</span>`}</div>
+		<dl class="kv">
+			<dt>Art</dt><dd>${p.via === 'ipp-usb' ? 'Ohne Treiber (IPP over USB)' : 'Mit Treiber am Rechner (Port 9100)'}</dd>
+			${p.via === 'ipp-usb' ? html`<dt>Scannen</dt><dd>${p.port ? 'über das Netzwerk (eSCL), wenn das Gerät einen Scanner hat' : '–'}</dd>` : ''}
+			<dt>Adresse</dt><dd>${p.port ? (p.via === 'ipp-usb' ? `ipp://${host}:${p.port}/ipp/print` : `${host}:${p.port}`) : '–'}</dd>
+			${p.port && p.via === 'ipp-usb' ? html`<dt>Geräteseite</dt><dd><a href="http://${host}:${p.port}/" target="_blank" rel="noopener">http://${host}:${p.port}/</a></dd>` : ''}
+			<dt>USB</dt><dd>${p.id}${p.lp ? ' · ' + p.lp : ''}</dd>
+		</dl>
+		${p.port && p.via === 'ipp-usb' ? html`<p class="note">Windows 10/11, macOS, iPhone/iPad und Android finden den Drucker von selbst („Drucker hinzufügen“). Von Hand: Adresse oben als IPP-Drucker eintragen.</p>`
+		: p.port ? html`<p class="note">Windows: „Drucker hinzufügen“ → „TCP/IP-Adresse“ → <b>${host}</b>, Port <b>${p.port}</b>, Treiber des Herstellers. macOS/Linux: „HP JetDirect – Socket“ bzw. AppSocket.</p>
+			<div class="acts" style="margin-top:10px"><button class="btn" type="button" data-act="prn-test" data-id="${p.lp}">Testseite</button></div>` : ''}
+	</div>`;
+	return html`<section class="sec">
+		${d.printers.length ? html`<div class="g2">${d.printers.map(card)}</div>`
+		: html`<div class="panel"><div class="empty">${svg(I.info)}<span>Kein USB-Drucker angeschlossen. Einstecken – er erscheint hier nach ein paar Sekunden.</span></div></div>`}
+	</section>
+	<section class="sec"><form class="panel" id="f-prn" style="max-width:820px">
+		<div class="ph"><span class="pt">EINSTELLUNGEN</span>${d.enabled ? html`<span class="tag ok ml">an</span>` : html`<span class="tag ml">aus</span>`}</div>
+		<label class="chk"><input type="checkbox" name="enabled"${d.enabled ? raw(' checked') : ''}>Drucker im Netzwerk freigeben (startet auch nach einem Neustart)</label>
+		<div class="fields" style="grid-template-columns:1fr;margin-top:12px"><label class="f"><span>ART</span><select name="mode">
+			<option value="auto"${d.mode === 'auto' ? raw(' selected') : ''}>Automatisch – ohne Treiber, wo der Drucker es kann</option>
+			<option value="raw"${d.mode === 'raw' ? raw(' selected') : ''}>Immer Port 9100 (Treiber am Rechner)</option></select></label></div>
+		<p class="note">Jeder im Netzwerk kann drucken, ohne Anmeldung. „Immer Port 9100“ nur, wenn ein Drucker ohne Treiber nicht richtig druckt.</p>
+		<div class="acts" style="margin-top:14px"><button class="btn primary" type="submit">Speichern</button></div>
+	</form></section>`;
+}
+
+function printerAfter() {
+	if (!S.prn) { loadPrinter(); return; }
+	if (!S.prnTimer) S.prnTimer = setTimeout(loadPrinter, 10000);
+	$('#f-prn')?.addEventListener('submit', async (e) => {
+		e.preventDefault();
+		const f = e.target, b = $('button[type=submit]', f); b.disabled = true;
+		try { S.prn = await rpc('shareos.printer', 'set', { enabled: f.enabled.checked, mode: f.mode.value }); toast('Drucker gespeichert.'); }
+		catch (err) { toast('Drucker: ' + err.message, true); }
+		loadPrinter();
 	});
 }
 
@@ -3285,6 +3344,7 @@ const VIEWS_AFTER = {
 	},
 	services() {
 		if (S.route.sub === 'dlna') { dlnaAfter(); return; }
+		if (S.route.sub === 'printer') { printerAfter(); return; }
 		if (!S.services) loadServices();
 		document.querySelectorAll('.as-toggle').forEach((c) => c.addEventListener('change', async () => {
 			c.disabled = true;
@@ -4161,6 +4221,11 @@ const ACTIONS = {
 	},
 
 
+	async 'prn-test'(el) {
+		try { await rpc('shareos.printer', 'test', { lp: el.dataset.id }); toast('Testseite geschickt.'); }
+		catch (e) { toast('Testseite: ' + e.message, true); }
+	},
+
 	async 'ddns-now'() {
 		try { await rpc('shareos.web', 'ddns_update'); toast('Wird gemeldet …'); setTimeout(async () => { await loadNetExtra(); if (S.route.sub === 'network') renderMain(); }, 5000); }
 		catch (e) { toast('DynDNS: ' + e.message, true); }
@@ -4259,6 +4324,7 @@ window.addEventListener('hashchange', () => {
 	if (S.route.tab !== 'storage' || S.route.sub !== 'snapshots') { clearTimeout(S.snapTimer); if (S.snap) { S.snap.edit = null; S.snap.log = null; } }
 	if (S.route.tab !== 'shares') { S.shEdit = null; S.uEdit = null; }
 	if (S.route.tab !== 'services' || S.route.sub !== 'dlna') clearTimeout(S.dlnaTimer);
+	if (S.route.tab !== 'services' || S.route.sub !== 'printer') { clearTimeout(S.prnTimer); S.prnTimer = null; }
 	if (S.fb && S.route.sub === 'files') S.fb.roots = null;   // volumes may have changed
 	if (S.route.tab !== 'paperless') { S.plEdit = null; S.plLog = null; } else if (S.pl) loadPaperless();
 	if (S.route.tab !== 'cloud') { clearTimeout(S.cloudTimer); if (S.cloud?.scope === 'admin') { S.cloud.remoteEdit = null; S.cloud.jobEdit = null; S.cloud.log = null; } }

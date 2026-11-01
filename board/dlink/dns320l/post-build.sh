@@ -79,6 +79,9 @@ done
 # (shareos-usb ignores the internal SATA disks)
 grep -q shareos-usb "$TARGET_DIR/etc/mdev.conf" || \
 	printf 'sd[a-z][0-9]*\troot:disk 660 */usr/sbin/shareos-usb hotplug\n' >> "$TARGET_DIR/etc/mdev.conf"
+# USB printers (usblp, /dev/usb/lpN): the printer service follows them
+grep -q shareos-printer "$TARGET_DIR/etc/mdev.conf" || \
+	printf 'lp[0-9]*\troot:lp 660 */usr/sbin/shareos-printer hotplug\n' >> "$TARGET_DIR/etc/mdev.conf"
 
 # ntfs-3g: only mkntfs/ntfslabel are used (mounting goes through the kernel's ntfs3)
 for p in ntfs-3g ntfs-3g.probe lowntfs-3g ntfscat ntfscluster ntfscmp ntfsfix ntfsinfo ntfsls \

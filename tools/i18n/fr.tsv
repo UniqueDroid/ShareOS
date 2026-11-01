@@ -1693,3 +1693,27 @@ E1324	Désactiver Let's Encrypt ?
 E1325	La box utilise ensuite de nouveau un certificat auto-signé.
 E1326	Désactivé – la page se reconnecte.
 E1327	Certificat Let's Encrypt actif – la page se reconnecte.
+E1328	IMPRIMANTES
+E1329	Chargement des imprimantes …
+E1330	Les imprimantes en réseau sont une application système : les imprimantes et appareils multifonctions récents impriment et numérisent alors sans pilote (AirPrint, Mopria, Windows 10/11), les plus anciens via le port 9100 avec le pilote sur l'ordinateur.
+E1331	Installer depuis le store (ipp-usb + p910nd)
+E1332	dans le réseau
+E1333	injoignable
+E1334	Sans pilote (IPP over USB)
+E1335	Avec le pilote sur l'ordinateur (port 9100)
+E1336	Numérisation
+E1337	via le réseau (eSCL), si l'appareil a un scanner
+E1338	Adresse
+E1339	Page de l'appareil
+E1340	Windows 10/11, macOS, iPhone/iPad et Android trouvent l'imprimante tout seuls (« Ajouter une imprimante »). À la main : saisir l'adresse ci-dessus comme imprimante IPP.
+E1341	Windows : « Ajouter une imprimante » → « Adresse TCP/IP » →
+E1342	, port
+E1343	, pilote du fabricant. macOS/Linux : « HP JetDirect – Socket » ou AppSocket.
+E1344	Page de test
+E1345	Aucune imprimante USB branchée. Branchez-en une – elle apparaît ici après quelques secondes.
+E1346	Partager les imprimantes sur le réseau (démarre aussi après un redémarrage)
+E1347	Automatique – sans pilote quand l'imprimante le permet
+E1348	Toujours le port 9100 (pilote sur l'ordinateur)
+E1349	Tout le monde sur le réseau peut imprimer, sans connexion. « Toujours le port 9100 » seulement si une imprimante n'imprime pas correctement sans pilote.
+E1350	Imprimantes enregistrées.
+E1351	Page de test envoyée.

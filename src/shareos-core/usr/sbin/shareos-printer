@@ -1,0 +1,229 @@
+#!/bin/sh
+#
+# shareos-printer – USB printers in the network (system app "printer")
+#
+#   shareos-printer start | stop | restart
+#   shareos-printer apply        start or stop what the plugged-in printers need
+#                                (mdev calls it when a printer comes or goes)
+#   shareos-printer status       key=value lines for the web interface
+#   shareos-printer test <lpN>   print a test page on an older printer (port 9100)
+#   shareos-printer boot         start at boot when it is switched on
+#   shareos-printer stop-all     stop (system app removed, shutdown)
+#   shareos-printer hotplug      called by mdev (ACTION, MDEV) – runs apply
+#
+# shareos-service: boot start stop-all
+#
+# Two ways, chosen per printer:
+#   - Printers that speak IPP over USB (most since about 2015, interface class
+#     7/1/4): ipp-usb makes them printers and scanners in the network –
+#     driverless printing (AirPrint, Mopria, IPP Everywhere, Windows 10/11
+#     finds them by itself) and scanning (eSCL). Port 60000 and up.
+#   - Older printers: p910nd passes the print data from port 9100 + N to
+#     /dev/usb/lpN as it is; the computer needs the printer's driver
+#     ("Standard TCP/IP port" in Windows, AppSocket/JetDirect elsewhere).
+# Both are announced in the network (avahi service files).
+#
+# Settings: UCI printer.main – enabled, mode auto|raw (raw: p910nd for every
+# printer, also those with IPP over USB). ipp-usb keeps the port of each
+# device in /etc/shareos/printer/dev, so computers keep finding it.
+#   SHAREOS_PRINTER_SYS=<dir>   instead of /sys (tests)
+#   SHAREOS_ROOT=<dir>          fake root for files (tests)
+#
+[ -n "$SHAREOS_ROOT" ] || PATH=/usr/sbin:/usr/bin:/sbin:/bin:/opt/shareos/bin
+R=${SHAREOS_ROOT:-}
+SYS=${SHAREOS_PRINTER_SYS:-/sys}
+IPPUSB=${SHAREOS_PRINTER_IPPUSB:-/opt/shareos/bin/ipp-usb}
+P910ND=${SHAREOS_PRINTER_P910ND:-/opt/shareos/bin/p910nd}
+QUIRKS=/opt/shareos/sysapps/printer/share/ipp-usb/quirks
+RUN=$R/tmp/shareos-printer
+STATE=$R/etc/shareos/printer
+AVAHI=$R/etc/avahi/services
+
+die() { echo "error: $*"; exit 1; }
+uget() { if [ -n "$SHAREOS_ROOT" ]; then uci -q -c "$R/etc/config" get "$1"; else uci -q get "$1"; fi; }
+enabled() { [ "$(uget printer.main.enabled)" = 1 ]; }
+mode() { [ "$(uget printer.main.mode)" = raw ] && echo raw || echo auto; }
+installed() { [ -x "$IPPUSB" ] && [ -x "$P910ND" ]; }
+
+# printers: one line per USB printer
+#   <usb device dir> <vendor:product> <ipp 0|1> <lp node or -> <manufacturer> | <product>
+printers() {
+	for i in "$SYS"/bus/usb/devices/*:*; do
+		[ "$(cat "$i/bInterfaceClass" 2>/dev/null)" = 07 ] || continue
+		echo "${i%:*}"
+	done | sort -u | while read -r d; do
+		ipp=0; lp=-
+		for i in "$d":*; do
+			[ "$(cat "$i/bInterfaceClass" 2>/dev/null)" = 07 ] || continue
+			[ "$(cat "$i/bInterfaceProtocol" 2>/dev/null)" = 04 ] && ipp=1
+			for n in "$i"/usbmisc/lp*; do [ -e "$n" ] && lp=$(basename "$n"); done
+		done
+		echo "$(basename "$d") $(cat "$d/idVendor" 2>/dev/null):$(cat "$d/idProduct" 2>/dev/null) $ipp $lp $(cat "$d/manufacturer" 2>/dev/null) | $(cat "$d/product" 2>/dev/null)"
+	done
+}
+
+ippusb_pid() {
+	p=$(cat $RUN/ipp-usb.pid 2>/dev/null)
+	[ -n "$p" ] && kill -0 "$p" 2>/dev/null && grep -q ipp-usb /proc/$p/cmdline 2>/dev/null && echo "$p"
+}
+p910_pid() {   # <n>
+	p=$(cat $RUN/p910$1.pid 2>/dev/null)
+	[ -n "$p" ] && kill -0 "$p" 2>/dev/null && echo "$p"
+}
+
+ippusb_conf() {
+	mkdir -p $RUN/conf $RUN/log "$STATE/dev"
+	cat > $RUN/conf/ipp-usb.conf <<EOF
+# written by shareos-printer at every start
+[network]
+  http-min-port = 60000
+  http-max-port = 60099
+  dns-sd = enable
+  interface = all
+  ipv6 = enable
+[logging]
+  device-log = error,info
+  main-log = error,info
+  console-log = disable
+  max-file-size = 256K
+  max-backup-files = 1
+EOF
+}
+
+ippusb_start() {
+	[ -n "$(ippusb_pid)" ] && return 0
+	ippusb_conf
+	SHAREOS_AVAHI_SERVICES=$AVAHI "$IPPUSB" standalone \
+		-path-conf-files-srch $RUN/conf -path-quirks-files-srch "$QUIRKS:$STATE/quirks" \
+		-path-log-dir $RUN/log -path-lock-file $RUN/ipp-usb.lock -path-dev-state-dir "$STATE/dev" \
+		-path-ctrl-sock $RUN/ipp-usb.sock >>$RUN/ipp-usb.out 2>&1 &
+	echo $! > $RUN/ipp-usb.pid
+}
+
+ippusb_stop() {
+	p=$(ippusb_pid)
+	if [ -n "$p" ]; then
+		kill "$p"
+		i=0; while [ $i -lt 25 ] && kill -0 "$p" 2>/dev/null; do sleep 0.2; i=$((i + 1)); done
+		kill -9 "$p" 2>/dev/null
+	fi
+	rm -f $RUN/ipp-usb.pid "$AVAHI"/ipp-usb-*.service
+}
+
+p910_service() {   # <n> <name>
+	cat > "$AVAHI/shareos-printer-lp$1.service.tmp" <<EOF
+<?xml version="1.0" standalone='no'?>
+<!DOCTYPE service-group SYSTEM "avahi-service.dtd">
+<service-group>
+  <name>$(echo "$2" | sed 's/&/\&amp;/g;s/</\&lt;/g;s/>/\&gt;/g')</name>
+  <service>
+    <type>_pdl-datastream._tcp</type>
+    <port>$((9100 + $1))</port>
+    <txt-record>txtvers=1</txt-record>
+    <txt-record>qtotal=1</txt-record>
+    <txt-record>ty=$(echo "$2" | sed 's/&/\&amp;/g;s/</\&lt;/g;s/>/\&gt;/g')</txt-record>
+    <txt-record>note=ShareOS</txt-record>
+  </service>
+</service-group>
+EOF
+	mv "$AVAHI/shareos-printer-lp$1.service.tmp" "$AVAHI/shareos-printer-lp$1.service"
+}
+
+p910_start() {   # <n> <name>
+	[ -n "$(p910_pid $1)" ] && return 0
+	mkdir -p $RUN $R/var/lock/subsys
+	# -b: bidirectional (the printer's answers go back); stays in front, the
+	# controller keeps its pid
+	"$P910ND" -f $R/dev/usb/lp$1 -b -d $1 >>$RUN/p910$1.out 2>&1 &
+	echo $! > $RUN/p910$1.pid
+	p910_service $1 "$2"
+}
+
+p910_stop() {   # <n>
+	p=$(p910_pid $1)
+	[ -n "$p" ] && kill "$p" 2>/dev/null
+	rm -f $RUN/p910$1.pid "$AVAHI/shareos-printer-lp$1.service"
+}
+
+# start what the printers need, stop the rest
+apply() {
+	mkdir -p $RUN "$AVAHI"
+	if ! enabled || ! installed; then stop_all; return 0; fi
+	m=$(mode)
+	[ $m = auto ] && ippusb_start || ippusb_stop
+	want=
+	printers > $RUN/printers
+	while read -r dev id ipp lp name; do
+		[ "$lp" = - ] && continue
+		[ $m = auto ] && [ $ipp = 1 ] && continue
+		n=${lp#lp}
+		want="$want $n"
+		p910_start $n "$(echo "$name" | sed 's/^ *| *//;s/ *| */ /')"
+	done < $RUN/printers
+	for f in $RUN/p910*.pid; do
+		[ -e "$f" ] || continue
+		n=${f#$RUN/p910}; n=${n%.pid}
+		case " $want " in *" $n "*) ;; *) p910_stop $n ;; esac
+	done
+	return 0
+}
+
+stop_all() {
+	ippusb_stop
+	for f in $RUN/p910*.pid; do
+		[ -e "$f" ] || continue
+		n=${f#$RUN/p910}; n=${n%.pid}
+		p910_stop $n
+	done
+	rm -f "$AVAHI"/shareos-printer-lp*.service
+}
+
+status() {
+	echo "installed=$(installed && echo 1 || echo 0)"
+	echo "enabled=$(enabled && echo 1 || echo 0)"
+	echo "mode=$(mode)"
+	echo "ippusb=$([ -n "$(ippusb_pid)" ] && echo 1 || echo 0)"
+	# ports of the IPP-over-USB devices from ipp-usb itself
+	ports=
+	if [ -n "$(ippusb_pid)" ]; then
+		ports=$("$IPPUSB" status -path-ctrl-sock $RUN/ipp-usb.sock -path-conf-files-srch $RUN/conf 2>/dev/null \
+			| sed -n 's/^ *[0-9]*\. *Bus [0-9]* Device [0-9]* *\([0-9a-f]*:[0-9a-f]*\) *\([0-9-]*\) .*/\1=\2/p')
+	fi
+	printers | while read -r dev id ipp lp name; do
+		via=; port=
+		if [ $(mode) = auto ] && [ $ipp = 1 ]; then
+			via=ipp-usb; port=$(echo "$ports" | sed -n "s/^$id=\([0-9]*\)$/\1/p" | head -1)
+		elif [ "$lp" != - ]; then
+			via=p910nd; n=${lp#lp}; [ -n "$(p910_pid $n)" ] && port=$((9100 + n))
+		fi
+		enabled || port=
+		echo "printer=$id|$ipp|$lp|$via|$port|$name"
+	done
+}
+
+# a test page for printers that take plain text or PCL (port 9100 ones; a
+# printer that only understands its driver's language prints nothing)
+testpage() {
+	echo "$1" | grep -qE '^lp[0-9]+$' || die "no such printer"
+	[ -e $R/dev/usb/$1 ] || die "no such printer"
+	n=${1#lp}
+	host=$(cat /proc/sys/kernel/hostname 2>/dev/null)
+	# straight to the device (p910nd only holds it during a job)
+	printf '\033E\r\nShareOS test page\r\nBox: %s\r\nPort: %s\r\nTime: %s\r\n\f\033E' "$host" "$((9100 + n))" "$(date '+%Y-%m-%d %H:%M')" > $RUN/testpage
+	timeout 15 sh -c "cat $RUN/testpage > $R/dev/usb/$1" 2>/dev/null || die "the printer did not take the page"
+}
+
+case "$1" in
+	start|boot)
+		[ "$1" = boot ] && ! enabled && exit 0
+		installed || { [ "$1" = boot ] && exit 0; die "the system app \"printer\" is not installed (store)"; }
+		apply ;;
+	apply) apply ;;
+	stop|stop-all) stop_all ;;
+	restart) stop_all; apply ;;
+	hotplug) ( sleep 2; "$0" apply ) >/dev/null 2>&1 & ;;
+	status) status ;;
+	test) testpage "$2" ;;
+	*) sed -n '3,30s/^# \{0,1\}//p' "$0"; exit 2 ;;
+esac
+exit 0

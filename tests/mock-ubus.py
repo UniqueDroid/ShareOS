@@ -699,6 +699,18 @@ def call(obj, method, args):
             STATE['led'].update({k: v for k, v in args.items() if v})
         return {'fan': STATE['fan'], 'led': STATE['led'], 'temperature': 41000, 'fan_pwm': 100,
                 'presets': {'quiet': {'off_temp': 40, 'full_temp': 55, 'half_temp': 50}}}
+    if obj == 'shareos.printer':
+        pr = STATE.setdefault('printer', {'installed': True, 'enabled': False, 'mode': 'auto', 'ippusb': False, 'hostname': 'skynet-nas', 'printers': [
+            {'id': '03f0:5c11', 'ipp': True, 'lp': 'lp0', 'via': 'ipp-usb', 'port': None, 'maker': 'HP', 'model': 'Smart Tank 5100 series'},
+            {'id': '04a9:2676', 'ipp': False, 'lp': 'lp1', 'via': 'p910nd', 'port': None, 'maker': 'Canon', 'model': 'LBP2900'}]})
+        if method == 'set':
+            pr['enabled'] = bool(args.get('enabled')); pr['mode'] = args.get('mode') or pr['mode']
+            for x in pr['printers']:
+                x['via'] = 'ipp-usb' if x['ipp'] and pr['mode'] == 'auto' else 'p910nd'
+                x['port'] = (60000 if x['via'] == 'ipp-usb' else 9100 + int(x['lp'][2:])) if pr['enabled'] else None
+        if method == 'test':
+            return {'ok': True}
+        return pr
     if obj == 'shareos.web' and method.startswith(('ddns', 'ca_', 'acme')):
         d = STATE.setdefault('ddns', {'enabled': False, 'provider': '', 'host': '', 'user': '', 'url': '', 'token_set': False, 'ipv4': True, 'ipv6': False, 'last': None})
         ca = STATE.setdefault('ca', {'exists': False, 'certs': [], 'web': False})

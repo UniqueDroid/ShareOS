@@ -1,0 +1,16 @@
+config BR2_PACKAGE_SHAREOS_IPP_USB
+	bool "shareos-ipp-usb"
+	depends on BR2_PACKAGE_HOST_GO_TARGET_ARCH_SUPPORTS
+	depends on BR2_PACKAGE_HOST_GO_TARGET_CGO_LINKING_SUPPORTS
+	depends on BR2_TOOLCHAIN_HAS_THREADS # libusb
+	select BR2_PACKAGE_HOST_GO
+	select BR2_PACKAGE_LIBUSB
+	help
+	  ipp-usb for the system app "printer": makes a USB printer or
+	  scanner that speaks IPP over USB (most printers since about
+	  2015) available in the network – driverless printing (AirPrint,
+	  Mopria, IPP Everywhere) and scanning (eSCL). DNS-SD through
+	  static avahi service files, as the firmware's avahi-daemon has
+	  no D-Bus.
+
+	  https://github.com/OpenPrinting/ipp-usb

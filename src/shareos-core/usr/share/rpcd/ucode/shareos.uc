@@ -849,7 +849,7 @@ function default_password() {
 /* ---------- settings backup ---------- */
 
 const CRYPT = '/usr/sbin/shareos-crypt';
-const BACKUP_CONFIGS = [ 'shareos', 'storage', 'network', 'accounts', 'shares', 'paperless', 'cloud', 'apps', 'snapshots', 'dlna', 'dockerhosts', 'zabbix' ];
+const BACKUP_CONFIGS = [ 'shareos', 'storage', 'network', 'accounts', 'shares', 'paperless', 'cloud', 'apps', 'snapshots', 'dlna', 'dockerhosts', 'zabbix', 'printer' ];
 const BACKUP_FILES = [ '/etc/ksmbd/ksmbdpwd.db', '/etc/ssl/shareos/server.crt', '/etc/ssl/shareos/server.key', '/etc/hostname', '/etc/timezone', '/etc/shareos/zabbix.psk',
 	'/etc/shareos/ca/ca.crt', '/etc/shareos/ca/ca.key' ];
 
@@ -1173,6 +1173,25 @@ function dlna_status() {
 		audio: +(st.audio || 0), video: +(st.video || 0), image: +(st.image || 0), db: st.db ?? null, clients,
 		name: c.get('dlna', 'main', 'name') ?? '', hostname: trim(readfile('/proc/sys/kernel/hostname') ?? ''), media,
 		shares: map(filter(share_list().shares, (x) => x.volume), (x) => x.name) };
+}
+
+/* ---------- printers (system app "printer": ipp-usb, p910nd) ---------- */
+
+const PRINTER = '/usr/sbin/shareos-printer';
+function printer_status() {
+	let st = {}, printers = [];
+	for (let l in split(sh(PRINTER + ' status').out, '\n')) {
+		let m = match(l, /^([a-z0-9]+)=(.*)$/);
+		if (!m) continue;
+		if (m[1] == 'printer') {
+			let f = split(m[2], '|');
+			push(printers, { id: f[0], ipp: f[1] == '1', lp: f[2] == '-' ? null : f[2], via: f[3] || null, port: f[4] ? +f[4] : null,
+				maker: trim(f[5] ?? ''), model: trim(join('|', slice(f, 6))) });
+		}
+		else st[m[1]] = m[2];
+	}
+	return { installed: st.installed == '1', enabled: st.enabled == '1', mode: st.mode ?? 'auto', ippusb: st.ippusb == '1', printers,
+		hostname: trim(readfile('/proc/sys/kernel/hostname') ?? '') };
 }
 
 /* ---------- snapshots (rsync with hard links, shareos-snapshot) ---------- */
@@ -3827,6 +3846,37 @@ return {
 				let r = sh(DLNA + ' rescan');
 				let m = match(r.out, /error: ([^\n]*)/);
 				return m ? { error: m[1] } : dlna_status();
+			}
+		}
+	},
+
+	'shareos.printer': {
+		status: { call: function() { return printer_status(); } },
+
+		set: {
+			args: { enabled: false, mode: '' },
+			call: function(req) {
+				let a = req.args, c = cursor();
+				if (a.mode && !(a.mode in { auto: 1, raw: 1 })) return { error: 'invalid mode' };
+				c.set('printer', 'main', 'printer');
+				c.set('printer', 'main', 'enabled', a.enabled === true ? '1' : '0');
+				if (a.mode) c.set('printer', 'main', 'mode', a.mode);
+				c.commit('printer');
+				let r = sh(PRINTER + (a.enabled === true ? ' restart' : ' stop'));
+				let m = match(r.out, /error: ([^\n]*)/);
+				if (m || r.rc != 0) return { error: m ? m[1] : (trim(r.out) || 'failed') };
+				sleep(500);
+				return printer_status();
+			}
+		},
+
+		test: {
+			args: { lp: '' },
+			call: function(req) {
+				if (!match(req.args.lp ?? '', /^lp[0-9]$/)) return { error: 'no such printer' };
+				let r = sh(PRINTER + ' test ' + req.args.lp);
+				let m = match(r.out, /error: ([^\n]*)/);
+				return m || r.rc != 0 ? { error: m ? m[1] : 'failed' } : { ok: true };
 			}
 		}
 	},

@@ -76,6 +76,7 @@ Version in brackets = first release with the feature.
 - **USB sticks and disks:** mounted at `/mnt/usb-<name>` when plugged in (FAT32, exFAT, NTFS, ext4, Btrfs), **Safely remove**, **Format** with exFAT, FAT32, NTFS or ext4 (beta.7)
 
 **Shares, users, files**
+- USB printers in the network: current printers without a driver (IPP over USB: AirPrint, Mopria, Windows), scanning over the network (eSCL), older printers over port 9100 (system app "printer", 0.2.0-beta.18)
 - SMB 2/3 (ksmbd) and NFS v4 shares with read/write permissions per user and group, guest access optional; the crypto engine of the SoC computes the SMB 3 signatures (about three times as fast, 0.2.0-beta.17); compatibility mode up to SMB 2.1 for difficult clients (0.2.0-beta.17)
 - Users and groups; one account for shares, web interface and apps; storage limit per user (ext4); import of Alt-F users with their passwords
 - "My ShareOS": users with web access manage their own password, look, shares, storage, cloud and Paperless

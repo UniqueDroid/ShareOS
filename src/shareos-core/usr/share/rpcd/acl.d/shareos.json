@@ -107,6 +107,9 @@
 				],
 				"shareos.status": [
 					"chips"
+				],
+				"shareos.printer": [
+					"status"
 				]
 			},
 			"uci": [
@@ -299,6 +302,10 @@
 					"set",
 					"test",
 					"telegram_chats"
+				],
+				"shareos.printer": [
+					"set",
+					"test"
 				]
 			},
 			"uci": [

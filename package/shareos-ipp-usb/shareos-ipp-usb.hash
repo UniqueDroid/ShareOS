@@ -1,0 +1,3 @@
+# Locally calculated (git tag 0.9.34, Go modules vendored by buildroot)
+sha256  062fbbb29519ef5786f7f06d5c1200e9208d3f744094a32c19ae9a2761cb347b  shareos-ipp-usb-0.9.34-git4-go2.tar.gz
+sha256  744244cc574688a0017c85d81b2555b1af768601f242f079fac4f7570c822e47  LICENSE
