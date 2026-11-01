@@ -449,6 +449,14 @@ Braucht ein Tailscale-Konto (kostenlos), ein Handy oder einen Rechner mit Tailsc
 5. Konto ohne persönlichen Ordner: Teilen meldet „no personal folder“; das Geteilte wird verworfen und kommt bei der nächsten Anmeldung nicht wieder.
 6. Dateidialog einer App für ein Konto **ohne** *Dateien* (z. B. Webpad → *Öffnen*): Die Ordnerauswahl zeigt zuerst *App-Daten*, dann *Mein Ordner* und die Freigaben des Benutzers; Freigaben nur zum Lesen sind markiert und fehlen beim Speichern. Die App legt ihre eigenen Dateien weiter in *App-Daten* ab.
 
+## 14zf. DynDNS, Zertifikate, Drucker, USV (0.2.0-beta.18)
+
+1. **DynDNS:** Bei duckdns.org einen Namen anlegen. System → Netzwerk → DynDNS: *DuckDNS*, Name und Token, *Speichern*. Rechts steht nach ein paar Sekunden *aktuell* mit der öffentlichen Adresse; `nslookup <name>.duckdns.org 1.1.1.1` zeigt sie. Falsches Token: *Fehler* und eine Meldung.
+2. **Eigene CA:** *Zertifizierungsstelle anlegen*, *Für diese Box verwenden* (die Seite verbindet sich neu), *Stammzertifikat* herunterladen und auf dem PC als vertrauenswürdige Stammzertifizierungsstelle installieren: `https://<box>/` öffnet ohne Warnung. Ein Zertifikat für ein anderes Gerät ausstellen (z. B. `router.home.lan, 192.168.1.1`), Zertifikat und Schlüssel herunterladen.
+3. **Let's Encrypt** (DynDNS mit DuckDNS oder Cloudflare): mit *Testmodus* *Zertifikat holen* – nach bis zu 3 Minuten *aktiv (Test)*. Dann ohne Testmodus. Bei Fehlern: `cat /tmp/shareos-acme.log`. *Abschalten* führt zurück zum selbstsignierten Zertifikat.
+4. **Drucker:** System-App *ipp-usb + p910nd* installieren, Drucker per USB anschließen, Dienste → Drucker → *Drucker im Netzwerk freigeben*. Ein aktueller Drucker zeigt *Ohne Treiber (IPP over USB)*; Windows 10/11 findet ihn unter „Drucker hinzufügen“, ein Multifunktionsgerät scannt mit der App „Scannen“ bzw. „Mopria Scan“. Ein älterer Drucker zeigt Port 9100; *Testseite*. Drucker abziehen: verschwindet nach ein paar Sekunden.
+5. **USV:** System-App *Network UPS Tools* installieren, USV per USB anschließen, Dienste → USV → *USV überwachen*, Herunterfahren *Nach einer Zeit auf Akku*, 2 Minuten. Akkustand und Modell erscheinen. Netzstecker der USV ziehen: Meldung „Stromausfall“, nach 2 Minuten fährt die Box herunter, danach schaltet die USV ab; Stecker wieder rein: USV und Box gehen an. Bei Problemen: `shareos-ups status`, `cat /tmp/shareos-ups/driver.log`.
+
 ## 14ze. Vorhandenes Laufwerk übernehmen (0.2.0-beta.17)
 
 1. Eine Platte mit Daten (z. B. von Alt-F, ext4) einsetzen, die ShareOS noch nicht kennt. Speicher → Laufwerke: an der Platte erscheint **„sdX2 übernehmen“**.

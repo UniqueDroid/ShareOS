@@ -232,6 +232,15 @@ the box for why the web server was not running.
 | 08:39 | ksmbd computes the SMB 3 signatures (AES-CMAC) through `cbc(aes)` of the Marvell crypto engine: Jan measured 18–22 MB/s instead of 6–11 (#101). The same morning: hardening after an external code review (#102). |
 | 12:34 | Switching off by schedule never happened (#82): BusyBox `crond` read the empty `/etc/cron/crontabs`, so no ShareOS cron job had ever run (#104). |
 | 15:14 | The schedule is a short overview with the date of the next switch-on (#105); *Mein ShareOS* gets its own APPS tab and the header stays on one line, the rest behind **+N** (#106). Everything goes into `v0.2.0-beta.17`. |
+| 19:27 | Jan publishes `v0.2.0-beta.17`. |
+
+### Sunday, 01.11.2026
+
+| Time | What happened |
+|---|---|
+| 15:22 | System → Netzwerk gets dynamic DNS (DuckDNS, dynv6, Cloudflare, No-IP, any dyndns2 address; IPv4 and IPv6), an own certificate authority for the box and other devices in the home network, and Let's Encrypt over DNS – no port has to be open (#108). |
+| 16:17 | USB printers in the network (#109): ipp-usb for current printers – driverless printing and scanning; the firmware's avahi has no D-Bus, so a patch makes ipp-usb announce the devices through static service files. Older printers over port 9100 with p910nd. |
+| 17:23 | UPS over USB with Network UPS Tools (#110): charge and runtime, messages on a power failure, a clean shutdown on battery and the UPS switching the box on again with the power. Everything goes into `v0.2.0-beta.18`. |
 
 ## Notable problems solved
 

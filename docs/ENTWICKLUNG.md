@@ -233,6 +233,15 @@ direkt auf der Box nachgesehen, warum der Webserver nicht lief.
 | 08:39 | ksmbd berechnet die SMB-3-Signaturen (AES-CMAC) über `cbc(aes)` der Marvell-Krypto-Einheit: Jan hat 18–22 MB/s statt 6–11 gemessen (#101). Am selben Morgen: Härtung nach einer externen Code-Prüfung (#102). |
 | 12:34 | Das Ausschalten nach Zeitplan passierte nie (#82): BusyBox-`crond` las das leere `/etc/cron/crontabs`, kein Cron-Auftrag von ShareOS war je gelaufen (#104). |
 | 15:14 | Der Zeitplan ist eine kurze Übersicht mit dem Datum des nächsten Einschaltens (#105); *Mein ShareOS* bekommt einen eigenen Reiter APPS, und der Kopf bleibt einzeilig, der Rest hinter **+N** (#106). Alles kommt in `v0.2.0-beta.17`. |
+| 19:27 | Jan veröffentlicht `v0.2.0-beta.17`. |
+
+### Sonntag, 01.11.2026
+
+| Zeit | Was passiert ist |
+|---|---|
+| 15:22 | System → Netzwerk bekommt DynDNS (DuckDNS, dynv6, Cloudflare, No-IP, jede dyndns2-Adresse; IPv4 und IPv6), eine eigene Zertifizierungsstelle für die Box und andere Geräte im Heimnetz und Let's Encrypt über DNS – kein Port muss offen sein (#108). |
+| 16:17 | USB-Drucker im Netzwerk (#109): ipp-usb für aktuelle Drucker – Drucken und Scannen ohne Treiber; das avahi der Firmware hat kein D-Bus, deshalb kündigt ipp-usb die Geräte per Patch über statische Service-Dateien an. Ältere Drucker über Port 9100 mit p910nd. |
+| 17:23 | USV über USB mit Network UPS Tools (#110): Akkustand und Restlaufzeit, Meldungen bei Stromausfall, sauberes Herunterfahren auf Akku, und die USV schaltet die Box mit dem Strom wieder ein. Alles kommt in `v0.2.0-beta.18`. |
 
 ## Bemerkenswerte Problemlösungen
 
