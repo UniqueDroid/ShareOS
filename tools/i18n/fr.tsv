@@ -1717,3 +1717,48 @@ E1348	Toujours le port 9100 (pilote sur l'ordinateur)
 E1349	Tout le monde sur le réseau peut imprimer, sans connexion. « Toujours le port 9100 » seulement si une imprimante n'imprime pas correctement sans pilote.
 E1350	Imprimantes enregistrées.
 E1351	Page de test envoyée.
+E1352	ONDULEUR
+E1353	Chargement de l'onduleur …
+E1354	Installer depuis le store (Network UPS Tools)
+E1355	La prise en charge de l'onduleur est une application système : la box affiche alors la charge et l'autonomie, signale une coupure de courant et s'arrête proprement à temps.
+E1356	Batterie presque vide
+E1357	sur batterie
+E1358	sur secteur
+E1359	pas de données
+E1360	BATTERIE
+E1361	AUTONOMIE
+E1362	CHARGE
+E1363	Tension secteur
+E1364	Batterie depuis
+E1365	Pilote
+E1366	Connexion à l'onduleur …
+E1367	Détecté :
+E1368	Activez-le ci-dessous.
+E1369	ÉVÉNEMENTS
+E1370	Aucun pour l'instant – une coupure de courant s'affiche ici et comme message.
+E1371	Coupure de courant – sur onduleur
+E1372	Courant rétabli
+E1373	Arrêt déclenché
+E1374	La box s'arrête
+E1375	Connexion à l'onduleur perdue
+E1376	Pas de connexion à l'onduleur
+E1377	Connexion à l'onduleur rétablie
+E1378	Remplacer la batterie
+E1379	Surveiller l'onduleur (démarre aussi après un redémarrage)
+E1380	ARRÊT
+E1381	Quand l'onduleur signale « batterie faible »
+E1382	Sous un niveau de charge
+E1383	Après un temps sur batterie
+E1384	CHARGE DE LA BATTERIE (%)
+E1385	MINUTES SUR BATTERIE
+E1386	PILOTE
+E1387	Automatique
+E1388	blazer_usb (anciens Megatec)
+E1389	Ensuite éteindre l'onduleur – la box redémarre au retour du courant
+E1390	D'autres ordinateurs peuvent lire l'onduleur via le réseau (port 3493)
+E1391	MOT DE PASSE POUR « MONITOR »
+E1392	enregistré – laisser vide pour le conserver
+E1393	Sur l'autre ordinateur (NUT, upsmon) :
+E1394	– il s'arrête alors avant la box.
+E1395	La box ne s'arrête que tant qu'elle est sur batterie. Si le courant revient avant, rien ne se passe.
+E1396	Onduleur enregistré.

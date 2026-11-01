@@ -1,0 +1,17 @@
+# UPS over USB (system app "nut": Network UPS Tools) – managed by
+# shareos-ups (web interface: Services -> UPS).
+#
+#	option shutdown 'low'      # low | percent | minutes
+#	option percent '30'        # shutdown percent: below this charge
+#	option minutes '5'         # shutdown minutes: after this long on battery
+#	option killpower '1'       # switch the UPS output off afterwards
+#	option server '0'          # other computers may read it (user monitor)
+
+config ups 'main'
+	option enabled '0'
+	option driver 'auto'
+	option shutdown 'low'
+	option percent '30'
+	option minutes '5'
+	option killpower '1'
+	option server '0'

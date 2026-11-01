@@ -1,0 +1,19 @@
+{
+	"id": "nut",
+	"name": "Network UPS Tools",
+	"version": "2.8.5",
+	"publisher": "UniqueDroid",
+	"description": {
+		"de": "USV (unterbrechungsfreie Stromversorgung) über USB: Die Box zeigt Akkustand und Restlaufzeit, meldet einen Stromausfall und fährt rechtzeitig sauber herunter – bei leerem Akku, unter einem Prozentwert oder nach einigen Minuten auf Akku. Danach schaltet die USV ab und mit dem Strom wieder ein. Andere Rechner können die USV über das Netzwerk mitlesen. Für die meisten USVs (APC, Eaton, CyberPower, Megatec …). Einstellungen unter Dienste → USV.",
+		"en": "UPS (uninterruptible power supply) over USB: the box shows charge and runtime, reports a power failure and shuts down cleanly in time – on a low battery, below a percentage or after some minutes on battery. Then the UPS switches off and on again with the power. Other computers can read the UPS over the network. For most UPSs (APC, Eaton, CyberPower, Megatec …). Settings under Services → UPS."
+	},
+	"type": "system",
+	"commands": [ "usbhid-ups", "nutdrv_qx", "blazer_usb", "upsd", "upsmon", "upsc" ],
+	"service": { "control": "ups", "delay": 0 },
+	"flash": true,
+	"icon": "icon.svg",
+	"category": "system",
+	"license": "GPL-2.0-or-later",
+	"homepage": "https://networkupstools.org/",
+	"min_shareos": "0.2.0-beta.18"
+}

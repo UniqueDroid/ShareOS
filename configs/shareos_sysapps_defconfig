@@ -54,6 +54,11 @@ BR2_PACKAGE_SHAREOS_ZABBIX_AGENT=y
 # package/shareos-ipp-usb
 BR2_PACKAGE_SHAREOS_IPP_USB=y
 BR2_PACKAGE_P910ND=y
+# UPS (system app "nut"): Network UPS Tools with the USB drivers of most
+# UPSs (usbhid-ups: APC, Eaton, CyberPower …; nutdrv_qx/blazer_usb: Megatec)
+BR2_PACKAGE_LIBUSB=y
+BR2_PACKAGE_NUT=y
+BR2_PACKAGE_NUT_DRIVERS="usbhid-ups,nutdrv_qx,blazer_usb"
 BR2_PACKAGE_HTOP=y
 BR2_PACKAGE_STRACE=y
 BR2_PACKAGE_IPERF3=y

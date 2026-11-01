@@ -1717,3 +1717,48 @@ E1348	Sempre porta 9100 (controlador no computador)
 E1349	Qualquer pessoa na rede pode imprimir, sem iniciar sessão. «Sempre porta 9100» só se uma impressora não imprimir bem sem controlador.
 E1350	Impressoras guardadas.
 E1351	Página de teste enviada.
+E1352	UPS
+E1353	A carregar UPS …
+E1354	Instalar a partir da loja (Network UPS Tools)
+E1355	O suporte a UPS é uma app de sistema: a caixa mostra a carga e a autonomia, avisa de um corte de energia e desliga-se a tempo de forma limpa.
+E1356	Bateria quase vazia
+E1357	em bateria
+E1358	na rede elétrica
+E1359	sem dados
+E1360	BATERIA
+E1361	AUTONOMIA
+E1362	CARGA
+E1363	Tensão da rede
+E1364	Bateria desde
+E1365	Controlador
+E1366	A ligar à UPS …
+E1367	Detetado:
+E1368	Ligue-o abaixo.
+E1369	EVENTOS
+E1370	Nenhum ainda – um corte de energia aparece aqui e como mensagem.
+E1371	Corte de energia – a funcionar com a UPS
+E1372	Energia reposta
+E1373	Encerramento iniciado
+E1374	A caixa está a desligar
+E1375	Ligação à UPS perdida
+E1376	Sem ligação à UPS
+E1377	Ligação à UPS restabelecida
+E1378	Substituir a bateria
+E1379	Monitorizar a UPS (também arranca após reiniciar)
+E1380	ENCERRAR
+E1381	Quando a UPS indica «bateria fraca»
+E1382	Abaixo de uma carga
+E1383	Após algum tempo em bateria
+E1384	CARGA DA BATERIA (%)
+E1385	MINUTOS EM BATERIA
+E1386	CONTROLADOR
+E1387	Automático
+E1388	blazer_usb (Megatec antigos)
+E1389	Depois desligar a UPS – a caixa volta a arrancar quando a energia regressar
+E1390	Outros computadores podem ler a UPS pela rede (porta 3493)
+E1391	PALAVRA-PASSE PARA «MONITOR»
+E1392	guardada – deixe vazio para a manter
+E1393	No outro computador (NUT, upsmon):
+E1394	– então desliga-se antes da caixa.
+E1395	A caixa só se desliga enquanto estiver em bateria. Se a energia voltar antes, nada acontece.
+E1396	UPS guardada.

@@ -110,6 +110,9 @@
 				],
 				"shareos.printer": [
 					"status"
+				],
+				"shareos.ups": [
+					"status"
 				]
 			},
 			"uci": [
@@ -306,6 +309,9 @@
 				"shareos.printer": [
 					"set",
 					"test"
+				],
+				"shareos.ups": [
+					"set"
 				]
 			},
 			"uci": [
