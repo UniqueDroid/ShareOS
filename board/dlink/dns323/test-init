@@ -1,0 +1,63 @@
+#!/bin/sh
+#
+# ShareOS Lite – hardware test initramfs for the D-Link DNS-323 (phase 1).
+# Not the final initramfs: it loads the drivers, reports what it finds and
+# stays in a shell (serial console, SSH as root/shareos). Nothing is written
+# to the flash or to the disks.
+#
+mount -t proc proc /proc
+mount -t sysfs sysfs /sys
+mount -t devtmpfs devtmpfs /dev 2>/dev/null
+mkdir -p /dev/pts /run /tmp /var/run
+mount -t devpts devpts /dev/pts
+mount -t tmpfs tmpfs /run
+mount -t tmpfs tmpfs /tmp
+echo /sbin/mdev > /proc/sys/kernel/hotplug
+mdev -s
+
+R=/tmp/hw-report.txt
+say() { echo "$*" | tee -a $R; }
+
+say "=== ShareOS Lite DNS-323 hardware test ($(uname -r)) ==="
+say "model: $(grep -m1 Hardware /proc/cpuinfo | cut -d: -f2-)"
+say "cpu:   $(grep -m1 -i 'model name\|Processor' /proc/cpuinfo | cut -d: -f2-)"
+say "ram:   $(awk '/MemTotal/{print $2" kB"}' /proc/meminfo)"
+say "cmdline: $(cat /proc/cmdline)"
+
+# drivers (order matters: buses, then disks, then filesystems)
+for m in mtd physmap mv643xx_eth marvell i2c-mv64xxx i2c-dev g760a lm75 gpio-fan \
+	rtc-m41t80 gpio_keys leds-gpio orion_wdt evdev \
+	scsi_mod sd_mod libata sata_mv sata_sil md-mod raid1 ext2 ext4 squashfs overlay; do
+	if modprobe $m 2>/tmp/mod.err; then say "module $m: ok"
+	else say "module $m: FAILED $(cat /tmp/mod.err)"; fi
+done
+mdev -s
+sleep 5
+
+say "--- flash ---";    cat /proc/mtd | tee -a $R
+say "--- disks ---";    cat /proc/partitions | tee -a $R
+say "--- sata ---"   # (no dmesg in the initramfs)
+say "ports: $(ls /sys/class/ata_port 2>/dev/null | tr '\n' ' ')"
+for d in /sys/block/sd*; do [ -d "$d" ] && say "$(basename $d): $(cat $d/device/model 2>/dev/null) $(( $(cat $d/size) / 2097152 )) GB"; done
+say "--- network ---";  ip link show eth0 2>&1 | tee -a $R
+say "--- hwmon ---"
+for h in /sys/class/hwmon/hwmon*; do
+	[ -d "$h" ] || continue
+	say "$(cat $h/name 2>/dev/null): $(cat $h/temp1_input $h/fan1_input $h/pwm1 2>/dev/null | tr '\n' ' ')"
+done
+say "--- rtc ---";      hwclock -r 2>&1 | tee -a $R
+say "--- leds ---";     ls /sys/class/leds 2>&1 | tee -a $R
+say "--- input ---";    cat /proc/bus/input/devices 2>/dev/null | grep -E 'Name|Handlers' | tee -a $R
+say "--- memory ---";   free | tee -a $R
+
+udhcpc -i eth0 -t 10 -T 2 -n -q -s /usr/share/udhcpc/default.script -x hostname:shareos-lite \
+	&& say "dhcp: ok" || say "dhcp: FAILED"
+say "speed: $(cat /sys/class/net/eth0/speed 2>/dev/null) Mb/s"
+mkdir -p /etc/dropbear
+dropbear -R 2>/dev/null && say "ssh: root@$(ip -4 addr show eth0 | sed -n 's/.*inet \([0-9.]*\).*/\1/p') (password: shareos)"
+say "=== done – report in $R ==="
+
+while true; do
+	getty -L 115200 ttyS0 vt100
+	sleep 1
+done
