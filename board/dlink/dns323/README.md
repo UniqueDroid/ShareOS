@@ -45,5 +45,17 @@ initramfs (`test-init`) that loads the drivers, prints a hardware report
 by DHCP and starts SSH (root / shareos). It writes nothing to flash or disks.
 
 Boot it without flashing, from Alt-F on the DNS-323 with *TryIt* (kexec –
-works on Orion), or from U-Boot over the serial console. Do not use FlashIt
-for this test image.
+works on Orion), or from U-Boot over the serial console.
+
+**Do not flash this image – not with Alt-F's FlashIt and not with the
+D-Link firmware upgrade page.** It carries the real DNS-323 signature, so
+both would accept it; afterwards the box always boots the test initramfs
+(no web interface, nothing to flash back from) and recovery needs the
+serial console.
+
+## Not planned for Lite (so far)
+
+- Netfilter/nftables (kernel size): no firewall rules, no Tailscale subnet
+  routing, VPN features that need NAT/firewall are hidden.
+- Btrfs, cgroups (per-app RAM limits), kallsyms in oopses.
+- rclone only in low-memory mode; heavy store apps carry a warning.

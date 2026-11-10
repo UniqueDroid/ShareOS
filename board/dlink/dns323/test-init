@@ -5,6 +5,9 @@
 # stays in a shell (serial console, SSH as root/shareos). Nothing is written
 # to the flash or to the disks.
 #
+export PATH=/sbin:/bin:/usr/sbin:/usr/bin
+exec </dev/console >/dev/console 2>&1
+
 mount -t proc proc /proc
 mount -t sysfs sysfs /sys
 mount -t devtmpfs devtmpfs /dev 2>/dev/null

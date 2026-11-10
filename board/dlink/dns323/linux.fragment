@@ -162,6 +162,9 @@ CONFIG_MSDOS_FS=m
 # CONFIG_INPUT_KEYBOARD_ATKBD is not set
 # CONFIG_PCIEPORTBUS is not set
 
+# TRIM_UNUSED_KSYMS keeps only the exports used by modules of this same
+# build. Phase 2: build kernel and all modules (initramfs and disk) in one
+# run, or turn this off – a module built later fails with "Unknown symbol".
 CONFIG_TRIM_UNUSED_KSYMS=y
 CONFIG_SLUB_TINY=y
 # CONFIG_BASE_FULL is not set
