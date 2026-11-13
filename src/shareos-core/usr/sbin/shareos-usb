@@ -240,7 +240,7 @@ led() {   # blink <ms> | off
 
 cmd_copy() {
 	vol=$(uci -q get shareos.usbcopy.volume); rel=$(uci -q get shareos.usbcopy.path)
-	[ -n "$rel" ] || rel=USB-Kopien
+	[ -n "$rel" ] || rel="USB copies"
 	echo "$vol" | grep -qE '^[A-Za-z0-9._-]+$' || { copy_state state error error "no target set"; exit 1; }
 	echo "/$rel/" | grep -qE '/\.\.?/|//' && { copy_state state error error "invalid target folder"; exit 1; }
 	grep -q " /mnt/$vol " /proc/mounts || { copy_state state error error "target drive not mounted"; notify_copy warn "Ziellaufwerk $vol ist nicht eingehängt." "Target drive $vol is not mounted."; exit 1; }

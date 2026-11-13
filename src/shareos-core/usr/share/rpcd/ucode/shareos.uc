@@ -36,25 +36,25 @@ const NET_TIMEOUT = 120;     // s until unconfirmed network settings are rolled 
 
 // services the UI may show and control: init script -> process name
 const SERVICES = {
-	dropbear: { proc: 'dropbear', label: 'SSH / SFTP', desc: 'Dropbear, Port 22' },
-	uhttpd:   { proc: 'uhttpd',   label: 'Weboberfläche', desc: 'uhttpd, Port 80' },
-	ntpd:     { proc: 'ntpd',     label: 'Zeit (NTP)', desc: 'stellt die Uhr, gleicht die MCU-Uhr ab' },
-	crond:    { proc: 'crond',    label: 'Zeitplaner', desc: 'cron' },
-	rpcd:     { proc: 'rpcd',     label: 'API (rpcd)', desc: 'Schnittstelle für diese Oberfläche' },
-	ubus:     { proc: 'ubusd',    label: 'Systembus (ubus)', desc: 'Nachrichten zwischen den Diensten' },
-	syslogd:  { proc: 'syslogd',  label: 'Systemprotokoll', desc: 'syslogd, im RAM' },
-	'avahi-daemon': { proc: 'avahi-daemon', label: 'Netzwerkname (mDNS)', desc: 'macht die Box als <name>.local erreichbar' },
-	board:    { proc: 'dns320l-daemon', label: 'Gerätesteuerung', desc: 'Lüfter, Temperatur, Taster, MCU-Uhr' }
+	dropbear: { proc: 'dropbear', label: 'SSH / SFTP', desc: 'Dropbear, port 22' },
+	uhttpd:   { proc: 'uhttpd',   label: 'Web interface', desc: 'uhttpd, port 80' },
+	ntpd:     { proc: 'ntpd',     label: 'Time (NTP)', desc: 'sets the clock, keeps the MCU clock in sync' },
+	crond:    { proc: 'crond',    label: 'Scheduler', desc: 'cron' },
+	rpcd:     { proc: 'rpcd',     label: 'API (rpcd)', desc: 'interface for this web UI' },
+	ubus:     { proc: 'ubusd',    label: 'System bus (ubus)', desc: 'messages between the services' },
+	syslogd:  { proc: 'syslogd',  label: 'System log', desc: 'syslogd, in RAM' },
+	'avahi-daemon': { proc: 'avahi-daemon', label: 'Network name (mDNS)', desc: 'makes the box reachable as <name>.local' },
+	board:    { proc: 'dns320l-daemon', label: 'Board control', desc: 'fan, temperature, buttons, MCU clock' }
 };
 // services of system apps ("service" in their app.json, see shareos-apps):
 // listed while the app is installed, controlled by /usr/sbin/shareos-<control>
 const SYS_SVC_TEXT = {
-	dlna:         { label: 'Medienserver (DLNA)', desc: 'MiniDLNA, Port 8200' },
-	tailscale:    { label: 'Fernzugriff (Tailscale)', desc: 'tailscaled, WireGuard-Mesh' },
-	vpn:          { label: 'VPN (OpenVPN)', desc: 'Client und Server, App NetTunnel' },
-	transmission: { label: 'Torrents (Transmission)', desc: 'ein Dienst pro Konto' },
-	autobrr:      { label: 'Download-Automatik (autobrr)', desc: 'autobrr, Port 7474' },
-	zabbix:       { label: 'Überwachung (Zabbix-Agent)', desc: 'zabbix_agentd, Aktiv-Modus' },
+	dlna:         { label: 'Media server (DLNA)', desc: 'MiniDLNA, port 8200' },
+	tailscale:    { label: 'Remote access (Tailscale)', desc: 'tailscaled, WireGuard mesh' },
+	vpn:          { label: 'VPN (OpenVPN)', desc: 'Client and server, app NetTunnel' },
+	transmission: { label: 'Torrents (Transmission)', desc: 'one service per account' },
+	autobrr:      { label: 'Download automation (autobrr)', desc: 'autobrr, port 7474' },
+	zabbix:       { label: 'Monitoring (Zabbix agent)', desc: 'zabbix_agentd, active mode' },
 	// proc: the program to look for when the system app lists no command
 	dnsfilter:    { proc: 'AdGuardHome' }
 };
@@ -112,6 +112,28 @@ function read_trim(path) {
 function read_int(path) {
 	let v = read_trim(path);
 	return v != null && match(v, /^-?[0-9]+$/) ? +v : null;
+}
+
+// names of folders the box creates on the disks, in the language of the box
+// ("folders" of /www/i18n/<code>.json). Only used when a folder is created:
+// an existing one keeps its name, also after the language changed.
+const FOLDER_EN = { shared: 'Shared', usb: 'USB copies' };
+function folder_names(lang) {
+	if (!lang || lang == 'en' || !match(lang, /^[a-z]{2,3}$/)) return FOLDER_EN;
+	let j = null;
+	try { j = json(readfile('/www/i18n/' + lang + '.json') ?? 'null'); } catch (e) {}
+	return { ...FOLDER_EN, ...(type(j?.folders) == 'object' ? j.folders : {}) };
+}
+function folder_name(id) { return folder_names(cursor().get('shareos', 'ui', 'lang'))[id]; }
+// every name a folder has in any language (to find one made earlier)
+function folder_all_names(id) {
+	let out = [ FOLDER_EN[id] ];
+	for (let f in glob('/www/i18n/*.json')) {
+		let m = match(f, /\/([a-z]{2,3})\.json$/);
+		let n = m ? folder_names(m[1])[id] : null;
+		if (n && index(out, n) < 0) push(out, n);
+	}
+	return out;
 }
 
 function release() {
@@ -376,7 +398,7 @@ function usb_copy_info() {
 	}
 	if (st.state == 'running' && !stat('/tmp/shareos-usb.copy.lock')) { st.state = 'error'; st.error ??= 'stopped'; }
 	return { enabled: c.get('shareos', 'usbcopy', 'enabled') == '1', volume: c.get('shareos', 'usbcopy', 'volume') ?? '',
-		path: c.get('shareos', 'usbcopy', 'path') ?? 'USB-Kopien', last: length(st) ? st : null };
+		path: c.get('shareos', 'usbcopy', 'path') ?? folder_name('usb'), last: length(st) ? st : null };
 }
 
 function smart_read(disk, refresh) {
@@ -440,17 +462,34 @@ function storage_job() {
 	return length(j) ? j : null;
 }
 
+// the device of a volume. Must not touch the disks: this runs on every poll of
+// the storage page and the status page, and a probe wakes sleeping disks
+// (issue #155). A mounted volume: from /proc/mounts. Otherwise blkid – it
+// reads every partition – kept for 10 minutes and as long as the same block
+// devices exist.
+function volume_device(uuid, mp, mounts) {
+	for (let line in split(mounts, '\n')) {
+		let f = split(line, ' ');
+		if (f[1] == mp && index(f[0], '/dev/') == 0) return f[0];
+	}
+	if (!uuid) return null;
+	return memo('voldev:' + uuid, join(',', glob('/sys/class/block/*')), 600, () => {
+		let d = trim(sh('blkid -o device -t UUID=' + shq(uuid) + ' /dev/sd[a-z]* /dev/md[0-9]* /dev/loop[0-9]* 2>/dev/null | head -1').out);
+		return length(d) ? d : null;
+	});
+}
+
 function volumes() {
 	let list = [];
 	let c = cursor();
 	let mounts = readfile('/proc/mounts') ?? '';
 	c.foreach('storage', 'volume', function(s) {
 		let name = s['.name'];
-		let dev = s.uuid ? trim(sh('blkid -o device -t UUID=' + shq(s.uuid) + ' /dev/sd[a-z]* /dev/md[0-9]* /dev/loop[0-9]* 2>/dev/null | head -1').out) : null;
 		let mp = '/mnt/' + name;
+		let dev = volume_device(s.uuid, mp, mounts);
 		let mounted = index(mounts, ' ' + mp + ' ') >= 0;
 		let v = { name, uuid: s.uuid, fstype: s.fstype, layout: s.layout, enabled: s.enabled != '0',
-			device: dev && length(dev) ? dev : null, mountpoint: mp, mounted };
+			device: dev, mountpoint: mp, mounted };
 		if (mounted) {
 			let f = split(trim(split(sh('df -k ' + shq(mp)).out, '\n')[1] ?? ''), /\s+/);
 			if (length(f) >= 4) { v.size = +f[1] * 1024; v.used = +f[2] * 1024; v.avail = +f[3] * 1024; }
@@ -1446,7 +1485,6 @@ function apps_for(u) {
 /* ---------- file browser ---------- */
 
 const FILES_TICKETS = '/tmp/shareos-files';
-const SHARE_IN = 'Geteilt';   // folder for "Teilen mit" in the personal folder
 const APP_TICKETS = '/tmp/shareos-appfiles';     // read by /www-apps/_shareos/cgi/file
 const FILES_MAX = 2000;            // entries listed per folder
 
@@ -2069,7 +2107,12 @@ function sys_info() {
 		memory: meminfo(), temperature: read_int('/tmp/sys/temp1_input'), fan_pwm: read_int('/tmp/sys/pwm1'),
 		network: { speed: read_int(net + 'speed'), rx_bytes: read_int(net + 'statistics/rx_bytes'), tx_bytes: read_int(net + 'statistics/tx_bytes') },
 		volumes: memo('sysvol', '', 20, sys_volumes),
-		disks: memo('sysdisks', '', 60, () => map(disks(), (d) => ({ ...d, standby: !!match(sh('hdparm -C /dev/' + d.name).out, /standby/) })))
+		// standby: CHECK POWER MODE does not wake a sleeping disk; USB disks have
+		// no sleep state here (null), like on the storage page
+		disks: memo('sysdisks', '', 60, () => map(disks(), (d) => {
+			let usb = is_usb(d.name);
+			return { ...d, usb, standby: usb ? null : !!match(sh('hdparm -C /dev/' + d.name).out, /standby/) };
+		}))
 	};
 }
 
@@ -2201,19 +2244,19 @@ function status_chips(u) {
 	if (admin && stat('/opt/shareos/bin/openvpn') && pid_alive('/tmp/shareos-vpn/pid', 'openvpn')) {
 		let st = vpn_tool([ 'status' ]);
 		let ok = st.state == 'CONNECTED';
-		push(chips, { id: 'svc:vpn', label: 'VPN', detail: ok ? (st.ip ?? 'verbunden') : 'verbindet …', state: ok ? 'ok' : 'warn',
+		push(chips, { id: 'svc:vpn', label: 'VPN', detail: ok ? (st.ip ?? 'connected') : 'connecting …', state: ok ? 'ok' : 'warn',
 			app: ids.nettunnel ? 'nettunnel' : null });
 	}
 	if (admin && stat('/opt/shareos/bin/openvpn') && pid_alive('/tmp/shareos-vpn-server/pid', 'openvpn')) {
 		let n = 0;
 		for (let l in split(readfile('/tmp/shareos-vpn-server/status') ?? '', '\n')) if (substr(l, 0, 12) == 'CLIENT_LIST,') n++;
-		push(chips, { id: 'svc:vpnserver', label: 'VPN-SERVER', detail: n == 1 ? '1 Gerät' : n + ' Geräte', state: 'ok',
+		push(chips, { id: 'svc:vpnserver', label: 'VPN-SERVER', detail: n == 1 ? '1 device' : n + ' devices', state: 'ok',
 			app: ids.nettunnel ? 'nettunnel' : null });
 	}
 	if (admin && stat('/opt/shareos/bin/tailscaled') && pid_alive('/tmp/shareos-tailscale/pid', 'tailscaled')) {
 		// cheap (every 15 s): the address of tailscale0 instead of asking the daemon
 		let m = match(sh('ip -4 -o addr show dev tailscale0').out, /inet (100\.[0-9.]+)\//);
-		push(chips, { id: 'svc:tailscale', label: 'TAILSCALE', detail: m ? m[1] : 'getrennt',
+		push(chips, { id: 'svc:tailscale', label: 'TAILSCALE', detail: m ? m[1] : 'disconnected',
 			state: m ? 'ok' : 'warn', app: ids.tailscale ? 'tailscale' : null });
 	}
 	if (stat('/tmp/shareos-transmission/' + u + '/pid') && pid_alive('/tmp/shareos-transmission/' + u + '/pid', 'transmission')) {
@@ -2224,7 +2267,7 @@ function status_chips(u) {
 				state: 'ok', app: ids.transmission ? 'transmission' : null });
 	}
 	if (admin && pid_alive('/tmp/shareos-dlna/minidlna.pid', 'minidlna'))
-		push(chips, { id: 'svc:dlna', label: 'DLNA', detail: 'läuft', state: 'ok', href: '#/services/dlna' });
+		push(chips, { id: 'svc:dlna', label: 'DLNA', detail: 'running', state: 'ok', href: '#/services/dlna' });
 	let now = time();
 	for (let f in lsdir(APPSTATUS + '/' + u) ?? []) {
 		let m = match(f, /^([a-z][a-z0-9-]{1,31})\.json$/), a = m ? ids[m[1]] : null;
@@ -3421,7 +3464,7 @@ return {
 			call: function(req) {
 				let a = req.args, c = cursor();
 				if (type(a.enabled) != 'bool') return { error: 'invalid value' };
-				let path = trim(a.path ?? '') || 'USB-Kopien';
+				let path = trim(a.path ?? '') || folder_name('usb');
 				for (let part in split(path, '/')) if (!name_ok(part) || substr(part, 0, 1) == '.') return { error: 'invalid folder' };
 				if (a.enabled || a.volume) {
 					if (!valid_name(a.volume) || c.get('storage', a.volume) != 'volume') return { error: 'unknown volume' };
@@ -3658,9 +3701,11 @@ return {
 	},
 
 	'shareos.me': {
-		// "Teilen mit" of the installed app (Web Share Target): an upload
-		// ticket for one shared file into <personal folder>/Geteilt; a name
-		// that is taken gets " (2)", " (3)" … – nothing is replaced
+		// "Share with" of the installed app (Web Share Target): an upload
+		// ticket for one shared file into the folder for shared files in the
+		// personal folder ("Shared", named in the language of the box; one made
+		// earlier in another language is used as it is); a name that is taken
+		// gets " (2)", " (3)" … – nothing is replaced
 		share_ticket: {
 			args: { name: '' },
 			call: function(req) {
@@ -3674,8 +3719,9 @@ return {
 					h = r?.path;
 				}
 				if (!h) return { error: 'no personal folder' };
-				let d = h + '/' + SHARE_IN;
-				if (lstat(d) && stat(d)?.type != 'directory') return { error: 'not a folder: ' + SHARE_IN };
+				let folder = filter(folder_all_names('shared'), (x) => stat(h + '/' + x)?.type == 'directory')[0] ?? folder_name('shared');
+				let d = h + '/' + folder;
+				if (lstat(d) && stat(d)?.type != 'directory') return { error: 'not a folder: ' + folder };
 				if (!lstat(d)) {
 					let r = files_sh(u, 'mkdir -- ' + shq(d), false);
 					if (r.rc != 0) return { error: files_err(r) };
@@ -3690,7 +3736,7 @@ return {
 				system('find ' + FILES_TICKETS + ' -type f -mmin +5 -delete 2>/dev/null');
 				let t = new_token();
 				writefile(FILES_TICKETS + '/' + t, sprintf('put\n%s\n%s\n%d\n%s\n', acc_role(u) == 'admin' ? 'root' : u, d + '/' + n, time() + 120, pct_enc(n)));
-				return { url: '/cgi-bin/files?t=' + t, name: n, folder: SHARE_IN };
+				return { url: '/cgi-bin/files?t=' + t, name: n, folder };
 			}
 		},
 

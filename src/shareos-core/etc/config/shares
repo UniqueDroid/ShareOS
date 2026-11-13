@@ -2,7 +2,7 @@
 # (web interface: Shares). Example:
 #
 # config share 'fotos'
-#	option volume 'daten'
+#	option volume 'data'
 #	option path 'Fotos'          # folder on the volume
 #	option smb '1'
 #	option guest '0'             # 1 = everyone may read without a password

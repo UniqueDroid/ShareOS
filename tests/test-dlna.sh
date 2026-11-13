@@ -63,7 +63,7 @@ check "not installed: status says so, no service entry" "u status | js \"not d['
 check "switching on without the system app: clear error" "u set '{\"enabled\":true,\"name\":\"\",\"media\":[]}' | js \"'not installed' in d.get('error','')\""
 cp "$SAPP" "$R/tmp/m.sapp"
 check "system app minidlna installs" "run 'shareos-apps install-file /tmp/m.sapp' | js \"d.get('id')=='minidlna'\" && [ -x $R/opt/shareos/bin/minidlnad ]"
-check "service list shows the media server" "run 'ubus call shareos.service list' | grep -q 'Medienserver'"
+check "service list shows the media server" "run 'ubus call shareos.service list' | grep -q 'Media server'"
 check "unknown share refused" "u set '{\"enabled\":true,\"name\":\"x\",\"media\":[{\"share\":\"nix\",\"type\":\"A\"}]}' | js \"d.get('error')=='invalid folder'\""
 o=$(u set '{"enabled":true,"name":"Wohnzimmer NAS","media":[{"share":"musik","type":"A"},{"share":"bilder","type":"P"}]}')
 check "switched on: running, folders in the settings" "echo '$o' | js \"d['running'] and d['name']=='Wohnzimmer NAS' and d['media']==[{'type':'A','share':'musik'},{'type':'P','share':'bilder'}]\" && grep -q '^media_dir=A,/mnt/daten/musik$' $R/tmp/shareos-dlna/minidlna.conf && grep -q '^media_dir=P,/mnt/daten/bilder$' $R/tmp/shareos-dlna/minidlna.conf"

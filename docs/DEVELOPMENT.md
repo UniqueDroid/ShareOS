@@ -148,7 +148,7 @@ the box for why the web server was not running.
 | 16:30 | Instead of rsnapshot Claude builds **snapshots** right into ShareOS (rsync with hard links like rsnapshot, without OpenSSL) and the **media server** (MiniDLNA as a system app, settings under Services). |
 | 18:26 | An outside Tailscale PR (ShareOS-Apps #16) only shows demo data, because there is no Tailscale on the box. Jan and Claude reply: the system app and an API in the firmware will come from ShareOS. |
 | 19:37 | #37–#40 are merged, everything for `v0.2.0-beta.6` is on `main`. |
-| 20:01 | Jan: ShareCommander shows a user only example files like `/etc/hosts`. Cause: users only got their personal folder, and only with "Dateien" ticked. Now they see their shares by rights; Jan's question "is that safe with the user concept?" leads to ACLs: Linux itself enforces the share rights for every program. ShareCommander 1.3 starts on the box. |
+| 20:01 | Jan: ShareCommander shows a user only example files like `/etc/hosts`. Cause: users only got their personal folder, and only with "Files" ticked. Now they see their shares by rights; Jan's question "is that safe with the user concept?" leads to ACLs: Linux itself enforces the share rights for every program. ShareCommander 1.3 starts on the box. |
 | 20:44 | Jan: Transmission only runs for admins. Cause: system apps installed from the web interface landed in a folder only root can read (rpcd works with umask 077); reproduced in the test and fixed. WinWeb Player 1.2 keeps its settings and playlist and plays whole folders of the box. |
 | 21:12 | Jan: "What about Tailscale?" (an outside PR only showed demo data). Claude builds Tailscale for ARMv5: 1.98.8 (the newest that builds with buildroot's Go), without what a NAS does not need – 17 instead of 33 MB; in the emulator the daemon runs with about 50 MB RAM. |
 | 21:52 | Jan's box has 27.9 MB free on the flash. Jan: "Move them out, create symbolic links – for large apps." System apps over 2 MB go to the drive, `/opt/shareos/sysapps/<id>` is a link there. Plus the permission `tailscale`, `ShareOS.tailscale` and the header chip. |
@@ -164,9 +164,9 @@ the box for why the web server was not running.
 
 | Time | What happened |
 |---|---|
-| 08:30 | Jan: "it does not start by itself" – `tailscaled` only ran once an app pressed *Verbinden*, and the submitted Tailscale app talked to an interface the box does not have. Claude starts the daemon on install and at boot (ShareOS #48) and ports the app to `ShareOS.tailscale` with a real QR code (ShareOS-Apps #22). |
+| 08:30 | Jan: "it does not start by itself" – `tailscaled` only ran once an app pressed *Connect*, and the submitted Tailscale app talked to an interface the box does not have. Claude starts the daemon on install and at boot (ShareOS #48) and ports the app to `ShareOS.tailscale` with a real QR code (ShareOS-Apps #22). |
 | 09:22 | Jan: "Can this be simpler with system apps?" Every service had its own init script and its own hook – Jan's rename to `tailscaled` had orphaned exactly that hook. Since then the service is declared in the system app's `app.json` (`"service"`), one init script starts them all, the control stays in the firmware. Jan decides: system apps are submitted to the ShareOS repo, ShareOS-Apps only takes web apps – with one example each for a program and a service. |
-| 11:28 | Jan's app ShareNotes goes into the store. His requirement: accounts without "Dateien" should keep their notes on the box too. Jan picks a private folder per app and account on the apps drive; the account's folders, shares and file browser stay closed. |
+| 11:28 | Jan's app ShareNotes goes into the store. His requirement: accounts without "Files" should keep their notes on the box too. Jan picks a private folder per app and account on the apps drive; the account's folders, shares and file browser stay closed. |
 | 15:03 | autobrr for the box (outside PR #20 had only the interface): Claude builds autobrr 1.84 for ARMv5 (32 MB including its web interface, about 45 MB RAM in the emulator). Jan decides: one autobrr for the whole box, set up by admins; matches go through a hand-over folder to the Transmission of a chosen account; plus autobrr's own web interface. |
 
 ### Saturday, 24.10.2026
@@ -175,7 +175,7 @@ the box for why the web server was not running.
 |---|---|
 | 14:17 | Jan publishes `v0.2.0-beta.10`. |
 | 17:30 | Jan: "Can you make something out of the apps that do nothing sensible?" SysMon, HomePing, DockerDeck and TuyaPulse showed sample data. Four new permissions for admins only: `sysinfo` (the box's values), `netcheck` (checks from the box), `docker` (Docker hosts in the homelab) and `tuya` – with a small program of its own, `shareos-tuya` (C, 13 KB), that switches Tuya devices locally without the cloud, checked against a fake device built from tinytuya's code. Also ShareVault with categories, TinyPDF with a real PDF viewer, KeyKeeper encrypted, all UniqueDroid apps under GPL-2.0-only. |
-| 19:20 | Jan's redesign of *Mein ShareOS*: *Darstellung* becomes *Einstellungen* with the password, *Speicher* as a full-width table, "share with" on the phone into the folder `Geteilt`, and shares in the apps' file dialog also without "Dateien". Jan: "We can also do everything together in one release" – all of it goes into `v0.2.0-beta.11`. |
+| 19:20 | Jan's redesign of *My ShareOS*: *Appearance* becomes *Settings* with the password, *Storage* as a full-width table, "share with" on the phone into the folder `Geteilt`, and shares in the apps' file dialog also without "Files". Jan: "We can also do everything together in one release" – all of it goes into `v0.2.0-beta.11`. |
 | 22:40 | Jan publishes `v0.2.0-beta.11`. |
 
 ### Sunday, 25.10.2026
@@ -193,7 +193,7 @@ the box for why the web server was not running.
 | Time | What happened |
 |---|---|
 | 07:43 | Issue #74: apps do not follow the language. Jan: the demo apps should follow the ShareOS colours and languages without changing their layouts. All 35 own apps now follow light/dark and the accent colour (they had overridden the theme in their own CSS) and show English for every language but German – a small translator in each app, the same scheme as the interface (ShareOS-Apps #33). SmartBudget had not started at all. |
-| 09:21 | Jan: *Freigaben* often does not open. His browser console showed the cause: after *Paperless*, the shares page found shares and accounts but not the volumes (#76). |
+| 09:21 | Jan: *Shares* often does not open. His browser console showed the cause: after *Paperless*, the shares page found shares and accounts but not the volumes (#76). |
 | 10:34 | The terminal in its own window stayed black: the terminal takes one client, and the window used the session of the page (#77). |
 | 10:40 | BeatBox sent its loop to WinWeb Player, but the player had no access to the box: only the interface handed out grants. Now an app passes the user's folders on – if the other app asks for no more permissions (#78). Everything goes into `v0.2.0-beta.13`. |
 | 15:26 | Jan publishes `v0.2.0-beta.13`. |
@@ -228,17 +228,17 @@ the box for why the web server was not running.
 
 | Time | What happened |
 |---|---|
-| 00:08 | A tester switching from Alt-F asked how to keep the data on his disks – the setup wizard erases them. Now *übernehmen* takes a disk with data as it is (#100). He followed the SSH steps and both disks run on ShareOS. |
+| 00:08 | A tester switching from Alt-F asked how to keep the data on his disks – the setup wizard erases them. Now *Take over* takes a disk with data as it is (#100). He followed the SSH steps and both disks run on ShareOS. |
 | 08:39 | ksmbd computes the SMB 3 signatures (AES-CMAC) through `cbc(aes)` of the Marvell crypto engine: Jan measured 18–22 MB/s instead of 6–11 (#101). The same morning: hardening after an external code review (#102). |
 | 12:34 | Switching off by schedule never happened (#82): BusyBox `crond` read the empty `/etc/cron/crontabs`, so no ShareOS cron job had ever run (#104). |
-| 15:14 | The schedule is a short overview with the date of the next switch-on (#105); *Mein ShareOS* gets its own APPS tab and the header stays on one line, the rest behind **+N** (#106). Everything goes into `v0.2.0-beta.17`. |
+| 15:14 | The schedule is a short overview with the date of the next switch-on (#105); *My ShareOS* gets its own APPS tab and the header stays on one line, the rest behind **+N** (#106). Everything goes into `v0.2.0-beta.17`. |
 | 19:27 | Jan publishes `v0.2.0-beta.17`. |
 
 ### Sunday, 01.11.2026
 
 | Time | What happened |
 |---|---|
-| 15:22 | System → Netzwerk gets dynamic DNS (DuckDNS, dynv6, Cloudflare, No-IP, any dyndns2 address; IPv4 and IPv6), an own certificate authority for the box and other devices in the home network, and Let's Encrypt over DNS – no port has to be open (#108). |
+| 15:22 | System → Network gets dynamic DNS (DuckDNS, dynv6, Cloudflare, No-IP, any dyndns2 address; IPv4 and IPv6), an own certificate authority for the box and other devices in the home network, and Let's Encrypt over DNS – no port has to be open (#108). |
 | 16:17 | USB printers in the network (#109): ipp-usb for current printers – driverless printing and scanning; the firmware's avahi has no D-Bus, so a patch makes ipp-usb announce the devices through static service files. Older printers over port 9100 with p910nd. |
 | 17:23 | UPS over USB with Network UPS Tools (#110): charge and runtime, messages on a power failure, a clean shutdown on battery and the UPS switching the box on again with the power. Everything goes into `v0.2.0-beta.18`. |
 | 22:48 | Jan publishes `v0.2.0-beta.18`. |
@@ -256,7 +256,7 @@ the box for why the web server was not running.
 | 14:20 | Jan publishes `v0.2.0-beta.19`. |
 | 16:47 | Transmission used most of the 800 MHz CPU (#115). Every account's daemon gets lighter defaults once: 60 peers in total, 30 per torrent, a download queue of 3, µTP off – its congestion control in user space costs more CPU than all TCP peers together – and nice 10, so file shares stay quick. What the user sets afterwards stays. |
 | 18:40 | Syncthing per account (#88, #117): a system app built without its own web interface; the app *Syncthing* talks to its REST API over a Unix socket through the box, which only lets through what a remote control needs and only folders of the account. Passing Syncthing's own interface through the apps web server was the first plan – its two long-polling requests would have taken two of the three CGI slots. |
-| 20:20 | The firmware page shows the newest 3 GitHub versions, *Alle anzeigen* opens the rest (#118). |
+| 20:20 | The firmware page shows the newest 3 GitHub versions, *Show all (n)* opens the rest (#118). |
 | 21:51 | App permission `zabbix` for the Zabbix Agent Config app (#119). Its tests found two old faults in `shareos-zabbix`: called from rpcd it asked rpcd for the SMART values and waited for itself, and a stopped agent left worker processes behind that kept its pid file locked. |
 
 ### Friday, 06.11.2026
@@ -282,7 +282,7 @@ the box for why the web server was not running.
 | Time | What happened |
 |---|---|
 | 06:50 | **0.3.0-beta.3** is out (Paperless as a module). Measurement of AdGuard Home v0.107.80 (official ARMv5 build) in the ShareOS userland: default list (188,000 rules) 45 MB of Go memory, 30 MB with `GOMEMLIMIT=32MiB`; 696,000 rules 107 and 77 MB – plus the program code. Much more than Pi-hole (lists in SQLite). Jan decides: AdGuard Home with guard rails. |
-| 07:30 | **DNS filter as the second module:** system app "DNS-Filter", controller `shareos-dnsfilter`, tab DNS-FILTER. Set up through AdGuard's own setup API, memory limit, query log and statistics in RAM only, warning from 300,000 rules on. AdGuard's user switch drops root too early (port 53 fails) – it runs as root. `test-dnsfilter` with 34 checks, blocking over port 53 included. |
+| 07:30 | **DNS filter as the second module:** system app "DNS filter", controller `shareos-dnsfilter`, tab DNS FILTER. Set up through AdGuard's own setup API, memory limit, query log and statistics in RAM only, warning from 300,000 rules on. AdGuard's user switch drops root too early (port 53 fails) – it runs as root. `test-dnsfilter` with 34 checks, blocking over port 53 included. |
 | 10:17 | **Project website** on GitHub Pages: [uniquedroid.github.io/ShareOS](https://uniquedroid.github.io/ShareOS/) – features, downloads per model, the app catalog, discussions and these docs as a wiki. It builds itself from the repository on every push, release and once a day. |
 | 15:30 | **DNS filter:** AdGuard's interface over HTTPS with the box's certificate (redirect only with a trusted certificate – HSTS), and the box keeps its local name when the filter is the network's DNS server (rewrites for its names, local domain to the router). Reported by Jan: the Chromebook could no longer reach the box. Plus own local entries (name → IP) on the tab, so AdGuard's interface is only needed for fine-tuning. |
 | 13:00 | **Cloud as the third module:** system app "Cloud", CLOUD tab and "My ShareOS" part only while it is installed. Boxes with jobs, accounts or rclone get it by themselves on the update. All three planned modules are done; *Areas* now only switches Apps. |
@@ -303,7 +303,7 @@ the box for why the web server was not running.
 |---|---|
 | 11:30 | **Remote access for Transmission programs** (issue #103). Jan's decisions: a separate password, home network only (VPN covers the rest), no extra web interface. The box's Transmission daemons only listen on Unix sockets, so the existing app proxy got a second entry point: `/transmission/rpc` on its own port with basic auth, the same checks and allowed methods. uhttpd does not pass `X-Transmission-Session-Id` to CGI, so the CSRF guard is "no `Origin` header" instead (there is no page that could need one). Passwords are made by the box and kept as hashes; rpcd keeps a right one in memory for 5 minutes so a client polling every two seconds does not run `mkpasswd` each time. |
 | 13:50 | #149 (remote access for Transmission programs), #150 (CodeQL findings as an artifact; `legacy/` no longer scanned) and the Transmission app 1.4.0 are merged – everything for `v0.3.0-beta.6` is on `main`. The monthly audit now also fetches and rates the CodeQL findings. |
-| 18:15 | Jan logs switching the DNS filter off and on on his box (script from the session). Found: "ready" came about 40 s before AdGuard answered DNS (it loads the lists first), the local names were never set (the API did not answer while the lists loaded), the box was its own only DNS server (handed out by the network) and could not resolve anything while the filter was off, and *Dienste* always showed it as not started. Once the filter went off again after switching on: Jan had saved again because nothing visible happened – each status call waited up to 30 s for AdGuard while the lists loaded and held up the whole interface. Now "startet …" shows at once, *Speichern* is locked while it starts, and the status does not wait for AdGuard. |
+| 18:15 | Jan logs switching the DNS filter off and on on his box (script from the session). Found: "ready" came about 40 s before AdGuard answered DNS (it loads the lists first), the local names were never set (the API did not answer while the lists loaded), the box was its own only DNS server (handed out by the network) and could not resolve anything while the filter was off, and *Services* always showed it as not started. Once the filter went off again after switching on: Jan had saved again because nothing visible happened – each status call waited up to 30 s for AdGuard while the lists loaded and held up the whole interface. Now "starting …" shows at once, *Save* is locked while it starts, and the status does not wait for AdGuard. |
 | 20:20 | #152 merged – everything for `v0.3.0-beta.7` (DNS filter fixes) is on `main`; Jan releases it right after beta.6. |
 
 ### Monday, 09.11.2026

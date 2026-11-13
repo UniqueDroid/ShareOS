@@ -1,10 +1,10 @@
 /* ShareOS service worker – makes the web interface installable as an app.
  * Nothing is cached: the NAS is always asked directly, so the app never
  * shows stale data, and /ubus calls are never touched.
- * "Teilen mit" (Web Share Target, manifest share_target): what Android shares
+ * "Share with" (Web Share Target, manifest share_target): what Android shares
  * with the installed app arrives here as a POST to ./share-target; it is kept
  * in IndexedDB and the interface uploads it after the login (app.js
- * shareInbox) into <personal folder>/Geteilt. */
+ * shareInbox) into the folder for shared files in the personal folder. */
 const SHARE_DB = 'shareos', SHARE_STORE = 'share';
 
 self.addEventListener('install', () => self.skipWaiting());

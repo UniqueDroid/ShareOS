@@ -122,6 +122,17 @@ S=$(run ubus call shareos.storage status)
 [ -n "${VERBOSE:-}" ] && echo "$S" | head -20
 check "status: volume daten mounted with size" "echo '$S' | python3 -c \"import json,sys; d=json.load(sys.stdin); v=[x for x in d['volumes'] if x['name']=='daten'][0]; sys.exit(0 if v['mounted'] and v['size']>0 and v['layout']=='single' else 1)\""
 check "status: job and spindown reported" "echo '$S' | python3 -c \"import json,sys; d=json.load(sys.stdin); sys.exit(0 if d['spindown']==30 and d['job']['state']=='done' else 1)\""
+# the status must not touch the disks (it is polled every 15 s and would keep
+# them from sleeping, #155): count the reads on the test disks around a call
+# (after a first one, as on the box, where the poll repeats)
+ios() { for l in $A $B $C; do awk '{printf "%s ", $1}' /sys/block/$l/stat; done; }
+# (the partition watcher of this test reads the disks itself: paused meanwhile)
+run ubus call shareos.storage status >/dev/null
+kill -STOP $WATCH; sleep 1
+io1=$(ios); run ubus call shareos.storage status >/dev/null; io2=$(ios)
+kill -CONT $WATCH
+check "status: no reads on the disks (mounted volumes need no probe)" "[ '$io1' = '$io2' ]"
+[ "$io1" = "$io2" ] || echo "      reads before: $io1 after: $io2"
 # disk health: self-test schedule into the crontab, test on an unknown disk refused
 E=$(run ubus call shareos.storage smart_schedule "'{\"mode\":\"short_weekly\"}'")
 check "smart: weekly short self-test scheduled (crontab)" "echo '$E' | grep -q short_weekly && run uci get storage.global.smart_test | grep -qx short_weekly && grep -q 'shareos-storage smart-test short' $R/etc/crontabs/root && run ubus call shareos.storage status | grep -q '\"smart_schedule\": \"short_weekly\"'"
@@ -212,14 +223,21 @@ if [ -n "$V" ]; then
 	check "usb copy: no target set -> error, nothing copied" "echo '$o' | grep -q rc=1 && grep -q 'error=no target set' $R/tmp/shareos-usb.copy/state"
 	run "uci set shareos.usbcopy=usbcopy; uci set shareos.usbcopy.enabled=1; uci set shareos.usbcopy.volume=$V; uci commit shareos" >/dev/null
 	o=$(usb shareos-usb copy; echo rc=$?)
-	check "usb copy: the stick into a new dated folder on $V" "echo '$o' | grep -q rc=0 && grep -qx data $R/mnt/$V/USB-Kopien/*-mein_stick/f && grep -q state=done $R/tmp/shareos-usb.copy/state && grep -q files=1 $R/tmp/shareos-usb.copy/state"
+	check "usb copy: the stick into a new dated folder on $V" "echo '$o' | grep -q rc=0 && grep -qx data \"$R/mnt/$V/USB copies/\"*-mein_stick/f && grep -q state=done $R/tmp/shareos-usb.copy/state && grep -q files=1 $R/tmp/shareos-usb.copy/state"
 	usb shareos-usb copy >/dev/null
-	check "usb copy: again -> a second folder, nothing overwritten" "[ \$(ls -d $R/mnt/$V/USB-Kopien/*mein_stick* | wc -l) = 2 ]"
+	check "usb copy: again -> a second folder, nothing overwritten" "[ \$(ls -d \"$R/mnt/$V/USB copies/\"*mein_stick* | wc -l) = 2 ]"
 	check "usb copy: the stick stays mounted" "grep -q \" $R/mnt/usb-mein_stick \" /proc/mounts"
 	run "uci set shareos.usbcopy.path='../x'; uci commit shareos" >/dev/null
 	o=$(usb shareos-usb copy; echo rc=$?)
 	check "usb copy: a target outside the drive is refused" "echo '$o' | grep -q rc=1 && grep -q 'invalid target' $R/tmp/shareos-usb.copy/state"
 	run "uci delete shareos.usbcopy; uci commit shareos" >/dev/null
+	# the default folder is named in the language of the box and kept once saved (rpcd)
+	run '/etc/init.d/S12ubus start; /etc/init.d/S13rpcd start' >/dev/null; sleep 1
+	run "uci set shareos.ui.lang=de; uci commit shareos" >/dev/null
+	o=$(run ubus call shareos.storage usb_copy_config "'{\"enabled\":false,\"volume\":\"\",\"path\":\"\"}'")
+	check "usb copy: default folder in the language of the box (de: USB-Kopien), kept after a language change" "[ \"\$(run uci -q get shareos.usbcopy.path)\" = USB-Kopien ] && run 'uci set shareos.ui.lang=en; uci commit shareos' >/dev/null && run ubus call shareos.storage status | grep -q '\"path\": \"USB-Kopien\"'"
+	run "uci delete shareos.usbcopy; uci -q delete shareos.ui.lang; uci commit shareos" >/dev/null
+	check "usb copy: default folder of an English box" "run ubus call shareos.storage status | grep -q '\"path\": \"USB copies\"'"
 else
 	echo "SKIP  usb copy (no volume mounted here)"
 fi

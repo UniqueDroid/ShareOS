@@ -92,10 +92,10 @@ const D = {
 const DK_AREA = { files: ['shares', 'files'], storage: ['storage', 'volumes'], shares: ['shares', 'shares'], services: ['services', 'status'],
 	store: ['apps', 'store'], task: ['overview', ''], logs: ['system', 'logs'], system: ['system', 'general'],
 	cloud: ['cloud', ''], paperless: ['paperless', ''], dnsfilter: ['dnsfilter', ''] };
-const DK_TITLE = { files: ['Dateien', 'files'], storage: ['Speicher', 'storage'], shares: ['Freigaben', 'shares'], services: ['Dienste', 'services'],
-	store: ['App-Store', 'store'], task: ['Task-Manager', 'task'], logs: ['Protokolle', 'logs'], system: ['Einstellungen', 'settings'], term: ['Terminal', 'term'],
-	panel: ['Systemsteuerung', 'panel'], cloud: ['Cloud', 'cloud'], paperless: ['Paperless', 'paperless'], dnsfilter: ['DNS-Filter', 'dnsfilter'],
-	me: ['Mein ShareOS', 'me'], settings: ['Einstellungen', 'settings'] };
+const DK_TITLE = { files: ['Files', 'files'], storage: ['Storage', 'storage'], shares: ['Shares', 'shares'], services: ['Services', 'services'],
+	store: ['App store', 'store'], task: ['Task manager', 'task'], logs: ['Logs', 'logs'], system: ['Settings', 'settings'], term: ['Terminal', 'term'],
+	panel: ['Control panel', 'panel'], cloud: ['Cloud', 'cloud'], paperless: ['Paperless', 'paperless'], dnsfilter: ['DNS filter', 'dnsfilter'],
+	me: ['My ShareOS', 'me'], settings: ['Settings', 'settings'] };
 // the window of a page (admins)
 function dkAreaOf(r) {
 	if (r.tab === 'shares' && r.sub === 'files') return 'files';
@@ -127,13 +127,13 @@ function dkItems() {
 // control panel: the settings by category (admins) – [title, icon, page, action]
 function dkPanel() {
 	return [
-		['Zugang & Verbindung', [['Benutzer', 'users', '#/shares/users'], ['Gruppen', 'group', '#/shares/groups'], ['Freigaben', 'shares', '#/shares/shares'], ['Terminal', 'term', '#/system/terminal']]],
-		['Allgemein', [['Allgemein', 'general', '#/system/general'], ['Netzwerk', 'net', '#/system/network'], ['Zeit', 'time', '#/system/time'], ['Darstellung', 'look', '#/system/appearance'],
-			['Hintergrundbild', 'image', null, 'wall'], ['Meldungen', 'notes', '#/system/notifications'], ['Energie & Reset', 'power', '#/system/power']]],
-		['Dienste', [['Status', 'services', '#/services/status'], ['Autostart', 'autostart', '#/services/autostart'], ['Medienserver', 'media', '#/services/dlna'], ['Drucker', 'printer', '#/services/printer'], ['USV', 'ups', '#/services/ups'], ['Torrent-Fernzugriff', 'torrent', '#/services/torrent']]],
-		['Speicher', [['Laufwerke', 'storage', '#/storage/volumes'], ['Gesundheit', 'health', '#/storage/health'], ['Snapshots', 'snap', '#/storage/snapshots']]],
-		['System', [['Firmware', 'firmware', '#/system/firmware'], ['Protokolle', 'logs', '#/system/logs'],
-			...(tabOn('apps') ? [['Installierte Apps', 'store', '#/apps/installed'], ['App-Quellen', 'store', '#/apps/sources']] : [])]]
+		['Access & connection', [['User', 'users', '#/shares/users'], ['Groups', 'group', '#/shares/groups'], ['Shares', 'shares', '#/shares/shares'], ['Terminal', 'term', '#/system/terminal']]],
+		['General', [['General', 'general', '#/system/general'], ['Network', 'net', '#/system/network'], ['Time', 'time', '#/system/time'], ['Appearance', 'look', '#/system/appearance'],
+			['Wallpaper', 'image', null, 'wall'], ['Messages', 'notes', '#/system/notifications'], ['Power & reset', 'power', '#/system/power']]],
+		['Services', [['Status', 'services', '#/services/status'], ['Autostart', 'autostart', '#/services/autostart'], ['Media server', 'media', '#/services/dlna'], ['Printer', 'printer', '#/services/printer'], ['UPS', 'ups', '#/services/ups'], ['Torrent remote access', 'torrent', '#/services/torrent']]],
+		['Storage', [['Drives', 'storage', '#/storage/volumes'], ['Health', 'health', '#/storage/health'], ['Snapshots', 'snap', '#/storage/snapshots']]],
+		['System', [['Firmware', 'firmware', '#/system/firmware'], ['Logs', 'logs', '#/system/logs'],
+			...(tabOn('apps') ? [['Installed apps', 'store', '#/apps/installed'], ['App sources', 'store', '#/apps/sources']] : [])]]
 	];
 }
 const dkPanelFlat = () => dkPanel().flatMap(([, l]) => l.map(([t, ico, route, act]) => ({ id: route ? 'r:' + route : act, title: t, ico, route, act })));
@@ -155,20 +155,20 @@ async function deskRun() {
 	$('#root').innerHTML = html`<div class="dk" id="dk">
 		<div class="dk-wall" id="dk-wall"></div>
 		<header class="dk-bar">
-			<button class="dk-tb dk-sb" type="button" data-dk="start" aria-label="Startmenü" title="Startmenü" aria-expanded="false">${dkIco('start')}</button>
+			<button class="dk-tb dk-sb" type="button" data-dk="start" aria-label="Start menu" title="Start menu" aria-expanded="false">${dkIco('start')}</button>
 			<div class="dk-brand">SHAREOS</div>
-			<nav class="dk-task" id="dk-task" aria-label="Offene Fenster"></nav>
+			<nav class="dk-task" id="dk-task" aria-label="Open windows"></nav>
 			<div class="dk-stat" id="dk-stat"></div>
-			<button class="dk-tb" type="button" data-dk="notes" id="dk-bell" aria-label="Meldungen" title="Meldungen" hidden>${dkIco('notes')}<span class="dk-badge" id="dk-badge" hidden></span></button>
-			<button class="dk-tb" type="button" data-dk="search" aria-label="Suche" title="Suche">${dkIco('search')}</button>
-			<button class="dk-av" type="button" data-dk="menu" aria-label="Benutzermenü" title="Benutzermenü" aria-expanded="false" id="dk-av"></button>
+			<button class="dk-tb" type="button" data-dk="notes" id="dk-bell" aria-label="Messages" title="Messages" hidden>${dkIco('notes')}<span class="dk-badge" id="dk-badge" hidden></span></button>
+			<button class="dk-tb" type="button" data-dk="search" aria-label="Search" title="Search">${dkIco('search')}</button>
+			<button class="dk-av" type="button" data-dk="menu" aria-label="User menu" title="User menu" aria-expanded="false" id="dk-av"></button>
 			<div class="dk-clock" id="dk-clock"></div>
 		</header>
 		<div class="dk-icons" id="dk-icons" role="list" aria-label="Desktop"></div>
 		<div class="dk-snapv" id="dk-snapv" hidden></div>
 		<div class="dk-wins" id="dk-wins"></div>
-		<div class="dk-pop dk-start" id="dk-start" role="dialog" aria-label="Startmenü" hidden></div>
-		<div class="dk-pop dk-menu" id="dk-menu" role="dialog" aria-label="Benutzermenü" hidden></div>
+		<div class="dk-pop dk-start" id="dk-start" role="dialog" aria-label="Start menu" hidden></div>
+		<div class="dk-pop dk-menu" id="dk-menu" role="dialog" aria-label="User menu" hidden></div>
 	</div>`.s;
 	const sig = { signal: D.ac.signal };
 	const dk = $('#dk');
@@ -387,10 +387,10 @@ function dkWinEl(w) {
 	el.setAttribute('aria-label', w.title);
 	el.innerHTML = html`<div class="dk-wt">
 			<span class="dk-wi">${w.app ? appIcon(w.app, appSrv()) : dkIco(w.ico)}</span><h2>${w.title}</h2>
-			${w.kind !== 'panel' ? html`<button class="dk-wb" type="button" data-w="reload" aria-label="Neu laden" title="Neu laden">${dkIco('reload')}</button>` : ''}
-			<button class="dk-wb" type="button" data-w="min" aria-label="Minimieren" title="Minimieren">${dkIco('min')}</button>
-			<button class="dk-wb" type="button" data-w="max" aria-label="Maximieren" title="Maximieren">${dkIco('max')}</button>
-			<button class="dk-wb x" type="button" data-w="close" aria-label="Schließen" title="Schließen">${dkIco('close')}</button>
+			${w.kind !== 'panel' ? html`<button class="dk-wb" type="button" data-w="reload" aria-label="Reload" title="Reload">${dkIco('reload')}</button>` : ''}
+			<button class="dk-wb" type="button" data-w="min" aria-label="Minimise" title="Minimise">${dkIco('min')}</button>
+			<button class="dk-wb" type="button" data-w="max" aria-label="Maximise" title="Maximise">${dkIco('max')}</button>
+			<button class="dk-wb x" type="button" data-w="close" aria-label="Close" title="Close">${dkIco('close')}</button>
 		</div>
 		<div class="dk-wc${w.kind === 'view' ? ' dk-view' : ''}"></div>
 		<div class="dk-rs" data-rs="e"></div><div class="dk-rs" data-rs="w"></div><div class="dk-rs" data-rs="s"></div>
@@ -521,7 +521,7 @@ async function dkTerm(w) {
 		body.innerHTML = html`<iframe class="dk-term" title="Terminal" src="${termUrl(t)}" allow="clipboard-read; clipboard-write"></iframe>`.s;
 	} catch (e) {
 		if (!D.wins.includes(w)) return;
-		body.innerHTML = html`<div class="dk-wait"><p class="mut">Terminal: ${e.message}</p><button class="btn" type="button" data-w="reload">Neu laden</button></div>`.s;
+		body.innerHTML = html`<div class="dk-wait"><p class="mut">Terminal: ${e.message}</p><button class="btn" type="button" data-w="reload">Reload</button></div>`.s;
 	}
 }
 
@@ -543,7 +543,7 @@ function dkPlace(w) {
 	const mb = $('[data-w=max]', w.el);
 	if (mb) {
 		mb.innerHTML = dkIco(w.max ? 'unmax' : 'max').s;
-		mb.title = mb.ariaLabel = w.max ? 'Wiederherstellen' : 'Maximieren';
+		mb.title = mb.ariaLabel = w.max ? 'Restore' : 'Maximise';
 	}
 }
 
@@ -727,7 +727,7 @@ async function dkClick(e) {
 	else if (k === 'wall') dkWallDlg();
 	else if (k === 'look') { if (isUser()) dkOpen({ id: 'settings' }); else dkOpenPage(routeOf('#/system/appearance')); }
 	else if (k === 'arrange') {
-		if (!await confirmDlg('Anordnung zurücksetzen?', 'Symbole und Fenster kommen an ihre Standardplätze.', 'Zurücksetzen')) return;
+		if (!await confirmDlg('Reset the layout?', 'Icons and windows go back to their default places.', 'Reset')) return;
 		D.icons = {}; D.geo = {};
 		dkIcons(); dkSave();
 	}
@@ -776,12 +776,12 @@ function dkStartToggle(search) {
 	const open = s.hidden || search;
 	dkPopsClose();
 	if (!open) return;
-	s.innerHTML = html`<label class="dk-q">${dkIco('search')}<input id="dk-q" type="search" placeholder="Apps und Einstellungen suchen" aria-label="Apps und Einstellungen suchen" autocomplete="off"></label>
+	s.innerHTML = html`<label class="dk-q">${dkIco('search')}<input id="dk-q" type="search" placeholder="Search apps and settings" aria-label="Search apps and settings" autocomplete="off"></label>
 		<div id="dk-sl"></div>
 		<div class="dk-sf"><span class="dk-av sm" aria-hidden="true">${$('#dk-av').textContent}</span>
 			<div class="dk-who">${dkWho()}</div>
-			<button class="btn sm ghost" type="button" data-dk="classic">Klassische Ansicht</button>
-			<button class="btn sm ghost" type="button" data-dk="logout">Abmelden</button></div>`.s;
+			<button class="btn sm ghost" type="button" data-dk="classic">Classic view</button>
+			<button class="btn sm ghost" type="button" data-dk="logout">Log out</button></div>`.s;
 	s.hidden = false;
 	$('[data-dk=start]').setAttribute('aria-expanded', 'true');
 	dkStartList();
@@ -797,13 +797,13 @@ function dkStartList() {
 		// the visible (translated) names are searched as well as the German ones
 		const all = [...items, ...(isUser() ? [] : dkPanelFlat().filter((p) => !items.some((x) => x.title === p.title)))];
 		const hit = all.filter((it) => it.title.toLowerCase().includes(q) || (typeof i18nText === 'function' && i18nText(it.title).toLowerCase().includes(q)));
-		box.innerHTML = hit.length ? html`<div class="dk-sg">${hit.map(tile)}</div>`.s : html`<p class="dk-none">Nichts gefunden.</p>`.s;
+		box.innerHTML = hit.length ? html`<div class="dk-sg">${hit.map(tile)}</div>`.s : html`<p class="dk-none">Nothing found.</p>`.s;
 		return;
 	}
 	const sys = items.filter((x) => !x.app && !['cloud', 'paperless', 'dnsfilter'].includes(x.id));
 	const more = items.filter((x) => x.app || ['cloud', 'paperless', 'dnsfilter'].includes(x.id));
 	box.innerHTML = html`<div class="dk-sh">SYSTEM</div><div class="dk-sg">${sys.map(tile)}</div>
-		${more.length ? html`<div class="dk-sh">MODULE &amp; APPS</div><div class="dk-sg">${more.map(tile)}</div>` : ''}`.s;
+		${more.length ? html`<div class="dk-sh">MODULES &amp; APPS</div><div class="dk-sg">${more.map(tile)}</div>` : ''}`.s;
 }
 
 // name of the account and its role (root: "Administrator" and "root")
@@ -818,12 +818,12 @@ function dkMenuToggle() {
 	dkPopsClose();
 	if (!open) return;
 	m.innerHTML = html`<div class="dk-mh">${dkWho()}</div>
-		<button class="dk-mi" type="button" data-dk="theme">${svg(I.moon)}<span>Hell/Dunkel umschalten</span></button>
-		<button class="dk-mi" type="button" data-dk="look">${dkIco('look')}<span>Darstellung</span></button>
-		<button class="dk-mi" type="button" data-dk="wall">${dkIco('image')}<span>Hintergrundbild</span></button>
-		<button class="dk-mi" type="button" data-dk="arrange">${dkIco('reload')}<span>Anordnung zurücksetzen</span></button>
-		<button class="dk-mi" type="button" data-dk="classic">${svg(I.classic)}<span>Klassische Ansicht</span></button>
-		<button class="dk-mi" type="button" data-dk="logout">${svg(I.power)}<span>Abmelden</span></button>`.s;
+		<button class="dk-mi" type="button" data-dk="theme">${svg(I.moon)}<span>Toggle light/dark</span></button>
+		<button class="dk-mi" type="button" data-dk="look">${dkIco('look')}<span>Appearance</span></button>
+		<button class="dk-mi" type="button" data-dk="wall">${dkIco('image')}<span>Wallpaper</span></button>
+		<button class="dk-mi" type="button" data-dk="arrange">${dkIco('reload')}<span>Reset layout</span></button>
+		<button class="dk-mi" type="button" data-dk="classic">${svg(I.classic)}<span>Classic view</span></button>
+		<button class="dk-mi" type="button" data-dk="logout">${svg(I.power)}<span>Log out</span></button>`.s;
 	m.hidden = false;
 	$('#dk-av').setAttribute('aria-expanded', 'true');
 	$('button', m).focus();
@@ -840,9 +840,9 @@ function dkPanelDraw() {
 	const cats = dkPanel().map(([c, l]) => [c, l.filter(([t]) => hit(t))]).filter(([, l]) => l.length);
 	const list = html`${cats.map(([c, l]) => html`<div class="dk-ch">${c}</div><div class="dk-cg">${l.map(([t, ico, route, act]) =>
 		html`<button class="dk-cat" type="button" data-dk="panel-open" data-id="${route ? 'r:' + route : act}">${dkIco(ico)}<span>${t}</span></button>`)}</div>`)}
-		${cats.length ? '' : html`<p class="dk-none">Nichts gefunden.</p>`}`;
+		${cats.length ? '' : html`<p class="dk-none">Nothing found.</p>`}`;
 	if (!$('#dk-pq', body)) {
-		body.innerHTML = html`<div class="dk-panel"><label class="dk-q">${dkIco('search')}<input id="dk-pq" type="search" placeholder="Suche in allen Einstellungen" aria-label="Suche in allen Einstellungen" autocomplete="off"></label>
+		body.innerHTML = html`<div class="dk-panel"><label class="dk-q">${dkIco('search')}<input id="dk-pq" type="search" placeholder="Search all settings" aria-label="Search all settings" autocomplete="off"></label>
 			<div id="dk-pl">${list}</div></div>`.s;
 	} else $('#dk-pl', body).innerHTML = list.s;
 }
@@ -865,7 +865,7 @@ async function dkWall() {
 		D.wallUrl = URL.createObjectURL(new Blob([b], { type: DK_TYPES[ext] || 'image/jpeg' }));
 		el.style.backgroundImage = `url("${D.wallUrl}")`;
 		el.className = 'dk-wall img fit-' + (D.wall.fit === 'contain' || D.wall.fit === 'tile' ? D.wall.fit : 'cover');
-	} catch (e) { toast('Hintergrundbild: ' + e.message, true); }
+	} catch (e) { toast('Wallpaper: ' + e.message, true); }
 }
 
 // pick an image on the box: the places of the file browser, then folders and images
@@ -881,26 +881,26 @@ function dkWallDlg() {
 			if (!places) places = (await rpc('shareos.files', 'roots')).roots || [];
 			if (!place) {
 				body = places.length ? html`<div class="fb-list" data-i18n-skip>${places.map((x, i) => html`<button class="btn ghost fb-item" type="button" data-place="${i}">${svg(I.folder)}<span>${x.name}</span></button>`)}</div>`
-					: html`<p class="note">Keine Laufwerke oder Freigaben.</p>`;
+					: html`<p class="note">No drives or shares.</p>`;
 			} else {
 				const r = await rpc('shareos.files', 'list', { root: place.name, path: cur });
 				const dirs = r.entries.filter((x) => x.type === 'dir' || x.type === 'dirlink'), imgs = r.entries.filter((x) => x.type === 'file' && DK_IMG.test(x.name));
 				body = dirs.length || imgs.length ? html`<div class="fb-list" data-i18n-skip>${dirs.map((x) => html`<button class="btn ghost fb-item" type="button" data-dir="${x.name}">${svg(I.folder)}<span>${x.name}</span></button>`)}
 					${imgs.map((x) => html`<button class="btn ghost fb-item" type="button" data-img="${x.name}">${dkIco('image')}<span>${x.name}</span></button>`)}</div>`
-					: html`<p class="mut" style="margin:10px 0">Keine Bilder in diesem Ordner.</p>`;
+					: html`<p class="mut" style="margin:10px 0">No images in this folder.</p>`;
 			}
 		} catch (e) {
-			body = html`<p class="note">${e.message === 'not allowed' ? 'Für ein Hintergrundbild von der Box braucht dein Konto das Recht „Dateien“.' : e.message}</p>`;
+			body = html`<p class="note">${e.message === 'not allowed' ? 'A wallpaper from the box needs the “Files” permission for your account.' : e.message}</p>`;
 		}
-		d.innerHTML = html`<h3>Hintergrundbild</h3>
-			<p class="note" style="margin:0 0 12px">Ein Bild (JPG, PNG, WebP, GIF) von der Box – es wird nur für dich gespeichert.</p>
-			<div class="fb-path"><button class="btn sm" type="button" value="up"${place ? '' : raw(' disabled')}>Nach oben</button>
+		d.innerHTML = html`<h3>Wallpaper</h3>
+			<p class="note" style="margin:0 0 12px">An image (JPG, PNG, WebP, GIF) from the box – saved for you only.</p>
+			<div class="fb-path"><button class="btn sm" type="button" value="up"${place ? '' : raw(' disabled')}>Up</button>
 				<code data-i18n-skip>${place ? '/' + join(place.name, cur) : '/'}</code></div>
 			${body}
-			<label class="f" style="margin-top:14px"><span>BILD ANPASSEN</span><select id="dk-fit">
-				${[['cover', 'Füllen'], ['contain', 'Einpassen'], ['tile', 'Kacheln']].map(([v, t]) => html`<option value="${v}"${fit === v ? raw(' selected') : ''}>${t}</option>`)}</select></label>
-			<div class="acts" style="margin-top:14px"><button class="btn" type="button" value="default"${D.wall ? '' : raw(' disabled')}>ShareOS (Standard)</button>
-				<button class="btn ghost ml" type="button" value="no">Schließen</button></div>`.s;
+			<label class="f" style="margin-top:14px"><span>IMAGE FIT</span><select id="dk-fit">
+				${[['cover', 'Fill'], ['contain', 'Fit'], ['tile', 'Tile']].map(([v, t]) => html`<option value="${v}"${fit === v ? raw(' selected') : ''}>${t}</option>`)}</select></label>
+			<div class="acts" style="margin-top:14px"><button class="btn" type="button" value="default"${D.wall ? '' : raw(' disabled')}>ShareOS (default)</button>
+				<button class="btn ghost ml" type="button" value="no">Close</button></div>`.s;
 	};
 	d.addEventListener('change', (e) => {
 		if (e.target.id !== 'dk-fit') return;
@@ -914,7 +914,7 @@ function dkWallDlg() {
 		if (b.dataset.dir != null) { cur = join(cur, b.dataset.dir); return draw(); }
 		if (b.dataset.img != null) {
 			D.wall = { root: place.name, path: cur, name: b.dataset.img, fit };
-			await dkWall(); dkSave(); toast('Hintergrundbild gespeichert.');
+			await dkWall(); dkSave(); toast('Wallpaper saved.');
 			return draw();
 		}
 		if (b.value === 'up') { if (cur) cur = cur.includes('/') ? cur.slice(0, cur.lastIndexOf('/')) : ''; else place = null; return draw(); }
@@ -923,7 +923,7 @@ function dkWallDlg() {
 	});
 	d.addEventListener('close', () => d.remove());
 	$('#app').append(d);
-	d.innerHTML = html`<h3>Hintergrundbild</h3><div class="spin" style="margin:12px 0"></div>`.s;
+	d.innerHTML = html`<h3>Wallpaper</h3><div class="spin" style="margin:12px 0"></div>`.s;
 	d.showModal();
 	// start in the folder of the current image
 	if (D.wall) { place = { name: D.wall.root }; cur = D.wall.path || ''; }

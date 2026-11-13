@@ -1,0 +1,3339 @@
+{
+	"source": "en",
+	"exact": [
+		"OVERVIEW",
+		"STORAGE",
+		"SHARES",
+		"SERVICES",
+		"APPS",
+		"CLOUD",
+		"PAPERLESS",
+		"SYSTEM",
+		"NEW",
+		"ONLINE",
+		"OFFLINE",
+		"Log out",
+		"Toggle light/dark",
+		"Main menu",
+		"System",
+		"available",
+		"The ShareOS interface needs JavaScript.",
+		"Administration – please log in.",
+		"USER",
+		"PASSWORD",
+		"Stay logged in (7 days)",
+		"Log in",
+		"Wrong user or password.",
+		"Box not reachable.",
+		"Session expired – please log in again.",
+		"live · every 5 s",
+		"LOAD",
+		"board control active",
+		"no MCU data",
+		"FAN",
+		"TEMP",
+		"off",
+		"half",
+		"full",
+		"no link",
+		"last 10 min",
+		"Gateway · DNS",
+		"collecting samples …",
+		"Firmware",
+		"Booted from",
+		"Flash (UBI)",
+		"Network (RAM)",
+		"Settings are kept",
+		"Changes are lost on reboot",
+		"Uptime",
+		"since the last boot",
+		"Services",
+		"running",
+		"Flash free",
+		"for settings & packages",
+		"Drives",
+		"detected",
+		"none attached",
+		"manage all",
+		"Update available",
+		"Loading system data …",
+		"Loading services …",
+		"Loading drives …",
+		"No hard disk or USB storage detected. ShareOS runs entirely from the internal flash – drives appear here as soon as they are attached.",
+		"unknown model",
+		"start, stop, restart",
+		"Restart",
+		"Stop",
+		"Start",
+		"SSH / SFTP",
+		"Web interface",
+		"Time (NTP)",
+		"Scheduler",
+		"API (rpcd)",
+		"System bus (ubus)",
+		"System log",
+		"Board control",
+		"sets the clock, keeps the MCU clock in sync",
+		"interface for this web UI",
+		"messages between the services",
+		"syslogd, in RAM",
+		"fan, temperature, buttons, MCU clock",
+		"This area is not built yet. Planned:",
+		"SHARES, USERS & GROUPS",
+		"APPS & PACKAGES",
+		"CLOUD STORAGE",
+		"PAPERLESS-NGX",
+		"Shares per folder with switches for SMB, NFS, FTP and DLNA",
+		"Users & groups with permissions per share",
+		"Mount network drives (CIFS/NFS)",
+		"Backup jobs (rsync)",
+		"Package source (opkg feed) on GitHub",
+		"Catalogue with categories, install/remove with a queue",
+		"Packages go to settings & packages (flash) or to the disk",
+		"Accounts via rclone: Nextcloud/WebDAV, Google Drive, OneDrive, Dropbox, S3, SFTP",
+		"Sync jobs: copy, mirror, bidirectional",
+		"Encryption (crypt), bandwidth and schedule",
+		"Inbox folder on the NAS → upload via the Paperless REST API (token)",
+		"Transfer status via /api/tasks/",
+		"Tags and correspondent per folder, export backup to the NAS",
+		"VOLUMES",
+		"DRIVES",
+		"SETTINGS",
+		"SPINDOWN",
+		"SET UP AGAIN",
+		"SPIN DISKS DOWN AFTER",
+		"never",
+		"10 minutes",
+		"20 minutes",
+		"30 minutes",
+		"1 hour",
+		"2 hours",
+		"Swap",
+		"App area",
+		"none yet",
+		"none active",
+		"none yet",
+		"Saves power and wear. Disks spin up again on the next access (a few seconds).",
+		"The wizard erases the selected disks and sets them up again. Single disks can also be formatted directly under \"Drives\".",
+		"Start wizard",
+		"Set up storage",
+		"INTERNAL FLASH",
+		"128 MB NAND · UBI",
+		"AREA",
+		"MOUNTED",
+		"USED",
+		"Settings & packages",
+		"System (read-only)",
+		"RAM (tmp)",
+		"Unmount",
+		"Mount",
+		"Remove",
+		"Read SMART",
+		"Erase & format",
+		"Mirror (RAID 1)",
+		"Single drive",
+		"SMART not read yet",
+		"asleep (SMART on next wake-up)",
+		"no SMART data",
+		"SMART OK",
+		"SMART WARNING",
+		"SMART FAILED",
+		"empty",
+		"no file system",
+		"not mounted",
+		"file system not found",
+		"waiting",
+		"Packages and app data live in .shareos",
+		"No storage set up yet. The wizard sets up the disks in a few steps – as a mirror (both disks hold the same data) or as separate drives.",
+		"SET UP STORAGE · WIZARD",
+		"Cancel",
+		"Disks",
+		"Layout",
+		"Name",
+		"Confirm",
+		"Back",
+		"Next",
+		"Set up",
+		"Which disks should be set up?",
+		"Everything on these disks will be erased.",
+		"Mirror (RAID 1) – recommended",
+		"Two separate drives",
+		"SWAP PER DISK",
+		"1 GB – recommended",
+		"none",
+		"The box has only 256 MB of RAM. Swap on the disks absorbs load peaks (shares, cloud sync, package installs). It is a small partition at the start of each disk; the rest becomes the drive.",
+		"NAME OF THE MIRROR",
+		"DRIVE",
+		"DISKS",
+		"SIZE",
+		"LAYOUT",
+		"Lower-case letters, digits, - and _ (max. 16 characters). The drive appears as",
+		"; you create shares on it later.",
+		"Erase and set up the disks?",
+		"Erase & set up",
+		"Setup started.",
+		"Formatting started.",
+		"Name of the new drive (a–z, 0–9, - and _, max. 16 characters):",
+		"Please select at least one disk.",
+		"Two disks at most.",
+		"Invalid name: only a–z, 0–9, - and _, max. 16 characters.",
+		"The names must be different.",
+		"Invalid name.",
+		"Spindown saved.",
+		"FIRMWARE",
+		"GENERAL",
+		"POWER & RESET",
+		"LOGS",
+		"APPEARANCE",
+		"ABOUT",
+		"FIRMWARE UPDATE",
+		"Installed",
+		"Kernel, initramfs and system",
+		"not checked yet",
+		"up to date",
+		"no release for this device yet",
+		"none",
+		"UPDATE CHANNEL",
+		"Stable (releases)",
+		"Beta (also pre-releases)",
+		"Check now",
+		"Checking …",
+		"VERSIONS",
+		"from GitHub",
+		"VERSION",
+		"DATE",
+		"CHANNEL",
+		"STABLE",
+		"BETA",
+		"installed",
+		"Download",
+		"Notes ↗",
+		"HOW AN UPDATE WORKS",
+		"Download the bundle from GitHub and check it (SHA-256, device, sizes)",
+		"Write kernel and initramfs to flash and read them back",
+		"Stage the new system",
+		"Reboot: the initramfs installs the system, then ShareOS starts again",
+		"Settings and installed packages are kept. If interrupted, the installation is repeated on the next boot.",
+		"Download",
+		"Verify",
+		"Ready",
+		"Write",
+		"Discard",
+		"Error:",
+		"Last update:",
+		"Reboot needed",
+		"Reboot now",
+		"Verified: SHA-256, checksums of all parts, made for this device. Settings and packages are kept.",
+		"ShareOS is up to date.",
+		"Update downloaded and verified.",
+		"Update written – please reboot.",
+		"Install update?",
+		"Install",
+		"DEVICE NAME",
+		"HOSTNAME",
+		"Save",
+		"NEW PASSWORD",
+		"REPEAT",
+		"Change password",
+		"Letters, digits and hyphens. Applies at once; the DHCP server sees it on the next lease renewal.",
+		"Applies to the web interface and SSH. At least 6 characters.",
+		"Hostname saved.",
+		"Password changed.",
+		"The passwords do not match.",
+		"POWER",
+		"Power off",
+		"Powering off shuts ShareOS down and the board control cuts the power. Switch on with the power button.",
+		"FACTORY RESET",
+		"erases settings",
+		"Reset to factory settings",
+		"Removes all settings and installed packages from flash and reboots. The system and firmware version stay. Afterwards the password is again",
+		"Reboot?",
+		"Reboot",
+		"The box reboots. This page reconnects on its own (about 1–2 minutes).",
+		"Power off?",
+		"ShareOS shuts down and the box switches off. Switch it on again at the device.",
+		"Factory reset?",
+		"Reset",
+		"All settings and installed packages are erased, then the box reboots. The password is \"shareos\" again afterwards.",
+		"Rebooting",
+		"ShareOS is restarting",
+		"Box is powering off",
+		"You can close this window.",
+		"Service is restarting",
+		"waiting for the box",
+		"Factory reset",
+		"LOG",
+		"Source",
+		"System (syslog)",
+		"Kernel (dmesg)",
+		"Refresh",
+		"loading …",
+		"(empty)",
+		"this browser only",
+		"Light theme",
+		"Scanlines",
+		"LOGO",
+		"applies to everyone",
+		"Show the ShareOS logo (off: text only)",
+		"LANGUAGE",
+		"Accent colour green",
+		"Accent colour red",
+		"Accent colour blue",
+		"Accent colour white",
+		"Version",
+		"Stage",
+		"Device",
+		"Firmware name",
+		"PROJECT",
+		"ShareOS is free firmware for D-Link NAS boxes, derived from Alt-F. Based on buildroot, Linux and BusyBox; operating model after OpenWrt (UCI, ubus, rpcd, ucode). Licence GPLv2.",
+		"Setup running",
+		"Do not switch the box off.",
+		"Setup failed:",
+		"HTTPS",
+		"CONNECTION",
+		"this page: HTTPS",
+		"this page: HTTP",
+		"HTTPS on port 443",
+		"Redirect HTTP requests to HTTPS",
+		"After a change the web server restarts; the page is unreachable for a moment.",
+		"CERTIFICATE",
+		"self-signed",
+		"own certificate",
+		"No certificate yet – one is created automatically when HTTPS is switched on.",
+		"Issued to",
+		"Issuer",
+		"Valid from",
+		"Valid until",
+		"Names",
+		"Browsers warn once about self-signed certificates. The connection is encrypted anyway; for a page without a warning, upload your own certificate (e.g. from your intranet CA or Let's Encrypt).",
+		"New self-signed certificate",
+		"UPLOAD YOUR OWN CERTIFICATE",
+		"CERTIFICATE (PEM, INTERMEDIATES WELCOME)",
+		"PRIVATE KEY (PEM, NO PASSWORD)",
+		"Before it is used, the box checks that certificate and key belong together. The key never leaves the box.",
+		"Use certificate",
+		"Certificate installed.",
+		"Certificate created.",
+		"New self-signed certificate?",
+		"Create",
+		"A new certificate for the current name and IP is created and replaces the old one. Browsers will show a warning once again.",
+		"Saved – the web server is restarting.",
+		"Loading …",
+		"INTERFACE LANGUAGE",
+		"More languages: one file in",
+		"– see docs/TRANSLATING.md.",
+		"OFF BELOW (°C, 0 = NEVER)",
+		"FULL FROM (°C)",
+		"BACK TO HALF BELOW (°C)",
+		"Everything can be set later under System. The password stays \"shareos\" until you change it.",
+		"Alt-F",
+		"Take over Alt-F",
+		"Test versions too, with new features earlier.",
+		"This box has settings from",
+		"",
+		"Balanced",
+		"User",
+		"Shares",
+		"NFS",
+		"Users and shares are kept and offered in the \"Shares\" area. The Alt-F data in flash stays untouched.",
+		"Beta",
+		"Stable",
+		"Next, you can set up the hard disks right away.",
+		"Everyone knows the default password",
+		"– please set your own now. It applies to the web interface and SSH.",
+		"The box runs the fan in three steps (off, half, full) according to the board temperature. Changes apply within seconds.",
+		"The orange USB LED shows rescue mode and updates during boot and cannot be changed.",
+		"FIRST-TIME SETUP",
+		"Custom values",
+		"First-time setup finished.",
+		"Run first-time setup again",
+		"Skip first-time setup?",
+		"Done",
+		"Done & set up storage",
+		"Device name",
+		"Take over device name, time zone and fan",
+		"Heartbeat (ShareOS running)",
+		"Cool",
+		"Quiet",
+		"LEDS",
+		"FAN & LEDS",
+		"Fan",
+		"Leave empty to change the password later.",
+		"Fan always on, full from 45 °C",
+		"Fan always on, full from 50 °C",
+		"Fan stops below 40 °C, full from 55 °C",
+		"Name & time",
+		"Finished versions only – recommended.",
+		"DISK LEDS (RED)",
+		"POWER LED",
+		"STATUS LED (BLUE)",
+		"Password",
+		"Show disk access",
+		"Language",
+		"Set the temperatures yourself",
+		"The box appears under this name on the network. The clock sets itself via NTP.",
+		"Update channel",
+		"Updates",
+		"Updates come from GitHub and are installed under System → Firmware.",
+		"Welcome to ShareOS. The box is set up in a few steps; everything can be changed later under",
+		".",
+		"TIME ZONE",
+		"Time zone",
+		"blinking",
+		"on",
+		"applies at once",
+		"will be changed",
+		"stays (change later)",
+		"yes",
+		"no",
+		"Skip",
+		"Fan saved.",
+		"LED saved.",
+		"Invalid device name.",
+		"The password needs at least 6 characters.",
+		"Checking the bundle again …",
+		"Staging the system for the restart …",
+		"Boot system: erasing flash …",
+		"Writing the boot system …",
+		"Verifying the boot system …",
+		"Kernel: erasing flash …",
+		"Writing the kernel …",
+		"Verifying the kernel …",
+		"Starting …",
+		"do not switch off",
+		", this takes about 1–2 minutes.",
+		"Checking the bundle …",
+		"SHA-256 and contents, takes about half a minute.",
+		"– the new system is installed on the next start (about 1 minute, do not switch off the box).",
+		"NETWORK",
+		"ADDRESS",
+		"CURRENT",
+		"ACCENT COLOUR",
+		"AT BOOT",
+		"DESCRIPTION",
+		"SERVICE",
+		"LIGHT OR DARK",
+		"HTTPS & CERTIFICATE",
+		"NOW",
+		"METRIC",
+		"VALUE",
+		"NOTE",
+		"TYPE",
+		"MODEL",
+		"HEALTH",
+		"CONTENTS",
+		"IP ADDRESS",
+		"SUBNET MASK",
+		"DNS SERVERS (COMMA-SEPARATED)",
+		"Automatic (DHCP) – from the router",
+		"Static address",
+		"static",
+		"Dark",
+		"Light",
+		"Same as the operating system (automatic)",
+		"Green",
+		"Red",
+		"Blue",
+		"White",
+		"The logo and the browser icon take on the accent colour. The setting applies to everyone, including the login page.",
+		"Scanlines (this browser only)",
+		"Apply",
+		"connected",
+		"no address",
+		"change",
+		"Connection",
+		"Applies from the next start. Running services are started and stopped under “Status”. Device control, system bus, API and web interface always start, otherwise the box could no longer be operated.",
+		"which services start when the box is switched on",
+		"start",
+		"always",
+		"Without this service the box cannot be operated",
+		"Tile view",
+		"Table view",
+		"New network settings are waiting for confirmation",
+		"Keep",
+		"The last change was not confirmed; the previous network settings are active again.",
+		"New network settings confirmed.",
+		"Change the network?",
+		"Switching the network",
+		"Restarting the network",
+		"No connection – the box should have restored the old settings. Reload the page.",
+		"a disk is missing",
+		"OK",
+		"Sync waiting",
+		"STATUS",
+		"AUTOSTART",
+		"GROUPS",
+		"Administrator",
+		"Shares only",
+		"read & write",
+		"read only",
+		"no access",
+		"unlimited",
+		"Shares need a drive – first set one up under",
+		".",
+		"No share yet. A share makes a folder on a drive reachable on the network – from Windows, macOS and Linux.",
+		"Create a share",
+		"New share",
+		"SHARE",
+		"FOLDER",
+		"ACCESS",
+		"drive missing",
+		"nobody yet",
+		"SMB (WINDOWS, MACOS, LINUX)",
+		"Offer SMB shares",
+		"WORKGROUP",
+		"The SMB service starts automatically as soon as there is a share. Personal folders appear as",
+		"NFS (LINUX, PROXMOX)",
+		"Offer NFS shares",
+		"NFS has no user accounts: the listed computers or networks get access. Files are stored as",
+		". Mount e.g. with",
+		"no protocol",
+		"GUEST",
+		"Edit",
+		"Delete",
+		"Create",
+		"NEW SHARE",
+		"NAME",
+		"FOLDER ON THE DRIVE",
+		"same as the name",
+		"ACCESS VIA SMB",
+		"Share via SMB (Windows, macOS, Linux)",
+		"Guests may read without a password",
+		"USER / GROUP",
+		"PERMISSION",
+		"No users yet – create them under",
+		", or allow guest access.",
+		"ACCESS VIA NFS",
+		"Share via NFS",
+		"NFS clients may write",
+		"NFS CLIENTS (IP OR NETWORK, COMMA-SEPARATED)",
+		"The folder is created if it is missing. Removing a share keeps the folder and its files.",
+		"no limit",
+		"of",
+		"No users yet. One account works everywhere: for shares, the web interface and later for apps and cloud sync.",
+		"Create a user",
+		"Import from Alt-F",
+		"New user",
+		"ROLE",
+		"PERSONAL FOLDER",
+		"no personal folder",
+		"Roles:",
+		"– everything, including SSH.",
+		"– own area “My ShareOS” in the web interface.",
+		"– access to shares, no web login. The account",
+		"is always an administrator.",
+		"· no web",
+		"NEW USER",
+		"USER NAME",
+		"FULL NAME",
+		"STORAGE LIMIT PER DRIVE (GB, 0 = UNLIMITED)",
+		"May log in to the web interface (“My ShareOS”)",
+		"User name: lower-case letters, digits and _, starting with a letter. The password is used for shares and – depending on the role – for the web interface.",
+		"GROUP",
+		"MEMBERS",
+		"Groups bring users together, e.g. “family” or “media”. Share permissions can then be given to the whole group.",
+		"New group",
+		"Members are set on the user (Users → Edit).",
+		"MY SHAREOS",
+		"Nothing stored yet.",
+		"Personal folder",
+		"No personal folder set up.",
+		"CHANGE PASSWORD",
+		"CURRENT PASSWORD",
+		"Used for the shares and this interface.",
+		"MY SHARES",
+		"No share has been assigned to you yet.",
+		"APPS & CLOUD",
+		"planned",
+		"The apps released for you and your own cloud sync jobs will appear here later.",
+		"My ShareOS",
+		"Enter at least one client (IP or network) for NFS.",
+		"Saved.",
+		"The share disappears from the network. The folder and all files in it stay on the drive.",
+		"Import users from Alt-F?",
+		"Users and groups from the kept Alt-F settings are created (role “Shares only”). Passwords are taken over where Alt-F stored them.",
+		"No new users found.",
+		"Group name (a–z, 0–9 and _, starting with a letter):",
+		"The members stay, but lose the permissions given through this group.",
+		"Set",
+		"New password (at least 6 characters). Used for shares and – depending on the role – for the web interface.",
+		"Please log in again.",
+		"The personal folder is kept.",
+		"User accounts",
+		"BACK UP & RESTORE SETTINGS",
+		"BACK UP",
+		"JSON file",
+		"PASSWORD FOR ENCRYPTION (OPTIONAL)",
+		"empty = not encrypted",
+		"Contains all settings, users with their passwords (as hashes), shares, network and the HTTPS certificate including its key. Without a password the file is readable – keep it safe. With a password: AES-256, the password is needed to restore.",
+		"Download backup",
+		"RESTORE",
+		"BACKUP FILE",
+		"PASSWORD (IF ENCRYPTED)",
+		"Created",
+		"Certificate",
+		"Restoring replaces the current settings, users and shares. A restart is needed afterwards. Data on the drives is not touched.",
+		"Restore",
+		"Restore settings?",
+		"The current settings, users and shares are replaced by the backup.",
+		"Restored",
+		"The settings are restored. Restart now so that everything applies?",
+		"Encrypted backup downloaded.",
+		"Backup downloaded.",
+		"The backup is encrypted – please enter the password.",
+		"PAPERLESS ADDRESS",
+		"CHECK EVERY",
+		"AFTER UPLOAD",
+		"Delete file",
+		"keep (.paperless/done)",
+		"Send inbox folders automatically",
+		"Send now",
+		"HOW IT WORKS",
+		"Create an API token in Paperless for each inbox (Profile → API token). The documents then belong to that Paperless user.",
+		"Put files (PDF, images, Office) into the inbox folder – from a PC or straight from the scanner.",
+		"ShareOS uploads them through the Paperless API and shows whether Paperless accepted them.",
+		"Personal inboxes live in the personal folder (",
+		"); users can also enter their token themselves under “My ShareOS”. Shared inboxes use a share, e.g. for a scanner.",
+		"INBOXES",
+		"accepted",
+		"processing",
+		"Error",
+		"Log",
+		"nothing waiting",
+		"New inbox",
+		"NEW INBOX",
+		"personal (folder “Paperless” in the personal folder)",
+		"shared (folder of a share)",
+		"API TOKEN",
+		"active",
+		"Test connection",
+		"from Paperless: Profile → API token",
+		"API TOKEN (EMPTY = KEEP)",
+		"TAGS FOR NEW DOCUMENTS",
+		"Close",
+		"TIME",
+		"FILE",
+		"MESSAGE",
+		"Nothing will be sent any more. The folder and the files in it are kept.",
+		"INBOX",
+		"WAITING",
+		"LAST",
+		"shared",
+		"Paperless → Profile → API token",
+		"Paperless inbox saved.",
+		"Transfer started.",
+		"MY INBOX",
+		"MY API TOKEN FROM PAPERLESS",
+		"Send files from my inbox",
+		"Inbox folder",
+		"RECENTLY SENT",
+		"Nothing sent yet. Put files into the inbox folder – they reach Paperless within a few minutes.",
+		"ACCOUNTS",
+		"Test",
+		"Add account",
+		"NOTES",
+		"Credentials stay encrypted on the box. For Google Drive, OneDrive or Dropbox run",
+		"on a PC and paste the finished section here. Jobs run with little memory (2 transfers at a time); a bandwidth limit such as",
+		"keeps the network free.",
+		"JOBS",
+		"Start now",
+		"New job",
+		"NEW CLOUD ACCOUNT",
+		"SFTP (SSH server)",
+		"other – paste rclone configuration",
+		"ADDRESS (WEBDAV URL)",
+		"PROVIDER",
+		"PASSWORD / APP PASSWORD",
+		"Add",
+		"ENDPOINT (EMPTY FOR AWS)",
+		"SECTION FROM RCLONE.CONF (STARTS WITH [NAME])",
+		"The credentials are deleted. Jobs using this account stop working. Nothing is deleted in the cloud.",
+		"NEW JOB",
+		"FOLDER ON THE NAS",
+		"CLOUD ACCOUNT",
+		"FOLDER IN THE CLOUD",
+		"DIRECTION",
+		"Upload – copy to the cloud, nothing is deleted",
+		"Download – copy to the NAS, nothing is deleted",
+		"Mirror to the cloud – deletes in the cloud what is missing here",
+		"Mirror from the cloud – deletes here what is missing in the cloud",
+		"SCHEDULE",
+		"manual only",
+		"hourly",
+		"daily at 2:30",
+		"Sundays at 3:00",
+		"custom time (cron)",
+		"CRON TIME (MIN HOUR DAY MON WEEKDAY)",
+		"BANDWIDTH (EMPTY = UNLIMITED)",
+		"Schedule active",
+		"Mirroring deletes on the target side what is missing on the source side – for plain backups choose “Upload”.",
+		"The job will not run any more. Files on the NAS and in the cloud stay as they are.",
+		"JOB",
+		"FROM → TO",
+		"Mirror?",
+		"Understood",
+		"Stopped.",
+		"Mirroring from the cloud deletes files on the NAS that are missing in the cloud.",
+		"Mirroring to the cloud deletes files in the cloud that are missing on the NAS.",
+		"MY CLOUD",
+		"own accounts and jobs",
+		"Credentials stay encrypted on the box in your personal folder. For Google Drive, OneDrive or Dropbox run",
+		"keeps the network free. What you download counts towards your storage limit.",
+		"May create own cloud sync jobs (needs a personal folder)",
+		"APP & WIDGETS",
+		"INSTALL AS AN APP",
+		"via the browser menu",
+		"running as an app",
+		"ready",
+		"HTTPS only",
+		"This interface is running as an installed app.",
+		"The browser can install ShareOS as an app with its own icon.",
+		"In the browser menu choose",
+		"“Install app”",
+		"or",
+		"“Add to home screen”",
+		". With a self-signed certificate browsers do not offer the real installation.",
+		"Browsers install web apps only over",
+		"HTTPS with a trusted certificate",
+		"(e.g. Let's Encrypt, install it under SYSTEM → NETWORK). Over http:// Chrome's menu only offers",
+		"– that creates a bookmark icon.",
+		"On Android: long-press the app icon to open the shortcuts",
+		"Overview, Storage, Shares, Firmware",
+		". Chrome offers no real home-screen widgets for web apps – use the status for widget apps on the right instead.",
+		"Install as an app",
+		"STATUS FOR WIDGETS",
+		"Enable the status address",
+		"ADDRESS (KEEP IT SECRET)",
+		"Copy",
+		"New key",
+		"Open ↗",
+		"Returns a short JSON answer without login: name, version, uptime, load, temperature, drive usage, RAID state and warnings (",
+		"). Meant for widget apps such as",
+		"(Android), Home Assistant or your own scripts. Anyone who knows the address sees these values – nobody can change anything with it.",
+		"Status address enabled.",
+		"Status address disabled.",
+		"Create a new key?",
+		"Create",
+		"New key created.",
+		"The old address stops working – widgets need the new one.",
+		"Copied.",
+		"Please select and copy the address yourself.",
+		"ShareOS is installed as an app.",
+		"· My ShareOS",
+		"FILES",
+		"New folder",
+		"Upload",
+		"Rename",
+		"Move",
+		"Hidden",
+		"MODIFIED",
+		"You can also simply drag files here.",
+		"Path",
+		"Folder up",
+		"Select all",
+		"Move to",
+		"Copy to",
+		"Name of the new folder:",
+		"This folder is empty.",
+		"STORAGE LIMIT (GB)",
+		"File browser for the personal folder in the web interface",
+		"User name: lower-case letters, digits and _, starting with a letter. The storage limit applies per drive, 0 = unlimited. The password is used for shares and – depending on the role – for the web interface.",
+		"just for you",
+		"Same as for everyone",
+		"Applies only to your login, on every device. Logo and browser icon take on the accent colour.",
+		"Replace file?",
+		"Replace",
+		"skipped",
+		"done",
+		"Connection lost",
+		"Deleted.",
+		"Moved.",
+		"Look reset to the one for everyone.",
+		"No drive mounted – set one up under STORAGE first.",
+		"There is no personal folder.",
+		"Only the first 2000 entries are shown.",
+		"Hostname saved. The HTTPS certificate was reissued for the new name – the browser will ask once more.",
+		"INSTALLED",
+		"STORE",
+		"SOURCES",
+		"INSTALLED APPS",
+		"No app installed yet. The",
+		"store",
+		"has apps to install – or upload your own package (.sapp).",
+		"Apps",
+		"APP STORE",
+		"Beta (also pre-releases)",
+		"Refresh now",
+		"INSTALL PACKAGE",
+		"PACKAGE FILE",
+		"For your own apps (built with",
+		"from the app repository). Uploaded packages count as “own / not verified”.",
+		"Upload & install",
+		"AVAILABLE APPS",
+		"APP",
+		"PUBLISHER",
+		"Tools",
+		"Media",
+		"Office",
+		"Network",
+		"Download",
+		"Sync",
+		"downloading …",
+		"from the store",
+		"own / not verified",
+		"own",
+		"VISIBLE TO",
+		"all users",
+		"administrators only",
+		"All users with web access",
+		"Administrators see all apps. The selection decides who sees the app in “My ShareOS”.",
+		"The app is deleted. Data it stored in the browser stays there.",
+		"APP SOURCES",
+		"ANOTHER SOURCE (CATALOG ADDRESS)",
+		"A source is an app catalog (",
+		") in the format of the repository",
+		". Own apps: use the repository as a template, its GitHub Action builds packages and catalog. Only add sources you trust.",
+		"Remove source?",
+		"Apps from this source no longer show up in the store. Installed apps stay.",
+		"MY APPS",
+		"Store refreshed.",
+		"Removed.",
+		"Loading the catalog …",
+		"No apps found – check the internet connection and the sources.",
+		"No user with web access – set one up under Shares → Users.",
+		"needs a newer ShareOS",
+		"not loaded yet",
+		"Web apps run on their own port (8081 / 8444 for HTTPS) – apart from this interface, so an app cannot use your login. Anyone who knows the address can open a web app on the network; “visible to” decides who sees it in “My ShareOS”.",
+		"Installation finished",
+		"(100 %) – restart now.",
+		"INSTALL FIRMWARE FILE",
+		"Upload & check",
+		"Type",
+		"other firmware",
+		"Install",
+		"Writing firmware",
+		"Kernel and boot system – please wait, do not switch off",
+		"Written",
+		"Size",
+		"ext4 – recommended",
+		"exFAT – recommended",
+		"Everything: permissions per user, storage limit, personal folders, apps.",
+		"Permissions per user, personal folders, apps; no storage limit per user. Needs more memory.",
+		"Also readable on Windows and macOS. No permissions per user (whoever may write to a share may change everything in it), no storage limit, no personal folders, no apps.",
+		"Also readable on Windows. No permissions per user, no storage limit, no personal folders, no apps.",
+		"Windows, macOS, Linux, TVs; files over 4 GB.",
+		"For older devices (car radio, camera); files up to 4 GB.",
+		"For Windows computers.",
+		"For Linux and backups with permissions.",
+		"FILE SYSTEM",
+		"Safely remove",
+		"Format",
+		"Name of the new volume (a–z, 0–9, - and _, at most 16 characters) and file system:",
+		"TIME ON THE BOX",
+		"Time sync",
+		"from the internet (NTP)",
+		"NTP switched on but not running",
+		"by hand",
+		"Last synced",
+		"not yet",
+		"Battery clock",
+		"is set after every sync",
+		"Sync now",
+		"TIME ZONE & TIME SERVERS",
+		"Get the time from the internet automatically (NTP)",
+		"TIME SERVERS (ONE PER LINE, AT MOST 5)",
+		"In a home network the router can be the time server too, e.g.",
+		". The time zone applies to logs, schedules and the display.",
+		"SET THE CLOCK BY HAND",
+		"While NTP is on, the box sets the clock from the internet again at the next sync. For a box without internet, switch NTP off above.",
+		"The clock keeps running from there; the box's battery clock is set too.",
+		"Take this device's time",
+		"Set time",
+		"Time set.",
+		"Time synced.",
+		"Invalid time.",
+		"A firmware in D-Link format, e.g. for the",
+		"switch back to Alt-F",
+		". Kernel and boot system are written; the ShareOS system and settings stay in flash.",
+		"Tasks",
+		"Scheduled tasks",
+		"May run scheduled tasks on the box – as its own restricted user, only in its data folder, with a time limit.",
+		"TASK",
+		"SCHEDULE (CRON)",
+		"ACTIVE",
+		"never",
+		"Time limit",
+		"Run now",
+		"Task started.",
+		"Allow & install",
+		"The app is deleted, with its tasks and its data on the box.",
+		"Schedule in cron format (minute hour day month weekday), at most every 5 minutes, e.g.",
+		"= daily at 3:30.",
+		"Update without internet:",
+		"upload the .sysupgrade.tar of a ShareOS release, preferably with its .sha256 file. It is checked like an update from GitHub.",
+		"CHECKSUM (.SHA256, OPTIONAL)",
+		"Uploaded – the bundle is being checked.",
+		"Uploaded file – verified: SHA-256 of the .sha256 file, checksums of all parts, made for this device. Settings and packages are kept.",
+		"Uploaded file – verified: checksums of all parts, made for this device (without .sha256 file). Settings and packages are kept.",
+		"Open",
+		"In its own window ↗",
+		"Shown in ShareOS",
+		"May be shown as a page inside the ShareOS interface (instead of its own window).",
+		"RAID 0 – fast",
+		"JBOD – full space",
+		"NAME OF THE VOLUME",
+		"Older Linux file system (e.g. known from Alt-F): permissions per user, personal folders, apps; no storage limit.",
+		"No journal – long check after a power cut. Only if an old device needs it.",
+		"For very old devices. Files up to 4 GB, no permissions per user, no storage limit, no personal folders, no apps.",
+		"Repair mirror",
+		"Put a new disk into the free bay, then “Repair mirror”.",
+		"Erase & repair",
+		"Repair started.",
+		"MESSAGES",
+		"1 MESSAGE",
+		"Mark all as read",
+		"Delete all",
+		"RESOLVED",
+		"ERROR",
+		"WARNING",
+		"INFO",
+		"Read",
+		"No messages – everything is fine.",
+		"Every 10 minutes the box checks RAID, volumes (mounted, how full), temperature, SMART values and updates; failed cloud jobs, app tasks and storage jobs report at once. Repeated messages are counted and sent again at most once a day.",
+		"E-MAIL",
+		"Send messages by e-mail",
+		"MAIL SERVER (SMTP)",
+		"ENCRYPTION",
+		"STARTTLS (port 587)",
+		"SSL/TLS (port 465)",
+		"none (port 25)",
+		"PORT (EMPTY = DEFAULT)",
+		"SENDER",
+		"RECIPIENTS (SEPARATE WITH COMMAS)",
+		"SEND",
+		"everything (info, warning, error)",
+		"warnings and errors",
+		"errors only",
+		"PUSH",
+		"Send messages to the phone",
+		"ACCESS TOKEN (OPTIONAL)",
+		"Webhook (JSON)",
+		"ntfy: address with topic, e.g.",
+		"(an own ntfy server works too), subscribe to the same topic in the ntfy app. Gotify: server address and app token.",
+		"LIMITS",
+		"TEMPERATURE FROM (°C)",
+		"VOLUME FULL FROM (%)",
+		"Test message",
+		"Test message sent.",
+		"Delete all messages?",
+		"The list is emptied. If a problem persists, the box reports it again at the next check.",
+		"•••••• (saved)",
+		"BOX NAME FOR LINKS (E.G. TO THE APPS)",
+		"Leave empty: with your own certificate the name is taken from it, otherwise the address this page was opened with. The name must resolve in your network (DNS).",
+		"Save name",
+		"Name saved.",
+		"Access to files",
+		"May read, change and delete the files the signed-in user reaches in the file browser – with his rights, while the app is open.",
+		"Box not reachable",
+		"Network traffic of the last 10 minutes",
+		"not connected yet",
+		"No inbox yet. First enter the address of Paperless above.",
+		"shared · off",
+		"Nothing transferred yet.",
+		"no tags found",
+		"Windows share (SMB)",
+		"Google Photos",
+		"DOMAIN (OPTIONAL)",
+		"APP PASSWORD",
+		"not run yet",
+		"rclone not installed",
+		"downloading and checking …",
+		"First, under",
+		"set up a drive.",
+		"Credentials stay encrypted on the box.",
+		"For Google Drive, OneDrive, Dropbox and similar services you sign in in the browser; for other services paste the finished section from “rclone config”.",
+		"Jobs run with little memory (2 transfers at a time); a bandwidth limit like",
+		"Your credentials are kept in your personal folder; what you download counts towards your storage limit.",
+		"After signing in, the browser shows “page not reachable” with an address like",
+		". Copy this whole address from the address bar and paste it here:",
+		"Checking the package again",
+		"Preparing the system for the restart",
+		"Boot system: erasing flash",
+		"Writing the boot system",
+		"Checking the boot system",
+		"Kernel: erasing flash",
+		"Writing the kernel",
+		"Checking the kernel",
+		"Telegram: create a bot with @BotFather in Telegram (/newbot), enter the token here and save. Then send your bot a message (or add it to a group) and click “Find chat ID”.",
+		"Find chat ID",
+		"CHAT ID",
+		"BOT TOKEN (FROM @BOTFATHER)",
+		"Telegram (bot)",
+		"AREAS",
+		"Switched off: the tab disappears, also for users in “My ShareOS”, and the background work rests (apps web server and app tasks). Settings and data stay; switching on brings everything back.",
+		"Apps (app store, web apps, app tasks)",
+		"Cloud (sync with cloud storage)",
+		"Paperless (inboxes for Paperless-ngx)",
+		"Area switched on.",
+		"Area switched off.",
+		"Signed in – now “Add”.",
+		"The account is removed; rights on shares are dropped.",
+		"The account is removed; rights on shares are dropped. The personal folder stays.",
+		"The drive is unmounted and removed from the configuration. The data on the disk stays until it is set up again.",
+		"Drive",
+		"No message to the bot yet – first save the token, then write to the bot in Telegram.",
+		"downloading",
+		"checking",
+		"installing",
+		"Uses the internet",
+		"Loads data from the internet (e.g. online services, streams, maps). Without an internet connection these parts of the app do not work.",
+		"TERMINAL",
+		"Open terminal",
+		"End",
+		"A shell as",
+		"right on the box – for diagnosis and manual work (BusyBox, uci, logread, mdadm, smartctl …).",
+		"The session is for one window and ends when it is closed. Careful: commands as root take effect at once and without a recycle bin.",
+		"Personal inboxes need a user with a personal folder.",
+		"Cloud sync is not set up on this box yet – please ask the administrator.",
+		"signed in ✓",
+		"2. ADDRESS AFTER SIGNING IN",
+		"Sign in first (step 1 and 2).",
+		"The box is not running from the flash right now (",
+		"). Updates on this page only work after a normal start from the flash.",
+		"Command",
+		"From system apps:",
+		"Terminal (administrators)",
+		"System app · terminal",
+		"A program for the command line of the box (System → Terminal or SSH). It runs with the rights of whoever starts it – in the terminal as root.",
+		"Terminal",
+		"not tested yet",
+		"ShareOS has not been tested on real hardware of this model yet.",
+		"First sign-in: user root, password shareos – then set your own password.",
+		"Own torrents (Transmission)",
+		"May control the user's own Transmission service: add, pause and remove torrents. Every user has their own service; downloads go only into their folders.",
+		"Convert media (FFmpeg)",
+		"May have the user's audio and video converted on the box (FFmpeg) – with their rights, only in their folders, from fixed choices (no arbitrary command).",
+		"All",
+		"Other",
+		"Search …",
+		"A snapshot keeps the state of a folder – hourly, daily or weekly.",
+		"Each state looks like a full copy, but unchanged files take no extra space.",
+		"To get back a file deleted or overwritten yesterday or last week, copy it back from the snapshot in the file browser.",
+		"New snapshot job",
+		"NEW SNAPSHOT JOB",
+		"Best save to another drive (second disk or USB disk): then snapshots also protect against a failing disk.",
+		"A mirror (RAID 1) does not replace snapshots – it mirrors every deletion at once.",
+		"The snapshots are in the folder",
+		"of the target drive and are visible to administrators only.",
+		"For an off-site copy, a cloud job can upload the snapshot folder.",
+		"newest",
+		"Back up now",
+		"SOURCE → TARGET",
+		"SCHEDULE · KEEP",
+		"STATE",
+		"Open in the file browser",
+		"To restore, copy the file or folder from the snapshot back to its old place in the file browser. Do not change files inside a snapshot: unchanged files share their space with the other snapshots.",
+		"WHAT TO SAVE",
+		"TARGET DRIVE",
+		"HOW OFTEN",
+		"Hourly",
+		"Every 6 hours",
+		"Daily",
+		"Weekly (Sunday)",
+		"TIME",
+		"FROM",
+		"MINUTE (HH:MM, ONLY THE MINUTE COUNTS)",
+		"KEEP",
+		"THE LAST",
+		"DAYS (ONE EACH)",
+		"WEEKS (ONE EACH)",
+		"MONTHS (ONE EACH)",
+		"The last N snapshots always stay (also those taken by hand); plus the newest of each day, week and month. Example daily: 7 days · 4 weeks · 6 months ≈ half a year back with 17 states.",
+		"EXCLUSIONS (ONE PER LINE, E.G. *.tmp OR /Downloads/)",
+		"Source and target are on the same drive: this protects against accidental deletion, not against a failing disk.",
+		"No new snapshots will be taken.",
+		"Delete snapshot?",
+		"Delete the snapshots too?",
+		"Delete snapshots",
+		"Snapshot deleted.",
+		"stopped",
+		"Loading snapshots …",
+		"No snapshot job yet. A job saves a share, the personal folders or a whole drive on a schedule.",
+		"No snapshot yet – “Back up now” takes the first one.",
+		"rsync is missing in this firmware.",
+		"No suitable target: snapshots need a drive with ext4 or Btrfs (FAT32/exFAT have no hard links).",
+		"jobs",
+		"– no hard links",
+		"MEDIA SERVER",
+		"Media server (DLNA)",
+		"do not share",
+		"music, videos and pictures",
+		"music only",
+		"videos only",
+		"pictures only",
+		"TRACKS",
+		"DEVICES",
+		"In the network as",
+		"reading folders …",
+		"Loading media server …",
+		"Read everything again",
+		"Install from the store (MiniDLNA)",
+		"The media server (MiniDLNA) is a system app: TVs, receivers, game consoles and apps like VLC then find the box in the network and play music, videos and pictures from the shares.",
+		"The media server is switched off. Choose folders below and switch it on.",
+		"Devices in the same network find the server by themselves (DLNA/UPnP AV), e.g. under “Media server” or “Sources” on the TV.",
+		"New files show up by themselves after a short while; after big changes “Read everything again” helps.",
+		"The server only reads – and shows everything in the chosen shares to every device in the network, without sign-in.",
+		"Videos are not converted: the device must be able to play the format itself.",
+		"Media server switched on (also starts after a restart)",
+		"NAME IN THE NETWORK",
+		"SHOW AS",
+		"“Music”, “Videos”, “Pictures”: show only this kind of files from the share. “Everything”: music, videos and pictures.",
+		"Choose at least one share.",
+		"Media server saved.",
+		"Media server reads all folders again.",
+		"No share yet – create one under",
+		".",
+		"VIDEOS",
+		"PICTURES",
+		"HEADER INDICATORS",
+		"Header indicator",
+		"VPN of the box (OpenVPN)",
+		"connecting …",
+		"No service and no app shows anything right now.",
+		"Services (VPN, torrents, media server) and apps with the permission “Header indicator” show their state here; a click opens the app.",
+		"May connect and disconnect the box as a VPN client and manage VPN profiles (OpenVPN) – this affects the network of the whole box, so administrators only.",
+		"May show a short state at the top of the ShareOS interface (e.g. “connected”) – only to the user who opened the app; it disappears by itself after at most 10 minutes.",
+		"VPN SERVER",
+		"1 device",
+		"Neither a personal folder nor a share for you.",
+		"Files: personal folder and shares (by permissions) in the file browser and in apps",
+		" (read only)",
+		"(read only)",
+		"TAILSCALE",
+		"sign-in needed",
+		"disconnected",
+		"Remote access (Tailscale)",
+		"May connect the box with Tailscale, sign in and out and see the devices of the tailnet – this affects the network of the whole box, so admins only.",
+		"In the page",
+		"Own window",
+		"Now opens in the page.",
+		"Now opens in its own window.",
+		"This app does not exist (any more).",
+		"tailscaled, WireGuard mesh",
+		"VPN (OpenVPN)",
+		"Client and server, app NetTunnel",
+		"Torrents (Transmission)",
+		"one service per account",
+		"Download automation (autobrr)",
+		"autobrr, port 7474",
+		"May set up and control the box's autobrr (filters, indexers, IRC, releases) and choose whose Transmission gets the torrents it finds – one service for the whole box, so for administrators only.",
+		"Mark as favourite",
+		"Remove from favourites",
+		"Show the “FAV APPS” app bar (just for you)",
+		"The star on an app tile makes it a favourite. The bar sits above “Status” in the overview and above the installed apps.",
+		"Show names below the icons (off: icons only)",
+		"Box values",
+		"Network checks",
+		"Docker hosts",
+		"May read the box's values (CPU, memory, temperature, fan, drives, processes) and end processes ShareOS does not need – administrators only.",
+		"May check from the box whether devices and services on the network are reachable (ping, port, HTTP/HTTPS) – administrators only.",
+		"May manage the Docker hosts the administrator adds and there view, start, stop and restart containers and read their logs (Docker API) – administrators only.",
+		"Smart home (Tuya)",
+		"May find Tuya devices on the home network from the box, read their state and switch them (locally, without the cloud) – administrators only.",
+		"No drive mounted for you.",
+		"CONTAINS",
+		"MY USAGE",
+		"USED",
+		"FREE",
+		"LIMIT",
+		"HEALTH",
+		"Health",
+		"SELF-TEST",
+		"GOOD",
+		"CAUTION",
+		"CRITICAL",
+		"BAY",
+		"Read again",
+		"Read now",
+		"Short test",
+		"Long test",
+		"Abort test",
+		"All values",
+		"Hide values",
+		"Temperature",
+		"Running time",
+		"Power cycles",
+		"Motor start-ups",
+		"Reallocated sectors",
+		"Pending sectors",
+		"Unreadable sectors",
+		"Transfer errors (CRC)",
+		"Error log",
+		"WORST",
+		"THRESHOLD",
+		"RAW VALUE",
+		"EARLIER",
+		"FAILED",
+		"SCHEDULED SELF-TEST",
+		"ALL DISKS IN THE BAYS",
+		"HOW IT IS RATED",
+		"Short test every Sunday (3:30 am)",
+		"Long test on the 1st of every month (3:30 am)",
+		"self-test running",
+		"Start the long test?",
+		"Self-test started.",
+		"Self-test aborted.",
+		"Schedule saved.",
+		"Nothing unusual.",
+		"SSD life",
+		"No self-test has run yet.",
+		"Back up the data and replace the disk soon.",
+		"SMART of the disks and SSDs",
+		"No disk found.",
+		"SMART not read yet. Reading wakes the disk up.",
+		"The disk is asleep – the values come when it next wakes up.",
+		"This disk gives no SMART values.",
+		"This USB adapter does not pass on SMART values.",
+		"The disk itself reports: failure is imminent (SMART overall assessment FAILED).",
+		"The last self-test failed.",
+		"The disk itself reports a failure, a value is below the manufacturer's threshold, a self-test failed, more than 100 reallocated or more than 10 pending sectors, an SSD with 10 % life or less, 60 °C and above.",
+		"A few reallocated, pending or unreadable sectors, transfer errors, entries in the error log, an SSD with 20 % life or less, from 55 °C.",
+		"The short test checks the electronics and part of the surface, the long test reads the whole disk (many hours for large disks; the disk stays awake meanwhile). The result shows here and as a message when something is wrong.",
+		"without errors",
+		"ASLEEP",
+		"The disk is asleep (standby)",
+		"The disk is running",
+		"Trash",
+		"TRASH",
+		"Delete for good",
+		"Empty trash",
+		"Empty the trash?",
+		"FROM",
+		"DELETED",
+		"Move to trash",
+		"Moved to the trash.",
+		"Empty",
+		"Trash emptied.",
+		"Deleted for good.",
+		"Trash settings saved.",
+		"The trash is empty.",
+		"never (empty by hand only)",
+		"Put what is deleted in the file browser into the trash first",
+		"DELETE FOR GOOD AUTOMATICALLY AFTER",
+		"This cannot be undone.",
+		"Every folder has its own trash: the personal folder, each share, each drive. It lies on the same disk and counts towards the storage limit. It applies to the file browser of this interface – what is deleted over SMB from a PC or in apps is gone at once; for that there are the snapshots.",
+		"USB BUTTON",
+		"copies",
+		"Copy now",
+		"USB button saved.",
+		"USB copy started.",
+		"Last:",
+		"No USB drive plugged in.",
+		"No target set.",
+		"Not enough space on the target – nothing copied.",
+		"The target drive is not mounted.",
+		"A short press copies the USB drives, holding 3 s ejects them",
+		"A new folder with the date every time, e.g.",
+		"– nothing on the box is overwritten or deleted. The USB light blinks while copying; the result comes as a message. Without the tick the button only ejects, as before.",
+		"Send notifications",
+		"May send messages through the box's notifications (web interface, e-mail, push) – at most 20 an hour, with the app's name in front; in the browser for administrators only.",
+		"Reload",
+		"Window blocked – allow pop-ups for this page.",
+		"Show here",
+		"The terminal runs in its own window.",
+		"The session is for one window and ends when it is closed – a window of its own gets a new session. Careful: commands as root take effect at once and without a trash.",
+		"SWITCH OFF AND ON BY SCHEDULE",
+		"Switch the schedule on",
+		"DAY",
+		"SWITCH ON",
+		"SWITCH OFF",
+		"Monday",
+		"Tuesday",
+		"Wednesday",
+		"Thursday",
+		"Friday",
+		"Saturday",
+		"Sunday",
+		"Next switch-on:",
+		"Next switch-off:",
+		"· Next switch-off:",
+		"Empty fields: nothing on that day. The box shuts down cleanly (as with the button); while a storage job runs (e.g. a RAID rebuild) it stays on. To switch on, ShareOS sets the wake-up time of the device controller – do not unplug it.",
+		"This box cannot switch itself on (no wake-up function) – only switching off by schedule works. Switch it on with the power button.",
+		"Monitoring (Zabbix agent)",
+		"zabbix_agentd, active mode",
+		"Compatibility mode (SMB 2.1 at most)",
+		"Faster with Windows 11, which signs every connection: the signature of SMB 2.1 costs this box about half the computing time of the one of SMB 3 (measured about 9–14 instead of 4–10 MB/s when writing). Without signing about 35 MB/s are possible. In exchange there is no SMB 3: no encryption, no multichannel. Open connections are dropped when this is changed.",
+		"The wizard erases the selected disks and sets them up again. Single disks can also be formatted directly at the disk under “Drives”. Disks with data (e.g. from Alt-F or the D-Link firmware) are added without erasing with “… take over” at the disk.",
+		"Only for devices that have trouble with SMB 3. The signature Windows 11 requires on every connection is computed by the crypto engine of the box with SMB 3 (measured about 19–23 MB/s when writing, about 35 without signing); SMB 2.1 computes it on the processor (about 9–14 MB/s) and has no encryption and no multichannel. Open connections are dropped when this is changed.",
+		"The schedule is off – the times entered only apply with the tick at “Switch the schedule on”.",
+		"Schedule saved (switched off).",
+		"Schedule saved – no switch-on planned.",
+		"Switching on afterwards only at the device.",
+		"No times set up.",
+		"DEVICE & ACCESS",
+		"The star makes an app a favourite – favourites are shown at the top of “My ShareOS”.",
+		"Show all notices",
+		"OWN CERTIFICATES",
+		"Update dynamic DNS",
+		"API TOKEN (ZONE:READ, DNS:EDIT)",
+		"UPDATE URL ({host} {ip} {ip6})",
+		"Own URL (dyndns2)",
+		"– choose –",
+		"saved – leave empty to keep it",
+		"The box reports its public address every 5 minutes when it has changed. Many connections (DS-Lite, fibre, mobile) have no IPv4 address of their own – then use IPv6. For access from outside, the router has to forward the port (or open it for IPv6).",
+		"Last reported",
+		"Last checked",
+		"Not reported yet – coming shortly.",
+		"Dynamic DNS is off.",
+		"CERTIFICATE AUTHORITY (CA)",
+		"this box uses it",
+		"Fingerprint",
+		"Root certificate",
+		"Reissue the box certificate",
+		"Use for this box",
+		"Install the root certificate once on PC and phone as trusted (Windows: double-click → “Trusted Root Certification Authorities”, Android/iOS: Settings → Security). After that all certificates of this CA work without a warning – for the box and other devices in the home network.",
+		"An own certificate authority issues certificates for the box and other devices in the home network (e.g.",
+		"). Its root certificate is installed once on the devices – after that there are no more certificate warnings.",
+		"Create certificate authority",
+		"Getting the certificate – this takes up to 3 minutes …",
+		"Checked daily and renewed 30 days before it expires.",
+		"Switch off",
+		"A certificate for",
+		", trusted by all browsers. The check runs through a DNS record at the dynamic DNS provider – no port has to be open.",
+		"E-MAIL (OPTIONAL, FOR NOTICES FROM LET'S ENCRYPT)",
+		"Test mode (test CA, browsers warn)",
+		"Get certificate",
+		"Needs dynamic DNS with DuckDNS or Cloudflare (above).",
+		"CERTIFICATE FOR ANOTHER DEVICE",
+		"HOST NAMES AND IP ADDRESSES (COMMA-SEPARATED)",
+		"Valid for 825 days. Wildcards such as",
+		"are possible too. Download certificate and key and enter them in the device.",
+		"Issue",
+		"HOST NAMES",
+		"VALID UNTIL",
+		"Key",
+		"own CA",
+		"active (test)",
+		"Please enter provider and name.",
+		"Please enter name and host names.",
+		"Saved – the address is being reported.",
+		"Reporting …",
+		"Certificate authority created.",
+		"Certificate issued.",
+		"Use a certificate of the own CA?",
+		"The box gets a certificate of its own CA for the device name, the .local name and the IP address; it replaces the current one. Without the root certificate installed, the browser keeps warning.",
+		"Use",
+		"Certificate installed – the page reconnects.",
+		"Delete certificate?",
+		"Switch off Let's Encrypt?",
+		"The box then uses a self-signed certificate again.",
+		"Switched off – the page reconnects.",
+		"Let's Encrypt certificate active – the page reconnects.",
+		"PRINTERS",
+		"Loading printers …",
+		"Printers in the network are a system app: current printers and multifunction devices then print and scan without drivers (AirPrint, Mopria, Windows 10/11), older ones over port 9100 with the driver on the computer.",
+		"Install from the store (ipp-usb + p910nd)",
+		"in the network",
+		"not reachable",
+		"Without driver (IPP over USB)",
+		"With the driver on the computer (port 9100)",
+		"Scanning",
+		"over the network (eSCL), if the device has a scanner",
+		"Address",
+		"Device page",
+		"Windows 10/11, macOS, iPhone/iPad and Android find the printer by themselves (“Add printer”). By hand: enter the address above as an IPP printer.",
+		"Windows: “Add printer” → “TCP/IP address” →",
+		", port",
+		", the maker's driver. macOS/Linux: “HP JetDirect – Socket” or AppSocket.",
+		"Test page",
+		"No USB printer connected. Plug one in – it shows up here after a few seconds.",
+		"Share printers in the network (also starts after a restart)",
+		"Automatic – without driver where the printer can",
+		"Always port 9100 (driver on the computer)",
+		"Everyone in the network can print, without signing in. “Always port 9100” only if a printer does not print properly without a driver.",
+		"Printers saved.",
+		"Test page sent.",
+		"UPS",
+		"Loading UPS …",
+		"Install from the store (Network UPS Tools)",
+		"UPS support is a system app: the box then shows charge and runtime, reports a power failure and shuts down cleanly in time.",
+		"Battery almost empty",
+		"on battery",
+		"on mains",
+		"no data",
+		"BATTERY",
+		"RUNTIME",
+		"LOAD",
+		"Mains voltage",
+		"Battery since",
+		"Driver",
+		"Connecting to the UPS …",
+		"Detected:",
+		"Switch it on below.",
+		"EVENTS",
+		"None yet – a power failure is shown here and as a message.",
+		"Power failure – running on the UPS",
+		"Power is back",
+		"Shutdown triggered",
+		"Box shuts down",
+		"Connection to the UPS lost",
+		"No connection to the UPS",
+		"Connection to the UPS is back",
+		"Replace the battery",
+		"Monitor the UPS (also starts after a restart)",
+		"SHUT DOWN",
+		"When the UPS reports “battery low”",
+		"Below a battery charge",
+		"After some time on battery",
+		"BATTERY CHARGE (%)",
+		"MINUTES ON BATTERY",
+		"DRIVER",
+		"Automatic",
+		"blazer_usb (older Megatec)",
+		"Then switch the UPS off – the box starts again when the power is back",
+		"Other computers may read the UPS over the network (port 3493)",
+		"PASSWORD FOR “MONITOR”",
+		"saved – leave empty to keep it",
+		"On the other computer (NUT, upsmon):",
+		"– it then shuts down before the box.",
+		"The box only shuts down while it runs on battery. If the power comes back before, nothing happens.",
+		"UPS saved.",
+		"Sync folders (Syncthing)",
+		"May control the user's own Syncthing service: pair devices and sync folders with them. Every user has their own service; only folders they have access to are synced.",
+		"Show fewer",
+		"May set up the box's Zabbix agent (server, host name, PSK encryption, passive checks, SMART interval), restart it and read its log – the app never sees the key again. Admins only.",
+		"Include the HTTPS certificate (with key)",
+		"Include the own CA",
+		"Keys only go into an encrypted backup – enter a password first.",
+		"Contains the box (network, name, time, drives, root password), users and groups (passwords as hashes), shares, the settings of the services and the list of installed apps. Without a password the file is readable – keep it safe. With a password: AES-256, the password is needed to restore.",
+		"Groups",
+		"Own CA",
+		"Root password, network, device name, time zone, drives and the settings of the web interface are taken over right away. Then the box restarts and asks in recovery mode what else should come back. Data on the drives stays untouched.",
+		"Root password, network, name, time zone and drives come from the backup right away, then the box restarts. You choose the rest afterwards in recovery mode.",
+		"Restore and restart",
+		"Then it continues in recovery mode",
+		"RECOVERY MODE",
+		"Backup",
+		"The box was restored from a backup:",
+		"Already taken over: root password, network (IP address, subnet), device name, time zone, drives and the settings of the web interface. Choose what else should come back:",
+		"Users and groups",
+		"Paperless connection",
+		"Cloud storage",
+		"Snapshots",
+		"Zabbix agent",
+		"Printer",
+		"Settings",
+		"Installed from the store after the restart (internet needed). Whatever fails is offered again later on the apps page.",
+		"CERTIFICATES",
+		"Reuse the HTTPS certificate from the backup",
+		"Otherwise the own CA issues a new certificate if it is restored. Browser and desktop app then ask once again.",
+		"Otherwise the box keeps its current certificate. Browser and desktop app then ask once again.",
+		"The backup holds no HTTPS certificate – the box keeps its current one.",
+		"Restore the own CA",
+		"Devices that trust the CA keep trusting the box only with the same CA. Without it you have to install the new CA there and issue certificates for other devices again.",
+		"Take over nothing else",
+		"Apply and restart",
+		"Apply the selection?",
+		"The box applies the chosen settings and restarts.",
+		"Take over nothing else?",
+		"The box stays as it is now: only password, network, name, time zone and drives come from the backup. The backup can be restored again later.",
+		"End recovery",
+		"Applying the settings",
+		"Recovery mode ended.",
+		"APPS FROM THE BACKUP",
+		"Being installed …",
+		"Not installed yet:",
+		"Install apps from the backup",
+		"The apps are being installed in the background.",
+		"Browse …",
+		"Choose folder",
+		"Choose this folder",
+		"Up",
+		"No subfolders.",
+		"SUBFOLDERS",
+		"Add subfolder",
+		"Single folders from a share – no extra share needed.",
+		"SUBFOLDER (OPTIONAL)",
+		"The folder browser needs the “Files” permission – please type the folder.",
+		"Choose whole shares in the list above.",
+		"Cut",
+		"Clear clipboard",
+		"Paste",
+		"This box is not set up yet. Press the USB button on the front of the box briefly, then choose a password for root.",
+		"Waiting for the USB button …",
+		"Button detected – choose a password now (you have 2 minutes).",
+		"NEW PASSWORD (MIN. 8 CHARACTERS)",
+		"REPEAT PASSWORD",
+		"Set password",
+		"Everything can be set later under System.",
+		"Paperless is a module: it appears when it is installed under APPS and disappears when removed (settings and folders stay).",
+		"Module · own tab",
+		"Switches on an area of ShareOS with its own tab. The code is part of the reviewed firmware – the package only brings the switch.",
+		"Module",
+		"DNS FILTER",
+		"HOW TO USE IT",
+		"BLOCK LISTS",
+		"QUERIES",
+		"BLOCKED",
+		"RULES",
+		"RAM",
+		"LIST",
+		"running",
+		"starting …",
+		"filtering paused",
+		"Show login",
+		"Update lists",
+		"Lists updated.",
+		"List removed.",
+		"Remove list?",
+		"Add list",
+		"List added.",
+		"UPSTREAM SERVERS (ONE PER LINE)",
+		"ADDRESS OF THE LIST",
+		"PORT OF THE ADGUARD INTERFACE",
+		"DNS filter is starting …",
+		"DNS filter (AdGuard Home)",
+		"Enter the address of the box as DNS server in the router – or only on single devices:",
+		"Do not enter a second DNS server, otherwise devices ask past the box. While the box is off or restarting, the devices have no DNS.",
+		"Fine settings, query log and statistics in the interface of AdGuard Home.",
+		"Switch on the DNS filter (also starts after a restart)",
+		"The DNS filter needs the apps drive (Storage → Drives).",
+		"Estimated need with these lists:",
+		"Many rules: large lists cost a lot of memory. With the 256 MB of the box, better stay with the default list.",
+		"AdGuard Home is starting – the first time takes a while.",
+		"Open AdGuard Home ↗",
+		"Filtering on (off = only forward)",
+		"Every rule costs memory (about 0.1 KB). From 300,000 rules on, ShareOS warns.",
+		"The DNS filter (AdGuard Home) is a module too: DNS FILTER tab once it is installed under APPS.",
+		"Paperless, Cloud and the DNS filter are modules: their tab appears when they are installed under APPS and disappears when removed – settings and data stay.",
+		"VAULT",
+		"locked",
+		"Unlock",
+		"Lock",
+		"Lock now",
+		"As a vault: share only on request, for some minutes",
+		"DEFAULT TIME WHEN UNLOCKING",
+		"A vault is not visible in the network. A user with rights on it unlocks it under “My ShareOS” (or in an app) with their password – then, for the chosen time, it is reachable for them only as",
+		"and locks itself afterwards. While locked, nobody gets at the files, not through open connections or apps either. A vault is shared over SMB only, without guests and NFS.",
+		"Your password again, for safety. The vault is then reachable in the network for you only and locks itself again.",
+		"OPEN FOR",
+		"The vault disappears from the network for everyone who unlocked it. Open connections lose access.",
+		"Vault shares",
+		"May unlock the user's vault shares (after the user enters their password) and lock them; for admins it can also choose which shares are vaults.",
+		"HTTPS PORT OF THE ADGUARD INTERFACE",
+		"Encrypted (HTTPS) with the box's certificate; HTTP requests are redirected.",
+		"Encrypted (HTTPS) with the box's self-signed certificate – the browser warns as with the interface. HTTP is only redirected once the box has a trusted certificate (own CA or Let's Encrypt under",
+		"Without a certificate of the box only unencrypted (HTTP).",
+		"Local names",
+		"Local domain",
+		"DNS server of the network",
+		"System → Network",
+		"LOCAL ENTRIES",
+		"Add entry",
+		"For devices with a fixed IP address that the router does not know.",
+		"applies to all names below it. ShareOS sets the box's own names itself.",
+		"Remove entry?",
+		"Entry added.",
+		"Entry removed.",
+		"View",
+		"Classic",
+		"Desktop",
+		"Desktop view",
+		"Start menu",
+		"Open windows",
+		"Messages",
+		"Search",
+		"User menu",
+		"Files",
+		"Storage",
+		"Control panel",
+		"App store",
+		"Task manager",
+		"Logs",
+		"Cloud",
+		"Paperless",
+		"DNS filter",
+		"Access & connection",
+		"General",
+		"Time",
+		"Appearance",
+		"Wallpaper",
+		"Power & reset",
+		"Status",
+		"Autostart",
+		"Media server",
+		"Minimise",
+		"Maximise",
+		"Search apps and settings",
+		"Classic view",
+		"Nothing found.",
+		"MODULES & APPS",
+		"Reset layout",
+		"Reset the layout?",
+		"Icons and windows go back to their default places.",
+		"Search all settings",
+		"No drives or shares.",
+		"No images in this folder.",
+		"A wallpaper from the box needs the “Files” permission for your account.",
+		"An image (JPG, PNG, WebP, GIF) from the box – saved for you only.",
+		"IMAGE FIT",
+		"Fill",
+		"Fit",
+		"Tile",
+		"ShareOS (default)",
+		"Wallpaper saved.",
+		"Installed apps",
+		"App sources",
+		"Teal",
+		"Orange",
+		"Violet",
+		"Grey",
+		"Accent colour teal",
+		"Accent colour orange",
+		"Accent colour violet",
+		"Accent colour grey",
+		"TORRENTS",
+		"Torrent remote access",
+		"Torrent remote access saved.",
+		"PORT (HTTP)",
+		"PORT (HTTPS)",
+		"USERS WITH A REMOTE PASSWORD",
+		"Install from the store (Transmission)",
+		"Revoke",
+		"Torrents run on the system app Transmission: every user has their own service and controls it with the Transmission app. Here you can also switch on access for programs such as Transmission Remote GUI or Transmissionic.",
+		"REMOTE ACCESS FOR TORRENT PROGRAMS",
+		"Programs such as Transmission Remote GUI, Transmissionic or Tremotesf use it to control a user’s own Transmission service.",
+		"Sign in with the user name and a separate remote password the user creates in the Transmission app – not with the box password.",
+		"Only from the home network, also over VPN or Tailscale; access from the internet is blocked.",
+		"After 5 wrong passwords, sign-in is blocked for 10 minutes.",
+		"There is no separate web interface: in the browser, use the Transmission app.",
+		"Switch on remote access for torrent programs (also starts after a restart)",
+		"HTTPS is available while the web interface uses HTTPS (System → Network); the same certificate applies. Many programs expect port 9091.",
+		"Switched off – torrents can only be controlled with the Transmission app.",
+		"Revoke password",
+		"None yet – each user creates their password in the Transmission app.",
+		"Programs using this password lose access. The user can create a new one in the Transmission app.",
+		"AdGuard Home is starting and loading the block lists – this takes about a minute.",
+		"Start failed:",
+		"You can save again once it is running.",
+		"No inbox yet.",
+		"Cloud sync uses",
+		"No permission",
+		"Network name (mDNS)",
+		"makes the box reachable as <name>.local",
+		"Accent colour Blue",
+		"Accent colour Teal",
+		"Accent colour Green",
+		"Accent colour Orange",
+		"Accent colour Red",
+		"Accent colour Violet",
+		"Accent colour Grey",
+		"Accent colour White",
+		"Monday switch on",
+		"Monday switch off",
+		"Tuesday switch on",
+		"Tuesday switch off",
+		"Wednesday switch on",
+		"Wednesday switch off",
+		"Thursday switch on",
+		"Thursday switch off",
+		"Friday switch on",
+		"Friday switch off",
+		"Saturday switch on",
+		"Saturday switch off",
+		"Sunday switch on",
+		"Sunday switch off",
+		"Disk",
+		"Off",
+		"Starting",
+		"No cloud account yet.",
+		"No job yet. A job copies or mirrors a folder with a cloud account – by hand or on a schedule.",
+		"Initial sync: waiting",
+		"Recovery: waiting",
+		"Check: waiting",
+		"shared inbox · no token",
+		"The Let's Encrypt certificate could not be fetched.",
+		"Checked once a minute"
+	],
+	"patterns": [
+		[
+			"^No swap, no app area \\(packages and app data need ext4 or Btrfs\\)\\.$",
+			"No swap, no app area (packages and app data need ext4 or Btrfs)."
+		],
+		[
+			"^(.+) swap per disk, no app area \\(packages and app data need ext4 or Btrfs\\)\\.$",
+			"$1 swap per disk, no app area (packages and app data need ext4 or Btrfs)."
+		],
+		[
+			"^Restore: (.*)$",
+			"Restore: $1"
+		],
+		[
+			"^Backup: (.*)$",
+			"Backup: $1"
+		],
+		[
+			"^(\\d+) created$",
+			"$1 created"
+		],
+		[
+			"^SHARE (.+)$",
+			"SHARE $1"
+		],
+		[
+			"^USER (.+)$",
+			"USER $1"
+		],
+		[
+			"^Group (\\S+)$",
+			"Group $1"
+		],
+		[
+			"^Permission for (.+)$",
+			"Permission for $1"
+		],
+		[
+			"^on (\\S+)$",
+			"on $1"
+		],
+		[
+			"^Limit (.+) per drive$",
+			"Limit $1 per drive"
+		],
+		[
+			"^Guests \\(r\\)(.*)$",
+			"Guests (r)$1"
+		],
+		[
+			"^Share “(.+)” saved\\.$",
+			"Share “$1” saved."
+		],
+		[
+			"^Remove share “(.+)”\\?$",
+			"Remove share “$1”?"
+		],
+		[
+			"^Share “(.+)” removed\\.$",
+			"Share “$1” removed."
+		],
+		[
+			"^User “(.+)” created\\.$",
+			"User “$1” created."
+		],
+		[
+			"^User “(.+)” saved\\.$",
+			"User “$1” saved."
+		],
+		[
+			"^Delete user “(.+)”\\?$",
+			"Delete user “$1”?"
+		],
+		[
+			"^User “(.+)” deleted\\.$",
+			"User “$1” deleted."
+		],
+		[
+			"^The account is removed; its share permissions are dropped\\.(.*)$",
+			"The account is removed; its share permissions are dropped.$1"
+		],
+		[
+			"^Group “(.+)” created\\.$",
+			"Group “$1” created."
+		],
+		[
+			"^Delete group “(.+)”\\?$",
+			"Delete group “$1”?"
+		],
+		[
+			"^Group “(.+)” deleted\\.$",
+			"Group “$1” deleted."
+		],
+		[
+			"^Password for (\\S+)$",
+			"Password for $1"
+		],
+		[
+			"^Password of (\\S+) changed\\.$",
+			"Password of $1 changed."
+		],
+		[
+			"^Imported: (.+)$",
+			"Imported: $1"
+		],
+		[
+			"^Skipped: (.+)$",
+			"Skipped: $1"
+		],
+		[
+			"^Shares: (.*)$",
+			"Shares: $1"
+		],
+		[
+			"^Share: (.*)$",
+			"Share: $1"
+		],
+		[
+			"^User: (.*)$",
+			"User: $1"
+		],
+		[
+			"^Password: (.*)$",
+			"Password: $1"
+		],
+		[
+			"^Alt-F: (.*)$",
+			"Alt-F: $1"
+		],
+		[
+			"^The change takes effect at once\\. The box then waits (\\d+) seconds for a confirmation from the new address – if none comes, it restores the previous settings\\. So you cannot lock yourself out\\.$",
+			"The change takes effect at once. The box then waits $1 seconds for a confirmation from the new address – if none comes, it restores the previous settings. So you cannot lock yourself out."
+		],
+		[
+			"^– without confirmation the box returns to the old ones in (\\d+) s\\.$",
+			"– without confirmation the box returns to the old ones in $1 s."
+		],
+		[
+			"^The box gets its address from the router\\. Afterwards it may be reachable under a different address \\(look it up in the router\\)\\. If the change is not confirmed on the box within (\\d+) seconds, the previous settings apply again\\.$",
+			"The box gets its address from the router. Afterwards it may be reachable under a different address (look it up in the router). If the change is not confirmed on the box within $1 seconds, the previous settings apply again."
+		],
+		[
+			"^The box switches to (\\S+)\\. This page then opens the new address and confirms the change\\. If that does not work, the previous settings apply again after (\\d+) seconds\\.$",
+			"The box switches to $1. This page then opens the new address and confirms the change. If that does not work, the previous settings apply again after $2 seconds."
+		],
+		[
+			"^The network settings are applied and confirmed by this page\\. If that does not work, the previous settings apply again after (\\d+) seconds\\.$",
+			"The network settings are applied and confirmed by this page. If that does not work, the previous settings apply again after $1 seconds."
+		],
+		[
+			"^new address (\\S+)$",
+			"new address $1"
+		],
+		[
+			"^waiting for the box \\((\\d+) s\\) – not reachable\\? Look up the new address in the router and log in there\\.$",
+			"waiting for the box ($1 s) – not reachable? Look up the new address in the router and log in there."
+		],
+		[
+			"^waiting for the box \\((\\d+) s\\)$",
+			"waiting for the box ($1 s)"
+		],
+		[
+			"^(\\S+): starts at boot$",
+			"$1: starts at boot"
+		],
+		[
+			"^(\\S+): no longer starts at boot$",
+			"$1: no longer starts at boot"
+		],
+		[
+			"^Network: (.*)$",
+			"Network: $1"
+		],
+		[
+			"^Appearance: (.*)$",
+			"Appearance: $1"
+		],
+		[
+			"^\\((\\d+) %\\) –$",
+			"($1 %) –"
+		],
+		[
+			"^Channel (\\S+)$",
+			"Channel $1"
+		],
+		[
+			"^Update (\\S+) available$",
+			"Update $1 available"
+		],
+		[
+			"^Update (\\S+) available\\.$",
+			"Update $1 available."
+		],
+		[
+			"^UPDATE (\\S+)$",
+			"UPDATE $1"
+		],
+		[
+			"^for (.+)$",
+			"for $1"
+		],
+		[
+			"^(\\d+) set up$",
+			"$1 set up"
+		],
+		[
+			"^(\\d+) detected$",
+			"$1 detected"
+		],
+		[
+			"^planned · phase (\\d)$",
+			"planned · phase $1"
+		],
+		[
+			"^Latest · Beta$",
+			"Latest · Beta"
+		],
+		[
+			"^Latest · Stable$",
+			"Latest · Stable"
+		],
+		[
+			"^CHANGES IN (.+)$",
+			"CHANGES IN $1"
+		],
+		[
+			"^ACCESS · (.+)$",
+			"ACCESS · $1"
+		],
+		[
+			"^NAME FOR (\\S+) \\((.+)\\)$",
+			"NAME FOR $1 ($2)"
+		],
+		[
+			"^PROGRESS · (.*)$",
+			"PROGRESS · $1"
+		],
+		[
+			"^Source: GitHub releases · (.+)$",
+			"Source: GitHub releases · $1"
+		],
+		[
+			"^installed successfully \\((.+)\\)$",
+			"installed successfully ($1)"
+		],
+		[
+			"^Format (\\S+)$",
+			"Format $1"
+		],
+		[
+			"^(.+) will be erased completely\\. This cannot be undone\\.$",
+			"$1 will be erased completely. This cannot be undone."
+		],
+		[
+			"^Clicking \"Set up\" erases (.+) completely\\. The initial sync then runs in the background \\(several hours on large disks\\); the drive can be used right away\\.$",
+			"Clicking \"Set up\" erases $1 completely. The initial sync then runs in the background (several hours on large disks); the drive can be used right away."
+		],
+		[
+			"^Clicking \"Set up\" erases (.+) completely\\.$",
+			"Clicking \"Set up\" erases $1 completely."
+		],
+		[
+			"^(.+) swap per disk, app area on \"(.+)\" \\(unless one exists\\)\\.$",
+			"$1 swap per disk, app area on \"$2\" (unless one exists)."
+		],
+		[
+			"^No swap, app area on \"(.+)\" \\(unless one exists\\)\\.$",
+			"No swap, app area on \"$1\" (unless one exists)."
+		],
+		[
+			"^Both disks hold the same data\\. If one fails, nothing is lost\\. Usable: (.+)\\.$",
+			"Both disks hold the same data. If one fails, nothing is lost. Usable: $1."
+		],
+		[
+			"^Twice the space \\((.+)\\), but no redundancy – each disk is a drive of its own\\.$",
+			"Twice the space ($1), but no redundancy – each disk is a drive of its own."
+		],
+		[
+			"^The disk becomes a drive of (.+)\\. For redundancy, add a second disk as a mirror later\\.$",
+			"The disk becomes a drive of $1. For redundancy, add a second disk as a mirror later."
+		],
+		[
+			"^(\\S+): both disks active \\((.+)\\)$",
+			"$1: both disks active ($2)"
+		],
+		[
+			"^(\\S+): one disk missing \\((.+)\\)$",
+			"$1: one disk missing ($2)"
+		],
+		[
+			"^Remove \"(.+)\"\\?$",
+			"Remove \"$1\"?"
+		],
+		[
+			"^Erase (\\S+)\\?$",
+			"Erase $1?"
+		],
+		[
+			"^(.+) will be erased completely and set up as drive \"(.+)\"\\.$",
+			"$1 will be erased completely and set up as drive \"$2\"."
+		],
+		[
+			"^ShareOS (\\S+) will be written to flash\\. A reboot is needed afterwards, during which the new system is installed\\. Do not switch the box off while writing\\.$",
+			"ShareOS $1 will be written to flash. A reboot is needed afterwards, during which the new system is installed. Do not switch the box off while writing."
+		],
+		[
+			"^(\\S+) of (\\S+ \\S+)$",
+			"$1 of $2"
+		],
+		[
+			"^Install (.+)$",
+			"Install $1"
+		],
+		[
+			"^Load ([0-9.]+ [0-9.]+ [0-9.]+)( ·)?$",
+			"Load $1$2"
+		],
+		[
+			"^NETWORK · (.+)$",
+			"NETWORK · $1"
+		],
+		[
+			"^(\\S+): mounted$",
+			"$1: mounted"
+		],
+		[
+			"^(\\S+): unmounted$",
+			"$1: unmounted"
+		],
+		[
+			"^(\\S+): removed$",
+			"$1: removed"
+		],
+		[
+			"^(\\S+): started$",
+			"$1: started"
+		],
+		[
+			"^(\\S+): stopped$",
+			"$1: stopped"
+		],
+		[
+			"^(\\S+): restarted$",
+			"$1: restarted"
+		],
+		[
+			"^\\((.+)\\)\\.$",
+			"($1)."
+		],
+		[
+			"^full from (\\d+) °C$",
+			"full from $1 °C"
+		],
+		[
+			"^now: (.+)$",
+			"now: $1"
+		],
+		[
+			"^last (.+)$",
+			"last $1"
+		],
+		[
+			"^(\\d+) file\\(s\\) waiting$",
+			"$1 file(s) waiting"
+		],
+		[
+			"^personal inbox of (\\S+) · token (.+)$",
+			"personal inbox of $1 · token $2"
+		],
+		[
+			"^shared inbox · token (.+)$",
+			"shared inbox · token $1"
+		],
+		[
+			"^personal: (.+)$",
+			"personal: $1"
+		],
+		[
+			"^INBOX (.+)$",
+			"INBOX $1"
+		],
+		[
+			"^LOG · (.+)$",
+			"LOG · $1"
+		],
+		[
+			"^Connection OK – (\\S+) documents in Paperless\\.$",
+			"Connection OK – $1 documents in Paperless."
+		],
+		[
+			"^Remove inbox “(.+)”\\?$",
+			"Remove inbox “$1”?"
+		],
+		[
+			"^(.+): connection OK \\((\\d+) folders\\)\\.$",
+			"$1: connection OK ($2 folders)."
+		],
+		[
+			"^Remove account “(.+)”\\?$",
+			"Remove account “$1”?"
+		],
+		[
+			"^Remove job “(.+)”\\?$",
+			"Remove job “$1”?"
+		],
+		[
+			"^Share (\\S+)$",
+			"Share $1"
+		],
+		[
+			"^Share (\\S+) → (.+)$",
+			"Share $1 → $2"
+		],
+		[
+			"^(.+) → Personal folder$",
+			"$1 → Personal folder"
+		],
+		[
+			"^cron: (.+) · by (\\S+)$",
+			"cron: $1 · by $2"
+		],
+		[
+			"^by (\\S+)$",
+			"by $1"
+		],
+		[
+			"^Error · (.+)$",
+			"Error · $1"
+		],
+		[
+			"^running since (.+)$",
+			"running since $1"
+		],
+		[
+			"^Job: (.*)$",
+			"Job: $1"
+		],
+		[
+			"^Account: (.*)$",
+			"Account: $1"
+		],
+		[
+			"^Inbox: (.*)$",
+			"Inbox: $1"
+		],
+		[
+			"^Fan: (.*)$",
+			"Fan: $1"
+		],
+		[
+			"^Services: (.*)$",
+			"Services: $1"
+		],
+		[
+			"^Setup: (.*)$",
+			"Setup: $1"
+		],
+		[
+			"^Format: (.*)$",
+			"Format: $1"
+		],
+		[
+			"^Install: (.*)$",
+			"Install: $1"
+		],
+		[
+			"^Standby: (.*)$",
+			"Standby: $1"
+		],
+		[
+			"^Storage: (.*)$",
+			"Storage: $1"
+		],
+		[
+			"^Language: (.*)$",
+			"Language: $1"
+		],
+		[
+			"^Channel: (.*)$",
+			"Channel: $1"
+		],
+		[
+			"^Certificate: (.*)$",
+			"Certificate: $1"
+		],
+		[
+			"^Check failed: (.*)$",
+			"Check failed: $1"
+		],
+		[
+			"^(.+) free$",
+			"$1 free"
+		],
+		[
+			"^select (.+)$",
+			"select $1"
+		],
+		[
+			"^download (.+)$",
+			"download $1"
+		],
+		[
+			"^(\\d+) selected\\.$",
+			"$1 selected."
+		],
+		[
+			"^New name for “(.+)”:$",
+			"New name for “$1”:"
+		],
+		[
+			"^(\\d+) item\\(s\\)\\. Target folder as a path in “(.+)”, e\\.g\\. Photos\\/2026 \\(empty = top level\\)\\.$",
+			"$1 item(s). Target folder as a path in “$2”, e.g. Photos/2026 (empty = top level)."
+		],
+		[
+			"^Delete (\\d+) item\\(s\\)\\?$",
+			"Delete $1 item(s)?"
+		],
+		[
+			"^(.+) – folders with their content\\. This cannot be undone\\.$",
+			"$1 – folders with their content. This cannot be undone."
+		],
+		[
+			"^“(.+)” already exists in this folder\\.$",
+			"“$1” already exists in this folder."
+		],
+		[
+			"^(\\d+) file\\(s\\) uploaded\\.$",
+			"$1 file(s) uploaded."
+		],
+		[
+			"^(\\d+) file\\(s\\) not uploaded\\.$",
+			"$1 file(s) not uploaded."
+		],
+		[
+			"^Same as for everyone \\((.+)\\)$",
+			"Same as for everyone ($1)"
+		],
+		[
+			"^Download: (.*)$",
+			"Download: $1"
+		],
+		[
+			"^Folder: (.*)$",
+			"Folder: $1"
+		],
+		[
+			"^Rename: (.*)$",
+			"Rename: $1"
+		],
+		[
+			"^Delete: (.*)$",
+			"Delete: $1"
+		],
+		[
+			"^Move: (.*)$",
+			"Move: $1"
+		],
+		[
+			"^Copy: (.*)$",
+			"Copy: $1"
+		],
+		[
+			"^Files: (.*)$",
+			"Files: $1"
+		],
+		[
+			"^Web apps run on their own port \\((\\d+)\\) – apart from this interface, so an app cannot use your login\\. Anyone who knows the address can open a web app on the network; “visible to” decides who sees it in “My ShareOS”\\.$",
+			"Web apps run on their own port ($1) – apart from this interface, so an app cannot use your login. Anyone who knows the address can open a web app on the network; “visible to” decides who sees it in “My ShareOS”."
+		],
+		[
+			"^Web apps run on their own port \\((\\d+) / (\\d+) for HTTPS\\) – apart from this interface, so an app cannot use your login\\. Anyone who knows the address can open a web app on the network; “visible to” decides who sees it in “My ShareOS”\\.$",
+			"Web apps run on their own port ($1 / $2 for HTTPS) – apart from this interface, so an app cannot use your login. Anyone who knows the address can open a web app on the network; “visible to” decides who sees it in “My ShareOS”."
+		],
+		[
+			"^as of (.+)$",
+			"as of $1"
+		],
+		[
+			"^(.+) · visible to (.+)$",
+			"$1 · visible to $2"
+		],
+		[
+			"^(.+) · VISIBLE TO$",
+			"$1 · VISIBLE TO"
+		],
+		[
+			"^Remove (.+)\\?$",
+			"Remove $1?"
+		],
+		[
+			"^(\\S+) (\\S+) installed\\.$",
+			"$1 $2 installed."
+		],
+		[
+			"^(\\S+) (\\S+) installed \\(own app\\)\\.$",
+			"$1 $2 installed (own app)."
+		],
+		[
+			"^(\\S+) downloading …$",
+			"$1 downloading …"
+		],
+		[
+			"^(\\S+) being verified …$",
+			"$1 being verified …"
+		],
+		[
+			"^(\\S+) being installed …$",
+			"$1 being installed …"
+		],
+		[
+			"^Update (.+)$",
+			"Update $1"
+		],
+		[
+			"^Store: (.*)$",
+			"Store: $1"
+		],
+		[
+			"^Apps: (.*)$",
+			"Apps: $1"
+		],
+		[
+			"^Remove: (.*)$",
+			"Remove: $1"
+		],
+		[
+			"^Sources: (.*)$",
+			"Sources: $1"
+		],
+		[
+			"^Package: (.*)$",
+			"Package: $1"
+		],
+		[
+			"^Afterwards (.+) starts\\. Alt-F's extra packages are missing then – flash the same file once more in Alt-F's firmware page\\. Back to ShareOS: flash the ShareOS \\.bin in Alt-F, system and settings are still there\\.$",
+			"Afterwards $1 starts. Alt-F's extra packages are missing then – flash the same file once more in Alt-F's firmware page. Back to ShareOS: flash the ShareOS .bin in Alt-F, system and settings are still there."
+		],
+		[
+			"^Install (.+)\\?$",
+			"Install $1?"
+		],
+		[
+			"^Kernel and boot system are replaced and checked\\. Do not switch the box off while writing\\.$",
+			"Kernel and boot system are replaced and checked. Do not switch the box off while writing."
+		],
+		[
+			"^(.+) is in flash\\. Restart now\\?$",
+			"$1 is in flash. Restart now?"
+		],
+		[
+			"^(.+) is starting – its interface will be at (.+) shortly \\(port 80\\)\\.$",
+			"$1 is starting – its interface will be at $2 shortly (port 80)."
+		],
+		[
+			"^(.+) is starting$",
+			"$1 is starting"
+		],
+		[
+			"^Firmware file: (.*)$",
+			"Firmware file: $1"
+		],
+		[
+			"^(.+) can be unplugged now\\.$",
+			"$1 can be unplugged now."
+		],
+		[
+			"^Format (.+)$",
+			"Format $1"
+		],
+		[
+			"^Erase (.+)\\?$",
+			"Erase $1?"
+		],
+		[
+			"^(.+) – name \\(letters, digits, spaces, - and _\\) and file system:$",
+			"$1 – name (letters, digits, spaces, - and _) and file system:"
+		],
+		[
+			"^Everything on (.+) is erased\\. Afterwards it is a (.+) drive “(.+)”\\.$",
+			"Everything on $1 is erased. Afterwards it is a $2 drive “$3”."
+		],
+		[
+			"^(.+) \\((.*), (.+)\\) is erased completely and set up again as volume “(.+)” \\((.+)\\)\\.$",
+			"$1 ($2, $3) is erased completely and set up again as volume “$4” ($5)."
+		],
+		[
+			"^App area on “(.+)” \\(unless there is one already\\)\\.$",
+			"App area on “$1” (unless there is one already)."
+		],
+		[
+			"^DATE AND TIME \\((.+)\\)$",
+			"DATE AND TIME ($1)"
+		],
+		[
+			"^Time: (.*)$",
+			"Time: $1"
+		],
+		[
+			"^Sync: (.*)$",
+			"Sync: $1"
+		],
+		[
+			"^(.+) \\(mirror \\(RAID 1\\)\\)$",
+			"$1 (mirror (RAID 1))"
+		],
+		[
+			"^(.+) \\(single drive\\)$",
+			"$1 (single drive)"
+		],
+		[
+			"^Error (\\d+)$",
+			"Error $1"
+		],
+		[
+			"^Default: (.+)$",
+			"Default: $1"
+		],
+		[
+			"^(.+) · max\\. (\\d+) s$",
+			"$1 · max. $2 s"
+		],
+		[
+			"^(.+) · TASKS$",
+			"$1 · TASKS"
+		],
+		[
+			"^Tasks: (.*)$",
+			"Tasks: $1"
+		],
+		[
+			"^Task: (.*)$",
+			"Task: $1"
+		],
+		[
+			"^Log: (.*)$",
+			"Log: $1"
+		],
+		[
+			"^(.+): permissions$",
+			"$1: permissions"
+		],
+		[
+			"^Open with (.+)$",
+			"Open with $1"
+		],
+		[
+			"^Open: (.+)$",
+			"Open: $1"
+		],
+		[
+			"^Both disks become one volume, data spread across them: faster, space (.+)\\. If one disk fails, everything is lost\\.$",
+			"Both disks become one volume, data spread across them: faster, space $1. If one disk fails, everything is lost."
+		],
+		[
+			"^Both disks become one volume one after the other with (.+) \\(also with disks of different sizes\\)\\. If one disk fails, everything is lost\\.$",
+			"Both disks become one volume one after the other with $1 (also with disks of different sizes). If one disk fails, everything is lost."
+		],
+		[
+			"^Repair mirror “(.+)”\\?$",
+			"Repair mirror “$1”?"
+		],
+		[
+			"^(\\S+) \\((.*) · (.+)\\) is erased completely and added to the mirror as the second disk\\. The data is then copied in the background \\(several hours for large disks\\); the volume stays usable\\.$",
+			"$1 ($2 · $3) is erased completely and added to the mirror as the second disk. The data is then copied in the background (several hours for large disks); the volume stays usable."
+		],
+		[
+			"^one disk missing \\((.+)\\)$",
+			"one disk missing ($1)"
+		],
+		[
+			"^(\\d+) MESSAGES$",
+			"$1 MESSAGES"
+		],
+		[
+			"^(\\d+) unread$",
+			"$1 unread"
+		],
+		[
+			"^Messages: (.+)$",
+			"Messages: $1"
+		],
+		[
+			"^Test: (.+)$",
+			"Test: $1"
+		],
+		[
+			"^This page is opened via (.+)\\. Without a certificate warning:$",
+			"This page is opened via $1. Without a certificate warning:"
+		],
+		[
+			"^Name: (.+)$",
+			"Name: $1"
+		],
+		[
+			"^File access: (.+)$",
+			"File access: $1"
+		],
+		[
+			"^ubus error (.+)$",
+			"ubus error $1"
+		],
+		[
+			"^personal: (.+) · off$",
+			"personal: $1 · off"
+		],
+		[
+			"^personal inbox of (.+) · token (.+)$",
+			"personal inbox of $1 · token $2"
+		],
+		[
+			"^Share (.+)$",
+			"Share $1"
+		],
+		[
+			"^Error: (.+)$",
+			"Error: $1"
+		],
+		[
+			"^by (.+)$",
+			"by $1"
+		],
+		[
+			"^Account “(.+)” added\\.$",
+			"Account “$1” added."
+		],
+		[
+			"^Account: (.+)$",
+			"Account: $1"
+		],
+		[
+			"^Job “(.+)” saved\\.$",
+			"Job “$1” saved."
+		],
+		[
+			"^Job: (.+)$",
+			"Job: $1"
+		],
+		[
+			"^Password: (.+)$",
+			"Password: $1"
+		],
+		[
+			"^(.+) · not mounted$",
+			"$1 · not mounted"
+		],
+		[
+			"^(.+) · file system not found$",
+			"$1 · file system not found"
+		],
+		[
+			"^contains: (.+)$",
+			"contains: $1"
+		],
+		[
+			"^The name “(.+)” is already taken\\.$",
+			"The name “$1” is already taken."
+		],
+		[
+			"^([0-9.,]+ [KMGT]?B) of ([0-9.,]+ [KMGT]?B)$",
+			"$1 of $2"
+		],
+		[
+			"^Area: (.+)$",
+			"Area: $1"
+		],
+		[
+			"^Fan: (.+)$",
+			"Fan: $1"
+		],
+		[
+			"^Firmware file: (.+)$",
+			"Firmware file: $1"
+		],
+		[
+			"^Language: (.+)$",
+			"Language: $1"
+		],
+		[
+			"^Share: (.+)$",
+			"Share: $1"
+		],
+		[
+			"^User: (.+)$",
+			"User: $1"
+		],
+		[
+			"^(.+): no longer starts at power-on$",
+			"$1: no longer starts at power-on"
+		],
+		[
+			"^(.+): starts at power-on$",
+			"$1: starts at power-on"
+		],
+		[
+			"^The box switches to (.+)\\. This page then opens the new address and confirms the change\\. If that fails, the previous settings apply again after (\\d+) seconds\\.$",
+			"The box switches to $1. This page then opens the new address and confirms the change. If that fails, the previous settings apply again after $2 seconds."
+		],
+		[
+			"^Check failed: (.+)$",
+			"Check failed: $1"
+		],
+		[
+			"^Account “(.+)” removed\\.$",
+			"Account “$1” removed."
+		],
+		[
+			"^Job “(.+)” started\\.$",
+			"Job “$1” started."
+		],
+		[
+			"^Job “(.+)” removed\\.$",
+			"Job “$1” removed."
+		],
+		[
+			"^(.+): mounted$",
+			"$1: mounted"
+		],
+		[
+			"^(.+): unmounted$",
+			"$1: unmounted"
+		],
+		[
+			"^(.+): removed$",
+			"$1: removed"
+		],
+		[
+			"^Chat found: (.+) – now save\\.$",
+			"Chat found: $1 – now save."
+		],
+		[
+			"^Telegram: (.+)$",
+			"Telegram: $1"
+		],
+		[
+			"^Folder: (.+)$",
+			"Folder: $1"
+		],
+		[
+			"^Delete: (.+)$",
+			"Delete: $1"
+		],
+		[
+			"^Terminal: (.+)$",
+			"Terminal: $1"
+		],
+		[
+			"^\\(Nextcloud, WebDAV, S3, SFTP, Google Drive, OneDrive, Dropbox and more\\)\\. The program \\(about 20 MB\\) goes into the apps area on the disk(.*)\\.$",
+			"(Nextcloud, WebDAV, S3, SFTP, Google Drive, OneDrive, Dropbox and more). The program (about 20 MB) goes into the apps area on the disk$1."
+		],
+		[
+			"^For (.+) you sign in in the browser; the box only stores an access token, no password\\.$",
+			"For $1 you sign in in the browser; the box only stores an access token, no password."
+		],
+		[
+			"^1\\. Sign in at (.+) ↗$",
+			"1. Sign in at $1 ↗"
+		],
+		[
+			"^Sign in: (.+)$",
+			"Sign in: $1"
+		],
+		[
+			"^– (.+)\\. Do not switch the box off\\.$",
+			"– $1. Do not switch the box off."
+		],
+		[
+			"^Also installed: (.+)\\.$",
+			"Also installed: $1."
+		],
+		[
+			"^Needed by: (.+) – these apps will no longer work\\.$",
+			"Needed by: $1 – these apps will no longer work."
+		],
+		[
+			"^(\\S+) (\\S+) installed, also: (.+)\\.$",
+			"$1 $2 installed, also: $3."
+		],
+		[
+			"^Note: (.+)$",
+			"Note: $1"
+		],
+		[
+			"^(\\d+) jobs$",
+			"$1 jobs"
+		],
+		[
+			"^Daily (\\d\\d:\\d\\d)$",
+			"Daily $1"
+		],
+		[
+			"^Weekly \\(Sunday\\) (\\d\\d:\\d\\d)$",
+			"Weekly (Sunday) $1"
+		],
+		[
+			"^the last (\\d+)$",
+			"the last $1"
+		],
+		[
+			"^(\\d+) days$",
+			"$1 days"
+		],
+		[
+			"^(\\d+) weeks$",
+			"$1 weeks"
+		],
+		[
+			"^(\\d+) months$",
+			"$1 months"
+		],
+		[
+			"^(\\d+) files$",
+			"$1 files"
+		],
+		[
+			"^(\\d+) changed$",
+			"$1 changed"
+		],
+		[
+			"^(\\d+) old ones removed$",
+			"$1 old ones removed"
+		],
+		[
+			"^Personal folders \\((.+)\\)$",
+			"Personal folders ($1)"
+		],
+		[
+			"^Whole drive (.+)$",
+			"Whole drive $1"
+		],
+		[
+			"^(.+) – no hard links$",
+			"$1 – no hard links"
+		],
+		[
+			"^Delete the state of (.+)\\? The other snapshots stay complete\\.$",
+			"Delete the state of $1? The other snapshots stay complete."
+		],
+		[
+			"^Also delete the (\\d+) snapshots in (.+)\\? Otherwise they stay there\\.$",
+			"Also delete the $1 snapshots in $2? Otherwise they stay there."
+		],
+		[
+			"^Snapshot “(.+)” is running\\.$",
+			"Snapshot “$1” is running."
+		],
+		[
+			"^The target drive (.+) is not mounted\\.$",
+			"The target drive $1 is not mounted."
+		],
+		[
+			"^JOB (.+)$",
+			"JOB $1"
+		],
+		[
+			"^Media server: (.*)$",
+			"Media server: $1"
+		],
+		[
+			"^(\\d+) devices$",
+			"$1 devices"
+		],
+		[
+			"^(.+) \\(read only\\)$",
+			"$1 (read only)"
+		],
+		[
+			"^Display of (.+)$",
+			"Display of $1"
+		],
+		[
+			"^Display: (.+)$",
+			"Display: $1"
+		],
+		[
+			"^Mark as favourite: (.+)$",
+			"Mark as favourite: $1"
+		],
+		[
+			"^Remove from favourites: (.+)$",
+			"Remove from favourites: $1"
+		],
+		[
+			"^Favourites: (.+)$",
+			"Favourites: $1"
+		],
+		[
+			"^File (\\d+)$",
+			"File $1"
+		],
+		[
+			"^Share: (\\d+) file\\(s\\) not saved – (.*)$",
+			"Share: $1 file(s) not saved – $2"
+		],
+		[
+			"^(\\d+) file\\(s\\) saved to “(.+)” in your personal folder\\.$",
+			"$1 file(s) saved to “$2” in your personal folder."
+		],
+		[
+			"^(\\d+) % of my limit$",
+			"$1 % of my limit"
+		],
+		[
+			"^Drive (\\d+) % used$",
+			"Drive $1 % used"
+		],
+		[
+			"^([\\d.,  ]+) sectors have already been replaced \\(reallocated\\)\\.$",
+			"$1 sectors have already been replaced (reallocated)."
+		],
+		[
+			"^([\\d.,  ]+) sectors are uncertain \\(pending\\) – they are checked on the next write\\.$",
+			"$1 sectors are uncertain (pending) – they are checked on the next write."
+		],
+		[
+			"^([\\d.,  ]+) sectors could not be read\\.$",
+			"$1 sectors could not be read."
+		],
+		[
+			"^([\\d.,  ]+) transfer errors \\(CRC\\) – usually the connector or cable, not the disk itself\\.$",
+			"$1 transfer errors (CRC) – usually the connector or cable, not the disk itself."
+		],
+		[
+			"^([\\d.,  ]+) entries in the disk's error log\\.$",
+			"$1 entries in the disk's error log."
+		],
+		[
+			"^The SSD is almost worn out: (\\d+) % life left\\.$",
+			"The SSD is almost worn out: $1 % life left."
+		],
+		[
+			"^The SSD is wearing: (\\d+) % life left\\.$",
+			"The SSD is wearing: $1 % life left."
+		],
+		[
+			"^Very warm: (\\d+) °C\\.$",
+			"Very warm: $1 °C."
+		],
+		[
+			"^Warm: (\\d+) °C\\.$",
+			"Warm: $1 °C."
+		],
+		[
+			"^Value (\\S+) below the manufacturer's threshold$",
+			"Value $1 below the manufacturer's threshold"
+		],
+		[
+			"^Value (\\S+) was below the threshold earlier$",
+			"Value $1 was below the threshold earlier"
+		],
+		[
+			"^([\\d.,  ]+) entries$",
+			"$1 entries"
+		],
+		[
+			"^(\\d+) °C \\(highest: (\\d+) °C\\)$",
+			"$1 °C (highest: $2 °C)"
+		],
+		[
+			"^([\\d.,  ]+) days \\(([\\d.,  ]+) h\\)$",
+			"$1 days ($2 h)"
+		],
+		[
+			"^([\\d.,  ]+) years \\(([\\d.,  ]+) h\\)$",
+			"$1 years ($2 h)"
+		],
+		[
+			"^(\\d+) % left$",
+			"$1 % left"
+		],
+		[
+			"^SSD (\\d+) % left$",
+			"SSD $1 % left"
+		],
+		[
+			"^Running – (\\d+) % left$",
+			"Running – $1 % left"
+		],
+		[
+			"^\\(at ([\\d.,  ]+) h\\)$",
+			"(at $1 h)"
+		],
+		[
+			"^Read (.+)\\.$",
+			"Read $1."
+		],
+		[
+			"^(\\d+) rpm$",
+			"$1 rpm"
+		],
+		[
+			"^The long test reads the whole disk (\\S+) – many hours for large disks\\. The box stays usable, the disk is a bit slower\\.$",
+			"The long test reads the whole disk $1 – many hours for large disks. The box stays usable, the disk is a bit slower."
+		],
+		[
+			"^Self-test: (.*)$",
+			"Self-test: $1"
+		],
+		[
+			"^deletes after (\\d+) days$",
+			"deletes after $1 days"
+		],
+		[
+			"^Move (\\d+) item\\(s\\) to the trash\\?$",
+			"Move $1 item(s) to the trash?"
+		],
+		[
+			"^(.+) – can be restored from the trash\\.$",
+			"$1 – can be restored from the trash."
+		],
+		[
+			"^Delete (\\d+) item\\(s\\) for good\\?$",
+			"Delete $1 item(s) for good?"
+		],
+		[
+			"^(\\d+) item\\(s\\) restored\\.$",
+			"$1 item(s) restored."
+		],
+		[
+			"^Trash: (.*)$",
+			"Trash: $1"
+		],
+		[
+			"^USB copy: (.*)$",
+			"USB copy: $1"
+		],
+		[
+			"^USB button: (.*)$",
+			"USB button: $1"
+		],
+		[
+			"^This page could not be shown: (.+)$",
+			"This page could not be shown: $1"
+		],
+		[
+			"^Start log (.+)$",
+			"Start log $1"
+		],
+		[
+			"^Schedule: (.+)$",
+			"Schedule: $1"
+		],
+		[
+			"^Take over (\\S+)$",
+			"Take over $1"
+		],
+		[
+			"^Take over (\\S+): (.*)$",
+			"Take over $1: $2"
+		],
+		[
+			"^(\\S+) \\((.+), (.+)\\) is added as a drive as it is – nothing is erased\\. Name of the drive \\(a–z, 0–9, - and _, at most 16 characters\\):$",
+			"$1 ($2, $3) is added as a drive as it is – nothing is erased. Name of the drive (a–z, 0–9, - and _, at most 16 characters):"
+		],
+		[
+			"^(\\S+) is now the drive “(.+)” – the data is kept\\. Create shares for existing folders under “Shares”\\.$",
+			"$1 is now the drive “$2” – the data is kept. Create shares for existing folders under “Shares”."
+		],
+		[
+			"^Schedule saved – the box switches on on (.+)\\.$",
+			"Schedule saved – the box switches on on $1."
+		],
+		[
+			"^ShareOS shuts down and the box switches off\\. By schedule it switches on again on (.+)\\.$",
+			"ShareOS shuts down and the box switches off. By schedule it switches on again on $1."
+		],
+		[
+			"^By schedule it switches on again on (.+)\\.$",
+			"By schedule it switches on again on $1."
+		],
+		[
+			"^ShareOS shuts down and the box switches off\\. (.+)$",
+			"ShareOS shuts down and the box switches off. $1"
+		],
+		[
+			"^on ([0-9:]+)$",
+			"on $1"
+		],
+		[
+			"^off ([0-9:]+)$",
+			"off $1"
+		],
+		[
+			"^The certificate “(.+)” and its key are deleted from the box\\. Devices that already use it keep their copy\\.$",
+			"The certificate “$1” and its key are deleted from the box. Devices that already use it keep their copy."
+		],
+		[
+			"^Show all \\(([0-9]+)\\)$",
+			"Show all ($1)"
+		],
+		[
+			"^\\((\\d+) issued certificates\\)$",
+			"($1 issued certificates)"
+		],
+		[
+			"^Groups: (.+)$",
+			"Groups: $1"
+		],
+		[
+			"^Issued certificates: (.+)$",
+			"Issued certificates: $1"
+		],
+		[
+			"^Recovery: (.*)$",
+			"Recovery: $1"
+		],
+		[
+			"^Personal folder \\/ (.+)$",
+			"Personal folder / $1"
+		],
+		[
+			"^Paste \\((\\d+)\\)$",
+			"Paste ($1)"
+		],
+		[
+			"^(\\d+) item\\(s\\) on the clipboard – choose “Paste” in the target folder\\.$",
+			"$1 item(s) on the clipboard – choose “Paste” in the target folder."
+		],
+		[
+			"^Unlock vault “(.+)”$",
+			"Unlock vault “$1”"
+		],
+		[
+			"^Vault “(.+)” is open until (.+)\\.$",
+			"Vault “$1” is open until $2."
+		],
+		[
+			"^Lock vault “(.+)” now\\?$",
+			"Lock vault “$1” now?"
+		],
+		[
+			"^Vault “(.+)” locked\\.$",
+			"Vault “$1” locked."
+		],
+		[
+			"^open until (.+)$",
+			"open until $1"
+		],
+		[
+			"^(\\S+): open until (.+)$",
+			"$1: open until $2"
+		],
+		[
+			"^(\\d+) minutes$",
+			"$1 minutes"
+		],
+		[
+			"^(\\d+) hours$",
+			"$1 hours"
+		],
+		[
+			"^Vault: (.+)$",
+			"Vault: $1"
+		],
+		[
+			"^Revoke the remote password of “(.+)”\\?$",
+			"Revoke the remote password of “$1”?"
+		],
+		[
+			"^Remote password of “(.+)” revoked\\.$",
+			"Remote password of “$1” revoked."
+		],
+		[
+			"^Torrent remote access: (.+)$",
+			"Torrent remote access: $1"
+		],
+		[
+			"^(.+), port (\\d+)$",
+			"$1, port $2"
+		],
+		[
+			"^BAY · (.+)$",
+			"BAY · $1"
+		],
+		[
+			"^owner: (.+)$",
+			"owner: $1"
+		],
+		[
+			"^(\\d+) waiting$",
+			"$1 waiting"
+		],
+		[
+			"^(.+) · (\\d+) files · (.+)$",
+			"$1 · $2 files · $3"
+		],
+		[
+			"^([0-9.,]+) years$",
+			"$1 years"
+		],
+		[
+			"^both disks active \\((.+)\\)$",
+			"both disks active ($1)"
+		],
+		[
+			"^Inbox “(.+)” saved\\.$",
+			"Inbox “$1” saved."
+		],
+		[
+			"^Inbox “(.+)” removed\\.$",
+			"Inbox “$1” removed."
+		],
+		[
+			"^ok · (.+)$",
+			"ok · $1"
+		],
+		[
+			"^(.*)Linux (\\S+) · Load ([0-9. ]+)$",
+			"$1Linux $2 · Load $3"
+		],
+		[
+			"^List: (.*)$",
+			"List: $1"
+		],
+		[
+			"^Entry: (.*)$",
+			"Entry: $1"
+		],
+		[
+			"^Printer: (.*)$",
+			"Printer: $1"
+		],
+		[
+			"^Test page: (.*)$",
+			"Test page: $1"
+		],
+		[
+			"^Wallpaper: (.*)$",
+			"Wallpaper: $1"
+		],
+		[
+			"^DNS filter: (.*)$",
+			"DNS filter: $1"
+		],
+		[
+			"^Hostname: (.*)$",
+			"Hostname: $1"
+		],
+		[
+			"^Cloud: (.*)$",
+			"Cloud: $1"
+		],
+		[
+			"^Logo: (.*)$",
+			"Logo: $1"
+		],
+		[
+			"^Snapshots: (.*)$",
+			"Snapshots: $1"
+		],
+		[
+			"^personal inbox of (.+) · no token$",
+			"personal inbox of $1 · no token"
+		]
+	],
+	"words": [
+		[
+			"\\brunning\\b",
+			"running",
+			"g"
+		],
+		[
+			"\\bstopped\\b",
+			"stopped",
+			"g"
+		],
+		[
+			" free of ",
+			" free of ",
+			"g"
+		],
+		[
+			" of (?=\\d)",
+			" of ",
+			"g"
+		],
+		[
+			" used\\b",
+			" used",
+			"g"
+		],
+		[
+			"\\bdays powered on\\b",
+			"days powered on",
+			"g"
+		],
+		[
+			"^contains: ",
+			"contains: ",
+			""
+		],
+		[
+			"RAID member of",
+			"RAID member of",
+			"g"
+		],
+		[
+			"RAID member",
+			"RAID member",
+			"g"
+		],
+		[
+			"^Disk · ",
+			"Disk · ",
+			""
+		],
+		[
+			"^Bay · ",
+			"Bay · ",
+			""
+		],
+		[
+			"Initial sync",
+			"Initial sync",
+			"g"
+		],
+		[
+			"Recovery",
+			"Recovery",
+			"g"
+		],
+		[
+			"Check",
+			"Check",
+			"g"
+		],
+		[
+			" · (.+) left$",
+			" · $1 left",
+			""
+		],
+		[
+			"^Mirror \\(RAID 1\\)",
+			"Mirror (RAID 1)",
+			""
+		],
+		[
+			"^Single drive",
+			"Single drive",
+			""
+		],
+		[
+			" reallocated, ",
+			" reallocated, ",
+			"g"
+		],
+		[
+			" pending\\b",
+			" pending",
+			"g"
+		],
+		[
+			"\\bRUNNING\\b",
+			"RUNNING",
+			"g"
+		],
+		[
+			" and ",
+			" and ",
+			"g"
+		],
+		[
+			"\\bd (\\d+) h\\b",
+			"d $1 h",
+			"g"
+		],
+		[
+			" – do not switch off\\.",
+			" – do not switch off.",
+			""
+		],
+		[
+			"^Check failed: ",
+			"Check failed: ",
+			""
+		],
+		[
+			"^Channel: ",
+			"Channel: ",
+			""
+		],
+		[
+			"^Services: ",
+			"Services: ",
+			""
+		],
+		[
+			"^Storage: ",
+			"Storage: ",
+			""
+		],
+		[
+			"^Download: ",
+			"Download: ",
+			""
+		],
+		[
+			"^Install: ",
+			"Install: ",
+			""
+		],
+		[
+			"^Set up: ",
+			"Set up: ",
+			""
+		],
+		[
+			"^Format: ",
+			"Format: ",
+			""
+		],
+		[
+			"^Certificate: ",
+			"Certificate: ",
+			""
+		],
+		[
+			"^HTTPS: ",
+			"HTTPS: ",
+			""
+		],
+		[
+			"^Language: ",
+			"Language: ",
+			""
+		],
+		[
+			"^Logo: ",
+			"Logo: ",
+			""
+		],
+		[
+			"\\bhalf\\b",
+			"half",
+			"g"
+		],
+		[
+			"^Fan: ",
+			"Fan: ",
+			""
+		],
+		[
+			"^Hardware: ",
+			"Hardware: ",
+			""
+		],
+		[
+			"\\bgroup\\b",
+			"group",
+			"g"
+		],
+		[
+			" · (.+) left$",
+			" · $1 left",
+			""
+		],
+		[
+			"\\bUSB drive\\b",
+			"USB drive",
+			"g"
+		],
+		[
+			"\\bentry\\/entries\\b",
+			"entry/entries",
+			"g"
+		],
+		[
+			"\\ball users\\b",
+			"all users",
+			"g"
+		]
+	],
+	"folders": [
+		[
+			"shared",
+			"Shared"
+		],
+		[
+			"usb",
+			"USB copies"
+		]
+	]
+}
