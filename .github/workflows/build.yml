@@ -175,3 +175,25 @@ jobs:
           prerelease: ${{ contains(github.ref_name, '-') }}
           body_path: notes.md
           append_body: true
+
+      # The built system (ARM) in a chroot with qemu-user: rpcd with the ShareOS
+      # plugin, users, storage, apps, cloud … – what the host tests cannot
+      # show. Last step: the images are uploaded (and a release is published)
+      # also when one of these tests fails.
+      - name: ARM emulator tests (the built system with qemu-user)
+        run: |
+          sudo apt-get install -y --no-install-recommends qemu-user-static binfmt-support
+          O=output/${{ matrix.board }}
+          v=$(sed -n 's/^VERSION=${SHAREOS_RCLONE_VERSION:-\(.*\)}$/\1/p' src/shareos-core/usr/sbin/shareos-cloud)
+          mkdir -p "rclone-dl/v$v"
+          for f in "rclone-v$v-linux-arm.zip" SHA256SUMS; do
+            curl -fsSL --retry 3 -o "rclone-dl/v$v/$f" "https://github.com/rclone/rclone/releases/download/v$v/$f"
+          done
+          rc=0
+          run() { echo "::group::$1"; shift; if sudo "$@"; then echo "::endgroup::"; else echo "::endgroup::"; echo "::error::failed: $*"; rc=1; fi; }
+          run "stack (rpcd, uhttpd, JSON-RPC)" tests/run-stack-qemu.sh "$O" 8080 --check
+          for t in users storage apps firstinstall transmission media dlna vpn tailscale autobrr syncthing zabbix dnsfilter snapshots sysperms; do
+            run "test-$t" "tests/test-$t.sh" "$O"
+          done
+          run "test-cloud-paperless" tests/test-cloud-paperless.sh "$O" "$PWD/rclone-dl"
+          exit $rc

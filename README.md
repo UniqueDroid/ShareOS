@@ -136,7 +136,7 @@ Version in brackets = first release with the feature.
 - *My ShareOS*: tab *Settings* with look and password, storage as a table per drive with own use, limit and free space (0.2.0-beta.11)
 - 10 languages: English, German, Chinese, Hindi, Spanish, French, Arabic (right to left), Bengali, Portuguese, Russian (beta.7; more: [docs/TRANSLATING.md](docs/TRANSLATING.md))
 - Time: time zone, NTP on/off with own servers (e.g. the router), sync now, set the clock by hand; the battery clock follows (beta.7)
-- SSH/SFTP (Dropbear), rescue system in the initramfs (SSH, flash tools)
+- SSH/SFTP (Dropbear), rescue system in the initramfs (SSH after pressing the USB button, flash tools)
 
 ## D-Link firmware, Alt-F and ShareOS compared (DNS-320L)
 

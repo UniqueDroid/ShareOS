@@ -62,8 +62,9 @@ Datei).
 **Wenn die Installation nicht klappt** (kein Stick, kein Netz, Paket defekt),
 bleibt die Box im **Rettungsmodus**: Die orange USB-LED blinkt langsam. Dann
 die `.sysupgrade.tar` auf einen USB-Stick kopieren, einstecken und die Box
-aus- und wieder einschalten. Den Grund zeigt `ssh root@<IP>` (Passwort
-`shareos`) in `/tmp/firstinstall.err`.
+aus- und wieder einschalten. Der Grund steht in `/tmp/firstinstall.err`:
+die **USB-Taste** vorn drücken (die LED blinkt schnell, SSH ist 30 Minuten
+offen), dann `ssh root@<IP>`, Passwort `shareos`.
 
 ## ShareOS → Alt-F
 

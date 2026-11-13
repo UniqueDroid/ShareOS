@@ -70,7 +70,10 @@ Log in with `session.login {username, password}` using the null session
 | `shareos.recovery.status` | – | `active` + summary of the backup, `pending_apps`, `apps_running` |
 | `shareos.recovery.apply` | `users`, `shares`, `services` [names], `apps` [ids], `certificate`, `ca` | restores the parts, `done`; apps are installed after the reboot (`shareos-restore-apps`) |
 | `shareos.recovery.discard` / `apps_install` / `apps_dismiss` | – | end recovery mode / install the missing apps now / forget them |
-| `uci.*` | rpcd standard | read/write `/etc/config/shareos` |
+| `shareos.update.set_channel` | `channel` (`stable`, `beta`) | sets the update channel |
+
+Web sessions have no access to rpcd's `uci.*` methods: every setting goes
+through a `shareos.*` method that checks the value (`tests/check-acl.py`).
 
 ## Updater
 

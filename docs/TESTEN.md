@@ -514,6 +514,54 @@ Braucht ein Tailscale-Konto (kostenlos), ein Handy oder einen Rechner mit Tailsc
 5. Konto ohne persönlichen Ordner: Teilen meldet „no personal folder“; das Geteilte wird verworfen und kommt bei der nächsten Anmeldung nicht wieder.
 6. Dateidialog einer App für ein Konto **ohne** *Dateien* (z. B. Webpad → *Öffnen*): Die Ordnerauswahl zeigt zuerst *App-Daten*, dann *Mein Ordner* und die Freigaben des Benutzers; Freigaben nur zum Lesen sind markiert und fehlen beim Speichern. Die App legt ihre eigenen Dateien weiter in *App-Daten* ab.
 
+## 14zs. Korrekturen aus dem Code-Review (0.3.0-beta.9)
+
+Nichts Neues zu bedienen; die Schritte prüfen, ob die Korrekturen auf einer echten Box wirken. Alle Befehle als root über SSH.
+
+**Browser-Cache**
+
+1. Das Update wie gewohnt über *System → Firmware* einspielen, die Seite dabei zusätzlich in einem zweiten Browser-Tab offen lassen.
+2. Nach dem Neustart zeigt die Seite die neue Version, ohne dass der Browser-Cache geleert wird; der zweite Tab lädt sich einmal selbst neu („ShareOS wurde aktualisiert – die neue Oberfläche wird geladen …“).
+3. `curl -sk https://<Box>/version.txt` zeigt die installierte Version.
+
+**Anzeigen**
+
+4. *Übersicht*: Eine Platte im Standby hat einen abgeblendeten Punkt und SCHLÄFT (Standby-Zeit abwarten oder `hdparm -y /dev/sda`).
+5. *Dienste*: einen Dienst stoppen und starten – die Liste folgt innerhalb von Sekunden. `killall ksmbd.mountd`: Die Seite zeigt den Dienst nach ihrer nächsten Auffrischung (höchstens 30 s) als gestoppt, ohne neu zu laden.
+6. Netzwerkkabel 30 s ziehen: Im Kopf steht OFFLINE, mit Kabel wieder ONLINE.
+7. *System → Firmware*: den *Update-Kanal* auf beta und zurück stellen; `uci get shareos.update.channel` folgt jedes Mal.
+
+**Temperatur und Überwachung** (dauert etwa 15 Minuten; der Lüfter behält seine Drehzahl, solange der Daemon gestoppt ist)
+
+8. `killall dns320l-daemon`. Nach etwa 90 s zeigt die Übersicht „–“ bei der Temperatur, und die Hardware-Seite meldet die Gerätesteuerung nicht mehr als aktiv.
+9. `shareos-notify check`: *System → Meldungen* zeigt *Temperatur der Box nicht lesbar*.
+10. `/etc/init.d/S05board restart`: Temperatur und Lüfter sind wieder da; nach dem nächsten `shareos-notify check` ist die Meldung weg.
+11. `killall rpcd`: Die Oberfläche ist nach wenigen Sekunden wieder da (neu anmelden); `logread | grep shareos-supervise` zeigt den Neustart.
+
+**SMART**
+
+12. `rm -f /tmp/shareos-storage/smart-*.json; shareos-notify check`: Die Dateien sind wieder da (die Prüfung liest SMART selbst, wenn die Werte älter als 6 Stunden sind). Eine Platte im Standby wird dafür nicht geweckt.
+
+**Geheimnisse**
+
+13. *Freigaben → Benutzer*: einem Benutzer ein neues Passwort geben und sich damit vom PC an einer Freigabe anmelden (das SMB-Passwort geht jetzt über die Standardeingabe an `ksmbd.adduser`).
+14. *Cloud*: eine WebDAV- oder SFTP-Verbindung mit Passwort anlegen und einen Job damit laufen lassen. `grep -A6 '^\[<Name>\]' /etc/shareos/cloud/rclone.conf` zeigt `pass = ` mit einem verschleierten Wert.
+15. *System → Benachrichtigungen*: *Testnachricht* kommt an (E-Mail und Push).
+16. Falls genutzt: dynamisches DNS *Jetzt aktualisieren*, die Seite des DNS-Filters, autobrr, Syncthing und Tailscale (*Verbinden* mit Auth-Key) arbeiten wie vorher.
+17. Während der Schritte 13–16: `while :; do ps w | grep -E 'curl|mkpasswd|ksmbd.adduser|rclone' | grep -v grep; sleep 0.2; done` in einem zweiten SSH-Fenster zeigt kein Passwort, kein Token und keinen Schlüssel.
+
+**Dateien**
+
+18. *Dateien*: einen Ordner mit mehreren GB kopieren – die Oberfläche bleibt währenddessen bedienbar, und der Ordner ist danach vollständig.
+
+**Ausschalten während eines Updates**
+
+19. Ein Update starten und in einem zweiten Tab *Neustart* drücken, während Kernel oder System geschrieben werden: wird abgelehnt („firmware is being written – wait until it has finished“; Meldungen des Backends sind englisch). (Auch die Netztaste wird in dieser Phase ignoriert – das nicht durch Gedrückthalten ausprobieren.)
+
+**Rettungsmodus** (nicht absichtlich herbeiführen; nur falls die Box je dort landet – langsam blinkende orange USB-LED)
+
+20. `ssh root@<IP>` wird abgelehnt. USB-Taste drücken: Die LED blinkt schnell, `ssh root@<IP>` (Passwort `shareos`) geht 30 Minuten lang.
+
 ## 14zr. DNS-Filter: aus- und wieder einschalten (0.3.0-beta.7)
 
 Braucht den DNS-Filter eingeschaltet mit der Standardliste. Am besten verteilt der Router die Box als DNS-Server.

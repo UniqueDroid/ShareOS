@@ -298,6 +298,12 @@ direkt auf der Box nachgesehen, warum der Webserver nicht lief.
 |---|---|
 | 13:00 | **Statische Codeanalyse** (Jan: „Bei KI-Projekten wird das immer bemängelt – wie stehen wir dazu?“). Es gab schon projekteigene Prüfungen (ucode übersetzen, Vorwärtsverweise, ACL, i18n) und die wöchentliche CVE-Übersicht; neu: ShellCheck über alle Shell-Skripte, ESLint für die Oberfläche und das App-SDK, eine Prüfung auf ungenutzten Code, ein Komplexitätsbericht (`tests/static-analysis.sh`, CI-Job `static-analysis`) und CodeQL für JavaScript und Python (Taint-Analyse, `codeql.yml`). Behoben: drei Schleifen über `ls`-Ausgaben, eine ungenutzte Funktion, zwei überflüssige Escapes. Das monatliche Audit wertet den Bericht aus. |
 
+### Freitag, 13.11.2026
+
+| Zeit | Was passiert ist |
+|---|---|
+| 19:40 | **Review der ganzen Firmware** durch eine zweite KI (Claude Fable 5.2), von Jan beauftragt: „echte Werte, Standards, Geschwindigkeit“ – Backend, Oberfläche, Werkzeuge, Board-Skripte und C-Quellen Zeile für Zeile gelesen, etwa 90 Befunde. Jan entscheidet Punkt für Punkt; die Korrekturen kommen als ein Pull-Request (#158) in sechs Paketen: Daten- und Hardware-Sicherheit (SMART liest die Box selbst, eingefrorene Temperatur, kein Ausschalten beim Flashen, überwachter `rpcd`), Anzeigen, die zeigen, was ist, Geschwindigkeit und Browser-Cache, Robustheit, Geheimnisse weg von der Kommandozeile, Rettungsmodus mit USB-Taste. Nebenbei gefunden: Die ARM-Emulator-Tests liefen auf GitHub nie – jetzt schon. Signierte Releases stehen als eigenes Must-have auf der Liste; die Aufteilung von `app.js` und `shareos.uc` nach Bereichen folgt als nächster Pull-Request. |
+
 ### Donnerstag, 12.11.2026
 
 | Zeit | Was passiert ist |
