@@ -53,7 +53,7 @@
  *                                  path }] of the chosen folder) or null
  * ShareOS.torrent             the account's own Transmission daemon, for apps
  *                             with the permissions "files" and "torrent"
- *                             (ShareOS 0.2.0-beta.4+, null otherwise):
+ *                             (ShareOS 0.2.0-beta.4+):
  *   .rpc(method, args)             Transmission RPC, resolves to its "arguments";
  *                                  folders as "<root>/<path>" (ShareOS.fs roots);
  *                                  session-set "watch-dir" + "watch-dir-enabled":
@@ -69,8 +69,7 @@
  *                                  when the box made a new one (shown once)
  * ShareOS.syncthing           the account's own Syncthing (system app
  *                             "syncthing"), for apps with the permissions
- *                             "files" and "syncthing" (ShareOS 0.2.0-beta.20+,
- *                             null otherwise):
+ *                             "files" and "syncthing" (ShareOS 0.2.0-beta.20+):
  *   .api(method, path, query, body)  Syncthing's REST API (the parts a remote
  *                                  control needs: devices, folders, pending
  *                                  requests, status), resolves to its answer;
@@ -81,7 +80,7 @@
  *   .restart()                     settings that need a restart
  * ShareOS.media               media jobs of the account on the box (ffmpeg system
  *                             app), for apps with the permissions "files" and
- *                             "media" (ShareOS 0.2.0-beta.5+, null otherwise):
+ *                             "media" (ShareOS 0.2.0-beta.5+):
  *   .probe(root, path, name)       {format, duration, size, streams: [{type, codec, …}]}
  *   .start({ input: {root, path, name}, output: {root, path, name},
  *            action: 'remux'|'audio', format, bitrate, stream, start, duration })
@@ -89,7 +88,7 @@
  *   .jobs()   .cancel(id)   .remove(id)
  * ShareOS.vpn                 the box as an OpenVPN client, for apps with the
  *                             permissions "files" and "vpn" – admin accounts
- *                             only (ShareOS 0.2.0-beta.6+, null otherwise):
+ *                             only (ShareOS 0.2.0-beta.6+):
  *   .list()                        {profiles: [{name, remote, autostart, full,
  *                                  needs_auth, auth, removed}], status}
  *   .status()                      {installed, running, profile, state
@@ -103,7 +102,7 @@
  * ShareOS.tailscale           remote access with Tailscale (system app
  *                             "tailscaled"), for apps with the permissions
  *                             "files" and "tailscale" – admin accounts only
- *                             (ShareOS 0.2.0-beta.7+, null otherwise):
+ *                             (ShareOS 0.2.0-beta.7+):
  *   .status()                      {installed, running, state (NeedsLogin,
  *                                  Running, Stopped …), auth_url, self {name,
  *                                  dns, ips, key_expiry}, tailnet {name, suffix},
@@ -132,7 +131,7 @@
  * ShareOS.zabbix              the box's Zabbix agent (system app
  *                             "zabbix-agent"), for apps with the permissions
  *                             "files" and "zabbix" – admin accounts only
- *                             (ShareOS 0.2.0-beta.20+, null otherwise):
+ *                             (ShareOS 0.2.0-beta.20+):
  *   .status()                      {installed, enabled, running, server,
  *                                  hostname, hostname_used, metadata,
  *                                  psk_identity, psk (true/false – the key is
@@ -147,7 +146,7 @@
  *   .restart()   .log()            {log}: the last lines of the agent's log
  * ShareOS.sysinfo             the box's values, for apps with the permissions
  *                             "files" and "sysinfo" – admin accounts only
- *                             (ShareOS 0.2.0-beta.11+, null otherwise):
+ *                             (ShareOS 0.2.0-beta.11+):
  *   .info()                        {model, board, version, hostname, kernel,
  *                                  uptime, load, cpu {total, idle} (jiffies –
  *                                  CPU use from two samples), cores, memory
@@ -204,7 +203,7 @@
  * ShareOS.vault               vault shares: SMB shares that stay locked and
  *                             are unlocked on demand for some minutes, for
  *                             apps with the permissions "files" and "vault"
- *                             (ShareOS 0.3.0-beta.5+, null otherwise):
+ *                             (ShareOS 0.3.0-beta.5+):
  *   .status()                      {user, host, vaults [{name, comment, access
  *                                  'rw'|'ro', ttl (default minutes), until (epoch
  *                                  seconds, 0 = locked for this user), open_for
@@ -222,11 +221,17 @@
  *                                  default time
  * ShareOS.status              a chip in the header of the ShareOS interface,
  *                             for apps with the permissions "files" and
- *                             "status" (ShareOS 0.2.0-beta.6+, null otherwise):
+ *                             "status" (ShareOS 0.2.0-beta.6+):
  *   .set({ text, state: 'ok'|'warn'|'err'|'info', ttl })   text max. 24
  *                                  characters; it goes after ttl seconds
  *                                  (10–600, default 300) unless set again
  *   .clear()
+ *
+ * Which of these objects exist: ShareOS.fs and all the objects after it are
+ * there as soon as the app has the permission "files", and null without it.
+ * The second permission (and the admin account, where one is needed) is
+ * checked by the box: without it the calls of that object are rejected
+ * ("no access").
  *
  * Storage per account: the apps share one web origin, so ShareOS keeps the
  * browser storage of the accounts apart – localStorage and IndexedDB of an
@@ -532,14 +537,8 @@
 	if (fs) fs.pick = pick;
 
 	/* media jobs of the account (permissions "files" + "media") */
-	function mediaCall(op, args) {
-		var body = { op: op };
-		for (var k in (args || {})) if (k !== 'op') body[k] = args[k];
-		return fetch('/_shareos/cgi/media?g=' + grant, { method: 'POST', body: JSON.stringify(body), cache: 'no-store' })
-			.then(function (r) { return r.json().catch(function () { return { error: 'HTTP ' + r.status }; }); })
-			.then(function (j) { if (j.error) throw new Error(j.error); return j; });
-	}
-	/* other CGIs of the platform: same calling convention as media */
+	function mediaCall(op, args) { return cgiCall('media', op, args); }
+	/* the CGIs of the platform share one calling convention */
 	function cgiCall(cgi, op, args) {
 		var body = { op: op };
 		for (var k in (args || {})) if (k !== 'op') body[k] = args[k];

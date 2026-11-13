@@ -1671,7 +1671,8 @@
 		"some files vanished while copying",
 		"unknown",
 		"ShareOS was updated – loading the new interface …",
-		"This takes a while – it goes on in the background …"
+		"This takes a while – it goes on in the background …",
+		"To learn its public IPv4 address, the box asks api.ipify.org (ipv4.icanhazip.com if that does not answer)."
 	],
 	"patterns": [
 		[

@@ -1653,7 +1653,8 @@
 		"some files vanished while copying": "কপি করার সময় কিছু ফাইল হারিয়ে গেছে",
 		"unknown": "অজানা",
 		"ShareOS was updated – loading the new interface …": "ShareOS আপডেট হয়েছে – নতুন ইন্টারফেস লোড হচ্ছে …",
-		"This takes a while – it goes on in the background …": "এতে কিছু সময় লাগবে – পটভূমিতে চলতে থাকবে …"
+		"This takes a while – it goes on in the background …": "এতে কিছু সময় লাগবে – পটভূমিতে চলতে থাকবে …",
+		"To learn its public IPv4 address, the box asks api.ipify.org (ipv4.icanhazip.com if that does not answer).": "নিজের পাবলিক IPv4 ঠিকানা জানতে বক্সটি api.ipify.org-কে জিজ্ঞাসা করে (সেটি উত্তর না দিলে ipv4.icanhazip.com)।"
 	},
 	"patterns": [
 		[

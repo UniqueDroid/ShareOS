@@ -16,3 +16,5 @@ CONFIG_IONICE=y
 # crontab (buildroot's default "/etc/cron" made crond read an empty
 # /etc/cron/crontabs – no scheduled job of ShareOS ran)
 CONFIG_FEATURE_CROND_DIR="/etc"
+# the initramfs reads the USB button with it (rescue mode: SSH on demand)
+CONFIG_OD=y

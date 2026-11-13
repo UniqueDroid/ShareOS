@@ -77,6 +77,19 @@ check "DNS-320L: stale temperature (MCU silent) -> fan to full speed" "[ \"\$(ca
 touch $SHAREOS_ROOT/tmp/sys/temp1_input; echo 100 > $SHAREOS_ROOT/tmp/sys/pwm1
 SHAREOS_BOARD_ONCE=1 SHAREOS_BOARD_MISS_MAX=1 sh $O/usr/sbin/shareos-board
 check "DNS-320L: a fresh reading of 30 °C leaves the fan at half speed" "[ \"\$(cat $SHAREOS_ROOT/tmp/sys/pwm1)\" = 100 ]"
+# the presets come from one file (the web interface reads the same one)
+printf '#!/bin/sh\n[ "$*" = "-q get shareos.fan.preset" ] && { echo quiet; exit 0; }\nexit 1\n' > $S/uci
+echo 30000 > $SHAREOS_ROOT/tmp/sys/temp1_input
+SHAREOS_BOARD_ONCE=1 sh $O/usr/sbin/shareos-board
+check "preset quiet from the preset file: 30 °C -> fan off" "[ \"\$(cat $SHAREOS_ROOT/tmp/sys/pwm1)\" = 0 ]"
+echo 56000 > $SHAREOS_ROOT/tmp/sys/temp1_input
+SHAREOS_BOARD_ONCE=1 sh $O/usr/sbin/shareos-board
+check "preset quiet: 56 °C -> full" "[ \"\$(cat $SHAREOS_ROOT/tmp/sys/pwm1)\" = 255 ]"
+printf '#!/bin/sh\n[ "$*" = "-q get shareos.fan.preset" ] && { echo nonsense; exit 0; }\nexit 1\n' > $S/uci
+echo 30000 > $SHAREOS_ROOT/tmp/sys/temp1_input; echo 100 > $SHAREOS_ROOT/tmp/sys/pwm1
+SHAREOS_BOARD_ONCE=1 sh $O/usr/sbin/shareos-board
+check "unknown preset: the fan never stops" "[ \"\$(cat $SHAREOS_ROOT/tmp/sys/pwm1)\" = 100 ]"
+printf '#!/bin/sh\nexit 1\n' > $S/uci
 
 echo; echo "$pass passed, $failed failed"
 [ $failed -eq 0 ]

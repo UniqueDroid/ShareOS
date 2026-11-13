@@ -262,8 +262,14 @@ function cmd_api() {
 	// the key of ShareOS and the sign-in stay ShareOS's business
 	if (match(a.path, /^\/api\/(keys|auth)(\/|\?|$)/)) die('not allowed');
 	if (!pid()) die('autobrr is not running');
-	let s = setup();
-	let r = call(m, a.path, a.body, s.key);
+	// the stored key is used as it is; only when autobrr refuses it (or there
+	// is none yet) the sign-up runs – not one more request before every call
+	let s = secret();
+	let r = s.key ? call(m, a.path, a.body, s.key) : null;
+	if (!r || r.status == 401 || r.status == 403) {
+		s = setup();
+		r = call(m, a.path, a.body, s.key);
+	}
 	let j = null;
 	try { j = json(r.body); } catch (e) { }
 	out({ status: r.status, data: j, text: j == null ? substr(r.body, 0, 65536) : null });

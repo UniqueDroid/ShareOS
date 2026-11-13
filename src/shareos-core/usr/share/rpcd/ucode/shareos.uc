@@ -747,11 +747,16 @@ function cert_refresh() {
 
 /* ---------- hardware settings, first run, Alt-F ---------- */
 
-const FAN_PRESETS = {
-	quiet:    { off_temp: 40, full_temp: 55, half_temp: 50 },
-	balanced: { off_temp: 0,  full_temp: 50, half_temp: 45 },
-	cool:     { off_temp: 0,  full_temp: 45, half_temp: 42 }
-};
+// The fan curves are defined in one file; shareos-board regulates by it.
+function fan_presets() {
+	let p = {};
+	for (let l in split(readfile('/usr/lib/shareos/fan-presets') ?? '', '\n')) {
+		let m = match(l, /^([a-z]+)[ \t]+([0-9]+)[ \t]+([0-9]+)[ \t]+([0-9]+)[ \t]*$/);
+		if (m) p[m[1]] = { off_temp: +m[2], full_temp: +m[3], half_temp: +m[4] };
+	}
+	return p;
+}
+const FAN_PRESETS = fan_presets();
 
 function fan_settings() {
 	let c = cursor();
@@ -895,8 +900,9 @@ function altf_scan() {
 	return a;
 }
 
+// root's password (System → General and the first set-up); null or an error text
 function set_password(pw) {
-	if (length(pw ?? '') < 6) return 'password too short (min. 6)';
+	if (type(pw) != 'string' || length(pw) < 6) return 'password too short (min. 6)';
 	if (match(pw, /[\n\r:]/)) return 'password contains invalid characters';
 	let p = popen('chpasswd -c sha512 >/dev/null 2>&1', 'w');
 	if (!p) return 'chpasswd not available';
@@ -911,6 +917,8 @@ function set_hostname(h) {
 	if (!match(h ?? '', /^[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?$/)) return false;
 	writefile('/etc/hostname', h + '\n');
 	sh('hostname ' + shq(h));
+	// mDNS name (<hostname>.local) follows
+	system('[ -x /etc/init.d/S50avahi-daemon ] && pidof avahi-daemon >/dev/null && /etc/init.d/S50avahi-daemon restart >/dev/null 2>&1 &');
 	return true;
 }
 
@@ -3022,7 +3030,8 @@ return {
 			call: function(req) {
 				let crt = req.args.cert ?? '', key = req.args.key ?? '';
 				if (length(crt) > 65536 || length(key) > 16384) return { error: 'file too large' };
-				let d = trim(sh('mktemp -d').out);
+				let d = trim(sh_quiet('mktemp -d').out);
+				if (!match(d, /^\/tmp\/[A-Za-z0-9._-]+$/)) return { error: 'no room for temporary files' };
 				writefile(d + '/crt', crt);
 				writefile(d + '/key', key);
 				let r = sh(CERT + ' install ' + shq(d + '/crt') + ' ' + shq(d + '/key')); forget('cert');
@@ -3185,16 +3194,8 @@ return {
 		set_password: {
 			args: { password: '' },
 			call: function(req) {
-				let pw = req.args.password ?? '';
-				if (length(pw) < 6)
-					return { error: 'password too short (min. 6)' };
-				if (match(pw, /[\n\r:]/))
-					return { error: 'password contains invalid characters' };
-				let p = popen('chpasswd -c sha512 >/dev/null 2>&1', 'w');
-				if (!p)
-					return { error: 'chpasswd not available' };
-				p.write('root:' + pw + '\n');
-				return p.close() == 0 ? { ok: true } : { error: 'chpasswd failed' };
+				let e = set_password(req.args.password);
+				return e ? { error: e } : { ok: true };
 			}
 		},
 
@@ -3202,12 +3203,7 @@ return {
 			args: { hostname: '' },
 			call: function(req) {
 				let h = req.args.hostname ?? '';
-				if (!match(h, /^[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?$/))
-					return { error: 'invalid hostname' };
-				writefile('/etc/hostname', h + '\n');
-				sh('hostname ' + shq(h));
-				// mDNS name (<hostname>.local) follows
-				system('[ -x /etc/init.d/S50avahi-daemon ] && pidof avahi-daemon >/dev/null && /etc/init.d/S50avahi-daemon restart >/dev/null 2>&1 &');
+				if (!set_hostname(h)) return { error: 'invalid hostname' };
 				return { ok: true, hostname: h, cert_renewed: cert_refresh() };
 			}
 		}
@@ -3373,7 +3369,7 @@ return {
 			args: { preset: '', off_temp: 0, full_temp: 0, half_temp: 0 },
 			call: function(req) {
 				let a = req.args, c = cursor();
-				if (!(a.preset in { quiet: 1, balanced: 1, cool: 1, custom: 1 })) return { error: 'unknown preset' };
+				if (a.preset != 'custom' && !FAN_PRESETS[a.preset ?? '']) return { error: 'unknown preset' };
 				c.set('shareos', 'fan', 'fan');
 				c.set('shareos', 'fan', 'preset', a.preset);
 				if (a.preset == 'custom') {

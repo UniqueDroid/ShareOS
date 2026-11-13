@@ -1653,7 +1653,8 @@
 		"some files vanished while copying": "اختفت بعض الملفات أثناء النسخ",
 		"unknown": "غير معروف",
 		"ShareOS was updated – loading the new interface …": "تم تحديث ShareOS – جارٍ تحميل الواجهة الجديدة …",
-		"This takes a while – it goes on in the background …": "يستغرق هذا بعض الوقت – يستمر في الخلفية …"
+		"This takes a while – it goes on in the background …": "يستغرق هذا بعض الوقت – يستمر في الخلفية …",
+		"To learn its public IPv4 address, the box asks api.ipify.org (ipv4.icanhazip.com if that does not answer).": "لمعرفة عنوان IPv4 العام، يسأل الجهاز api.ipify.org ‏(ipv4.icanhazip.com إذا لم يُجب)."
 	},
 	"patterns": [
 		[

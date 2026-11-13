@@ -57,6 +57,8 @@ jobs:
         run: LD_LIBRARY_PATH="$HOME/hostroot/lib" tests/test-net.sh "$HOME/hostroot/bin/uci"
       - name: Model descriptions (board.sh, LEDs, fan backends)
         run: tests/test-boards.sh
+      - name: Rescue mode (SSH only after the USB button)
+        run: tests/test-rescue.sh
       - name: Size check of the flash partition in shareos-install-ubi
         run: tests/test-install-ubi.sh
       - name: Button tests (reset/USB)
@@ -165,7 +167,9 @@ jobs:
 
       - name: Publish release
         if: startsWith(github.ref, 'refs/tags/v')
-        uses: softprops/action-gh-release@v2
+        # not an action of GitHub itself and it runs with the right to publish:
+        # pinned to a commit (a tag can be moved), here v2.6.2
+        uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65
         with:
           files: artifacts/*
           prerelease: ${{ contains(github.ref_name, '-') }}

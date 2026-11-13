@@ -719,13 +719,13 @@ int quit_cmd(char *mcmd, char *retMessage, int retSize) {
 int help_cmd(char *mcmd, char *retMessage, int retSize) {
 	int i;
 	
-	strncpy(retMessage, "Available Commands:\n\n", retSize);
-	for (i = 0; i < sizeof(cmds)/sizeof(cmd_t); i++) {
-		strncat(retMessage, cmds[i].ucmd, retSize);
-		strncat(retMessage, ", ", retSize);
-	}
-	retMessage[strlen(retMessage)-2] = 0;
-	strncat(retMessage, ".", retSize);
+	/* strncat's size is the room that is left, not the size of the buffer:
+	   count what is used and stop before the buffer is full */
+	int n = snprintf(retMessage, retSize, "Available Commands:\n\n");
+	for (i = 0; i < sizeof(cmds)/sizeof(cmd_t) && n >= 0 && n < retSize; i++)
+		n += snprintf(retMessage + n, retSize - n, "%s%s", i ? ", " : "", cmds[i].ucmd);
+	if (n >= 0 && n < retSize)
+		snprintf(retMessage + n, retSize - n, ".");
 	return 1;
 }
 

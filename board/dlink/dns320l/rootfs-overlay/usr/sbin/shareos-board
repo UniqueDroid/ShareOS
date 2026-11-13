@@ -24,6 +24,7 @@
 board_detect
 R=${SHAREOS_ROOT:-}          # tests: fake root; SHAREOS_BOARD_ONCE=1: one cycle
 
+PRESETS=${SHAREOS_BOARD_LIB:-/usr/lib/shareos/board.sh}; PRESETS=${PRESETS%/*}/fan-presets
 OFF=0; HALF=100; FULL=255
 MAX_AGE=90
 MISS_MAX=${SHAREOS_BOARD_MISS_MAX:-6}
@@ -76,21 +77,26 @@ read_button() {
 	gpioget --numeric -c "${BOARD_POWER_BUTTON%%:*}" "${BOARD_POWER_BUTTON#*:}" 2>/dev/null
 }
 
+# "off full half" (°C) of a preset
+preset_curve() {
+	awk -v p="$1" '$1 == p && $2 ~ /^[0-9]+$/ && $3 ~ /^[0-9]+$/ && $4 ~ /^[0-9]+$/ {print $2, $3, $4; exit}' "$PRESETS" 2>/dev/null
+}
+
 # sets OFF_T FULL_T HALF_T (millidegrees; OFF_T=0 means never stop)
 read_curve() {
 	p=$(uci -q get shareos.fan.preset || echo balanced)
-	case "$p" in
-		quiet)  OFF_T=40000; FULL_T=55000; HALF_T=50000 ;;
-		cool)   OFF_T=0;     FULL_T=45000; HALF_T=42000 ;;
-		custom)
-			o=$(uci -q get shareos.fan.off_temp || echo 0)
-			f=$(uci -q get shareos.fan.full_temp || echo 50)
-			h=$(uci -q get shareos.fan.half_temp || echo 45)
-			OFF_T=$((o * 1000)); FULL_T=$((f * 1000)); HALF_T=$((h * 1000))
-			[ $HALF_T -lt $FULL_T ] || HALF_T=$((FULL_T - 3000))
-			;;
-		*)      OFF_T=0;     FULL_T=50000; HALF_T=45000 ;;
-	esac
+	if [ "$p" = custom ]; then
+		o=$(uci -q get shareos.fan.off_temp || echo 0)
+		f=$(uci -q get shareos.fan.full_temp || echo 50)
+		h=$(uci -q get shareos.fan.half_temp || echo 45)
+	else
+		# the presets are defined in one file (the web interface reads it too);
+		# an unknown name or a missing file: the fan never stops
+		c=$(preset_curve "$p"); [ -n "$c" ] || c=$(preset_curve balanced); [ -n "$c" ] || c="0 50 45"
+		o=${c%% *}; h=${c##* }; f=${c#* }; f=${f% *}
+	fi
+	OFF_T=$((o * 1000)); FULL_T=$((f * 1000)); HALF_T=$((h * 1000))
+	[ $HALF_T -lt $FULL_T ] || HALF_T=$((FULL_T - 3000))
 }
 
 set_fan() {

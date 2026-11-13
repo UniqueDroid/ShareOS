@@ -3526,6 +3526,7 @@ const SYS = {
 					<label class="chk"><input type="checkbox" name="ipv6"${d.ipv6 ? raw(' checked') : ''}>IPv6</label>
 				</div>
 				<p class="note">The box reports its public address every 5 minutes when it has changed. Many connections (DS-Lite, fibre, mobile) have no IPv4 address of their own – then use IPv6. For access from outside, the router has to forward the port (or open it for IPv6).</p>
+				<p class="note">To learn its public IPv4 address, the box asks api.ipify.org (ipv4.icanhazip.com if that does not answer).</p>
 				<div class="acts" style="margin-top:12px"><button class="btn primary" type="submit">Save</button>
 					${d.enabled ? html`<button class="btn" type="button" data-act="ddns-now">Refresh now</button>` : ''}</div>
 			</form>
