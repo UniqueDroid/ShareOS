@@ -165,9 +165,9 @@ check "rpc: invalid volume name rejected" "echo '$E' | grep -q 'invalid name'"
 run '/etc/init.d/S13rpcd stop; /etc/init.d/S12ubus stop' >/dev/null 2>&1
 
 if [ -e /proc/mdstat ]; then
-	run shareos-storage setup mirror spiegel $A $B --swap=32 --yes >/dev/null
+	o=$(run shareos-storage setup mirror spiegel $A $B --swap=32 --yes)
 	check "mirror setup" "run shareos-storage job | grep -q 'state=done' && mounted spiegel && grep -q md /proc/mdstat"
-	run shareos-storage job | grep -q 'state=done' || { echo "      job: $(run shareos-storage job | tr '\n' ' ')"; echo "      mdstat: $(tr '\n' ' ' < /proc/mdstat)"; }
+	run shareos-storage job | grep -q 'state=done' || { echo "      job: $(run shareos-storage job | tr '\n' ' ')"; echo "      mdstat: $(tr '\n' ' ' < /proc/mdstat)"; echo "      output: $(echo "$o" | tail -n 6 | tr '\n' ' ' | cut -c1-900)"; }
 	run shareos-storage shutdown >/dev/null
 	for l in stripe span; do
 		run shareos-storage setup $l gross $A $B --swap=0 --yes >/dev/null

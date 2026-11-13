@@ -116,6 +116,9 @@ check "password: too short refused" "a password '{\"password\":\"kurz\"}' | grep
 check "password for admin set" "a password '{\"password\":\"geheim-12345\"}' | js \"d['ok']\""
 check "the new password signs in" "run \"curl -s -o /dev/null -w '%{http_code}' -H 'Content-Type: application/json' -d '{\\\"username\\\":\\\"admin\\\",\\\"password\\\":\\\"geheim-12345\\\"}' http://127.0.0.1:7474/api/auth/login\" | grep -q '^20'"
 o=$(a set '{"ui":true}')
+echo "$o" | js "d['ui'] and d['running']" 2>/dev/null || echo "      set: $(echo "$o" | cut -c1-400)"
+grep -q ' 00000000:1D32 00000000:0000 0A' /proc/net/tcp || echo "      listeners on 7474: $(grep -h ':1D32 ' /proc/net/tcp /proc/net/tcp6 | grep ' 0A ' | cut -c1-120 | tr '\n' '|')"
+echo "      api: $(a api '{"method":"GET","path":"/api/filters"}' | cut -c1-300)"
 check "web interface on: listens on all addresses, API key still works" "echo '$o' | js \"d['ui'] and d['running']\" && grep -q ' 00000000:1D32 00000000:0000 0A' /proc/net/tcp && a api '{\"method\":\"GET\",\"path\":\"/api/filters\"}' | js \"'Test-Filter' in [f['name'] for f in d['data']]\""
 check "it serves its web interface" "run 'curl -s http://127.0.0.1:7474/' | grep -qi '<html'"
 a set '{"ui":false}' >/dev/null

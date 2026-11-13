@@ -144,6 +144,7 @@ check "https: the same port as HTTP refused" "ub set '{\"https_port\":8053}' | g
 
 # --- block lists ----------------------------------------------------------------------
 check "list added" "ub filter_add '{\"name\":\"Test\",\"url\":\"http://127.0.0.1:$LPORT/list.txt\"}' | js \"[f for f in d['filters'] if f['name']=='Test' and f['rules']==3]\""
+[ "$(dnsq ads.shareos-test.example)" = 0.0.0.0 ] || { echo "      answers: $(dnsq ads.shareos-test.example) $(dnsq banner.shareos-test.example)"; echo "      status: $(ub status | tr '\n' ' ' | cut -c1-700)"; }
 check "blocked name answered with 0.0.0.0" "[ \"\$(dnsq ads.shareos-test.example)\" = 0.0.0.0 ] && [ \"\$(dnsq banner.shareos-test.example)\" = 0.0.0.0 ]"
 check "status: rules, queries, blocked, estimate" "ub status | js \"d['rules']>=3 and d['blocked']>=2 and d['queries']>=2 and d['estimate_mb']>=25 and not d['warn']\""
 check "list switched off: name no longer blocked" "ub filter_enable '{\"url\":\"http://127.0.0.1:$LPORT/list.txt\",\"enabled\":false}' | js \"[f for f in d['filters'] if f['name']=='Test' and not f['enabled']]\" && [ \"\$(dnsq tracker.shareos-test.example)\" != 0.0.0.0 ]"
@@ -167,7 +168,8 @@ check "invalid upstream refused" "ub set '{\"upstream\":[\"rm -rf /\"]}' | grep 
 check "port of the box refused" "ub set '{\"web_port\":443}' | grep -q 'not a port of the box'"
 check "filtering paused and on again" "ub set '{\"protection\":false}' | js \"d['protection']==False\" && ub set '{\"protection\":true}' | js \"d['protection']==True\""
 check "web port changed: restarted on the new ports (HTTPS one above)" "ub set '{\"web_port\":8063}' | js \"d['ready'] and d['web_port']==8063 and d['https_port']==8064\" && curl -s -o /dev/null -w '%{http_code}' -u admin:$PW http://127.0.0.1:8063/control/status | grep -q 307 && curl -sk -o /dev/null -w '%{http_code}' -u admin:$PW https://127.0.0.1:8064/control/status | grep -q 200"
-check "settings kept over a restart" "df restart | js \"d['ready'] and d['upstream'][0]=='https://dns.quad9.net/dns-query'\""
+o=$(df restart); echo "$o" | js "d['ready']" 2>/dev/null || echo "      restart: $(echo "$o" | tr '\n' ' ' | cut -c1-500)"
+check "settings kept over a restart" "echo '$o' | js \"d['ready'] and d['upstream'][0]=='https://dns.quad9.net/dns-query'\""
 
 # --- switching off, boot, removal -------------------------------------------------------
 check "switched off: stopped" "ub set '{\"enabled\":false}' | js \"not d['running'] and not d['enabled']\" && [ \"\$(dnsq ads.shareos-test.example)\" = timeout ]"
@@ -195,6 +197,7 @@ done
 check "switched on: not ready before DNS answers (port 53)" "[ \"$first\" = $BOXIP ]"
 sleep 15
 check "switched on: stays on (setting, process, DNS, Services page)" "[ \"\$(run 'uci -q get dnsfilter.main.enabled')\" = 1 ] && ub status | js \"d['enabled'] and d['running'] and d['ready']\" && [ \"\$(dnsq shareos-u.test.lan)\" = $BOXIP ] && svc True"
+echo "      local.json: $(tr '\n' ' ' < $R/etc/shareos/dnsfilter/local.json 2>/dev/null | cut -c1-300) | upstream: $(curl -sk -u admin:$PW https://127.0.0.1:8064/control/dns_info | cut -c1-400)"
 check "the box as its own DNS server: local domain to the gateway ($GW)" "[ -z \"$GW\" ] || { i=0; until [ -s $R/etc/shareos/dnsfilter/local.json ] && grep -q '$GW' $R/etc/shareos/dnsfilter/local.json || [ \$i -ge 30 ]; do sleep 1; i=\$((i + 1)); done; curl -sk -u admin:$PW https://127.0.0.1:8064/control/dns_info | js \"'[/test.lan/]$GW' in d['upstream_dns']\"; }"
 check "removed: stopped, tab gone, settings kept" "run 'shareos-apps remove dnsfilter' >/dev/null; ! [ -e $R/tmp/shareos-dnsfilter/pid ] && run 'ubus call shareos.ui get' | js \"d['areas']['dnsfilter']==False\" && [ -f $Y ]"
 
