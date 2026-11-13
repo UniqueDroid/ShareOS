@@ -33,6 +33,10 @@ import { readfile, writefile, unlink, stat, popen, chmod } from 'fs';
 import { cursor } from 'uci';
 import * as socket from 'socket';
 
+// JSON text -> value; null when the text is not JSON (never an exception:
+// a damaged file or a tool that printed an error must not end the call)
+function jparse(s) { try { return json(s); } catch (e) { return null; } }
+
 const BIN = '/opt/shareos/bin/openvpn';
 const DIR = '/etc/shareos/vpn';
 const RUN = '/tmp/shareos-vpn';
@@ -65,7 +69,7 @@ function sh(cmd) {
 }
 function out(o) { print(sprintf('%J\n', o)); }
 function die(msg) { out({ error: msg }); exit(1); }
-function stdin_json() { let j = json(readfile('/dev/stdin') ?? 'null'); return type(j) == 'object' ? j : {}; }
+function stdin_json() { let j = jparse(readfile('/dev/stdin') ?? 'null'); return type(j) == 'object' ? j : {}; }
 function file_of(n) { return DIR + '/' + n + '.ovpn'; }
 function auth_of(n) { return DIR + '/' + n + '.auth'; }
 function sec(n) { return 'p_' + replace(lc(n), /[^a-z0-9]/g, '_'); }

@@ -36,6 +36,10 @@
 import { readfile, writefile, mkdir, stat, unlink, rename, popen, glob } from 'fs';
 import { cursor } from 'uci';
 
+// JSON text -> value; null when the text is not JSON (never an exception:
+// a damaged file or a tool that printed an error must not end the call)
+function jparse(s) { try { return json(s); } catch (e) { return null; } }
+
 // SHAREOS_ROOT lets the test suite run this against a fake root on a build host
 const ROOT = getenv('SHAREOS_ROOT') ?? '';
 const STATE_DIR = ROOT + '/tmp/shareos-update';
@@ -198,7 +202,7 @@ function fetch_releases(cfg) {
 		let m = match(r.out, /curl: \([0-9]+\)[^\n]*/);
 		return { error: m ? m[0] : 'curl exit ' + r.rc };
 	}
-	let list = json(r.out);
+	let list = jparse(r.out);
 	return type(list) == 'array' ? list : { error: 'unexpected answer from GitHub' };
 }
 

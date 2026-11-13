@@ -22,6 +22,10 @@
 import { stdin, stdout, readfile, writefile, unlink, popen } from 'fs';
 import * as ubus from 'ubus';
 
+// JSON text -> value; null when the text is not JSON (never an exception:
+// a damaged file or a tool that printed an error must not end the call)
+function jparse(s) { try { return json(s); } catch (e) { return null; } }
+
 const REMOTE = TR_MODE == 'remote';
 const MAX_BODY = 16 * 1048576;     // .torrent files go in base64
 const CURL_MAX = 32 * 1048576;
@@ -102,7 +106,7 @@ while (length(body) < len) {
 	if (chunk == null || chunk == '') break;
 	body += chunk;
 }
-req = json(body);
+req = jparse(body);
 
 // errors about the request itself: remote programs show "result" of an answer
 // (Transmission answers them with 200 as well), apps get the HTTP status
@@ -240,7 +244,7 @@ unlink(tmp);
 if (!resp) fail('502 Bad Gateway', 'Transmission does not answer');
 if (resp.code != 200) fail('502 Bad Gateway', 'Transmission: HTTP ' + resp.code);
 
-let res = json(resp.body);
+let res = jparse(resp.body);
 if (type(res) != 'object') fail('502 Bad Gateway', 'Transmission: invalid answer');
 
 // absolute paths -> "<root>/<path>", internal settings out

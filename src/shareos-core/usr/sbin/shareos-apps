@@ -106,6 +106,10 @@
 import { readfile, writefile, mkdir, stat, lstat, lsdir, unlink, rename, popen, readlink } from 'fs';
 import { cursor } from 'uci';
 
+// JSON text -> value; null when the text is not JSON (never an exception:
+// a damaged file or a tool that printed an error must not end the call)
+function jparse(s) { try { return json(s); } catch (e) { return null; } }
+
 const ROOT = getenv('SHAREOS_ROOT') ?? '';
 const APPS = ROOT + '/www-apps';
 const SYS = ROOT + '/opt/shareos/sysapps';
@@ -415,7 +419,7 @@ function installed() {
 	for (let base in [ APPS, SYS ])
 	for (let id in sort(lsdir(base) ?? [])) {
 		if (!match(id, ID_RE) || seen[id]) continue;
-		let a = json(readfile(base + '/' + id + '/app.json') ?? 'null');
+		let a = jparse(readfile(base + '/' + id + '/app.json') ?? 'null');
 		if (type(a) != 'object') continue;
 		seen[id] = true;
 		let s = sect(id);
@@ -442,7 +446,7 @@ function fetch_catalog(url) {
 		let m = match(r.out, /curl: \([0-9]+\)[^\n]*/);
 		return { error: m ? m[0] : 'curl exit ' + r.rc };
 	}
-	let d = json(r.out);
+	let d = jparse(r.out);
 	if (type(d) != 'object' || type(d.apps) != 'array') return { error: 'not a ShareOS app catalog' };
 	return d;
 }
@@ -487,8 +491,8 @@ function cmd_catalog() {
 
 function cmd_cached() {
 	let K = conf(), channel = K.channel, sources = K.sources;
-	let cats = json(readfile(ST + '/catalogs.json') ?? '[]') ?? [];
-	let errors = json(readfile(ST + '/catalog-errors.json') ?? '[]') ?? [];
+	let cats = jparse(readfile(ST + '/catalogs.json') ?? '[]') ?? [];
+	let errors = jparse(readfile(ST + '/catalog-errors.json') ?? '[]') ?? [];
 	return out({ time: +(readfile(ST + '/catalog-time') ?? 0), channel, sources, errors, apps: merge(cats, channel) });
 }
 
@@ -590,7 +594,7 @@ function service_run(svc, verb, bg, delay) {
 }
 
 function sysapp_json(id) {
-	let a = json(readfile(SYS + '/' + id + '/app.json') ?? 'null');
+	let a = jparse(readfile(SYS + '/' + id + '/app.json') ?? 'null');
 	return type(a) == 'object' && a.id == id ? a : null;
 }
 
@@ -720,7 +724,7 @@ function check_requires(a) {
 }
 
 function check_app(dir) {
-	let a = json(readfile(dir + '/app.json') ?? 'null');
+	let a = jparse(readfile(dir + '/app.json') ?? 'null');
 	if (type(a) != 'object') return { error: 'app.json is not valid JSON' };
 	if (!match(a.id ?? '', ID_RE)) return { error: 'invalid app id (a-z, 0-9 and -)' };
 	let re = check_requires(a);
@@ -823,7 +827,7 @@ let ensure_requires;
 // from the catalog: download, verify, install – apps it needs first
 function install_catalog(id, version, depth) {
 	if (!match(id ?? '', ID_RE)) return { error: 'invalid app id' };
-	let cats = json(readfile(ST + '/catalogs.json') ?? '[]') ?? [];
+	let cats = jparse(readfile(ST + '/catalogs.json') ?? '[]') ?? [];
 	let channel = conf().channel;
 	let app = filter(merge(cats, 'beta'), (a) => a.id == id)[0];
 	if (!app) return { error: depth ? id + ' is not in the store' : 'unknown app – refresh the store first' };
@@ -898,7 +902,7 @@ const NOTIFY_LEVELS = { info: 1, warn: 1, error: 1 };
 const NOTIFY_SPOOL_MAX = 10;
 function notify_app(id) {
 	let d = match(id ?? '', ID_RE) ? app_dir(id) : null;
-	let a = d ? json(readfile(d + '/app.json') ?? 'null') : null;
+	let a = d ? jparse(readfile(d + '/app.json') ?? 'null') : null;
 	return type(a) == 'object' && index(a.permissions ?? [], 'notify') >= 0 ? a : null;
 }
 function notify_text_ok(s, max, nl) {
@@ -927,7 +931,7 @@ function app_notify(id, op, level, key, title, text) {
 	writefile(rf, join('\n', sent) + '\n');
 	let t = (a.name ?? id) + ': ' + title;
 	let r = capture(sprintf('/usr/sbin/shareos-notify send %s apps %s %s %s %s %s', level, shq(full), shq(t), shq(t), shq(text), shq(text)));
-	let j = json(trim(r.out) || 'null');
+	let j = jparse(trim(r.out) || 'null');
 	return type(j) == 'object' && j.ok ? { ok: true, sent: j.sent } : { error: 'sending failed' };
 }
 
@@ -987,7 +991,7 @@ function cmd_remove(id, force) {
 // run a job: as the app's user, in its data folder, with a time limit; one at a time
 function cmd_run_job(id, j) {
 	if (!match(id ?? '', ID_RE) || !match(j ?? '', JOB_RE)) die('invalid app or job');
-	let a = json(readfile(APPS + '/' + id + '/app.json') ?? 'null');
+	let a = jparse(readfile(APPS + '/' + id + '/app.json') ?? 'null');
 	let def = type(a) == 'object' ? filter(a.jobs ?? [], (x) => x.id == j)[0] : null;
 	if (!def || index(a.permissions ?? [], 'cron') < 0) die('unknown job');
 	mkdir(ST); mkdir(ST + '/jobs');

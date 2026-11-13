@@ -18,6 +18,10 @@
 import { stdin, stdout, readfile, writefile, unlink, popen } from 'fs';
 import * as ubus from 'ubus';
 
+// JSON text -> value; null when the text is not JSON (never an exception:
+// a damaged file or a tool that printed an error must not end the call)
+function jparse(s) { try { return json(s); } catch (e) { return null; } }
+
 const MAX_BODY = 262144;
 const ID = '[A-Za-z0-9._-]{1,64}';
 const DEV = '[A-Z0-9-]{50,70}';
@@ -93,7 +97,7 @@ while (length(body) < len) {
 	if (chunk == null || chunk == '') break;
 	body += chunk;
 }
-let req = json(body || 'null');
+let req = jparse(body || 'null');
 if (type(req) != 'object' || type(req.method) != 'string' || type(req.path) != 'string') fail('400 Bad Request', 'invalid request');
 let method = uc(req.method), path = req.path, query = req.query ?? {};
 if (type(query) != 'object') fail('400 Bad Request', 'invalid request');

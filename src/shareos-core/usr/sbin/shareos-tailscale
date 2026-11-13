@@ -24,6 +24,10 @@
 import { readfile, writefile, unlink, stat, popen, mkdir } from 'fs';
 import { cursor } from 'uci';
 
+// JSON text -> value; null when the text is not JSON (never an exception:
+// a damaged file or a tool that printed an error must not end the call)
+function jparse(s) { try { return json(s); } catch (e) { return null; } }
+
 const BIN = '/opt/shareos/bin/tailscaled';
 const STATE = '/etc/shareos/tailscale';
 const RUN = '/tmp/shareos-tailscale';
@@ -42,7 +46,7 @@ function sh(cmd) {
 }
 function out(o) { print(sprintf('%J\n', o)); }
 function die(msg) { out({ error: msg }); exit(1); }
-function stdin_json() { let j = json(readfile('/dev/stdin') ?? 'null'); return type(j) == 'object' ? j : {}; }
+function stdin_json() { let j = jparse(readfile('/dev/stdin') ?? 'null'); return type(j) == 'object' ? j : {}; }
 function installed() { return stat(BIN)?.type == 'file'; }
 function hostname() { return trim(readfile('/proc/sys/kernel/hostname') ?? 'shareos'); }
 

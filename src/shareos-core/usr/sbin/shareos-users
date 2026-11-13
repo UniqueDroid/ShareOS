@@ -53,6 +53,16 @@ set_linux_password() {   # name password
 		|| printf '%s:%s\n' "$1" "$2" | chpasswd >/dev/null || die "cannot set the password"
 }
 
+# Put a rewritten account file in place in one step: a power cut leaves the
+# old or the new file, never a cut-off one (which would lock everybody out).
+# Mode and owner of the old file are kept.
+replace_file() {   # <new file> <file>
+	chmod "$(stat -c %a "$2" 2>/dev/null || echo 644)" "$1" 2>/dev/null
+	chown "$(stat -c %u:%g "$2" 2>/dev/null || echo 0:0)" "$1" 2>/dev/null
+	sync
+	mv -f "$1" "$2"
+}
+
 # SMB password (ksmbd keeps its own NT hashes)
 set_smb_password() {   # name password
 	command -v ksmbd.adduser >/dev/null || return 0
@@ -125,7 +135,7 @@ apply_opts() {   # name
 	shell=/bin/false; [ "$role" = admin ] && shell=/bin/sh
 	full=$(uci -q get accounts."$n".fullname)
 	awk -F: -v OFS=: -v n="$n" -v g="$full" -v s="$shell" '$1 == n {$5 = g; $7 = s} {print}' /etc/passwd > /etc/passwd.new \
-		&& cat /etc/passwd.new > /etc/passwd && rm -f /etc/passwd.new
+		&& replace_file /etc/passwd.new /etc/passwd
 }
 
 # --- sync: everything derived from UCI -------------------------------------------
@@ -149,7 +159,7 @@ sync_groups() {
 		fi
 		echo "$name:$pw:$gid:$list" >> $tmp
 	done < /etc/group
-	cat $tmp > /etc/group; rm -f $tmp
+	replace_file $tmp /etc/group
 }
 
 sync_web() {
@@ -188,7 +198,7 @@ sync_homes() {
 			mkdir -p "$h" && chmod 0755 "${h%/*}" && chown "$u":users "$h" && chmod 0700 "$h" || log "cannot create $h"
 		fi
 		awk -F: -v OFS=: -v n="$u" -v h="$h" '$1 == n {$6 = h} {print}' /etc/passwd > /etc/passwd.new \
-			&& cat /etc/passwd.new > /etc/passwd && rm -f /etc/passwd.new
+			&& replace_file /etc/passwd.new /etc/passwd
 	done
 }
 
@@ -318,7 +328,7 @@ cmd_import_altf() {
 		hash=$(awk -F: -v u="$u" '$1 == u {print $2}' $ALTF/shadow 2>/dev/null)
 		case "$hash" in ''|'!'*|'*'*|x) ;; *)
 			awk -F: -v OFS=: -v u="$u" -v h="$hash" '$1 == u {$2 = h} {print}' /etc/shadow > /etc/shadow.new \
-				&& cat /etc/shadow.new > /etc/shadow && rm -f /etc/shadow.new ;;
+				&& replace_file /etc/shadow.new /etc/shadow ;;
 		esac
 		# keep the SMB password (NT hash from smbpasswd)
 		nt=$(awk -F: -v u="$u" '$1 == u {print $4}' $ALTF/samba/smbpasswd 2>/dev/null)

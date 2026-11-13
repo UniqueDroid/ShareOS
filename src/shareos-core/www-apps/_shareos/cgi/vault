@@ -9,6 +9,10 @@
 import { stdin, stdout } from 'fs';
 import * as ubus from 'ubus';
 
+// JSON text -> value; null when the text is not JSON (never an exception:
+// a damaged file or a tool that printed an error must not end the call)
+function jparse(s) { try { return json(s); } catch (e) { return null; } }
+
 const OPS = {
 	status: [],
 	unlock: [ 'share', 'minutes', 'password' ],
@@ -32,7 +36,7 @@ while (length(body) < len) {
 	if (chunk == null || chunk == '') break;
 	body += chunk;
 }
-let req = json(body || 'null');
+let req = jparse(body || 'null');
 if (type(req) != 'object' || type(req.op) != 'string' || !exists(OPS, req.op))
 	reply('400 Bad Request', { error: 'invalid request' });
 

@@ -14,6 +14,10 @@
 import { stdin, stdout, readfile, popen, mkdtemp, unlink, rmdir } from 'fs';
 import * as ubus from 'ubus';
 
+// JSON text -> value; null when the text is not JSON (never an exception:
+// a damaged file or a tool that printed an error must not end the call)
+function jparse(s) { try { return json(s); } catch (e) { return null; } }
+
 const MGMT = { hosts: [], host_set: [ 'name', 'label', 'url', 'insecure' ], host_del: [ 'name' ] };
 const ACTIONS = { start: 1, stop: 1, restart: 1, pause: 1, unpause: 1 };
 
@@ -28,7 +32,7 @@ if (!g) reply('403 Forbidden', { error: 'no access' });
 if (getenv('REQUEST_METHOD') != 'POST') reply('405 Method Not Allowed', { error: 'method not allowed' });
 let len = +(getenv('CONTENT_LENGTH') ?? 0);
 if (!(len > 0) || len > 4096) reply('413 Payload Too Large', { error: 'invalid request' });
-let req = json(stdin.read(len) ?? 'null');
+let req = jparse(stdin.read(len) ?? 'null');
 if (type(req) != 'object' || type(req.op) != 'string') reply('400 Bad Request', { error: 'invalid request' });
 
 let conn = ubus.connect();

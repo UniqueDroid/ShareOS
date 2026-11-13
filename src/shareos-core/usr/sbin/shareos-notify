@@ -33,6 +33,10 @@
 import { readfile, writefile, mkdir, stat, glob, popen, unlink, lsdir, realpath } from 'fs';
 import { cursor } from 'uci';
 
+// JSON text -> value; null when the text is not JSON (never an exception:
+// a damaged file or a tool that printed an error must not end the call)
+function jparse(s) { try { return json(s); } catch (e) { return null; } }
+
 const ROOT = getenv('SHAREOS_ROOT') ?? '';
 const DB = ROOT + '/etc/shareos/notifications.json';
 const LEVELS = { info: 1, warn: 2, error: 3 };
@@ -143,7 +147,7 @@ function telegram(token, method, body) {
 	let r = run(argv, body != null ? sprintf('%J', body) : null);
 	if (!DRY) unlink(cfg);
 	if (DRY) return { ok: true, result: [] };
-	let j = json(r.out || 'null');
+	let j = jparse(r.out || 'null');
 	if (type(j) != 'object') return { error: 'telegram: ' + (trim(r.out) || 'curl exit ' + r.rc) };
 	if (!j.ok) return { error: 'telegram: ' + (j.description ?? 'failed') };
 	return j;

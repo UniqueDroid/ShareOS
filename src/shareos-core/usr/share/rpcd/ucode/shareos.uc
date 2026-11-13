@@ -28,6 +28,10 @@
 import { readfile, writefile, open as fopen, popen, glob, stat, lstat, lsdir, realpath, readlink, symlink, unlink, rename } from 'fs';
 import { cursor } from 'uci';
 
+// JSON text -> value; null when the text is not JSON (never an exception:
+// a damaged file or a tool that printed an error must not end the call)
+function jparse(s) { try { return json(s); } catch (e) { return null; } }
+
 const UPDATER = '/usr/sbin/shareos-update';
 // Switching off or restarting while kernel, initramfs or the system are being
 // written leaves a box that may not start any more: refused until the write
@@ -103,6 +107,17 @@ function fstamp(...paths) {
 
 function sh(cmd) {
 	let p = popen(cmd + ' 2>&1', 'r');
+	if (!p)
+		return { rc: -1, out: '' };
+	let out = p.read('all') ?? '';
+	let rc = p.close();
+	return { rc, out };
+}
+
+// like sh(), but without the error output: for tools whose answer is parsed
+// (JSON) – a warning on stderr in the middle of it would make it unreadable
+function sh_quiet(cmd) {
+	let p = popen(cmd + ' 2>/dev/null', 'r');
 	if (!p)
 		return { rc: -1, out: '' };
 	let out = p.read('all') ?? '';
@@ -337,7 +352,7 @@ function ubiblock_major() {
 
 function lsblk_read() {
 	// -e: leave out mtdblock (31), ram (1) and ubiblock devices – only disks matter here
-	let r = sh('lsblk -J -b -e 1,31,' + (ubiblock_major() ?? '31') + ' -o NAME,TYPE,SIZE,FSTYPE,LABEL,UUID,MOUNTPOINT,MODEL,SERIAL,TRAN,RM,ROTA');
+	let r = sh_quiet('lsblk -J -b -e 1,31,' + (ubiblock_major() ?? '31') + ' -o NAME,TYPE,SIZE,FSTYPE,LABEL,UUID,MOUNTPOINT,MODEL,SERIAL,TRAN,RM,ROTA');
 	let j = null;
 	try { j = json(r.out); } catch (e) { }
 	return j?.blockdevices ?? [];
@@ -464,7 +479,7 @@ function smart_read(disk, refresh) {
 		return { standby: true };
 	// -n standby: do not wake a sleeping disk just for SMART; -a: health,
 	// attributes, error and self-test log; devstat: the SSD endurance indicator
-	let r = sh('smartctl -j -n standby -a -l devstat /dev/' + disk);
+	let r = sh_quiet('smartctl -j -n standby -a -l devstat /dev/' + disk);
 	let j = null;
 	try { j = json(r.out); } catch (e) { }
 	if (!j)
@@ -1578,7 +1593,7 @@ const APPS_UPLOAD = '/tmp/shareos-apps/upload.sapp';
 
 function apps_json(args) {
 	let r = sh(APPS_TOOL + ' ' + join(' ', map(args, shq)));
-	let j = json(trim(r.out) || 'null');
+	let j = jparse(trim(r.out) || 'null');
 	return type(j) == 'object' ? j : { error: trim(r.out) || 'failed' };
 }
 
@@ -1798,7 +1813,7 @@ function media_secs(v) {
 function media_probe(u, abs) {
 	if (stat(FFPROBE)?.type != 'file') return { error: 'ffmpeg is not installed (system app "ffmpeg" in the store)' };
 	let r = files_sh(u, sprintf('timeout 30 %s -v error -protocol_whitelist file -show_format -show_streams -of json -- %s', shq(FFPROBE), shq(abs)));
-	let d = json(r.out ?? '');
+	let d = jparse(r.out ?? '');
 	if (r.rc != 0 || type(d) != 'object') return { error: 'not a media file' + (trim(r.out) ? ': ' + substr(trim(r.out), 0, 200) : '') };
 	let f = d.format ?? {};
 	return {
@@ -2121,10 +2136,10 @@ function vpn_tool(args, input) {
 		cmd += ' < ' + shq(f);
 		let r = sh(cmd);
 		unlink(f);
-		let j = json(trim(r.out) || 'null');
+		let j = jparse(trim(r.out) || 'null');
 		return type(j) == 'object' ? j : { error: trim(r.out) || 'failed' };
 	}
-	let j = json(trim(sh(cmd).out) || 'null');
+	let j = jparse(trim(sh(cmd).out) || 'null');
 	return type(j) == 'object' ? j : { error: 'failed' };
 }
 
@@ -2140,7 +2155,7 @@ function ts_tool(args, input) {
 	}
 	let r = sh(cmd);
 	if (f) unlink(f);
-	let j = json(trim(r.out) || 'null');
+	let j = jparse(trim(r.out) || 'null');
 	return type(j) == 'object' ? j : { error: trim(r.out) || 'failed' };
 }
 
@@ -2232,10 +2247,10 @@ function torrent_user(args) {
 
 // the account's daemon, started when needed: what the CGI needs
 function torrent_session(u) {
-	let st = json(sh('/usr/sbin/shareos-transmission status ' + shq(u)).out ?? '') ?? {};
+	let st = jparse(sh('/usr/sbin/shareos-transmission status ' + shq(u)).out ?? '') ?? {};
 	if (!st.running) {
 		let r = sh('/usr/sbin/shareos-transmission start ' + shq(u));
-		st = json(r.out ?? '') ?? { error: trim(r.out) || 'cannot start' };
+		st = jparse(r.out ?? '') ?? { error: trim(r.out) || 'cannot start' };
 		if (st.error) return { error: st.error, installed: st.installed };
 	}
 	return { user: u, socket: st.socket, watch: st.watch, watch_autobrr: !!st.watch_autobrr, peer_port: st.peer_port,
@@ -2253,7 +2268,7 @@ function tremote_new_pass() {
 
 // the admin page: settings, whether it runs, the accounts with a remote password
 function tremote_status() {
-	let st = json(sh('/usr/sbin/shareos-transmission status root').out ?? '') ?? {};
+	let st = jparse(sh('/usr/sbin/shareos-transmission status root').out ?? '') ?? {};
 	return { ...tremote_conf(), installed: st.installed === true,
 		running: system("pgrep -f 'uhttpd .*-h /www-tremote' >/dev/null") == 0,
 		accounts: sort(filter(map(glob(TREMOTE_KEYS + '/*'), (f) => substr(f, length(TREMOTE_KEYS) + 1)), (u) => u == 'root' || acc_name_ok(u))),
@@ -2263,7 +2278,7 @@ function tremote_status() {
 // permission "notify": shareos-apps checks the message and the rate
 function app_notify_tool(args, id) {
 	let r = sh('/usr/sbin/shareos-apps notify ' + shq(id) + ' ' + join(' ', map(args, shq)));
-	let j = json(trim(r.out) || 'null');
+	let j = jparse(trim(r.out) || 'null');
 	return type(j) == 'object' ? j : { error: 'failed' };
 }
 
@@ -2375,7 +2390,7 @@ function zb_tool(args, input) {
 	}
 	let r = sh(cmd);
 	if (f) unlink(f);
-	let j = json(trim(r.out) || 'null');
+	let j = jparse(trim(r.out) || 'null');
 	return type(j) == 'object' ? j : { error: trim(r.out) || 'failed' };
 }
 function ab_tool(args, input) {
@@ -2389,7 +2404,7 @@ function ab_tool(args, input) {
 	}
 	let r = sh(cmd);
 	if (f) unlink(f);
-	let j = json(trim(r.out) || 'null');
+	let j = jparse(trim(r.out) || 'null');
 	return type(j) == 'object' ? j : { error: trim(r.out) || 'failed' };
 }
 
@@ -2415,7 +2430,7 @@ function torrent_activity(u) {
 	let r = call();
 	if (r && r.code == 409 && r.token) { writefile(tokf, r.token); r = call(); }
 	if (!r || r.code != 200) return null;
-	let j = json(r.body);
+	let j = jparse(r.body);
 	let down = 0, up = 0;
 	for (let x in j?.arguments?.torrents ?? []) {
 		if (x.status == 4) down++;                              // downloading
@@ -2459,7 +2474,7 @@ function status_chips(u) {
 	for (let f in lsdir(APPSTATUS + '/' + u) ?? []) {
 		let m = match(f, /^([a-z][a-z0-9-]{1,31})\.json$/), a = m ? ids[m[1]] : null;
 		if (!a || index(a.permissions ?? [], 'status') < 0) continue;
-		let x = json(readfile(APPSTATUS + '/' + u + '/' + f) ?? 'null');
+		let x = jparse(readfile(APPSTATUS + '/' + u + '/' + f) ?? 'null');
 		if (type(x) != 'object' || +x.until < now) continue;
 		push(chips, { id: 'app:' + a.id, label: x.text, state: x.state, app: a.id, name: a.name });
 	}
@@ -2630,10 +2645,14 @@ function backup_summary(b) {
 		ca: !!b.ca?.['ca.key'], ca_certs: map(ca_certs, (k) => replace(k, /^certs\/(.*)\.crt$/, '$1')) };
 }
 
+// Files are written beside their place and moved there: a power cut leaves
+// the old or the new file, never a cut-off one.
 function put_file(path, data, private) {
 	system('mkdir -p ' + shq(replace(path, /\/[^\/]+$/, '')));
-	writefile(path, data);
-	if (private) system('chmod 600 ' + shq(path));
+	let tmp = path + '.new';
+	writefile(tmp, data);
+	system('chmod ' + (private ? '600 ' : '644 ') + shq(tmp) + '; sync');
+	rename(tmp, path);
 }
 
 // step 1: what the box needs to run; the rest goes to the recovery mode
@@ -2659,8 +2678,7 @@ function restore_essentials(b) {
 	if (type(b.files?.['/etc/hostname']) == 'string') system('hostname ' + shq(trim(b.files['/etc/hostname'])));
 	let root = filter(b.accounts?.shadow ?? [], (l) => field(l, 0) == 'root' && length(split(l, ':')) >= 2)[0];
 	if (root)
-		writefile('/etc/shadow', join('\n', map(lines_of('/etc/shadow'), (l) => field(l, 0) == 'root' ? root : l)) + '\n');
-	system('chmod 600 /etc/shadow');
+		put_file('/etc/shadow', join('\n', map(lines_of('/etc/shadow'), (l) => field(l, 0) == 'root' ? root : l)) + '\n', true);
 	put_file(RECOVERY, sprintf('%J', b), true);
 	return [ 'root', 'network', 'hostname', 'timezone', 'storage', 'web' ];
 }
@@ -2678,10 +2696,9 @@ function restore_accounts(b) {
 	let sysnames = map(passwd, (l) => field(l, 0));
 	let shadow = [ ...filter(lines_of('/etc/shadow'), (l) => index(sysnames, field(l, 0)) >= 0 && index(names, field(l, 0)) < 0), ...sh_new ];
 	let group = [ ...keep('/etc/group', (l) => !(+field(l, 2) >= 1000 && +field(l, 2) < 65534)), ...grp ];
-	writefile('/etc/passwd', join('\n', passwd) + '\n');
-	writefile('/etc/shadow', join('\n', shadow) + '\n');
-	system('chmod 600 /etc/shadow');
-	writefile('/etc/group', join('\n', group) + '\n');
+	put_file('/etc/passwd', join('\n', passwd) + '\n');
+	put_file('/etc/shadow', join('\n', shadow) + '\n', true);
+	put_file('/etc/group', join('\n', group) + '\n');
 	if (type(b.files?.['/etc/ksmbd/ksmbdpwd.db']) == 'string') put_file('/etc/ksmbd/ksmbdpwd.db', b.files['/etc/ksmbd/ksmbdpwd.db'], true);
 	system(USERS + ' sync >/dev/null 2>&1');
 }
@@ -2845,7 +2862,7 @@ return {
 
 		// dynamic DNS (shareos-ddns); the token is never sent back
 		ddns_get: {
-			call: function() { return json(trim(sh('/usr/sbin/shareos-ddns status').out) || 'null') ?? { error: 'shareos-ddns failed' }; }
+			call: function() { return jparse(trim(sh('/usr/sbin/shareos-ddns status').out) || 'null') ?? { error: 'shareos-ddns failed' }; }
 		},
 
 		ddns_set: {
@@ -2882,8 +2899,8 @@ return {
 		// own certificate authority (shareos-ca)
 		ca_get: {
 			call: function() {
-				let i = json(trim(sh('/usr/sbin/shareos-ca info').out) || 'null') ?? { exists: false };
-				i.certs = i.exists ? (json(trim(sh('/usr/sbin/shareos-ca list').out) || '[]') ?? []) : [];
+				let i = jparse(trim(sh('/usr/sbin/shareos-ca info').out) || 'null') ?? { exists: false };
+				i.certs = i.exists ? (jparse(trim(sh('/usr/sbin/shareos-ca list').out) || '[]') ?? []) : [];
 				i.web = cursor().get('shareos', 'web', 'source') == 'ca';
 				return i;
 			}
@@ -2945,7 +2962,7 @@ return {
 		// Let's Encrypt for the DynDNS name (shareos-acme, takes up to a few minutes)
 		acme_get: {
 			call: function() {
-				let j = json(trim(sh('/usr/sbin/shareos-acme status').out) || 'null') ?? {};
+				let j = jparse(trim(sh('/usr/sbin/shareos-acme status').out) || 'null') ?? {};
 				j.running = acme_running();
 				return j;
 			}
@@ -3066,7 +3083,7 @@ return {
 		// the kept snapshots of the last starts (shareos-bootlog)
 		bootlogs: {
 			call: function() {
-				let j = json(trim(sh('/usr/sbin/shareos-bootlog list').out) || 'null');
+				let j = jparse(trim(sh('/usr/sbin/shareos-bootlog list').out) || 'null');
 				return type(j) == 'object' ? j : { logs: [] };
 			}
 		},
@@ -3094,7 +3111,7 @@ return {
 		// power schedule: switch off and on by weekday (shareos-power)
 		power_schedule: {
 			call: function() {
-				let j = json(trim(sh('/usr/sbin/shareos-power status').out) || 'null');
+				let j = jparse(trim(sh('/usr/sbin/shareos-power status').out) || 'null');
 				return type(j) == 'object' ? j : { error: 'failed' };
 			}
 		},
@@ -4240,13 +4257,13 @@ return {
 		restore: {
 			args: { content: '', password: '', apply: false },
 			call: function(req) {
-				let j = json(req.args.content ?? '');
+				let j = jparse(req.args.content ?? '');
 				if (type(j) != 'object' || index([ 1, 2 ], j.shareos_backup) < 0) return { error: 'not a ShareOS settings backup' };
 				if (j.encrypted) {
 					if (!req.args.password) return { error: 'password required', encrypted: true };
 					let r = crypt('dec', req.args.password, b64dec(j.data ?? '') ?? '');
 					if (r.error) return { ...r, encrypted: true };
-					j = json(r.data);
+					j = jparse(r.data);
 					if (type(j) != 'object' || index([ 1, 2 ], j.shareos_backup) < 0) return { error: 'damaged backup' };
 				}
 				j = backup_upgrade(j);
@@ -4261,7 +4278,7 @@ return {
 	'shareos.recovery': {
 		status: {
 			call: function() {
-				let b = json(readfile(RECOVERY) ?? 'null');
+				let b = jparse(readfile(RECOVERY) ?? 'null');
 				let pending = recovery_pending_apps();
 				let pid = read_trim('/tmp/shareos-restore-apps.run');
 				let job = !!pid && match(pid, /^[0-9]+$/) && stat('/proc/' + pid) != null;
@@ -4275,7 +4292,7 @@ return {
 		apply: {
 			args: { users: false, shares: false, services: [], apps: [], certificate: false, ca: false },
 			call: function(req) {
-				let b = json(readfile(RECOVERY) ?? 'null');
+				let b = jparse(readfile(RECOVERY) ?? 'null');
 				if (type(b) != 'object') return { error: 'not in recovery mode' };
 				return recovery_apply(b, req.args);
 			}
@@ -4382,7 +4399,7 @@ return {
 			call: function(req) {
 				if (!module_on('paperless')) return { error: 'Paperless is not installed (system app paperless)' };
 				if (!match(req.args.inbox ?? '', /^[a-z][a-z0-9_]{0,31}$/)) return { error: 'invalid inbox' };
-				let j = json(sh(PAPERLESS + ' tags ' + shq(req.args.inbox)).out);
+				let j = jparse(sh(PAPERLESS + ' tags ' + shq(req.args.inbox)).out);
 				return { tags: map(j?.results ?? [], (t) => ({ id: t.id, name: t.name })) };
 			}
 		},
@@ -5342,7 +5359,7 @@ return {
 				let g = app_grant_user(req.args.grant);
 				if (!g || index(g.app.permissions ?? [], 'media') < 0) return { error: 'no access' };
 				if (!match(req.args.id ?? '', /^[0-9a-f]{16}$/)) return { error: 'invalid job' };
-				let f = MEDIA_DIR + '/' + req.args.id + '.json', j = json(readfile(f) ?? 'null');
+				let f = MEDIA_DIR + '/' + req.args.id + '.json', j = jparse(readfile(f) ?? 'null');
 				if (type(j) != 'object' || j.user != g.u) return { error: 'unknown job' };
 				if (j.state == 'queued' || j.state == 'running') {
 					// the worker sees the stop file, ends ffmpeg and removes the half file;
@@ -5363,7 +5380,7 @@ return {
 				let g = app_grant_user(req.args.grant);
 				if (!g || index(g.app.permissions ?? [], 'media') < 0) return { error: 'no access' };
 				if (!match(req.args.id ?? '', /^[0-9a-f]{16}$/)) return { error: 'invalid job' };
-				let j = json(readfile(MEDIA_DIR + '/' + req.args.id + '.json') ?? 'null');
+				let j = jparse(readfile(MEDIA_DIR + '/' + req.args.id + '.json') ?? 'null');
 				if (type(j) != 'object' || j.user != g.u) return { error: 'unknown job' };
 				if (j.state == 'queued' || j.state == 'running' || j.state == 'stopping') return { error: 'job still running' };
 				for (let x in [ '.json', '.log', '.stop' ]) unlink(MEDIA_DIR + '/' + j.id + x);
@@ -5487,7 +5504,7 @@ return {
 					abs = realpath(p.abs);
 				}
 				let r = sh('/usr/sbin/shareos-transmission watch ' + shq(g.u) + ' ' + shq(abs));
-				return json(trim(r.out) || 'null') ?? { error: trim(r.out) || 'failed' };
+				return jparse(trim(r.out) || 'null') ?? { error: trim(r.out) || 'failed' };
 			}
 		},
 
@@ -5501,7 +5518,7 @@ return {
 				let p = req.args.port;
 				if (type(p) != 'int' || p < 0 || p > 65535) return { error: 'the peer port must be a number' };
 				let r = sh('/usr/sbin/shareos-transmission port ' + shq(g.u) + ' ' + shq(p == 0 ? '' : '' + p));
-				return json(trim(r.out) || 'null') ?? { error: trim(r.out) || 'failed' };
+				return jparse(trim(r.out) || 'null') ?? { error: trim(r.out) || 'failed' };
 			}
 		}
 	},
@@ -5553,10 +5570,10 @@ return {
 			call: function(req) {
 				let g = app_grant_user(req.args.grant);
 				if (!g || index(g.app.permissions ?? [], 'syncthing') < 0) return { error: 'no access' };
-				let st = json(sh('/usr/sbin/shareos-syncthing status ' + shq(g.u)).out ?? '') ?? {};
+				let st = jparse(sh('/usr/sbin/shareos-syncthing status ' + shq(g.u)).out ?? '') ?? {};
 				if (!st.running) {
 					let r = sh('/usr/sbin/shareos-syncthing start ' + shq(g.u));
-					st = json(r.out ?? '') ?? { error: trim(r.out) || 'cannot start' };
+					st = jparse(r.out ?? '') ?? { error: trim(r.out) || 'cannot start' };
 					if (st.error) return { error: st.error, installed: st.installed };
 				}
 				return { user: g.u, socket: st.socket, key: trim(readfile('/tmp/shareos-syncthing/' + g.u + '/apikey') ?? ''),
@@ -5583,7 +5600,7 @@ return {
 				let g = app_grant_user(req.args.grant);
 				if (!g || index(g.app.permissions ?? [], 'syncthing') < 0) return { error: 'no access' };
 				let r = sh('/usr/sbin/shareos-syncthing restart ' + shq(g.u));
-				return json(r.out ?? '') ?? { error: trim(r.out) || 'failed' };
+				return jparse(r.out ?? '') ?? { error: trim(r.out) || 'failed' };
 			}
 		}
 	},

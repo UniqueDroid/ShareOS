@@ -22,6 +22,10 @@
 //
 import { readfile, writefile, rename, lsdir, stat, unlink, popen } from 'fs';
 
+// JSON text -> value; null when the text is not JSON (never an exception:
+// a damaged file or a tool that printed an error must not end the call)
+function jparse(s) { try { return json(s); } catch (e) { return null; } }
+
 const DIR = '/tmp/shareos-media';
 const JOBS = DIR + '/jobs';
 const FFMPEG = '/opt/shareos/bin/ffmpeg';
@@ -34,7 +38,7 @@ function sh(cmd) {
 	let o = p.read('all') ?? '';
 	return { rc: p.close(), out: o };
 }
-function load(id) { let j = json(readfile(JOBS + '/' + id + '.json') ?? 'null'); return type(j) == 'object' ? j : null; }
+function load(id) { let j = jparse(readfile(JOBS + '/' + id + '.json') ?? 'null'); return type(j) == 'object' ? j : null; }
 function save(j) {
 	let tmp = JOBS + '/.' + j.id + '.tmp';
 	writefile(tmp, sprintf('%J\n', j));

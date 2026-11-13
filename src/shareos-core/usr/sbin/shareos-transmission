@@ -31,8 +31,12 @@
 //     box's services, not in use).
 // Every JSON line printed is the result; exit code 1 on errors.
 //
-import { readfile, writefile, stat, lsdir, popen, unlink } from 'fs';
+import { readfile, writefile, stat, lsdir, popen, unlink, rename } from 'fs';
 import { cursor } from 'uci';
+
+// JSON text -> value; null when the text is not JSON (never an exception:
+// a damaged file or a tool that printed an error must not end the call)
+function jparse(s) { try { return json(s); } catch (e) { return null; } }
 
 const ROOT = getenv('SHAREOS_ROOT') ?? '';
 const BIN = ROOT + '/opt/shareos/bin/transmission-daemon';
@@ -181,7 +185,7 @@ function status(u) {
 // settings the box decides; the rest (speed limits …) stays as the user set it
 function settings(u, pl) {
 	let file = ROOT + pl.state + '/settings.json';
-	let s = json(readfile(file) ?? '{}') ?? {};
+	let s = jparse(readfile(file) ?? '{}') ?? {};
 	if (type(s) != 'object') s = {};
 	let uid = pl.run_as == 'root' ? 0 : (uid_of(pl.run_as) ?? 1000);
 	let small = small_ram();
@@ -225,7 +229,10 @@ function settings(u, pl) {
 		s['utp-enabled'] = false;
 		writefile(mark, DEFAULTS + '\n');
 	}
-	writefile(file, sprintf('%.J\n', s));
+	// beside its place, then moved there: a power cut must not leave a
+	// cut-off settings.json (Transmission would not start with it)
+	writefile(file + '.new', sprintf('%.J\n', s));
+	rename(file + '.new', file);
 }
 
 function start(u) {

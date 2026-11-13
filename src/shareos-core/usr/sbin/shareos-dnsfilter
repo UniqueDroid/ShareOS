@@ -70,6 +70,10 @@
 import { readfile, writefile, unlink, stat, popen, mkdir } from 'fs';
 import { cursor } from 'uci';
 
+// JSON text -> value; null when the text is not JSON (never an exception:
+// a damaged file or a tool that printed an error must not end the call)
+function jparse(s) { try { return json(s); } catch (e) { return null; } }
+
 const ROOT = getenv('SHAREOS_ROOT') ?? '';
 const APP = ROOT + '/opt/shareos/sysapps/dnsfilter';
 const BIN = APP + '/bin/AdGuardHome';
@@ -315,7 +319,7 @@ function local_wanted() {
 function managed_line(u) { return substr(u, 0, 2) == '[/'; }
 
 function local_dns() {
-	let w = local_wanted(), old = json(readfile(LOCAL_STATE) || '{}') ?? {};
+	let w = local_wanted(), old = jparse(readfile(LOCAL_STATE) || '{}') ?? {};
 	let rw = api('GET', 'rewrite/list');
 	if (!rw.ok) return;
 	for (let e in rw.data ?? []) {
@@ -383,7 +387,7 @@ function status() {
 	st.starting = !!p && !st.ready;
 	// a start in the background (switched on in the web interface) that failed
 	if (!p && c.enabled) {
-		let e = json(readfile(RUN + '/start.log') || 'null');
+		let e = jparse(readfile(RUN + '/start.log') || 'null');
 		if (type(e) == 'object' && type(e.error) == 'string') st.start_error = e.error;
 	}
 	st.web_port = c.web_port;
@@ -405,7 +409,7 @@ function status() {
 		st.blocked = s.data?.num_blocked_filtering ?? 0;
 		let d = api('GET', 'dns_info');
 		st.upstream = filter(d.data?.upstream_dns ?? [], (u) => !managed_line(u));
-		let l = json(readfile(LOCAL_STATE) || 'null');
+		let l = jparse(readfile(LOCAL_STATE) || 'null');
 		st.local = type(l) == 'object' ? { ip: l.ip, names: l.names ?? [], domains: map(l.upstream ?? [], (u) => match(u, /^\[\/([^\/]+)\/\]/)?.[1]) } : null;
 		// about 15 MB + 0.1 KB per rule, plus the program (measured 10.11.2026)
 		st.estimate_mb = 25 + int(st.rules / 10000);
@@ -419,7 +423,7 @@ function need_up() { if (!pid() || !api_up()) die('the DNS filter is not running
 /* ---------- own local entries (rewrites without the box's names) ---------- */
 
 function managed_names() {
-	let l = json(readfile(LOCAL_STATE) || 'null');
+	let l = jparse(readfile(LOCAL_STATE) || 'null');
 	return type(l) == 'object' ? { ip: l.ip, names: l.names ?? [] } : { ip: null, names: [] };
 }
 function rewrites() {
