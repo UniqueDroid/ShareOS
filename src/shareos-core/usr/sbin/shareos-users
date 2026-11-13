@@ -70,7 +70,9 @@ set_smb_password() {   # name password
 	# without -a/-u ksmbd.adduser adds or updates
 	# a failure must not pass as "user created": the account then cannot sign
 	# in to shares – it is logged and shown under System → Messages
-	if ksmbd.adduser -p "$2" "$1" >/dev/null 2>&1; then
+	# the password goes in through the prompt (twice: "New" and "Retype"),
+	# not with -p: a command line can be read by every local user (ps)
+	if printf '%s\n%s\n' "$2" "$2" | ksmbd.adduser "$1" >/dev/null 2>&1; then
 		/usr/sbin/shareos-notify clear "smbpw-$1" >/dev/null 2>&1
 	else
 		log "warning: cannot set the SMB password of $1"

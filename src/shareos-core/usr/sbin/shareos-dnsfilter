@@ -162,11 +162,19 @@ function rss_mb(p) {
 
 function api(method, path, body, port) {
 	let p = port ?? conf().web_port;
-	let cmd = sprintf('curl -sS -m 30 -o - -w "\\n%%{http_code}" -u %s -X %s', shq('admin:' + password()), method);
+	// the password goes through a curl config only root can read, not onto the
+	// command line (every local user could read it in the process list); own
+	// file names per call, so that two calls do not remove each other's files
+	let rnd = readfile('/dev/urandom', 6) ?? '', id = '';
+	for (let i = 0; i < length(rnd); i++) id += sprintf('%02x', ord(rnd, i));
+	let af = RUN + '/.auth.' + id;
+	sh('mkdir -p ' + shq(RUN) + ' && umask 077 && : > ' + shq(af));
+	writefile(af, 'user = ' + sprintf('%J', 'admin:' + password()) + '\n');
+	let cmd = sprintf('curl -sS -m 30 -o - -w "\\n%%{http_code}" -K %s -X %s', shq(af), method);
 	let f = null;
 	if (body != null) {
-		f = RUN + '/.in';
-		sh('mkdir -p ' + shq(RUN) + ' && umask 077 && : > ' + shq(f));
+		f = RUN + '/.in.' + id;
+		sh('umask 077 && : > ' + shq(f));
 		writefile(f, sprintf('%J', body));
 		cmd += ' -H "Content-Type: application/json" --data-binary @' + shq(f);
 	}
@@ -176,6 +184,7 @@ function api(method, path, body, port) {
 	let r = force ? sh(cmd + ' -k ' + shq(sprintf('https://127.0.0.1:%d/control/%s', conf().https_port, path))) : null;
 	if (!r || match(r.out, /\n000$/)) r = sh(cmd + ' ' + shq(sprintf('http://127.0.0.1:%d/control/%s', p, path)));
 	if (f) unlink(f);
+	unlink(af);
 	let lines = split(trim(r.out), '\n');
 	let code = +pop(lines);
 	let text = join('\n', lines);

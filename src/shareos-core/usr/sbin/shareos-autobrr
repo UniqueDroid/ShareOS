@@ -98,9 +98,16 @@ function account_ok(u) {
 // curl to autobrr's API; key: the API key (else a cookie jar for the sign-up)
 function call(method, path, body, key, jar) {
 	let args = [ 'curl', '-s', '-m', '20', '-X', method, '-o', '-', '-w', '\n%{http_code}', '-H', 'Content-Type: application/json' ];
-	if (key) push(args, '-H', 'X-API-Token: ' + key);
+	// the key goes through a curl config only root can read, not onto the
+	// command line (every local user could read it in the process list)
+	let f = null, kf = null;
+	if (key) {
+		kf = RUN + '/.key.' + substr(token(6), 0, 12);
+		sh('umask 077; : > ' + shq(kf));
+		writefile(kf, 'header = ' + sprintf('%J', 'X-API-Token: ' + key) + '\n');
+		push(args, '-K', kf);
+	}
 	if (jar) push(args, '-b', jar, '-c', jar);
-	let f = null;
 	if (body != null) {
 		f = RUN + '/.req.' + substr(token(6), 0, 12);
 		sh('umask 077; : > ' + shq(f));
@@ -110,6 +117,7 @@ function call(method, path, body, key, jar) {
 	push(args, API + path);
 	let r = sh(join(' ', map(args, shq)));
 	if (f) unlink(f);
+	if (kf) unlink(kf);
 	let i = rindex(r.out, '\n');
 	return { status: i >= 0 ? +substr(r.out, i + 1) : 0, body: i >= 0 ? substr(r.out, 0, i) : r.out };
 }

@@ -46,11 +46,6 @@
 				"shareos.widget": [
 					"get"
 				],
-				"uci": [
-					"get",
-					"state",
-					"configs"
-				],
 				"shareos.hw": [
 					"get"
 				],
@@ -132,16 +127,7 @@
 				"shareos.tremote": [
 					"get"
 				]
-			},
-			"uci": [
-				"shareos",
-				"storage",
-				"network",
-				"accounts",
-				"shares",
-				"paperless",
-				"cloud"
-			]
+			}
 		},
 		"write": {
 			"ubus": {
@@ -180,7 +166,8 @@
 					"bin_ticket",
 					"bin_write",
 					"local_ticket",
-					"local"
+					"local",
+					"set_channel"
 				],
 				"shareos.ui": [
 					"set"
@@ -204,16 +191,6 @@
 					"acme_get",
 					"acme_issue",
 					"acme_off"
-				],
-				"uci": [
-					"set",
-					"add",
-					"delete",
-					"commit",
-					"revert",
-					"apply",
-					"confirm",
-					"rollback"
 				],
 				"shareos.hw": [
 					"set_fan",
@@ -356,10 +333,7 @@
 					"set",
 					"revoke"
 				]
-			},
-			"uci": [
-				"shareos"
-			]
+			}
 		}
 	},
 	"shareos-user": {

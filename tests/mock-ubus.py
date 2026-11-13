@@ -1015,6 +1015,11 @@ def call(obj, method, args):
             STATE['repair_t'] = time.time()
         return {'ok': True}
     if obj == 'shareos.update':
+        if method == 'set_channel':
+            if args.get('channel') not in ('stable', 'beta'):
+                return {'error': 'invalid channel'}
+            STATE['channel'] = args['channel']
+            return {'ok': True, 'channel': STATE['channel']}
         if method == 'apply':
             STATE['apply_t'] = time.time()
             return {'started': True}
@@ -1059,12 +1064,6 @@ def call(obj, method, args):
         if STATE.get('acked'):
             del r['last_upgrade']
         return r
-    if obj == 'uci':
-        if method == 'get':
-            return {'values': {}}
-        if method == 'set' and args.get('section') == 'update':
-            STATE['channel'] = args['values'].get('channel', STATE['channel'])
-        return {}
     return 3
 
 

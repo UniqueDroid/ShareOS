@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Every method of the ShareOS rpcd plugin must be granted by an ACL group,
 otherwise the web interface gets "access denied" and logs the user out.
+No group may reach the settings directly (uci): every setting goes through a
+method of the plugin, which checks the value.
 
   tests/check-acl.py [shareos.uc] [acl.d/shareos.json]
 """
@@ -26,9 +28,11 @@ for line in open(UC, encoding='utf-8'):
     if re.match(r'^\t\},?$', line):
         cur = None
 
-granted = {}
-for group in json.load(open(ACL, encoding='utf-8')).values():
+granted, direct = {}, []
+for name, group in json.load(open(ACL, encoding='utf-8')).items():
     for rw in ('read', 'write'):
+        if 'uci' in group.get(rw, {}) or 'uci' in group.get(rw, {}).get('ubus', {}):
+            direct.append(f'{name} ({rw})')
         for obj, methods in group.get(rw, {}).get('ubus', {}).items():
             granted.setdefault(obj, set()).update(methods)
 
@@ -42,4 +46,6 @@ if bad:
     print('methods without ACL (web sessions get "access denied"):', ', '.join(bad))
 if unknown:
     print('ACL grants methods that do not exist:', ', '.join(unknown))
-sys.exit(1 if bad or unknown else 0)
+if direct:
+    print('groups with direct access to the settings (uci):', ', '.join(direct))
+sys.exit(1 if bad or unknown or direct else 0)

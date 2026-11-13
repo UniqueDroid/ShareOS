@@ -4006,8 +4006,7 @@ const VIEWS_AFTER = {
 		if (sub === 'firmware') {
 			$('#channel')?.addEventListener('change', async (e) => {
 				try {
-					await rpc('uci', 'set', { config: 'shareos', section: 'update', values: { channel: e.target.value } });
-					await rpc('uci', 'commit', { config: 'shareos' });
+					await rpc('shareos.update', 'set_channel', { channel: e.target.value });
 					checkUpdates();
 				} catch (err) { toast('Channel: ' + err.message, true); }
 			});

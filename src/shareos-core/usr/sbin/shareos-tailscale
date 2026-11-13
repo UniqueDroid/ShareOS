@@ -125,9 +125,18 @@ function up(reauth) {
 	start();
 	set_enabled(true);
 	let args = [ 'up', '--reset', '--netfilter-mode=off', '--accept-dns=false', '--hostname=' + hostname() ];
-	if (a.authkey) push(args, '--auth-key=' + a.authkey);
+	// the key goes in through a file only root can read ("file:" is tailscale's
+	// own way), not onto the command line (ps); removed once "up" has ended
+	let kf = null;
+	if (a.authkey) {
+		kf = RUN + '/.authkey';
+		sh('mkdir -p ' + shq(RUN) + ' && umask 077 && rm -f ' + shq(kf) + ' && : > ' + shq(kf));
+		writefile(kf, a.authkey + '\n');
+		push(args, '--auth-key=file:' + kf);
+	}
 	if (reauth) push(args, '--force-reauth');
 	let cmd = 'TS_BE_CLI=1 ' + shq(BIN) + ' --socket=' + shq(SOCK) + ' ' + join(' ', map(args, shq));
+	if (kf) cmd += '; rm -f ' + shq(kf);
 	sh('(timeout 600 sh -c ' + shq(cmd) + ' >>' + shq(LOG) + ' 2>&1 &) </dev/null >/dev/null 2>&1');
 	// at most about 15 s (the web interface waits for the answer): the app polls
 	// status afterwards until the link or the connection is there

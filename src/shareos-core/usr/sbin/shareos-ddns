@@ -27,7 +27,7 @@
 //
 'use strict';
 
-import { readfile, writefile, stat, popen, mkdir } from 'fs';
+import { readfile, writefile, stat, popen, mkdir, unlink } from 'fs';
 import { cursor } from 'uci';
 
 const ROOT = getenv('SHAREOS_ROOT') ?? '';
@@ -50,8 +50,10 @@ function version() {
 	return m ? m[1] : 'dev';
 }
 
-// curl: { code, body }; headers as [ 'Name: value' ], secrets travel on stdin
-// (-H @- / -u through --config) so they do not show up in ps
+// curl: { code, body }; headers as [ 'Name: value' ]. Headers, sign-in and the
+// address (DuckDNS and dynv6 carry their token in it) reach curl as a config
+// on its standard input, from a file only root can read – nothing of it is on
+// a command line, where every local user could read it in the process list
 function http(method, url, opt) {
 	opt ??= {};
 	let cfg = [];
@@ -61,11 +63,16 @@ function http(method, url, opt) {
 		stat(CA) ? '--cacert ' + CA : '', shq('\n%{http_code}'), shq('ShareOS/' + version() + ' ddns'));
 	if (opt.ipv) cmd += ' -' + opt.ipv;
 	if (opt.json != null) cmd += ' -H ' + shq('Content-Type: application/json') + ' --data ' + shq(sprintf('%J', opt.json));
-	cmd += ' ' + shq(url);
-	let f = popen('printf %s ' + shq(join('\n', cfg) + '\n') + ' | ' + cmd + ' 2>&1', 'r');
-	if (!f) return { code: 0, body: 'curl missing' };
+	push(cfg, 'url = ' + sprintf('%J', url));
+	let rnd = readfile('/dev/urandom', 8) ?? '', tmp = (ROOT ?? '') + '/tmp/.shareos-ddns.';
+	for (let i = 0; i < length(rnd); i++) tmp += sprintf('%02x', ord(rnd, i));
+	system('umask 077; : > ' + shq(tmp));
+	writefile(tmp, join('\n', cfg) + '\n');
+	let f = popen(cmd + ' < ' + shq(tmp) + ' 2>&1', 'r');
+	if (!f) { unlink(tmp); return { code: 0, body: 'curl missing' }; }
 	let o = f.read('all') ?? '';
 	f.close();
+	unlink(tmp);
 	// the last line is the HTTP status (-w)
 	let i = rindex(o, '\n'), c = substr(o, i + 1);
 	return i >= 0 && match(c, /^[0-9][0-9][0-9]$/) ? { code: +c, body: trim(substr(o, 0, i)) } : { code: 0, body: trim(o) };

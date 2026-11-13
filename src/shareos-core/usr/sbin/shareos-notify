@@ -153,6 +153,19 @@ function telegram(token, method, body) {
 	return j;
 }
 
+// token and address of a push service (a webhook address is a secret by
+// itself): through a curl config only root can read, not onto the command
+// line, where every local user could read them in the process list.
+// Returns the file to remove afterwards.
+function secret_args(argv, hdr, url) {
+	if (DRY) { if (hdr) push(argv, '-H', hdr); push(argv, url); return null; }
+	let cfg = '/tmp/shareos-notify-push.' + newid();
+	system('umask 077; : > ' + shq(cfg));
+	writefile(cfg, (hdr ? 'header = ' + sprintf('%J', hdr) + '\n' : '') + 'url = ' + sprintf('%J', url) + '\n');
+	push(argv, '-K', cfg);
+	return cfg;
+}
+
 function send_push(n, m) {
 	let url = n.push_url, typ = n.push_type ?? 'ntfy';
 	let L = lang(), title = 'ShareOS ' + hostname() + ': ' + (L == 'de' ? m.title_de : m.title_en);
@@ -165,23 +178,25 @@ function send_push(n, m) {
 	}
 	if (!url || !match(url, /^https?:\/\/[^ ]+$/)) return 'push: invalid address';
 	let prio = { info: 3, warn: 4, error: 5 }[m.level] ?? 3;
-	let argv = [ ...CURL, '-f', '-H', 'Content-Type: application/json' ], body;
+	let argv = [ ...CURL, '-f', '-H', 'Content-Type: application/json' ], body, hdr = null;
 	if (typ == 'ntfy') {
 		let u = match(url, /^(https?:\/\/[^\/]+)\/([^\/?#]+)$/);
 		if (!u) return 'push: ntfy address must be like https://ntfy.sh/<topic>';
 		body = { topic: u[2], title, message: text, priority: prio, tags: [ m.level == 'error' ? 'rotating_light' : m.level == 'warn' ? 'warning' : 'information_source' ] };
 		url = u[1];
-		if (n.push_token) push(argv, '-H', 'Authorization: Bearer ' + n.push_token);
+		if (n.push_token) hdr = 'Authorization: Bearer ' + n.push_token;
 	} else if (typ == 'gotify') {
 		body = { title, message: text, priority: prio * 2 - 2 };
 		url = replace(url, /\/+$/, '') + '/message';
-		if (n.push_token) push(argv, '-H', 'X-Gotify-Key: ' + n.push_token);
+		if (n.push_token) hdr = 'X-Gotify-Key: ' + n.push_token;
 	} else {
 		body = { host: hostname(), level: m.level, source: m.source, key: m.key, title, text, time: m.last };
-		if (n.push_token) push(argv, '-H', 'Authorization: Bearer ' + n.push_token);
+		if (n.push_token) hdr = 'Authorization: Bearer ' + n.push_token;
 	}
-	push(argv, '-X', 'POST', '--data-binary', '@-', url);
+	push(argv, '-X', 'POST', '--data-binary', '@-');
+	let cfg = secret_args(argv, hdr, url);
 	let r = run(argv, sprintf('%J', body));
+	if (cfg) unlink(cfg);
 	return r.rc == 0 ? null : 'push: ' + (trim(r.out) || 'curl exit ' + r.rc);
 }
 

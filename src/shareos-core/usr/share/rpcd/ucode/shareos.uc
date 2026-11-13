@@ -125,6 +125,26 @@ function sh_quiet(cmd) {
 	return { rc, out };
 }
 
+// run a command with secret text on its standard input. The text goes through
+// a file only root can read (in RAM) and never onto a command line, where every
+// local user could read it in the process list.
+const SH_IN_DIR = '/tmp/.shareos-in';
+function sh_in_file(input) {
+	let rnd = readfile('/dev/urandom', 12) ?? '';
+	let name = '';
+	for (let i = 0; i < length(rnd); i++) name += sprintf('%02x', ord(rnd, i));
+	let f = SH_IN_DIR + '/' + (name != '' ? name : '' + time());
+	system(sprintf('mkdir -p %s && chmod 700 %s && umask 077 && : > %s', SH_IN_DIR, SH_IN_DIR, f));
+	writefile(f, input ?? '');
+	return f;
+}
+function sh_in(cmd, input) {
+	let f = sh_in_file(input);
+	let r = sh(sprintf('( %s ) < %s', cmd, f));
+	unlink(f);
+	return r;
+}
+
 function read_trim(path) {
 	let d = readfile(path);
 	return d != null ? trim(replace(d, '\0', '')) : null;
@@ -884,6 +904,9 @@ function set_password(pw) {
 	return p.close() == 0 ? null : 'chpasswd failed';
 }
 
+// the update channels there are (first set-up and Firmware page)
+function channel_ok(ch) { return type(ch) == 'string' && ch in { stable: 1, beta: 1 }; }
+
 function set_hostname(h) {
 	if (!match(h ?? '', /^[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?$/)) return false;
 	writefile('/etc/hostname', h + '\n');
@@ -904,7 +927,7 @@ function acc_name_ok(n) { return type(n) == 'string' && match(n, ACC_RE); }
 
 // run a tool with the password on stdin (never on the command line)
 function sh_pass(cmd, pass) {
-	return sh(sprintf("printf '%%s\\n' %s | %s", shq(pass ?? ''), cmd));
+	return sh_in(cmd, (pass ?? '') + '\n');
 }
 function tool_result(r) {
 	if (r.rc == 0) return { ok: true, output: trim(r.out) };
@@ -1029,7 +1052,7 @@ function password_ok(user, pass) {
 	let m = match(hash, /^\$([156])\$([^$]+)\$/);
 	let method = m ? { '1': 'md5', '5': 'sha256', '6': 'sha512' }[m[1]] : 'des';
 	let salt = m ? m[2] : substr(hash, 0, 2);
-	let r = sh(sprintf("printf '%%s' %s | mkpasswd -P 0 -m %s -S %s", shq(pass), method, shq(salt)));
+	let r = sh_in(sprintf('mkpasswd -P 0 -m %s -S %s', method, shq(salt)), pass);
 	return trim(r.out) == hash;
 }
 
@@ -1390,7 +1413,7 @@ function cloud_remote_add(owner, a) {
 	if (!match(a.name ?? '', /^[a-z][a-z0-9_]{0,31}$/)) return { error: 'invalid name (a-z, 0-9 and _)' };
 	if (a.type == 'raw') {
 		if (!match(a.raw ?? '', /^\[[A-Za-z0-9_-]+\]\n/)) return { error: 'paste an rclone.conf section starting with [name]' };
-		return tool_result(sh(sprintf("printf '%%s\\n' %s | %s remote-add %s %s raw", shq(a.raw), CLOUD, shq(o), shq(a.name))));
+		return tool_result(sh_in(sprintf('%s remote-add %s %s raw', CLOUD, shq(o), shq(a.name)), a.raw + '\n'));
 	}
 	let keys = REMOTE_KEYS[a.type];
 	if (!keys) return { error: 'unknown type' };
@@ -1403,7 +1426,7 @@ function cloud_remote_add(owner, a) {
 		if (match('' + a.params[k], /[\n\r]/)) return { error: 'invalid ' + k };
 		push(secrets, k + '=' + a.params[k]);
 	}
-	return tool_result(sh(sprintf("printf '%%s\\n' %s | %s remote-add %s %s %s %s", shq(join('\n', secrets)), CLOUD, shq(o), shq(a.name), a.type, join(' ', args))));
+	return tool_result(sh_in(sprintf('%s remote-add %s %s %s %s', CLOUD, shq(o), shq(a.name), a.type, join(' ', args)), join('\n', secrets) + '\n'));
 }
 
 function cloud_log(c, name, n) {
@@ -2559,9 +2582,10 @@ const WEB_CERT_OPTS = [ 'cert', 'key', 'source' ];
 
 // run shareos-crypt: the password is the first line of its input
 function crypt(mode, pass, data) {
-	let tin = '/tmp/.sos-crypt-in', tout = '/tmp/.sos-crypt-out';
-	system('umask 077; : > ' + tin);
-	writefile(tin, pass + '\n' + data);
+	// own file names per call in a directory only root can enter: nobody can
+	// put a link there beforehand, and two calls cannot mix up their data
+	let tin = sh_in_file(pass + '\n' + data), tout = tin + '.out';
+	system('umask 077; : > ' + tout);
 	let r = sh(sprintf('%s %s < %s > %s', CRYPT, mode, tin, tout));
 	let out = readfile(tout);
 	unlink(tin); unlink(tout);
@@ -3492,7 +3516,7 @@ return {
 				if (a.hostname) { if (!set_hostname(a.hostname)) return { error: 'invalid hostname' }; push(done, 'hostname'); }
 				if (a.timezone) { if (!set_timezone(a.timezone)) return { error: 'unknown time zone' }; push(done, 'timezone'); }
 				if (a.channel) {
-					if (!(a.channel in { stable: 1, beta: 1 })) return { error: 'invalid channel' };
+					if (!channel_ok(a.channel)) return { error: 'invalid channel' };
 					c.set('shareos', 'update', 'channel', a.channel); push(done, 'channel');
 				}
 				if (a.password) { let e = set_password(a.password); if (e) return { error: e }; push(done, 'password'); }
@@ -4050,7 +4074,7 @@ return {
 				if (a.test) {
 					let tok = a.token || c.get('paperless', name, 'token');
 					if (!tok) return { error: 'token needed' };
-					let r = sh(sprintf("printf '%%s\\n' %s | %s test %s", shq(tok), PAPERLESS, shq(c.get('paperless', 'global', 'url'))));
+					let r = sh_in(sprintf('%s test %s', PAPERLESS, shq(c.get('paperless', 'global', 'url'))), tok + '\n');
 					let m = match(r.out, /ok documents=([0-9?]+)/);
 					return m ? { ok: true, documents: m[1] } : tool_result(r);
 				}
@@ -4348,7 +4372,7 @@ return {
 				let c = cursor(), tok = req.args.token || (req.args.inbox ? c.get('paperless', req.args.inbox, 'token') : null);
 				let url = req.args.url || c.get('paperless', 'global', 'url');
 				if (!url || !tok) return { error: 'URL and token needed' };
-				let r = sh(sprintf("printf '%%s\\n' %s | %s test %s", shq(tok), PAPERLESS, shq(url)));
+				let r = sh_in(sprintf('%s test %s', PAPERLESS, shq(url)), tok + '\n');
 				let m = match(r.out, /ok documents=([0-9?]+)/);
 				return m ? { ok: true, documents: m[1] } : tool_result(r);
 			}
@@ -5420,7 +5444,7 @@ return {
 					if (c && c.hash == hash && c.until > time() && same_token(c.pass, pass)) ok = true;
 					else {
 						let m = match(hash, /^\$5\$([^$]+)\$/);
-						let r = m ? sh(sprintf("printf '%%s' %s | mkpasswd -P 0 -m sha256 -S %s", shq(pass), shq(m[1]))) : null;
+						let r = m ? sh_in(sprintf('mkpasswd -P 0 -m sha256 -S %s', shq(m[1])), pass) : null;
 						ok = !!r && trim(r.out) == hash;
 						if (ok) tremote_ok[u] = { pass, hash, until: time() + 300 };
 					}
@@ -5466,7 +5490,7 @@ return {
 				if (!req.args.on) unlink(f);
 				else if (req.args.regen || tremote_hash(g.u) == '') {
 					let p = tremote_new_pass();
-					let r = sh(sprintf("printf '%%s' %s | mkpasswd -P 0 -m sha256", shq(p)));
+					let r = sh_in('mkpasswd -P 0 -m sha256', p);
 					let h = trim(r.out);
 					if (!match(h, /^\$5\$/)) return { error: 'cannot make a password' };
 					system(sprintf('mkdir -p %s && chmod 700 %s && umask 077 && : > %s', TREMOTE_KEYS, TREMOTE_KEYS, shq(f)));
@@ -5997,6 +6021,20 @@ return {
 	},
 
 	'shareos.update': {
+		// the one setting of the Firmware page. It has a method of its own, so
+		// that web sessions need no general write access to the settings (uci)
+		set_channel: {
+			args: { channel: '' },
+			call: function(req) {
+				if (!channel_ok(req.args.channel)) return { error: 'invalid channel' };
+				let c = cursor();
+				c.set('shareos', 'update', 'update');
+				c.set('shareos', 'update', 'channel', req.args.channel);
+				c.commit('shareos');
+				return { ok: true, channel: req.args.channel };
+			}
+		},
+
 		check: {
 			args: { channel: 'stable' },
 			call: function(req) {
