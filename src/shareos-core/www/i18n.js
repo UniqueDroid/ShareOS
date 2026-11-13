@@ -1,11 +1,11 @@
 /*
  * ShareOS web interface – translations.
  *
- * The interface is written in German (the source language). For any other
+ * The interface is written in English (the source language). For any other
  * language, i18n/<code>.json is loaded and every text node plus the
  * attributes placeholder/aria-label/title/alt are translated after rendering:
  *
- *   exact     "German text": "translation"
+ *   exact     "English text": "translation"
  *   patterns  [ "regular expression on the whole text", "replacement with $1" ]
  *             for texts that contain values (sizes, names, versions)
  *   words     [ "regular expression", "replacement", "flags" ] applied to what
@@ -19,7 +19,7 @@
 let I18N = null;
 
 async function i18nLoad(code) {
-	if (!code || code === 'de') return false;
+	if (!code || code === 'en') return false;
 	try {
 		const r = await fetch('i18n/' + code + '.json', { cache: 'no-cache' });
 		if (!r.ok) return false;
@@ -101,7 +101,9 @@ function i18nStart(target) {
 	new MutationObserver((muts) => {
 		for (const m of muts) {
 			if (m.type === 'characterData') i18nApply(m.target);
+			// a title or label set later (e.g. el.title = '…'): translate it too
+			else if (m.type === 'attributes') i18nAttrs(m.target);
 			else m.addedNodes.forEach(i18nApply);
 		}
-	}).observe(target, { childList: true, subtree: true, characterData: true });
+	}).observe(target, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: I18N_ATTRS });
 }

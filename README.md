@@ -70,7 +70,7 @@ Version in brackets = first release with the feature.
 
 **Storage**
 - Setup wizard: one disk, two separate disks, a mirror (RAID 1), RAID 0 or JBOD (mdadm; RAID 0/JBOD from beta.9), optional swap partition per disk
-- Take over disks with data from Alt-F or the D-Link firmware as they are, nothing erased (Speicher → Laufwerke → *übernehmen*, 0.2.0-beta.17)
+- Take over disks with data from Alt-F or the D-Link firmware as they are, nothing erased (Storage → Drives → *Take over*, 0.2.0-beta.17)
 - File system per volume: **ext4** (recommended: owners, storage limit per user, personal folders, apps), **Btrfs**, **exFAT**, **NTFS** (beta.7), **ext3**, **ext2**, **FAT32** (beta.9)
 - Share rights are also set as POSIX ACLs on the share folders (ext4, Btrfs), so every program of a user is held to them, not only SMB (0.2.0-beta.6)
 - **Snapshots:** dated states of shares, personal folders or whole drives on another drive (hourly to weekly, hard links like rsnapshot, keep the last N plus days/weeks/months), restore with the file browser (0.2.0-beta.6)
@@ -114,7 +114,7 @@ Version in brackets = first release with the feature.
 - Large system apps on the apps drive (link in `/opt`), the flash stays free (0.2.0-beta.7)
 - Media server (DLNA/UPnP AV, MiniDLNA as a system app): TVs and players play music, videos and pictures from chosen shares (0.2.0-beta.6) or subfolders of them (0.3.0-beta.2)
 - VPN for the box in both directions (OpenVPN as a system app, app NetTunnel, admins only): as client with cleaned profiles, as server with its own CA and a ready-made profile per device; status chips of services and apps in the header (0.2.0-beta.6)
-- Transmission with own torrents per user: system app `transmission-daemon`, app permission `torrent`; apps bring the system apps they need (`"requires"`) (0.2.0-beta.4); lighter defaults for the small CPU (fewer peers, download queue, µTP off, lower priority, 0.2.0-beta.20); a watch folder for .torrent files, set by the app (0.2.0-beta.20); an own peer port per account, set by the app, for port forwarding (0.3.0-beta.1); remote access for Transmission programs on the PC or phone (Transmission Remote GUI, Transmissionic …) with a separate password per user, home network and VPN only, switched on under *Dienste → Torrents* (0.3.0-beta.6)
+- Transmission with own torrents per user: system app `transmission-daemon`, app permission `torrent`; apps bring the system apps they need (`"requires"`) (0.2.0-beta.4); lighter defaults for the small CPU (fewer peers, download queue, µTP off, lower priority, 0.2.0-beta.20); a watch folder for .torrent files, set by the app (0.2.0-beta.20); an own peer port per account, set by the app, for port forwarding (0.3.0-beta.1); remote access for Transmission programs on the PC or phone (Transmission Remote GUI, Transmissionic …) with a separate password per user, home network and VPN only, switched on under *Services → Torrents* (0.3.0-beta.6)
 - Media jobs: FFmpeg as a system app, app permission `media` – convert audio, change the container of videos, cut, in the background with the user's rights (MediaTranscoder) (0.2.0-beta.5)
 
 **Firmware and system**
@@ -125,15 +125,15 @@ Version in brackets = first release with the feature.
 - HTTPS with a self-signed certificate that follows name and IP, own certificate possible; own certificate authority for the home network and Let's Encrypt over DNS (0.2.0-beta.18)
 - Dynamic DNS: DuckDNS, dynv6, Cloudflare, No-IP or any dyndns2 address, IPv4 and IPv6 (0.2.0-beta.18)
 - Power schedule: switch off and on per weekday (switching on through the wake-up alarm of the DNS-320L/320 rev B/327L; 0.2.0-beta.15; switching off works from 0.2.0-beta.17, the overview shows the date of the next switch-on)
-- Start log: the logs of the last 3 starts are kept on the flash (System → Protokolle → *Start-Protokoll*), so a box that was unreachable after a start can be looked into afterwards (0.2.0-beta.15)
+- Start log: the logs of the last 3 starts are kept on the flash (System → Logs → *Start-Protokoll*), so a box that was unreachable after a start can be looked into afterwards (0.2.0-beta.15)
 - Reset button: access reset (5–10 s: network, root password, certificate) or factory reset (≥ 15 s), USB button removes USB drives (beta.9) or copies them into a dated folder (0.2.0-beta.12); the buttons work again on the DNS-320L and DNS-325 (0.2.0-beta.10)
 - Messages: RAID, volumes, temperature, SMART, updates, failed cloud jobs and app tasks – in the interface, by e-mail (SMTP) and push (ntfy, Gotify, webhook) (beta.9), Telegram bot (beta.12)
 - Terminal in the browser (System → Terminal, root shell, beta.12); Apps can be switched off (beta.12); Paperless, Cloud, the DNS filter and the desktop view are modules from the store (0.3.0-beta.3 … beta.5)
 - Services with autostart, fan curve and LEDs, logs, settings backup and restore (JSON, optionally AES-256; recovery mode picks users, shares, services, apps, certificate and own CA), messages that can be closed
 - Look: light/dark/system, eight accent colours (blue, teal, green, orange, red, violet, grey, white; 0.3.0-beta.6), tiles or tables, per user; Appearance page in two columns on wide screens (0.2.0-beta.10)
 - Desktop view (module from the store, 0.3.0-beta.5): the interface as a desktop in the browser – icons, start menu with search, windows to move, resize and snap, bar with CPU/RAM/network and messages, control panel with categories, own wallpaper from the box; layout per account; the classic view stays
-- FAV APPS: favourite apps per account as an icon bar above the overview status, the installed apps and in *Mein ShareOS* (with names or icons only, 0.2.0-beta.10)
-- *Mein ShareOS*: tab *Einstellungen* with look and password, storage as a table per drive with own use, limit and free space (0.2.0-beta.11)
+- FAV APPS: favourite apps per account as an icon bar above the overview status, the installed apps and in *My ShareOS* (with names or icons only, 0.2.0-beta.10)
+- *My ShareOS*: tab *Settings* with look and password, storage as a table per drive with own use, limit and free space (0.2.0-beta.11)
 - 10 languages: English, German, Chinese, Hindi, Spanish, French, Arabic (right to left), Bengali, Portuguese, Russian (beta.7; more: [docs/TRANSLATING.md](docs/TRANSLATING.md))
 - Time: time zone, NTP on/off with own servers (e.g. the router), sync now, set the clock by hand; the battery clock follows (beta.7)
 - SSH/SFTP (Dropbear), rescue system in the initramfs (SSH, flash tools)

@@ -19,31 +19,31 @@ WWW = Path(__file__).resolve().parent.parent / 'src/shareos-core/www'
 SID = 'c0ffee00c0ffee00c0ffee00c0ffee00'
 T0 = time.time()
 STATE = {'setup_done': False, 'fan': {'preset': 'balanced', 'off_temp': 0, 'full_temp': 50, 'half_temp': 45}, 'led': {'status': 'heartbeat', 'power': 'on', 'disks': 'off'}, 'logo': True, 'lang': 'en', 'channel': 'beta', 'job': None, 'https': True, 'redirect': False, 'theme': 'dark', 'accent': 'blue', 'autostart_off': ['crond'],
-         'users': {'jan': {'role': 'admin', 'fullname': 'Jan', 'groups': ['familie'], 'home': 'daten', 'quota': 0, 'web': True, 'pw': 'shareos'},
-                   'anna': {'role': 'user', 'fullname': 'Anna', 'groups': ['familie'], 'home': 'daten', 'quota': 200000, 'web': True, 'cloud': True, 'files': True, 'pw': 'anna123'},
-                   'tv': {'role': 'share', 'fullname': 'Fernseher', 'groups': ['medien'], 'home': '', 'quota': 0, 'web': True, 'pw': 'tv1234'}},
-         'groups': {'familie': 'Familie', 'medien': 'Mediengeräte'},
-         'shares': {'fotos': {'volume': 'daten', 'path': 'Fotos', 'comment': 'Familienfotos', 'smb': True, 'nfs': False, 'guest': False, 'rw': ['jan'], 'ro': ['@familie'], 'nfs_rw': False, 'nfs_hosts': []},
-                    'medien': {'volume': 'daten', 'path': 'Medien', 'comment': 'Filme und Musik', 'smb': True, 'nfs': True, 'guest': True, 'rw': ['jan'], 'ro': ['@medien'], 'nfs_rw': False, 'nfs_hosts': ['10.241.1.0/24']},
-                    'tresor': {'volume': 'daten', 'path': 'Tresor', 'comment': 'Verträge und Ausweise', 'smb': True, 'nfs': False, 'guest': False, 'rw': ['jan', 'anna'], 'ro': [], 'nfs_rw': False, 'nfs_hosts': [], 'vault': True, 'vault_ttl': 30}},
+         'users': {'jan': {'role': 'admin', 'fullname': 'Jan', 'groups': ['family'], 'home': 'data', 'quota': 0, 'web': True, 'pw': 'shareos'},
+                   'anna': {'role': 'user', 'fullname': 'Anna', 'groups': ['family'], 'home': 'data', 'quota': 200000, 'web': True, 'cloud': True, 'files': True, 'pw': 'anna123'},
+                   'tv': {'role': 'share', 'fullname': 'TV', 'groups': ['media'], 'home': '', 'quota': 0, 'web': True, 'pw': 'tv1234'}},
+         'groups': {'family': 'Family', 'media': 'Media devices'},
+         'shares': {'photos': {'volume': 'data', 'path': 'Photos', 'comment': 'Family photos', 'smb': True, 'nfs': False, 'guest': False, 'rw': ['jan'], 'ro': ['@family'], 'nfs_rw': False, 'nfs_hosts': []},
+                    'media': {'volume': 'data', 'path': 'Media', 'comment': 'Films and music', 'smb': True, 'nfs': True, 'guest': True, 'rw': ['jan'], 'ro': ['@media'], 'nfs_rw': False, 'nfs_hosts': ['10.241.1.0/24']},
+                    'vault': {'volume': 'data', 'path': 'Vault', 'comment': 'Contracts and IDs', 'smb': True, 'nfs': False, 'guest': False, 'rw': ['jan', 'anna'], 'ro': [], 'nfs_rw': False, 'nfs_hosts': [], 'vault': True, 'vault_ttl': 30}},
          'sessions': {},
          'widget': {'enabled': False, 'token': ''},
          'pl': {'url': 'http://10.241.1.20:8000', 'enabled': True, 'interval': 2, 'after': 'delete',
                 'inboxes': {'u_jan': {'owner': 'jan', 'share': '', 'tags': [3], 'enabled': True},
-                            'scanner': {'owner': '', 'share': 'fotos', 'tags': [], 'enabled': True}}},
+                            'scanner': {'owner': '', 'share': 'photos', 'tags': [], 'enabled': True}}},
          'cloud': {'installed': True, 'remotes': {'-': [{'name': 'nextcloud', 'type': 'webdav'}, {'name': 'b2backup', 'type': 'b2'}],
                                                   'anna': [{'name': 'gdrive', 'type': 'drive'}]},
-                   'jobs': {'fotos_b2': {'owner': '', 'remote': 'b2backup', 'remote_path': 'nas/fotos', 'local': 'share:fotos', 'mode': 'upload', 'schedule': '0 3 * * *', 'bwlimit': '2M', 'enabled': True, 'state': 'ok', 'summary': '1.2 GiB / 1.2 GiB, 100%, 312 files'},
-                            'nc_dokumente': {'owner': '', 'remote': 'nextcloud', 'remote_path': 'Dokumente', 'local': 'share:fotos/Scans', 'mode': 'mirror', 'schedule': '30 * * * *', 'bwlimit': '', 'enabled': True, 'state': 'running', 'summary': '45 MiB / 120 MiB, 37%'},
-                            'anna_handy': {'owner': 'anna', 'remote': 'gdrive', 'remote_path': 'Handy', 'local': 'home', 'mode': 'download', 'schedule': '0 */6 * * *', 'bwlimit': '', 'enabled': True, 'state': 'error', 'error': 'token expired – log in again', 'summary': ''}}},
+                   'jobs': {'photos_b2': {'owner': '', 'remote': 'b2backup', 'remote_path': 'nas/photos', 'local': 'share:photos', 'mode': 'upload', 'schedule': '0 3 * * *', 'bwlimit': '2M', 'enabled': True, 'state': 'ok', 'summary': '1.2 GiB / 1.2 GiB, 100%, 312 files'},
+                            'nc_documents': {'owner': '', 'remote': 'nextcloud', 'remote_path': 'Documents', 'local': 'share:photos/Scans', 'mode': 'mirror', 'schedule': '30 * * * *', 'bwlimit': '', 'enabled': True, 'state': 'running', 'summary': '45 MiB / 120 MiB, 37%'},
+                            'anna_phone': {'owner': 'anna', 'remote': 'gdrive', 'remote_path': 'Phone', 'local': 'home', 'mode': 'download', 'schedule': '0 */6 * * *', 'bwlimit': '', 'enabled': True, 'state': 'error', 'error': 'token expired – log in again', 'summary': ''}}},
          'net': {'proto': 'dhcp', 'ipaddr': '', 'netmask': '255.255.255.0', 'gateway': '', 'dns': []}, 'net_pending': None}
 
 DISK = lambda n, model, serial: {
     'name': n, 'type': 'disk', 'size': 4000787030016, 'model': model, 'serial': serial, 'tran': 'sata', 'rm': False, 'rota': True,
     'children': [
         {'name': n + '1', 'type': 'part', 'size': 1073741824, 'fstype': 'swap', 'label': 'shareos-swap'},
-        {'name': n + '2', 'type': 'part', 'size': 3999713288192, 'fstype': 'linux_raid_member', 'label': 'shareos:daten',
-         'children': [{'name': 'md0', 'type': 'raid1', 'fstype': 'ext4', 'label': 'daten', 'mountpoint': '/mnt/daten'}]}],
+        {'name': n + '2', 'type': 'part', 'size': 3999713288192, 'fstype': 'linux_raid_member', 'label': 'shareos:data',
+         'children': [{'name': 'md0', 'type': 'raid1', 'fstype': 'ext4', 'label': 'data', 'mountpoint': '/mnt/data'}]}],
     'smart': SMART.get(n), 'standby': n == 'sdb'}
 
 ATTR = lambda i, name, v, w, t, raw, wf='': {'id': i, 'name': name, 'value': v, 'worst': w, 'thresh': t, 'raw': raw, 'when_failed': wf, 'prefail': i in (1, 5)}
@@ -96,34 +96,34 @@ def storage():
               'children': [{'name': 'sdc1', 'type': 'part', 'fstype': 'exfat', 'label': 'STICK', 'mountpoint': '/mnt/usb-stick'}]}]),
         'usb': [] if STATE.get('usb_gone') else [{'dev': '/dev/sdc1', 'path': '/mnt/usb-stick', 'fs': 'exfat'}],
         'swaps': [{'device': '/dev/sda1', 'size': 1 << 30, 'used': 12 << 20}, {'device': '/dev/sdb1', 'size': 1 << 30, 'used': 11 << 20}],
-        'apps': 'daten',
+        'apps': 'data',
         # MOCK_DEGRADED=1: sdb is new/empty, the mirror runs on sda only
         'arrays': {'md0': {'name': 'md0', 'state': 'active', 'level': 'raid1', 'members': ['sda2'], 'disks': 2, 'active': 1, 'health': 'U_'}
                    if os.environ.get('MOCK_DEGRADED') and not STATE.get('repair_t') else
                    {'name': 'md0', 'state': 'active', 'level': 'raid1', 'members': ['sdb2', 'sda2'], 'disks': 2, 'active': 2,
                     'health': 'UU', 'sync': {'action': 'recovery' if STATE.get('repair_t') else 'resync', 'percent': pct, 'finish': '412.5min'}}},
-        'volumes': [{'name': 'daten', 'uuid': '1b4e28ba-2fa1-11d2-883f-0016d3cca427', 'fstype': 'ext4', 'layout': 'mirror', 'enabled': True,
-                     'device': '/dev/md0', 'mountpoint': '/mnt/daten', 'mounted': True, 'size': 3936 << 30, 'used': 1210 << 30, 'avail': 2726 << 30}],
+        'volumes': [{'name': 'data', 'uuid': '1b4e28ba-2fa1-11d2-883f-0016d3cca427', 'fstype': 'ext4', 'layout': 'mirror', 'enabled': True,
+                     'device': '/dev/md0', 'mountpoint': '/mnt/data', 'mounted': True, 'size': 3936 << 30, 'used': 1210 << 30, 'avail': 2726 << 30}],
         'spindown': 20, 'smart_schedule': STATE.get('smart_schedule', ''), 'job': STATE['job'], 'usb_copy': STATE.setdefault('usb_copy', {'enabled': False, 'volume': '', 'path': 'USB-Kopien', 'last': None})}
 
 
-SERVICES = [('board', 'Gerätesteuerung', 'Lüfter, Temperatur, Taster, MCU-Uhr', True), ('crond', 'Zeitplaner', 'cron', False),
-            ('dropbear', 'SSH / SFTP', 'Dropbear, Port 22', False), ('ntpd', 'Zeit (NTP)', 'stellt die Uhr, gleicht die MCU-Uhr ab', False),
-            ('rpcd', 'API (rpcd)', 'Schnittstelle für diese Oberfläche', True), ('syslogd', 'Systemprotokoll', 'syslogd, im RAM', False),
-            ('ubus', 'Systembus (ubus)', 'Nachrichten zwischen den Diensten', True), ('uhttpd', 'Weboberfläche', 'uhttpd, Port 80', True)]
+SERVICES = [('board', 'Board control', 'fan, temperature, buttons, MCU clock', True), ('crond', 'Scheduler', 'cron', False),
+            ('dropbear', 'SSH / SFTP', 'Dropbear, port 22', False), ('ntpd', 'Time (NTP)', 'sets the clock, keeps the MCU clock in sync', False),
+            ('rpcd', 'API (rpcd)', 'interface for this web UI', True), ('syslogd', 'System log', 'syslogd, in RAM', False),
+            ('ubus', 'System bus (ubus)', 'messages between the services', True), ('uhttpd', 'Web interface', 'uhttpd, port 80', True)]
 
 RELEASES = [{'tag': 'v0.2.0-beta.%d' % n, 'version': '0.2.0-beta.%d' % n, 'prerelease': True, 'date': '2026-11-0%dT10:00:00Z' % (n - 1), 'size': 8400000 + n * 4096,
              'url': 'https://github.com/UniqueDroid/ShareOS/releases', 'notes': '- Beta %d' % n} for n in (5, 4, 3, 2)] + [{'tag': 'v0.2.0-beta.1', 'version': '0.2.0-beta.1', 'prerelease': True, 'date': '2026-10-24T10:00:00Z', 'size': 8396800,
-             'url': 'https://github.com/UniqueDroid/ShareOS/releases', 'notes': '- Freigaben (SMB, NFS)\n- Benutzer und Gruppen\n- Speicher-Assistent'},
+             'url': 'https://github.com/UniqueDroid/ShareOS/releases', 'notes': '- Shares (SMB, NFS)\n- Users and groups\n- Storage wizard'},
             {'tag': 'v0.1.0-beta.1', 'version': '0.1.0-beta.1', 'prerelease': True, 'date': '2026-10-17T16:00:00Z', 'size': 8392704,
-             'url': 'https://github.com/UniqueDroid/ShareOS/releases', 'notes': 'Erste Testversion'}]
+             'url': 'https://github.com/UniqueDroid/ShareOS/releases', 'notes': 'First test version'}]
 
 
 def accounts():
     u = STATE['users']
     users = [{'name': n, 'role': x['role'], 'fullname': x['fullname'], 'uid': 1000 + k, 'groups': x['groups'], 'home': x['home'],
               'quota': x['quota'], 'web': x['web'],
-              'usage': [{'volume': 'daten', 'used': (k + 1) * 37_000_000_000, 'limit': x['quota'] * 1000000}] if x['home'] else []}
+              'usage': [{'volume': 'data', 'used': (k + 1) * 37_000_000_000, 'limit': x['quota'] * 1000000}] if x['home'] else []}
              for k, (n, x) in enumerate(sorted(u.items()))]
     groups = [{'name': g, 'desc': d, 'members': [n for n, x in u.items() if g in x['groups']]} for g, d in sorted(STATE['groups'].items())]
     return {'users': users, 'groups': groups}
@@ -156,8 +156,8 @@ def me(user):
                          'vault_ttl': sh.get('vault_ttl', 15), 'vault_until': VAULT.get(n, {}).get(user, 0) if sh.get('vault') else 0})
     return {'name': user, 'role': x['role'], 'fullname': x['fullname'], 'groups': x['groups'], 'quota': x['quota'],
             'home': {'volume': x['home'], 'path': f"/mnt/{x['home']}/home/{user}", 'smb': user} if x['home'] else None,
-            'usage': [{'volume': 'daten', 'used': 61_500_000_000, 'limit': x['quota'] * 1000000}], 'shares': mine, 'host': 'skynet-nas',
-            'volumes': [{'name': 'daten', 'size': 3_936_000_000_000, 'used': 1_412_000_000_000, 'avail': 2_524_000_000_000}],
+            'usage': [{'volume': 'data', 'used': 61_500_000_000, 'limit': x['quota'] * 1000000}], 'shares': mine, 'host': 'skynet-nas',
+            'volumes': [{'name': 'data', 'size': 3_936_000_000_000, 'used': 1_412_000_000_000, 'avail': 2_524_000_000_000}],
             'cloud': x.get('cloud', False), 'paperless': bool(x['home']), 'files': x.get('files', False) and x['role'] == 'user',
             'ui': x.get('ui', {'theme': None, 'accent': None}),
             'apps': [{'id': a['id'], 'name': a['name'], 'entry': a['entry'], 'icon': a['icon'], 'description': a['description']}
@@ -170,14 +170,14 @@ FAV = {}
 
 
 PL_LOG = [
-    {'file': 'Rechnung-Stadtwerke.pdf', 'task': 'a1b2', 'state': 'SUCCESS', 'message': 'Success. New document id 412 created'},
+    {'file': 'Invoice-utilities.pdf', 'task': 'a1b2', 'state': 'SUCCESS', 'message': 'Success. New document id 412 created'},
     {'file': 'Kontoauszug-09.pdf', 'task': 'c3d4', 'state': 'PENDING', 'message': 'uploaded'},
     {'file': 'scan_0042.tif', 'task': '', 'state': 'FAILURE', 'message': 'Not consuming scan_0042.tif: It is a duplicate of Steuer 2025 (#388)'}]
 
 
 def pl_inbox(name):
     x = STATE['pl']['inboxes'][name]
-    path = f"/mnt/daten/home/{x['owner']}/Paperless" if x['owner'] else '/mnt/daten/Fotos'
+    path = f"/mnt/data/home/{x['owner']}/Paperless" if x['owner'] else '/mnt/data/Photos'
     now = int(time.time())
     return {'name': name, 'owner': x['owner'], 'share': x['share'], 'path': path, 'token_set': True, 'token_hint': '…9f2c',
             'tags': x['tags'], 'enabled': x['enabled'], 'waiting': 1 if x['owner'] else 0,
@@ -201,12 +201,12 @@ def cloud_jobs(owner):
 
 T0F = int(time.time())
 FS = {   # root -> path -> list of (name, type, size)
-    'daten': {'': [('Fotos', 'dir', 0), ('Medien', 'dir', 0), ('home', 'dir', 0), ('Rechnungen 2026', 'dir', 0), ('notizen.txt', 'file', 2310), ('backup-router.tar.gz', 'file', 48_200_000)],
-              'Fotos': [('2025', 'dir', 0), ('2026', 'dir', 0), ('Urlaub_Ostsee_001.jpg', 'file', 4_812_000), ('Urlaub_Ostsee_002.jpg', 'file', 5_120_400)],
-              'Fotos/2025': [], 'Fotos/2026': [], 'Medien': [('Filme', 'dir', 0), ('Musik', 'dir', 0)], 'Medien/Filme': [], 'Medien/Musik': [], 'home': [],
-              'Rechnungen 2026': [('Stadtwerke-09.pdf', 'file', 182_000), ('Telekom-09.pdf', 'file', 95_400)]},
-    'home': {'': [('Paperless', 'dir', 0), ('Dokumente', 'dir', 0), ('Handy-Fotos', 'dir', 0), ('Lebenslauf.pdf', 'file', 310_220), ('Einkaufsliste.txt', 'file', 412)],
-             'Paperless': [], 'Dokumente': [('Steuer 2025.pdf', 'file', 1_204_000)], 'Handy-Fotos': [('IMG_2041.jpg', 'file', 3_400_000)]},
+    'data': {'': [('Photos', 'dir', 0), ('Media', 'dir', 0), ('home', 'dir', 0), ('Invoices 2026', 'dir', 0), ('notes.txt', 'file', 2310), ('backup-router.tar.gz', 'file', 48_200_000)],
+              'Photos': [('2025', 'dir', 0), ('2026', 'dir', 0), ('Urlaub_Ostsee_001.jpg', 'file', 4_812_000), ('Urlaub_Ostsee_002.jpg', 'file', 5_120_400)],
+              'Photos/2025': [], 'Photos/2026': [], 'Media': [('Films', 'dir', 0), ('Music', 'dir', 0)], 'Media/Films': [], 'Media/Music': [], 'home': [],
+              'Invoices 2026': [('Stadtwerke-09.pdf', 'file', 182_000), ('Telekom-09.pdf', 'file', 95_400)]},
+    'home': {'': [('Paperless', 'dir', 0), ('Documents', 'dir', 0), ('Phone photos', 'dir', 0), ('Lebenslauf.pdf', 'file', 310_220), ('Einkaufsliste.txt', 'file', 412)],
+             'Paperless': [], 'Documents': [('Steuer 2025.pdf', 'file', 1_204_000)], 'Phone photos': [('IMG_2041.jpg', 'file', 3_400_000)]},
 }
 TICKETS = {}
 TRASH_CONF = {'enabled': True, 'days': 30}
@@ -232,7 +232,7 @@ def fs_entries(root, path):
 
 
 def files_call(user, method, args):
-    roots = [{'name': 'daten', 'home': False}] if user == 'root' or STATE['users'].get(user, {}).get('role') == 'admin' else [{'name': 'home', 'home': True}]
+    roots = [{'name': 'data', 'home': False}] if user == 'root' or STATE['users'].get(user, {}).get('role') == 'admin' else [{'name': 'home', 'home': True}]
     if method == 'roots':
         return {'roots': roots, 'trash': dict(TRASH_CONF)}
     if method == 'trash_config':
@@ -311,13 +311,13 @@ APPS = {'installed': {'notes-backup': {'id': 'notes-backup', 'name': 'Notes Back
                        'nano': {'id': 'nano', 'name': 'nano', 'version': '8.7.0', 'publisher': 'UniqueDroid', 'description': {'de': 'Einfacher Texteditor für das Terminal (System → Terminal oder SSH): „nano datei“. Mit Rückgängig, Suchen und Ersetzen und UTF-8.', 'en': 'text editor for the terminal'},
                                 'type': 'system', 'commands': ['nano'], 'entry': 'index.html', 'icon': None, 'category': 'tools', 'permissions': [], 'verified': True, 'source': 'store',
                                 'installed': 0, 'users': [], 'jobs': [], 'window': None, 'opens': []},
-                       'dnsfilter': {'id': 'dnsfilter', 'name': 'DNS-Filter', 'version': '0.107.80', 'publisher': 'UniqueDroid', 'description': {'de': 'DNS-Filter mit AdGuard Home (Modul)', 'en': 'DNS filter with AdGuard Home (module)'},
+                       'dnsfilter': {'id': 'dnsfilter', 'name': 'DNS filter', 'version': '0.107.80', 'publisher': 'UniqueDroid', 'description': {'de': 'DNS-Filter mit AdGuard Home (Modul)', 'en': 'DNS filter with AdGuard Home (module)'},
                                      'type': 'system', 'module': 'dnsfilter', 'commands': [], 'entry': 'index.html', 'icon': None, 'category': 'network', 'permissions': [], 'verified': True, 'source': 'store',
                                      'installed': 0, 'users': [], 'jobs': [], 'window': None, 'opens': []},
                        'cloud': {'id': 'cloud', 'name': 'Cloud', 'version': '1.0.0', 'publisher': 'UniqueDroid', 'description': {'de': 'Abgleich mit Cloud-Speichern (Modul)', 'en': 'Cloud sync (module)'},
                                  'type': 'system', 'module': 'cloud', 'commands': [], 'entry': 'index.html', 'icon': None, 'category': 'network', 'permissions': [], 'verified': True, 'source': 'store',
                                  'installed': 0, 'users': [], 'jobs': [], 'window': None, 'opens': []},
-                       'desktop': {'id': 'desktop', 'name': 'Desktop-Ansicht', 'version': '1.0.0', 'publisher': 'UniqueDroid', 'description': {'de': 'Die Weboberfläche als Desktop (Modul)', 'en': 'The web interface as a desktop (module)'},
+                       'desktop': {'id': 'desktop', 'name': 'Desktop view', 'version': '1.0.0', 'publisher': 'UniqueDroid', 'description': {'de': 'Die Weboberfläche als Desktop (Modul)', 'en': 'The web interface as a desktop (module)'},
                                    'type': 'system', 'module': 'desktop', 'commands': [], 'entry': 'index.html', 'icon': None, 'category': 'system', 'permissions': [], 'verified': True, 'source': 'store',
                                    'installed': 0, 'users': [], 'jobs': [], 'window': None, 'opens': []},
                        'paperless': {'id': 'paperless', 'name': 'Paperless', 'version': '1.0.0', 'publisher': 'UniqueDroid', 'description': {'de': 'Anbindung an Paperless-ngx (Modul)', 'en': 'Paperless-ngx connection (module)'},
@@ -338,7 +338,7 @@ CATALOG = [
      'icon_url': None, 'entry': 'index.html',
      'versions': [{'version': '3.4.1', 'date': '2026-10-20T08:30:00Z', 'prerelease': False, 'url': 'https://example/htop.sapp', 'sha256': '0' * 64,
                    'size': 263644, 'min_shareos': '0.2.0-beta.1', 'notes_url': ''}]},
-    {'id': 'mediathek', 'name': 'Mediathek', 'publisher': 'Beispiel', 'category': 'media', 'type': 'webapp',
+    {'id': 'mediathek', 'name': 'Mediathek', 'publisher': 'Example', 'category': 'media', 'type': 'webapp',
      'description': {'de': 'Fotos und Videos der Freigaben im Browser ansehen (Beispiel-Eintrag).', 'en': 'Browse photos and videos (sample entry).'},
      'icon_url': None, 'entry': 'index.html',
      'versions': [{'version': '0.3.0-beta.1', 'date': '2026-10-16T09:00:00Z', 'prerelease': True, 'url': 'https://example/m.sapp', 'sha256': '0' * 64,
@@ -427,10 +427,10 @@ def apps_call(method, args):
     if method == 'upload_ticket':
         return {'url': '/cgi-bin/files?t=upload'}
     if method == 'install_upload':
-        APPS['installed']['meine-app'] = {'id': 'meine-app', 'name': 'Meine App', 'version': '0.1.0', 'publisher': 'Jan', 'description': 'Eigene Test-App',
+        APPS['installed']['my-app'] = {'id': 'my-app', 'name': 'My App', 'version': '0.1.0', 'publisher': 'Jan', 'description': 'Own test app',
                                           'type': 'webapp', 'entry': 'index.html', 'icon': None, 'category': 'tools', 'permissions': [],
                                           'verified': False, 'source': 'upload', 'installed': int(time.time()), 'users': []}
-        return {'ok': True, 'id': 'meine-app', 'version': '0.1.0', 'verified': False}
+        return {'ok': True, 'id': 'my-app', 'version': '0.1.0', 'verified': False}
     return {'error': 'unknown'}
 
 
@@ -519,7 +519,7 @@ def call(obj, method, args):
                 c['jobs'].pop(args['name'], None)
             if method == 'cloud_job_run':
                 return {'started': True}
-            return {'allowed': True, 'installed': c['installed'], 'remotes': mine, 'jobs': cloud_jobs(u), 'shares': ['fotos'], 'ok': True}
+            return {'allowed': True, 'installed': c['installed'], 'remotes': mine, 'jobs': cloud_jobs(u), 'shares': ['photos'], 'ok': True}
         return me(u)
     if obj == 'shareos.apps':
         return apps_call(method, args)
@@ -597,9 +597,9 @@ def call(obj, method, args):
                           {'id': 'app:webpad', 'label': '2 ungespeichert', 'state': 'warn', 'app': 'webpad', 'name': 'Webpad'}]}
     if obj == 'shareos.dlna':
         d = STATE.setdefault('dlna', {'installed': True, 'enabled': True, 'running': True, 'scanning': False, 'audio': 4218, 'video': 312, 'image': 15873,
-                                      'db': '/mnt/daten/.shareos/minidlna', 'clients': [{'type': 'Samsung Series [CDEFJ]', 'ip': '10.241.1.40'}, {'type': 'Generic DLNA 1.5', 'ip': '10.241.1.52'}],
-                                      'name': '', 'hostname': 'skynet-nas', 'media': [{'type': 'A', 'share': 'musik'}, {'type': 'V', 'share': 'filme'}],
-                                      'shares': ['backup', 'filme', 'fotos', 'musik']})
+                                      'db': '/mnt/data/.shareos/minidlna', 'clients': [{'type': 'Samsung Series [CDEFJ]', 'ip': '10.241.1.40'}, {'type': 'Generic DLNA 1.5', 'ip': '10.241.1.52'}],
+                                      'name': '', 'hostname': 'skynet-nas', 'media': [{'type': 'A', 'share': 'music'}, {'type': 'V', 'share': 'filme'}],
+                                      'shares': ['backup', 'filme', 'photos', 'music']})
         if method == 'set':
             d.update(enabled=args['enabled'], running=args['enabled'], name=args['name'],
                      media=[{k: v for k, v in m.items() if k != 'path' or v} for m in args['media']])
@@ -609,14 +609,14 @@ def call(obj, method, args):
             d['scanning'] = True
         return d
     if obj == 'shareos.snapshots':
-        sn = STATE.setdefault('snap', {'fotos': {
-            'name': 'fotos', 'source': 'share:fotos', 'target': 'usb', 'every': 'day', 'time': '03:15', 'exclude': ['*.tmp'], 'enabled': True,
-            'keep_last': 3, 'keep_daily': 7, 'keep_weekly': 4, 'keep_monthly': 6, 'running': False, 'mounted': True, 'path': '/mnt/usb/Snapshots/fotos',
+        sn = STATE.setdefault('snap', {'photos': {
+            'name': 'photos', 'source': 'share:photos', 'target': 'usb', 'every': 'day', 'time': '03:15', 'exclude': ['*.tmp'], 'enabled': True,
+            'keep_last': 3, 'keep_daily': 7, 'keep_weekly': 4, 'keep_monthly': 6, 'running': False, 'mounted': True, 'path': '/mnt/usb/Snapshots/photos',
             'last': {'state': 'ok', 'started': int(T0) - 3700, 'ended': int(T0) - 3600, 'files': 18342, 'changed': 27, 'bytes': 81234567, 'removed': 1},
             'snapshots': [{'name': 'snap%d' % k, 'time': int(T0) - 3600 - k * 86400} for k in range(9)]}})
-        vols = [{'name': 'daten', 'fstype': 'ext4', 'links': True}, {'name': 'usb', 'fstype': 'ext4', 'links': True}, {'name': 'stick', 'fstype': 'vfat', 'links': False}]
-        srcs = [{'id': 'share:fotos', 'kind': 'share', 'name': 'fotos', 'volume': 'daten'}, {'id': 'share:musik', 'kind': 'share', 'name': 'musik', 'volume': 'daten'},
-                {'id': 'homes:daten', 'kind': 'homes', 'name': 'daten'}, {'id': 'volume:daten', 'kind': 'volume', 'name': 'daten'}]
+        vols = [{'name': 'data', 'fstype': 'ext4', 'links': True}, {'name': 'usb', 'fstype': 'ext4', 'links': True}, {'name': 'stick', 'fstype': 'vfat', 'links': False}]
+        srcs = [{'id': 'share:photos', 'kind': 'share', 'name': 'photos', 'volume': 'data'}, {'id': 'share:music', 'kind': 'share', 'name': 'music', 'volume': 'data'},
+                {'id': 'homes:data', 'kind': 'homes', 'name': 'data'}, {'id': 'volume:data', 'kind': 'volume', 'name': 'data'}]
         jobs = lambda: sorted(sn.values(), key=lambda j: j['name'])
         if method == 'status':
             return {'jobs': jobs(), 'volumes': vols, 'sources': srcs, 'rsync': True}
@@ -638,11 +638,11 @@ def call(obj, method, args):
             j = sn[args['name']]; j['snapshots'] = [x for x in j['snapshots'] if x['name'] != args['snapshot']]
             return {'ok': True, 'jobs': jobs()}
         if method == 'log':
-            return {'log': '=== 2026-10-21_031500 share:fotos, rsync 0\nNumber of files: 18,342\nNumber of regular files transferred: 27\n'}
+            return {'log': '=== 2026-10-21_031500 share:photos, rsync 0\nNumber of files: 18,342\nNumber of regular files transferred: 27\n'}
     if obj == 'shareos.cloud':
         c = STATE['cloud']
         if method == 'status':
-            return {'installed': c['installed'], 'version': 'v1.75.2' if c['installed'] else None, 'apps': 'daten', 'installing': False, 'install_error': None}
+            return {'installed': c['installed'], 'version': 'v1.75.2' if c['installed'] else None, 'apps': 'data', 'installing': False, 'install_error': None}
         if method in ('remotes', 'remote_add', 'remote_del'):
             if method == 'remote_add':
                 c['remotes']['-'].append({'name': args['name'], 'type': args['type'] or 'raw'})
@@ -659,7 +659,7 @@ def call(obj, method, args):
                 c['jobs'].pop(args['name'], None)
             return {'ok': True, 'jobs': cloud_jobs(None)}
         if method == 'job_log':
-            return {'lines': ['2026/10/18 03:00:01 INFO  : Starting upload to b2backup:nas/fotos', '2026/10/18 03:01:01 INFO  : 312 / 312 files, 1.2 GiB, 100%', '2026/10/18 03:01:05 INFO  : done']}
+            return {'lines': ['2026/10/18 03:00:01 INFO  : Starting upload to b2backup:nas/photos', '2026/10/18 03:01:01 INFO  : 312 / 312 files, 1.2 GiB, 100%', '2026/10/18 03:01:05 INFO  : done']}
         return {'started': True}
     if obj == 'shareos.accounts':
         if method == 'add':
@@ -681,7 +681,7 @@ def call(obj, method, args):
                    'groups': sorted(STATE['groups']), 'shares': sorted(STATE['shares']), 'services': ['paperless', 'cloud', 'zabbix'],
                    'apps': [{'id': 'webpad', 'name': 'Webpad', 'version': '1.2.0'}, {'id': 'transmission', 'name': 'Transmission', 'version': '1.3.1'}],
                    'configs': ['shareos', 'storage', 'network', 'accounts', 'shares'], 'certificate': True, 'cert_source': 'ca',
-                   'ca': True, 'ca_certs': ['drucker', 'proxmox']}
+                   'ca': True, 'ca_certs': ['printer', 'proxmox']}
         if method == 'offer':
             return {'certificate': True, 'source': 'ca', 'ca': True, 'ca_certs': 2}
         if method == 'export':
@@ -794,7 +794,7 @@ def call(obj, method, args):
             return {'zones': ['Europe/Berlin', 'Europe/London', 'Europe/Vienna', 'Europe/Zurich', 'America/New_York', 'UTC'], 'current': 'Europe/Berlin'}
         if method == 'altf':
             return {'found': True, 'file': 'set_2026-07-23_15:20:02.tgz', 'date': '2026-07-23 15:20:02', 'hostname': 'skynet-nas',
-                    'timezone': 'Europe/Berlin', 'users': ['jan:Jan', 'media:Medien'], 'shares': ['Fotos', 'Musik', 'Backup'], 'nfs': ['/mnt/md0/proxmox'], 'fan_lo_temp': '45'}
+                    'timezone': 'Europe/Berlin', 'users': ['jan:Jan', 'media:Media'], 'shares': ['Photos', 'Music', 'Backup'], 'nfs': ['/mnt/md0/proxmox'], 'fan_lo_temp': '45'}
         if method in ('apply',):
             STATE['setup_done'] = True
             return {'ok': True, 'done': []}
@@ -833,7 +833,7 @@ def call(obj, method, args):
             d.update({'running': t > 2, 'starting': 2 < t <= 8, 'dns': t > 8, 'ready': t > 8})
             if t > 8:
                 d.pop('_start'); d.update({'rss_mb': 41.5, 'queries': 12873, 'blocked': 2214}); d['rules'] = sum(f['rules'] for f in fl if f['enabled']); d['lists'] = len(fl)
-        rw = STATE.setdefault('dnsfilter_rw', [{'domain': 'drucker.skynet.lan', 'answer': '10.241.1.50'}])
+        rw = STATE.setdefault('dnsfilter_rw', [{'domain': 'printer.skynet.lan', 'answer': '10.241.1.50'}])
         if method == 'rewrites':
             return {'rewrites': rw}
         if method == 'rewrite_add':

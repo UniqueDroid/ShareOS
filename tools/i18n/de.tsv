@@ -1,0 +1,2033 @@
+# Deutsch
+E0	ÜBERSICHT
+E1	SPEICHER
+E2	FREIGABEN
+E3	DIENSTE
+E4	APPS
+E5	CLOUD
+E6	PAPERLESS
+E7	SYSTEM
+E8	NEU
+E9	ONLINE
+E10	OFFLINE
+E11	Abmelden
+E12	Hell/Dunkel umschalten
+E13	Hauptmenü
+E14	System
+E15	verfügbar
+E16	Die ShareOS-Oberfläche braucht JavaScript.
+E17	Verwaltung – bitte anmelden.
+E18	BENUTZER
+E19	PASSWORT
+E20	Angemeldet bleiben (7 Tage)
+E21	Anmelden
+E22	Benutzer oder Passwort falsch.
+E23	Box nicht erreichbar.
+E24	Sitzung abgelaufen – bitte neu anmelden.
+E25	live · alle 5 s
+E26	AUSLASTUNG
+E27	Gerätesteuerung aktiv
+E28	keine MCU-Daten
+E29	LÜFTER
+E30	TEMP
+E31	aus
+E32	halb
+E33	voll
+E34	kein Link
+E35	letzte 10 min
+E36	Gateway · DNS
+E37	sammle Messwerte …
+E38	Firmware
+E39	Start aus
+E40	Flash (UBI)
+E41	Netzwerk (RAM)
+E42	Einstellungen bleiben erhalten
+E43	Änderungen gehen beim Neustart verloren
+E44	Laufzeit
+E45	seit dem letzten Start
+E46	Dienste
+E48	Flash frei
+E49	für Einstellungen & Pakete
+E50	Laufwerke
+E51	erkannt
+E52	keine eingesteckt
+E53	alle verwalten
+E54	Update verfügbar
+E55	Lade Systemdaten …
+E56	Lade Dienste …
+E57	Lade Laufwerke …
+E58	Keine Festplatte und kein USB-Speicher erkannt. ShareOS läuft vollständig aus dem internen Flash – Laufwerke erscheinen hier, sobald sie eingesteckt sind.
+E59	unbekanntes Modell
+E60	Start, Stopp, Neustart
+E61	Neustart
+E62	Stopp
+E63	Starten
+E64	SSH / SFTP
+E65	Weboberfläche
+E66	Zeit (NTP)
+E67	Zeitplaner
+E68	API (rpcd)
+E69	Systembus (ubus)
+E70	Systemprotokoll
+E71	Gerätesteuerung
+E72	stellt die Uhr, gleicht die MCU-Uhr ab
+E73	Schnittstelle für diese Oberfläche
+E74	Nachrichten zwischen den Diensten
+E75	syslogd, im RAM
+E76	Lüfter, Temperatur, Taster, MCU-Uhr
+E77	Dieser Bereich ist noch nicht gebaut. Geplant:
+E78	FREIGABEN, BENUTZER & GRUPPEN
+E79	APPS & PAKETE
+E80	CLOUD-SPEICHER
+E81	PAPERLESS-NGX
+E82	Freigaben je Ordner mit Schaltern für SMB, NFS, FTP und DLNA
+E83	Benutzer & Gruppen mit Rechten pro Freigabe
+E84	Netzlaufwerke einbinden (CIFS/NFS)
+E85	Backup-Jobs (rsync)
+E86	Paketquelle (opkg-Feed) über GitHub
+E87	Katalog mit Kategorien, Installieren/Entfernen mit Warteschlange
+E88	Pakete landen in den Einstellungen & Paketen (Flash) oder auf der Platte
+E89	Konten über rclone: Nextcloud/WebDAV, Google Drive, OneDrive, Dropbox, S3, SFTP
+E90	Sync-Jobs: kopieren, spiegeln, bidirektional
+E91	Verschlüsselung (crypt), Bandbreite und Zeitplan
+E92	Eingangsordner auf dem NAS → Upload über die Paperless-REST-API (Token)
+E93	Status der Übertragungen über /api/tasks/
+E94	Tags und Korrespondent je Ordner, Export-Backup aufs NAS
+E95	VOLUMES
+E96	LAUFWERKE
+E97	EINSTELLUNGEN
+E98	RUHEZUSTAND
+E99	NEU EINRICHTEN
+E100	PLATTEN ABSCHALTEN NACH
+E101	nie
+E102	10 Minuten
+E103	20 Minuten
+E104	30 Minuten
+E105	1 Stunde
+E106	2 Stunden
+E107	Swap
+E108	Apps-Bereich
+E110	keiner aktiv
+E111	noch keine
+E112	Spart Strom und schont die Platten. Beim ersten Zugriff laufen sie wieder an (einige Sekunden).
+E113	Der Assistent löscht die ausgewählten Platten und richtet sie neu ein. Einzelne Platten lassen sich auch direkt an der Platte unter „Laufwerke“ formatieren.
+E114	Assistent starten
+E115	Speicher einrichten
+E116	INTERNER FLASH
+E117	128 MB NAND · UBI
+E118	BEREICH
+E119	EINGEHÄNGT
+E120	BELEGT
+E121	Einstellungen & Pakete
+E122	System (nur lesbar)
+E123	Arbeitsspeicher (tmp)
+E124	Aushängen
+E125	Einhängen
+E126	Entfernen
+E127	SMART lesen
+E128	Löschen & formatieren
+E129	Spiegel (RAID 1)
+E130	Einzelnes Laufwerk
+E131	SMART noch nicht gelesen
+E132	schläft (SMART beim nächsten Aufwachen)
+E133	no SMART data
+E134	SMART OK
+E135	SMART WARNUNG
+E136	SMART FEHLER
+E137	leer
+E138	ohne Dateisystem
+E139	nicht eingehängt
+E140	Dateisystem nicht gefunden
+E141	wartet
+E142	Pakete und App-Daten liegen in .shareos
+E143	Noch kein Speicher eingerichtet. Der Assistent richtet die Platten in wenigen Schritten ein – als Spiegel (beide Platten mit denselben Daten) oder als getrennte Laufwerke.
+E144	SPEICHER EINRICHTEN · ASSISTENT
+E145	Abbrechen
+E146	Platten
+E147	Aufbau
+E148	Name
+E149	Bestätigen
+E150	Zurück
+E151	Weiter
+E152	Einrichten
+E153	Welche Platten sollen eingerichtet werden?
+E154	Alles auf diesen Platten wird gelöscht.
+E155	Spiegel (RAID 1) – empfohlen
+E156	Zwei getrennte Laufwerke
+E157	AUSLAGERUNGSSPEICHER (SWAP) JE PLATTE
+E158	1 GB – empfohlen
+E160	Die Box hat nur 256 MB RAM. Swap auf den Platten fängt Lastspitzen ab (Freigaben, Cloud-Sync, Paketinstallation). Er liegt als eigene kleine Partition vorne auf jeder Platte; der Rest wird das Laufwerk.
+E161	NAME DES SPIEGELS
+E162	LAUFWERK
+E163	PLATTEN
+E164	GRÖSSE
+E165	AUFBAU
+E166	Kleinbuchstaben, Ziffern, - und _ (max. 16 Zeichen). Das Laufwerk erscheint als
+E167	; Freigaben legst du später darauf an.
+E168	Platten löschen und einrichten?
+E169	Löschen & einrichten
+E170	Einrichtung gestartet.
+E171	Formatieren gestartet.
+E172	Name des neuen Laufwerks (a–z, 0–9, - und _, max. 16 Zeichen):
+E173	Bitte mindestens eine Platte auswählen.
+E174	Höchstens zwei Platten.
+E175	Ungültiger Name: nur a–z, 0–9, - und _, max. 16 Zeichen.
+E176	Die Namen müssen verschieden sein.
+E177	Ungültiger Name.
+E178	Ruhezustand gespeichert.
+E179	FIRMWARE
+E180	ALLGEMEIN
+E181	ENERGIE & RESET
+E182	PROTOKOLLE
+E183	DARSTELLUNG
+E184	ÜBER
+E185	FIRMWARE-UPDATE
+E186	Installiert
+E187	Kernel, Startsystem und System
+E188	noch nicht geprüft
+E189	aktuell
+E190	noch kein Release für dieses Gerät
+E191	keine
+E192	UPDATE-KANAL
+E193	Stabil (Releases)
+E195	Jetzt prüfen
+E196	Prüfe …
+E197	VERSIONEN
+E198	von GitHub
+E199	VERSION
+E200	DATUM
+E201	KANAL
+E202	STABIL
+E203	BETA
+E204	installiert
+E206	Notes ↗
+E207	SO LÄUFT EIN UPDATE
+E208	Paket von GitHub laden und prüfen (SHA-256, Gerät, Größen)
+E209	Kernel und Startsystem in den Flash schreiben und zurücklesen
+E210	Neues System bereitlegen
+E211	Neustart: das Startsystem installiert das System, dann startet ShareOS neu
+E212	Einstellungen und installierte Pakete bleiben erhalten. Bei einem Abbruch wird die Installation beim nächsten Start wiederholt.
+E213	Herunterladen
+E214	Prüfen
+E215	Bereit
+E216	Schreiben
+E217	Verwerfen
+E218	Fehler:
+E219	Letztes Update:
+E220	Neustart nötig
+E221	Jetzt neu starten
+E222	Geprüft: SHA-256, Prüfsummen aller Teile, passend für dieses Gerät. Einstellungen und Pakete bleiben erhalten.
+E223	ShareOS ist aktuell.
+E224	Update geladen und geprüft.
+E225	Update geschrieben – bitte neu starten.
+E226	Update installieren?
+E227	Installieren
+E228	GERÄTENAME
+E229	HOSTNAME
+E230	Speichern
+E231	NEUES PASSWORT
+E232	WIEDERHOLEN
+E233	Passwort ändern
+E234	Buchstaben, Ziffern und Bindestrich. Gilt sofort, der DHCP-Server sieht ihn bei der nächsten Verlängerung.
+E235	Gilt für die Weboberfläche und SSH. Mindestens 6 Zeichen.
+E236	Hostname gespeichert.
+E237	Passwort geändert.
+E238	Die Passwörter stimmen nicht überein.
+E239	ENERGIE
+E240	Ausschalten
+E241	Beim Ausschalten fährt ShareOS herunter und die Gerätesteuerung schaltet den Strom ab. Einschalten über den Power-Taster.
+E242	WERKSEINSTELLUNGEN
+E243	löscht Einstellungen
+E244	Auf Werkseinstellungen zurücksetzen
+E245	Entfernt alle Einstellungen und installierten Pakete aus dem Flash und startet neu. Das System selbst und die Firmware-Version bleiben. Danach gilt wieder das Passwort
+E246	Neu starten?
+E247	Neu starten
+E248	Die Box startet neu. Die Seite verbindet sich danach von selbst wieder (ca. 1–2 Minuten).
+E249	Ausschalten?
+E250	ShareOS fährt herunter und die Box schaltet sich aus. Einschalten danach nur am Gerät.
+E251	Werkseinstellungen?
+E252	Zurücksetzen
+E253	Alle Einstellungen und installierten Pakete werden gelöscht, danach startet die Box neu. Das Passwort ist dann wieder „shareos“.
+E254	Neustart läuft
+E255	ShareOS startet neu
+E256	Box wird ausgeschaltet
+E257	Du kannst dieses Fenster schließen.
+E258	Dienst wird neu gestartet
+E259	warte auf die Box
+E260	Werkseinstellungen
+E261	PROTOKOLL
+E262	Quelle
+E263	System (syslog)
+E264	Kernel (dmesg)
+E265	Aktualisieren
+E266	lade …
+E267	(leer)
+E268	nur in diesem Browser
+E269	Helles Design
+E270	Scanlines
+E271	LOGO
+E272	gilt für alle
+E273	ShareOS-Logo anzeigen (aus: nur Schriftzug)
+E274	SPRACHE
+E275	Akzentfarbe Grün
+E276	Akzentfarbe Rot
+E277	Akzentfarbe Blau
+E278	Akzentfarbe Weiß
+E279	Version
+E280	Stufe
+E281	Gerät
+E282	Firmware-Name
+E283	PROJEKT
+E284	ShareOS ist eine freie Firmware für D-Link-NAS, hervorgegangen aus Alt-F. Basis: buildroot, Linux, BusyBox; Bedienkonzept nach OpenWrt (UCI, ubus, rpcd, ucode). Lizenz GPLv2.
+E285	Einrichtung läuft
+E286	Box nicht ausschalten.
+E287	Einrichtung fehlgeschlagen:
+E288	HTTPS
+E289	VERBINDUNG
+E290	diese Seite: HTTPS
+E291	diese Seite: HTTP
+E292	HTTPS auf Port 443
+E293	HTTP-Aufrufe auf HTTPS umleiten
+E294	Nach einer Änderung startet der Webserver neu; die Seite ist für einen Moment nicht erreichbar.
+E295	ZERTIFIKAT
+E296	selbstsigniert
+E297	eigenes Zertifikat
+E298	Noch kein Zertifikat – es wird beim Einschalten von HTTPS automatisch erstellt.
+E299	Ausgestellt für
+E300	Aussteller
+E301	Gültig ab
+E302	Gültig bis
+E303	Namen
+E304	Browser warnen bei selbstsignierten Zertifikaten einmalig. Die Verbindung ist trotzdem verschlüsselt; für eine Seite ohne Warnung ein eigenes Zertifikat hinterlegen (z. B. von der eigenen Intranet-CA oder Let's Encrypt).
+E305	Neues selbstsigniertes Zertifikat
+E306	EIGENES ZERTIFIKAT HINTERLEGEN
+E307	ZERTIFIKAT (PEM, GERNE MIT ZWISCHENZERTIFIKATEN)
+E308	PRIVATER SCHLÜSSEL (PEM, OHNE PASSWORT)
+E309	Vor dem Übernehmen wird geprüft, ob Zertifikat und Schlüssel zusammenpassen. Der Schlüssel verlässt die Box nicht.
+E310	Zertifikat übernehmen
+E311	Zertifikat übernommen.
+E312	Zertifikat erstellt.
+E313	Neues selbstsigniertes Zertifikat?
+E315	Ein neues Zertifikat für den aktuellen Namen und die aktuelle IP wird erstellt und ersetzt das bisherige. Browser zeigen danach einmalig wieder eine Warnung.
+E316	Gespeichert – der Webserver startet neu.
+E317	Lade …
+E318	SPRACHE DER OBERFLÄCHE
+E319	Weitere Sprachen: eine Datei in
+E320	– siehe docs/TRANSLATING.md.
+E321	AUS UNTER (°C, 0 = NIE)
+E322	VOLL AB (°C)
+E323	ZURÜCK AUF HALB UNTER (°C)
+E324	Alles lässt sich später unter System einstellen. Das Passwort bleibt „shareos“, bis du es änderst.
+E325	Alt-F
+E326	Alt-F übernehmen
+E327	Auch Testversionen, mit neuen Funktionen früher.
+E328	Auf dieser Box wurden Einstellungen von
+E329	gefunden
+E330	Ausgewogen
+E331	Benutzer
+E332	Freigaben
+E333	NFS
+E334	Benutzer und Freigaben werden aufbewahrt und mit dem Bereich „Freigaben“ angeboten. Die Alt-F-Daten im Flash bleiben unverändert.
+E335	Beta
+E336	Stabil
+E337	Danach kannst du gleich die Festplatten einrichten.
+E338	Das Standardpasswort
+E339	kennt jeder – bitte jetzt ein eigenes setzen. Es gilt für die Weboberfläche und SSH.
+E340	Die Box regelt den Lüfter in drei Stufen (aus, halb, voll) nach der Temperatur der Gerätesteuerung. Änderungen gelten nach wenigen Sekunden.
+E341	Die orange USB-LED zeigt den Rettungsmodus und Updates beim Start an und ist nicht einstellbar.
+E342	ERSTEINRICHTUNG
+E343	Eigene Werte
+E344	Ersteinrichtung abgeschlossen.
+E345	Ersteinrichtung erneut starten
+E346	Ersteinrichtung überspringen?
+E347	Fertig
+E348	Fertig & Speicher einrichten
+E349	Gerätename
+E350	Gerätename, Zeitzone und Lüfter übernehmen
+E351	Herzschlag (ShareOS läuft)
+E352	Kühl
+E353	Leise
+E354	LEDS
+E355	LÜFTER & LEDS
+E356	Lüfter
+E357	Leer lassen, um das Passwort später zu ändern.
+E358	Lüfter läuft immer, voll ab 45 °C
+E359	Lüfter läuft immer, voll ab 50 °C
+E360	Lüfter steht unter 40 °C, voll ab 55 °C
+E361	Name & Zeit
+E362	Nur fertige Versionen – empfohlen.
+E363	PLATTEN-LEDS (ROT)
+E364	POWER-LED
+E365	STATUS-LED (BLAU)
+E366	Passwort
+E367	Plattenzugriffe anzeigen
+E368	Sprache
+E369	Temperaturen selbst festlegen
+E370	Unter diesem Namen erscheint die Box im Netzwerk. Die Uhr stellt sich per NTP selbst.
+E371	Update-Kanal
+E372	Updates
+E373	Updates kommen von GitHub und werden unter System → Firmware installiert.
+E374	Willkommen bei ShareOS. In wenigen Schritten ist die Box eingerichtet; alles lässt sich später unter
+E376	ZEITZONE
+E377	Zeitzone
+E378	blinkt
+E379	an
+E380	sofort aktiv
+E381	wird geändert
+E382	bleibt (später ändern)
+E383	ja
+E384	nein
+E385	Überspringen
+E386	Lüfter gespeichert.
+E387	LED gespeichert.
+E388	Ungültiger Gerätename.
+E389	Das Passwort braucht mindestens 6 Zeichen.
+E390	Paket wird erneut geprüft …
+E391	System wird für den Neustart bereitgelegt …
+E392	Startsystem: Flash wird gelöscht …
+E393	Startsystem wird geschrieben …
+E394	Startsystem wird geprüft …
+E395	Kernel: Flash wird gelöscht …
+E396	Kernel wird geschrieben …
+E397	Kernel wird geprüft …
+E398	Wird gestartet …
+E399	nicht ausschalten
+E400	, das dauert etwa 1–2 Minuten.
+E401	Paket wird geprüft …
+E402	SHA-256 und Inhalt, dauert etwa eine halbe Minute.
+E403	– das neue System wird beim nächsten Start installiert (ca. 1 Minute, Box nicht ausschalten).
+E404	NETZWERK
+E405	ADRESSE
+E406	AKTUELL
+E407	AKZENTFARBE
+E408	BEIM START
+E409	BESCHREIBUNG
+E410	DIENST
+E411	HELL ODER DUNKEL
+E412	HTTPS & ZERTIFIKAT
+E413	JETZT
+E414	KENNZAHL
+E415	WERT
+E416	HINWEIS
+E417	ART
+E418	MODELL
+E420	INHALT
+E421	IP-ADRESSE
+E422	SUBNETZMASKE
+E423	DNS-SERVER (KOMMA-GETRENNT)
+E424	Automatisch (DHCP) – vom Router
+E425	Feste Adresse
+E426	statisch
+E427	Dunkel
+E428	Hell
+E429	Wie das Betriebssystem (automatisch)
+E430	Grün
+E431	Rot
+E432	Blau
+E433	Weiß
+E434	Logo und Browser-Symbol nehmen die Akzentfarbe an. Die Einstellung gilt für alle, auch für die Anmeldeseite.
+E435	Scanlines (nur in diesem Browser)
+E436	Übernehmen
+E437	verbunden
+E438	keine Adresse
+E439	ändern
+E440	Verbindung
+E441	Gilt ab dem nächsten Start. Laufende Dienste startest und stoppst du unter „Status“. Gerätesteuerung, Systembus, API und Weboberfläche starten immer, sonst wäre die Box nicht mehr bedienbar.
+E442	welche Dienste beim Einschalten starten
+E443	starten
+E444	immer
+E445	Ohne diesen Dienst ist die Box nicht bedienbar
+E446	Kachelansicht
+E447	Tabellenansicht
+E448	Neue Netzwerkeinstellungen warten auf Bestätigung
+E449	Behalten
+E450	Die letzte Änderung wurde nicht bestätigt; die vorherigen Netzwerkeinstellungen sind wieder aktiv.
+E451	Neue Netzwerkeinstellungen bestätigt.
+E452	Netzwerk ändern?
+E453	Netzwerk wird umgestellt
+E454	Netzwerk wird neu gestartet
+E455	Keine Verbindung – die Box sollte die alten Einstellungen wiederhergestellt haben. Seite neu laden.
+E456	eine Platte fehlt
+E458	Sync wartet
+E459	STATUS
+E460	AUTOSTART
+E461	GRUPPEN
+E462	Administrator
+E463	Nur Freigaben
+E464	lesen & schreiben
+E465	nur lesen
+E466	kein Zugriff
+E467	unbegrenzt
+E468	Für Freigaben wird ein Laufwerk gebraucht – zuerst unter
+E470	Noch keine Freigabe. Eine Freigabe macht einen Ordner auf einem Laufwerk im Netzwerk erreichbar – unter Windows, macOS und Linux.
+E471	Freigabe anlegen
+E472	Neue Freigabe
+E473	FREIGABE
+E474	ORDNER
+E475	ZUGRIFF
+E476	Laufwerk fehlt
+E477	noch niemand
+E478	SMB (WINDOWS, MACOS, LINUX)
+E479	SMB-Freigaben anbieten
+E480	ARBEITSGRUPPE
+E481	Der SMB-Dienst startet automatisch, sobald es eine Freigabe gibt. Persönliche Ordner erscheinen als
+E482	NFS (LINUX, PROXMOX)
+E483	NFS-Freigaben anbieten
+E484	NFS kennt keine Benutzer: Zugriff bekommen die eingetragenen Rechner oder Netze. Dateien werden als
+E485	gespeichert. Einbinden z. B. mit
+E486	kein Protokoll
+E487	GAST
+E488	Bearbeiten
+E489	Löschen
+E490	Anlegen
+E491	NEUE FREIGABE
+E492	NAME
+E493	ORDNER AUF DEM LAUFWERK
+E494	wie der Name
+E495	ZUGRIFF ÜBER SMB
+E496	Über SMB freigeben (Windows, macOS, Linux)
+E497	Gäste dürfen ohne Passwort lesen
+E498	BENUTZER / GRUPPE
+E499	RECHT
+E500	Noch keine Benutzer – unter
+E501	anlegen, oder Gastzugang erlauben.
+E502	ZUGRIFF ÜBER NFS
+E503	Über NFS freigeben
+E504	NFS-Clients dürfen schreiben
+E505	NFS-CLIENTS (IP ODER NETZ, KOMMA-GETRENNT)
+E506	Der Ordner wird angelegt, falls er fehlt. Beim Entfernen einer Freigabe bleiben Ordner und Dateien erhalten.
+E507	kein Limit
+E508	von
+E509	Noch keine Benutzer. Ein Konto gilt überall: für Freigaben, die Weboberfläche und später für Apps und Cloud-Sync.
+E510	Benutzer anlegen
+E511	Von Alt-F übernehmen
+E512	Neuer Benutzer
+E513	ROLLE
+E514	PERSÖNLICHER ORDNER
+E515	kein persönlicher Ordner
+E516	Rollen:
+E517	– alles, auch SSH.
+E518	– eigener Bereich „Mein ShareOS“ in der Weboberfläche.
+E519	– Zugriff auf Freigaben, keine Anmeldung an der Oberfläche. Das Konto
+E520	bleibt immer Administrator.
+E521	· ohne Web
+E522	NEUER BENUTZER
+E523	BENUTZERNAME
+E524	VOLLER NAME
+E525	SPEICHERLIMIT JE LAUFWERK (GB, 0 = UNBEGRENZT)
+E526	Darf sich an der Weboberfläche anmelden („Mein ShareOS“)
+E527	Benutzername: Kleinbuchstaben, Ziffern und _, beginnt mit einem Buchstaben. Das Passwort gilt für Freigaben und – je nach Rolle – für die Weboberfläche.
+E528	GRUPPE
+E529	MITGLIEDER
+E530	Gruppen fassen Benutzer zusammen, z. B. „familie“ oder „medien“. Rechte an Freigaben lassen sich dann für die ganze Gruppe vergeben.
+E531	Neue Gruppe
+E532	Mitglieder legst du beim Benutzer fest (Benutzer → Bearbeiten).
+E533	MEIN SHAREOS
+E534	Noch nichts gespeichert.
+E535	Persönlicher Ordner
+E536	Kein persönlicher Ordner eingerichtet.
+E537	PASSWORT ÄNDERN
+E538	AKTUELLES PASSWORT
+E539	Gilt für die Freigaben und diese Oberfläche.
+E540	MEINE FREIGABEN
+E541	Dir wurde noch keine Freigabe zugewiesen.
+E542	APPS & CLOUD
+E543	geplant
+E544	Hier erscheinen später die Apps, die für dich freigegeben sind, und deine eigenen Cloud-Sync-Aufträge.
+E545	Mein ShareOS
+E546	Für NFS mindestens einen Client (IP oder Netz) eintragen.
+E547	Gespeichert.
+E548	Die Freigabe verschwindet aus dem Netzwerk. Der Ordner und alle Dateien darin bleiben auf dem Laufwerk erhalten.
+E549	Benutzer von Alt-F übernehmen?
+E550	Benutzer und Gruppen aus den gesicherten Alt-F-Einstellungen werden angelegt (Rolle „Nur Freigaben“). Passwörter werden übernommen, wo Alt-F sie gespeichert hat.
+E551	Keine neuen Benutzer gefunden.
+E552	Name der Gruppe (a–z, 0–9 und _, beginnt mit einem Buchstaben):
+E553	Die Mitglieder bleiben bestehen, verlieren aber die Rechte, die über diese Gruppe vergeben wurden.
+E554	Setzen
+E555	Neues Passwort (mindestens 6 Zeichen). Gilt für Freigaben und – je nach Rolle – für die Weboberfläche.
+E556	Bitte neu anmelden.
+E557	Der persönliche Ordner bleibt erhalten.
+E558	Benutzerkonten
+E559	EINSTELLUNGEN SICHERN & WIEDERHERSTELLEN
+E560	SICHERN
+E561	JSON-Datei
+E562	PASSWORT ZUM VERSCHLÜSSELN (OPTIONAL)
+E563	leer = unverschlüsselt
+E564	Enthält alle Einstellungen, Benutzer mit ihren Passwörtern (als Hash), Freigaben, Netzwerk und das HTTPS-Zertifikat samt Schlüssel. Ohne Passwort ist die Datei lesbar – dann sicher aufbewahren. Mit Passwort: AES-256, das Passwort wird zum Wiederherstellen gebraucht.
+E565	Sicherung herunterladen
+E566	WIEDERHERSTELLEN
+E567	SICHERUNGSDATEI
+E568	PASSWORT (FALLS VERSCHLÜSSELT)
+E569	Erstellt
+E570	Zertifikat
+E571	Beim Wiederherstellen werden die aktuellen Einstellungen, Benutzer und Freigaben ersetzt. Danach ist ein Neustart nötig. Daten auf den Laufwerken bleiben unberührt.
+E572	Wiederherstellen
+E573	Einstellungen wiederherstellen?
+E574	Die aktuellen Einstellungen, Benutzer und Freigaben werden durch die Sicherung ersetzt.
+E575	Wiederhergestellt
+E576	Die Einstellungen sind zurückgespielt. Jetzt neu starten, damit alles gilt?
+E577	Verschlüsselte Sicherung heruntergeladen.
+E578	Sicherung heruntergeladen.
+E579	Die Sicherung ist verschlüsselt – bitte das Passwort eingeben.
+E580	ADRESSE VON PAPERLESS
+E581	PRÜFEN ALLE
+E582	NACH DEM HOCHLADEN
+E583	Datei löschen
+E584	aufheben (.paperless/done)
+E585	Eingangsordner automatisch übertragen
+E586	Jetzt übertragen
+E587	SO FUNKTIONIERT ES
+E588	Für jeden Eingang ein API-Token in Paperless anlegen (Profil → API-Token). Die Dokumente gehören dann diesem Paperless-Benutzer.
+E589	Dateien (PDF, Bilder, Office) in den Eingangsordner legen – vom PC oder direkt vom Scanner.
+E590	ShareOS lädt sie über die Paperless-API hoch und zeigt, ob Paperless sie übernommen hat.
+E591	Persönliche Eingänge liegen im persönlichen Ordner (
+E592	); Benutzer können ihr Token auch selbst unter „Mein ShareOS“ eintragen. Gemeinsame Eingänge nutzen eine Freigabe, z. B. für einen Scanner.
+E593	EINGÄNGE
+E594	übernommen
+E595	wird verarbeitet
+E596	Fehler
+E597	Protokoll
+E598	nichts wartend
+E599	Neuer Eingang
+E600	NEUER EINGANG
+E601	persönlich (Ordner „Paperless“ im persönlichen Ordner)
+E602	gemeinsam (Ordner einer Freigabe)
+E603	API-TOKEN
+E604	aktiv
+E605	Verbindung prüfen
+E606	aus Paperless: Profil → API-Token
+E607	API-TOKEN (LEER = BEHALTEN)
+E608	TAGS FÜR NEUE DOKUMENTE
+E609	Schließen
+E610	ZEIT
+E611	DATEI
+E612	MELDUNG
+E613	Es wird nichts mehr übertragen. Der Ordner und die Dateien darin bleiben erhalten.
+E614	EINGANG
+E615	WARTEND
+E616	ZULETZT
+E617	gemeinsam
+E618	Paperless → Profil → API-Token
+E619	Paperless-Eingang gespeichert.
+E620	Übertragung gestartet.
+E621	MEIN EINGANG
+E622	MEIN API-TOKEN AUS PAPERLESS
+E623	Dateien aus meinem Eingang übertragen
+E624	Eingangsordner
+E625	ZULETZT ÜBERTRAGEN
+E626	Noch nichts übertragen. Dateien in den Eingangsordner legen – sie landen nach wenigen Minuten in Paperless.
+E627	KONTEN
+E628	Testen
+E629	Konto hinzufügen
+E630	HINWEISE
+E631	Zugangsdaten bleiben verschlüsselt auf der Box. Für Google Drive, OneDrive oder Dropbox auf dem PC
+E632	ausführen und den fertigen Abschnitt hier einfügen. Aufträge laufen mit wenig Speicher (2 Übertragungen gleichzeitig); eine Bandbreitengrenze wie
+E633	hält das Netz frei.
+E634	AUFTRÄGE
+E635	Jetzt starten
+E636	Neuer Auftrag
+E637	NEUES CLOUD-KONTO
+E638	SFTP (SSH-Server)
+E639	andere – rclone-Konfiguration einfügen
+E640	ADRESSE (WEBDAV-URL)
+E641	ANBIETER
+E642	PASSWORT / APP-PASSWORT
+E643	Hinzufügen
+E644	ENDPUNKT (LEER BEI AWS)
+E645	ABSCHNITT AUS RCLONE.CONF (BEGINNT MIT [NAME])
+E646	Die Zugangsdaten werden gelöscht. Aufträge mit diesem Konto laufen dann nicht mehr. In der Cloud wird nichts gelöscht.
+E647	NEUER AUFTRAG
+E648	ORDNER AUF DEM NAS
+E649	CLOUD-KONTO
+E650	ORDNER IN DER CLOUD
+E651	RICHTUNG
+E652	Hochladen – Kopie in die Cloud, nichts wird gelöscht
+E653	Herunterladen – Kopie aufs NAS, nichts wird gelöscht
+E654	Spiegeln zur Cloud – löscht in der Cloud, was hier fehlt
+E655	Spiegeln von der Cloud – löscht hier, was in der Cloud fehlt
+E656	ZEITPLAN
+E657	nur von Hand
+E658	stündlich
+E659	täglich um 2:30
+E660	sonntags um 3:00
+E661	eigene Zeit (cron)
+E662	CRON-ZEIT (MIN STD TAG MON WOTAG)
+E663	BANDBREITE (LEER = UNBEGRENZT)
+E664	Zeitplan aktiv
+E665	Beim Spiegeln wird auf der Zielseite gelöscht, was auf der Quellseite fehlt – für reine Sicherungen „Hochladen“ wählen.
+E666	Der Auftrag läuft nicht mehr. Dateien auf dem NAS und in der Cloud bleiben, wie sie sind.
+E667	AUFTRAG
+E668	VON → NACH
+E669	Spiegeln?
+E670	Verstanden
+E671	Gestoppt.
+E672	Beim Spiegeln von der Cloud werden auf dem NAS Dateien gelöscht, die in der Cloud fehlen.
+E673	Beim Spiegeln zur Cloud werden in der Cloud Dateien gelöscht, die auf dem NAS fehlen.
+E674	MEINE CLOUD
+E675	eigene Konten und Aufträge
+E676	Zugangsdaten bleiben verschlüsselt auf der Box in deinem persönlichen Ordner. Für Google Drive, OneDrive oder Dropbox auf dem PC
+E677	hält das Netz frei. Was du herunterlädst, zählt zu deinem Speicherlimit.
+E678	Darf eigene Cloud-Sync-Aufträge anlegen (braucht persönlichen Ordner)
+E679	APP & WIDGETS
+E680	ALS APP INSTALLIEREN
+E681	über das Browsermenü
+E682	läuft als App
+E683	bereit
+E684	nur über HTTPS
+E685	Diese Oberfläche läuft gerade als installierte App.
+E686	Der Browser kann ShareOS als App mit eigenem Symbol installieren.
+E687	Im Browsermenü
+E688	„App installieren“
+E689	bzw.
+E690	„Zum Startbildschirm hinzufügen“
+E691	wählen. Mit einem selbst signierten Zertifikat bieten Browser die echte Installation nicht an.
+E692	Browser installieren Web-Apps nur über
+E693	HTTPS mit einem vertrauenswürdigen Zertifikat
+E694	(z. B. Let's Encrypt, unter SYSTEM → NETZWERK einspielen). Über http:// bietet Chrome im Menü nur
+E695	– das legt ein Lesezeichen-Symbol an.
+E696	Auf Android: das App-Symbol lange drücken öffnet die Kurzbefehle
+E697	Übersicht, Speicher, Freigaben, Firmware
+E698	. Echte Startbildschirm-Widgets bietet Chrome für Web-Apps nicht – dafür gibt es rechts den Status für Widget-Apps.
+E699	Als App installieren
+E700	STATUS FÜR WIDGETS
+E701	Status-Adresse einschalten
+E702	ADRESSE (GEHEIM HALTEN)
+E703	Kopieren
+E704	Neuer Schlüssel
+E705	Öffnen ↗
+E706	Liefert eine kurze JSON-Antwort ohne Anmeldung: Name, Version, Laufzeit, Last, Temperatur, Belegung der Laufwerke, RAID-Zustand und Warnungen (
+E707	). Gedacht für Widget-Apps wie
+E708	(Android), Home Assistant oder eigene Skripte. Wer die Adresse kennt, sieht diese Werte – ändern kann damit niemand etwas.
+E709	Status-Adresse eingeschaltet.
+E710	Status-Adresse ausgeschaltet.
+E711	Neuen Schlüssel erzeugen?
+E713	Neuer Schlüssel erzeugt.
+E714	Die bisherige Adresse funktioniert danach nicht mehr – Widgets müssen die neue bekommen.
+E715	Kopiert.
+E716	Bitte die Adresse selbst markieren und kopieren.
+E717	ShareOS ist als App installiert.
+E718	· Mein ShareOS
+E719	DATEIEN
+E720	Neuer Ordner
+E721	Hochladen
+E722	Umbenennen
+E723	Verschieben
+E724	Versteckte
+E725	GEÄNDERT
+E726	Dateien lassen sich auch einfach hierher ziehen.
+E727	Pfad
+E728	Ordner nach oben
+E729	Alle auswählen
+E730	Verschieben nach
+E731	Kopieren nach
+E732	Name des neuen Ordners:
+E733	Dieser Ordner ist leer.
+E734	SPEICHERLIMIT (GB)
+E735	Dateibrowser für den persönlichen Ordner in der Weboberfläche
+E736	Benutzername: Kleinbuchstaben, Ziffern und _, beginnt mit einem Buchstaben. Das Speicherlimit gilt je Laufwerk, 0 = unbegrenzt. Das Passwort gilt für Freigaben und – je nach Rolle – für die Weboberfläche.
+E737	nur für dich
+E738	Wie für alle
+E739	Gilt nur für deine Anmeldung, auf jedem Gerät. Logo und Browser-Symbol nehmen die Akzentfarbe an.
+E740	Datei ersetzen?
+E741	Ersetzen
+E742	übersprungen
+E743	fertig
+E744	Verbindung unterbrochen
+E745	Gelöscht.
+E746	Verschoben.
+E747	Darstellung wie für alle.
+E748	Kein Laufwerk eingehängt – zuerst unter SPEICHER einrichten.
+E749	Kein persönlicher Ordner vorhanden.
+E750	Es werden nur die ersten 2000 Einträge gezeigt.
+E751	Hostname gespeichert. Das HTTPS-Zertifikat wurde für den neuen Namen neu ausgestellt – der Browser fragt einmal neu nach.
+E752	INSTALLIERT
+E753	STORE
+E754	QUELLEN
+E755	INSTALLIERTE APPS
+E756	Noch keine App installiert. Im
+E757	Store
+E758	gibt es Apps zum Installieren – oder ein eigenes Paket (.sapp) hochladen.
+E759	Apps
+E760	APP-STORE
+E761	Beta (auch Vorabversionen)
+E762	Jetzt aktualisieren
+E763	PAKET INSTALLIEREN
+E764	PAKETDATEI
+E765	Für eigene Apps (gebaut mit
+E766	aus dem App-Repo). Hochgeladene Pakete gelten als „eigene / ungeprüft“.
+E767	Hochladen & installieren
+E768	VERFÜGBARE APPS
+E769	APP
+E770	HERAUSGEBER
+E771	Werkzeuge
+E772	Medien
+E773	Büro
+E774	Netzwerk
+E776	Sync
+E777	wird geladen …
+E778	aus dem Store
+E779	eigene / ungeprüft
+E780	eigene
+E781	SICHTBAR FÜR
+E782	alle Benutzer
+E783	nur Administratoren
+E784	Alle Benutzer mit Web-Zugang
+E785	Administratoren sehen alle Apps. Die Auswahl bestimmt, wem die App in „Mein ShareOS“ angezeigt wird.
+E786	Die App wird gelöscht. Daten, die sie im Browser gespeichert hat, bleiben dort.
+E787	APP-QUELLEN
+E788	WEITERE QUELLE (KATALOG-ADRESSE)
+E789	Eine Quelle ist ein App-Katalog (
+E790	) im Format des Repos
+E791	. Eigene Apps: das Repo als Vorlage nehmen, die GitHub Action baut Pakete und Katalog. Nur Quellen eintragen, denen du vertraust.
+E792	Quelle entfernen?
+E793	Apps aus dieser Quelle erscheinen nicht mehr im Store. Installierte Apps bleiben.
+E794	MEINE APPS
+E795	Store aktualisiert.
+E796	Entfernt.
+E797	Lade den Katalog …
+E798	Keine Apps gefunden – Internetverbindung und Quellen prüfen.
+E799	Kein Benutzer mit Web-Zugang – unter Freigaben → Benutzer einrichten.
+E800	braucht neuere ShareOS
+E801	noch nicht geladen
+E802	Web-Apps laufen auf einem eigenen Port (8081 / 8444 für HTTPS) – getrennt von dieser Oberfläche, damit eine App deine Anmeldung nicht benutzen kann. Wer die Adresse kennt, kann eine Web-App im Netzwerk öffnen; „sichtbar für“ steuert, wem sie in „Mein ShareOS“ angezeigt wird.
+E803	Installation abgeschlossen
+E804	(100 %) – jetzt neu starten.
+E805	FIRMWARE-DATEI EINSPIELEN
+E806	Hochladen & prüfen
+E807	Art
+E808	andere Firmware
+E810	Firmware wird geschrieben
+E811	Kernel und Startsystem – bitte warten, nicht ausschalten
+E812	Geschrieben
+E813	Größe
+E814	ext4 – empfohlen
+E815	exFAT – empfohlen
+E816	Alle Funktionen: Rechte je Benutzer, Speicherlimit, persönliche Ordner, Apps.
+E817	Rechte je Benutzer, persönliche Ordner, Apps; kein Speicherlimit je Benutzer. Braucht mehr Arbeitsspeicher.
+E818	Auch an Windows und macOS lesbar. Keine Rechte je Benutzer (wer eine Freigabe schreiben darf, darf alles darin), kein Speicherlimit, keine persönlichen Ordner, keine Apps.
+E819	Auch an Windows lesbar. Keine Rechte je Benutzer, kein Speicherlimit, keine persönlichen Ordner, keine Apps.
+E820	Windows, macOS, Linux, Fernseher; Dateien über 4 GB.
+E821	Für ältere Geräte (Autoradio, Kamera); Dateien höchstens 4 GB.
+E822	Für Windows-Rechner.
+E823	Für Linux und Sicherungen mit Rechten.
+E824	DATEISYSTEM
+E825	Sicher entfernen
+E826	Formatieren
+E827	Name des neuen Laufwerks (a–z, 0–9, - und _, max. 16 Zeichen) und Dateisystem:
+E828	UHRZEIT DER BOX
+E829	Zeitabgleich
+E830	aus dem Internet (NTP)
+E831	NTP eingeschaltet, läuft aber nicht
+E832	von Hand
+E833	Zuletzt abgeglichen
+E834	noch nicht
+E835	Batterie-Uhr
+E836	wird nach jedem Abgleich gestellt
+E837	Jetzt abgleichen
+E838	ZEITZONE & ZEITSERVER
+E839	Uhrzeit automatisch aus dem Internet holen (NTP)
+E840	ZEITSERVER (EINER JE ZEILE, HÖCHSTENS 5)
+E841	Im Heimnetz kann auch der Router Zeitserver sein, z. B.
+E842	. Die Zeitzone gilt für Protokolle, Zeitpläne und die Anzeige.
+E843	UHRZEIT VON HAND STELLEN
+E844	Solange NTP eingeschaltet ist, stellt die Box die Uhr beim nächsten Abgleich wieder nach dem Internet. Für eine Box ohne Internet NTP oben ausschalten.
+E845	Die Uhr läuft danach weiter; die Batterie-Uhr der Box wird mitgestellt.
+E846	Uhrzeit dieses Geräts übernehmen
+E847	Uhrzeit setzen
+E848	Uhrzeit gesetzt.
+E849	Uhrzeit abgeglichen.
+E850	Ungültige Uhrzeit.
+E851	Eine Firmware im D-Link-Format, z. B. für den
+E852	Wechsel zurück zu Alt-F
+E853	. Geschrieben werden Kernel und Startsystem; System und Einstellungen von ShareOS bleiben im Flash.
+E854	Aufgaben
+E855	Zeitgesteuerte Aufgaben
+E856	Darf zeitgesteuerte Aufgaben auf der Box ausführen – als eigener eingeschränkter Benutzer, nur in ihrem Datenordner, mit Zeitlimit.
+E857	AUFGABE
+E858	ZEITPLAN (CRON)
+E859	AKTIV
+E861	Zeitlimit
+E862	Jetzt ausführen
+E863	Aufgabe gestartet.
+E864	Erlauben & installieren
+E865	Die App wird gelöscht, mit ihren Aufgaben und ihren Daten auf der Box.
+E866	Zeitplan im Cron-Format (Minute Stunde Tag Monat Wochentag), höchstens alle 5 Minuten, z. B.
+E867	= täglich 3:30 Uhr.
+E868	Update ohne Internet:
+E869	eine .sysupgrade.tar eines ShareOS-Release hochladen, am besten mit der passenden .sha256-Datei. Geprüft wird wie beim Update von GitHub.
+E870	PRÜFSUMME (.SHA256, OPTIONAL)
+E871	Hochgeladen – das Paket wird geprüft.
+E872	Hochgeladene Datei – geprüft: SHA-256 laut .sha256-Datei, Prüfsummen aller Teile, passend für dieses Gerät. Einstellungen und Pakete bleiben erhalten.
+E873	Hochgeladene Datei – geprüft: Prüfsummen aller Teile, passend für dieses Gerät (ohne .sha256-Datei). Einstellungen und Pakete bleiben erhalten.
+E874	Öffnen
+E875	In eigenem Fenster ↗
+E876	In ShareOS anzeigen
+E877	Darf als Seite in der ShareOS-Oberfläche angezeigt werden (statt in einem eigenen Fenster).
+E878	RAID 0 – schnell
+E879	JBOD – voller Platz
+E880	NAME DES LAUFWERKS
+E881	Älteres Linux-Dateisystem (z. B. von Alt-F gewohnt): Rechte je Benutzer, persönliche Ordner, Apps; kein Speicherlimit.
+E882	Ohne Journal – nach Stromausfall lange Prüfung. Nur wenn ein altes Gerät es braucht.
+E883	Für sehr alte Geräte. Dateien höchstens 4 GB, keine Rechte je Benutzer, kein Speicherlimit, keine persönlichen Ordner, keine Apps.
+E884	Spiegel reparieren
+E885	Neue Platte in den freien Schacht einsetzen, dann „Spiegel reparieren“.
+E886	Löschen & reparieren
+E887	Reparatur gestartet.
+E888	MELDUNGEN
+E889	1 MELDUNG
+E890	Alle als gelesen markieren
+E891	Alle löschen
+E892	ERLEDIGT
+E893	FEHLER
+E894	WARNUNG
+E895	INFO
+E896	Gelesen
+E897	Keine Meldungen – alles in Ordnung.
+E898	Die Box prüft alle 10 Minuten RAID, Laufwerke (eingehängt, Füllstand), Temperatur, SMART-Werte und Updates; fehlgeschlagene Cloud-Aufträge, App-Aufgaben und Speicher-Aufträge melden sich sofort. Gleiche Meldungen werden gezählt und höchstens einmal am Tag erneut verschickt.
+E899	E-MAIL
+E900	Meldungen per E-Mail schicken
+E901	MAILSERVER (SMTP)
+E902	VERSCHLÜSSELUNG
+E903	STARTTLS (Port 587)
+E904	SSL/TLS (Port 465)
+E905	keine (Port 25)
+E906	PORT (LEER = STANDARD)
+E907	ABSENDER
+E908	EMPFÄNGER (MEHRERE MIT KOMMA)
+E909	SCHICKEN
+E910	alles (Info, Warnung, Fehler)
+E911	Warnungen und Fehler
+E912	nur Fehler
+E913	PUSH
+E914	Meldungen aufs Handy schicken
+E915	ZUGANGSSCHLÜSSEL (OPTIONAL)
+E916	Webhook (JSON)
+E917	ntfy: Adresse mit Thema, z. B.
+E918	(eigener ntfy-Server geht auch), in der ntfy-App dasselbe Thema abonnieren. Gotify: Serveradresse und App-Token.
+E919	GRENZEN
+E920	TEMPERATUR AB (°C)
+E921	LAUFWERK VOLL AB (%)
+E922	Testnachricht
+E923	Testnachricht verschickt.
+E924	Alle Meldungen löschen?
+E925	Die Liste wird geleert. Besteht ein Problem weiter, meldet die Box es bei der nächsten Prüfung wieder.
+E926	•••••• (gespeichert)
+E927	NAME DER BOX FÜR LINKS (Z. B. ZU DEN APPS)
+E928	Leer lassen: Mit eigenem Zertifikat wird der Name daraus genommen, sonst die Adresse, unter der diese Seite geöffnet ist. Der Name muss im Netzwerk auflösbar sein (DNS).
+E929	Name speichern
+E930	Name gespeichert.
+E931	Zugriff auf Dateien
+E932	Darf die Dateien lesen, ändern und löschen, die der angemeldete Benutzer im Dateibrowser erreicht – mit seinen Rechten, solange die App offen ist.
+E933	Box nicht erreichbar
+E934	Netzwerkverkehr der letzten 10 Minuten
+E935	noch nicht verbunden
+E936	Noch kein Eingangsordner. Zuerst oben die Adresse von Paperless eintragen.
+E937	gemeinsam · aus
+E938	Noch nichts übertragen.
+E939	keine Tags gefunden
+E940	Windows-Freigabe (SMB)
+E941	Google Fotos
+E942	DOMÄNE (OPTIONAL)
+E943	APP-PASSWORT
+E944	noch nicht gelaufen
+E945	rclone nicht installiert
+E946	wird geladen und geprüft …
+E947	Zuerst unter
+E948	ein Laufwerk einrichten.
+E949	Zugangsdaten bleiben verschlüsselt auf der Box.
+E950	Bei Google Drive, OneDrive, Dropbox und ähnlichen Diensten meldest du dich im Browser an; für andere Dienste den fertigen Abschnitt aus „rclone config“ einfügen.
+E951	Aufträge laufen mit wenig Speicher (2 Übertragungen gleichzeitig); eine Bandbreitengrenze wie
+E952	Deine Zugangsdaten liegen in deinem persönlichen Ordner; was du herunterlädst, zählt zu deinem Speicherlimit.
+E953	Nach der Anmeldung zeigt der Browser „Seite nicht erreichbar“ mit einer Adresse wie
+E954	. Diese komplette Adresse aus der Adresszeile kopieren und hier einfügen:
+E955	Paket wird erneut geprüft
+E956	System wird für den Neustart bereitgelegt
+E957	Startsystem: Flash wird gelöscht
+E958	Startsystem wird geschrieben
+E959	Startsystem wird geprüft
+E960	Kernel: Flash wird gelöscht
+E961	Kernel wird geschrieben
+E962	Kernel wird geprüft
+E963	Telegram: In Telegram mit @BotFather einen Bot anlegen (/newbot), den Token hier eintragen und speichern. Dann dem eigenen Bot eine Nachricht schreiben (oder ihn in eine Gruppe aufnehmen) und „Chat-ID suchen“ klicken.
+E964	Chat-ID suchen
+E965	CHAT-ID
+E966	BOT-TOKEN (VON @BOTFATHER)
+E967	Telegram (Bot)
+E968	BEREICHE
+E969	Ausgeschaltet: Der Reiter verschwindet, auch für Benutzer in „Mein ShareOS“, und die Hintergrundarbeit ruht (App-Webserver und App-Aufgaben). Einstellungen und Daten bleiben erhalten; einschalten macht alles wieder an.
+E970	Apps (App-Store, Web-Apps, Aufgaben der Apps)
+E971	Cloud (Abgleich mit Cloud-Speichern)
+E972	Paperless (Eingangsordner für Paperless-ngx)
+E973	Bereich eingeschaltet.
+E974	Bereich ausgeschaltet.
+E975	Angemeldet – jetzt „Hinzufügen“.
+E976	Das Konto wird entfernt; Rechte an Freigaben entfallen.
+E977	Das Konto wird entfernt; Rechte an Freigaben entfallen. Der persönliche Ordner bleibt erhalten.
+E978	Das Laufwerk wird ausgehängt und aus der Konfiguration genommen. Die Daten auf der Platte bleiben erhalten, bis sie neu eingerichtet wird.
+E979	Laufwerk
+E980	Noch keine Nachricht an den Bot – erst den Token speichern, dann dem Bot in Telegram schreiben.
+E981	wird geladen
+E982	wird geprüft
+E983	wird installiert
+E984	Nutzt das Internet
+E985	Lädt Daten aus dem Internet (z. B. Online-Dienste, Streams, Karten). Ohne Internetverbindung funktionieren diese Teile der App nicht.
+E986	TERMINAL
+E987	Terminal öffnen
+E988	Beenden
+E989	Eine Shell als
+E990	direkt auf der Box – für Diagnose und Handarbeit (BusyBox, uci, logread, mdadm, smartctl …).
+E991	Die Sitzung gilt für ein Fenster und endet, wenn es geschlossen wird. Vorsicht: Befehle als root wirken sofort und ohne Papierkorb.
+E992	Persönliche Eingänge brauchen einen Benutzer mit persönlichem Ordner.
+E993	Cloud-Sync ist auf dieser Box noch nicht eingerichtet – bitte den Administrator fragen.
+E994	angemeldet ✓
+E995	2. ADRESSE NACH DER ANMELDUNG
+E996	Erst anmelden (Schritt 1 und 2).
+E997	Die Box läuft gerade nicht aus dem Flash (
+E998	). Updates über diese Seite gehen nur beim normalen Start aus dem Flash.
+E999	Befehl
+E1000	Aus System-Apps:
+E1001	Terminal (Administratoren)
+E1002	System-App · Terminal
+E1003	Programm für die Kommandozeile der Box (System → Terminal oder SSH). Es läuft mit den Rechten dessen, der es startet – im Terminal als root.
+E1004	Terminal
+E1005	noch ungetestet
+E1006	ShareOS wurde auf diesem Modell noch nicht auf echter Hardware getestet.
+E1007	Erste Anmeldung: Benutzer root, Passwort shareos – danach ein eigenes Passwort setzen.
+E1008	Eigene Torrents (Transmission)
+E1009	Darf den eigenen Transmission-Dienst des Benutzers steuern: Torrents hinzufügen, anhalten und löschen. Jeder Benutzer hat seinen eigenen Dienst; Downloads landen nur in seinen Ordnern.
+E1010	Medien umwandeln (FFmpeg)
+E1011	Darf auf der Box Audio und Video des Benutzers umwandeln lassen (FFmpeg) – mit seinen Rechten, nur in seinen Ordnern, aus festen Auswahlen (kein beliebiger Befehl).
+E1012	Alle
+E1013	Sonstige
+E1014	Suchen …
+E1015	Ein Snapshot hält den Stand eines Ordners fest – stündlich, täglich oder wöchentlich.
+E1016	Jeder Stand sieht aus wie eine vollständige Kopie; unveränderte Dateien belegen aber keinen zusätzlichen Platz.
+E1017	So holst du eine gelöschte oder überschriebene Datei von gestern oder letzter Woche zurück: im Dateibrowser aus dem Snapshot zurückkopieren.
+E1018	Neuer Snapshot-Auftrag
+E1019	NEUER SNAPSHOT-AUFTRAG
+E1020	Am besten auf ein anderes Laufwerk sichern (zweite Platte oder USB-Festplatte): dann schützen Snapshots auch bei einem Plattendefekt.
+E1021	Ein Spiegel (RAID 1) ersetzt keine Snapshots – er spiegelt auch jedes Löschen sofort.
+E1022	Die Snapshots liegen im Ordner
+E1023	des Ziel-Laufwerks und sind nur für Administratoren sichtbar.
+E1024	Für eine Kopie außer Haus kann ein Cloud-Auftrag den Snapshot-Ordner hochladen.
+E1025	neuester
+E1026	Jetzt sichern
+E1027	QUELLE → ZIEL
+E1028	ZEITPLAN · BEHALTEN
+E1029	STAND
+E1030	Im Dateibrowser öffnen
+E1031	Zum Wiederherstellen im Dateibrowser die Datei oder den Ordner aus dem Snapshot an den alten Platz kopieren. Dateien im Snapshot nicht ändern: unveränderte Dateien teilen sich den Platz mit den anderen Snapshots.
+E1032	WAS SICHERN
+E1033	ZIEL-LAUFWERK
+E1034	WIE OFT
+E1035	Stündlich
+E1036	Alle 6 Stunden
+E1037	Täglich
+E1038	Wöchentlich (Sonntag)
+E1040	AB UHRZEIT
+E1041	MINUTE (HH:MM, NUR DIE MINUTE ZÄHLT)
+E1042	BEHALTEN
+E1043	DIE LETZTEN
+E1044	TAGE (JE EINER)
+E1045	WOCHEN (JE EINER)
+E1046	MONATE (JE EINER)
+E1047	Die letzten N Snapshots bleiben immer (auch die von Hand); dazu je der neueste eines Tages, einer Woche, eines Monats. Beispiel täglich: 7 Tage · 4 Wochen · 6 Monate ≈ ein halbes Jahr zurück mit 17 Ständen.
+E1048	AUSNAHMEN (EINE PRO ZEILE, Z. B. *.tmp ODER /Downloads/)
+E1049	Quelle und Ziel liegen auf demselben Laufwerk: das schützt vor versehentlichem Löschen, aber nicht vor einem Plattendefekt.
+E1050	Es werden keine neuen Snapshots mehr angelegt.
+E1051	Snapshot löschen?
+E1052	Snapshots auch löschen?
+E1053	Snapshots löschen
+E1054	Snapshot gelöscht.
+E1055	gestoppt
+E1056	Lade Snapshots …
+E1057	Noch kein Snapshot-Auftrag. Ein Auftrag sichert eine Freigabe, die persönlichen Ordner oder ein ganzes Laufwerk nach Zeitplan.
+E1058	Noch kein Snapshot – „Jetzt sichern“ legt den ersten an.
+E1059	rsync fehlt in dieser Firmware.
+E1060	Kein geeignetes Ziel: Snapshots brauchen ein Laufwerk mit ext4 oder Btrfs (FAT32/exFAT kennen keine Hardlinks).
+E1061	Aufträge
+E1062	– keine Hardlinks
+E1063	MEDIENSERVER
+E1064	Medienserver (DLNA)
+E1065	nicht freigeben
+E1066	Musik, Videos und Bilder
+E1067	nur Musik
+E1068	nur Videos
+E1069	nur Bilder
+E1070	MUSIKSTÜCKE
+E1071	GERÄTE
+E1072	Im Netzwerk als
+E1073	liest Ordner ein …
+E1074	Lade Medienserver …
+E1075	Alles neu einlesen
+E1076	Im Store installieren (MiniDLNA)
+E1077	Der Medienserver (MiniDLNA) ist eine System-App: Fernseher, Receiver, Spielkonsolen und Apps wie VLC finden die Box dann im Netzwerk und spielen Musik, Videos und Bilder aus den Freigaben ab.
+E1078	Der Medienserver ist ausgeschaltet. Unten Ordner wählen und einschalten.
+E1079	Geräte im selben Netzwerk finden den Server von selbst (DLNA/UPnP AV), z. B. unter „Medienserver“ oder „Quellen“ am Fernseher.
+E1080	Neue Dateien erscheinen nach kurzer Zeit von selbst; nach großen Änderungen hilft „Alles neu einlesen“.
+E1081	Der Server liest nur – und zeigt alles in den gewählten Freigaben jedem Gerät im Netzwerk, ohne Anmeldung.
+E1082	Videos werden nicht umgewandelt: das Gerät muss das Format selbst abspielen können.
+E1083	Medienserver eingeschaltet (startet auch nach einem Neustart)
+E1084	NAME IM NETZWERK
+E1085	ZEIGEN ALS
+E1086	„Musik“, „Videos“, „Bilder“: aus der Freigabe nur diese Art von Dateien zeigen. „Alles“: Musik, Videos und Bilder.
+E1087	Mindestens eine Freigabe wählen.
+E1088	Medienserver gespeichert.
+E1089	Medienserver liest alle Ordner neu ein.
+E1090	Noch keine Freigabe – unter
+E1092	VIDEOS
+E1093	BILDER
+E1094	ANZEIGEN IM KOPF
+E1095	Anzeige im Kopf
+E1096	VPN der Box (OpenVPN)
+E1097	verbindet …
+E1098	Gerade zeigt kein Dienst und keine App etwas an.
+E1099	Dienste (VPN, Torrents, Medienserver) und Apps mit der Berechtigung „Anzeige im Kopf“ zeigen hier ihren Zustand; ein Klick öffnet die App.
+E1100	Darf die Box als VPN-Client verbinden und trennen und VPN-Profile verwalten (OpenVPN) – das betrifft das Netzwerk der ganzen Box, deshalb nur für Administratoren.
+E1101	Darf oben in der Kopfzeile der ShareOS-Oberfläche einen kurzen Zustand anzeigen (z. B. „verbunden“) – nur für den Benutzer, der die App geöffnet hat; er verschwindet nach höchstens 10 Minuten von selbst.
+E1102	VPN-SERVER
+E1103	1 Gerät
+E1104	Weder ein persönlicher Ordner noch eine Freigabe für dich.
+E1105	Dateien: persönlicher Ordner und Freigaben (nach Rechten) im Dateibrowser und in Apps
+E1106	 (nur lesen)
+E1107	(nur lesen)
+E1108	TAILSCALE
+E1109	Anmeldung nötig
+E1110	getrennt
+E1111	Fernzugriff (Tailscale)
+E1112	Darf die Box mit Tailscale verbinden, an- und abmelden und die Geräte des Tailnets sehen – das betrifft das Netzwerk der ganzen Box, deshalb nur für Administratoren.
+E1113	In der Seite
+E1114	Eigenes Fenster
+E1115	Öffnet sich jetzt in der Seite.
+E1116	Öffnet sich jetzt in einem eigenen Fenster.
+E1117	Diese App gibt es nicht (mehr).
+E1118	tailscaled, WireGuard-Mesh
+E1119	VPN (OpenVPN)
+E1120	Client und Server, App NetTunnel
+E1121	Torrents (Transmission)
+E1122	ein Dienst pro Konto
+E1123	Download-Automatik (autobrr)
+E1124	autobrr, Port 7474
+E1125	Darf autobrr der Box einrichten und steuern (Filter, Indexer, IRC, Releases) und festlegen, in wessen Transmission gefundene Torrents landen – ein Dienst für die ganze Box, deshalb nur für Administratoren.
+E1126	Als Favorit markieren
+E1127	Aus den Favoriten nehmen
+E1128	App-Leiste „FAV APPS“ anzeigen (nur für dich)
+E1129	Mit dem Stern auf einer App-Kachel wird sie zum Favoriten. Die Leiste steht über „Status“ in der Übersicht und über den installierten Apps.
+E1130	Namen unter den Symbolen zeigen (aus: nur Symbole)
+E1131	Werte der Box
+E1132	Netzwerk prüfen
+E1133	Docker-Hosts
+E1134	Darf die Werte der Box lesen (CPU, Arbeitsspeicher, Temperatur, Lüfter, Laufwerke, Prozesse) und Prozesse beenden, die ShareOS nicht braucht – nur für Administratoren.
+E1135	Darf von der Box aus prüfen, ob Geräte und Dienste im Netz erreichbar sind (Ping, Port, HTTP/HTTPS) – nur für Administratoren.
+E1136	Darf die Docker-Hosts verwalten, die der Administrator einträgt, und dort Container ansehen, starten, stoppen und neu starten sowie ihre Protokolle lesen (Docker-API) – nur für Administratoren.
+E1137	Smart Home (Tuya)
+E1138	Darf von der Box aus Tuya-Geräte im Heimnetz suchen, ihren Zustand lesen und sie schalten (lokal, ohne Cloud) – nur für Administratoren.
+E1139	Kein Laufwerk für dich eingehängt.
+E1140	ENTHÄLT
+E1141	MEIN VERBRAUCH
+E1143	FREI
+E1144	LIMIT
+E1145	ZUSTAND
+E1146	Gesundheit
+E1147	SELBSTTEST
+E1148	GUT
+E1149	ACHTUNG
+E1150	KRITISCH
+E1151	SCHACHT
+E1152	Neu lesen
+E1153	Jetzt lesen
+E1154	Kurztest
+E1155	Langtest
+E1156	Test abbrechen
+E1157	Alle Werte
+E1158	Werte ausblenden
+E1159	Temperatur
+E1160	Betriebszeit
+E1161	Einschaltvorgänge
+E1162	Anläufe des Motors
+E1163	Umgelagerte Sektoren
+E1164	Schwebende Sektoren
+E1165	Nicht lesbare Sektoren
+E1166	Übertragungsfehler (CRC)
+E1167	Fehlerprotokoll
+E1168	SCHLECHTESTER
+E1169	SCHWELLE
+E1170	ROHWERT
+E1171	FRÜHER
+E1172	FEHLGESCHLAGEN
+E1173	SELBSTTEST NACH ZEITPLAN
+E1174	ALLE PLATTEN IN DEN SCHÄCHTEN
+E1175	SO WIRD BEWERTET
+E1176	Kurztest jeden Sonntag (3:30 Uhr)
+E1177	Langtest am 1. jedes Monats (3:30 Uhr)
+E1178	Selbsttest läuft
+E1179	Langtest starten?
+E1180	Selbsttest gestartet.
+E1181	Selbsttest abgebrochen.
+E1182	Zeitplan gespeichert.
+E1183	Keine Auffälligkeiten.
+E1184	Lebensdauer der SSD
+E1185	Noch kein Selbsttest gelaufen.
+E1186	Daten sichern und die Platte bald tauschen.
+E1187	SMART der Platten und SSDs
+E1188	Keine Platte erkannt.
+E1189	SMART noch nicht gelesen. Beim Lesen wacht die Platte auf.
+E1190	Die Platte schläft – die Werte kommen beim nächsten Aufwachen.
+E1191	Diese Platte liefert keine SMART-Werte.
+E1192	Dieser USB-Adapter reicht keine SMART-Werte weiter.
+E1193	Die Platte meldet selbst: Ausfall droht (SMART-Gesamtbewertung FEHLER).
+E1194	Der letzte Selbsttest ist fehlgeschlagen.
+E1195	Die Platte meldet selbst einen Ausfall, ein Wert liegt unter der Schwelle des Herstellers, ein Selbsttest schlug fehl, über 100 umgelagerte oder über 10 schwebende Sektoren, SSD mit höchstens 10 % Lebensdauer, 60 °C und mehr.
+E1196	Einzelne umgelagerte, schwebende oder nicht lesbare Sektoren, Übertragungsfehler, Einträge im Fehlerprotokoll, SSD mit höchstens 20 % Lebensdauer, ab 55 °C.
+E1197	Der Kurztest prüft die Elektronik und einen Teil der Oberfläche, der Langtest liest die ganze Platte (bei großen Platten viele Stunden; die Platte bleibt dabei wach). Das Ergebnis erscheint hier und als Meldung, wenn etwas auffällt.
+E1198	ohne Fehler
+E1199	SCHLÄFT
+E1200	Die Platte schläft (Ruhezustand)
+E1201	Die Platte läuft
+E1202	Papierkorb
+E1203	PAPIERKORB
+E1204	Endgültig löschen
+E1205	Papierkorb leeren
+E1206	Papierkorb leeren?
+E1207	HERKUNFT
+E1208	GELÖSCHT
+E1209	In den Papierkorb
+E1210	In den Papierkorb verschoben.
+E1211	Leeren
+E1212	Papierkorb geleert.
+E1213	Endgültig gelöscht.
+E1214	Papierkorb gespeichert.
+E1215	Der Papierkorb ist leer.
+E1216	nie (nur von Hand leeren)
+E1217	Gelöschtes im Dateibrowser erst in den Papierkorb legen
+E1218	AUTOMATISCH ENDGÜLTIG LÖSCHEN NACH
+E1219	Das lässt sich nicht rückgängig machen.
+E1220	Jeder Ordner hat seinen eigenen Papierkorb: der persönliche Ordner, jede Freigabe, jedes Laufwerk. Er liegt auf derselben Platte und zählt zum Speicherlimit. Gilt für den Dateibrowser dieser Oberfläche – über SMB vom PC oder in Apps Gelöschtes ist sofort weg; dafür gibt es die Snapshots.
+E1221	USB-TASTE
+E1222	kopiert
+E1223	Jetzt kopieren
+E1224	USB-Taste gespeichert.
+E1225	USB-Kopie gestartet.
+E1226	Zuletzt:
+E1227	Kein USB-Laufwerk eingesteckt.
+E1228	Kein Ziel eingestellt.
+E1229	Zu wenig Platz auf dem Ziel – nichts kopiert.
+E1230	Das Ziellaufwerk ist nicht eingehängt.
+E1231	Kurz drücken kopiert die USB-Laufwerke, 3 s halten wirft sie aus
+E1232	Jedes Mal ein neuer Ordner mit Datum, z. B.
+E1233	– auf der Box wird nichts überschrieben oder gelöscht. Die USB-Lampe blinkt beim Kopieren; das Ergebnis kommt als Meldung. Ohne Häkchen wirft die Taste wie bisher nur aus.
+E1234	Meldungen senden
+E1235	Darf Meldungen über die Benachrichtigungen der Box senden (Oberfläche, E-Mail, Push) – höchstens 20 pro Stunde, mit dem Namen der App davor; im Browser nur für Administratoren.
+E1236	Neu laden
+E1237	Fenster blockiert – Pop-ups für diese Seite erlauben.
+E1238	Hier anzeigen
+E1239	Das Terminal läuft in einem eigenen Fenster.
+E1240	Die Sitzung gilt für ein Fenster und endet, wenn es geschlossen wird – ein eigenes Fenster bekommt eine neue Sitzung. Vorsicht: Befehle als root wirken sofort und ohne Papierkorb.
+E1241	AUS- UND EINSCHALTEN NACH ZEITPLAN
+E1242	Zeitplan einschalten
+E1243	TAG
+E1244	EINSCHALTEN
+E1245	AUSSCHALTEN
+E1246	Montag
+E1247	Dienstag
+E1248	Mittwoch
+E1249	Donnerstag
+E1250	Freitag
+E1251	Samstag
+E1252	Sonntag
+E1253	Nächstes Einschalten:
+E1254	Nächstes Ausschalten:
+E1255	· Nächstes Ausschalten:
+E1256	Leere Felder: an diesem Tag nichts. Ausgeschaltet wird sauber (wie mit dem Knopf); läuft gerade ein Speicher-Auftrag (z. B. RAID-Aufbau), bleibt die Box an. Zum Einschalten stellt ShareOS die Weckzeit der Gerätesteuerung – den Stecker nicht ziehen.
+E1257	Diese Box kann sich nicht selbst einschalten (keine Weckfunktion) – nur das Ausschalten nach Zeitplan geht. Einschalten über den Power-Taster.
+E1258	Überwachung (Zabbix-Agent)
+E1259	zabbix_agentd, Aktiv-Modus
+E1260	Kompatibilitätsmodus (höchstens SMB 2.1)
+E1261	Schneller mit Windows 11, das jede Verbindung signiert: Die Signatur von SMB 2.1 kostet diese Box etwa halb so viel Rechenzeit wie die von SMB 3 (gemessen etwa 9–14 statt 4–10 MB/s beim Schreiben). Ohne Signatur sind etwa 35 MB/s möglich. Dafür gibt es kein SMB 3: keine Verschlüsselung, kein Multichannel. Bestehende Verbindungen werden dabei getrennt.
+E1262	Der Assistent löscht die ausgewählten Platten und richtet sie neu ein. Einzelne Platten lassen sich auch direkt an der Platte unter „Laufwerke“ formatieren. Platten mit Daten (z. B. von Alt-F oder der D-Link-Firmware) bindet „… übernehmen“ an der Platte ohne Löschen ein.
+E1263	Nur für Geräte, die mit SMB 3 nicht zurechtkommen. Die Signatur, die Windows 11 bei jeder Verbindung verlangt, rechnet bei SMB 3 die Krypto-Einheit der Box (gemessen etwa 19–23 MB/s beim Schreiben, ohne Signatur etwa 35); SMB 2.1 rechnet sie auf dem Prozessor (etwa 9–14 MB/s) und hat keine Verschlüsselung und kein Multichannel. Bestehende Verbindungen werden beim Umschalten getrennt.
+E1264	Der Zeitplan ist aus – die eingetragenen Zeiten gelten erst mit dem Haken bei „Zeitplan einschalten“.
+E1265	Zeitplan gespeichert (ausgeschaltet).
+E1266	Zeitplan gespeichert – kein Einschalten geplant.
+E1267	Einschalten danach nur am Gerät.
+E1268	Keine Zeiten eingerichtet.
+E1269	GERÄT & ZUGANG
+E1270	Mit dem Stern wird eine App zum Favoriten – Favoriten stehen oben auf „Mein ShareOS“.
+E1271	Alle Hinweise anzeigen
+E1272	EIGENE ZERTIFIKATE
+E1273	DynDNS aktualisieren
+E1274	API-TOKEN (ZONE:LESEN, DNS:BEARBEITEN)
+E1275	UPDATE-ADRESSE ({host} {ip} {ip6})
+E1276	Eigene Adresse (dyndns2)
+E1277	– wählen –
+E1278	gespeichert – leer lassen behält ihn
+E1279	Die Box meldet ihre öffentliche Adresse alle 5 Minuten, wenn sie sich geändert hat. Viele Anschlüsse (DS-Lite, Glasfaser, Mobilfunk) haben keine eigene IPv4-Adresse – dann IPv6 nehmen. Für Zugriff von außen muss der Router den Port weiterleiten (bzw. bei IPv6 freigeben).
+E1280	Zuletzt gemeldet
+E1281	Zuletzt geprüft
+E1282	Noch keine Meldung – kommt gleich.
+E1283	DynDNS ist aus.
+E1284	ZERTIFIZIERUNGSSTELLE (CA)
+E1285	diese Box nutzt sie
+E1286	Fingerabdruck
+E1287	Stammzertifikat
+E1288	Zertifikat der Box neu ausstellen
+E1289	Für diese Box verwenden
+E1290	Das Stammzertifikat einmal auf PC und Handy als vertrauenswürdig installieren (Windows: Doppelklick → „Vertrauenswürdige Stammzertifizierungsstellen“, Android/iOS: Einstellungen → Sicherheit). Danach sind alle Zertifikate dieser CA ohne Warnung – für die Box und andere Geräte im Heimnetz.
+E1291	Eine eigene Zertifizierungsstelle stellt Zertifikate für die Box und andere Geräte im Heimnetz aus (z. B.
+E1292	). Ihr Stammzertifikat wird einmal auf den Geräten installiert – danach gibt es keine Zertifikatswarnungen mehr.
+E1293	Zertifizierungsstelle anlegen
+E1294	Zertifikat wird geholt – das dauert bis zu 3 Minuten …
+E1295	Wird täglich geprüft und 30 Tage vor Ablauf erneuert.
+E1296	Abschalten
+E1297	Ein Zertifikat für
+E1298	, dem alle Browser vertrauen. Die Prüfung läuft über einen DNS-Eintrag beim DynDNS-Anbieter – kein Port muss offen sein.
+E1299	E-MAIL (OPTIONAL, FÜR HINWEISE VON LET'S ENCRYPT)
+E1300	Testmodus (Test-CA, Browser warnen)
+E1301	Zertifikat holen
+E1302	Braucht DynDNS mit DuckDNS oder Cloudflare (oben).
+E1303	ZERTIFIKAT FÜR EIN ANDERES GERÄT
+E1304	HOSTNAMEN UND IP-ADRESSEN (KOMMA-GETRENNT)
+E1305	Gültig 825 Tage. Auch Platzhalter wie
+E1306	sind möglich. Zertifikat und Schlüssel herunterladen und im Gerät eintragen.
+E1307	Ausstellen
+E1308	HOSTNAMEN
+E1309	GÜLTIG BIS
+E1310	Schlüssel
+E1311	eigene CA
+E1312	aktiv (Test)
+E1313	Bitte Anbieter und Namen angeben.
+E1314	Bitte Name und Hostnamen angeben.
+E1315	Gespeichert – die Adresse wird gemeldet.
+E1316	Wird gemeldet …
+E1317	Zertifizierungsstelle angelegt.
+E1318	Zertifikat ausgestellt.
+E1319	Zertifikat der eigenen CA verwenden?
+E1320	Die Box bekommt ein Zertifikat ihrer eigenen Zertifizierungsstelle für Gerätenamen, .local-Namen und IP-Adresse; es ersetzt das bisherige. Ohne installiertes Stammzertifikat warnt der Browser weiter.
+E1321	Verwenden
+E1322	Zertifikat installiert – die Seite verbindet sich neu.
+E1323	Zertifikat löschen?
+E1324	Let's Encrypt abschalten?
+E1325	Die Box nutzt danach wieder ein selbstsigniertes Zertifikat.
+E1326	Abgeschaltet – die Seite verbindet sich neu.
+E1327	Let's-Encrypt-Zertifikat aktiv – die Seite verbindet sich neu.
+E1328	DRUCKER
+E1329	Lade Drucker …
+E1330	Drucker im Netzwerk sind eine System-App: Aktuelle Drucker und Multifunktionsgeräte drucken und scannen dann ohne Treiber (AirPrint, Mopria, Windows 10/11), ältere über Port 9100 mit dem Treiber am Rechner.
+E1331	Im Store installieren (ipp-usb + p910nd)
+E1332	im Netzwerk
+E1333	nicht erreichbar
+E1334	Ohne Treiber (IPP over USB)
+E1335	Mit Treiber am Rechner (Port 9100)
+E1336	Scannen
+E1337	über das Netzwerk (eSCL), wenn das Gerät einen Scanner hat
+E1338	Adresse
+E1339	Geräteseite
+E1340	Windows 10/11, macOS, iPhone/iPad und Android finden den Drucker von selbst („Drucker hinzufügen“). Von Hand: Adresse oben als IPP-Drucker eintragen.
+E1341	Windows: „Drucker hinzufügen“ → „TCP/IP-Adresse“ →
+E1342	, Port
+E1343	, Treiber des Herstellers. macOS/Linux: „HP JetDirect – Socket“ bzw. AppSocket.
+E1344	Testseite
+E1345	Kein USB-Drucker angeschlossen. Einstecken – er erscheint hier nach ein paar Sekunden.
+E1346	Drucker im Netzwerk freigeben (startet auch nach einem Neustart)
+E1347	Automatisch – ohne Treiber, wo der Drucker es kann
+E1348	Immer Port 9100 (Treiber am Rechner)
+E1349	Jeder im Netzwerk kann drucken, ohne Anmeldung. „Immer Port 9100“ nur, wenn ein Drucker ohne Treiber nicht richtig druckt.
+E1350	Drucker gespeichert.
+E1351	Testseite geschickt.
+E1352	USV
+E1353	Lade USV …
+E1354	Im Store installieren (Network UPS Tools)
+E1355	Die USV-Unterstützung ist eine System-App: Die Box zeigt dann Akkustand und Restlaufzeit, meldet einen Stromausfall und fährt rechtzeitig sauber herunter.
+E1356	Akku fast leer
+E1357	läuft über Akku
+E1358	am Netz
+E1359	keine Daten
+E1360	AKKU
+E1361	RESTLAUFZEIT
+E1363	Netzspannung
+E1364	Akku seit
+E1365	Treiber
+E1366	Verbinde mit der USV …
+E1367	Erkannt:
+E1368	Unten einschalten.
+E1369	EREIGNISSE
+E1370	Noch keine – ein Stromausfall wird hier und als Meldung angezeigt.
+E1371	Stromausfall – läuft über die USV
+E1372	Strom wieder da
+E1373	Herunterfahren ausgelöst
+E1374	Box fährt herunter
+E1375	Verbindung zur USV verloren
+E1376	Keine Verbindung zur USV
+E1377	Verbindung zur USV wieder da
+E1378	Akku tauschen
+E1379	USV überwachen (startet auch nach einem Neustart)
+E1380	HERUNTERFAHREN
+E1381	Wenn die USV „Akku fast leer“ meldet
+E1382	Unter einem Akkustand
+E1383	Nach einer Zeit auf Akku
+E1384	AKKUSTAND (%)
+E1385	MINUTEN AUF AKKU
+E1386	TREIBER
+E1387	Automatisch
+E1388	blazer_usb (ältere Megatec)
+E1389	Danach die USV ausschalten – die Box startet wieder, wenn der Strom zurück ist
+E1390	Andere Rechner dürfen die USV über das Netzwerk lesen (Port 3493)
+E1391	PASSWORT FÜR „MONITOR“
+E1392	gespeichert – leer lassen behält es
+E1393	Auf dem anderen Rechner (NUT, upsmon):
+E1394	– er fährt dann vor der Box herunter.
+E1395	Die Box fährt nur herunter, solange sie über Akku läuft. Kommt der Strom vorher zurück, passiert nichts.
+E1396	USV gespeichert.
+E1397	Ordner synchronisieren (Syncthing)
+E1398	Darf den eigenen Syncthing-Dienst des Benutzers steuern: Geräte koppeln und Ordner mit ihnen synchronisieren. Jeder Benutzer hat seinen eigenen Dienst; synchronisiert werden nur Ordner, auf die er Zugriff hat.
+E1399	Weniger anzeigen
+E1400	Darf den Zabbix-Agenten der Box einrichten (Server, Hostname, PSK-Verschlüsselung, passive Abfragen, SMART-Intervall), ihn neu starten und sein Protokoll lesen – den Schlüssel sieht die App nie wieder. Nur für Administratoren.
+E1401	HTTPS-Zertifikat mitsichern (mit Schlüssel)
+E1402	Eigene CA mitsichern
+E1403	Schlüssel kommen nur in eine verschlüsselte Sicherung – erst ein Passwort eingeben.
+E1404	Enthält Box (Netzwerk, Name, Zeit, Laufwerke, Passwort von root), Benutzer und Gruppen (Passwörter als Hash), Freigaben, die Einstellungen der Dienste und die Liste der installierten Apps. Ohne Passwort ist die Datei lesbar – dann sicher aufbewahren. Mit Passwort: AES-256, das Passwort wird zum Wiederherstellen gebraucht.
+E1405	Gruppen
+E1406	Eigene CA
+E1407	Sofort übernommen werden Passwort von root, Netzwerk, Gerätename, Zeitzone, Laufwerke und die Einstellungen der Weboberfläche. Danach startet die Box neu und fragt im Recovery-Modus, was zusätzlich zurückkommen soll. Daten auf den Laufwerken bleiben unberührt.
+E1408	Passwort von root, Netzwerk, Name, Zeitzone und Laufwerke kommen sofort aus der Sicherung, dann startet die Box neu. Den Rest wählst du danach im Recovery-Modus.
+E1409	Wiederherstellen und neu starten
+E1410	Danach geht es im Recovery-Modus weiter
+E1411	RECOVERY-MODUS
+E1412	Sicherung
+E1413	Die Box wurde aus einer Sicherung wiederhergestellt:
+E1414	Schon übernommen: Passwort von root, Netzwerk (IP-Adresse, Subnetz), Gerätename, Zeitzone, Laufwerke und die Einstellungen der Weboberfläche. Wähle, was zusätzlich zurückkommen soll:
+E1415	Benutzer und Gruppen
+E1416	Paperless-Anbindung
+E1417	Cloud-Speicher
+E1418	Snapshots
+E1419	Zabbix-Agent
+E1420	Drucker
+E1421	Einstellungen
+E1422	Werden nach dem Neustart aus dem Store installiert (Internet nötig). Was nicht klappt, bietet der Bereich Apps später noch einmal an.
+E1423	ZERTIFIKATE
+E1424	HTTPS-Zertifikat aus der Sicherung wiederverwenden
+E1425	Sonst stellt die eigene CA ein neues Zertifikat aus, wenn sie wiederhergestellt wird. Browser und Desktop-App fragen dann einmal neu nach.
+E1426	Sonst behält die Box ihr aktuelles Zertifikat. Browser und Desktop-App fragen dann einmal neu nach.
+E1427	Die Sicherung enthält kein HTTPS-Zertifikat – die Box behält ihr aktuelles.
+E1428	Eigene CA wiederherstellen
+E1429	Geräte, die der CA vertrauen, vertrauen der Box nur mit derselben CA weiter. Ohne sie musst du die neue CA dort installieren und Zertifikate für andere Geräte neu ausstellen.
+E1430	Nichts weiter übernehmen
+E1431	Übernehmen und neu starten
+E1432	Auswahl übernehmen?
+E1433	Die Box übernimmt die gewählten Einstellungen und startet neu.
+E1434	Nichts weiter übernehmen?
+E1435	Die Box bleibt, wie sie jetzt ist: nur Passwort, Netzwerk, Name, Zeitzone und Laufwerke kommen aus der Sicherung. Die Sicherung lässt sich später erneut einspielen.
+E1436	Recovery beenden
+E1437	Die Einstellungen werden übernommen
+E1438	Recovery-Modus beendet.
+E1439	APPS AUS DER SICHERUNG
+E1440	Werden gerade installiert …
+E1441	Noch nicht installiert:
+E1442	Apps aus Sicherung installieren
+E1443	Die Apps werden im Hintergrund installiert.
+E1444	Durchsuchen …
+E1445	Ordner wählen
+E1446	Diesen Ordner wählen
+E1447	Nach oben
+E1448	Keine Unterordner.
+E1449	UNTERORDNER
+E1450	Unterordner hinzufügen
+E1451	Einzelne Ordner aus einer Freigabe – dafür ist keine eigene Freigabe nötig.
+E1452	UNTERORDNER (OPTIONAL)
+E1453	Der Ordner-Browser braucht das Recht „Dateien“ – den Ordner bitte eintippen.
+E1454	Ganze Freigaben oben in der Liste wählen.
+E1455	Ausschneiden
+E1456	Zwischenablage leeren
+E1457	Einfügen
+E1458	Diese Box ist noch nicht eingerichtet. Drücke kurz die USB-Taste an der Vorderseite der Box und lege dann ein Passwort für root fest.
+E1459	Warte auf die USB-Taste …
+E1460	Taste erkannt – jetzt Passwort festlegen (2 Minuten Zeit).
+E1461	NEUES PASSWORT (MIND. 8 ZEICHEN)
+E1462	PASSWORT WIEDERHOLEN
+E1463	Passwort festlegen
+E1464	Alles lässt sich später unter System einstellen.
+E1465	Paperless ist ein Modul: Es erscheint, wenn es unter APPS installiert ist, und verschwindet beim Entfernen (Einstellungen und Ordner bleiben).
+E1466	Modul · eigener Reiter
+E1467	Schaltet einen Bereich von ShareOS frei, mit eigenem Reiter. Der Code gehört zur geprüften Firmware – das Paket bringt nur den Schalter mit.
+E1468	Modul
+E1469	DNS-FILTER
+E1470	SO NUTZT DU IHN
+E1471	SPERRLISTEN
+E1472	ANFRAGEN
+E1473	GEBLOCKT
+E1474	REGELN
+E1475	RAM
+E1476	LISTE
+E1477	läuft
+E1478	startet …
+E1479	Filterung pausiert
+E1480	Zugangsdaten anzeigen
+E1481	Listen aktualisieren
+E1482	Listen aktualisiert.
+E1483	Liste entfernt.
+E1484	Liste entfernen?
+E1485	Liste hinzufügen
+E1486	Liste hinzugefügt.
+E1487	UPSTREAM-SERVER (EINER PRO ZEILE)
+E1488	ADRESSE DER LISTE
+E1489	PORT DER ADGUARD-OBERFLÄCHE
+E1490	DNS-Filter startet …
+E1491	DNS-Filter (AdGuard Home)
+E1492	Im Router als DNS-Server die Adresse der Box eintragen – oder nur an einzelnen Geräten:
+E1493	Keinen zweiten DNS-Server eintragen, sonst fragen Geräte an der Box vorbei. Ist die Box aus oder startet neu, haben die Geräte so lange kein DNS.
+E1494	Feineinstellungen, Abfrageprotokoll und Statistik in der Oberfläche von AdGuard Home.
+E1495	DNS-Filter einschalten (startet auch nach einem Neustart)
+E1496	Der DNS-Filter braucht das Apps-Laufwerk (Speicher → Laufwerke).
+E1497	Geschätzter Bedarf mit diesen Listen:
+E1498	Viele Regeln: Große Listen kosten viel Arbeitsspeicher. Für die 256 MB der Box besser bei der Standardliste bleiben.
+E1499	AdGuard Home startet – beim ersten Mal dauert das etwas.
+E1500	AdGuard Home öffnen ↗
+E1501	Filterung aktiv (aus = nur weiterleiten)
+E1502	Jede Regel kostet Arbeitsspeicher (etwa 0,1 KB). Ab 300 000 Regeln warnt ShareOS.
+E1503	Der DNS-Filter (AdGuard Home) ist ebenfalls ein Modul: Reiter DNS-FILTER, sobald er unter APPS installiert ist.
+E1504	Paperless, Cloud und der DNS-Filter sind Module: Ihr Reiter erscheint, wenn sie unter APPS installiert sind, und verschwindet beim Entfernen – Einstellungen und Daten bleiben.
+E1505	TRESOR
+E1506	gesperrt
+E1507	Entsperren
+E1508	Sperren
+E1509	Jetzt sperren
+E1510	Als Tresor: nur auf Anfrage für einige Minuten freigeben
+E1511	STANDARD-DAUER BEIM ENTSPERREN
+E1512	Ein Tresor ist im Netzwerk nicht zu sehen. Ein Benutzer mit Recht darauf entsperrt ihn unter „Mein ShareOS“ (oder in einer App) mit seinem Passwort – dann ist er für die gewählte Zeit nur für ihn als
+E1513	erreichbar und sperrt sich danach von selbst. Gesperrt kommt auch über bestehende Verbindungen und Apps niemand an die Dateien. Einen Tresor gibt es nur über SMB, ohne Gäste und ohne NFS.
+E1514	Zur Sicherheit noch einmal dein Passwort. Der Tresor ist danach nur für dich im Netzwerk erreichbar und sperrt sich von selbst wieder.
+E1515	OFFEN FÜR
+E1516	Der Tresor verschwindet für alle, die ihn entsperrt haben, aus dem Netzwerk. Offene Verbindungen verlieren den Zugriff.
+E1517	Tresor-Freigaben
+E1518	Darf die Tresor-Freigaben des Benutzers entsperren (nach Eingabe seines Passworts) und sperren; Administratoren können damit auch festlegen, welche Freigaben Tresore sind.
+E1519	HTTPS-PORT DER ADGUARD-OBERFLÄCHE
+E1520	Verschlüsselt (HTTPS) mit dem Zertifikat der Box; Aufrufe über HTTP werden umgeleitet.
+E1521	Verschlüsselt (HTTPS) mit dem selbstsignierten Zertifikat der Box – der Browser warnt wie bei der Oberfläche. HTTP wird erst umgeleitet, wenn die Box ein vertrauenswürdiges Zertifikat hat (eigene CA oder Let's Encrypt unter
+E1522	Ohne Zertifikat der Box nur unverschlüsselt (HTTP).
+E1523	Lokale Namen
+E1524	Lokale Domäne
+E1525	DNS-Server des Netzwerks
+E1526	System → Netzwerk
+E1527	LOKALE EINTRÄGE
+E1528	Eintrag hinzufügen
+E1529	Für Geräte mit fester IP-Adresse, die der Router nicht kennt.
+E1530	gilt für alle Namen darunter. Die Namen der Box trägt ShareOS selbst ein.
+E1531	Eintrag entfernen?
+E1532	Eintrag hinzugefügt.
+E1533	Eintrag entfernt.
+E1534	Ansicht
+E1535	Klassisch
+E1536	Desktop
+E1537	Desktop-Ansicht
+E1538	Startmenü
+E1539	Offene Fenster
+E1540	Meldungen
+E1541	Suche
+E1542	Benutzermenü
+E1543	Dateien
+E1544	Speicher
+E1545	Systemsteuerung
+E1546	App-Store
+E1547	Task-Manager
+E1548	Protokolle
+E1549	Cloud
+E1550	Paperless
+E1551	DNS-Filter
+E1552	Zugang & Verbindung
+E1553	Allgemein
+E1554	Zeit
+E1555	Darstellung
+E1556	Hintergrundbild
+E1557	Energie & Reset
+E1558	Status
+E1559	Autostart
+E1560	Medienserver
+E1561	Minimieren
+E1562	Maximieren
+E1563	Apps und Einstellungen suchen
+E1564	Klassische Ansicht
+E1565	Nichts gefunden.
+E1566	MODULE & APPS
+E1567	Anordnung zurücksetzen
+E1568	Anordnung zurücksetzen?
+E1569	Symbole und Fenster kommen an ihre Standardplätze.
+E1570	Suche in allen Einstellungen
+E1571	Keine Laufwerke oder Freigaben.
+E1572	Keine Bilder in diesem Ordner.
+E1573	Für ein Hintergrundbild von der Box braucht dein Konto das Recht „Dateien“.
+E1574	Ein Bild (JPG, PNG, WebP, GIF) von der Box – es wird nur für dich gespeichert.
+E1575	BILD ANPASSEN
+E1576	Füllen
+E1577	Einpassen
+E1578	Kacheln
+E1579	ShareOS (Standard)
+E1580	Hintergrundbild gespeichert.
+E1581	Installierte Apps
+E1582	App-Quellen
+E1583	Türkis
+E1584	Orange
+E1585	Violett
+E1586	Grau
+E1587	Akzentfarbe Türkis
+E1588	Akzentfarbe Orange
+E1589	Akzentfarbe Violett
+E1590	Akzentfarbe Grau
+E1591	TORRENTS
+E1592	Torrent-Fernzugriff
+E1593	Torrent-Fernzugriff gespeichert.
+E1594	PORT (HTTP)
+E1595	PORT (HTTPS)
+E1596	BENUTZER MIT FERNZUGRIFF-PASSWORT
+E1597	Im Store installieren (Transmission)
+E1598	Entziehen
+E1599	Torrents laufen über die System-App Transmission: Jeder Benutzer hat seinen eigenen Dienst und bedient ihn mit der Transmission-App. Hier lässt sich zusätzlich der Zugriff für Programme wie Transmission Remote GUI oder Transmissionic einschalten.
+E1600	FERNZUGRIFF FÜR TORRENT-PROGRAMME
+E1601	Programme wie Transmission Remote GUI, Transmissionic oder Tremotesf steuern damit den eigenen Transmission-Dienst eines Benutzers.
+E1602	Anmeldung mit dem Benutzernamen und einem eigenen Fernzugriff-Passwort, das der Benutzer in der Transmission-App erzeugt – nicht mit dem Passwort der Box.
+E1603	Nur aus dem Heimnetz, auch über VPN oder Tailscale; aus dem Internet ist der Zugriff gesperrt.
+E1604	Nach 5 falschen Passwörtern ist die Anmeldung 10 Minuten gesperrt.
+E1605	Es gibt keine eigene Weboberfläche: Im Browser dient die Transmission-App.
+E1606	Fernzugriff für Torrent-Programme einschalten (startet auch nach einem Neustart)
+E1607	HTTPS gibt es, solange die Weboberfläche HTTPS nutzt (System → Netzwerk); es gilt dasselbe Zertifikat. Viele Programme erwarten Port 9091.
+E1608	Ausgeschaltet – Torrents lassen sich nur mit der Transmission-App bedienen.
+E1609	Passwort entziehen
+E1610	Noch keiner – das Passwort erzeugt jeder Benutzer selbst in der Transmission-App.
+E1611	Programme mit diesem Passwort verlieren den Zugriff. Der Benutzer kann in der Transmission-App ein neues erzeugen.
+E1612	AdGuard Home startet und lädt die Blocklisten – das dauert etwa eine Minute.
+E1613	Start fehlgeschlagen:
+E1614	Speichern geht wieder, sobald er läuft.
+P0	Kein Swap, kein Apps-Bereich (Pakete und App-Daten brauchen ext4 oder Btrfs).
+P1	Je Platte $1 Swap, kein Apps-Bereich (Pakete und App-Daten brauchen ext4 oder Btrfs).
+P2	Wiederherstellen: $1
+P3	Sicherung: $1
+P4	$1 angelegt
+P5	FREIGABE $1
+P6	BENUTZER $1
+P7	Gruppe $1
+P8	Recht für $1
+P9	auf $1
+P10	Limit $1 je Laufwerk
+P11	Gäste (r)$1
+P12	Freigabe „$1“ gespeichert.
+P13	Freigabe „$1“ entfernen?
+P14	Freigabe „$1“ entfernt.
+P15	Benutzer „$1“ angelegt.
+P16	Benutzer „$1“ gespeichert.
+P17	Benutzer „$1“ löschen?
+P18	Benutzer „$1“ gelöscht.
+P19	Das Konto wird entfernt; Rechte an Freigaben entfallen.$1
+P20	Gruppe „$1“ angelegt.
+P21	Gruppe „$1“ löschen?
+P22	Gruppe „$1“ gelöscht.
+P23	Passwort für $1
+P24	Passwort von $1 geändert.
+P25	Übernommen: $1
+P26	Übersprungen: $1
+P27	Freigaben: $1
+P28	Freigabe: $1
+P29	Benutzer: $1
+P30	Passwort: $1
+P31	Alt-F: $1
+P32	Die Änderung gilt sofort. Die Box wartet dann $1 Sekunden auf eine Bestätigung von der neuen Adresse – kommt keine, stellt sie die bisherigen Einstellungen wieder her. So sperrst du dich nicht aus.
+P33	– ohne Bestätigung kehrt die Box in $1 s zu den alten zurück.
+P34	Die Box holt sich ihre Adresse vom Router. Sie ist danach eventuell unter einer anderen Adresse erreichbar (im Router nachsehen). Wird die Änderung nicht innerhalb von $1 Sekunden von der Box aus bestätigt, gelten wieder die bisherigen Einstellungen.
+P35	Die Box wechselt auf $1. Diese Seite öffnet danach die neue Adresse und bestätigt die Änderung. Klappt das nicht, gelten nach $2 Sekunden wieder die bisherigen Einstellungen.
+P36	Die Netzwerkeinstellungen werden übernommen und von dieser Seite bestätigt. Klappt das nicht, gelten nach $1 Sekunden wieder die bisherigen Einstellungen.
+P37	neue Adresse $1
+P38	warte auf die Box ($1 s) – nicht erreichbar? Neue Adresse im Router nachsehen und dort anmelden.
+P39	warte auf die Box ($1 s)
+P40	$1: startet beim Einschalten
+P41	$1: startet nicht mehr beim Einschalten
+P42	Netzwerk: $1
+P43	Darstellung: $1
+P44	($1 %) – Box
+P45	Kanal $1
+P46	Update $1 verfügbar
+P47	Update $1 verfügbar.
+P48	UPDATE $1
+P49	seit $1
+P50	$1 eingerichtet
+P51	$1 erkannt
+P52	geplant · Phase $1
+P53	Neueste · Beta
+P54	Neueste · Stabil
+P55	ÄNDERUNGEN IN $1
+P56	ZUGANG · $1
+P57	NAME FÜR $1 ($2)
+P58	ABLAUF · $1
+P59	Quelle: GitHub Releases · $1
+P60	erfolgreich installiert ($1)
+P61	$1 formatieren
+P62	$1 werden vollständig gelöscht. Das lässt sich nicht rückgängig machen.
+P63	Beim Klick auf „Einrichten“ werden $1 vollständig gelöscht. Die Erst-Synchronisierung läuft danach im Hintergrund (bei großen Platten mehrere Stunden); das Laufwerk ist sofort nutzbar.
+P64	Beim Klick auf „Einrichten“ werden $1 vollständig gelöscht.
+P65	Je Platte $1 Swap, Apps-Bereich auf „$2“ (falls noch keiner besteht).
+P66	Kein Swap, Apps-Bereich auf „$1“ (falls noch keiner besteht).
+P67	Beide Platten enthalten dieselben Daten. Fällt eine aus, ist nichts verloren. Nutzbar: $1.
+P68	Doppelter Platz ($1), aber keine Ausfallsicherheit – jede Platte ist ein eigenes Laufwerk.
+P69	Die Platte wird ein Laufwerk mit $1. Für Ausfallsicherheit später eine zweite Platte als Spiegel einrichten.
+P70	$1: beide Platten aktiv ($2)
+P71	$1: eine Platte fehlt ($2)
+P72	„$1“ entfernen?
+P73	$1 löschen?
+P74	$1 wird vollständig gelöscht und als Laufwerk „$2“ neu eingerichtet.
+P75	ShareOS $1 wird in den Flash geschrieben. Danach ist ein Neustart nötig, bei dem das neue System installiert wird. Die Box während des Schreibens nicht ausschalten.
+P76	$1 von $2
+P77	$1 installieren
+P78	Last $1$2
+P79	NETZWERK · $1
+P80	$1: eingehängt
+P81	$1: ausgehängt
+P82	$1: entfernt
+P83	$1: gestartet
+P84	$1: gestoppt
+P85	$1: neu gestartet
+P86	gefunden ($1).
+P87	voll ab $1 °C
+P88	jetzt: $1
+P89	zuletzt $1
+P90	$1 Datei(en) warten
+P91	persönlicher Eingang von $1 · Token $2
+P92	gemeinsamer Eingang · Token $1
+P93	persönlich: $1
+P94	EINGANG $1
+P95	PROTOKOLL · $1
+P96	Verbindung in Ordnung – $1 Dokumente in Paperless.
+P97	Eingang „$1“ entfernen?
+P98	$1: Verbindung in Ordnung ($2 Ordner).
+P99	Konto „$1“ entfernen?
+P100	Auftrag „$1“ entfernen?
+P101	Freigabe $1
+P102	Freigabe $1 → $2
+P103	$1 → Persönlicher Ordner
+P104	cron: $1 · von $2
+P105	von $1
+P106	Fehler · $1
+P107	läuft seit $1
+P108	Auftrag: $1
+P109	Konto: $1
+P110	Eingang: $1
+P111	Lüfter: $1
+P112	Dienste: $1
+P113	Einrichten: $1
+P114	Formatieren: $1
+P115	Installieren: $1
+P116	Ruhezustand: $1
+P117	Speicher: $1
+P118	Sprache: $1
+P119	Kanal: $1
+P120	Zertifikat: $1
+P121	Prüfen fehlgeschlagen: $1
+P122	$1 frei
+P123	$1 auswählen
+P124	$1 herunterladen
+P125	$1 ausgewählt.
+P126	Neuer Name für „$1“:
+P127	$1 Eintrag/Einträge. Zielordner als Pfad in „$2“, z. B. Fotos/2026 (leer = oberste Ebene).
+P128	$1 Eintrag/Einträge löschen?
+P129	$1 – Ordner samt Inhalt. Das lässt sich nicht rückgängig machen.
+P130	„$1“ gibt es in diesem Ordner schon.
+P131	$1 Datei(en) hochgeladen.
+P132	$1 Datei(en) nicht hochgeladen.
+P133	Wie für alle ($1)
+P134	Herunterladen: $1
+P135	Ordner: $1
+P136	Umbenennen: $1
+P137	Löschen: $1
+P138	Verschieben: $1
+P139	Kopieren: $1
+P140	Dateien: $1
+P141	Web-Apps laufen auf einem eigenen Port ($1) – getrennt von dieser Oberfläche, damit eine App deine Anmeldung nicht benutzen kann. Wer die Adresse kennt, kann eine Web-App im Netzwerk öffnen; „sichtbar für“ steuert, wem sie in „Mein ShareOS“ angezeigt wird.
+P142	Web-Apps laufen auf einem eigenen Port ($1 / $2 für HTTPS) – getrennt von dieser Oberfläche, damit eine App deine Anmeldung nicht benutzen kann. Wer die Adresse kennt, kann eine Web-App im Netzwerk öffnen; „sichtbar für“ steuert, wem sie in „Mein ShareOS“ angezeigt wird.
+P143	Stand $1
+P144	$1 · sichtbar für $2
+P145	$1 · SICHTBAR FÜR
+P146	$1 entfernen?
+P147	$1 $2 installiert.
+P148	$1 $2 installiert (eigene App).
+P149	$1 wird geladen …
+P150	$1 wird geprüft …
+P151	$1 wird installiert …
+P152	Update $1
+P153	Store: $1
+P154	Apps: $1
+P155	Entfernen: $1
+P156	Quellen: $1
+P157	Paket: $1
+P158	Danach startet $1. Die Zusatzpakete von Alt-F fehlen dann – in Alt-F dieselbe Datei noch einmal über dessen Firmware-Seite flashen. Zurück zu ShareOS: die ShareOS-.bin in Alt-F flashen, System und Einstellungen sind noch da.
+P159	$1 einspielen?
+P160	Kernel und Startsystem werden ersetzt und geprüft. Box während des Schreibens nicht ausschalten.
+P161	$1 ist im Flash. Jetzt neu starten?
+P162	$1 startet – dessen Oberfläche ist gleich unter $2 erreichbar (Port 80).
+P163	$1 startet
+P164	Firmware-Datei: $1
+P165	$1 kann jetzt abgezogen werden.
+P166	$1 formatieren
+P167	$1 löschen?
+P168	$1 – Name (Buchstaben, Ziffern, Leerzeichen, - und _) und Dateisystem:
+P169	Alles auf $1 wird gelöscht. Danach ist es ein $2-Laufwerk „$3“.
+P170	$1 ($2, $3) wird vollständig gelöscht und als Laufwerk „$4“ ($5) neu eingerichtet.
+P171	Apps-Bereich auf „$1“ (falls noch keiner besteht).
+P172	DATUM UND UHRZEIT ($1)
+P173	Zeit: $1
+P174	Abgleich: $1
+P175	$1 (Spiegel (RAID 1))
+P176	$1 (Einzelnes Laufwerk)
+P177	Fehler $1
+P178	Standard: $1
+P179	$1 · max. $2 s
+P180	$1 · AUFGABEN
+P181	Aufgaben: $1
+P182	Aufgabe: $1
+P183	Protokoll: $1
+P184	$1: Berechtigungen
+P185	Öffnen mit $1
+P186	Öffnen: $1
+P187	Beide Platten werden ein Laufwerk, Daten abwechselnd verteilt: schneller, Platz $1. Fällt eine Platte aus, ist alles verloren.
+P188	Beide Platten werden hintereinander ein Laufwerk mit $1 (auch bei verschieden großen Platten). Fällt eine Platte aus, ist alles verloren.
+P189	Spiegel „$1“ reparieren?
+P190	$1 ($2 · $3) wird vollständig gelöscht und als zweite Platte in den Spiegel aufgenommen. Die Daten werden danach im Hintergrund kopiert (bei großen Platten mehrere Stunden); das Laufwerk bleibt nutzbar.
+P191	eine Platte fehlt ($1)
+P192	$1 MELDUNGEN
+P193	$1 ungelesen
+P194	Meldungen: $1
+P195	Test: $1
+P196	Diese Seite ist über $1 geöffnet. Ohne Zertifikatswarnung:
+P197	Name: $1
+P198	Dateizugriff: $1
+P199	ubus-Fehler $1
+P200	persönlich: $1 · aus
+P201	persönlicher Eingang von $1 · Token $2
+P202	Freigabe $1
+P203	Fehler: $1
+P204	von $1
+P205	Konto „$1“ hinzugefügt.
+P206	Konto: $1
+P207	Auftrag „$1“ gespeichert.
+P208	Auftrag: $1
+P209	Passwort: $1
+P210	$1 · nicht eingehängt
+P211	$1 · Dateisystem nicht gefunden
+P212	enthält: $1
+P213	Der Name „$1“ ist schon vergeben.
+P214	$1 von $2
+P215	Bereich: $1
+P216	Lüfter: $1
+P217	Firmware-Datei: $1
+P218	Sprache: $1
+P219	Freigabe: $1
+P220	Benutzer: $1
+P221	$1: startet nicht mehr beim Einschalten
+P222	$1: startet beim Einschalten
+P223	Die Box wechselt auf $1. Diese Seite öffnet danach die neue Adresse und bestätigt die Änderung. Klappt das nicht, gelten nach $2 Sekunden wieder die bisherigen Einstellungen.
+P224	Prüfen fehlgeschlagen: $1
+P225	Konto „$1“ entfernt.
+P226	Auftrag „$1“ gestartet.
+P227	Auftrag „$1“ entfernt.
+P228	$1: eingehängt
+P229	$1: ausgehängt
+P230	$1: entfernt
+P231	Chat gefunden: $1 – jetzt speichern.
+P232	Telegram: $1
+P233	Ordner: $1
+P234	Löschen: $1
+P235	Terminal: $1
+P236	(Nextcloud, WebDAV, S3, SFTP, Google Drive, OneDrive, Dropbox und mehr). Das Programm (rund 20 MB) kommt in den Apps-Bereich auf der Platte$1.
+P237	Bei $1 meldest du dich im Browser an; auf der Box wird nur ein Zugangsschlüssel gespeichert, kein Passwort.
+P238	1. Bei $1 anmelden ↗
+P239	Anmelden: $1
+P240	– $1. Box nicht ausschalten.
+P241	Dazu wird installiert: $1.
+P242	Gebraucht von: $1 – diese Apps funktionieren danach nicht mehr.
+P243	$1 $2 installiert, dazu: $3.
+P244	Hinweis: $1
+P245	$1 Aufträge
+P246	Täglich $1
+P247	Wöchentlich (Sonntag) $1
+P248	die letzten $1
+P249	$1 Tage
+P250	$1 Wochen
+P251	$1 Monate
+P252	$1 Dateien
+P253	$1 geändert
+P254	$1 alte entfernt
+P255	Persönliche Ordner ($1)
+P256	Ganzes Laufwerk $1
+P257	$1 – keine Hardlinks
+P258	Den Stand vom $1 löschen? Die anderen Snapshots bleiben vollständig.
+P259	Die $1 vorhandenen Snapshots in $2 ebenfalls löschen? Sonst bleiben sie dort liegen.
+P260	Snapshot „$1“ läuft.
+P261	Das Ziel-Laufwerk $1 ist nicht eingebunden.
+P262	AUFTRAG $1
+P263	Medienserver: $1
+P264	$1 Geräte
+P265	$1 (nur lesen)
+P266	Anzeige von $1
+P267	Anzeige: $1
+P268	Als Favorit markieren: $1
+P269	Aus den Favoriten nehmen: $1
+P270	Favoriten: $1
+P271	Datei $1
+P272	Teilen: $1 Datei(en) nicht gespeichert – $2
+P273	$1 Datei(en) in „Geteilt“ in deinem persönlichen Ordner gespeichert.
+P274	$1 % von meinem Limit
+P275	Laufwerk $1 % belegt
+P276	$1 Sektoren wurden schon ersetzt (umgelagert).
+P277	$1 Sektoren sind unsicher (schwebend) – sie werden beim nächsten Schreiben geprüft.
+P278	$1 Sektoren waren nicht lesbar.
+P279	$1 Übertragungsfehler (CRC) – meist Anschluss oder Kabel, nicht die Platte selbst.
+P280	$1 Einträge im Fehlerprotokoll der Platte.
+P281	Die SSD ist fast verbraucht: noch $1 % Lebensdauer.
+P282	Die SSD nutzt sich ab: noch $1 % Lebensdauer.
+P283	Sehr warm: $1 °C.
+P284	Warm: $1 °C.
+P285	Wert $1 unter der Schwelle des Herstellers
+P286	Wert $1 war früher unter der Schwelle
+P287	$1 Einträge
+P288	$1 °C (höchste: $2 °C)
+P289	$1 Tage ($2 h)
+P290	$1 Jahre ($2 h)
+P291	noch $1 %
+P292	SSD noch $1 %
+P293	Läuft – noch $1 %
+P294	(bei $1 h)
+P295	Gelesen $1.
+P296	$1 U/min
+P297	Der Langtest liest die ganze Platte $1 – bei großen Platten viele Stunden. Die Box bleibt dabei nutzbar, die Platte ist etwas langsamer.
+P298	Selbsttest: $1
+P299	löscht nach $1 Tagen
+P300	$1 Eintrag/Einträge in den Papierkorb?
+P301	$1 – lässt sich im Papierkorb wiederherstellen.
+P302	Endgültig löschen – $1 Eintrag/Einträge
+P303	$1 Eintrag/Einträge wiederhergestellt.
+P304	Papierkorb: $1
+P305	USB-Kopie: $1
+P306	USB-Taste: $1
+P307	Diese Seite konnte nicht angezeigt werden: $1
+P308	Start-Protokoll $1
+P309	Zeitplan: $1
+P310	$1 übernehmen
+P311	$1 übernehmen: $2
+P312	$1 ($2, $3) wird so, wie es ist, als Laufwerk eingebunden – es wird nichts gelöscht. Name des Laufwerks (a–z, 0–9, - und _, max. 16 Zeichen):
+P313	$1 ist jetzt das Laufwerk „$2“ – die Daten sind erhalten. Freigaben für vorhandene Ordner unter „Freigaben“ anlegen.
+P314	Zeitplan gespeichert – die Box schaltet sich am $1 ein.
+P315	ShareOS fährt herunter und die Box schaltet sich aus. Nach Zeitplan schaltet sie sich am $1 wieder ein.
+P316	Nach Zeitplan schaltet sie sich am $1 wieder ein.
+P317	ShareOS fährt herunter und die Box schaltet sich aus. $1
+P318	an $1
+P319	aus $1
+P320	Das Zertifikat „$1“ und sein Schlüssel werden von der Box gelöscht. Geräte, die es schon nutzen, behalten ihre Kopie.
+P321	Alle anzeigen ($1)
+P322	($1 ausgestellte Zertifikate)
+P323	Gruppen: $1
+P324	Ausgestellte Zertifikate: $1
+P325	Recovery: $1
+P326	Persönlicher Ordner / $1
+P327	Einfügen ($1)
+P328	$1 Eintrag/Einträge in der Zwischenablage – im Zielordner „Einfügen“ wählen.
+P329	Tresor „$1“ entsperren
+P330	Tresor „$1“ ist bis $2 offen.
+P331	Tresor „$1“ jetzt sperren?
+P332	Tresor „$1“ gesperrt.
+P333	offen bis $1
+P334	$1: offen bis $2
+P335	$1 Minuten
+P336	$1 Stunden
+P337	Tresor: $1
+P338	Fernzugriff-Passwort von „$1“ entziehen?
+P339	Passwort von „$1“ entzogen.
+P340	Torrent-Fernzugriff: $1
+W0	läuft
+W1	gestoppt
+W2	 frei von 
+W3	 von 
+W4	 belegt
+W5	Tage Laufzeit
+W6	enthält: 
+W7	RAID-Mitglied von
+W8	RAID-Mitglied
+W9	Festplatte · 
+W10	Schacht · 
+W11	Erst-Synchronisierung
+W12	Wiederherstellung
+W13	Prüfung
+W14	 · noch $1
+W15	Spiegel (RAID 1)
+W16	Einzelnes Laufwerk
+W17	 umgelagert, 
+W18	 schwebend
+W19	LÄUFT
+W20	 und 
+W21	T $1 h
+W22	 – nicht ausschalten.
+W23	Prüfen fehlgeschlagen: 
+W24	Kanal: 
+W25	Dienste: 
+W26	Speicher: 
+W27	Download: 
+W28	Installieren: 
+W29	Einrichten: 
+W30	Formatieren: 
+W31	Zertifikat: 
+W32	HTTPS: 
+W33	Sprache: 
+W34	Logo: 
+W35	halb
+W36	Lüfter: 
+W37	Hardware: 
+W38	Gruppe
+W39	 · noch $1
+W40	USB-Laufwerk
+W41	Eintrag/Einträge
+W42	alle Benutzer
+E1615	Noch kein Eingangsordner.
+E1616	Cloud-Sync nutzt
+E1617	Keine Berechtigung
+E1618	Netzwerkname (mDNS)
+E1619	macht die Box als <name>.local erreichbar
+P341	$1, Port $2
+P342	SCHACHT · $1
+P343	von $1
+P344	$1 wartend
+P345	$1 · $2 Dateien · $3
+P346	$1 Jahre
+P347	beide Platten aktiv ($1)
+P348	Eingang „$1“ gespeichert.
+P349	Eingang „$1“ entfernt.
+P350	ok · $1
+P351	$1Linux $2 · Last $3
+P352	Liste: $1
+P353	Eintrag: $1
+E1620	Akzentfarbe Blau
+E1621	Akzentfarbe Türkis
+E1622	Akzentfarbe Grün
+E1623	Akzentfarbe Orange
+E1624	Akzentfarbe Rot
+E1625	Akzentfarbe Violett
+E1626	Akzentfarbe Grau
+E1627	Akzentfarbe Weiß
+E1628	Montag einschalten
+E1629	Montag ausschalten
+E1630	Dienstag einschalten
+E1631	Dienstag ausschalten
+E1632	Mittwoch einschalten
+E1633	Mittwoch ausschalten
+E1634	Donnerstag einschalten
+E1635	Donnerstag ausschalten
+E1636	Freitag einschalten
+E1637	Freitag ausschalten
+E1638	Samstag einschalten
+E1639	Samstag ausschalten
+E1640	Sonntag einschalten
+E1641	Sonntag ausschalten
+E1642	Festplatte
+E1643	Aus
+E1644	Wird gestartet
+P354	Drucker: $1
+P355	Testseite: $1
+P356	Hintergrundbild: $1
+P357	DNS-Filter: $1
+P358	Hostname: $1
+P359	Cloud: $1
+P360	Logo: $1
+P361	Snapshots: $1

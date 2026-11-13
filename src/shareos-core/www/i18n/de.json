@@ -1,0 +1,3277 @@
+{
+	"language": "de",
+	"name": "Deutsch",
+	"source": "en",
+	"exact": {
+		"OVERVIEW": "ÜBERSICHT",
+		"STORAGE": "SPEICHER",
+		"SHARES": "FREIGABEN",
+		"SERVICES": "DIENSTE",
+		"APPS": "APPS",
+		"CLOUD": "CLOUD",
+		"PAPERLESS": "PAPERLESS",
+		"SYSTEM": "SYSTEM",
+		"NEW": "NEU",
+		"ONLINE": "ONLINE",
+		"OFFLINE": "OFFLINE",
+		"Log out": "Abmelden",
+		"Toggle light/dark": "Hell/Dunkel umschalten",
+		"Main menu": "Hauptmenü",
+		"System": "System",
+		"available": "verfügbar",
+		"The ShareOS interface needs JavaScript.": "Die ShareOS-Oberfläche braucht JavaScript.",
+		"Administration – please log in.": "Verwaltung – bitte anmelden.",
+		"USER": "BENUTZER",
+		"PASSWORD": "PASSWORT",
+		"Stay logged in (7 days)": "Angemeldet bleiben (7 Tage)",
+		"Log in": "Anmelden",
+		"Wrong user or password.": "Benutzer oder Passwort falsch.",
+		"Box not reachable.": "Box nicht erreichbar.",
+		"Session expired – please log in again.": "Sitzung abgelaufen – bitte neu anmelden.",
+		"live · every 5 s": "live · alle 5 s",
+		"LOAD": "AUSLASTUNG",
+		"board control active": "Gerätesteuerung aktiv",
+		"no MCU data": "keine MCU-Daten",
+		"FAN": "LÜFTER",
+		"TEMP": "TEMP",
+		"off": "aus",
+		"half": "halb",
+		"full": "voll",
+		"no link": "kein Link",
+		"last 10 min": "letzte 10 min",
+		"Gateway · DNS": "Gateway · DNS",
+		"collecting samples …": "sammle Messwerte …",
+		"Firmware": "Firmware",
+		"Booted from": "Start aus",
+		"Flash (UBI)": "Flash (UBI)",
+		"Network (RAM)": "Netzwerk (RAM)",
+		"Settings are kept": "Einstellungen bleiben erhalten",
+		"Changes are lost on reboot": "Änderungen gehen beim Neustart verloren",
+		"Uptime": "Laufzeit",
+		"since the last boot": "seit dem letzten Start",
+		"Services": "Dienste",
+		"Flash free": "Flash frei",
+		"for settings & packages": "für Einstellungen & Pakete",
+		"Drives": "Laufwerke",
+		"detected": "erkannt",
+		"none attached": "keine eingesteckt",
+		"manage all": "alle verwalten",
+		"Update available": "Update verfügbar",
+		"Loading system data …": "Lade Systemdaten …",
+		"Loading services …": "Lade Dienste …",
+		"Loading drives …": "Lade Laufwerke …",
+		"No hard disk or USB storage detected. ShareOS runs entirely from the internal flash – drives appear here as soon as they are attached.": "Keine Festplatte und kein USB-Speicher erkannt. ShareOS läuft vollständig aus dem internen Flash – Laufwerke erscheinen hier, sobald sie eingesteckt sind.",
+		"unknown model": "unbekanntes Modell",
+		"start, stop, restart": "Start, Stopp, Neustart",
+		"Restart": "Neustart",
+		"Stop": "Stopp",
+		"Start": "Starten",
+		"SSH / SFTP": "SSH / SFTP",
+		"Web interface": "Weboberfläche",
+		"Time (NTP)": "Zeit (NTP)",
+		"Scheduler": "Zeitplaner",
+		"API (rpcd)": "API (rpcd)",
+		"System bus (ubus)": "Systembus (ubus)",
+		"System log": "Systemprotokoll",
+		"Board control": "Gerätesteuerung",
+		"sets the clock, keeps the MCU clock in sync": "stellt die Uhr, gleicht die MCU-Uhr ab",
+		"interface for this web UI": "Schnittstelle für diese Oberfläche",
+		"messages between the services": "Nachrichten zwischen den Diensten",
+		"syslogd, in RAM": "syslogd, im RAM",
+		"fan, temperature, buttons, MCU clock": "Lüfter, Temperatur, Taster, MCU-Uhr",
+		"This area is not built yet. Planned:": "Dieser Bereich ist noch nicht gebaut. Geplant:",
+		"SHARES, USERS & GROUPS": "FREIGABEN, BENUTZER & GRUPPEN",
+		"APPS & PACKAGES": "APPS & PAKETE",
+		"CLOUD STORAGE": "CLOUD-SPEICHER",
+		"PAPERLESS-NGX": "PAPERLESS-NGX",
+		"Shares per folder with switches for SMB, NFS, FTP and DLNA": "Freigaben je Ordner mit Schaltern für SMB, NFS, FTP und DLNA",
+		"Users & groups with permissions per share": "Benutzer & Gruppen mit Rechten pro Freigabe",
+		"Mount network drives (CIFS/NFS)": "Netzlaufwerke einbinden (CIFS/NFS)",
+		"Backup jobs (rsync)": "Backup-Jobs (rsync)",
+		"Package source (opkg feed) on GitHub": "Paketquelle (opkg-Feed) über GitHub",
+		"Catalogue with categories, install/remove with a queue": "Katalog mit Kategorien, Installieren/Entfernen mit Warteschlange",
+		"Packages go to settings & packages (flash) or to the disk": "Pakete landen in den Einstellungen & Paketen (Flash) oder auf der Platte",
+		"Accounts via rclone: Nextcloud/WebDAV, Google Drive, OneDrive, Dropbox, S3, SFTP": "Konten über rclone: Nextcloud/WebDAV, Google Drive, OneDrive, Dropbox, S3, SFTP",
+		"Sync jobs: copy, mirror, bidirectional": "Sync-Jobs: kopieren, spiegeln, bidirektional",
+		"Encryption (crypt), bandwidth and schedule": "Verschlüsselung (crypt), Bandbreite und Zeitplan",
+		"Inbox folder on the NAS → upload via the Paperless REST API (token)": "Eingangsordner auf dem NAS → Upload über die Paperless-REST-API (Token)",
+		"Transfer status via /api/tasks/": "Status der Übertragungen über /api/tasks/",
+		"Tags and correspondent per folder, export backup to the NAS": "Tags und Korrespondent je Ordner, Export-Backup aufs NAS",
+		"VOLUMES": "VOLUMES",
+		"DRIVES": "LAUFWERKE",
+		"SETTINGS": "EINSTELLUNGEN",
+		"SPINDOWN": "RUHEZUSTAND",
+		"SET UP AGAIN": "NEU EINRICHTEN",
+		"SPIN DISKS DOWN AFTER": "PLATTEN ABSCHALTEN NACH",
+		"never": "nie",
+		"10 minutes": "10 Minuten",
+		"20 minutes": "20 Minuten",
+		"30 minutes": "30 Minuten",
+		"1 hour": "1 Stunde",
+		"2 hours": "2 Stunden",
+		"Swap": "Swap",
+		"App area": "Apps-Bereich",
+		"none active": "keiner aktiv",
+		"none yet": "noch keine",
+		"Saves power and wear. Disks spin up again on the next access (a few seconds).": "Spart Strom und schont die Platten. Beim ersten Zugriff laufen sie wieder an (einige Sekunden).",
+		"The wizard erases the selected disks and sets them up again. Single disks can also be formatted directly under \"Drives\".": "Der Assistent löscht die ausgewählten Platten und richtet sie neu ein. Einzelne Platten lassen sich auch direkt an der Platte unter „Laufwerke“ formatieren.",
+		"Start wizard": "Assistent starten",
+		"Set up storage": "Speicher einrichten",
+		"INTERNAL FLASH": "INTERNER FLASH",
+		"128 MB NAND · UBI": "128 MB NAND · UBI",
+		"AREA": "BEREICH",
+		"MOUNTED": "EINGEHÄNGT",
+		"USED": "BELEGT",
+		"Settings & packages": "Einstellungen & Pakete",
+		"System (read-only)": "System (nur lesbar)",
+		"RAM (tmp)": "Arbeitsspeicher (tmp)",
+		"Unmount": "Aushängen",
+		"Mount": "Einhängen",
+		"Remove": "Entfernen",
+		"Read SMART": "SMART lesen",
+		"Erase & format": "Löschen & formatieren",
+		"Mirror (RAID 1)": "Spiegel (RAID 1)",
+		"Single drive": "Einzelnes Laufwerk",
+		"SMART not read yet": "SMART noch nicht gelesen",
+		"asleep (SMART on next wake-up)": "schläft (SMART beim nächsten Aufwachen)",
+		"no SMART data": "no SMART data",
+		"SMART OK": "SMART OK",
+		"SMART WARNING": "SMART WARNUNG",
+		"SMART FAILED": "SMART FEHLER",
+		"empty": "leer",
+		"no file system": "ohne Dateisystem",
+		"not mounted": "nicht eingehängt",
+		"file system not found": "Dateisystem nicht gefunden",
+		"waiting": "wartet",
+		"Packages and app data live in .shareos": "Pakete und App-Daten liegen in .shareos",
+		"No storage set up yet. The wizard sets up the disks in a few steps – as a mirror (both disks hold the same data) or as separate drives.": "Noch kein Speicher eingerichtet. Der Assistent richtet die Platten in wenigen Schritten ein – als Spiegel (beide Platten mit denselben Daten) oder als getrennte Laufwerke.",
+		"SET UP STORAGE · WIZARD": "SPEICHER EINRICHTEN · ASSISTENT",
+		"Cancel": "Abbrechen",
+		"Disks": "Platten",
+		"Layout": "Aufbau",
+		"Name": "Name",
+		"Confirm": "Bestätigen",
+		"Back": "Zurück",
+		"Next": "Weiter",
+		"Set up": "Einrichten",
+		"Which disks should be set up?": "Welche Platten sollen eingerichtet werden?",
+		"Everything on these disks will be erased.": "Alles auf diesen Platten wird gelöscht.",
+		"Mirror (RAID 1) – recommended": "Spiegel (RAID 1) – empfohlen",
+		"Two separate drives": "Zwei getrennte Laufwerke",
+		"SWAP PER DISK": "AUSLAGERUNGSSPEICHER (SWAP) JE PLATTE",
+		"1 GB – recommended": "1 GB – empfohlen",
+		"The box has only 256 MB of RAM. Swap on the disks absorbs load peaks (shares, cloud sync, package installs). It is a small partition at the start of each disk; the rest becomes the drive.": "Die Box hat nur 256 MB RAM. Swap auf den Platten fängt Lastspitzen ab (Freigaben, Cloud-Sync, Paketinstallation). Er liegt als eigene kleine Partition vorne auf jeder Platte; der Rest wird das Laufwerk.",
+		"NAME OF THE MIRROR": "NAME DES SPIEGELS",
+		"DRIVE": "LAUFWERK",
+		"DISKS": "PLATTEN",
+		"SIZE": "GRÖSSE",
+		"LAYOUT": "AUFBAU",
+		"Lower-case letters, digits, - and _ (max. 16 characters). The drive appears as": "Kleinbuchstaben, Ziffern, - und _ (max. 16 Zeichen). Das Laufwerk erscheint als",
+		"; you create shares on it later.": "; Freigaben legst du später darauf an.",
+		"Erase and set up the disks?": "Platten löschen und einrichten?",
+		"Erase & set up": "Löschen & einrichten",
+		"Setup started.": "Einrichtung gestartet.",
+		"Formatting started.": "Formatieren gestartet.",
+		"Name of the new drive (a–z, 0–9, - and _, max. 16 characters):": "Name des neuen Laufwerks (a–z, 0–9, - und _, max. 16 Zeichen):",
+		"Please select at least one disk.": "Bitte mindestens eine Platte auswählen.",
+		"Two disks at most.": "Höchstens zwei Platten.",
+		"Invalid name: only a–z, 0–9, - and _, max. 16 characters.": "Ungültiger Name: nur a–z, 0–9, - und _, max. 16 Zeichen.",
+		"The names must be different.": "Die Namen müssen verschieden sein.",
+		"Invalid name.": "Ungültiger Name.",
+		"Spindown saved.": "Ruhezustand gespeichert.",
+		"FIRMWARE": "FIRMWARE",
+		"GENERAL": "ALLGEMEIN",
+		"POWER & RESET": "ENERGIE & RESET",
+		"LOGS": "PROTOKOLLE",
+		"APPEARANCE": "DARSTELLUNG",
+		"ABOUT": "ÜBER",
+		"FIRMWARE UPDATE": "FIRMWARE-UPDATE",
+		"Installed": "Installiert",
+		"Kernel, initramfs and system": "Kernel, Startsystem und System",
+		"not checked yet": "noch nicht geprüft",
+		"up to date": "aktuell",
+		"no release for this device yet": "noch kein Release für dieses Gerät",
+		"none": "keine",
+		"UPDATE CHANNEL": "UPDATE-KANAL",
+		"Stable (releases)": "Stabil (Releases)",
+		"Check now": "Jetzt prüfen",
+		"Checking …": "Prüfe …",
+		"VERSIONS": "VERSIONEN",
+		"from GitHub": "von GitHub",
+		"VERSION": "VERSION",
+		"DATE": "DATUM",
+		"CHANNEL": "KANAL",
+		"STABLE": "STABIL",
+		"BETA": "BETA",
+		"installed": "installiert",
+		"Notes ↗": "Notes ↗",
+		"HOW AN UPDATE WORKS": "SO LÄUFT EIN UPDATE",
+		"Download the bundle from GitHub and check it (SHA-256, device, sizes)": "Paket von GitHub laden und prüfen (SHA-256, Gerät, Größen)",
+		"Write kernel and initramfs to flash and read them back": "Kernel und Startsystem in den Flash schreiben und zurücklesen",
+		"Stage the new system": "Neues System bereitlegen",
+		"Reboot: the initramfs installs the system, then ShareOS starts again": "Neustart: das Startsystem installiert das System, dann startet ShareOS neu",
+		"Settings and installed packages are kept. If interrupted, the installation is repeated on the next boot.": "Einstellungen und installierte Pakete bleiben erhalten. Bei einem Abbruch wird die Installation beim nächsten Start wiederholt.",
+		"Download": "Herunterladen",
+		"Verify": "Prüfen",
+		"Ready": "Bereit",
+		"Write": "Schreiben",
+		"Discard": "Verwerfen",
+		"Error:": "Fehler:",
+		"Last update:": "Letztes Update:",
+		"Reboot needed": "Neustart nötig",
+		"Reboot now": "Jetzt neu starten",
+		"Verified: SHA-256, checksums of all parts, made for this device. Settings and packages are kept.": "Geprüft: SHA-256, Prüfsummen aller Teile, passend für dieses Gerät. Einstellungen und Pakete bleiben erhalten.",
+		"ShareOS is up to date.": "ShareOS ist aktuell.",
+		"Update downloaded and verified.": "Update geladen und geprüft.",
+		"Update written – please reboot.": "Update geschrieben – bitte neu starten.",
+		"Install update?": "Update installieren?",
+		"Install": "Installieren",
+		"DEVICE NAME": "GERÄTENAME",
+		"HOSTNAME": "HOSTNAME",
+		"Save": "Speichern",
+		"NEW PASSWORD": "NEUES PASSWORT",
+		"REPEAT": "WIEDERHOLEN",
+		"Change password": "Passwort ändern",
+		"Letters, digits and hyphens. Applies at once; the DHCP server sees it on the next lease renewal.": "Buchstaben, Ziffern und Bindestrich. Gilt sofort, der DHCP-Server sieht ihn bei der nächsten Verlängerung.",
+		"Applies to the web interface and SSH. At least 6 characters.": "Gilt für die Weboberfläche und SSH. Mindestens 6 Zeichen.",
+		"Hostname saved.": "Hostname gespeichert.",
+		"Password changed.": "Passwort geändert.",
+		"The passwords do not match.": "Die Passwörter stimmen nicht überein.",
+		"POWER": "ENERGIE",
+		"Power off": "Ausschalten",
+		"Powering off shuts ShareOS down and the board control cuts the power. Switch on with the power button.": "Beim Ausschalten fährt ShareOS herunter und die Gerätesteuerung schaltet den Strom ab. Einschalten über den Power-Taster.",
+		"FACTORY RESET": "WERKSEINSTELLUNGEN",
+		"erases settings": "löscht Einstellungen",
+		"Reset to factory settings": "Auf Werkseinstellungen zurücksetzen",
+		"Removes all settings and installed packages from flash and reboots. The system and firmware version stay. Afterwards the password is again": "Entfernt alle Einstellungen und installierten Pakete aus dem Flash und startet neu. Das System selbst und die Firmware-Version bleiben. Danach gilt wieder das Passwort",
+		"Reboot?": "Neu starten?",
+		"Reboot": "Neu starten",
+		"The box reboots. This page reconnects on its own (about 1–2 minutes).": "Die Box startet neu. Die Seite verbindet sich danach von selbst wieder (ca. 1–2 Minuten).",
+		"Power off?": "Ausschalten?",
+		"ShareOS shuts down and the box switches off. Switch it on again at the device.": "ShareOS fährt herunter und die Box schaltet sich aus. Einschalten danach nur am Gerät.",
+		"Factory reset?": "Werkseinstellungen?",
+		"Reset": "Zurücksetzen",
+		"All settings and installed packages are erased, then the box reboots. The password is \"shareos\" again afterwards.": "Alle Einstellungen und installierten Pakete werden gelöscht, danach startet die Box neu. Das Passwort ist dann wieder „shareos“.",
+		"Rebooting": "Neustart läuft",
+		"ShareOS is restarting": "ShareOS startet neu",
+		"Box is powering off": "Box wird ausgeschaltet",
+		"You can close this window.": "Du kannst dieses Fenster schließen.",
+		"Service is restarting": "Dienst wird neu gestartet",
+		"waiting for the box": "warte auf die Box",
+		"Factory reset": "Werkseinstellungen",
+		"LOG": "PROTOKOLL",
+		"Source": "Quelle",
+		"System (syslog)": "System (syslog)",
+		"Kernel (dmesg)": "Kernel (dmesg)",
+		"Refresh": "Aktualisieren",
+		"loading …": "lade …",
+		"(empty)": "(leer)",
+		"this browser only": "nur in diesem Browser",
+		"Light theme": "Helles Design",
+		"Scanlines": "Scanlines",
+		"LOGO": "LOGO",
+		"applies to everyone": "gilt für alle",
+		"Show the ShareOS logo (off: text only)": "ShareOS-Logo anzeigen (aus: nur Schriftzug)",
+		"LANGUAGE": "SPRACHE",
+		"Accent colour green": "Akzentfarbe Grün",
+		"Accent colour red": "Akzentfarbe Rot",
+		"Accent colour blue": "Akzentfarbe Blau",
+		"Accent colour white": "Akzentfarbe Weiß",
+		"Version": "Version",
+		"Stage": "Stufe",
+		"Device": "Gerät",
+		"Firmware name": "Firmware-Name",
+		"PROJECT": "PROJEKT",
+		"ShareOS is free firmware for D-Link NAS boxes, derived from Alt-F. Based on buildroot, Linux and BusyBox; operating model after OpenWrt (UCI, ubus, rpcd, ucode). Licence GPLv2.": "ShareOS ist eine freie Firmware für D-Link-NAS, hervorgegangen aus Alt-F. Basis: buildroot, Linux, BusyBox; Bedienkonzept nach OpenWrt (UCI, ubus, rpcd, ucode). Lizenz GPLv2.",
+		"Setup running": "Einrichtung läuft",
+		"Do not switch the box off.": "Box nicht ausschalten.",
+		"Setup failed:": "Einrichtung fehlgeschlagen:",
+		"HTTPS": "HTTPS",
+		"CONNECTION": "VERBINDUNG",
+		"this page: HTTPS": "diese Seite: HTTPS",
+		"this page: HTTP": "diese Seite: HTTP",
+		"HTTPS on port 443": "HTTPS auf Port 443",
+		"Redirect HTTP requests to HTTPS": "HTTP-Aufrufe auf HTTPS umleiten",
+		"After a change the web server restarts; the page is unreachable for a moment.": "Nach einer Änderung startet der Webserver neu; die Seite ist für einen Moment nicht erreichbar.",
+		"CERTIFICATE": "ZERTIFIKAT",
+		"self-signed": "selbstsigniert",
+		"own certificate": "eigenes Zertifikat",
+		"No certificate yet – one is created automatically when HTTPS is switched on.": "Noch kein Zertifikat – es wird beim Einschalten von HTTPS automatisch erstellt.",
+		"Issued to": "Ausgestellt für",
+		"Issuer": "Aussteller",
+		"Valid from": "Gültig ab",
+		"Valid until": "Gültig bis",
+		"Names": "Namen",
+		"Browsers warn once about self-signed certificates. The connection is encrypted anyway; for a page without a warning, upload your own certificate (e.g. from your intranet CA or Let's Encrypt).": "Browser warnen bei selbstsignierten Zertifikaten einmalig. Die Verbindung ist trotzdem verschlüsselt; für eine Seite ohne Warnung ein eigenes Zertifikat hinterlegen (z. B. von der eigenen Intranet-CA oder Let's Encrypt).",
+		"New self-signed certificate": "Neues selbstsigniertes Zertifikat",
+		"UPLOAD YOUR OWN CERTIFICATE": "EIGENES ZERTIFIKAT HINTERLEGEN",
+		"CERTIFICATE (PEM, INTERMEDIATES WELCOME)": "ZERTIFIKAT (PEM, GERNE MIT ZWISCHENZERTIFIKATEN)",
+		"PRIVATE KEY (PEM, NO PASSWORD)": "PRIVATER SCHLÜSSEL (PEM, OHNE PASSWORT)",
+		"Before it is used, the box checks that certificate and key belong together. The key never leaves the box.": "Vor dem Übernehmen wird geprüft, ob Zertifikat und Schlüssel zusammenpassen. Der Schlüssel verlässt die Box nicht.",
+		"Use certificate": "Zertifikat übernehmen",
+		"Certificate installed.": "Zertifikat übernommen.",
+		"Certificate created.": "Zertifikat erstellt.",
+		"New self-signed certificate?": "Neues selbstsigniertes Zertifikat?",
+		"A new certificate for the current name and IP is created and replaces the old one. Browsers will show a warning once again.": "Ein neues Zertifikat für den aktuellen Namen und die aktuelle IP wird erstellt und ersetzt das bisherige. Browser zeigen danach einmalig wieder eine Warnung.",
+		"Saved – the web server is restarting.": "Gespeichert – der Webserver startet neu.",
+		"Loading …": "Lade …",
+		"INTERFACE LANGUAGE": "SPRACHE DER OBERFLÄCHE",
+		"More languages: one file in": "Weitere Sprachen: eine Datei in",
+		"– see docs/TRANSLATING.md.": "– siehe docs/TRANSLATING.md.",
+		"OFF BELOW (°C, 0 = NEVER)": "AUS UNTER (°C, 0 = NIE)",
+		"FULL FROM (°C)": "VOLL AB (°C)",
+		"BACK TO HALF BELOW (°C)": "ZURÜCK AUF HALB UNTER (°C)",
+		"Everything can be set later under System. The password stays \"shareos\" until you change it.": "Alles lässt sich später unter System einstellen. Das Passwort bleibt „shareos“, bis du es änderst.",
+		"Alt-F": "Alt-F",
+		"Take over Alt-F": "Alt-F übernehmen",
+		"Test versions too, with new features earlier.": "Auch Testversionen, mit neuen Funktionen früher.",
+		"This box has settings from": "Auf dieser Box wurden Einstellungen von",
+		"": "gefunden",
+		"Balanced": "Ausgewogen",
+		"User": "Benutzer",
+		"Shares": "Freigaben",
+		"NFS": "NFS",
+		"Users and shares are kept and offered in the \"Shares\" area. The Alt-F data in flash stays untouched.": "Benutzer und Freigaben werden aufbewahrt und mit dem Bereich „Freigaben“ angeboten. Die Alt-F-Daten im Flash bleiben unverändert.",
+		"Beta": "Beta",
+		"Stable": "Stabil",
+		"Next, you can set up the hard disks right away.": "Danach kannst du gleich die Festplatten einrichten.",
+		"Everyone knows the default password": "Das Standardpasswort",
+		"– please set your own now. It applies to the web interface and SSH.": "kennt jeder – bitte jetzt ein eigenes setzen. Es gilt für die Weboberfläche und SSH.",
+		"The box runs the fan in three steps (off, half, full) according to the board temperature. Changes apply within seconds.": "Die Box regelt den Lüfter in drei Stufen (aus, halb, voll) nach der Temperatur der Gerätesteuerung. Änderungen gelten nach wenigen Sekunden.",
+		"The orange USB LED shows rescue mode and updates during boot and cannot be changed.": "Die orange USB-LED zeigt den Rettungsmodus und Updates beim Start an und ist nicht einstellbar.",
+		"FIRST-TIME SETUP": "ERSTEINRICHTUNG",
+		"Custom values": "Eigene Werte",
+		"First-time setup finished.": "Ersteinrichtung abgeschlossen.",
+		"Run first-time setup again": "Ersteinrichtung erneut starten",
+		"Skip first-time setup?": "Ersteinrichtung überspringen?",
+		"Done": "Fertig",
+		"Done & set up storage": "Fertig & Speicher einrichten",
+		"Device name": "Gerätename",
+		"Take over device name, time zone and fan": "Gerätename, Zeitzone und Lüfter übernehmen",
+		"Heartbeat (ShareOS running)": "Herzschlag (ShareOS läuft)",
+		"Cool": "Kühl",
+		"Quiet": "Leise",
+		"LEDS": "LEDS",
+		"FAN & LEDS": "LÜFTER & LEDS",
+		"Fan": "Lüfter",
+		"Leave empty to change the password later.": "Leer lassen, um das Passwort später zu ändern.",
+		"Fan always on, full from 45 °C": "Lüfter läuft immer, voll ab 45 °C",
+		"Fan always on, full from 50 °C": "Lüfter läuft immer, voll ab 50 °C",
+		"Fan stops below 40 °C, full from 55 °C": "Lüfter steht unter 40 °C, voll ab 55 °C",
+		"Name & time": "Name & Zeit",
+		"Finished versions only – recommended.": "Nur fertige Versionen – empfohlen.",
+		"DISK LEDS (RED)": "PLATTEN-LEDS (ROT)",
+		"POWER LED": "POWER-LED",
+		"STATUS LED (BLUE)": "STATUS-LED (BLAU)",
+		"Password": "Passwort",
+		"Show disk access": "Plattenzugriffe anzeigen",
+		"Language": "Sprache",
+		"Set the temperatures yourself": "Temperaturen selbst festlegen",
+		"The box appears under this name on the network. The clock sets itself via NTP.": "Unter diesem Namen erscheint die Box im Netzwerk. Die Uhr stellt sich per NTP selbst.",
+		"Update channel": "Update-Kanal",
+		"Updates": "Updates",
+		"Updates come from GitHub and are installed under System → Firmware.": "Updates kommen von GitHub und werden unter System → Firmware installiert.",
+		"Welcome to ShareOS. The box is set up in a few steps; everything can be changed later under": "Willkommen bei ShareOS. In wenigen Schritten ist die Box eingerichtet; alles lässt sich später unter",
+		"TIME ZONE": "ZEITZONE",
+		"Time zone": "Zeitzone",
+		"blinking": "blinkt",
+		"on": "an",
+		"applies at once": "sofort aktiv",
+		"will be changed": "wird geändert",
+		"stays (change later)": "bleibt (später ändern)",
+		"yes": "ja",
+		"no": "nein",
+		"Skip": "Überspringen",
+		"Fan saved.": "Lüfter gespeichert.",
+		"LED saved.": "LED gespeichert.",
+		"Invalid device name.": "Ungültiger Gerätename.",
+		"The password needs at least 6 characters.": "Das Passwort braucht mindestens 6 Zeichen.",
+		"Checking the bundle again …": "Paket wird erneut geprüft …",
+		"Staging the system for the restart …": "System wird für den Neustart bereitgelegt …",
+		"Boot system: erasing flash …": "Startsystem: Flash wird gelöscht …",
+		"Writing the boot system …": "Startsystem wird geschrieben …",
+		"Verifying the boot system …": "Startsystem wird geprüft …",
+		"Kernel: erasing flash …": "Kernel: Flash wird gelöscht …",
+		"Writing the kernel …": "Kernel wird geschrieben …",
+		"Verifying the kernel …": "Kernel wird geprüft …",
+		"Starting …": "Wird gestartet …",
+		"do not switch off": "nicht ausschalten",
+		", this takes about 1–2 minutes.": ", das dauert etwa 1–2 Minuten.",
+		"Checking the bundle …": "Paket wird geprüft …",
+		"SHA-256 and contents, takes about half a minute.": "SHA-256 und Inhalt, dauert etwa eine halbe Minute.",
+		"– the new system is installed on the next start (about 1 minute, do not switch off the box).": "– das neue System wird beim nächsten Start installiert (ca. 1 Minute, Box nicht ausschalten).",
+		"NETWORK": "NETZWERK",
+		"ADDRESS": "ADRESSE",
+		"CURRENT": "AKTUELL",
+		"ACCENT COLOUR": "AKZENTFARBE",
+		"AT BOOT": "BEIM START",
+		"DESCRIPTION": "BESCHREIBUNG",
+		"SERVICE": "DIENST",
+		"LIGHT OR DARK": "HELL ODER DUNKEL",
+		"HTTPS & CERTIFICATE": "HTTPS & ZERTIFIKAT",
+		"NOW": "JETZT",
+		"METRIC": "KENNZAHL",
+		"VALUE": "WERT",
+		"NOTE": "HINWEIS",
+		"TYPE": "ART",
+		"MODEL": "MODELL",
+		"CONTENTS": "INHALT",
+		"IP ADDRESS": "IP-ADRESSE",
+		"SUBNET MASK": "SUBNETZMASKE",
+		"DNS SERVERS (COMMA-SEPARATED)": "DNS-SERVER (KOMMA-GETRENNT)",
+		"Automatic (DHCP) – from the router": "Automatisch (DHCP) – vom Router",
+		"Static address": "Feste Adresse",
+		"static": "statisch",
+		"Dark": "Dunkel",
+		"Light": "Hell",
+		"Same as the operating system (automatic)": "Wie das Betriebssystem (automatisch)",
+		"Green": "Grün",
+		"Red": "Rot",
+		"Blue": "Blau",
+		"White": "Weiß",
+		"The logo and the browser icon take on the accent colour. The setting applies to everyone, including the login page.": "Logo und Browser-Symbol nehmen die Akzentfarbe an. Die Einstellung gilt für alle, auch für die Anmeldeseite.",
+		"Scanlines (this browser only)": "Scanlines (nur in diesem Browser)",
+		"Apply": "Übernehmen",
+		"connected": "verbunden",
+		"no address": "keine Adresse",
+		"change": "ändern",
+		"Connection": "Verbindung",
+		"Applies from the next start. Running services are started and stopped under “Status”. Device control, system bus, API and web interface always start, otherwise the box could no longer be operated.": "Gilt ab dem nächsten Start. Laufende Dienste startest und stoppst du unter „Status“. Gerätesteuerung, Systembus, API und Weboberfläche starten immer, sonst wäre die Box nicht mehr bedienbar.",
+		"which services start when the box is switched on": "welche Dienste beim Einschalten starten",
+		"start": "starten",
+		"always": "immer",
+		"Without this service the box cannot be operated": "Ohne diesen Dienst ist die Box nicht bedienbar",
+		"Tile view": "Kachelansicht",
+		"Table view": "Tabellenansicht",
+		"New network settings are waiting for confirmation": "Neue Netzwerkeinstellungen warten auf Bestätigung",
+		"Keep": "Behalten",
+		"The last change was not confirmed; the previous network settings are active again.": "Die letzte Änderung wurde nicht bestätigt; die vorherigen Netzwerkeinstellungen sind wieder aktiv.",
+		"New network settings confirmed.": "Neue Netzwerkeinstellungen bestätigt.",
+		"Change the network?": "Netzwerk ändern?",
+		"Switching the network": "Netzwerk wird umgestellt",
+		"Restarting the network": "Netzwerk wird neu gestartet",
+		"No connection – the box should have restored the old settings. Reload the page.": "Keine Verbindung – die Box sollte die alten Einstellungen wiederhergestellt haben. Seite neu laden.",
+		"a disk is missing": "eine Platte fehlt",
+		"Sync waiting": "Sync wartet",
+		"STATUS": "STATUS",
+		"AUTOSTART": "AUTOSTART",
+		"GROUPS": "GRUPPEN",
+		"Administrator": "Administrator",
+		"Shares only": "Nur Freigaben",
+		"read & write": "lesen & schreiben",
+		"read only": "nur lesen",
+		"no access": "kein Zugriff",
+		"unlimited": "unbegrenzt",
+		"Shares need a drive – first set one up under": "Für Freigaben wird ein Laufwerk gebraucht – zuerst unter",
+		"No share yet. A share makes a folder on a drive reachable on the network – from Windows, macOS and Linux.": "Noch keine Freigabe. Eine Freigabe macht einen Ordner auf einem Laufwerk im Netzwerk erreichbar – unter Windows, macOS und Linux.",
+		"Create a share": "Freigabe anlegen",
+		"New share": "Neue Freigabe",
+		"SHARE": "FREIGABE",
+		"FOLDER": "ORDNER",
+		"ACCESS": "ZUGRIFF",
+		"drive missing": "Laufwerk fehlt",
+		"nobody yet": "noch niemand",
+		"SMB (WINDOWS, MACOS, LINUX)": "SMB (WINDOWS, MACOS, LINUX)",
+		"Offer SMB shares": "SMB-Freigaben anbieten",
+		"WORKGROUP": "ARBEITSGRUPPE",
+		"The SMB service starts automatically as soon as there is a share. Personal folders appear as": "Der SMB-Dienst startet automatisch, sobald es eine Freigabe gibt. Persönliche Ordner erscheinen als",
+		"NFS (LINUX, PROXMOX)": "NFS (LINUX, PROXMOX)",
+		"Offer NFS shares": "NFS-Freigaben anbieten",
+		"NFS has no user accounts: the listed computers or networks get access. Files are stored as": "NFS kennt keine Benutzer: Zugriff bekommen die eingetragenen Rechner oder Netze. Dateien werden als",
+		". Mount e.g. with": "gespeichert. Einbinden z. B. mit",
+		"no protocol": "kein Protokoll",
+		"GUEST": "GAST",
+		"Edit": "Bearbeiten",
+		"Delete": "Löschen",
+		"Create": "Anlegen",
+		"NEW SHARE": "NEUE FREIGABE",
+		"NAME": "NAME",
+		"FOLDER ON THE DRIVE": "ORDNER AUF DEM LAUFWERK",
+		"same as the name": "wie der Name",
+		"ACCESS VIA SMB": "ZUGRIFF ÜBER SMB",
+		"Share via SMB (Windows, macOS, Linux)": "Über SMB freigeben (Windows, macOS, Linux)",
+		"Guests may read without a password": "Gäste dürfen ohne Passwort lesen",
+		"USER / GROUP": "BENUTZER / GRUPPE",
+		"PERMISSION": "RECHT",
+		"No users yet – create them under": "Noch keine Benutzer – unter",
+		", or allow guest access.": "anlegen, oder Gastzugang erlauben.",
+		"ACCESS VIA NFS": "ZUGRIFF ÜBER NFS",
+		"Share via NFS": "Über NFS freigeben",
+		"NFS clients may write": "NFS-Clients dürfen schreiben",
+		"NFS CLIENTS (IP OR NETWORK, COMMA-SEPARATED)": "NFS-CLIENTS (IP ODER NETZ, KOMMA-GETRENNT)",
+		"The folder is created if it is missing. Removing a share keeps the folder and its files.": "Der Ordner wird angelegt, falls er fehlt. Beim Entfernen einer Freigabe bleiben Ordner und Dateien erhalten.",
+		"no limit": "kein Limit",
+		"of": "von",
+		"No users yet. One account works everywhere: for shares, the web interface and later for apps and cloud sync.": "Noch keine Benutzer. Ein Konto gilt überall: für Freigaben, die Weboberfläche und später für Apps und Cloud-Sync.",
+		"Create a user": "Benutzer anlegen",
+		"Import from Alt-F": "Von Alt-F übernehmen",
+		"New user": "Neuer Benutzer",
+		"ROLE": "ROLLE",
+		"PERSONAL FOLDER": "PERSÖNLICHER ORDNER",
+		"no personal folder": "kein persönlicher Ordner",
+		"Roles:": "Rollen:",
+		"– everything, including SSH.": "– alles, auch SSH.",
+		"– own area “My ShareOS” in the web interface.": "– eigener Bereich „Mein ShareOS“ in der Weboberfläche.",
+		"– access to shares, no web login. The account": "– Zugriff auf Freigaben, keine Anmeldung an der Oberfläche. Das Konto",
+		"is always an administrator.": "bleibt immer Administrator.",
+		"· no web": "· ohne Web",
+		"NEW USER": "NEUER BENUTZER",
+		"USER NAME": "BENUTZERNAME",
+		"FULL NAME": "VOLLER NAME",
+		"STORAGE LIMIT PER DRIVE (GB, 0 = UNLIMITED)": "SPEICHERLIMIT JE LAUFWERK (GB, 0 = UNBEGRENZT)",
+		"May log in to the web interface (“My ShareOS”)": "Darf sich an der Weboberfläche anmelden („Mein ShareOS“)",
+		"User name: lower-case letters, digits and _, starting with a letter. The password is used for shares and – depending on the role – for the web interface.": "Benutzername: Kleinbuchstaben, Ziffern und _, beginnt mit einem Buchstaben. Das Passwort gilt für Freigaben und – je nach Rolle – für die Weboberfläche.",
+		"GROUP": "GRUPPE",
+		"MEMBERS": "MITGLIEDER",
+		"Groups bring users together, e.g. “family” or “media”. Share permissions can then be given to the whole group.": "Gruppen fassen Benutzer zusammen, z. B. „familie“ oder „medien“. Rechte an Freigaben lassen sich dann für die ganze Gruppe vergeben.",
+		"New group": "Neue Gruppe",
+		"Members are set on the user (Users → Edit).": "Mitglieder legst du beim Benutzer fest (Benutzer → Bearbeiten).",
+		"MY SHAREOS": "MEIN SHAREOS",
+		"Nothing stored yet.": "Noch nichts gespeichert.",
+		"Personal folder": "Persönlicher Ordner",
+		"No personal folder set up.": "Kein persönlicher Ordner eingerichtet.",
+		"CHANGE PASSWORD": "PASSWORT ÄNDERN",
+		"CURRENT PASSWORD": "AKTUELLES PASSWORT",
+		"Used for the shares and this interface.": "Gilt für die Freigaben und diese Oberfläche.",
+		"MY SHARES": "MEINE FREIGABEN",
+		"No share has been assigned to you yet.": "Dir wurde noch keine Freigabe zugewiesen.",
+		"APPS & CLOUD": "APPS & CLOUD",
+		"planned": "geplant",
+		"The apps released for you and your own cloud sync jobs will appear here later.": "Hier erscheinen später die Apps, die für dich freigegeben sind, und deine eigenen Cloud-Sync-Aufträge.",
+		"My ShareOS": "Mein ShareOS",
+		"Enter at least one client (IP or network) for NFS.": "Für NFS mindestens einen Client (IP oder Netz) eintragen.",
+		"Saved.": "Gespeichert.",
+		"The share disappears from the network. The folder and all files in it stay on the drive.": "Die Freigabe verschwindet aus dem Netzwerk. Der Ordner und alle Dateien darin bleiben auf dem Laufwerk erhalten.",
+		"Import users from Alt-F?": "Benutzer von Alt-F übernehmen?",
+		"Users and groups from the kept Alt-F settings are created (role “Shares only”). Passwords are taken over where Alt-F stored them.": "Benutzer und Gruppen aus den gesicherten Alt-F-Einstellungen werden angelegt (Rolle „Nur Freigaben“). Passwörter werden übernommen, wo Alt-F sie gespeichert hat.",
+		"No new users found.": "Keine neuen Benutzer gefunden.",
+		"Group name (a–z, 0–9 and _, starting with a letter):": "Name der Gruppe (a–z, 0–9 und _, beginnt mit einem Buchstaben):",
+		"The members stay, but lose the permissions given through this group.": "Die Mitglieder bleiben bestehen, verlieren aber die Rechte, die über diese Gruppe vergeben wurden.",
+		"Set": "Setzen",
+		"New password (at least 6 characters). Used for shares and – depending on the role – for the web interface.": "Neues Passwort (mindestens 6 Zeichen). Gilt für Freigaben und – je nach Rolle – für die Weboberfläche.",
+		"Please log in again.": "Bitte neu anmelden.",
+		"The personal folder is kept.": "Der persönliche Ordner bleibt erhalten.",
+		"User accounts": "Benutzerkonten",
+		"BACK UP & RESTORE SETTINGS": "EINSTELLUNGEN SICHERN & WIEDERHERSTELLEN",
+		"BACK UP": "SICHERN",
+		"JSON file": "JSON-Datei",
+		"PASSWORD FOR ENCRYPTION (OPTIONAL)": "PASSWORT ZUM VERSCHLÜSSELN (OPTIONAL)",
+		"empty = not encrypted": "leer = unverschlüsselt",
+		"Contains all settings, users with their passwords (as hashes), shares, network and the HTTPS certificate including its key. Without a password the file is readable – keep it safe. With a password: AES-256, the password is needed to restore.": "Enthält alle Einstellungen, Benutzer mit ihren Passwörtern (als Hash), Freigaben, Netzwerk und das HTTPS-Zertifikat samt Schlüssel. Ohne Passwort ist die Datei lesbar – dann sicher aufbewahren. Mit Passwort: AES-256, das Passwort wird zum Wiederherstellen gebraucht.",
+		"Download backup": "Sicherung herunterladen",
+		"RESTORE": "WIEDERHERSTELLEN",
+		"BACKUP FILE": "SICHERUNGSDATEI",
+		"PASSWORD (IF ENCRYPTED)": "PASSWORT (FALLS VERSCHLÜSSELT)",
+		"Created": "Erstellt",
+		"Certificate": "Zertifikat",
+		"Restoring replaces the current settings, users and shares. A restart is needed afterwards. Data on the drives is not touched.": "Beim Wiederherstellen werden die aktuellen Einstellungen, Benutzer und Freigaben ersetzt. Danach ist ein Neustart nötig. Daten auf den Laufwerken bleiben unberührt.",
+		"Restore": "Wiederherstellen",
+		"Restore settings?": "Einstellungen wiederherstellen?",
+		"The current settings, users and shares are replaced by the backup.": "Die aktuellen Einstellungen, Benutzer und Freigaben werden durch die Sicherung ersetzt.",
+		"Restored": "Wiederhergestellt",
+		"The settings are restored. Restart now so that everything applies?": "Die Einstellungen sind zurückgespielt. Jetzt neu starten, damit alles gilt?",
+		"Encrypted backup downloaded.": "Verschlüsselte Sicherung heruntergeladen.",
+		"Backup downloaded.": "Sicherung heruntergeladen.",
+		"The backup is encrypted – please enter the password.": "Die Sicherung ist verschlüsselt – bitte das Passwort eingeben.",
+		"PAPERLESS ADDRESS": "ADRESSE VON PAPERLESS",
+		"CHECK EVERY": "PRÜFEN ALLE",
+		"AFTER UPLOAD": "NACH DEM HOCHLADEN",
+		"Delete file": "Datei löschen",
+		"keep (.paperless/done)": "aufheben (.paperless/done)",
+		"Send inbox folders automatically": "Eingangsordner automatisch übertragen",
+		"Send now": "Jetzt übertragen",
+		"HOW IT WORKS": "SO FUNKTIONIERT ES",
+		"Create an API token in Paperless for each inbox (Profile → API token). The documents then belong to that Paperless user.": "Für jeden Eingang ein API-Token in Paperless anlegen (Profil → API-Token). Die Dokumente gehören dann diesem Paperless-Benutzer.",
+		"Put files (PDF, images, Office) into the inbox folder – from a PC or straight from the scanner.": "Dateien (PDF, Bilder, Office) in den Eingangsordner legen – vom PC oder direkt vom Scanner.",
+		"ShareOS uploads them through the Paperless API and shows whether Paperless accepted them.": "ShareOS lädt sie über die Paperless-API hoch und zeigt, ob Paperless sie übernommen hat.",
+		"Personal inboxes live in the personal folder (": "Persönliche Eingänge liegen im persönlichen Ordner (",
+		"); users can also enter their token themselves under “My ShareOS”. Shared inboxes use a share, e.g. for a scanner.": "); Benutzer können ihr Token auch selbst unter „Mein ShareOS“ eintragen. Gemeinsame Eingänge nutzen eine Freigabe, z. B. für einen Scanner.",
+		"INBOXES": "EINGÄNGE",
+		"accepted": "übernommen",
+		"processing": "wird verarbeitet",
+		"Error": "Fehler",
+		"Log": "Protokoll",
+		"nothing waiting": "nichts wartend",
+		"New inbox": "Neuer Eingang",
+		"NEW INBOX": "NEUER EINGANG",
+		"personal (folder “Paperless” in the personal folder)": "persönlich (Ordner „Paperless“ im persönlichen Ordner)",
+		"shared (folder of a share)": "gemeinsam (Ordner einer Freigabe)",
+		"API TOKEN": "API-TOKEN",
+		"active": "aktiv",
+		"Test connection": "Verbindung prüfen",
+		"from Paperless: Profile → API token": "aus Paperless: Profil → API-Token",
+		"API TOKEN (EMPTY = KEEP)": "API-TOKEN (LEER = BEHALTEN)",
+		"TAGS FOR NEW DOCUMENTS": "TAGS FÜR NEUE DOKUMENTE",
+		"Close": "Schließen",
+		"TIME": "ZEIT",
+		"FILE": "DATEI",
+		"MESSAGE": "MELDUNG",
+		"Nothing will be sent any more. The folder and the files in it are kept.": "Es wird nichts mehr übertragen. Der Ordner und die Dateien darin bleiben erhalten.",
+		"INBOX": "EINGANG",
+		"WAITING": "WARTEND",
+		"LAST": "ZULETZT",
+		"shared": "gemeinsam",
+		"Paperless → Profile → API token": "Paperless → Profil → API-Token",
+		"Paperless inbox saved.": "Paperless-Eingang gespeichert.",
+		"Transfer started.": "Übertragung gestartet.",
+		"MY INBOX": "MEIN EINGANG",
+		"MY API TOKEN FROM PAPERLESS": "MEIN API-TOKEN AUS PAPERLESS",
+		"Send files from my inbox": "Dateien aus meinem Eingang übertragen",
+		"Inbox folder": "Eingangsordner",
+		"RECENTLY SENT": "ZULETZT ÜBERTRAGEN",
+		"Nothing sent yet. Put files into the inbox folder – they reach Paperless within a few minutes.": "Noch nichts übertragen. Dateien in den Eingangsordner legen – sie landen nach wenigen Minuten in Paperless.",
+		"ACCOUNTS": "KONTEN",
+		"Test": "Testen",
+		"Add account": "Konto hinzufügen",
+		"NOTES": "HINWEISE",
+		"Credentials stay encrypted on the box. For Google Drive, OneDrive or Dropbox run": "Zugangsdaten bleiben verschlüsselt auf der Box. Für Google Drive, OneDrive oder Dropbox auf dem PC",
+		"on a PC and paste the finished section here. Jobs run with little memory (2 transfers at a time); a bandwidth limit such as": "ausführen und den fertigen Abschnitt hier einfügen. Aufträge laufen mit wenig Speicher (2 Übertragungen gleichzeitig); eine Bandbreitengrenze wie",
+		"keeps the network free.": "hält das Netz frei.",
+		"JOBS": "AUFTRÄGE",
+		"Start now": "Jetzt starten",
+		"New job": "Neuer Auftrag",
+		"NEW CLOUD ACCOUNT": "NEUES CLOUD-KONTO",
+		"SFTP (SSH server)": "SFTP (SSH-Server)",
+		"other – paste rclone configuration": "andere – rclone-Konfiguration einfügen",
+		"ADDRESS (WEBDAV URL)": "ADRESSE (WEBDAV-URL)",
+		"PROVIDER": "ANBIETER",
+		"PASSWORD / APP PASSWORD": "PASSWORT / APP-PASSWORT",
+		"Add": "Hinzufügen",
+		"ENDPOINT (EMPTY FOR AWS)": "ENDPUNKT (LEER BEI AWS)",
+		"SECTION FROM RCLONE.CONF (STARTS WITH [NAME])": "ABSCHNITT AUS RCLONE.CONF (BEGINNT MIT [NAME])",
+		"The credentials are deleted. Jobs using this account stop working. Nothing is deleted in the cloud.": "Die Zugangsdaten werden gelöscht. Aufträge mit diesem Konto laufen dann nicht mehr. In der Cloud wird nichts gelöscht.",
+		"NEW JOB": "NEUER AUFTRAG",
+		"FOLDER ON THE NAS": "ORDNER AUF DEM NAS",
+		"CLOUD ACCOUNT": "CLOUD-KONTO",
+		"FOLDER IN THE CLOUD": "ORDNER IN DER CLOUD",
+		"DIRECTION": "RICHTUNG",
+		"Upload – copy to the cloud, nothing is deleted": "Hochladen – Kopie in die Cloud, nichts wird gelöscht",
+		"Download – copy to the NAS, nothing is deleted": "Herunterladen – Kopie aufs NAS, nichts wird gelöscht",
+		"Mirror to the cloud – deletes in the cloud what is missing here": "Spiegeln zur Cloud – löscht in der Cloud, was hier fehlt",
+		"Mirror from the cloud – deletes here what is missing in the cloud": "Spiegeln von der Cloud – löscht hier, was in der Cloud fehlt",
+		"SCHEDULE": "ZEITPLAN",
+		"manual only": "nur von Hand",
+		"hourly": "stündlich",
+		"daily at 2:30": "täglich um 2:30",
+		"Sundays at 3:00": "sonntags um 3:00",
+		"custom time (cron)": "eigene Zeit (cron)",
+		"CRON TIME (MIN HOUR DAY MON WEEKDAY)": "CRON-ZEIT (MIN STD TAG MON WOTAG)",
+		"BANDWIDTH (EMPTY = UNLIMITED)": "BANDBREITE (LEER = UNBEGRENZT)",
+		"Schedule active": "Zeitplan aktiv",
+		"Mirroring deletes on the target side what is missing on the source side – for plain backups choose “Upload”.": "Beim Spiegeln wird auf der Zielseite gelöscht, was auf der Quellseite fehlt – für reine Sicherungen „Hochladen“ wählen.",
+		"The job will not run any more. Files on the NAS and in the cloud stay as they are.": "Der Auftrag läuft nicht mehr. Dateien auf dem NAS und in der Cloud bleiben, wie sie sind.",
+		"JOB": "AUFTRAG",
+		"FROM → TO": "VON → NACH",
+		"Mirror?": "Spiegeln?",
+		"Understood": "Verstanden",
+		"Stopped.": "Gestoppt.",
+		"Mirroring from the cloud deletes files on the NAS that are missing in the cloud.": "Beim Spiegeln von der Cloud werden auf dem NAS Dateien gelöscht, die in der Cloud fehlen.",
+		"Mirroring to the cloud deletes files in the cloud that are missing on the NAS.": "Beim Spiegeln zur Cloud werden in der Cloud Dateien gelöscht, die auf dem NAS fehlen.",
+		"MY CLOUD": "MEINE CLOUD",
+		"own accounts and jobs": "eigene Konten und Aufträge",
+		"Credentials stay encrypted on the box in your personal folder. For Google Drive, OneDrive or Dropbox run": "Zugangsdaten bleiben verschlüsselt auf der Box in deinem persönlichen Ordner. Für Google Drive, OneDrive oder Dropbox auf dem PC",
+		"keeps the network free. What you download counts towards your storage limit.": "hält das Netz frei. Was du herunterlädst, zählt zu deinem Speicherlimit.",
+		"May create own cloud sync jobs (needs a personal folder)": "Darf eigene Cloud-Sync-Aufträge anlegen (braucht persönlichen Ordner)",
+		"APP & WIDGETS": "APP & WIDGETS",
+		"INSTALL AS AN APP": "ALS APP INSTALLIEREN",
+		"via the browser menu": "über das Browsermenü",
+		"running as an app": "läuft als App",
+		"ready": "bereit",
+		"HTTPS only": "nur über HTTPS",
+		"This interface is running as an installed app.": "Diese Oberfläche läuft gerade als installierte App.",
+		"The browser can install ShareOS as an app with its own icon.": "Der Browser kann ShareOS als App mit eigenem Symbol installieren.",
+		"In the browser menu choose": "Im Browsermenü",
+		"“Install app”": "„App installieren“",
+		"or": "bzw.",
+		"“Add to home screen”": "„Zum Startbildschirm hinzufügen“",
+		". With a self-signed certificate browsers do not offer the real installation.": "wählen. Mit einem selbst signierten Zertifikat bieten Browser die echte Installation nicht an.",
+		"Browsers install web apps only over": "Browser installieren Web-Apps nur über",
+		"HTTPS with a trusted certificate": "HTTPS mit einem vertrauenswürdigen Zertifikat",
+		"(e.g. Let's Encrypt, install it under SYSTEM → NETWORK). Over http:// Chrome's menu only offers": "(z. B. Let's Encrypt, unter SYSTEM → NETZWERK einspielen). Über http:// bietet Chrome im Menü nur",
+		"– that creates a bookmark icon.": "– das legt ein Lesezeichen-Symbol an.",
+		"On Android: long-press the app icon to open the shortcuts": "Auf Android: das App-Symbol lange drücken öffnet die Kurzbefehle",
+		"Overview, Storage, Shares, Firmware": "Übersicht, Speicher, Freigaben, Firmware",
+		". Chrome offers no real home-screen widgets for web apps – use the status for widget apps on the right instead.": ". Echte Startbildschirm-Widgets bietet Chrome für Web-Apps nicht – dafür gibt es rechts den Status für Widget-Apps.",
+		"Install as an app": "Als App installieren",
+		"STATUS FOR WIDGETS": "STATUS FÜR WIDGETS",
+		"Enable the status address": "Status-Adresse einschalten",
+		"ADDRESS (KEEP IT SECRET)": "ADRESSE (GEHEIM HALTEN)",
+		"Copy": "Kopieren",
+		"New key": "Neuer Schlüssel",
+		"Open ↗": "Öffnen ↗",
+		"Returns a short JSON answer without login: name, version, uptime, load, temperature, drive usage, RAID state and warnings (": "Liefert eine kurze JSON-Antwort ohne Anmeldung: Name, Version, Laufzeit, Last, Temperatur, Belegung der Laufwerke, RAID-Zustand und Warnungen (",
+		"). Meant for widget apps such as": "). Gedacht für Widget-Apps wie",
+		"(Android), Home Assistant or your own scripts. Anyone who knows the address sees these values – nobody can change anything with it.": "(Android), Home Assistant oder eigene Skripte. Wer die Adresse kennt, sieht diese Werte – ändern kann damit niemand etwas.",
+		"Status address enabled.": "Status-Adresse eingeschaltet.",
+		"Status address disabled.": "Status-Adresse ausgeschaltet.",
+		"Create a new key?": "Neuen Schlüssel erzeugen?",
+		"New key created.": "Neuer Schlüssel erzeugt.",
+		"The old address stops working – widgets need the new one.": "Die bisherige Adresse funktioniert danach nicht mehr – Widgets müssen die neue bekommen.",
+		"Copied.": "Kopiert.",
+		"Please select and copy the address yourself.": "Bitte die Adresse selbst markieren und kopieren.",
+		"ShareOS is installed as an app.": "ShareOS ist als App installiert.",
+		"· My ShareOS": "· Mein ShareOS",
+		"FILES": "DATEIEN",
+		"New folder": "Neuer Ordner",
+		"Upload": "Hochladen",
+		"Rename": "Umbenennen",
+		"Move": "Verschieben",
+		"Hidden": "Versteckte",
+		"MODIFIED": "GEÄNDERT",
+		"You can also simply drag files here.": "Dateien lassen sich auch einfach hierher ziehen.",
+		"Path": "Pfad",
+		"Folder up": "Ordner nach oben",
+		"Select all": "Alle auswählen",
+		"Move to": "Verschieben nach",
+		"Copy to": "Kopieren nach",
+		"Name of the new folder:": "Name des neuen Ordners:",
+		"This folder is empty.": "Dieser Ordner ist leer.",
+		"STORAGE LIMIT (GB)": "SPEICHERLIMIT (GB)",
+		"File browser for the personal folder in the web interface": "Dateibrowser für den persönlichen Ordner in der Weboberfläche",
+		"User name: lower-case letters, digits and _, starting with a letter. The storage limit applies per drive, 0 = unlimited. The password is used for shares and – depending on the role – for the web interface.": "Benutzername: Kleinbuchstaben, Ziffern und _, beginnt mit einem Buchstaben. Das Speicherlimit gilt je Laufwerk, 0 = unbegrenzt. Das Passwort gilt für Freigaben und – je nach Rolle – für die Weboberfläche.",
+		"just for you": "nur für dich",
+		"Same as for everyone": "Wie für alle",
+		"Applies only to your login, on every device. Logo and browser icon take on the accent colour.": "Gilt nur für deine Anmeldung, auf jedem Gerät. Logo und Browser-Symbol nehmen die Akzentfarbe an.",
+		"Replace file?": "Datei ersetzen?",
+		"Replace": "Ersetzen",
+		"skipped": "übersprungen",
+		"done": "fertig",
+		"Connection lost": "Verbindung unterbrochen",
+		"Deleted.": "Gelöscht.",
+		"Moved.": "Verschoben.",
+		"Look reset to the one for everyone.": "Darstellung wie für alle.",
+		"No drive mounted – set one up under STORAGE first.": "Kein Laufwerk eingehängt – zuerst unter SPEICHER einrichten.",
+		"There is no personal folder.": "Kein persönlicher Ordner vorhanden.",
+		"Only the first 2000 entries are shown.": "Es werden nur die ersten 2000 Einträge gezeigt.",
+		"Hostname saved. The HTTPS certificate was reissued for the new name – the browser will ask once more.": "Hostname gespeichert. Das HTTPS-Zertifikat wurde für den neuen Namen neu ausgestellt – der Browser fragt einmal neu nach.",
+		"INSTALLED": "INSTALLIERT",
+		"STORE": "STORE",
+		"SOURCES": "QUELLEN",
+		"INSTALLED APPS": "INSTALLIERTE APPS",
+		"No app installed yet. The": "Noch keine App installiert. Im",
+		"store": "Store",
+		"has apps to install – or upload your own package (.sapp).": "gibt es Apps zum Installieren – oder ein eigenes Paket (.sapp) hochladen.",
+		"Apps": "Apps",
+		"APP STORE": "APP-STORE",
+		"Beta (also pre-releases)": "Beta (auch Vorabversionen)",
+		"Refresh now": "Jetzt aktualisieren",
+		"INSTALL PACKAGE": "PAKET INSTALLIEREN",
+		"PACKAGE FILE": "PAKETDATEI",
+		"For your own apps (built with": "Für eigene Apps (gebaut mit",
+		"from the app repository). Uploaded packages count as “own / not verified”.": "aus dem App-Repo). Hochgeladene Pakete gelten als „eigene / ungeprüft“.",
+		"Upload & install": "Hochladen & installieren",
+		"AVAILABLE APPS": "VERFÜGBARE APPS",
+		"APP": "APP",
+		"PUBLISHER": "HERAUSGEBER",
+		"Tools": "Werkzeuge",
+		"Media": "Medien",
+		"Office": "Büro",
+		"Network": "Netzwerk",
+		"Sync": "Sync",
+		"downloading …": "wird geladen …",
+		"from the store": "aus dem Store",
+		"own / not verified": "eigene / ungeprüft",
+		"own": "eigene",
+		"VISIBLE TO": "SICHTBAR FÜR",
+		"all users": "alle Benutzer",
+		"administrators only": "nur Administratoren",
+		"All users with web access": "Alle Benutzer mit Web-Zugang",
+		"Administrators see all apps. The selection decides who sees the app in “My ShareOS”.": "Administratoren sehen alle Apps. Die Auswahl bestimmt, wem die App in „Mein ShareOS“ angezeigt wird.",
+		"The app is deleted. Data it stored in the browser stays there.": "Die App wird gelöscht. Daten, die sie im Browser gespeichert hat, bleiben dort.",
+		"APP SOURCES": "APP-QUELLEN",
+		"ANOTHER SOURCE (CATALOG ADDRESS)": "WEITERE QUELLE (KATALOG-ADRESSE)",
+		"A source is an app catalog (": "Eine Quelle ist ein App-Katalog (",
+		") in the format of the repository": ") im Format des Repos",
+		". Own apps: use the repository as a template, its GitHub Action builds packages and catalog. Only add sources you trust.": ". Eigene Apps: das Repo als Vorlage nehmen, die GitHub Action baut Pakete und Katalog. Nur Quellen eintragen, denen du vertraust.",
+		"Remove source?": "Quelle entfernen?",
+		"Apps from this source no longer show up in the store. Installed apps stay.": "Apps aus dieser Quelle erscheinen nicht mehr im Store. Installierte Apps bleiben.",
+		"MY APPS": "MEINE APPS",
+		"Store refreshed.": "Store aktualisiert.",
+		"Removed.": "Entfernt.",
+		"Loading the catalog …": "Lade den Katalog …",
+		"No apps found – check the internet connection and the sources.": "Keine Apps gefunden – Internetverbindung und Quellen prüfen.",
+		"No user with web access – set one up under Shares → Users.": "Kein Benutzer mit Web-Zugang – unter Freigaben → Benutzer einrichten.",
+		"needs a newer ShareOS": "braucht neuere ShareOS",
+		"not loaded yet": "noch nicht geladen",
+		"Web apps run on their own port (8081 / 8444 for HTTPS) – apart from this interface, so an app cannot use your login. Anyone who knows the address can open a web app on the network; “visible to” decides who sees it in “My ShareOS”.": "Web-Apps laufen auf einem eigenen Port (8081 / 8444 für HTTPS) – getrennt von dieser Oberfläche, damit eine App deine Anmeldung nicht benutzen kann. Wer die Adresse kennt, kann eine Web-App im Netzwerk öffnen; „sichtbar für“ steuert, wem sie in „Mein ShareOS“ angezeigt wird.",
+		"Installation finished": "Installation abgeschlossen",
+		"(100 %) – restart now.": "(100 %) – jetzt neu starten.",
+		"INSTALL FIRMWARE FILE": "FIRMWARE-DATEI EINSPIELEN",
+		"Upload & check": "Hochladen & prüfen",
+		"Type": "Art",
+		"other firmware": "andere Firmware",
+		"Writing firmware": "Firmware wird geschrieben",
+		"Kernel and boot system – please wait, do not switch off": "Kernel und Startsystem – bitte warten, nicht ausschalten",
+		"Written": "Geschrieben",
+		"Size": "Größe",
+		"ext4 – recommended": "ext4 – empfohlen",
+		"exFAT – recommended": "exFAT – empfohlen",
+		"Everything: permissions per user, storage limit, personal folders, apps.": "Alle Funktionen: Rechte je Benutzer, Speicherlimit, persönliche Ordner, Apps.",
+		"Permissions per user, personal folders, apps; no storage limit per user. Needs more memory.": "Rechte je Benutzer, persönliche Ordner, Apps; kein Speicherlimit je Benutzer. Braucht mehr Arbeitsspeicher.",
+		"Also readable on Windows and macOS. No permissions per user (whoever may write to a share may change everything in it), no storage limit, no personal folders, no apps.": "Auch an Windows und macOS lesbar. Keine Rechte je Benutzer (wer eine Freigabe schreiben darf, darf alles darin), kein Speicherlimit, keine persönlichen Ordner, keine Apps.",
+		"Also readable on Windows. No permissions per user, no storage limit, no personal folders, no apps.": "Auch an Windows lesbar. Keine Rechte je Benutzer, kein Speicherlimit, keine persönlichen Ordner, keine Apps.",
+		"Windows, macOS, Linux, TVs; files over 4 GB.": "Windows, macOS, Linux, Fernseher; Dateien über 4 GB.",
+		"For older devices (car radio, camera); files up to 4 GB.": "Für ältere Geräte (Autoradio, Kamera); Dateien höchstens 4 GB.",
+		"For Windows computers.": "Für Windows-Rechner.",
+		"For Linux and backups with permissions.": "Für Linux und Sicherungen mit Rechten.",
+		"FILE SYSTEM": "DATEISYSTEM",
+		"Safely remove": "Sicher entfernen",
+		"Format": "Formatieren",
+		"Name of the new volume (a–z, 0–9, - and _, at most 16 characters) and file system:": "Name des neuen Laufwerks (a–z, 0–9, - und _, max. 16 Zeichen) und Dateisystem:",
+		"TIME ON THE BOX": "UHRZEIT DER BOX",
+		"Time sync": "Zeitabgleich",
+		"from the internet (NTP)": "aus dem Internet (NTP)",
+		"NTP switched on but not running": "NTP eingeschaltet, läuft aber nicht",
+		"by hand": "von Hand",
+		"Last synced": "Zuletzt abgeglichen",
+		"not yet": "noch nicht",
+		"Battery clock": "Batterie-Uhr",
+		"is set after every sync": "wird nach jedem Abgleich gestellt",
+		"Sync now": "Jetzt abgleichen",
+		"TIME ZONE & TIME SERVERS": "ZEITZONE & ZEITSERVER",
+		"Get the time from the internet automatically (NTP)": "Uhrzeit automatisch aus dem Internet holen (NTP)",
+		"TIME SERVERS (ONE PER LINE, AT MOST 5)": "ZEITSERVER (EINER JE ZEILE, HÖCHSTENS 5)",
+		"In a home network the router can be the time server too, e.g.": "Im Heimnetz kann auch der Router Zeitserver sein, z. B.",
+		". The time zone applies to logs, schedules and the display.": ". Die Zeitzone gilt für Protokolle, Zeitpläne und die Anzeige.",
+		"SET THE CLOCK BY HAND": "UHRZEIT VON HAND STELLEN",
+		"While NTP is on, the box sets the clock from the internet again at the next sync. For a box without internet, switch NTP off above.": "Solange NTP eingeschaltet ist, stellt die Box die Uhr beim nächsten Abgleich wieder nach dem Internet. Für eine Box ohne Internet NTP oben ausschalten.",
+		"The clock keeps running from there; the box's battery clock is set too.": "Die Uhr läuft danach weiter; die Batterie-Uhr der Box wird mitgestellt.",
+		"Take this device's time": "Uhrzeit dieses Geräts übernehmen",
+		"Set time": "Uhrzeit setzen",
+		"Time set.": "Uhrzeit gesetzt.",
+		"Time synced.": "Uhrzeit abgeglichen.",
+		"Invalid time.": "Ungültige Uhrzeit.",
+		"A firmware in D-Link format, e.g. for the": "Eine Firmware im D-Link-Format, z. B. für den",
+		"switch back to Alt-F": "Wechsel zurück zu Alt-F",
+		". Kernel and boot system are written; the ShareOS system and settings stay in flash.": ". Geschrieben werden Kernel und Startsystem; System und Einstellungen von ShareOS bleiben im Flash.",
+		"Tasks": "Aufgaben",
+		"Scheduled tasks": "Zeitgesteuerte Aufgaben",
+		"May run scheduled tasks on the box – as its own restricted user, only in its data folder, with a time limit.": "Darf zeitgesteuerte Aufgaben auf der Box ausführen – als eigener eingeschränkter Benutzer, nur in ihrem Datenordner, mit Zeitlimit.",
+		"TASK": "AUFGABE",
+		"SCHEDULE (CRON)": "ZEITPLAN (CRON)",
+		"ACTIVE": "AKTIV",
+		"Time limit": "Zeitlimit",
+		"Run now": "Jetzt ausführen",
+		"Task started.": "Aufgabe gestartet.",
+		"Allow & install": "Erlauben & installieren",
+		"The app is deleted, with its tasks and its data on the box.": "Die App wird gelöscht, mit ihren Aufgaben und ihren Daten auf der Box.",
+		"Schedule in cron format (minute hour day month weekday), at most every 5 minutes, e.g.": "Zeitplan im Cron-Format (Minute Stunde Tag Monat Wochentag), höchstens alle 5 Minuten, z. B.",
+		"= daily at 3:30.": "= täglich 3:30 Uhr.",
+		"Update without internet:": "Update ohne Internet:",
+		"upload the .sysupgrade.tar of a ShareOS release, preferably with its .sha256 file. It is checked like an update from GitHub.": "eine .sysupgrade.tar eines ShareOS-Release hochladen, am besten mit der passenden .sha256-Datei. Geprüft wird wie beim Update von GitHub.",
+		"CHECKSUM (.SHA256, OPTIONAL)": "PRÜFSUMME (.SHA256, OPTIONAL)",
+		"Uploaded – the bundle is being checked.": "Hochgeladen – das Paket wird geprüft.",
+		"Uploaded file – verified: SHA-256 of the .sha256 file, checksums of all parts, made for this device. Settings and packages are kept.": "Hochgeladene Datei – geprüft: SHA-256 laut .sha256-Datei, Prüfsummen aller Teile, passend für dieses Gerät. Einstellungen und Pakete bleiben erhalten.",
+		"Uploaded file – verified: checksums of all parts, made for this device (without .sha256 file). Settings and packages are kept.": "Hochgeladene Datei – geprüft: Prüfsummen aller Teile, passend für dieses Gerät (ohne .sha256-Datei). Einstellungen und Pakete bleiben erhalten.",
+		"Open": "Öffnen",
+		"In its own window ↗": "In eigenem Fenster ↗",
+		"Shown in ShareOS": "In ShareOS anzeigen",
+		"May be shown as a page inside the ShareOS interface (instead of its own window).": "Darf als Seite in der ShareOS-Oberfläche angezeigt werden (statt in einem eigenen Fenster).",
+		"RAID 0 – fast": "RAID 0 – schnell",
+		"JBOD – full space": "JBOD – voller Platz",
+		"NAME OF THE VOLUME": "NAME DES LAUFWERKS",
+		"Older Linux file system (e.g. known from Alt-F): permissions per user, personal folders, apps; no storage limit.": "Älteres Linux-Dateisystem (z. B. von Alt-F gewohnt): Rechte je Benutzer, persönliche Ordner, Apps; kein Speicherlimit.",
+		"No journal – long check after a power cut. Only if an old device needs it.": "Ohne Journal – nach Stromausfall lange Prüfung. Nur wenn ein altes Gerät es braucht.",
+		"For very old devices. Files up to 4 GB, no permissions per user, no storage limit, no personal folders, no apps.": "Für sehr alte Geräte. Dateien höchstens 4 GB, keine Rechte je Benutzer, kein Speicherlimit, keine persönlichen Ordner, keine Apps.",
+		"Repair mirror": "Spiegel reparieren",
+		"Put a new disk into the free bay, then “Repair mirror”.": "Neue Platte in den freien Schacht einsetzen, dann „Spiegel reparieren“.",
+		"Erase & repair": "Löschen & reparieren",
+		"Repair started.": "Reparatur gestartet.",
+		"MESSAGES": "MELDUNGEN",
+		"1 MESSAGE": "1 MELDUNG",
+		"Mark all as read": "Alle als gelesen markieren",
+		"Delete all": "Alle löschen",
+		"RESOLVED": "ERLEDIGT",
+		"ERROR": "FEHLER",
+		"WARNING": "WARNUNG",
+		"INFO": "INFO",
+		"Read": "Gelesen",
+		"No messages – everything is fine.": "Keine Meldungen – alles in Ordnung.",
+		"Every 10 minutes the box checks RAID, volumes (mounted, how full), temperature, SMART values and updates; failed cloud jobs, app tasks and storage jobs report at once. Repeated messages are counted and sent again at most once a day.": "Die Box prüft alle 10 Minuten RAID, Laufwerke (eingehängt, Füllstand), Temperatur, SMART-Werte und Updates; fehlgeschlagene Cloud-Aufträge, App-Aufgaben und Speicher-Aufträge melden sich sofort. Gleiche Meldungen werden gezählt und höchstens einmal am Tag erneut verschickt.",
+		"E-MAIL": "E-MAIL",
+		"Send messages by e-mail": "Meldungen per E-Mail schicken",
+		"MAIL SERVER (SMTP)": "MAILSERVER (SMTP)",
+		"ENCRYPTION": "VERSCHLÜSSELUNG",
+		"STARTTLS (port 587)": "STARTTLS (Port 587)",
+		"SSL/TLS (port 465)": "SSL/TLS (Port 465)",
+		"none (port 25)": "keine (Port 25)",
+		"PORT (EMPTY = DEFAULT)": "PORT (LEER = STANDARD)",
+		"SENDER": "ABSENDER",
+		"RECIPIENTS (SEPARATE WITH COMMAS)": "EMPFÄNGER (MEHRERE MIT KOMMA)",
+		"SEND": "SCHICKEN",
+		"everything (info, warning, error)": "alles (Info, Warnung, Fehler)",
+		"warnings and errors": "Warnungen und Fehler",
+		"errors only": "nur Fehler",
+		"PUSH": "PUSH",
+		"Send messages to the phone": "Meldungen aufs Handy schicken",
+		"ACCESS TOKEN (OPTIONAL)": "ZUGANGSSCHLÜSSEL (OPTIONAL)",
+		"Webhook (JSON)": "Webhook (JSON)",
+		"ntfy: address with topic, e.g.": "ntfy: Adresse mit Thema, z. B.",
+		"(an own ntfy server works too), subscribe to the same topic in the ntfy app. Gotify: server address and app token.": "(eigener ntfy-Server geht auch), in der ntfy-App dasselbe Thema abonnieren. Gotify: Serveradresse und App-Token.",
+		"LIMITS": "GRENZEN",
+		"TEMPERATURE FROM (°C)": "TEMPERATUR AB (°C)",
+		"VOLUME FULL FROM (%)": "LAUFWERK VOLL AB (%)",
+		"Test message": "Testnachricht",
+		"Test message sent.": "Testnachricht verschickt.",
+		"Delete all messages?": "Alle Meldungen löschen?",
+		"The list is emptied. If a problem persists, the box reports it again at the next check.": "Die Liste wird geleert. Besteht ein Problem weiter, meldet die Box es bei der nächsten Prüfung wieder.",
+		"•••••• (saved)": "•••••• (gespeichert)",
+		"BOX NAME FOR LINKS (E.G. TO THE APPS)": "NAME DER BOX FÜR LINKS (Z. B. ZU DEN APPS)",
+		"Leave empty: with your own certificate the name is taken from it, otherwise the address this page was opened with. The name must resolve in your network (DNS).": "Leer lassen: Mit eigenem Zertifikat wird der Name daraus genommen, sonst die Adresse, unter der diese Seite geöffnet ist. Der Name muss im Netzwerk auflösbar sein (DNS).",
+		"Save name": "Name speichern",
+		"Name saved.": "Name gespeichert.",
+		"Access to files": "Zugriff auf Dateien",
+		"May read, change and delete the files the signed-in user reaches in the file browser – with his rights, while the app is open.": "Darf die Dateien lesen, ändern und löschen, die der angemeldete Benutzer im Dateibrowser erreicht – mit seinen Rechten, solange die App offen ist.",
+		"Box not reachable": "Box nicht erreichbar",
+		"Network traffic of the last 10 minutes": "Netzwerkverkehr der letzten 10 Minuten",
+		"not connected yet": "noch nicht verbunden",
+		"No inbox yet. First enter the address of Paperless above.": "Noch kein Eingangsordner. Zuerst oben die Adresse von Paperless eintragen.",
+		"shared · off": "gemeinsam · aus",
+		"Nothing transferred yet.": "Noch nichts übertragen.",
+		"no tags found": "keine Tags gefunden",
+		"Windows share (SMB)": "Windows-Freigabe (SMB)",
+		"Google Photos": "Google Fotos",
+		"DOMAIN (OPTIONAL)": "DOMÄNE (OPTIONAL)",
+		"APP PASSWORD": "APP-PASSWORT",
+		"not run yet": "noch nicht gelaufen",
+		"rclone not installed": "rclone nicht installiert",
+		"downloading and checking …": "wird geladen und geprüft …",
+		"First, under": "Zuerst unter",
+		"set up a drive.": "ein Laufwerk einrichten.",
+		"Credentials stay encrypted on the box.": "Zugangsdaten bleiben verschlüsselt auf der Box.",
+		"For Google Drive, OneDrive, Dropbox and similar services you sign in in the browser; for other services paste the finished section from “rclone config”.": "Bei Google Drive, OneDrive, Dropbox und ähnlichen Diensten meldest du dich im Browser an; für andere Dienste den fertigen Abschnitt aus „rclone config“ einfügen.",
+		"Jobs run with little memory (2 transfers at a time); a bandwidth limit like": "Aufträge laufen mit wenig Speicher (2 Übertragungen gleichzeitig); eine Bandbreitengrenze wie",
+		"Your credentials are kept in your personal folder; what you download counts towards your storage limit.": "Deine Zugangsdaten liegen in deinem persönlichen Ordner; was du herunterlädst, zählt zu deinem Speicherlimit.",
+		"After signing in, the browser shows “page not reachable” with an address like": "Nach der Anmeldung zeigt der Browser „Seite nicht erreichbar“ mit einer Adresse wie",
+		". Copy this whole address from the address bar and paste it here:": ". Diese komplette Adresse aus der Adresszeile kopieren und hier einfügen:",
+		"Checking the package again": "Paket wird erneut geprüft",
+		"Preparing the system for the restart": "System wird für den Neustart bereitgelegt",
+		"Boot system: erasing flash": "Startsystem: Flash wird gelöscht",
+		"Writing the boot system": "Startsystem wird geschrieben",
+		"Checking the boot system": "Startsystem wird geprüft",
+		"Kernel: erasing flash": "Kernel: Flash wird gelöscht",
+		"Writing the kernel": "Kernel wird geschrieben",
+		"Checking the kernel": "Kernel wird geprüft",
+		"Telegram: create a bot with @BotFather in Telegram (/newbot), enter the token here and save. Then send your bot a message (or add it to a group) and click “Find chat ID”.": "Telegram: In Telegram mit @BotFather einen Bot anlegen (/newbot), den Token hier eintragen und speichern. Dann dem eigenen Bot eine Nachricht schreiben (oder ihn in eine Gruppe aufnehmen) und „Chat-ID suchen“ klicken.",
+		"Find chat ID": "Chat-ID suchen",
+		"CHAT ID": "CHAT-ID",
+		"BOT TOKEN (FROM @BOTFATHER)": "BOT-TOKEN (VON @BOTFATHER)",
+		"Telegram (bot)": "Telegram (Bot)",
+		"AREAS": "BEREICHE",
+		"Switched off: the tab disappears, also for users in “My ShareOS”, and the background work rests (apps web server and app tasks). Settings and data stay; switching on brings everything back.": "Ausgeschaltet: Der Reiter verschwindet, auch für Benutzer in „Mein ShareOS“, und die Hintergrundarbeit ruht (App-Webserver und App-Aufgaben). Einstellungen und Daten bleiben erhalten; einschalten macht alles wieder an.",
+		"Apps (app store, web apps, app tasks)": "Apps (App-Store, Web-Apps, Aufgaben der Apps)",
+		"Cloud (sync with cloud storage)": "Cloud (Abgleich mit Cloud-Speichern)",
+		"Paperless (inboxes for Paperless-ngx)": "Paperless (Eingangsordner für Paperless-ngx)",
+		"Area switched on.": "Bereich eingeschaltet.",
+		"Area switched off.": "Bereich ausgeschaltet.",
+		"Signed in – now “Add”.": "Angemeldet – jetzt „Hinzufügen“.",
+		"The account is removed; rights on shares are dropped.": "Das Konto wird entfernt; Rechte an Freigaben entfallen.",
+		"The account is removed; rights on shares are dropped. The personal folder stays.": "Das Konto wird entfernt; Rechte an Freigaben entfallen. Der persönliche Ordner bleibt erhalten.",
+		"The drive is unmounted and removed from the configuration. The data on the disk stays until it is set up again.": "Das Laufwerk wird ausgehängt und aus der Konfiguration genommen. Die Daten auf der Platte bleiben erhalten, bis sie neu eingerichtet wird.",
+		"Drive": "Laufwerk",
+		"No message to the bot yet – first save the token, then write to the bot in Telegram.": "Noch keine Nachricht an den Bot – erst den Token speichern, dann dem Bot in Telegram schreiben.",
+		"downloading": "wird geladen",
+		"checking": "wird geprüft",
+		"installing": "wird installiert",
+		"Uses the internet": "Nutzt das Internet",
+		"Loads data from the internet (e.g. online services, streams, maps). Without an internet connection these parts of the app do not work.": "Lädt Daten aus dem Internet (z. B. Online-Dienste, Streams, Karten). Ohne Internetverbindung funktionieren diese Teile der App nicht.",
+		"TERMINAL": "TERMINAL",
+		"Open terminal": "Terminal öffnen",
+		"End": "Beenden",
+		"A shell as": "Eine Shell als",
+		"right on the box – for diagnosis and manual work (BusyBox, uci, logread, mdadm, smartctl …).": "direkt auf der Box – für Diagnose und Handarbeit (BusyBox, uci, logread, mdadm, smartctl …).",
+		"The session is for one window and ends when it is closed. Careful: commands as root take effect at once and without a recycle bin.": "Die Sitzung gilt für ein Fenster und endet, wenn es geschlossen wird. Vorsicht: Befehle als root wirken sofort und ohne Papierkorb.",
+		"Personal inboxes need a user with a personal folder.": "Persönliche Eingänge brauchen einen Benutzer mit persönlichem Ordner.",
+		"Cloud sync is not set up on this box yet – please ask the administrator.": "Cloud-Sync ist auf dieser Box noch nicht eingerichtet – bitte den Administrator fragen.",
+		"signed in ✓": "angemeldet ✓",
+		"2. ADDRESS AFTER SIGNING IN": "2. ADRESSE NACH DER ANMELDUNG",
+		"Sign in first (step 1 and 2).": "Erst anmelden (Schritt 1 und 2).",
+		"The box is not running from the flash right now (": "Die Box läuft gerade nicht aus dem Flash (",
+		"). Updates on this page only work after a normal start from the flash.": "). Updates über diese Seite gehen nur beim normalen Start aus dem Flash.",
+		"Command": "Befehl",
+		"From system apps:": "Aus System-Apps:",
+		"Terminal (administrators)": "Terminal (Administratoren)",
+		"System app · terminal": "System-App · Terminal",
+		"A program for the command line of the box (System → Terminal or SSH). It runs with the rights of whoever starts it – in the terminal as root.": "Programm für die Kommandozeile der Box (System → Terminal oder SSH). Es läuft mit den Rechten dessen, der es startet – im Terminal als root.",
+		"Terminal": "Terminal",
+		"not tested yet": "noch ungetestet",
+		"ShareOS has not been tested on real hardware of this model yet.": "ShareOS wurde auf diesem Modell noch nicht auf echter Hardware getestet.",
+		"First sign-in: user root, password shareos – then set your own password.": "Erste Anmeldung: Benutzer root, Passwort shareos – danach ein eigenes Passwort setzen.",
+		"Own torrents (Transmission)": "Eigene Torrents (Transmission)",
+		"May control the user's own Transmission service: add, pause and remove torrents. Every user has their own service; downloads go only into their folders.": "Darf den eigenen Transmission-Dienst des Benutzers steuern: Torrents hinzufügen, anhalten und löschen. Jeder Benutzer hat seinen eigenen Dienst; Downloads landen nur in seinen Ordnern.",
+		"Convert media (FFmpeg)": "Medien umwandeln (FFmpeg)",
+		"May have the user's audio and video converted on the box (FFmpeg) – with their rights, only in their folders, from fixed choices (no arbitrary command).": "Darf auf der Box Audio und Video des Benutzers umwandeln lassen (FFmpeg) – mit seinen Rechten, nur in seinen Ordnern, aus festen Auswahlen (kein beliebiger Befehl).",
+		"All": "Alle",
+		"Other": "Sonstige",
+		"Search …": "Suchen …",
+		"A snapshot keeps the state of a folder – hourly, daily or weekly.": "Ein Snapshot hält den Stand eines Ordners fest – stündlich, täglich oder wöchentlich.",
+		"Each state looks like a full copy, but unchanged files take no extra space.": "Jeder Stand sieht aus wie eine vollständige Kopie; unveränderte Dateien belegen aber keinen zusätzlichen Platz.",
+		"To get back a file deleted or overwritten yesterday or last week, copy it back from the snapshot in the file browser.": "So holst du eine gelöschte oder überschriebene Datei von gestern oder letzter Woche zurück: im Dateibrowser aus dem Snapshot zurückkopieren.",
+		"New snapshot job": "Neuer Snapshot-Auftrag",
+		"NEW SNAPSHOT JOB": "NEUER SNAPSHOT-AUFTRAG",
+		"Best save to another drive (second disk or USB disk): then snapshots also protect against a failing disk.": "Am besten auf ein anderes Laufwerk sichern (zweite Platte oder USB-Festplatte): dann schützen Snapshots auch bei einem Plattendefekt.",
+		"A mirror (RAID 1) does not replace snapshots – it mirrors every deletion at once.": "Ein Spiegel (RAID 1) ersetzt keine Snapshots – er spiegelt auch jedes Löschen sofort.",
+		"The snapshots are in the folder": "Die Snapshots liegen im Ordner",
+		"of the target drive and are visible to administrators only.": "des Ziel-Laufwerks und sind nur für Administratoren sichtbar.",
+		"For an off-site copy, a cloud job can upload the snapshot folder.": "Für eine Kopie außer Haus kann ein Cloud-Auftrag den Snapshot-Ordner hochladen.",
+		"newest": "neuester",
+		"Back up now": "Jetzt sichern",
+		"SOURCE → TARGET": "QUELLE → ZIEL",
+		"SCHEDULE · KEEP": "ZEITPLAN · BEHALTEN",
+		"STATE": "STAND",
+		"Open in the file browser": "Im Dateibrowser öffnen",
+		"To restore, copy the file or folder from the snapshot back to its old place in the file browser. Do not change files inside a snapshot: unchanged files share their space with the other snapshots.": "Zum Wiederherstellen im Dateibrowser die Datei oder den Ordner aus dem Snapshot an den alten Platz kopieren. Dateien im Snapshot nicht ändern: unveränderte Dateien teilen sich den Platz mit den anderen Snapshots.",
+		"WHAT TO SAVE": "WAS SICHERN",
+		"TARGET DRIVE": "ZIEL-LAUFWERK",
+		"HOW OFTEN": "WIE OFT",
+		"Hourly": "Stündlich",
+		"Every 6 hours": "Alle 6 Stunden",
+		"Daily": "Täglich",
+		"Weekly (Sunday)": "Wöchentlich (Sonntag)",
+		"FROM": "AB UHRZEIT",
+		"MINUTE (HH:MM, ONLY THE MINUTE COUNTS)": "MINUTE (HH:MM, NUR DIE MINUTE ZÄHLT)",
+		"KEEP": "BEHALTEN",
+		"THE LAST": "DIE LETZTEN",
+		"DAYS (ONE EACH)": "TAGE (JE EINER)",
+		"WEEKS (ONE EACH)": "WOCHEN (JE EINER)",
+		"MONTHS (ONE EACH)": "MONATE (JE EINER)",
+		"The last N snapshots always stay (also those taken by hand); plus the newest of each day, week and month. Example daily: 7 days · 4 weeks · 6 months ≈ half a year back with 17 states.": "Die letzten N Snapshots bleiben immer (auch die von Hand); dazu je der neueste eines Tages, einer Woche, eines Monats. Beispiel täglich: 7 Tage · 4 Wochen · 6 Monate ≈ ein halbes Jahr zurück mit 17 Ständen.",
+		"EXCLUSIONS (ONE PER LINE, E.G. *.tmp OR /Downloads/)": "AUSNAHMEN (EINE PRO ZEILE, Z. B. *.tmp ODER /Downloads/)",
+		"Source and target are on the same drive: this protects against accidental deletion, not against a failing disk.": "Quelle und Ziel liegen auf demselben Laufwerk: das schützt vor versehentlichem Löschen, aber nicht vor einem Plattendefekt.",
+		"No new snapshots will be taken.": "Es werden keine neuen Snapshots mehr angelegt.",
+		"Delete snapshot?": "Snapshot löschen?",
+		"Delete the snapshots too?": "Snapshots auch löschen?",
+		"Delete snapshots": "Snapshots löschen",
+		"Snapshot deleted.": "Snapshot gelöscht.",
+		"stopped": "gestoppt",
+		"Loading snapshots …": "Lade Snapshots …",
+		"No snapshot job yet. A job saves a share, the personal folders or a whole drive on a schedule.": "Noch kein Snapshot-Auftrag. Ein Auftrag sichert eine Freigabe, die persönlichen Ordner oder ein ganzes Laufwerk nach Zeitplan.",
+		"No snapshot yet – “Back up now” takes the first one.": "Noch kein Snapshot – „Jetzt sichern“ legt den ersten an.",
+		"rsync is missing in this firmware.": "rsync fehlt in dieser Firmware.",
+		"No suitable target: snapshots need a drive with ext4 or Btrfs (FAT32/exFAT have no hard links).": "Kein geeignetes Ziel: Snapshots brauchen ein Laufwerk mit ext4 oder Btrfs (FAT32/exFAT kennen keine Hardlinks).",
+		"jobs": "Aufträge",
+		"– no hard links": "– keine Hardlinks",
+		"MEDIA SERVER": "MEDIENSERVER",
+		"Media server (DLNA)": "Medienserver (DLNA)",
+		"do not share": "nicht freigeben",
+		"music, videos and pictures": "Musik, Videos und Bilder",
+		"music only": "nur Musik",
+		"videos only": "nur Videos",
+		"pictures only": "nur Bilder",
+		"TRACKS": "MUSIKSTÜCKE",
+		"DEVICES": "GERÄTE",
+		"In the network as": "Im Netzwerk als",
+		"reading folders …": "liest Ordner ein …",
+		"Loading media server …": "Lade Medienserver …",
+		"Read everything again": "Alles neu einlesen",
+		"Install from the store (MiniDLNA)": "Im Store installieren (MiniDLNA)",
+		"The media server (MiniDLNA) is a system app: TVs, receivers, game consoles and apps like VLC then find the box in the network and play music, videos and pictures from the shares.": "Der Medienserver (MiniDLNA) ist eine System-App: Fernseher, Receiver, Spielkonsolen und Apps wie VLC finden die Box dann im Netzwerk und spielen Musik, Videos und Bilder aus den Freigaben ab.",
+		"The media server is switched off. Choose folders below and switch it on.": "Der Medienserver ist ausgeschaltet. Unten Ordner wählen und einschalten.",
+		"Devices in the same network find the server by themselves (DLNA/UPnP AV), e.g. under “Media server” or “Sources” on the TV.": "Geräte im selben Netzwerk finden den Server von selbst (DLNA/UPnP AV), z. B. unter „Medienserver“ oder „Quellen“ am Fernseher.",
+		"New files show up by themselves after a short while; after big changes “Read everything again” helps.": "Neue Dateien erscheinen nach kurzer Zeit von selbst; nach großen Änderungen hilft „Alles neu einlesen“.",
+		"The server only reads – and shows everything in the chosen shares to every device in the network, without sign-in.": "Der Server liest nur – und zeigt alles in den gewählten Freigaben jedem Gerät im Netzwerk, ohne Anmeldung.",
+		"Videos are not converted: the device must be able to play the format itself.": "Videos werden nicht umgewandelt: das Gerät muss das Format selbst abspielen können.",
+		"Media server switched on (also starts after a restart)": "Medienserver eingeschaltet (startet auch nach einem Neustart)",
+		"NAME IN THE NETWORK": "NAME IM NETZWERK",
+		"SHOW AS": "ZEIGEN ALS",
+		"“Music”, “Videos”, “Pictures”: show only this kind of files from the share. “Everything”: music, videos and pictures.": "„Musik“, „Videos“, „Bilder“: aus der Freigabe nur diese Art von Dateien zeigen. „Alles“: Musik, Videos und Bilder.",
+		"Choose at least one share.": "Mindestens eine Freigabe wählen.",
+		"Media server saved.": "Medienserver gespeichert.",
+		"Media server reads all folders again.": "Medienserver liest alle Ordner neu ein.",
+		"No share yet – create one under": "Noch keine Freigabe – unter",
+		"VIDEOS": "VIDEOS",
+		"PICTURES": "BILDER",
+		"HEADER INDICATORS": "ANZEIGEN IM KOPF",
+		"Header indicator": "Anzeige im Kopf",
+		"VPN of the box (OpenVPN)": "VPN der Box (OpenVPN)",
+		"connecting …": "verbindet …",
+		"No service and no app shows anything right now.": "Gerade zeigt kein Dienst und keine App etwas an.",
+		"Services (VPN, torrents, media server) and apps with the permission “Header indicator” show their state here; a click opens the app.": "Dienste (VPN, Torrents, Medienserver) und Apps mit der Berechtigung „Anzeige im Kopf“ zeigen hier ihren Zustand; ein Klick öffnet die App.",
+		"May connect and disconnect the box as a VPN client and manage VPN profiles (OpenVPN) – this affects the network of the whole box, so administrators only.": "Darf die Box als VPN-Client verbinden und trennen und VPN-Profile verwalten (OpenVPN) – das betrifft das Netzwerk der ganzen Box, deshalb nur für Administratoren.",
+		"May show a short state at the top of the ShareOS interface (e.g. “connected”) – only to the user who opened the app; it disappears by itself after at most 10 minutes.": "Darf oben in der Kopfzeile der ShareOS-Oberfläche einen kurzen Zustand anzeigen (z. B. „verbunden“) – nur für den Benutzer, der die App geöffnet hat; er verschwindet nach höchstens 10 Minuten von selbst.",
+		"VPN SERVER": "VPN-SERVER",
+		"1 device": "1 Gerät",
+		"Neither a personal folder nor a share for you.": "Weder ein persönlicher Ordner noch eine Freigabe für dich.",
+		"Files: personal folder and shares (by permissions) in the file browser and in apps": "Dateien: persönlicher Ordner und Freigaben (nach Rechten) im Dateibrowser und in Apps",
+		" (read only)": " (nur lesen)",
+		"(read only)": "(nur lesen)",
+		"TAILSCALE": "TAILSCALE",
+		"sign-in needed": "Anmeldung nötig",
+		"disconnected": "getrennt",
+		"Remote access (Tailscale)": "Fernzugriff (Tailscale)",
+		"May connect the box with Tailscale, sign in and out and see the devices of the tailnet – this affects the network of the whole box, so admins only.": "Darf die Box mit Tailscale verbinden, an- und abmelden und die Geräte des Tailnets sehen – das betrifft das Netzwerk der ganzen Box, deshalb nur für Administratoren.",
+		"In the page": "In der Seite",
+		"Own window": "Eigenes Fenster",
+		"Now opens in the page.": "Öffnet sich jetzt in der Seite.",
+		"Now opens in its own window.": "Öffnet sich jetzt in einem eigenen Fenster.",
+		"This app does not exist (any more).": "Diese App gibt es nicht (mehr).",
+		"tailscaled, WireGuard mesh": "tailscaled, WireGuard-Mesh",
+		"VPN (OpenVPN)": "VPN (OpenVPN)",
+		"Client and server, app NetTunnel": "Client und Server, App NetTunnel",
+		"Torrents (Transmission)": "Torrents (Transmission)",
+		"one service per account": "ein Dienst pro Konto",
+		"Download automation (autobrr)": "Download-Automatik (autobrr)",
+		"autobrr, port 7474": "autobrr, Port 7474",
+		"May set up and control the box's autobrr (filters, indexers, IRC, releases) and choose whose Transmission gets the torrents it finds – one service for the whole box, so for administrators only.": "Darf autobrr der Box einrichten und steuern (Filter, Indexer, IRC, Releases) und festlegen, in wessen Transmission gefundene Torrents landen – ein Dienst für die ganze Box, deshalb nur für Administratoren.",
+		"Mark as favourite": "Als Favorit markieren",
+		"Remove from favourites": "Aus den Favoriten nehmen",
+		"Show the “FAV APPS” app bar (just for you)": "App-Leiste „FAV APPS“ anzeigen (nur für dich)",
+		"The star on an app tile makes it a favourite. The bar sits above “Status” in the overview and above the installed apps.": "Mit dem Stern auf einer App-Kachel wird sie zum Favoriten. Die Leiste steht über „Status“ in der Übersicht und über den installierten Apps.",
+		"Show names below the icons (off: icons only)": "Namen unter den Symbolen zeigen (aus: nur Symbole)",
+		"Box values": "Werte der Box",
+		"Network checks": "Netzwerk prüfen",
+		"Docker hosts": "Docker-Hosts",
+		"May read the box's values (CPU, memory, temperature, fan, drives, processes) and end processes ShareOS does not need – administrators only.": "Darf die Werte der Box lesen (CPU, Arbeitsspeicher, Temperatur, Lüfter, Laufwerke, Prozesse) und Prozesse beenden, die ShareOS nicht braucht – nur für Administratoren.",
+		"May check from the box whether devices and services on the network are reachable (ping, port, HTTP/HTTPS) – administrators only.": "Darf von der Box aus prüfen, ob Geräte und Dienste im Netz erreichbar sind (Ping, Port, HTTP/HTTPS) – nur für Administratoren.",
+		"May manage the Docker hosts the administrator adds and there view, start, stop and restart containers and read their logs (Docker API) – administrators only.": "Darf die Docker-Hosts verwalten, die der Administrator einträgt, und dort Container ansehen, starten, stoppen und neu starten sowie ihre Protokolle lesen (Docker-API) – nur für Administratoren.",
+		"Smart home (Tuya)": "Smart Home (Tuya)",
+		"May find Tuya devices on the home network from the box, read their state and switch them (locally, without the cloud) – administrators only.": "Darf von der Box aus Tuya-Geräte im Heimnetz suchen, ihren Zustand lesen und sie schalten (lokal, ohne Cloud) – nur für Administratoren.",
+		"No drive mounted for you.": "Kein Laufwerk für dich eingehängt.",
+		"CONTAINS": "ENTHÄLT",
+		"MY USAGE": "MEIN VERBRAUCH",
+		"FREE": "FREI",
+		"LIMIT": "LIMIT",
+		"HEALTH": "ZUSTAND",
+		"Health": "Gesundheit",
+		"SELF-TEST": "SELBSTTEST",
+		"GOOD": "GUT",
+		"CAUTION": "ACHTUNG",
+		"CRITICAL": "KRITISCH",
+		"BAY": "SCHACHT",
+		"Read again": "Neu lesen",
+		"Read now": "Jetzt lesen",
+		"Short test": "Kurztest",
+		"Long test": "Langtest",
+		"Abort test": "Test abbrechen",
+		"All values": "Alle Werte",
+		"Hide values": "Werte ausblenden",
+		"Temperature": "Temperatur",
+		"Running time": "Betriebszeit",
+		"Power cycles": "Einschaltvorgänge",
+		"Motor start-ups": "Anläufe des Motors",
+		"Reallocated sectors": "Umgelagerte Sektoren",
+		"Pending sectors": "Schwebende Sektoren",
+		"Unreadable sectors": "Nicht lesbare Sektoren",
+		"Transfer errors (CRC)": "Übertragungsfehler (CRC)",
+		"Error log": "Fehlerprotokoll",
+		"WORST": "SCHLECHTESTER",
+		"THRESHOLD": "SCHWELLE",
+		"RAW VALUE": "ROHWERT",
+		"EARLIER": "FRÜHER",
+		"FAILED": "FEHLGESCHLAGEN",
+		"SCHEDULED SELF-TEST": "SELBSTTEST NACH ZEITPLAN",
+		"ALL DISKS IN THE BAYS": "ALLE PLATTEN IN DEN SCHÄCHTEN",
+		"HOW IT IS RATED": "SO WIRD BEWERTET",
+		"Short test every Sunday (3:30 am)": "Kurztest jeden Sonntag (3:30 Uhr)",
+		"Long test on the 1st of every month (3:30 am)": "Langtest am 1. jedes Monats (3:30 Uhr)",
+		"self-test running": "Selbsttest läuft",
+		"Start the long test?": "Langtest starten?",
+		"Self-test started.": "Selbsttest gestartet.",
+		"Self-test aborted.": "Selbsttest abgebrochen.",
+		"Schedule saved.": "Zeitplan gespeichert.",
+		"Nothing unusual.": "Keine Auffälligkeiten.",
+		"SSD life": "Lebensdauer der SSD",
+		"No self-test has run yet.": "Noch kein Selbsttest gelaufen.",
+		"Back up the data and replace the disk soon.": "Daten sichern und die Platte bald tauschen.",
+		"SMART of the disks and SSDs": "SMART der Platten und SSDs",
+		"No disk found.": "Keine Platte erkannt.",
+		"SMART not read yet. Reading wakes the disk up.": "SMART noch nicht gelesen. Beim Lesen wacht die Platte auf.",
+		"The disk is asleep – the values come when it next wakes up.": "Die Platte schläft – die Werte kommen beim nächsten Aufwachen.",
+		"This disk gives no SMART values.": "Diese Platte liefert keine SMART-Werte.",
+		"This USB adapter does not pass on SMART values.": "Dieser USB-Adapter reicht keine SMART-Werte weiter.",
+		"The disk itself reports: failure is imminent (SMART overall assessment FAILED).": "Die Platte meldet selbst: Ausfall droht (SMART-Gesamtbewertung FEHLER).",
+		"The last self-test failed.": "Der letzte Selbsttest ist fehlgeschlagen.",
+		"The disk itself reports a failure, a value is below the manufacturer's threshold, a self-test failed, more than 100 reallocated or more than 10 pending sectors, an SSD with 10 % life or less, 60 °C and above.": "Die Platte meldet selbst einen Ausfall, ein Wert liegt unter der Schwelle des Herstellers, ein Selbsttest schlug fehl, über 100 umgelagerte oder über 10 schwebende Sektoren, SSD mit höchstens 10 % Lebensdauer, 60 °C und mehr.",
+		"A few reallocated, pending or unreadable sectors, transfer errors, entries in the error log, an SSD with 20 % life or less, from 55 °C.": "Einzelne umgelagerte, schwebende oder nicht lesbare Sektoren, Übertragungsfehler, Einträge im Fehlerprotokoll, SSD mit höchstens 20 % Lebensdauer, ab 55 °C.",
+		"The short test checks the electronics and part of the surface, the long test reads the whole disk (many hours for large disks; the disk stays awake meanwhile). The result shows here and as a message when something is wrong.": "Der Kurztest prüft die Elektronik und einen Teil der Oberfläche, der Langtest liest die ganze Platte (bei großen Platten viele Stunden; die Platte bleibt dabei wach). Das Ergebnis erscheint hier und als Meldung, wenn etwas auffällt.",
+		"without errors": "ohne Fehler",
+		"ASLEEP": "SCHLÄFT",
+		"The disk is asleep (standby)": "Die Platte schläft (Ruhezustand)",
+		"The disk is running": "Die Platte läuft",
+		"Trash": "Papierkorb",
+		"TRASH": "PAPIERKORB",
+		"Delete for good": "Endgültig löschen",
+		"Empty trash": "Papierkorb leeren",
+		"Empty the trash?": "Papierkorb leeren?",
+		"DELETED": "GELÖSCHT",
+		"Move to trash": "In den Papierkorb",
+		"Moved to the trash.": "In den Papierkorb verschoben.",
+		"Empty": "Leeren",
+		"Trash emptied.": "Papierkorb geleert.",
+		"Deleted for good.": "Endgültig gelöscht.",
+		"Trash settings saved.": "Papierkorb gespeichert.",
+		"The trash is empty.": "Der Papierkorb ist leer.",
+		"never (empty by hand only)": "nie (nur von Hand leeren)",
+		"Put what is deleted in the file browser into the trash first": "Gelöschtes im Dateibrowser erst in den Papierkorb legen",
+		"DELETE FOR GOOD AUTOMATICALLY AFTER": "AUTOMATISCH ENDGÜLTIG LÖSCHEN NACH",
+		"This cannot be undone.": "Das lässt sich nicht rückgängig machen.",
+		"Every folder has its own trash: the personal folder, each share, each drive. It lies on the same disk and counts towards the storage limit. It applies to the file browser of this interface – what is deleted over SMB from a PC or in apps is gone at once; for that there are the snapshots.": "Jeder Ordner hat seinen eigenen Papierkorb: der persönliche Ordner, jede Freigabe, jedes Laufwerk. Er liegt auf derselben Platte und zählt zum Speicherlimit. Gilt für den Dateibrowser dieser Oberfläche – über SMB vom PC oder in Apps Gelöschtes ist sofort weg; dafür gibt es die Snapshots.",
+		"USB BUTTON": "USB-TASTE",
+		"copies": "kopiert",
+		"Copy now": "Jetzt kopieren",
+		"USB button saved.": "USB-Taste gespeichert.",
+		"USB copy started.": "USB-Kopie gestartet.",
+		"Last:": "Zuletzt:",
+		"No USB drive plugged in.": "Kein USB-Laufwerk eingesteckt.",
+		"No target set.": "Kein Ziel eingestellt.",
+		"Not enough space on the target – nothing copied.": "Zu wenig Platz auf dem Ziel – nichts kopiert.",
+		"The target drive is not mounted.": "Das Ziellaufwerk ist nicht eingehängt.",
+		"A short press copies the USB drives, holding 3 s ejects them": "Kurz drücken kopiert die USB-Laufwerke, 3 s halten wirft sie aus",
+		"A new folder with the date every time, e.g.": "Jedes Mal ein neuer Ordner mit Datum, z. B.",
+		"– nothing on the box is overwritten or deleted. The USB light blinks while copying; the result comes as a message. Without the tick the button only ejects, as before.": "– auf der Box wird nichts überschrieben oder gelöscht. Die USB-Lampe blinkt beim Kopieren; das Ergebnis kommt als Meldung. Ohne Häkchen wirft die Taste wie bisher nur aus.",
+		"Send notifications": "Meldungen senden",
+		"May send messages through the box's notifications (web interface, e-mail, push) – at most 20 an hour, with the app's name in front; in the browser for administrators only.": "Darf Meldungen über die Benachrichtigungen der Box senden (Oberfläche, E-Mail, Push) – höchstens 20 pro Stunde, mit dem Namen der App davor; im Browser nur für Administratoren.",
+		"Reload": "Neu laden",
+		"Window blocked – allow pop-ups for this page.": "Fenster blockiert – Pop-ups für diese Seite erlauben.",
+		"Show here": "Hier anzeigen",
+		"The terminal runs in its own window.": "Das Terminal läuft in einem eigenen Fenster.",
+		"The session is for one window and ends when it is closed – a window of its own gets a new session. Careful: commands as root take effect at once and without a trash.": "Die Sitzung gilt für ein Fenster und endet, wenn es geschlossen wird – ein eigenes Fenster bekommt eine neue Sitzung. Vorsicht: Befehle als root wirken sofort und ohne Papierkorb.",
+		"SWITCH OFF AND ON BY SCHEDULE": "AUS- UND EINSCHALTEN NACH ZEITPLAN",
+		"Switch the schedule on": "Zeitplan einschalten",
+		"DAY": "TAG",
+		"SWITCH ON": "EINSCHALTEN",
+		"SWITCH OFF": "AUSSCHALTEN",
+		"Monday": "Montag",
+		"Tuesday": "Dienstag",
+		"Wednesday": "Mittwoch",
+		"Thursday": "Donnerstag",
+		"Friday": "Freitag",
+		"Saturday": "Samstag",
+		"Sunday": "Sonntag",
+		"Next switch-on:": "Nächstes Einschalten:",
+		"Next switch-off:": "Nächstes Ausschalten:",
+		"· Next switch-off:": "· Nächstes Ausschalten:",
+		"Empty fields: nothing on that day. The box shuts down cleanly (as with the button); while a storage job runs (e.g. a RAID rebuild) it stays on. To switch on, ShareOS sets the wake-up time of the device controller – do not unplug it.": "Leere Felder: an diesem Tag nichts. Ausgeschaltet wird sauber (wie mit dem Knopf); läuft gerade ein Speicher-Auftrag (z. B. RAID-Aufbau), bleibt die Box an. Zum Einschalten stellt ShareOS die Weckzeit der Gerätesteuerung – den Stecker nicht ziehen.",
+		"This box cannot switch itself on (no wake-up function) – only switching off by schedule works. Switch it on with the power button.": "Diese Box kann sich nicht selbst einschalten (keine Weckfunktion) – nur das Ausschalten nach Zeitplan geht. Einschalten über den Power-Taster.",
+		"Monitoring (Zabbix agent)": "Überwachung (Zabbix-Agent)",
+		"zabbix_agentd, active mode": "zabbix_agentd, Aktiv-Modus",
+		"Compatibility mode (SMB 2.1 at most)": "Kompatibilitätsmodus (höchstens SMB 2.1)",
+		"Faster with Windows 11, which signs every connection: the signature of SMB 2.1 costs this box about half the computing time of the one of SMB 3 (measured about 9–14 instead of 4–10 MB/s when writing). Without signing about 35 MB/s are possible. In exchange there is no SMB 3: no encryption, no multichannel. Open connections are dropped when this is changed.": "Schneller mit Windows 11, das jede Verbindung signiert: Die Signatur von SMB 2.1 kostet diese Box etwa halb so viel Rechenzeit wie die von SMB 3 (gemessen etwa 9–14 statt 4–10 MB/s beim Schreiben). Ohne Signatur sind etwa 35 MB/s möglich. Dafür gibt es kein SMB 3: keine Verschlüsselung, kein Multichannel. Bestehende Verbindungen werden dabei getrennt.",
+		"The wizard erases the selected disks and sets them up again. Single disks can also be formatted directly at the disk under “Drives”. Disks with data (e.g. from Alt-F or the D-Link firmware) are added without erasing with “… take over” at the disk.": "Der Assistent löscht die ausgewählten Platten und richtet sie neu ein. Einzelne Platten lassen sich auch direkt an der Platte unter „Laufwerke“ formatieren. Platten mit Daten (z. B. von Alt-F oder der D-Link-Firmware) bindet „… übernehmen“ an der Platte ohne Löschen ein.",
+		"Only for devices that have trouble with SMB 3. The signature Windows 11 requires on every connection is computed by the crypto engine of the box with SMB 3 (measured about 19–23 MB/s when writing, about 35 without signing); SMB 2.1 computes it on the processor (about 9–14 MB/s) and has no encryption and no multichannel. Open connections are dropped when this is changed.": "Nur für Geräte, die mit SMB 3 nicht zurechtkommen. Die Signatur, die Windows 11 bei jeder Verbindung verlangt, rechnet bei SMB 3 die Krypto-Einheit der Box (gemessen etwa 19–23 MB/s beim Schreiben, ohne Signatur etwa 35); SMB 2.1 rechnet sie auf dem Prozessor (etwa 9–14 MB/s) und hat keine Verschlüsselung und kein Multichannel. Bestehende Verbindungen werden beim Umschalten getrennt.",
+		"The schedule is off – the times entered only apply with the tick at “Switch the schedule on”.": "Der Zeitplan ist aus – die eingetragenen Zeiten gelten erst mit dem Haken bei „Zeitplan einschalten“.",
+		"Schedule saved (switched off).": "Zeitplan gespeichert (ausgeschaltet).",
+		"Schedule saved – no switch-on planned.": "Zeitplan gespeichert – kein Einschalten geplant.",
+		"Switching on afterwards only at the device.": "Einschalten danach nur am Gerät.",
+		"No times set up.": "Keine Zeiten eingerichtet.",
+		"DEVICE & ACCESS": "GERÄT & ZUGANG",
+		"The star makes an app a favourite – favourites are shown at the top of “My ShareOS”.": "Mit dem Stern wird eine App zum Favoriten – Favoriten stehen oben auf „Mein ShareOS“.",
+		"Show all notices": "Alle Hinweise anzeigen",
+		"OWN CERTIFICATES": "EIGENE ZERTIFIKATE",
+		"Update dynamic DNS": "DynDNS aktualisieren",
+		"API TOKEN (ZONE:READ, DNS:EDIT)": "API-TOKEN (ZONE:LESEN, DNS:BEARBEITEN)",
+		"UPDATE URL ({host} {ip} {ip6})": "UPDATE-ADRESSE ({host} {ip} {ip6})",
+		"Own URL (dyndns2)": "Eigene Adresse (dyndns2)",
+		"– choose –": "– wählen –",
+		"saved – leave empty to keep it": "gespeichert – leer lassen behält ihn",
+		"The box reports its public address every 5 minutes when it has changed. Many connections (DS-Lite, fibre, mobile) have no IPv4 address of their own – then use IPv6. For access from outside, the router has to forward the port (or open it for IPv6).": "Die Box meldet ihre öffentliche Adresse alle 5 Minuten, wenn sie sich geändert hat. Viele Anschlüsse (DS-Lite, Glasfaser, Mobilfunk) haben keine eigene IPv4-Adresse – dann IPv6 nehmen. Für Zugriff von außen muss der Router den Port weiterleiten (bzw. bei IPv6 freigeben).",
+		"Last reported": "Zuletzt gemeldet",
+		"Last checked": "Zuletzt geprüft",
+		"Not reported yet – coming shortly.": "Noch keine Meldung – kommt gleich.",
+		"Dynamic DNS is off.": "DynDNS ist aus.",
+		"CERTIFICATE AUTHORITY (CA)": "ZERTIFIZIERUNGSSTELLE (CA)",
+		"this box uses it": "diese Box nutzt sie",
+		"Fingerprint": "Fingerabdruck",
+		"Root certificate": "Stammzertifikat",
+		"Reissue the box certificate": "Zertifikat der Box neu ausstellen",
+		"Use for this box": "Für diese Box verwenden",
+		"Install the root certificate once on PC and phone as trusted (Windows: double-click → “Trusted Root Certification Authorities”, Android/iOS: Settings → Security). After that all certificates of this CA work without a warning – for the box and other devices in the home network.": "Das Stammzertifikat einmal auf PC und Handy als vertrauenswürdig installieren (Windows: Doppelklick → „Vertrauenswürdige Stammzertifizierungsstellen“, Android/iOS: Einstellungen → Sicherheit). Danach sind alle Zertifikate dieser CA ohne Warnung – für die Box und andere Geräte im Heimnetz.",
+		"An own certificate authority issues certificates for the box and other devices in the home network (e.g.": "Eine eigene Zertifizierungsstelle stellt Zertifikate für die Box und andere Geräte im Heimnetz aus (z. B.",
+		"). Its root certificate is installed once on the devices – after that there are no more certificate warnings.": "). Ihr Stammzertifikat wird einmal auf den Geräten installiert – danach gibt es keine Zertifikatswarnungen mehr.",
+		"Create certificate authority": "Zertifizierungsstelle anlegen",
+		"Getting the certificate – this takes up to 3 minutes …": "Zertifikat wird geholt – das dauert bis zu 3 Minuten …",
+		"Checked daily and renewed 30 days before it expires.": "Wird täglich geprüft und 30 Tage vor Ablauf erneuert.",
+		"Switch off": "Abschalten",
+		"A certificate for": "Ein Zertifikat für",
+		", trusted by all browsers. The check runs through a DNS record at the dynamic DNS provider – no port has to be open.": ", dem alle Browser vertrauen. Die Prüfung läuft über einen DNS-Eintrag beim DynDNS-Anbieter – kein Port muss offen sein.",
+		"E-MAIL (OPTIONAL, FOR NOTICES FROM LET'S ENCRYPT)": "E-MAIL (OPTIONAL, FÜR HINWEISE VON LET'S ENCRYPT)",
+		"Test mode (test CA, browsers warn)": "Testmodus (Test-CA, Browser warnen)",
+		"Get certificate": "Zertifikat holen",
+		"Needs dynamic DNS with DuckDNS or Cloudflare (above).": "Braucht DynDNS mit DuckDNS oder Cloudflare (oben).",
+		"CERTIFICATE FOR ANOTHER DEVICE": "ZERTIFIKAT FÜR EIN ANDERES GERÄT",
+		"HOST NAMES AND IP ADDRESSES (COMMA-SEPARATED)": "HOSTNAMEN UND IP-ADRESSEN (KOMMA-GETRENNT)",
+		"Valid for 825 days. Wildcards such as": "Gültig 825 Tage. Auch Platzhalter wie",
+		"are possible too. Download certificate and key and enter them in the device.": "sind möglich. Zertifikat und Schlüssel herunterladen und im Gerät eintragen.",
+		"Issue": "Ausstellen",
+		"HOST NAMES": "HOSTNAMEN",
+		"VALID UNTIL": "GÜLTIG BIS",
+		"Key": "Schlüssel",
+		"own CA": "eigene CA",
+		"active (test)": "aktiv (Test)",
+		"Please enter provider and name.": "Bitte Anbieter und Namen angeben.",
+		"Please enter name and host names.": "Bitte Name und Hostnamen angeben.",
+		"Saved – the address is being reported.": "Gespeichert – die Adresse wird gemeldet.",
+		"Reporting …": "Wird gemeldet …",
+		"Certificate authority created.": "Zertifizierungsstelle angelegt.",
+		"Certificate issued.": "Zertifikat ausgestellt.",
+		"Use a certificate of the own CA?": "Zertifikat der eigenen CA verwenden?",
+		"The box gets a certificate of its own CA for the device name, the .local name and the IP address; it replaces the current one. Without the root certificate installed, the browser keeps warning.": "Die Box bekommt ein Zertifikat ihrer eigenen Zertifizierungsstelle für Gerätenamen, .local-Namen und IP-Adresse; es ersetzt das bisherige. Ohne installiertes Stammzertifikat warnt der Browser weiter.",
+		"Use": "Verwenden",
+		"Certificate installed – the page reconnects.": "Zertifikat installiert – die Seite verbindet sich neu.",
+		"Delete certificate?": "Zertifikat löschen?",
+		"Switch off Let's Encrypt?": "Let's Encrypt abschalten?",
+		"The box then uses a self-signed certificate again.": "Die Box nutzt danach wieder ein selbstsigniertes Zertifikat.",
+		"Switched off – the page reconnects.": "Abgeschaltet – die Seite verbindet sich neu.",
+		"Let's Encrypt certificate active – the page reconnects.": "Let's-Encrypt-Zertifikat aktiv – die Seite verbindet sich neu.",
+		"PRINTERS": "DRUCKER",
+		"Loading printers …": "Lade Drucker …",
+		"Printers in the network are a system app: current printers and multifunction devices then print and scan without drivers (AirPrint, Mopria, Windows 10/11), older ones over port 9100 with the driver on the computer.": "Drucker im Netzwerk sind eine System-App: Aktuelle Drucker und Multifunktionsgeräte drucken und scannen dann ohne Treiber (AirPrint, Mopria, Windows 10/11), ältere über Port 9100 mit dem Treiber am Rechner.",
+		"Install from the store (ipp-usb + p910nd)": "Im Store installieren (ipp-usb + p910nd)",
+		"in the network": "im Netzwerk",
+		"not reachable": "nicht erreichbar",
+		"Without driver (IPP over USB)": "Ohne Treiber (IPP over USB)",
+		"With the driver on the computer (port 9100)": "Mit Treiber am Rechner (Port 9100)",
+		"Scanning": "Scannen",
+		"over the network (eSCL), if the device has a scanner": "über das Netzwerk (eSCL), wenn das Gerät einen Scanner hat",
+		"Address": "Adresse",
+		"Device page": "Geräteseite",
+		"Windows 10/11, macOS, iPhone/iPad and Android find the printer by themselves (“Add printer”). By hand: enter the address above as an IPP printer.": "Windows 10/11, macOS, iPhone/iPad und Android finden den Drucker von selbst („Drucker hinzufügen“). Von Hand: Adresse oben als IPP-Drucker eintragen.",
+		"Windows: “Add printer” → “TCP/IP address” →": "Windows: „Drucker hinzufügen“ → „TCP/IP-Adresse“ →",
+		", port": ", Port",
+		", the maker's driver. macOS/Linux: “HP JetDirect – Socket” or AppSocket.": ", Treiber des Herstellers. macOS/Linux: „HP JetDirect – Socket“ bzw. AppSocket.",
+		"Test page": "Testseite",
+		"No USB printer connected. Plug one in – it shows up here after a few seconds.": "Kein USB-Drucker angeschlossen. Einstecken – er erscheint hier nach ein paar Sekunden.",
+		"Share printers in the network (also starts after a restart)": "Drucker im Netzwerk freigeben (startet auch nach einem Neustart)",
+		"Automatic – without driver where the printer can": "Automatisch – ohne Treiber, wo der Drucker es kann",
+		"Always port 9100 (driver on the computer)": "Immer Port 9100 (Treiber am Rechner)",
+		"Everyone in the network can print, without signing in. “Always port 9100” only if a printer does not print properly without a driver.": "Jeder im Netzwerk kann drucken, ohne Anmeldung. „Immer Port 9100“ nur, wenn ein Drucker ohne Treiber nicht richtig druckt.",
+		"Printers saved.": "Drucker gespeichert.",
+		"Test page sent.": "Testseite geschickt.",
+		"UPS": "USV",
+		"Loading UPS …": "Lade USV …",
+		"Install from the store (Network UPS Tools)": "Im Store installieren (Network UPS Tools)",
+		"UPS support is a system app: the box then shows charge and runtime, reports a power failure and shuts down cleanly in time.": "Die USV-Unterstützung ist eine System-App: Die Box zeigt dann Akkustand und Restlaufzeit, meldet einen Stromausfall und fährt rechtzeitig sauber herunter.",
+		"Battery almost empty": "Akku fast leer",
+		"on battery": "läuft über Akku",
+		"on mains": "am Netz",
+		"no data": "keine Daten",
+		"BATTERY": "AKKU",
+		"RUNTIME": "RESTLAUFZEIT",
+		"Mains voltage": "Netzspannung",
+		"Battery since": "Akku seit",
+		"Driver": "Treiber",
+		"Connecting to the UPS …": "Verbinde mit der USV …",
+		"Detected:": "Erkannt:",
+		"Switch it on below.": "Unten einschalten.",
+		"EVENTS": "EREIGNISSE",
+		"None yet – a power failure is shown here and as a message.": "Noch keine – ein Stromausfall wird hier und als Meldung angezeigt.",
+		"Power failure – running on the UPS": "Stromausfall – läuft über die USV",
+		"Power is back": "Strom wieder da",
+		"Shutdown triggered": "Herunterfahren ausgelöst",
+		"Box shuts down": "Box fährt herunter",
+		"Connection to the UPS lost": "Verbindung zur USV verloren",
+		"No connection to the UPS": "Keine Verbindung zur USV",
+		"Connection to the UPS is back": "Verbindung zur USV wieder da",
+		"Replace the battery": "Akku tauschen",
+		"Monitor the UPS (also starts after a restart)": "USV überwachen (startet auch nach einem Neustart)",
+		"SHUT DOWN": "HERUNTERFAHREN",
+		"When the UPS reports “battery low”": "Wenn die USV „Akku fast leer“ meldet",
+		"Below a battery charge": "Unter einem Akkustand",
+		"After some time on battery": "Nach einer Zeit auf Akku",
+		"BATTERY CHARGE (%)": "AKKUSTAND (%)",
+		"MINUTES ON BATTERY": "MINUTEN AUF AKKU",
+		"DRIVER": "TREIBER",
+		"Automatic": "Automatisch",
+		"blazer_usb (older Megatec)": "blazer_usb (ältere Megatec)",
+		"Then switch the UPS off – the box starts again when the power is back": "Danach die USV ausschalten – die Box startet wieder, wenn der Strom zurück ist",
+		"Other computers may read the UPS over the network (port 3493)": "Andere Rechner dürfen die USV über das Netzwerk lesen (Port 3493)",
+		"PASSWORD FOR “MONITOR”": "PASSWORT FÜR „MONITOR“",
+		"On the other computer (NUT, upsmon):": "Auf dem anderen Rechner (NUT, upsmon):",
+		"– it then shuts down before the box.": "– er fährt dann vor der Box herunter.",
+		"The box only shuts down while it runs on battery. If the power comes back before, nothing happens.": "Die Box fährt nur herunter, solange sie über Akku läuft. Kommt der Strom vorher zurück, passiert nichts.",
+		"UPS saved.": "USV gespeichert.",
+		"Sync folders (Syncthing)": "Ordner synchronisieren (Syncthing)",
+		"May control the user's own Syncthing service: pair devices and sync folders with them. Every user has their own service; only folders they have access to are synced.": "Darf den eigenen Syncthing-Dienst des Benutzers steuern: Geräte koppeln und Ordner mit ihnen synchronisieren. Jeder Benutzer hat seinen eigenen Dienst; synchronisiert werden nur Ordner, auf die er Zugriff hat.",
+		"Show fewer": "Weniger anzeigen",
+		"May set up the box's Zabbix agent (server, host name, PSK encryption, passive checks, SMART interval), restart it and read its log – the app never sees the key again. Admins only.": "Darf den Zabbix-Agenten der Box einrichten (Server, Hostname, PSK-Verschlüsselung, passive Abfragen, SMART-Intervall), ihn neu starten und sein Protokoll lesen – den Schlüssel sieht die App nie wieder. Nur für Administratoren.",
+		"Include the HTTPS certificate (with key)": "HTTPS-Zertifikat mitsichern (mit Schlüssel)",
+		"Include the own CA": "Eigene CA mitsichern",
+		"Keys only go into an encrypted backup – enter a password first.": "Schlüssel kommen nur in eine verschlüsselte Sicherung – erst ein Passwort eingeben.",
+		"Contains the box (network, name, time, drives, root password), users and groups (passwords as hashes), shares, the settings of the services and the list of installed apps. Without a password the file is readable – keep it safe. With a password: AES-256, the password is needed to restore.": "Enthält Box (Netzwerk, Name, Zeit, Laufwerke, Passwort von root), Benutzer und Gruppen (Passwörter als Hash), Freigaben, die Einstellungen der Dienste und die Liste der installierten Apps. Ohne Passwort ist die Datei lesbar – dann sicher aufbewahren. Mit Passwort: AES-256, das Passwort wird zum Wiederherstellen gebraucht.",
+		"Groups": "Gruppen",
+		"Own CA": "Eigene CA",
+		"Root password, network, device name, time zone, drives and the settings of the web interface are taken over right away. Then the box restarts and asks in recovery mode what else should come back. Data on the drives stays untouched.": "Sofort übernommen werden Passwort von root, Netzwerk, Gerätename, Zeitzone, Laufwerke und die Einstellungen der Weboberfläche. Danach startet die Box neu und fragt im Recovery-Modus, was zusätzlich zurückkommen soll. Daten auf den Laufwerken bleiben unberührt.",
+		"Root password, network, name, time zone and drives come from the backup right away, then the box restarts. You choose the rest afterwards in recovery mode.": "Passwort von root, Netzwerk, Name, Zeitzone und Laufwerke kommen sofort aus der Sicherung, dann startet die Box neu. Den Rest wählst du danach im Recovery-Modus.",
+		"Restore and restart": "Wiederherstellen und neu starten",
+		"Then it continues in recovery mode": "Danach geht es im Recovery-Modus weiter",
+		"RECOVERY MODE": "RECOVERY-MODUS",
+		"Backup": "Sicherung",
+		"The box was restored from a backup:": "Die Box wurde aus einer Sicherung wiederhergestellt:",
+		"Already taken over: root password, network (IP address, subnet), device name, time zone, drives and the settings of the web interface. Choose what else should come back:": "Schon übernommen: Passwort von root, Netzwerk (IP-Adresse, Subnetz), Gerätename, Zeitzone, Laufwerke und die Einstellungen der Weboberfläche. Wähle, was zusätzlich zurückkommen soll:",
+		"Users and groups": "Benutzer und Gruppen",
+		"Paperless connection": "Paperless-Anbindung",
+		"Cloud storage": "Cloud-Speicher",
+		"Snapshots": "Snapshots",
+		"Zabbix agent": "Zabbix-Agent",
+		"Printer": "Drucker",
+		"Settings": "Einstellungen",
+		"Installed from the store after the restart (internet needed). Whatever fails is offered again later on the apps page.": "Werden nach dem Neustart aus dem Store installiert (Internet nötig). Was nicht klappt, bietet der Bereich Apps später noch einmal an.",
+		"CERTIFICATES": "ZERTIFIKATE",
+		"Reuse the HTTPS certificate from the backup": "HTTPS-Zertifikat aus der Sicherung wiederverwenden",
+		"Otherwise the own CA issues a new certificate if it is restored. Browser and desktop app then ask once again.": "Sonst stellt die eigene CA ein neues Zertifikat aus, wenn sie wiederhergestellt wird. Browser und Desktop-App fragen dann einmal neu nach.",
+		"Otherwise the box keeps its current certificate. Browser and desktop app then ask once again.": "Sonst behält die Box ihr aktuelles Zertifikat. Browser und Desktop-App fragen dann einmal neu nach.",
+		"The backup holds no HTTPS certificate – the box keeps its current one.": "Die Sicherung enthält kein HTTPS-Zertifikat – die Box behält ihr aktuelles.",
+		"Restore the own CA": "Eigene CA wiederherstellen",
+		"Devices that trust the CA keep trusting the box only with the same CA. Without it you have to install the new CA there and issue certificates for other devices again.": "Geräte, die der CA vertrauen, vertrauen der Box nur mit derselben CA weiter. Ohne sie musst du die neue CA dort installieren und Zertifikate für andere Geräte neu ausstellen.",
+		"Take over nothing else": "Nichts weiter übernehmen",
+		"Apply and restart": "Übernehmen und neu starten",
+		"Apply the selection?": "Auswahl übernehmen?",
+		"The box applies the chosen settings and restarts.": "Die Box übernimmt die gewählten Einstellungen und startet neu.",
+		"Take over nothing else?": "Nichts weiter übernehmen?",
+		"The box stays as it is now: only password, network, name, time zone and drives come from the backup. The backup can be restored again later.": "Die Box bleibt, wie sie jetzt ist: nur Passwort, Netzwerk, Name, Zeitzone und Laufwerke kommen aus der Sicherung. Die Sicherung lässt sich später erneut einspielen.",
+		"End recovery": "Recovery beenden",
+		"Applying the settings": "Die Einstellungen werden übernommen",
+		"Recovery mode ended.": "Recovery-Modus beendet.",
+		"APPS FROM THE BACKUP": "APPS AUS DER SICHERUNG",
+		"Being installed …": "Werden gerade installiert …",
+		"Not installed yet:": "Noch nicht installiert:",
+		"Install apps from the backup": "Apps aus Sicherung installieren",
+		"The apps are being installed in the background.": "Die Apps werden im Hintergrund installiert.",
+		"Browse …": "Durchsuchen …",
+		"Choose folder": "Ordner wählen",
+		"Choose this folder": "Diesen Ordner wählen",
+		"Up": "Nach oben",
+		"No subfolders.": "Keine Unterordner.",
+		"SUBFOLDERS": "UNTERORDNER",
+		"Add subfolder": "Unterordner hinzufügen",
+		"Single folders from a share – no extra share needed.": "Einzelne Ordner aus einer Freigabe – dafür ist keine eigene Freigabe nötig.",
+		"SUBFOLDER (OPTIONAL)": "UNTERORDNER (OPTIONAL)",
+		"The folder browser needs the “Files” permission – please type the folder.": "Der Ordner-Browser braucht das Recht „Dateien“ – den Ordner bitte eintippen.",
+		"Choose whole shares in the list above.": "Ganze Freigaben oben in der Liste wählen.",
+		"Cut": "Ausschneiden",
+		"Clear clipboard": "Zwischenablage leeren",
+		"Paste": "Einfügen",
+		"This box is not set up yet. Press the USB button on the front of the box briefly, then choose a password for root.": "Diese Box ist noch nicht eingerichtet. Drücke kurz die USB-Taste an der Vorderseite der Box und lege dann ein Passwort für root fest.",
+		"Waiting for the USB button …": "Warte auf die USB-Taste …",
+		"Button detected – choose a password now (you have 2 minutes).": "Taste erkannt – jetzt Passwort festlegen (2 Minuten Zeit).",
+		"NEW PASSWORD (MIN. 8 CHARACTERS)": "NEUES PASSWORT (MIND. 8 ZEICHEN)",
+		"REPEAT PASSWORD": "PASSWORT WIEDERHOLEN",
+		"Set password": "Passwort festlegen",
+		"Everything can be set later under System.": "Alles lässt sich später unter System einstellen.",
+		"Paperless is a module: it appears when it is installed under APPS and disappears when removed (settings and folders stay).": "Paperless ist ein Modul: Es erscheint, wenn es unter APPS installiert ist, und verschwindet beim Entfernen (Einstellungen und Ordner bleiben).",
+		"Module · own tab": "Modul · eigener Reiter",
+		"Switches on an area of ShareOS with its own tab. The code is part of the reviewed firmware – the package only brings the switch.": "Schaltet einen Bereich von ShareOS frei, mit eigenem Reiter. Der Code gehört zur geprüften Firmware – das Paket bringt nur den Schalter mit.",
+		"Module": "Modul",
+		"DNS FILTER": "DNS-FILTER",
+		"HOW TO USE IT": "SO NUTZT DU IHN",
+		"BLOCK LISTS": "SPERRLISTEN",
+		"QUERIES": "ANFRAGEN",
+		"BLOCKED": "GEBLOCKT",
+		"RULES": "REGELN",
+		"RAM": "RAM",
+		"LIST": "LISTE",
+		"running": "läuft",
+		"starting …": "startet …",
+		"filtering paused": "Filterung pausiert",
+		"Show login": "Zugangsdaten anzeigen",
+		"Update lists": "Listen aktualisieren",
+		"Lists updated.": "Listen aktualisiert.",
+		"List removed.": "Liste entfernt.",
+		"Remove list?": "Liste entfernen?",
+		"Add list": "Liste hinzufügen",
+		"List added.": "Liste hinzugefügt.",
+		"UPSTREAM SERVERS (ONE PER LINE)": "UPSTREAM-SERVER (EINER PRO ZEILE)",
+		"ADDRESS OF THE LIST": "ADRESSE DER LISTE",
+		"PORT OF THE ADGUARD INTERFACE": "PORT DER ADGUARD-OBERFLÄCHE",
+		"DNS filter is starting …": "DNS-Filter startet …",
+		"DNS filter (AdGuard Home)": "DNS-Filter (AdGuard Home)",
+		"Enter the address of the box as DNS server in the router – or only on single devices:": "Im Router als DNS-Server die Adresse der Box eintragen – oder nur an einzelnen Geräten:",
+		"Do not enter a second DNS server, otherwise devices ask past the box. While the box is off or restarting, the devices have no DNS.": "Keinen zweiten DNS-Server eintragen, sonst fragen Geräte an der Box vorbei. Ist die Box aus oder startet neu, haben die Geräte so lange kein DNS.",
+		"Fine settings, query log and statistics in the interface of AdGuard Home.": "Feineinstellungen, Abfrageprotokoll und Statistik in der Oberfläche von AdGuard Home.",
+		"Switch on the DNS filter (also starts after a restart)": "DNS-Filter einschalten (startet auch nach einem Neustart)",
+		"The DNS filter needs the apps drive (Storage → Drives).": "Der DNS-Filter braucht das Apps-Laufwerk (Speicher → Laufwerke).",
+		"Estimated need with these lists:": "Geschätzter Bedarf mit diesen Listen:",
+		"Many rules: large lists cost a lot of memory. With the 256 MB of the box, better stay with the default list.": "Viele Regeln: Große Listen kosten viel Arbeitsspeicher. Für die 256 MB der Box besser bei der Standardliste bleiben.",
+		"AdGuard Home is starting – the first time takes a while.": "AdGuard Home startet – beim ersten Mal dauert das etwas.",
+		"Open AdGuard Home ↗": "AdGuard Home öffnen ↗",
+		"Filtering on (off = only forward)": "Filterung aktiv (aus = nur weiterleiten)",
+		"Every rule costs memory (about 0.1 KB). From 300,000 rules on, ShareOS warns.": "Jede Regel kostet Arbeitsspeicher (etwa 0,1 KB). Ab 300 000 Regeln warnt ShareOS.",
+		"The DNS filter (AdGuard Home) is a module too: DNS FILTER tab once it is installed under APPS.": "Der DNS-Filter (AdGuard Home) ist ebenfalls ein Modul: Reiter DNS-FILTER, sobald er unter APPS installiert ist.",
+		"Paperless, Cloud and the DNS filter are modules: their tab appears when they are installed under APPS and disappears when removed – settings and data stay.": "Paperless, Cloud und der DNS-Filter sind Module: Ihr Reiter erscheint, wenn sie unter APPS installiert sind, und verschwindet beim Entfernen – Einstellungen und Daten bleiben.",
+		"VAULT": "TRESOR",
+		"locked": "gesperrt",
+		"Unlock": "Entsperren",
+		"Lock": "Sperren",
+		"Lock now": "Jetzt sperren",
+		"As a vault: share only on request, for some minutes": "Als Tresor: nur auf Anfrage für einige Minuten freigeben",
+		"DEFAULT TIME WHEN UNLOCKING": "STANDARD-DAUER BEIM ENTSPERREN",
+		"A vault is not visible in the network. A user with rights on it unlocks it under “My ShareOS” (or in an app) with their password – then, for the chosen time, it is reachable for them only as": "Ein Tresor ist im Netzwerk nicht zu sehen. Ein Benutzer mit Recht darauf entsperrt ihn unter „Mein ShareOS“ (oder in einer App) mit seinem Passwort – dann ist er für die gewählte Zeit nur für ihn als",
+		"and locks itself afterwards. While locked, nobody gets at the files, not through open connections or apps either. A vault is shared over SMB only, without guests and NFS.": "erreichbar und sperrt sich danach von selbst. Gesperrt kommt auch über bestehende Verbindungen und Apps niemand an die Dateien. Einen Tresor gibt es nur über SMB, ohne Gäste und ohne NFS.",
+		"Your password again, for safety. The vault is then reachable in the network for you only and locks itself again.": "Zur Sicherheit noch einmal dein Passwort. Der Tresor ist danach nur für dich im Netzwerk erreichbar und sperrt sich von selbst wieder.",
+		"OPEN FOR": "OFFEN FÜR",
+		"The vault disappears from the network for everyone who unlocked it. Open connections lose access.": "Der Tresor verschwindet für alle, die ihn entsperrt haben, aus dem Netzwerk. Offene Verbindungen verlieren den Zugriff.",
+		"Vault shares": "Tresor-Freigaben",
+		"May unlock the user's vault shares (after the user enters their password) and lock them; for admins it can also choose which shares are vaults.": "Darf die Tresor-Freigaben des Benutzers entsperren (nach Eingabe seines Passworts) und sperren; Administratoren können damit auch festlegen, welche Freigaben Tresore sind.",
+		"HTTPS PORT OF THE ADGUARD INTERFACE": "HTTPS-PORT DER ADGUARD-OBERFLÄCHE",
+		"Encrypted (HTTPS) with the box's certificate; HTTP requests are redirected.": "Verschlüsselt (HTTPS) mit dem Zertifikat der Box; Aufrufe über HTTP werden umgeleitet.",
+		"Encrypted (HTTPS) with the box's self-signed certificate – the browser warns as with the interface. HTTP is only redirected once the box has a trusted certificate (own CA or Let's Encrypt under": "Verschlüsselt (HTTPS) mit dem selbstsignierten Zertifikat der Box – der Browser warnt wie bei der Oberfläche. HTTP wird erst umgeleitet, wenn die Box ein vertrauenswürdiges Zertifikat hat (eigene CA oder Let's Encrypt unter",
+		"Without a certificate of the box only unencrypted (HTTP).": "Ohne Zertifikat der Box nur unverschlüsselt (HTTP).",
+		"Local names": "Lokale Namen",
+		"Local domain": "Lokale Domäne",
+		"DNS server of the network": "DNS-Server des Netzwerks",
+		"System → Network": "System → Netzwerk",
+		"LOCAL ENTRIES": "LOKALE EINTRÄGE",
+		"Add entry": "Eintrag hinzufügen",
+		"For devices with a fixed IP address that the router does not know.": "Für Geräte mit fester IP-Adresse, die der Router nicht kennt.",
+		"applies to all names below it. ShareOS sets the box's own names itself.": "gilt für alle Namen darunter. Die Namen der Box trägt ShareOS selbst ein.",
+		"Remove entry?": "Eintrag entfernen?",
+		"Entry added.": "Eintrag hinzugefügt.",
+		"Entry removed.": "Eintrag entfernt.",
+		"View": "Ansicht",
+		"Classic": "Klassisch",
+		"Desktop": "Desktop",
+		"Desktop view": "Desktop-Ansicht",
+		"Start menu": "Startmenü",
+		"Open windows": "Offene Fenster",
+		"Messages": "Meldungen",
+		"Search": "Suche",
+		"User menu": "Benutzermenü",
+		"Files": "Dateien",
+		"Storage": "Speicher",
+		"Control panel": "Systemsteuerung",
+		"App store": "App-Store",
+		"Task manager": "Task-Manager",
+		"Logs": "Protokolle",
+		"Cloud": "Cloud",
+		"Paperless": "Paperless",
+		"DNS filter": "DNS-Filter",
+		"Access & connection": "Zugang & Verbindung",
+		"General": "Allgemein",
+		"Time": "Zeit",
+		"Appearance": "Darstellung",
+		"Wallpaper": "Hintergrundbild",
+		"Power & reset": "Energie & Reset",
+		"Status": "Status",
+		"Autostart": "Autostart",
+		"Media server": "Medienserver",
+		"Minimise": "Minimieren",
+		"Maximise": "Maximieren",
+		"Search apps and settings": "Apps und Einstellungen suchen",
+		"Classic view": "Klassische Ansicht",
+		"Nothing found.": "Nichts gefunden.",
+		"MODULES & APPS": "MODULE & APPS",
+		"Reset layout": "Anordnung zurücksetzen",
+		"Reset the layout?": "Anordnung zurücksetzen?",
+		"Icons and windows go back to their default places.": "Symbole und Fenster kommen an ihre Standardplätze.",
+		"Search all settings": "Suche in allen Einstellungen",
+		"No drives or shares.": "Keine Laufwerke oder Freigaben.",
+		"No images in this folder.": "Keine Bilder in diesem Ordner.",
+		"A wallpaper from the box needs the “Files” permission for your account.": "Für ein Hintergrundbild von der Box braucht dein Konto das Recht „Dateien“.",
+		"An image (JPG, PNG, WebP, GIF) from the box – saved for you only.": "Ein Bild (JPG, PNG, WebP, GIF) von der Box – es wird nur für dich gespeichert.",
+		"IMAGE FIT": "BILD ANPASSEN",
+		"Fill": "Füllen",
+		"Fit": "Einpassen",
+		"Tile": "Kacheln",
+		"ShareOS (default)": "ShareOS (Standard)",
+		"Wallpaper saved.": "Hintergrundbild gespeichert.",
+		"Installed apps": "Installierte Apps",
+		"App sources": "App-Quellen",
+		"Teal": "Türkis",
+		"Orange": "Orange",
+		"Violet": "Violett",
+		"Grey": "Grau",
+		"Accent colour teal": "Akzentfarbe Türkis",
+		"Accent colour orange": "Akzentfarbe Orange",
+		"Accent colour violet": "Akzentfarbe Violett",
+		"Accent colour grey": "Akzentfarbe Grau",
+		"TORRENTS": "TORRENTS",
+		"Torrent remote access": "Torrent-Fernzugriff",
+		"Torrent remote access saved.": "Torrent-Fernzugriff gespeichert.",
+		"PORT (HTTP)": "PORT (HTTP)",
+		"PORT (HTTPS)": "PORT (HTTPS)",
+		"USERS WITH A REMOTE PASSWORD": "BENUTZER MIT FERNZUGRIFF-PASSWORT",
+		"Install from the store (Transmission)": "Im Store installieren (Transmission)",
+		"Revoke": "Entziehen",
+		"Torrents run on the system app Transmission: every user has their own service and controls it with the Transmission app. Here you can also switch on access for programs such as Transmission Remote GUI or Transmissionic.": "Torrents laufen über die System-App Transmission: Jeder Benutzer hat seinen eigenen Dienst und bedient ihn mit der Transmission-App. Hier lässt sich zusätzlich der Zugriff für Programme wie Transmission Remote GUI oder Transmissionic einschalten.",
+		"REMOTE ACCESS FOR TORRENT PROGRAMS": "FERNZUGRIFF FÜR TORRENT-PROGRAMME",
+		"Programs such as Transmission Remote GUI, Transmissionic or Tremotesf use it to control a user’s own Transmission service.": "Programme wie Transmission Remote GUI, Transmissionic oder Tremotesf steuern damit den eigenen Transmission-Dienst eines Benutzers.",
+		"Sign in with the user name and a separate remote password the user creates in the Transmission app – not with the box password.": "Anmeldung mit dem Benutzernamen und einem eigenen Fernzugriff-Passwort, das der Benutzer in der Transmission-App erzeugt – nicht mit dem Passwort der Box.",
+		"Only from the home network, also over VPN or Tailscale; access from the internet is blocked.": "Nur aus dem Heimnetz, auch über VPN oder Tailscale; aus dem Internet ist der Zugriff gesperrt.",
+		"After 5 wrong passwords, sign-in is blocked for 10 minutes.": "Nach 5 falschen Passwörtern ist die Anmeldung 10 Minuten gesperrt.",
+		"There is no separate web interface: in the browser, use the Transmission app.": "Es gibt keine eigene Weboberfläche: Im Browser dient die Transmission-App.",
+		"Switch on remote access for torrent programs (also starts after a restart)": "Fernzugriff für Torrent-Programme einschalten (startet auch nach einem Neustart)",
+		"HTTPS is available while the web interface uses HTTPS (System → Network); the same certificate applies. Many programs expect port 9091.": "HTTPS gibt es, solange die Weboberfläche HTTPS nutzt (System → Netzwerk); es gilt dasselbe Zertifikat. Viele Programme erwarten Port 9091.",
+		"Switched off – torrents can only be controlled with the Transmission app.": "Ausgeschaltet – Torrents lassen sich nur mit der Transmission-App bedienen.",
+		"Revoke password": "Passwort entziehen",
+		"None yet – each user creates their password in the Transmission app.": "Noch keiner – das Passwort erzeugt jeder Benutzer selbst in der Transmission-App.",
+		"Programs using this password lose access. The user can create a new one in the Transmission app.": "Programme mit diesem Passwort verlieren den Zugriff. Der Benutzer kann in der Transmission-App ein neues erzeugen.",
+		"AdGuard Home is starting and loading the block lists – this takes about a minute.": "AdGuard Home startet und lädt die Blocklisten – das dauert etwa eine Minute.",
+		"Start failed:": "Start fehlgeschlagen:",
+		"You can save again once it is running.": "Speichern geht wieder, sobald er läuft.",
+		"No inbox yet.": "Noch kein Eingangsordner.",
+		"Cloud sync uses": "Cloud-Sync nutzt",
+		"No permission": "Keine Berechtigung",
+		"Network name (mDNS)": "Netzwerkname (mDNS)",
+		"makes the box reachable as <name>.local": "macht die Box als <name>.local erreichbar",
+		"Accent colour Blue": "Akzentfarbe Blau",
+		"Accent colour Teal": "Akzentfarbe Türkis",
+		"Accent colour Green": "Akzentfarbe Grün",
+		"Accent colour Orange": "Akzentfarbe Orange",
+		"Accent colour Red": "Akzentfarbe Rot",
+		"Accent colour Violet": "Akzentfarbe Violett",
+		"Accent colour Grey": "Akzentfarbe Grau",
+		"Accent colour White": "Akzentfarbe Weiß",
+		"Monday switch on": "Montag einschalten",
+		"Monday switch off": "Montag ausschalten",
+		"Tuesday switch on": "Dienstag einschalten",
+		"Tuesday switch off": "Dienstag ausschalten",
+		"Wednesday switch on": "Mittwoch einschalten",
+		"Wednesday switch off": "Mittwoch ausschalten",
+		"Thursday switch on": "Donnerstag einschalten",
+		"Thursday switch off": "Donnerstag ausschalten",
+		"Friday switch on": "Freitag einschalten",
+		"Friday switch off": "Freitag ausschalten",
+		"Saturday switch on": "Samstag einschalten",
+		"Saturday switch off": "Samstag ausschalten",
+		"Sunday switch on": "Sonntag einschalten",
+		"Sunday switch off": "Sonntag ausschalten",
+		"Disk": "Festplatte",
+		"Off": "Aus",
+		"Starting": "Wird gestartet"
+	},
+	"patterns": [
+		[
+			"^Web apps run on their own port \\((\\d+) / (\\d+) for HTTPS\\) – apart from this interface, so an app cannot use your login\\. Anyone who knows the address can open a web app on the network; “visible to” decides who sees it in “My ShareOS”\\.$",
+			"Web-Apps laufen auf einem eigenen Port ($1 / $2 für HTTPS) – getrennt von dieser Oberfläche, damit eine App deine Anmeldung nicht benutzen kann. Wer die Adresse kennt, kann eine Web-App im Netzwerk öffnen; „sichtbar für“ steuert, wem sie in „Mein ShareOS“ angezeigt wird."
+		],
+		[
+			"^The box gets its address from the router\\. Afterwards it may be reachable under a different address \\(look it up in the router\\)\\. If the change is not confirmed on the box within (\\d+) seconds, the previous settings apply again\\.$",
+			"Die Box holt sich ihre Adresse vom Router. Sie ist danach eventuell unter einer anderen Adresse erreichbar (im Router nachsehen). Wird die Änderung nicht innerhalb von $1 Sekunden von der Box aus bestätigt, gelten wieder die bisherigen Einstellungen."
+		],
+		[
+			"^Web apps run on their own port \\((\\d+)\\) – apart from this interface, so an app cannot use your login\\. Anyone who knows the address can open a web app on the network; “visible to” decides who sees it in “My ShareOS”\\.$",
+			"Web-Apps laufen auf einem eigenen Port ($1) – getrennt von dieser Oberfläche, damit eine App deine Anmeldung nicht benutzen kann. Wer die Adresse kennt, kann eine Web-App im Netzwerk öffnen; „sichtbar für“ steuert, wem sie in „Mein ShareOS“ angezeigt wird."
+		],
+		[
+			"^Afterwards (.+) starts\\. Alt-F's extra packages are missing then – flash the same file once more in Alt-F's firmware page\\. Back to ShareOS: flash the ShareOS \\.bin in Alt-F, system and settings are still there\\.$",
+			"Danach startet $1. Die Zusatzpakete von Alt-F fehlen dann – in Alt-F dieselbe Datei noch einmal über dessen Firmware-Seite flashen. Zurück zu ShareOS: die ShareOS-.bin in Alt-F flashen, System und Einstellungen sind noch da."
+		],
+		[
+			"^The change takes effect at once\\. The box then waits (\\d+) seconds for a confirmation from the new address – if none comes, it restores the previous settings\\. So you cannot lock yourself out\\.$",
+			"Die Änderung gilt sofort. Die Box wartet dann $1 Sekunden auf eine Bestätigung von der neuen Adresse – kommt keine, stellt sie die bisherigen Einstellungen wieder her. So sperrst du dich nicht aus."
+		],
+		[
+			"^(\\S+) \\((.*) · (.+)\\) is erased completely and added to the mirror as the second disk\\. The data is then copied in the background \\(several hours for large disks\\); the volume stays usable\\.$",
+			"$1 ($2 · $3) wird vollständig gelöscht und als zweite Platte in den Spiegel aufgenommen. Die Daten werden danach im Hintergrund kopiert (bei großen Platten mehrere Stunden); das Laufwerk bleibt nutzbar."
+		],
+		[
+			"^The box switches to (\\S+)\\. This page then opens the new address and confirms the change\\. If that does not work, the previous settings apply again after (\\d+) seconds\\.$",
+			"Die Box wechselt auf $1. Diese Seite öffnet danach die neue Adresse und bestätigt die Änderung. Klappt das nicht, gelten nach $2 Sekunden wieder die bisherigen Einstellungen."
+		],
+		[
+			"^ShareOS (\\S+) will be written to flash\\. A reboot is needed afterwards, during which the new system is installed\\. Do not switch the box off while writing\\.$",
+			"ShareOS $1 wird in den Flash geschrieben. Danach ist ein Neustart nötig, bei dem das neue System installiert wird. Die Box während des Schreibens nicht ausschalten."
+		],
+		[
+			"^Clicking \"Set up\" erases (.+) completely\\. The initial sync then runs in the background \\(several hours on large disks\\); the drive can be used right away\\.$",
+			"Beim Klick auf „Einrichten“ werden $1 vollständig gelöscht. Die Erst-Synchronisierung läuft danach im Hintergrund (bei großen Platten mehrere Stunden); das Laufwerk ist sofort nutzbar."
+		],
+		[
+			"^The box switches to (.+)\\. This page then opens the new address and confirms the change\\. If that fails, the previous settings apply again after (\\d+) seconds\\.$",
+			"Die Box wechselt auf $1. Diese Seite öffnet danach die neue Adresse und bestätigt die Änderung. Klappt das nicht, gelten nach $2 Sekunden wieder die bisherigen Einstellungen."
+		],
+		[
+			"^\\(Nextcloud, WebDAV, S3, SFTP, Google Drive, OneDrive, Dropbox and more\\)\\. The program \\(about 20 MB\\) goes into the apps area on the disk(.*)\\.$",
+			"(Nextcloud, WebDAV, S3, SFTP, Google Drive, OneDrive, Dropbox und mehr). Das Programm (rund 20 MB) kommt in den Apps-Bereich auf der Platte$1."
+		],
+		[
+			"^The network settings are applied and confirmed by this page\\. If that does not work, the previous settings apply again after (\\d+) seconds\\.$",
+			"Die Netzwerkeinstellungen werden übernommen und von dieser Seite bestätigt. Klappt das nicht, gelten nach $1 Sekunden wieder die bisherigen Einstellungen."
+		],
+		[
+			"^Both disks become one volume one after the other with (.+) \\(also with disks of different sizes\\)\\. If one disk fails, everything is lost\\.$",
+			"Beide Platten werden hintereinander ein Laufwerk mit $1 (auch bei verschieden großen Platten). Fällt eine Platte aus, ist alles verloren."
+		],
+		[
+			"^(\\S+) \\((.+), (.+)\\) is added as a drive as it is – nothing is erased\\. Name of the drive \\(a–z, 0–9, - and _, at most 16 characters\\):$",
+			"$1 ($2, $3) wird so, wie es ist, als Laufwerk eingebunden – es wird nichts gelöscht. Name des Laufwerks (a–z, 0–9, - und _, max. 16 Zeichen):"
+		],
+		[
+			"^The long test reads the whole disk (\\S+) – many hours for large disks\\. The box stays usable, the disk is a bit slower\\.$",
+			"Der Langtest liest die ganze Platte $1 – bei großen Platten viele Stunden. Die Box bleibt dabei nutzbar, die Platte ist etwas langsamer."
+		],
+		[
+			"^Both disks become one volume, data spread across them: faster, space (.+)\\. If one disk fails, everything is lost\\.$",
+			"Beide Platten werden ein Laufwerk, Daten abwechselnd verteilt: schneller, Platz $1. Fällt eine Platte aus, ist alles verloren."
+		],
+		[
+			"^The certificate “(.+)” and its key are deleted from the box\\. Devices that already use it keep their copy\\.$",
+			"Das Zertifikat „$1“ und sein Schlüssel werden von der Box gelöscht. Geräte, die es schon nutzen, behalten ihre Kopie."
+		],
+		[
+			"^waiting for the box \\((\\d+) s\\) – not reachable\\? Look up the new address in the router and log in there\\.$",
+			"warte auf die Box ($1 s) – nicht erreichbar? Neue Adresse im Router nachsehen und dort anmelden."
+		],
+		[
+			"^(\\S+) is now the drive “(.+)” – the data is kept\\. Create shares for existing folders under “Shares”\\.$",
+			"$1 ist jetzt das Laufwerk „$2“ – die Daten sind erhalten. Freigaben für vorhandene Ordner unter „Freigaben“ anlegen."
+		],
+		[
+			"^Kernel and boot system are replaced and checked\\. Do not switch the box off while writing\\.$",
+			"Kernel und Startsystem werden ersetzt und geprüft. Box während des Schreibens nicht ausschalten."
+		],
+		[
+			"^The disk becomes a drive of (.+)\\. For redundancy, add a second disk as a mirror later\\.$",
+			"Die Platte wird ein Laufwerk mit $1. Für Ausfallsicherheit später eine zweite Platte als Spiegel einrichten."
+		],
+		[
+			"^For (.+) you sign in in the browser; the box only stores an access token, no password\\.$",
+			"Bei $1 meldest du dich im Browser an; auf der Box wird nur ein Zugangsschlüssel gespeichert, kein Passwort."
+		],
+		[
+			"^ShareOS shuts down and the box switches off\\. By schedule it switches on again on (.+)\\.$",
+			"ShareOS fährt herunter und die Box schaltet sich aus. Nach Zeitplan schaltet sie sich am $1 wieder ein."
+		],
+		[
+			"^(\\d+) item\\(s\\)\\. Target folder as a path in “(.+)”, e\\.g\\. Photos\\/2026 \\(empty = top level\\)\\.$",
+			"$1 Eintrag/Einträge. Zielordner als Pfad in „$2“, z. B. Fotos/2026 (leer = oberste Ebene)."
+		],
+		[
+			"^([\\d.,  ]+) transfer errors \\(CRC\\) – usually the connector or cable, not the disk itself\\.$",
+			"$1 Übertragungsfehler (CRC) – meist Anschluss oder Kabel, nicht die Platte selbst."
+		],
+		[
+			"^Twice the space \\((.+)\\), but no redundancy – each disk is a drive of its own\\.$",
+			"Doppelter Platz ($1), aber keine Ausfallsicherheit – jede Platte ist ein eigenes Laufwerk."
+		],
+		[
+			"^(.+) swap per disk, no app area \\(packages and app data need ext4 or Btrfs\\)\\.$",
+			"Je Platte $1 Swap, kein Apps-Bereich (Pakete und App-Daten brauchen ext4 oder Btrfs)."
+		],
+		[
+			"^Both disks hold the same data\\. If one fails, nothing is lost\\. Usable: (.+)\\.$",
+			"Beide Platten enthalten dieselben Daten. Fällt eine aus, ist nichts verloren. Nutzbar: $1."
+		],
+		[
+			"^([\\d.,  ]+) sectors are uncertain \\(pending\\) – they are checked on the next write\\.$",
+			"$1 Sektoren sind unsicher (schwebend) – sie werden beim nächsten Schreiben geprüft."
+		],
+		[
+			"^No swap, no app area \\(packages and app data need ext4 or Btrfs\\)\\.$",
+			"Kein Swap, kein Apps-Bereich (Pakete und App-Daten brauchen ext4 oder Btrfs)."
+		],
+		[
+			"^(\\d+) item\\(s\\) on the clipboard – choose “Paste” in the target folder\\.$",
+			"$1 Eintrag/Einträge in der Zwischenablage – im Zielordner „Einfügen“ wählen."
+		],
+		[
+			"^– without confirmation the box returns to the old ones in (\\d+) s\\.$",
+			"– ohne Bestätigung kehrt die Box in $1 s zu den alten zurück."
+		],
+		[
+			"^(.+) \\((.*), (.+)\\) is erased completely and set up again as volume “(.+)” \\((.+)\\)\\.$",
+			"$1 ($2, $3) wird vollständig gelöscht und als Laufwerk „$4“ ($5) neu eingerichtet."
+		],
+		[
+			"^(.+) – name \\(letters, digits, spaces, - and _\\) and file system:$",
+			"$1 – Name (Buchstaben, Ziffern, Leerzeichen, - und _) und Dateisystem:"
+		],
+		[
+			"^(.+) is starting – its interface will be at (.+) shortly \\(port 80\\)\\.$",
+			"$1 startet – dessen Oberfläche ist gleich unter $2 erreichbar (Port 80)."
+		],
+		[
+			"^Also delete the (\\d+) snapshots in (.+)\\? Otherwise they stay there\\.$",
+			"Die $1 vorhandenen Snapshots in $2 ebenfalls löschen? Sonst bleiben sie dort liegen."
+		],
+		[
+			"^The account is removed; its share permissions are dropped\\.(.*)$",
+			"Das Konto wird entfernt; Rechte an Freigaben entfallen.$1"
+		],
+		[
+			"^This page is opened via (.+)\\. Without a certificate warning:$",
+			"Diese Seite ist über $1 geöffnet. Ohne Zertifikatswarnung:"
+		],
+		[
+			"^Delete the state of (.+)\\? The other snapshots stay complete\\.$",
+			"Den Stand vom $1 löschen? Die anderen Snapshots bleiben vollständig."
+		],
+		[
+			"^Everything on (.+) is erased\\. Afterwards it is a (.+) drive “(.+)”\\.$",
+			"Alles auf $1 wird gelöscht. Danach ist es ein $2-Laufwerk „$3“."
+		],
+		[
+			"^(.+) – folders with their content\\. This cannot be undone\\.$",
+			"$1 – Ordner samt Inhalt. Das lässt sich nicht rückgängig machen."
+		],
+		[
+			"^(\\d+) file\\(s\\) saved to “Geteilt” in your personal folder\\.$",
+			"$1 Datei(en) in „Geteilt“ in deinem persönlichen Ordner gespeichert."
+		],
+		[
+			"^(.+) swap per disk, app area on \"(.+)\" \\(unless one exists\\)\\.$",
+			"Je Platte $1 Swap, Apps-Bereich auf „$2“ (falls noch keiner besteht)."
+		],
+		[
+			"^([\\d.,  ]+) sectors have already been replaced \\(reallocated\\)\\.$",
+			"$1 Sektoren wurden schon ersetzt (umgelagert)."
+		],
+		[
+			"^(.+) will be erased completely\\. This cannot be undone\\.$",
+			"$1 werden vollständig gelöscht. Das lässt sich nicht rückgängig machen."
+		],
+		[
+			"^(.+) will be erased completely and set up as drive \"(.+)\"\\.$",
+			"$1 wird vollständig gelöscht und als Laufwerk „$2“ neu eingerichtet."
+		],
+		[
+			"^App area on “(.+)” \\(unless there is one already\\)\\.$",
+			"Apps-Bereich auf „$1“ (falls noch keiner besteht)."
+		],
+		[
+			"^Needed by: (.+) – these apps will no longer work\\.$",
+			"Gebraucht von: $1 – diese Apps funktionieren danach nicht mehr."
+		],
+		[
+			"^ShareOS shuts down and the box switches off\\. (.+)$",
+			"ShareOS fährt herunter und die Box schaltet sich aus. $1"
+		],
+		[
+			"^No swap, app area on \"(.+)\" \\(unless one exists\\)\\.$",
+			"Kein Swap, Apps-Bereich auf „$1“ (falls noch keiner besteht)."
+		],
+		[
+			"^The SSD is almost worn out: (\\d+) % life left\\.$",
+			"Die SSD ist fast verbraucht: noch $1 % Lebensdauer."
+		],
+		[
+			"^Value (\\S+) below the manufacturer's threshold$",
+			"Wert $1 unter der Schwelle des Herstellers"
+		],
+		[
+			"^Schedule saved – the box switches on on (.+)\\.$",
+			"Zeitplan gespeichert – die Box schaltet sich am $1 ein."
+		],
+		[
+			"^Connection OK – (\\S+) documents in Paperless\\.$",
+			"Verbindung in Ordnung – $1 Dokumente in Paperless."
+		],
+		[
+			"^Value (\\S+) was below the threshold earlier$",
+			"Wert $1 war früher unter der Schwelle"
+		],
+		[
+			"^Clicking \"Set up\" erases (.+) completely\\.$",
+			"Beim Klick auf „Einrichten“ werden $1 vollständig gelöscht."
+		],
+		[
+			"^By schedule it switches on again on (.+)\\.$",
+			"Nach Zeitplan schaltet sie sich am $1 wieder ein."
+		],
+		[
+			"^(.+) – can be restored from the trash\\.$",
+			"$1 – lässt sich im Papierkorb wiederherstellen."
+		],
+		[
+			"^([\\d.,  ]+) entries in the disk's error log\\.$",
+			"$1 Einträge im Fehlerprotokoll der Platte."
+		],
+		[
+			"^The SSD is wearing: (\\d+) % life left\\.$",
+			"Die SSD nutzt sich ab: noch $1 % Lebensdauer."
+		],
+		[
+			"^“(.+)” already exists in this folder\\.$",
+			"„$1“ gibt es in diesem Ordner schon."
+		],
+		[
+			"^The target drive (.+) is not mounted\\.$",
+			"Das Ziel-Laufwerk $1 ist nicht eingebunden."
+		],
+		[
+			"^Revoke the remote password of “(.+)”\\?$",
+			"Fernzugriff-Passwort von „$1“ entziehen?"
+		],
+		[
+			"^(.+): no longer starts at power-on$",
+			"$1: startet nicht mehr beim Einschalten"
+		],
+		[
+			"^– (.+)\\. Do not switch the box off\\.$",
+			"– $1. Box nicht ausschalten."
+		],
+		[
+			"^This page could not be shown: (.+)$",
+			"Diese Seite konnte nicht angezeigt werden: $1"
+		],
+		[
+			"^Remote password of “(.+)” revoked\\.$",
+			"Passwort von „$1“ entzogen."
+		],
+		[
+			"^The name “(.+)” is already taken\\.$",
+			"Der Name „$1“ ist schon vergeben."
+		],
+		[
+			"^Share: (\\d+) file\\(s\\) not saved – (.*)$",
+			"Teilen: $1 Datei(en) nicht gespeichert – $2"
+		],
+		[
+			"^([\\d.,  ]+) sectors could not be read\\.$",
+			"$1 Sektoren waren nicht lesbar."
+		],
+		[
+			"^Move (\\d+) item\\(s\\) to the trash\\?$",
+			"$1 Eintrag/Einträge in den Papierkorb?"
+		],
+		[
+			"^(.+): connection OK \\((\\d+) folders\\)\\.$",
+			"$1: Verbindung in Ordnung ($2 Ordner)."
+		],
+		[
+			"^personal inbox of (\\S+) · token (.+)$",
+			"persönlicher Eingang von $1 · Token $2"
+		],
+		[
+			"^personal inbox of (.+) · token (.+)$",
+			"persönlicher Eingang von $1 · Token $2"
+		],
+		[
+			"^(\\S+): no longer starts at boot$",
+			"$1: startet nicht mehr beim Einschalten"
+		],
+		[
+			"^Source: GitHub releases · (.+)$",
+			"Quelle: GitHub Releases · $1"
+		],
+		[
+			"^(.+) is in flash\\. Restart now\\?$",
+			"$1 ist im Flash. Jetzt neu starten?"
+		],
+		[
+			"^Delete (\\d+) item\\(s\\) for good\\?$",
+			"Endgültig löschen – $1 Eintrag/Einträge"
+		],
+		[
+			"^installed successfully \\((.+)\\)$",
+			"erfolgreich installiert ($1)"
+		],
+		[
+			"^waiting for the box \\((\\d+) s\\)$",
+			"warte auf die Box ($1 s)"
+		],
+		[
+			"^(.+) · file system not found$",
+			"$1 · Dateisystem nicht gefunden"
+		],
+		[
+			"^Chat found: (.+) – now save\\.$",
+			"Chat gefunden: $1 – jetzt speichern."
+		],
+		[
+			"^Remove from favourites: (.+)$",
+			"Aus den Favoriten nehmen: $1"
+		],
+		[
+			"^Vault “(.+)” is open until (.+)\\.$",
+			"Tresor „$1“ ist bis $2 offen."
+		],
+		[
+			"^Same as for everyone \\((.+)\\)$",
+			"Wie für alle ($1)"
+		],
+		[
+			"^Snapshot “(.+)” is running\\.$",
+			"Snapshot „$1“ läuft."
+		],
+		[
+			"^Torrent remote access: (.+)$",
+			"Torrent-Fernzugriff: $1"
+		],
+		[
+			"^(\\d+) file\\(s\\) not uploaded\\.$",
+			"$1 Datei(en) nicht hochgeladen."
+		],
+		[
+			"^\\((\\d+) issued certificates\\)$",
+			"($1 ausgestellte Zertifikate)"
+		],
+		[
+			"^(\\S+) (\\S+) installed \\(own app\\)\\.$",
+			"$1 $2 installiert (eigene App)."
+		],
+		[
+			"^(.+) can be unplugged now\\.$",
+			"$1 kann jetzt abgezogen werden."
+		],
+		[
+			"^(\\S+): both disks active \\((.+)\\)$",
+			"$1: beide Platten aktiv ($2)"
+		],
+		[
+			"^Password of (\\S+) changed\\.$",
+			"Passwort von $1 geändert."
+		],
+		[
+			"^shared inbox · token (.+)$",
+			"gemeinsamer Eingang · Token $1"
+		],
+		[
+			"^Issued certificates: (.+)$",
+			"Ausgestellte Zertifikate: $1"
+		],
+		[
+			"^(\\S+): one disk missing \\((.+)\\)$",
+			"$1: eine Platte fehlt ($2)"
+		],
+		[
+			"^(.+): starts at power-on$",
+			"$1: startet beim Einschalten"
+		],
+		[
+			"^both disks active \\((.+)\\)$",
+			"beide Platten aktiv ($1)"
+		],
+		[
+			"^(\\S+) (\\S+) installed, also: (.+)\\.$",
+			"$1 $2 installiert, dazu: $3."
+		],
+		[
+			"^deletes after (\\d+) days$",
+			"löscht nach $1 Tagen"
+		],
+		[
+			"^one disk missing \\((.+)\\)$",
+			"eine Platte fehlt ($1)"
+		],
+		[
+			"^Account “(.+)” removed\\.$",
+			"Konto „$1“ entfernt."
+		],
+		[
+			"^Personal folders \\((.+)\\)$",
+			"Persönliche Ordner ($1)"
+		],
+		[
+			"^Mark as favourite: (.+)$",
+			"Als Favorit markieren: $1"
+		],
+		[
+			"^(\\d+) file\\(s\\) uploaded\\.$",
+			"$1 Datei(en) hochgeladen."
+		],
+		[
+			"^(\\d+) °C \\(highest: (\\d+) °C\\)$",
+			"$1 °C (höchste: $2 °C)"
+		],
+		[
+			"^(\\d+) item\\(s\\) restored\\.$",
+			"$1 Eintrag/Einträge wiederhergestellt."
+		],
+		[
+			"^Update (\\S+) available\\.$",
+			"Update $1 verfügbar."
+		],
+		[
+			"^(\\S+) being installed …$",
+			"$1 wird installiert …"
+		],
+		[
+			"^Remove account “(.+)”\\?$",
+			"Konto „$1“ entfernen?"
+		],
+		[
+			"^(.+) → Personal folder$",
+			"$1 → Persönlicher Ordner"
+		],
+		[
+			"^(.+) \\(mirror \\(RAID 1\\)\\)$",
+			"$1 (Spiegel (RAID 1))"
+		],
+		[
+			"^Personal folder \\/ (.+)$",
+			"Persönlicher Ordner / $1"
+		],
+		[
+			"^Lock vault “(.+)” now\\?$",
+			"Tresor „$1“ jetzt sperren?"
+		],
+		[
+			"^(\\d+) old ones removed$",
+			"$1 alte entfernt"
+		],
+		[
+			"^Running – (\\d+) % left$",
+			"Läuft – noch $1 %"
+		],
+		[
+			"^Update (\\S+) available$",
+			"Update $1 verfügbar"
+		],
+		[
+			"^(\\S+) being verified …$",
+			"$1 wird geprüft …"
+		],
+		[
+			"^Share “(.+)” removed\\.$",
+			"Freigabe „$1“ entfernt."
+		],
+		[
+			"^Group “(.+)” created\\.$",
+			"Gruppe „$1“ angelegt."
+		],
+		[
+			"^Group “(.+)” deleted\\.$",
+			"Gruppe „$1“ gelöscht."
+		],
+		[
+			"^Repair mirror “(.+)”\\?$",
+			"Spiegel „$1“ reparieren?"
+		],
+		[
+			"^Account “(.+)” added\\.$",
+			"Konto „$1“ hinzugefügt."
+		],
+		[
+			"^Also installed: (.+)\\.$",
+			"Dazu wird installiert: $1."
+		],
+		[
+			"^Inbox “(.+)” removed\\.$",
+			"Eingang „$1“ entfernt."
+		],
+		[
+			"^planned · phase (\\d)$",
+			"geplant · Phase $1"
+		],
+		[
+			"^(\\d+) file\\(s\\) waiting$",
+			"$1 Datei(en) warten"
+		],
+		[
+			"^Delete (\\d+) item\\(s\\)\\?$",
+			"$1 Eintrag/Einträge löschen?"
+		],
+		[
+			"^Weekly \\(Sunday\\) (\\d\\d:\\d\\d)$",
+			"Wöchentlich (Sonntag) $1"
+		],
+		[
+			"^(\\S+): starts at boot$",
+			"$1: startet beim Einschalten"
+		],
+		[
+			"^Limit (.+) per drive$",
+			"Limit $1 je Laufwerk"
+		],
+		[
+			"^Remove share “(.+)”\\?$",
+			"Freigabe „$1“ entfernen?"
+		],
+		[
+			"^User “(.+)” created\\.$",
+			"Benutzer „$1“ angelegt."
+		],
+		[
+			"^User “(.+)” deleted\\.$",
+			"Benutzer „$1“ gelöscht."
+		],
+		[
+			"^Delete group “(.+)”\\?$",
+			"Gruppe „$1“ löschen?"
+		],
+		[
+			"^Remove inbox “(.+)”\\?$",
+			"Eingang „$1“ entfernen?"
+		],
+		[
+			"^New name for “(.+)”:$",
+			"Neuer Name für „$1“:"
+		],
+		[
+			"^DATE AND TIME \\((.+)\\)$",
+			"DATUM UND UHRZEIT ($1)"
+		],
+		[
+			"^personal: (.+) · off$",
+			"persönlich: $1 · aus"
+		],
+		[
+			"^1\\. Sign in at (.+) ↗$",
+			"1. Bei $1 anmelden ↗"
+		],
+		[
+			"^(.+) – no hard links$",
+			"$1 – keine Hardlinks"
+		],
+		[
+			"^Vault “(.+)” locked\\.$",
+			"Tresor „$1“ gesperrt."
+		],
+		[
+			"^Latest · Stable$",
+			"Neueste · Stabil"
+		],
+		[
+			"^Very warm: (\\d+) °C\\.$",
+			"Sehr warm: $1 °C."
+		],
+		[
+			"^Permission for (.+)$",
+			"Recht für $1"
+		],
+		[
+			"^Share “(.+)” saved\\.$",
+			"Freigabe „$1“ gespeichert."
+		],
+		[
+			"^Delete user “(.+)”\\?$",
+			"Benutzer „$1“ löschen?"
+		],
+		[
+			"^(.+) \\(single drive\\)$",
+			"$1 (Einzelnes Laufwerk)"
+		],
+		[
+			"^Firmware file: (.+)$",
+			"Firmware-Datei: $1"
+		],
+		[
+			"^Job “(.+)” started\\.$",
+			"Auftrag „$1“ gestartet."
+		],
+		[
+			"^Job “(.+)” removed\\.$",
+			"Auftrag „$1“ entfernt."
+		],
+		[
+			"^Unlock vault “(.+)”$",
+			"Tresor „$1“ entsperren"
+		],
+		[
+			"^Inbox “(.+)” saved\\.$",
+			"Eingang „$1“ gespeichert."
+		],
+		[
+			"^Firmware file: (.*)$",
+			"Firmware-Datei: $1"
+		],
+		[
+			"^(\\d+) % of my limit$",
+			"$1 % von meinem Limit"
+		],
+		[
+			"^(\\S+) downloading …$",
+			"$1 wird geladen …"
+		],
+		[
+			"^User “(.+)” saved\\.$",
+			"Benutzer „$1“ gespeichert."
+		],
+		[
+			"^Remove job “(.+)”\\?$",
+			"Auftrag „$1“ entfernen?"
+		],
+		[
+			"^running since (.+)$",
+			"läuft seit $1"
+		],
+		[
+			"^(.+) · not mounted$",
+			"$1 · nicht eingehängt"
+		],
+		[
+			"^Check failed: (.+)$",
+			"Prüfen fehlgeschlagen: $1"
+		],
+		[
+			"^Check failed: (.*)$",
+			"Prüfen fehlgeschlagen: $1"
+		],
+		[
+			"^Media server: (.*)$",
+			"Medienserver: $1"
+		],
+		[
+			"^(.+) · visible to (.+)$",
+			"$1 · sichtbar für $2"
+		],
+		[
+			"^(.*)Linux (\\S+) · Load ([0-9. ]+)$",
+			"$1Linux $2 · Last $3"
+		],
+		[
+			"^Latest · Beta$",
+			"Neueste · Beta"
+		],
+		[
+			"^full from (\\d+) °C$",
+			"voll ab $1 °C"
+		],
+		[
+			"^Drive (\\d+) % used$",
+			"Laufwerk $1 % belegt"
+		],
+		[
+			"^Password for (\\S+)$",
+			"Passwort für $1"
+		],
+		[
+			"^(.+) · VISIBLE TO$",
+			"$1 · SICHTBAR FÜR"
+		],
+		[
+			"^(.+): permissions$",
+			"$1: Berechtigungen"
+		],
+		[
+			"^File access: (.+)$",
+			"Dateizugriff: $1"
+		],
+		[
+			"^Job “(.+)” saved\\.$",
+			"Auftrag „$1“ gespeichert."
+		],
+		[
+			"^Certificate: (.*)$",
+			"Zertifikat: $1"
+		],
+		[
+			"^(\\S+): open until (.+)$",
+			"$1: offen bis $2"
+		],
+		[
+			"^new address (\\S+)$",
+			"neue Adresse $1"
+		],
+		[
+			"^(\\S+) (\\S+) installed\\.$",
+			"$1 $2 installiert."
+		],
+		[
+			"^(.+) is starting$",
+			"$1 startet"
+		],
+		[
+			"^Whole drive (.+)$",
+			"Ganzes Laufwerk $1"
+		],
+		[
+			"^(.+) \\(read only\\)$",
+			"$1 (nur lesen)"
+		],
+		[
+			"^Favourites: (.+)$",
+			"Favoriten: $1"
+		],
+		[
+			"^Appearance: (.*)$",
+			"Darstellung: $1"
+		],
+		[
+			"^NAME FOR (\\S+) \\((.+)\\)$",
+			"NAME FÜR $1 ($2)"
+		],
+		[
+			"^cron: (.+) · by (\\S+)$",
+			"cron: $1 · von $2"
+		],
+		[
+			"^USB button: (.*)$",
+			"USB-Taste: $1"
+		],
+		[
+			"^DNS filter: (.*)$",
+			"DNS-Filter: $1"
+		],
+		[
+			"^Take over (\\S+): (.*)$",
+			"$1 übernehmen: $2"
+		],
+		[
+			"^(.+) · (\\d+) files · (.+)$",
+			"$1 · $2 Dateien · $3"
+		],
+		[
+			"^([\\d.,  ]+) years \\(([\\d.,  ]+) h\\)$",
+			"$1 Jahre ($2 h)"
+		],
+		[
+			"^SSD (\\d+) % left$",
+			"SSD noch $1 %"
+		],
+		[
+			"^Show all \\(([0-9]+)\\)$",
+			"Alle anzeigen ($1)"
+		],
+		[
+			"^(\\S+): unmounted$",
+			"$1: ausgehängt"
+		],
+		[
+			"^(\\S+): restarted$",
+			"$1: neu gestartet"
+		],
+		[
+			"^CHANGES IN (.+)$",
+			"ÄNDERUNGEN IN $1"
+		],
+		[
+			"^ubus error (.+)$",
+			"ubus-Fehler $1"
+		],
+		[
+			"^(.+): unmounted$",
+			"$1: ausgehängt"
+		],
+		[
+			"^Display of (.+)$",
+			"Anzeige von $1"
+		],
+		[
+			"^open until (.+)$",
+			"offen bis $1"
+		],
+		[
+			"^PROGRESS · (.*)$",
+			"ABLAUF · $1"
+		],
+		[
+			"^Self-test: (.*)$",
+			"Selbsttest: $1"
+		],
+		[
+			"^Test page: (.*)$",
+			"Testseite: $1"
+		],
+		[
+			"^Wallpaper: (.*)$",
+			"Hintergrundbild: $1"
+		],
+		[
+			"^Snapshots: (.*)$",
+			"Snapshots: $1"
+		],
+		[
+			"^(\\d+) selected\\.$",
+			"$1 ausgewählt."
+		],
+		[
+			"^Warm: (\\d+) °C\\.$",
+			"Warm: $1 °C."
+		],
+		[
+			"^([\\d.,  ]+) days \\(([\\d.,  ]+) h\\)$",
+			"$1 Tage ($2 h)"
+		],
+		[
+			"^Take over (\\S+)$",
+			"$1 übernehmen"
+		],
+		[
+			"^Imported: (.+)$",
+			"Übernommen: $1"
+		],
+		[
+			"^Remove \"(.+)\"\\?$",
+			"„$1“ entfernen?"
+		],
+		[
+			"^NETWORK · (.+)$",
+			"NETZWERK · $1"
+		],
+		[
+			"^personal: (.+)$",
+			"persönlich: $1"
+		],
+		[
+			"^(.+) · max\\. (\\d+) s$",
+			"$1 · max. $2 s"
+		],
+		[
+			"^Open with (.+)$",
+			"Öffnen mit $1"
+		],
+		[
+			"^Messages: (.+)$",
+			"Meldungen: $1"
+		],
+		[
+			"^Password: (.+)$",
+			"Passwort: $1"
+		],
+		[
+			"^contains: (.+)$",
+			"enthält: $1"
+		],
+		[
+			"^Language: (.+)$",
+			"Sprache: $1"
+		],
+		[
+			"^Telegram: (.+)$",
+			"Telegram: $1"
+		],
+		[
+			"^Terminal: (.+)$",
+			"Terminal: $1"
+		],
+		[
+			"^Start log (.+)$",
+			"Start-Protokoll $1"
+		],
+		[
+			"^Schedule: (.+)$",
+			"Zeitplan: $1"
+		],
+		[
+			"^Guests \\(r\\)(.*)$",
+			"Gäste (r)$1"
+		],
+		[
+			"^Password: (.*)$",
+			"Passwort: $1"
+		],
+		[
+			"^Services: (.*)$",
+			"Dienste: $1"
+		],
+		[
+			"^Language: (.*)$",
+			"Sprache: $1"
+		],
+		[
+			"^Download: (.*)$",
+			"Herunterladen: $1"
+		],
+		[
+			"^USB copy: (.*)$",
+			"USB-Kopie: $1"
+		],
+		[
+			"^Recovery: (.*)$",
+			"Recovery: $1"
+		],
+		[
+			"^Hostname: (.*)$",
+			"Hostname: $1"
+		],
+		[
+			"^(\\d+) detected$",
+			"$1 erkannt"
+		],
+		[
+			"^(\\d+) MESSAGES$",
+			"$1 MELDUNGEN"
+		],
+		[
+			"^the last (\\d+)$",
+			"die letzten $1"
+		],
+		[
+			"^(\\S+): mounted$",
+			"$1: eingehängt"
+		],
+		[
+			"^(\\S+): removed$",
+			"$1: entfernt"
+		],
+		[
+			"^(\\S+): started$",
+			"$1: gestartet"
+		],
+		[
+			"^(\\S+): stopped$",
+			"$1: gestoppt"
+		],
+		[
+			"^Skipped: (.+)$",
+			"Übersprungen: $1"
+		],
+		[
+			"^ACCESS · (.+)$",
+			"ZUGANG · $1"
+		],
+		[
+			"^download (.+)$",
+			"$1 herunterladen"
+		],
+		[
+			"^Install (.+)\\?$",
+			"$1 einspielen?"
+		],
+		[
+			"^Default: (.+)$",
+			"Standard: $1"
+		],
+		[
+			"^Account: (.+)$",
+			"Konto: $1"
+		],
+		[
+			"^(.+): mounted$",
+			"$1: eingehängt"
+		],
+		[
+			"^(.+): removed$",
+			"$1: entfernt"
+		],
+		[
+			"^Sign in: (.+)$",
+			"Anmelden: $1"
+		],
+		[
+			"^Display: (.+)$",
+			"Anzeige: $1"
+		],
+		[
+			"^Restore: (.*)$",
+			"Wiederherstellen: $1"
+		],
+		[
+			"^Network: (.*)$",
+			"Netzwerk: $1"
+		],
+		[
+			"^Share (\\S+) → (.+)$",
+			"Freigabe $1 → $2"
+		],
+		[
+			"^Account: (.*)$",
+			"Konto: $1"
+		],
+		[
+			"^Install: (.*)$",
+			"Installieren: $1"
+		],
+		[
+			"^Standby: (.*)$",
+			"Ruhezustand: $1"
+		],
+		[
+			"^Storage: (.*)$",
+			"Speicher: $1"
+		],
+		[
+			"^Channel: (.*)$",
+			"Kanal: $1"
+		],
+		[
+			"^Sources: (.*)$",
+			"Quellen: $1"
+		],
+		[
+			"^Package: (.*)$",
+			"Paket: $1"
+		],
+		[
+			"^Printer: (.*)$",
+			"Drucker: $1"
+		],
+		[
+			"^(\\d+) created$",
+			"$1 angelegt"
+		],
+		[
+			"^(\\d+) changed$",
+			"$1 geändert"
+		],
+		[
+			"^(\\d+) devices$",
+			"$1 Geräte"
+		],
+		[
+			"^([\\d.,  ]+) entries$",
+			"$1 Einträge"
+		],
+		[
+			"^Paste \\((\\d+)\\)$",
+			"Einfügen ($1)"
+		],
+		[
+			"^(\\d+) minutes$",
+			"$1 Minuten"
+		],
+		[
+			"^(\\d+) waiting$",
+			"$1 wartend"
+		],
+		[
+			"^Channel (\\S+)$",
+			"Kanal $1"
+		],
+		[
+			"^Install (.+)$",
+			"$1 installieren"
+		],
+		[
+			"^Error · (.+)$",
+			"Fehler · $1"
+		],
+		[
+			"^Remove (.+)\\?$",
+			"$1 entfernen?"
+		],
+		[
+			"^(.+) · TASKS$",
+			"$1 · AUFGABEN"
+		],
+		[
+			"^Folder: (.+)$",
+			"Ordner: $1"
+		],
+		[
+			"^Delete: (.+)$",
+			"Löschen: $1"
+		],
+		[
+			"^Groups: (.+)$",
+			"Gruppen: $1"
+		],
+		[
+			"^Backup: (.*)$",
+			"Sicherung: $1"
+		],
+		[
+			"^Shares: (.*)$",
+			"Freigaben: $1"
+		],
+		[
+			"^Format: (.*)$",
+			"Formatieren: $1"
+		],
+		[
+			"^Folder: (.*)$",
+			"Ordner: $1"
+		],
+		[
+			"^Rename: (.*)$",
+			"Umbenennen: $1"
+		],
+		[
+			"^Delete: (.*)$",
+			"Löschen: $1"
+		],
+		[
+			"^Remove: (.*)$",
+			"Entfernen: $1"
+		],
+		[
+			"^(\\d+) set up$",
+			"$1 eingerichtet"
+		],
+		[
+			"^(\\d+) unread$",
+			"$1 ungelesen"
+		],
+		[
+			"^(\\d+) months$",
+			"$1 Monate"
+		],
+		[
+			"^(\\d+) % left$",
+			"noch $1 %"
+		],
+		[
+			"^\\(at ([\\d.,  ]+) h\\)$",
+			"(bei $1 h)"
+		],
+		[
+			"^UPDATE (\\S+)$",
+			"UPDATE $1"
+		],
+		[
+			"^Format (\\S+)$",
+			"$1 formatieren"
+		],
+		[
+			"^Erase (\\S+)\\?$",
+			"$1 löschen?"
+		],
+		[
+			"^select (.+)$",
+			"$1 auswählen"
+		],
+		[
+			"^Update (.+)$",
+			"Update $1"
+		],
+		[
+			"^Format (.+)$",
+			"$1 formatieren"
+		],
+		[
+			"^Erase (.+)\\?$",
+			"$1 löschen?"
+		],
+		[
+			"^Error: (.+)$",
+			"Fehler: $1"
+		],
+		[
+			"^Share: (.+)$",
+			"Freigabe: $1"
+		],
+		[
+			"^Vault: (.+)$",
+			"Tresor: $1"
+		],
+		[
+			"^(.+), port (\\d+)$",
+			"$1, Port $2"
+		],
+		[
+			"^owner: (.+)$",
+			"von $1"
+		],
+		[
+			"^Share: (.*)$",
+			"Freigabe: $1"
+		],
+		[
+			"^Alt-F: (.*)$",
+			"Alt-F: $1"
+		],
+		[
+			"^Inbox: (.*)$",
+			"Eingang: $1"
+		],
+		[
+			"^Setup: (.*)$",
+			"Einrichten: $1"
+		],
+		[
+			"^Files: (.*)$",
+			"Dateien: $1"
+		],
+		[
+			"^Store: (.*)$",
+			"Store: $1"
+		],
+		[
+			"^Tasks: (.*)$",
+			"Aufgaben: $1"
+		],
+		[
+			"^Trash: (.*)$",
+			"Papierkorb: $1"
+		],
+		[
+			"^Entry: (.*)$",
+			"Eintrag: $1"
+		],
+		[
+			"^Cloud: (.*)$",
+			"Cloud: $1"
+		],
+		[
+			"^\\((\\d+) %\\) –$",
+			"($1 %) – Box"
+		],
+		[
+			"^Load ([0-9.]+ [0-9.]+ [0-9.]+)( ·)?$",
+			"Last $1$2"
+		],
+		[
+			"^Error (\\d+)$",
+			"Fehler $1"
+		],
+		[
+			"^Daily (\\d\\d:\\d\\d)$",
+			"Täglich $1"
+		],
+		[
+			"^(\\d+) weeks$",
+			"$1 Wochen"
+		],
+		[
+			"^(\\d+) files$",
+			"$1 Dateien"
+		],
+		[
+			"^(\\d+) hours$",
+			"$1 Stunden"
+		],
+		[
+			"^([0-9.,]+) years$",
+			"$1 Jahre"
+		],
+		[
+			"^Group (\\S+)$",
+			"Gruppe $1"
+		],
+		[
+			"^Share (\\S+)$",
+			"Freigabe $1"
+		],
+		[
+			"^SHARE (.+)$",
+			"FREIGABE $1"
+		],
+		[
+			"^INBOX (.+)$",
+			"EINGANG $1"
+		],
+		[
+			"^LOG · (.+)$",
+			"PROTOKOLL · $1"
+		],
+		[
+			"^as of (.+)$",
+			"Stand $1"
+		],
+		[
+			"^Open: (.+)$",
+			"Öffnen: $1"
+		],
+		[
+			"^Test: (.+)$",
+			"Test: $1"
+		],
+		[
+			"^Name: (.+)$",
+			"Name: $1"
+		],
+		[
+			"^Share (.+)$",
+			"Freigabe $1"
+		],
+		[
+			"^Area: (.+)$",
+			"Bereich: $1"
+		],
+		[
+			"^User: (.+)$",
+			"Benutzer: $1"
+		],
+		[
+			"^Note: (.+)$",
+			"Hinweis: $1"
+		],
+		[
+			"^Read (.+)\\.$",
+			"Gelesen $1."
+		],
+		[
+			"^BAY · (.+)$",
+			"SCHACHT · $1"
+		],
+		[
+			"^User: (.*)$",
+			"Benutzer: $1"
+		],
+		[
+			"^Move: (.*)$",
+			"Verschieben: $1"
+		],
+		[
+			"^Copy: (.*)$",
+			"Kopieren: $1"
+		],
+		[
+			"^Apps: (.*)$",
+			"Apps: $1"
+		],
+		[
+			"^Time: (.*)$",
+			"Zeit: $1"
+		],
+		[
+			"^Sync: (.*)$",
+			"Abgleich: $1"
+		],
+		[
+			"^Task: (.*)$",
+			"Aufgabe: $1"
+		],
+		[
+			"^List: (.*)$",
+			"Liste: $1"
+		],
+		[
+			"^Logo: (.*)$",
+			"Logo: $1"
+		],
+		[
+			"^(\\d+) jobs$",
+			"$1 Aufträge"
+		],
+		[
+			"^(\\d+) days$",
+			"$1 Tage"
+		],
+		[
+			"^File (\\d+)$",
+			"Datei $1"
+		],
+		[
+			"^USER (.+)$",
+			"BENUTZER $1"
+		],
+		[
+			"^now: (.+)$",
+			"jetzt: $1"
+		],
+		[
+			"^last (.+)$",
+			"zuletzt $1"
+		],
+		[
+			"^(.+) free$",
+			"$1 frei"
+		],
+		[
+			"^Job: (.+)$",
+			"Auftrag: $1"
+		],
+		[
+			"^Fan: (.+)$",
+			"Lüfter: $1"
+		],
+		[
+			"^ok · (.+)$",
+			"ok · $1"
+		],
+		[
+			"^Job: (.*)$",
+			"Auftrag: $1"
+		],
+		[
+			"^Fan: (.*)$",
+			"Lüfter: $1"
+		],
+		[
+			"^Log: (.*)$",
+			"Protokoll: $1"
+		],
+		[
+			"^([0-9.,]+ [KMGT]?B) of ([0-9.,]+ [KMGT]?B)$",
+			"$1 von $2"
+		],
+		[
+			"^(\\d+) rpm$",
+			"$1 U/min"
+		],
+		[
+			"^off ([0-9:]+)$",
+			"aus $1"
+		],
+		[
+			"^(\\S+) of (\\S+ \\S+)$",
+			"$1 von $2"
+		],
+		[
+			"^for (.+)$",
+			"seit $1"
+		],
+		[
+			"^JOB (.+)$",
+			"AUFTRAG $1"
+		],
+		[
+			"^on ([0-9:]+)$",
+			"an $1"
+		],
+		[
+			"^on (\\S+)$",
+			"auf $1"
+		],
+		[
+			"^by (\\S+)$",
+			"von $1"
+		],
+		[
+			"^\\((.+)\\)\\.$",
+			"gefunden ($1)."
+		],
+		[
+			"^by (.+)$",
+			"von $1"
+		]
+	],
+	"words": [
+		[
+			"\\brunning\\b",
+			"läuft",
+			"g"
+		],
+		[
+			"\\bstopped\\b",
+			"gestoppt",
+			"g"
+		],
+		[
+			" free of ",
+			" frei von ",
+			"g"
+		],
+		[
+			" of (?=\\d)",
+			" von ",
+			"g"
+		],
+		[
+			" used\\b",
+			" belegt",
+			"g"
+		],
+		[
+			"\\bdays powered on\\b",
+			"Tage Laufzeit",
+			"g"
+		],
+		[
+			"^contains: ",
+			"enthält: "
+		],
+		[
+			"RAID member of",
+			"RAID-Mitglied von",
+			"g"
+		],
+		[
+			"RAID member",
+			"RAID-Mitglied",
+			"g"
+		],
+		[
+			"^Disk · ",
+			"Festplatte · "
+		],
+		[
+			"^Bay · ",
+			"Schacht · "
+		],
+		[
+			"Initial sync",
+			"Erst-Synchronisierung",
+			"g"
+		],
+		[
+			"Recovery",
+			"Wiederherstellung",
+			"g"
+		],
+		[
+			"Check",
+			"Prüfung",
+			"g"
+		],
+		[
+			" · (.+) left$",
+			" · noch $1"
+		],
+		[
+			"^Mirror \\(RAID 1\\)",
+			"Spiegel (RAID 1)"
+		],
+		[
+			"^Single drive",
+			"Einzelnes Laufwerk"
+		],
+		[
+			" reallocated, ",
+			" umgelagert, ",
+			"g"
+		],
+		[
+			" pending\\b",
+			" schwebend",
+			"g"
+		],
+		[
+			"\\bRUNNING\\b",
+			"LÄUFT",
+			"g"
+		],
+		[
+			" and ",
+			" und ",
+			"g"
+		],
+		[
+			"\\bd (\\d+) h\\b",
+			"T $1 h",
+			"g"
+		],
+		[
+			" – do not switch off\\.",
+			" – nicht ausschalten."
+		],
+		[
+			"^Check failed: ",
+			"Prüfen fehlgeschlagen: "
+		],
+		[
+			"^Channel: ",
+			"Kanal: "
+		],
+		[
+			"^Services: ",
+			"Dienste: "
+		],
+		[
+			"^Storage: ",
+			"Speicher: "
+		],
+		[
+			"^Download: ",
+			"Download: "
+		],
+		[
+			"^Install: ",
+			"Installieren: "
+		],
+		[
+			"^Set up: ",
+			"Einrichten: "
+		],
+		[
+			"^Format: ",
+			"Formatieren: "
+		],
+		[
+			"^Certificate: ",
+			"Zertifikat: "
+		],
+		[
+			"^HTTPS: ",
+			"HTTPS: "
+		],
+		[
+			"^Language: ",
+			"Sprache: "
+		],
+		[
+			"^Logo: ",
+			"Logo: "
+		],
+		[
+			"\\bhalf\\b",
+			"halb",
+			"g"
+		],
+		[
+			"^Fan: ",
+			"Lüfter: "
+		],
+		[
+			"^Hardware: ",
+			"Hardware: "
+		],
+		[
+			"\\bgroup\\b",
+			"Gruppe",
+			"g"
+		],
+		[
+			" · (.+) left$",
+			" · noch $1"
+		],
+		[
+			"\\bUSB drive\\b",
+			"USB-Laufwerk",
+			"g"
+		],
+		[
+			"\\bentry\\/entries\\b",
+			"Eintrag/Einträge",
+			"g"
+		],
+		[
+			"\\ball users\\b",
+			"alle Benutzer",
+			"g"
+		]
+	]
+}

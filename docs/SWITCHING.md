@@ -45,10 +45,10 @@ flash change.
    Before 0.3.0-beta.2: sign in as **root** with the password **shareos**.
 7. The setup wizard guides through language, taking over from Alt-F,
    password, name and time, and updates. Then take over the disks with your
-   data: **Storage → Drives**, at the disk **„sda2 übernehmen“** (one button per
+   data: **Storage → Drives**, at the disk **“Take over sda2”** (one button per
    partition with a file system) – nothing is erased. **Do not use the setup
    wizard for disks with data: it erases them.** Then create shares for the
-   existing folders under **Freigaben**. (From 0.2.0-beta.17; with older
+   existing folders under **Shares**. (From 0.2.0-beta.17; with older
    versions see [Taking over disks by hand](#taking-over-disks-by-hand).)
 
 From now on updates go through **System → Firmware** (from the internet or as

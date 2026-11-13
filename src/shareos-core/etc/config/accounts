@@ -5,7 +5,7 @@
 #	option role 'admin'          # admin | user | share
 #	option fullname 'Jan'
 #	list groups 'familie'
-#	option home 'daten'          # volume for the personal folder ('' = none)
+#	option home 'data'          # volume for the personal folder ('' = none)
 #	option quota '0'             # MB per volume, 0 = no limit
 #	option web '1'               # role user: may log in to the web interface
 #

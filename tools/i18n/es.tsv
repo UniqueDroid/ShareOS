@@ -855,182 +855,179 @@ P0	Sin swap, sin área de apps (los paquetes y datos de apps necesitan ext4 o Bt
 P1	$1 de swap por disco, sin área de apps (los paquetes y datos de apps necesitan ext4 o Btrfs).
 P2	Restaurar: $1
 P3	Copia: $1
-P4	Copia: $1
-P5	$1 creado
-P6	CARPETA COMPARTIDA $1
-P7	USUARIO $1
-P8	Grupo $1
-P9	Permiso para $1
-P10	en $1
-P11	Límite de $1 por unidad
-P12	Invitados (l)$1
-P13	Carpeta compartida «$1» guardada.
-P14	¿Quitar la carpeta compartida «$1»?
-P15	Carpeta compartida «$1» quitada.
-P16	Usuario «$1» creado.
-P17	Usuario «$1» guardado.
-P18	¿Eliminar el usuario «$1»?
-P19	Usuario «$1» eliminado.
-P20	La cuenta se elimina; sus permisos en carpetas compartidas desaparecen.$1
-P21	Grupo «$1» creado.
-P22	¿Eliminar el grupo «$1»?
-P23	Grupo «$1» eliminado.
-P24	Contraseña de $1
-P25	Contraseña de $1 cambiada.
-P26	Importados: $1
-P27	Omitidos: $1
-P28	Carpetas compartidas: $1
-P29	Carpeta compartida: $1
-P30	Usuario: $1
-P31	Contraseña: $1
-P32	Alt-F: $1
-P33	El cambio se aplica al momento. Después, la caja espera $1 segundos una confirmación desde la nueva dirección – si no llega, restaura los ajustes anteriores. Así no puedes quedarte fuera.
-P34	– sin confirmación la caja vuelve a los anteriores en $1 s.
-P35	La caja obtiene su dirección del router. Después puede ser accesible en otra dirección (búscala en el router). Si el cambio no se confirma en la caja en $1 segundos, vuelven a valer los ajustes anteriores.
-P36	La caja cambia a $1. Esta página abre entonces la nueva dirección y confirma el cambio. Si eso no funciona, vuelven a valer los ajustes anteriores tras $2 segundos.
-P37	Esta página aplica y confirma los ajustes de red. Si eso no funciona, vuelven a valer los ajustes anteriores tras $1 segundos.
-P38	nueva dirección $1
-P39	esperando a la caja ($1 s) – ¿no accesible? Busca la nueva dirección en el router e inicia sesión allí.
-P40	esperando a la caja ($1 s)
-P41	$1: arranca al encender
-P42	$1: ya no arranca al encender
-P43	Red: $1
-P44	Apariencia: $1
-P45	($1 %) –
-P46	Canal $1
-P47	Actualización $1 disponible
-P48	Actualización $1 disponible.
-P49	ACTUALIZACIÓN $1
-P50	desde hace $1
-P51	$1 configuradas
-P52	$1 detectadas
-P53	previsto · fase $1
-P54	Más reciente · Beta
-P55	Más reciente · Estable
-P56	CAMBIOS EN $1
-P57	ACCESO · $1
-P58	NOMBRE PARA $1 ($2)
-P59	PROGRESO · $1
-P60	Fuente: versiones de GitHub · $1
-P61	instalada correctamente ($1)
-P62	Formatear $1
-P63	$1 se borrará por completo. No se puede deshacer.
-P64	Al pulsar «Configurar» se borra $1 por completo. La sincronización inicial se hace después en segundo plano (varias horas con discos grandes); la unidad se puede usar al momento.
-P65	Al pulsar «Configurar» se borra $1 por completo.
-P66	$1 de swap por disco, área de apps en «$2» (si aún no existe ninguna).
-P67	Sin swap, área de apps en «$1» (si aún no existe ninguna).
-P68	Ambos discos guardan los mismos datos. Si uno falla, no se pierde nada. Útil: $1.
-P69	El doble de espacio ($1), pero sin redundancia – cada disco es una unidad propia.
-P70	El disco se convierte en una unidad de $1. Para tener redundancia, añade más tarde un segundo disco como espejo.
-P71	$1: ambos discos activos ($2)
-P72	$1: falta un disco ($2)
-P73	¿Quitar «$1»?
-P74	¿Borrar $1?
-P75	$1 se borrará por completo y se configurará como unidad «$2».
-P76	ShareOS $1 se escribirá en la flash. Después hace falta reiniciar; durante el reinicio se instala el nuevo sistema. No apagues la caja mientras se escribe.
-P77	$1 de $2
-P78	Instalar $1
-P79	Carga $1$2
-P80	RED · $1
-P81	$1: montado
-P82	$1: desmontado
-P83	$1: quitado
-P84	$1: iniciado
-P85	$1: detenido
-P86	$1: reiniciado
-P87	($1).
-P88	máximo desde $1 °C
-P89	ahora: $1
-P90	último $1
-P91	$1 archivo(s) en espera
-P92	bandeja personal de $1 · token $2
-P93	bandeja compartida · token $1
-P94	personal: $1
-P95	BANDEJA $1
-P96	REGISTRO · $1
-P97	Conexión correcta – $1 documentos en Paperless.
-P98	¿Quitar la bandeja «$1»?
-P99	$1: conexión correcta ($2 carpetas).
-P100	¿Quitar la cuenta «$1»?
-P101	¿Quitar la tarea «$1»?
-P102	Carpeta compartida $1
-P103	Carpeta compartida $1 → $2
-P104	$1 → Carpeta personal
-P105	cron: $1 · de $2
-P106	de $1
-P107	Error · $1
-P108	en marcha desde $1
-P109	Tarea: $1
-P110	Cuenta: $1
-P111	Bandeja: $1
-P112	Ventilador: $1
-P113	Servicios: $1
-P114	Configuración: $1
-P115	Formatear: $1
-P116	Instalar: $1
-P117	Reposo: $1
-P118	Almacenamiento: $1
-P119	Idioma: $1
-P120	Canal: $1
-P121	Certificado: $1
-P122	Comprobación fallida: $1
-P123	$1 libre
-P124	seleccionar $1
-P125	descargar $1
-P126	$1 seleccionado(s).
-P127	Nuevo nombre para «$1»:
-P128	$1 elemento(s). Carpeta de destino como ruta en «$2», p. ej. Fotos/2026 (vacío = nivel superior).
-P129	¿Eliminar $1 elemento(s)?
-P130	$1 – carpetas con su contenido. No se puede deshacer.
-P131	«$1» ya existe en esta carpeta.
-P132	$1 archivo(s) subido(s).
-P133	$1 archivo(s) no subido(s).
-P134	Igual que para todos ($1)
-P135	Descarga: $1
-P136	Carpeta: $1
-P137	Cambiar nombre: $1
-P138	Eliminar: $1
-P139	Mover: $1
-P140	Copiar: $1
-P141	Archivos: $1
-P142	Las apps web funcionan en su propio puerto ($1) – separadas de esta interfaz, así una app no puede usar tu inicio de sesión. Quien conozca la dirección puede abrir una app web en la red; «visible para» decide quién la ve en «Mi ShareOS».
-P143	Las apps web funcionan en su propio puerto ($1 / $2 para HTTPS) – separadas de esta interfaz, así una app no puede usar tu inicio de sesión. Quien conozca la dirección puede abrir una app web en la red; «visible para» decide quién la ve en «Mi ShareOS».
-P144	a fecha de $1
-P145	$1 · visible para $2
-P146	$1 · VISIBLE PARA
-P147	¿Quitar $1?
-P148	$1 $2 instalada.
-P149	$1 $2 instalada (app propia).
-P150	$1 descargando …
-P151	$1 comprobándose …
-P152	$1 instalándose …
-P153	Actualizar $1
-P154	Tienda: $1
-P155	Apps: $1
-P156	Quitar: $1
-P157	Fuentes: $1
-P158	Paquete: $1
-P159	Después arranca $1. Faltan entonces los paquetes adicionales de Alt-F – vuelve a grabar el mismo archivo en la página de firmware de Alt-F. Volver a ShareOS: graba el .bin de ShareOS en Alt-F; el sistema y los ajustes siguen ahí.
-P160	¿Instalar $1?
-P161	El kernel y el sistema de arranque se sustituyen y comprueban. No apagues la caja mientras se escribe.
-P162	$1 está en la flash. ¿Reiniciar ahora?
-P163	$1 está arrancando – su interfaz estará en breve en $2 (puerto 80).
-P164	$1 está arrancando
-P165	Instalar: $1
-P166	Archivo de firmware: $1
-P167	$1 ya se puede desconectar.
-P168	Formatear $1
-P169	¿Borrar $1?
-P170	$1 – nombre (letras, cifras, espacios, - y _) y sistema de archivos:
-P171	Todo lo que hay en $1 se borra. Después es una unidad $2 «$3».
-P172	$1 ($2, $3) se borra por completo y se configura de nuevo como volumen «$4» ($5).
-P173	Área de apps en «$1» (si aún no existe ninguna).
-P174	FECHA Y HORA ($1)
-P175	Hora: $1
-P176	Sincronización: $1
-P177	Hora: $1
-P178	$1 (espejo (RAID 1))
-P179	$1 (unidad individual)
+P4	$1 creado
+P5	CARPETA COMPARTIDA $1
+P6	USUARIO $1
+P7	Grupo $1
+P8	Permiso para $1
+P9	en $1
+P10	Límite de $1 por unidad
+P11	Invitados (l)$1
+P12	Carpeta compartida «$1» guardada.
+P13	¿Quitar la carpeta compartida «$1»?
+P14	Carpeta compartida «$1» quitada.
+P15	Usuario «$1» creado.
+P16	Usuario «$1» guardado.
+P17	¿Eliminar el usuario «$1»?
+P18	Usuario «$1» eliminado.
+P19	La cuenta se elimina; sus permisos en carpetas compartidas desaparecen.$1
+P20	Grupo «$1» creado.
+P21	¿Eliminar el grupo «$1»?
+P22	Grupo «$1» eliminado.
+P23	Contraseña de $1
+P24	Contraseña de $1 cambiada.
+P25	Importados: $1
+P26	Omitidos: $1
+P27	Carpetas compartidas: $1
+P28	Carpeta compartida: $1
+P29	Usuario: $1
+P30	Contraseña: $1
+P31	Alt-F: $1
+P32	El cambio se aplica al momento. Después, la caja espera $1 segundos una confirmación desde la nueva dirección – si no llega, restaura los ajustes anteriores. Así no puedes quedarte fuera.
+P33	– sin confirmación la caja vuelve a los anteriores en $1 s.
+P34	La caja obtiene su dirección del router. Después puede ser accesible en otra dirección (búscala en el router). Si el cambio no se confirma en la caja en $1 segundos, vuelven a valer los ajustes anteriores.
+P35	La caja cambia a $1. Esta página abre entonces la nueva dirección y confirma el cambio. Si eso no funciona, vuelven a valer los ajustes anteriores tras $2 segundos.
+P36	Esta página aplica y confirma los ajustes de red. Si eso no funciona, vuelven a valer los ajustes anteriores tras $1 segundos.
+P37	nueva dirección $1
+P38	esperando a la caja ($1 s) – ¿no accesible? Busca la nueva dirección en el router e inicia sesión allí.
+P39	esperando a la caja ($1 s)
+P40	$1: arranca al encender
+P41	$1: ya no arranca al encender
+P42	Red: $1
+P43	Apariencia: $1
+P44	($1 %) –
+P45	Canal $1
+P46	Actualización $1 disponible
+P47	Actualización $1 disponible.
+P48	ACTUALIZACIÓN $1
+P49	desde hace $1
+P50	$1 configuradas
+P51	$1 detectadas
+P52	previsto · fase $1
+P53	Más reciente · Beta
+P54	Más reciente · Estable
+P55	CAMBIOS EN $1
+P56	ACCESO · $1
+P57	NOMBRE PARA $1 ($2)
+P58	PROGRESO · $1
+P59	Fuente: versiones de GitHub · $1
+P60	instalada correctamente ($1)
+P61	Formatear $1
+P62	$1 se borrará por completo. No se puede deshacer.
+P63	Al pulsar «Configurar» se borra $1 por completo. La sincronización inicial se hace después en segundo plano (varias horas con discos grandes); la unidad se puede usar al momento.
+P64	Al pulsar «Configurar» se borra $1 por completo.
+P65	$1 de swap por disco, área de apps en «$2» (si aún no existe ninguna).
+P66	Sin swap, área de apps en «$1» (si aún no existe ninguna).
+P67	Ambos discos guardan los mismos datos. Si uno falla, no se pierde nada. Útil: $1.
+P68	El doble de espacio ($1), pero sin redundancia – cada disco es una unidad propia.
+P69	El disco se convierte en una unidad de $1. Para tener redundancia, añade más tarde un segundo disco como espejo.
+P70	$1: ambos discos activos ($2)
+P71	$1: falta un disco ($2)
+P72	¿Quitar «$1»?
+P73	¿Borrar $1?
+P74	$1 se borrará por completo y se configurará como unidad «$2».
+P75	ShareOS $1 se escribirá en la flash. Después hace falta reiniciar; durante el reinicio se instala el nuevo sistema. No apagues la caja mientras se escribe.
+P76	$1 de $2
+P77	Instalar $1
+P78	Carga $1$2
+P79	RED · $1
+P80	$1: montado
+P81	$1: desmontado
+P82	$1: quitado
+P83	$1: iniciado
+P84	$1: detenido
+P85	$1: reiniciado
+P86	($1).
+P87	máximo desde $1 °C
+P88	ahora: $1
+P89	último $1
+P90	$1 archivo(s) en espera
+P91	bandeja personal de $1 · token $2
+P92	bandeja compartida · token $1
+P93	personal: $1
+P94	BANDEJA $1
+P95	REGISTRO · $1
+P96	Conexión correcta – $1 documentos en Paperless.
+P97	¿Quitar la bandeja «$1»?
+P98	$1: conexión correcta ($2 carpetas).
+P99	¿Quitar la cuenta «$1»?
+P100	¿Quitar la tarea «$1»?
+P101	Carpeta compartida $1
+P102	Carpeta compartida $1 → $2
+P103	$1 → Carpeta personal
+P104	cron: $1 · de $2
+P105	de $1
+P106	Error · $1
+P107	en marcha desde $1
+P108	Tarea: $1
+P109	Cuenta: $1
+P110	Bandeja: $1
+P111	Ventilador: $1
+P112	Servicios: $1
+P113	Configuración: $1
+P114	Formatear: $1
+P115	Instalar: $1
+P116	Reposo: $1
+P117	Almacenamiento: $1
+P118	Idioma: $1
+P119	Canal: $1
+P120	Certificado: $1
+P121	Comprobación fallida: $1
+P122	$1 libre
+P123	seleccionar $1
+P124	descargar $1
+P125	$1 seleccionado(s).
+P126	Nuevo nombre para «$1»:
+P127	$1 elemento(s). Carpeta de destino como ruta en «$2», p. ej. Fotos/2026 (vacío = nivel superior).
+P128	¿Eliminar $1 elemento(s)?
+P129	$1 – carpetas con su contenido. No se puede deshacer.
+P130	«$1» ya existe en esta carpeta.
+P131	$1 archivo(s) subido(s).
+P132	$1 archivo(s) no subido(s).
+P133	Igual que para todos ($1)
+P134	Descarga: $1
+P135	Carpeta: $1
+P136	Cambiar nombre: $1
+P137	Eliminar: $1
+P138	Mover: $1
+P139	Copiar: $1
+P140	Archivos: $1
+P141	Las apps web funcionan en su propio puerto ($1) – separadas de esta interfaz, así una app no puede usar tu inicio de sesión. Quien conozca la dirección puede abrir una app web en la red; «visible para» decide quién la ve en «Mi ShareOS».
+P142	Las apps web funcionan en su propio puerto ($1 / $2 para HTTPS) – separadas de esta interfaz, así una app no puede usar tu inicio de sesión. Quien conozca la dirección puede abrir una app web en la red; «visible para» decide quién la ve en «Mi ShareOS».
+P143	a fecha de $1
+P144	$1 · visible para $2
+P145	$1 · VISIBLE PARA
+P146	¿Quitar $1?
+P147	$1 $2 instalada.
+P148	$1 $2 instalada (app propia).
+P149	$1 descargando …
+P150	$1 comprobándose …
+P151	$1 instalándose …
+P152	Actualizar $1
+P153	Tienda: $1
+P154	Apps: $1
+P155	Quitar: $1
+P156	Fuentes: $1
+P157	Paquete: $1
+P158	Después arranca $1. Faltan entonces los paquetes adicionales de Alt-F – vuelve a grabar el mismo archivo en la página de firmware de Alt-F. Volver a ShareOS: graba el .bin de ShareOS en Alt-F; el sistema y los ajustes siguen ahí.
+P159	¿Instalar $1?
+P160	El kernel y el sistema de arranque se sustituyen y comprueban. No apagues la caja mientras se escribe.
+P161	$1 está en la flash. ¿Reiniciar ahora?
+P162	$1 está arrancando – su interfaz estará en breve en $2 (puerto 80).
+P163	$1 está arrancando
+P164	Archivo de firmware: $1
+P165	$1 ya se puede desconectar.
+P166	Formatear $1
+P167	¿Borrar $1?
+P168	$1 – nombre (letras, cifras, espacios, - y _) y sistema de archivos:
+P169	Todo lo que hay en $1 se borra. Después es una unidad $2 «$3».
+P170	$1 ($2, $3) se borra por completo y se configura de nuevo como volumen «$4» ($5).
+P171	Área de apps en «$1» (si aún no existe ninguna).
+P172	FECHA Y HORA ($1)
+P173	Hora: $1
+P174	Sincronización: $1
+P175	$1 (espejo (RAID 1))
+P176	$1 (unidad individual)
 W0	en marcha
 W1	detenido
 W2	 libres de
@@ -1084,14 +1081,14 @@ E864	Permitir e instalar
 E865	La app se borra, junto con sus tareas y sus datos en la caja.
 E866	Horario en formato cron (minuto hora día mes día_semana), como mucho cada 5 minutos, p. ej.
 E867	= cada día a las 3:30.
-P180	Error $1
-P181	Por defecto: $1
-P182	$1 · máx. $2 s
-P183	$1 · TAREAS
-P184	Tareas: $1
-P185	Tarea: $1
-P186	Registro: $1
-P187	$1: permisos
+P177	Error $1
+P178	Por defecto: $1
+P179	$1 · máx. $2 s
+P180	$1 · TAREAS
+P181	Tareas: $1
+P182	Tarea: $1
+P183	Registro: $1
+P184	$1: permisos
 E868	Actualizar sin internet:
 E869	sube el .sysupgrade.tar de una versión de ShareOS, preferiblemente con su archivo .sha256. Se comprueba igual que una actualización desde GitHub.
 E870	SUMA DE COMPROBACIÓN (.SHA256, OPCIONAL)
@@ -1102,23 +1099,23 @@ E874	Abrir
 E875	En su propia ventana ↗
 E876	Se muestra en ShareOS
 E877	Puede mostrarse como página dentro de la interfaz de ShareOS (en lugar de en su propia ventana).
-P188	Abrir con $1
-P189	Abrir: $1
+P185	Abrir con $1
+P186	Abrir: $1
 E878	RAID 0 – rápido
 E879	JBOD – todo el espacio
 E880	NOMBRE DEL VOLUMEN
 E881	Sistema de archivos Linux más antiguo (p. ej. de Alt-F): permisos por usuario, carpetas personales, apps; sin límite de almacenamiento.
 E882	Sin journal – larga comprobación tras un corte de luz. Solo si un dispositivo antiguo lo necesita.
 E883	Para dispositivos muy antiguos. Archivos de hasta 4 GB, sin permisos por usuario, sin límite de almacenamiento, sin carpetas personales, sin apps.
-P190	Ambos discos forman un volumen, los datos se reparten entre ellos: más rápido, espacio $1. Si falla un disco, se pierde todo.
-P191	Ambos discos forman un volumen uno tras otro con $1 (también con discos de distinto tamaño). Si falla un disco, se pierde todo.
+P187	Ambos discos forman un volumen, los datos se reparten entre ellos: más rápido, espacio $1. Si falla un disco, se pierde todo.
+P188	Ambos discos forman un volumen uno tras otro con $1 (también con discos de distinto tamaño). Si falla un disco, se pierde todo.
 E884	Reparar espejo
 E885	Coloque un disco nuevo en la bahía libre y luego «Reparar espejo».
 E886	Borrar y reparar
 E887	Reparación iniciada.
-P192	¿Reparar el espejo «$1»?
-P193	$1 ($2 · $3) se borra por completo y se añade al espejo como segundo disco. Después los datos se copian en segundo plano (varias horas en discos grandes); el volumen sigue utilizable.
-P194	falta un disco ($1)
+P189	¿Reparar el espejo «$1»?
+P190	$1 ($2 · $3) se borra por completo y se añade al espejo como segundo disco. Después los datos se copian en segundo plano (varias horas en discos grandes); el volumen sigue utilizable.
+P191	falta un disco ($1)
 E888	AVISOS
 E889	1 AVISO
 E890	Marcar todo como leído
@@ -1158,57 +1155,57 @@ E923	Mensaje de prueba enviado.
 E924	¿Borrar todos los avisos?
 E925	La lista se vacía. Si un problema persiste, la caja lo avisará de nuevo en la próxima comprobación.
 E926	•••••• (guardado)
-P195	$1 AVISOS
-P196	$1 sin leer
-P197	Avisos: $1
-P198	Prueba: $1
+P192	$1 AVISOS
+P193	$1 sin leer
+P194	Avisos: $1
+P195	Prueba: $1
 E927	NOMBRE DEL EQUIPO PARA ENLACES (P. EJ. A LAS APPS)
 E928	Dejar vacío: con un certificado propio se toma el nombre de él; si no, la dirección con la que se abrió esta página. El nombre debe resolverse en la red (DNS).
 E929	Guardar nombre
 E930	Nombre guardado.
-P199	Esta página está abierta mediante $1. Sin aviso de certificado:
-P200	Nombre: $1
+P196	Esta página está abierta mediante $1. Sin aviso de certificado:
+P197	Nombre: $1
 E931	Acceso a archivos
 E932	Puede leer, cambiar y borrar los archivos a los que el usuario conectado llega en el explorador, con sus permisos, mientras la app esté abierta.
-P201	Acceso a archivos: $1
+P198	Acceso a archivos: $1
 E933	Equipo no accesible
-P202	Error de ubus $1
+P199	Error de ubus $1
 E934	Tráfico de red de los últimos 10 minutos
 E935	aún no conectado
 E936	Aún no hay carpeta de entrada. Primero introduce arriba la dirección de Paperless.
-P203	personal: $1 · desactivado
+P200	personal: $1 · desactivado
 E937	compartido · desactivado
-P204	entrada personal de $1 · token $2
+P201	entrada personal de $1 · token $2
 E938	Aún no se ha transferido nada.
 E939	no se encontraron etiquetas
 E940	Recurso compartido de Windows (SMB)
 E941	Google Fotos
 E942	DOMINIO (OPCIONAL)
 E943	CONTRASEÑA DE APLICACIÓN
-P205	Recurso $1
+P202	Recurso $1
 E944	aún no ejecutado
 E945	rclone no instalado
 E946	descargando y comprobando …
-P206	Error: $1
+P203	Error: $1
 E947	Primero, en
 E948	configura una unidad.
 E949	Las credenciales permanecen cifradas en el equipo.
 E950	Para Google Drive, OneDrive, Dropbox y servicios similares inicias sesión en el navegador; para otros servicios pega la sección terminada de «rclone config».
 E951	Las tareas usan poca memoria (2 transferencias a la vez); un límite de ancho de banda como
 E952	Tus credenciales están en tu carpeta personal; lo que descargas cuenta para tu límite de almacenamiento.
-P207	de $1
+P204	de $1
 E953	Tras iniciar sesión, el navegador muestra «página no accesible» con una dirección como
 E954	. Copia esta dirección completa de la barra de direcciones y pégala aquí:
-P208	Cuenta «$1» añadida.
-P209	Cuenta: $1
-P210	Tarea «$1» guardada.
-P211	Tarea: $1
-P212	Contraseña: $1
-P213	$1 · no montado
+P205	Cuenta «$1» añadida.
+P206	Cuenta: $1
+P207	Tarea «$1» guardada.
+P208	Tarea: $1
+P209	Contraseña: $1
+P210	$1 · no montado
 W39	 · quedan $1
-P214	$1 · sistema de archivos no encontrado
-P215	contiene: $1
-P216	El nombre «$1» ya está en uso.
+P211	$1 · sistema de archivos no encontrado
+P212	contiene: $1
+P213	El nombre «$1» ya está en uso.
 E955	Comprobando el paquete de nuevo
 E956	Preparando el sistema para el reinicio
 E957	Sistema de arranque: borrando la flash
@@ -1217,7 +1214,7 @@ E959	Comprobando el sistema de arranque
 E960	Kernel: borrando la flash
 E961	Escribiendo el kernel
 E962	Comprobando el kernel
-P217	$1 de $2
+P214	$1 de $2
 E963	Telegram: crea un bot con @BotFather en Telegram (/newbot), introduce aquí el token y guarda. Después envía un mensaje a tu bot (o añádelo a un grupo) y pulsa «Buscar ID de chat».
 E964	Buscar ID de chat
 E965	ID DE CHAT
@@ -1230,34 +1227,34 @@ E971	Nube (sincronización con almacenamiento en la nube)
 E972	Paperless (carpetas de entrada para Paperless-ngx)
 E973	Área activada.
 E974	Área desactivada.
-P218	Área: $1
-P219	Ventilador: $1
-P220	Archivo de firmware: $1
-P221	Idioma: $1
-P222	Recurso: $1
-P223	Usuario: $1
-P224	$1: ya no arranca al encender
-P225	$1: arranca al encender
-P226	El equipo cambia a $1. Esta página abre después la nueva dirección y confirma el cambio. Si falla, vuelven los ajustes anteriores tras $2 segundos.
-P227	Comprobación fallida: $1
+P215	Área: $1
+P216	Ventilador: $1
+P217	Archivo de firmware: $1
+P218	Idioma: $1
+P219	Recurso: $1
+P220	Usuario: $1
+P221	$1: ya no arranca al encender
+P222	$1: arranca al encender
+P223	El equipo cambia a $1. Esta página abre después la nueva dirección y confirma el cambio. Si falla, vuelven los ajustes anteriores tras $2 segundos.
+P224	Comprobación fallida: $1
 E975	Sesión iniciada – ahora «Añadir».
-P228	Cuenta «$1» eliminada.
-P229	Tarea «$1» iniciada.
-P230	Tarea «$1» eliminada.
+P225	Cuenta «$1» eliminada.
+P226	Tarea «$1» iniciada.
+P227	Tarea «$1» eliminada.
 E976	La cuenta se elimina; se pierden los permisos en los recursos compartidos.
 E977	La cuenta se elimina; se pierden los permisos en los recursos compartidos. La carpeta personal se conserva.
 W40	unidad USB
 W41	elemento(s)
 E978	La unidad se desmonta y se quita de la configuración. Los datos del disco se conservan hasta que se vuelva a configurar.
-P231	$1: montado
-P232	$1: desmontado
-P233	$1: eliminado
+P228	$1: montado
+P229	$1: desmontado
+P230	$1: eliminado
 E979	Unidad
 E980	Aún no hay mensajes al bot: guarda primero el token y luego escribe al bot en Telegram.
-P234	Chat encontrado: $1 – ahora guarda.
-P235	Telegram: $1
-P236	Carpeta: $1
-P237	Borrar: $1
+P231	Chat encontrado: $1 – ahora guarda.
+P232	Telegram: $1
+P233	Carpeta: $1
+P234	Borrar: $1
 E981	descargando
 E982	comprobando
 E983	instalando
@@ -1270,17 +1267,17 @@ E988	Terminar
 E989	Una shell como
 E990	directamente en el equipo – para diagnóstico y trabajo manual (BusyBox, uci, logread, mdadm, smartctl …).
 E991	La sesión es para una ventana y termina al cerrarla. Cuidado: los comandos como root actúan al instante y sin papelera.
-P238	Terminal: $1
+P235	Terminal: $1
 E992	Las entradas personales necesitan un usuario con carpeta personal.
-P239	(Nextcloud, WebDAV, S3, SFTP, Google Drive, OneDrive, Dropbox y más). El programa (unos 20 MB) va a la zona de apps del disco$1.
+P236	(Nextcloud, WebDAV, S3, SFTP, Google Drive, OneDrive, Dropbox y más). El programa (unos 20 MB) va a la zona de apps del disco$1.
 E993	La sincronización en la nube aún no está configurada en este equipo; pregunta al administrador.
-P240	En $1 inicias sesión en el navegador; el equipo solo guarda un token de acceso, ninguna contraseña.
-P241	1. Iniciar sesión en $1 ↗
+P237	En $1 inicias sesión en el navegador; el equipo solo guarda un token de acceso, ninguna contraseña.
+P238	1. Iniciar sesión en $1 ↗
 E994	sesión iniciada ✓
 E995	2. DIRECCIÓN TRAS INICIAR SESIÓN
 E996	Inicia sesión primero (pasos 1 y 2).
-P242	Inicio de sesión: $1
-P243	– $1. No apagues el equipo.
+P239	Inicio de sesión: $1
+P240	– $1. No apagues el equipo.
 E997	El equipo no se está ejecutando desde la flash (
 E998	). Las actualizaciones desde esta página solo funcionan tras un arranque normal desde la flash.
 E999	Comando
@@ -1294,10 +1291,10 @@ E1006	ShareOS aún no se ha probado en hardware real de este modelo.
 E1007	Primer inicio de sesión: usuario root, contraseña shareos – después establece tu propia contraseña.
 E1008	Torrents propios (Transmission)
 E1009	Puede controlar el servicio Transmission propio del usuario: añadir, pausar y eliminar torrents. Cada usuario tiene su propio servicio; las descargas van solo a sus carpetas.
-P244	También se instalará: $1.
-P245	Lo necesita: $1 – estas apps dejarán de funcionar.
-P246	$1 $2 instalado, además: $3.
-P247	Nota: $1
+P241	También se instalará: $1.
+P242	Lo necesita: $1 – estas apps dejarán de funcionar.
+P243	$1 $2 instalado, además: $3.
+P244	Nota: $1
 E1010	Convertir medios (FFmpeg)
 E1011	Puede convertir el audio y vídeo del usuario en la caja (FFmpeg): con sus permisos, solo en sus carpetas y con opciones fijas (ningún comando libre).
 E1012	Todas
@@ -1351,24 +1348,24 @@ E1059	Falta rsync en este firmware.
 E1060	No hay destino adecuado: las instantáneas necesitan una unidad ext4 o Btrfs (FAT32/exFAT no tienen enlaces duros).
 E1061	tareas
 E1062	– sin enlaces duros
-P248	$1 tareas
-P249	Diario a las $1
-P250	Semanal (domingo) a las $1
-P251	los últimos $1
-P252	$1 días
-P253	$1 semanas
-P254	$1 meses
-P255	$1 archivos
-P256	$1 cambiados
-P257	$1 antiguas eliminadas
-P258	Carpetas personales ($1)
-P259	Unidad entera $1
-P260	$1 – sin enlaces duros
-P261	¿Eliminar el estado del $1? Las demás instantáneas quedan completas.
-P262	¿Eliminar también las $1 instantáneas de $2? Si no, se quedan allí.
-P263	Instantánea «$1» en curso.
-P264	La unidad de destino $1 no está montada.
-P265	TAREA $1
+P245	$1 tareas
+P246	Diario a las $1
+P247	Semanal (domingo) a las $1
+P248	los últimos $1
+P249	$1 días
+P250	$1 semanas
+P251	$1 meses
+P252	$1 archivos
+P253	$1 cambiados
+P254	$1 antiguas eliminadas
+P255	Carpetas personales ($1)
+P256	Unidad entera $1
+P257	$1 – sin enlaces duros
+P258	¿Eliminar el estado del $1? Las demás instantáneas quedan completas.
+P259	¿Eliminar también las $1 instantáneas de $2? Si no, se quedan allí.
+P260	Instantánea «$1» en curso.
+P261	La unidad de destino $1 no está montada.
+P262	TAREA $1
 E1063	SERVIDOR MULTIMEDIA
 E1064	Servidor multimedia (DLNA)
 E1065	no compartir
@@ -1400,7 +1397,7 @@ E1090	Aún no hay recursos compartidos: créalos en
 E1091	.
 E1092	VÍDEOS
 E1093	IMÁGENES
-P266	Servidor multimedia: $1
+P263	Servidor multimedia: $1
 E1094	INDICADORES DE LA CABECERA
 E1095	Indicador en la cabecera
 E1096	VPN de la caja (OpenVPN)
@@ -1411,10 +1408,10 @@ E1100	Puede conectar y desconectar la caja como cliente VPN y gestionar perfiles
 E1101	Puede mostrar un estado breve arriba en la interfaz de ShareOS (p. ej. «conectado»), solo al usuario que abrió la app; desaparece solo tras 10 minutos como máximo.
 E1102	SERVIDOR VPN
 E1103	1 dispositivo
-P267	$1 dispositivos
+P264	$1 dispositivos
 E1104	Ni una carpeta personal ni una carpeta compartida para ti.
 E1105	Archivos: carpeta personal y carpetas compartidas (según permisos) en el explorador y en las apps
-P268	$1 (solo lectura)
+P265	$1 (solo lectura)
 E1106	 (solo lectura)
 E1107	(solo lectura)
 E1108	TAILSCALE
@@ -1427,8 +1424,8 @@ E1114	Ventana propia
 E1115	Ahora se abre en la página.
 E1116	Ahora se abre en su propia ventana.
 E1117	Esta app no existe (ya).
-P269	Visualización de $1
-P270	Visualización: $1
+P266	Visualización de $1
+P267	Visualización: $1
 E1118	tailscaled, malla WireGuard
 E1119	VPN (OpenVPN)
 E1120	Cliente y servidor, app NetTunnel
@@ -1439,11 +1436,11 @@ E1124	autobrr, puerto 7474
 E1125	Puede configurar y controlar autobrr de la caja (filtros, indexadores, IRC, releases) y elegir en qué Transmission acaban los torrents encontrados – un servicio para toda la caja, por eso solo para administradores.
 E1126	Marcar como favorito
 E1127	Quitar de favoritos
-P271	Marcar como favorito: $1
-P272	Quitar de favoritos: $1
+P268	Marcar como favorito: $1
+P269	Quitar de favoritos: $1
 E1128	Mostrar la barra «FAV APPS» (solo para ti)
 E1129	La estrella en el mosaico de una app la convierte en favorita. La barra aparece sobre «Estado» en la vista general y sobre las apps instaladas.
-P273	Favoritos: $1
+P270	Favoritos: $1
 E1130	Mostrar nombres bajo los iconos (desactivado: solo iconos)
 E1131	Valores de la caja
 E1132	Comprobar la red
@@ -1453,13 +1450,13 @@ E1135	Puede comprobar desde la caja si los dispositivos y servicios de la red es
 E1136	Puede gestionar los hosts Docker que añade el administrador y allí ver, iniciar, detener y reiniciar contenedores y leer sus registros (API de Docker) – solo administradores.
 E1137	Hogar inteligente (Tuya)
 E1138	Puede buscar desde la caja dispositivos Tuya en la red doméstica, leer su estado y conmutarlos (en local, sin la nube) – solo administradores.
-P274	Archivo $1
-P275	Compartir: $1 archivo(s) no guardado(s) – $2
-P276	$1 archivo(s) guardado(s) en «Geteilt» de tu carpeta personal.
+P271	Archivo $1
+P272	Compartir: $1 archivo(s) no guardado(s) – $2
+P273	$1 archivo(s) guardado(s) en «Geteilt» de tu carpeta personal.
 E1139	No hay ninguna unidad montada para ti.
 E1140	CONTIENE
-P277	$1 % de mi límite
-P278	Unidad al $1 % de uso
+P274	$1 % de mi límite
+P275	Unidad al $1 % de uso
 E1141	MI USO
 E1142	OCUPACIÓN
 E1143	LIBRE
@@ -1517,29 +1514,29 @@ E1194	La última autoprueba falló.
 E1195	El disco avisa de un fallo, un valor está por debajo del umbral del fabricante, una autoprueba falló, más de 100 sectores reasignados o más de 10 pendientes, SSD con un 10 % de vida o menos, 60 °C o más.
 E1196	Algunos sectores reasignados, pendientes o ilegibles, errores de transferencia, entradas en el registro de errores, SSD con un 20 % de vida o menos, desde 55 °C.
 E1197	La prueba corta comprueba la electrónica y parte de la superficie; la larga lee todo el disco (muchas horas en discos grandes; el disco permanece despierto). El resultado aparece aquí y como aviso si algo falla.
-P279	Ya se han sustituido $1 sectores (reasignados).
-P280	$1 sectores son dudosos (pendientes): se comprobarán en la próxima escritura.
-P281	$1 sectores no se pudieron leer.
-P282	$1 errores de transferencia (CRC): normalmente el conector o el cable, no el disco.
-P283	$1 entradas en el registro de errores del disco.
-P284	El SSD está casi agotado: queda un $1 % de vida.
-P285	El SSD se desgasta: queda un $1 % de vida.
-P286	Muy caliente: $1 °C.
-P287	Caliente: $1 °C.
-P288	Valor $1 por debajo del umbral del fabricante
-P289	Valor $1 estuvo antes por debajo del umbral
-P290	$1 entradas
-P291	$1 °C (máxima: $2 °C)
-P292	$1 días ($2 h)
-P293	$1 años ($2 h)
-P294	queda un $1 %
-P295	SSD: queda un $1 %
-P296	En curso: queda un $1 %
-P297	(a las $1 h)
-P298	Leído $1.
-P299	$1 rpm
-P300	La prueba larga lee todo el disco $1: muchas horas en discos grandes. El equipo sigue siendo utilizable; el disco va algo más lento.
-P301	Autoprueba: $1
+P276	Ya se han sustituido $1 sectores (reasignados).
+P277	$1 sectores son dudosos (pendientes): se comprobarán en la próxima escritura.
+P278	$1 sectores no se pudieron leer.
+P279	$1 errores de transferencia (CRC): normalmente el conector o el cable, no el disco.
+P280	$1 entradas en el registro de errores del disco.
+P281	El SSD está casi agotado: queda un $1 % de vida.
+P282	El SSD se desgasta: queda un $1 % de vida.
+P283	Muy caliente: $1 °C.
+P284	Caliente: $1 °C.
+P285	Valor $1 por debajo del umbral del fabricante
+P286	Valor $1 estuvo antes por debajo del umbral
+P287	$1 entradas
+P288	$1 °C (máxima: $2 °C)
+P289	$1 días ($2 h)
+P290	$1 años ($2 h)
+P291	queda un $1 %
+P292	SSD: queda un $1 %
+P293	En curso: queda un $1 %
+P294	(a las $1 h)
+P295	Leído $1.
+P296	$1 rpm
+P297	La prueba larga lee todo el disco $1: muchas horas en discos grandes. El equipo sigue siendo utilizable; el disco va algo más lento.
+P298	Autoprueba: $1
 E1198	sin errores
 E1199	EN REPOSO
 E1200	El disco está en reposo
@@ -1563,13 +1560,12 @@ E1217	Mover primero a la papelera lo eliminado en el explorador de archivos
 E1218	ELIMINAR DEFINITIVAMENTE TRAS
 E1219	No se puede deshacer.
 E1220	Cada carpeta tiene su propia papelera: la carpeta personal, cada recurso compartido, cada unidad. Está en el mismo disco y cuenta para el límite de almacenamiento. Se aplica al explorador de archivos de esta interfaz: lo que se borra por SMB desde un PC o en apps desaparece al momento; para eso están las instantáneas.
-P302	$1 días
-P303	borra tras $1 días
-P304	¿Mover $1 elemento(s) a la papelera?
-P305	$1: se puede restaurar desde la papelera.
-P306	¿Eliminar definitivamente $1 elemento(s)?
-P307	$1 elemento(s) restaurado(s).
-P308	Papelera: $1
+P299	borra tras $1 días
+P300	¿Mover $1 elemento(s) a la papelera?
+P301	$1: se puede restaurar desde la papelera.
+P302	¿Eliminar definitivamente $1 elemento(s)?
+P303	$1 elemento(s) restaurado(s).
+P304	Papelera: $1
 E1221	BOTÓN USB
 E1222	copia
 E1223	Copiar ahora
@@ -1583,17 +1579,17 @@ E1230	La unidad de destino no está montada.
 E1231	Una pulsación corta copia las unidades USB; mantener 3 s las expulsa
 E1232	Cada vez una carpeta nueva con la fecha, p. ej.
 E1233	: en el equipo no se sobrescribe ni se borra nada. La luz USB parpadea al copiar; el resultado llega como aviso. Sin la casilla, el botón solo expulsa, como antes.
-P309	Copia USB: $1
-P310	Botón USB: $1
+P305	Copia USB: $1
+P306	Botón USB: $1
 E1234	Enviar notificaciones
 E1235	Puede enviar mensajes a través de las notificaciones de la caja (interfaz, correo, push): como máximo 20 por hora, con el nombre de la app delante; en el navegador, solo para administradores.
 E1236	Recargar
-P311	No se pudo mostrar esta página: $1
+P307	No se pudo mostrar esta página: $1
 E1237	Ventana bloqueada: permite las ventanas emergentes para esta página.
 E1238	Mostrar aquí
 E1239	El terminal se ejecuta en su propia ventana.
 E1240	La sesión es para una ventana y termina al cerrarla; una ventana propia recibe una sesión nueva. Cuidado: los comandos como root actúan al instante y sin papelera.
-P312	Registro de arranque $1
+P308	Registro de arranque $1
 E1241	APAGADO Y ENCENDIDO PROGRAMADOS
 E1242	Activar la programación
 E1243	DÍA
@@ -1611,28 +1607,28 @@ E1254	Próximo apagado:
 E1255	· Próximo apagado:
 E1256	Campos vacíos: nada ese día. La caja se apaga de forma limpia (como con el botón); mientras haya una tarea de almacenamiento (p. ej. reconstrucción RAID), sigue encendida. Para encenderla, ShareOS fija la hora de activación del controlador; no la desenchufes.
 E1257	Esta caja no puede encenderse sola (sin función de activación): solo funciona el apagado programado. Enciéndela con el botón de encendido.
-P313	Programación: $1
+P309	Programación: $1
 E1258	Monitorización (agente Zabbix)
 E1259	zabbix_agentd, modo activo
 E1260	Modo de compatibilidad (SMB 2.1 como máximo)
 E1261	Más rápido con Windows 11, que firma cada conexión: la firma de SMB 2.1 cuesta a este equipo aproximadamente la mitad de tiempo de cálculo que la de SMB 3 (medido unos 9–14 en lugar de 4–10 MB/s al escribir). Sin firma son posibles unos 35 MB/s. A cambio no hay SMB 3: sin cifrado ni multicanal. Las conexiones abiertas se cortan al cambiarlo.
 E1262	El asistente borra los discos elegidos y los vuelve a configurar. Un disco suelto también puede formatearse directamente en «Unidades». Los discos con datos (p. ej. de Alt-F o del firmware de D-Link) se añaden sin borrar con «… adoptar» en el disco.
-P314	Adoptar $1
-P315	Adoptar $1: $2
-P316	$1 ($2, $3) se añade tal cual como unidad: no se borra nada. Nombre de la unidad (a–z, 0–9, - y _, máx. 16 caracteres):
-P317	$1 es ahora la unidad «$2»: los datos se conservan. Cree recursos compartidos para las carpetas existentes en «Compartidos».
+P310	Adoptar $1
+P311	Adoptar $1: $2
+P312	$1 ($2, $3) se añade tal cual como unidad: no se borra nada. Nombre de la unidad (a–z, 0–9, - y _, máx. 16 caracteres):
+P313	$1 es ahora la unidad «$2»: los datos se conservan. Cree recursos compartidos para las carpetas existentes en «Compartidos».
 E1263	Solo para dispositivos que tienen problemas con SMB 3. La firma que Windows 11 exige en cada conexión la calcula con SMB 3 el motor criptográfico del equipo (medido unos 19–23 MB/s al escribir, unos 35 sin firma); SMB 2.1 la calcula en el procesador (unos 9–14 MB/s) y no tiene cifrado ni multicanal. Las conexiones abiertas se cortan al cambiarlo.
 E1264	El horario está desactivado: las horas introducidas solo se aplican con la casilla «activar horario» marcada.
 E1265	Horario guardado (desactivado).
 E1266	Horario guardado: no hay encendido previsto.
 E1267	Después solo se enciende en el equipo.
 E1268	No hay horas configuradas.
-P318	Horario guardado: el equipo se enciende el $1.
-P319	ShareOS se apaga y el equipo se desconecta. Según el horario vuelve a encenderse el $1.
-P320	Según el horario vuelve a encenderse el $1.
-P321	ShareOS se apaga y el equipo se desconecta. $1
-P322	encendido $1
-P323	apagado $1
+P314	Horario guardado: el equipo se enciende el $1.
+P315	ShareOS se apaga y el equipo se desconecta. Según el horario vuelve a encenderse el $1.
+P316	Según el horario vuelve a encenderse el $1.
+P317	ShareOS se apaga y el equipo se desconecta. $1
+P318	encendido $1
+P319	apagado $1
 E1269	EQUIPO Y ACCESO
 E1270	La estrella convierte una app en favorita: las favoritas aparecen arriba en «Mi ShareOS».
 E1271	Mostrar todos los avisos
@@ -1688,7 +1684,7 @@ E1320	La caja recibe un certificado de su propia CA para el nombre del dispositi
 E1321	Usar
 E1322	Certificado instalado – la página se reconecta.
 E1323	¿Eliminar el certificado?
-P324	El certificado «$1» y su clave se eliminan de la caja. Los dispositivos que ya lo usan conservan su copia.
+P320	El certificado «$1» y su clave se eliminan de la caja. Los dispositivos que ya lo usan conservan su copia.
 E1324	¿Desactivar Let's Encrypt?
 E1325	La caja vuelve a usar un certificado autofirmado.
 E1326	Desactivado – la página se reconecta.
@@ -1765,7 +1761,7 @@ E1396	SAI guardado.
 E1397	Sincronizar carpetas (Syncthing)
 E1398	Puede controlar el servicio Syncthing propio del usuario: vincular dispositivos y sincronizar carpetas con ellos. Cada usuario tiene su propio servicio; solo se sincronizan carpetas a las que tiene acceso.
 E1399	Mostrar menos
-P325	Mostrar todo ($1)
+P321	Mostrar todo ($1)
 E1400	Puede configurar el agente Zabbix de la caja (servidor, nombre de host, cifrado PSK, comprobaciones pasivas, intervalo SMART), reiniciarlo y leer su registro: la app nunca vuelve a ver la clave. Solo administradores.
 E1401	Incluir el certificado HTTPS (con clave)
 E1402	Incluir la CA propia
@@ -1810,10 +1806,10 @@ E1440	Instalándose …
 E1441	Aún no instaladas:
 E1442	Instalar apps de la copia
 E1443	Las apps se están instalando en segundo plano.
-P326	($1 certificados emitidos)
-P327	Grupos: $1
-P328	Certificados emitidos: $1
-P329	Recuperación: $1
+P322	($1 certificados emitidos)
+P323	Grupos: $1
+P324	Certificados emitidos: $1
+P325	Recuperación: $1
 E1444	Examinar …
 E1445	Elegir carpeta
 E1446	Elegir esta carpeta
@@ -1825,11 +1821,11 @@ E1451	Carpetas sueltas de un recurso compartido, sin crear otro recurso.
 E1452	SUBCARPETA (OPCIONAL)
 E1453	El explorador de carpetas necesita el permiso «Archivos»; escribe la carpeta.
 E1454	Elige los recursos compartidos completos en la lista de arriba.
-P330	Carpeta personal / $1
+P326	Carpeta personal / $1
 E1455	Cortar
 E1456	Vaciar el portapapeles
-P331	Pegar ($1)
-P332	$1 elemento(s) en el portapapeles: elige «Pegar» en la carpeta de destino.
+P327	Pegar ($1)
+P328	$1 elemento(s) en el portapapeles: elige «Pegar» en la carpeta de destino.
 E1457	Pegar
 E1458	Esta caja aún no está configurada. Pulsa brevemente el botón USB de la parte frontal de la caja y elige después una contraseña para root.
 E1459	Esperando el botón USB …
@@ -1892,15 +1888,15 @@ E1515	ABIERTA DURANTE
 E1516	La caja fuerte desaparece de la red para todos los que la desbloquearon. Las conexiones abiertas pierden el acceso.
 E1517	Cajas fuertes
 E1518	Puede desbloquear (tras introducir la contraseña del usuario) y bloquear sus cajas fuertes; a los administradores también les permite elegir qué recursos son cajas fuertes.
-P333	Desbloquear la caja fuerte «$1»
-P334	La caja fuerte «$1» está abierta hasta las $2.
-P335	¿Bloquear ahora la caja fuerte «$1»?
-P336	Caja fuerte «$1» bloqueada.
-P337	abierta hasta las $1
-P338	$1: abierta hasta las $2
-P339	$1 minutos
-P340	$1 horas
-P341	Caja fuerte: $1
+P329	Desbloquear la caja fuerte «$1»
+P330	La caja fuerte «$1» está abierta hasta las $2.
+P331	¿Bloquear ahora la caja fuerte «$1»?
+P332	Caja fuerte «$1» bloqueada.
+P333	abierta hasta las $1
+P334	$1: abierta hasta las $2
+P335	$1 minutos
+P336	$1 horas
+P337	Caja fuerte: $1
 E1519	PUERTO HTTPS DE LA INTERFAZ DE ADGUARD
 E1520	Cifrado (HTTPS) con el certificado del equipo; los accesos por HTTP se redirigen.
 E1521	Cifrado (HTTPS) con el certificado autofirmado del equipo: el navegador avisa como con la interfaz. HTTP solo se redirige cuando el equipo tiene un certificado de confianza (CA propia o Let’s Encrypt en
@@ -1994,9 +1990,60 @@ E1608	Desactivado: los torrents solo se pueden manejar con la app Transmission.
 E1609	Revocar la contraseña
 E1610	Ninguno todavía: cada usuario genera su contraseña en la app Transmission.
 E1611	Los programas con esta contraseña pierden el acceso. El usuario puede generar una nueva en la app Transmission.
-P342	¿Revocar la contraseña de acceso remoto de «$1»?
-P343	Contraseña de «$1» revocada.
-P344	Acceso remoto a torrents: $1
+P338	¿Revocar la contraseña de acceso remoto de «$1»?
+P339	Contraseña de «$1» revocada.
+P340	Acceso remoto a torrents: $1
 E1612	AdGuard Home se está iniciando y cargando las listas de bloqueo; tarda aproximadamente un minuto.
 E1613	El inicio falló:
 E1614	Podrás guardar de nuevo en cuanto esté en marcha.
+E1615	Aún no hay bandeja de entrada.
+E1616	La sincronización en la nube usa
+E1617	Sin permiso
+E1618	Nombre de red (mDNS)
+E1619	hace que la caja sea accesible como <name>.local
+P341	$1, puerto $2
+P342	BAHÍA · $1
+P343	propietario: $1
+P344	$1 en espera
+P345	$1 · $2 archivos · $3
+P346	$1 años
+P347	ambos discos activos ($1)
+P348	Bandeja «$1» guardada.
+P349	Bandeja «$1» eliminada.
+P350	ok · $1
+P351	$1Linux $2 · Carga $3
+P352	Lista: $1
+P353	Entrada: $1
+E1620	Color de acento Azul
+E1621	Color de acento Turquesa
+E1622	Color de acento Verde
+E1623	Color de acento Naranja
+E1624	Color de acento Rojo
+E1625	Color de acento Violeta
+E1626	Color de acento Gris
+E1627	Color de acento Blanco
+E1628	lunes: encender
+E1629	lunes: apagar
+E1630	martes: encender
+E1631	martes: apagar
+E1632	miércoles: encender
+E1633	miércoles: apagar
+E1634	jueves: encender
+E1635	jueves: apagar
+E1636	viernes: encender
+E1637	viernes: apagar
+E1638	sábado: encender
+E1639	sábado: apagar
+E1640	domingo: encender
+E1641	domingo: apagar
+E1642	Disco
+E1643	Desactivado
+E1644	Iniciando
+P354	Impresora: $1
+P355	Página de prueba: $1
+P356	Fondo de pantalla: $1
+P357	Filtro DNS: $1
+P358	Nombre de host: $1
+P359	Nube: $1
+P360	Logotipo: $1
+P361	Instantáneas: $1

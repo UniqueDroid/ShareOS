@@ -36,25 +36,25 @@ const NET_TIMEOUT = 120;     // s until unconfirmed network settings are rolled 
 
 // services the UI may show and control: init script -> process name
 const SERVICES = {
-	dropbear: { proc: 'dropbear', label: 'SSH / SFTP', desc: 'Dropbear, Port 22' },
-	uhttpd:   { proc: 'uhttpd',   label: 'Weboberfläche', desc: 'uhttpd, Port 80' },
-	ntpd:     { proc: 'ntpd',     label: 'Zeit (NTP)', desc: 'stellt die Uhr, gleicht die MCU-Uhr ab' },
-	crond:    { proc: 'crond',    label: 'Zeitplaner', desc: 'cron' },
-	rpcd:     { proc: 'rpcd',     label: 'API (rpcd)', desc: 'Schnittstelle für diese Oberfläche' },
-	ubus:     { proc: 'ubusd',    label: 'Systembus (ubus)', desc: 'Nachrichten zwischen den Diensten' },
-	syslogd:  { proc: 'syslogd',  label: 'Systemprotokoll', desc: 'syslogd, im RAM' },
-	'avahi-daemon': { proc: 'avahi-daemon', label: 'Netzwerkname (mDNS)', desc: 'macht die Box als <name>.local erreichbar' },
-	board:    { proc: 'dns320l-daemon', label: 'Gerätesteuerung', desc: 'Lüfter, Temperatur, Taster, MCU-Uhr' }
+	dropbear: { proc: 'dropbear', label: 'SSH / SFTP', desc: 'Dropbear, port 22' },
+	uhttpd:   { proc: 'uhttpd',   label: 'Web interface', desc: 'uhttpd, port 80' },
+	ntpd:     { proc: 'ntpd',     label: 'Time (NTP)', desc: 'sets the clock, keeps the MCU clock in sync' },
+	crond:    { proc: 'crond',    label: 'Scheduler', desc: 'cron' },
+	rpcd:     { proc: 'rpcd',     label: 'API (rpcd)', desc: 'interface for this web UI' },
+	ubus:     { proc: 'ubusd',    label: 'System bus (ubus)', desc: 'messages between the services' },
+	syslogd:  { proc: 'syslogd',  label: 'System log', desc: 'syslogd, in RAM' },
+	'avahi-daemon': { proc: 'avahi-daemon', label: 'Network name (mDNS)', desc: 'makes the box reachable as <name>.local' },
+	board:    { proc: 'dns320l-daemon', label: 'Board control', desc: 'fan, temperature, buttons, MCU clock' }
 };
 // services of system apps ("service" in their app.json, see shareos-apps):
 // listed while the app is installed, controlled by /usr/sbin/shareos-<control>
 const SYS_SVC_TEXT = {
-	dlna:         { label: 'Medienserver (DLNA)', desc: 'MiniDLNA, Port 8200' },
-	tailscale:    { label: 'Fernzugriff (Tailscale)', desc: 'tailscaled, WireGuard-Mesh' },
-	vpn:          { label: 'VPN (OpenVPN)', desc: 'Client und Server, App NetTunnel' },
-	transmission: { label: 'Torrents (Transmission)', desc: 'ein Dienst pro Konto' },
-	autobrr:      { label: 'Download-Automatik (autobrr)', desc: 'autobrr, Port 7474' },
-	zabbix:       { label: 'Überwachung (Zabbix-Agent)', desc: 'zabbix_agentd, Aktiv-Modus' },
+	dlna:         { label: 'Media server (DLNA)', desc: 'MiniDLNA, port 8200' },
+	tailscale:    { label: 'Remote access (Tailscale)', desc: 'tailscaled, WireGuard mesh' },
+	vpn:          { label: 'VPN (OpenVPN)', desc: 'Client and server, app NetTunnel' },
+	transmission: { label: 'Torrents (Transmission)', desc: 'one service per account' },
+	autobrr:      { label: 'Download automation (autobrr)', desc: 'autobrr, port 7474' },
+	zabbix:       { label: 'Monitoring (Zabbix agent)', desc: 'zabbix_agentd, active mode' },
 	// proc: the program to look for when the system app lists no command
 	dnsfilter:    { proc: 'AdGuardHome' }
 };
@@ -2201,19 +2201,19 @@ function status_chips(u) {
 	if (admin && stat('/opt/shareos/bin/openvpn') && pid_alive('/tmp/shareos-vpn/pid', 'openvpn')) {
 		let st = vpn_tool([ 'status' ]);
 		let ok = st.state == 'CONNECTED';
-		push(chips, { id: 'svc:vpn', label: 'VPN', detail: ok ? (st.ip ?? 'verbunden') : 'verbindet …', state: ok ? 'ok' : 'warn',
+		push(chips, { id: 'svc:vpn', label: 'VPN', detail: ok ? (st.ip ?? 'connected') : 'connecting …', state: ok ? 'ok' : 'warn',
 			app: ids.nettunnel ? 'nettunnel' : null });
 	}
 	if (admin && stat('/opt/shareos/bin/openvpn') && pid_alive('/tmp/shareos-vpn-server/pid', 'openvpn')) {
 		let n = 0;
 		for (let l in split(readfile('/tmp/shareos-vpn-server/status') ?? '', '\n')) if (substr(l, 0, 12) == 'CLIENT_LIST,') n++;
-		push(chips, { id: 'svc:vpnserver', label: 'VPN-SERVER', detail: n == 1 ? '1 Gerät' : n + ' Geräte', state: 'ok',
+		push(chips, { id: 'svc:vpnserver', label: 'VPN-SERVER', detail: n == 1 ? '1 device' : n + ' devices', state: 'ok',
 			app: ids.nettunnel ? 'nettunnel' : null });
 	}
 	if (admin && stat('/opt/shareos/bin/tailscaled') && pid_alive('/tmp/shareos-tailscale/pid', 'tailscaled')) {
 		// cheap (every 15 s): the address of tailscale0 instead of asking the daemon
 		let m = match(sh('ip -4 -o addr show dev tailscale0').out, /inet (100\.[0-9.]+)\//);
-		push(chips, { id: 'svc:tailscale', label: 'TAILSCALE', detail: m ? m[1] : 'getrennt',
+		push(chips, { id: 'svc:tailscale', label: 'TAILSCALE', detail: m ? m[1] : 'disconnected',
 			state: m ? 'ok' : 'warn', app: ids.tailscale ? 'tailscale' : null });
 	}
 	if (stat('/tmp/shareos-transmission/' + u + '/pid') && pid_alive('/tmp/shareos-transmission/' + u + '/pid', 'transmission')) {
@@ -2224,7 +2224,7 @@ function status_chips(u) {
 				state: 'ok', app: ids.transmission ? 'transmission' : null });
 	}
 	if (admin && pid_alive('/tmp/shareos-dlna/minidlna.pid', 'minidlna'))
-		push(chips, { id: 'svc:dlna', label: 'DLNA', detail: 'läuft', state: 'ok', href: '#/services/dlna' });
+		push(chips, { id: 'svc:dlna', label: 'DLNA', detail: 'running', state: 'ok', href: '#/services/dlna' });
 	let now = time();
 	for (let f in lsdir(APPSTATUS + '/' + u) ?? []) {
 		let m = match(f, /^([a-z][a-z0-9-]{1,31})\.json$/), a = m ? ids[m[1]] : null;
