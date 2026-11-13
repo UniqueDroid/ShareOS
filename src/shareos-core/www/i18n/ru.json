@@ -1627,7 +1627,9 @@
 		"Sunday switch off": "воскресенье: выключить",
 		"Disk": "Диск",
 		"Off": "Выкл.",
-		"Starting": "Запуск"
+		"Starting": "Запуск",
+		"No cloud account yet.": "Облачных аккаунтов пока нет.",
+		"No job yet. A job copies or mirrors a folder with a cloud account – by hand or on a schedule.": "Заданий пока нет. Задание копирует или зеркалирует папку с облачным аккаунтом – вручную или по расписанию."
 	},
 	"patterns": [
 		[

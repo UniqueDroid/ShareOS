@@ -1645,7 +1645,9 @@
 		"Sunday switch off",
 		"Disk",
 		"Off",
-		"Starting"
+		"Starting",
+		"No cloud account yet.",
+		"No job yet. A job copies or mirrors a folder with a cloud account – by hand or on a schedule."
 	],
 	"patterns": [
 		[

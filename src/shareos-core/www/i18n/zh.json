@@ -1627,7 +1627,9 @@
 		"Sunday switch off": "周日关机",
 		"Disk": "磁盘",
 		"Off": "关闭",
-		"Starting": "正在启动"
+		"Starting": "正在启动",
+		"No cloud account yet.": "还没有云账户。",
+		"No job yet. A job copies or mirrors a folder with a cloud account – by hand or on a schedule.": "还没有任务。任务会将文件夹复制或镜像到云账户——手动或按计划执行。"
 	},
 	"patterns": [
 		[

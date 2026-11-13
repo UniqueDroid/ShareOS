@@ -2047,3 +2047,5 @@ P358	Nom d’hôte : $1
 P359	Cloud : $1
 P360	Logo : $1
 P361	Instantanés : $1
+E1645	Pas encore de compte cloud.
+E1646	Pas encore de tâche. Une tâche copie ou met en miroir un dossier avec un compte cloud – à la main ou selon un planning.

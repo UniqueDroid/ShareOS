@@ -2047,3 +2047,5 @@ P358	Nome do host: $1
 P359	Nuvem: $1
 P360	Logotipo: $1
 P361	Snapshots: $1
+E1645	Ainda não há conta na nuvem.
+E1646	Ainda não há tarefa. Uma tarefa copia ou espelha uma pasta com uma conta na nuvem – manualmente ou por agendamento.

@@ -1036,7 +1036,7 @@ function renderMain() {
 			main.innerHTML = v().s;
 			VIEWS_AFTER[S.route.tab]?.();
 		} catch (e) {
-			console.error('render ' + location.hash, e);
+			console.error('render %s', location.hash, e);
 			main.innerHTML = renderError(e).s;
 		}
 	}

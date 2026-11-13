@@ -1627,7 +1627,9 @@
 		"Sunday switch off": "रविवार: बंद करें",
 		"Disk": "डिस्क",
 		"Off": "बंद",
-		"Starting": "शुरू हो रहा है"
+		"Starting": "शुरू हो रहा है",
+		"No cloud account yet.": "अभी कोई क्लाउड खाता नहीं है।",
+		"No job yet. A job copies or mirrors a folder with a cloud account – by hand or on a schedule.": "अभी कोई कार्य नहीं है। कार्य किसी फ़ोल्डर को क्लाउड खाते के साथ कॉपी या मिरर करता है – हाथ से या समय-सारणी पर।"
 	},
 	"patterns": [
 		[

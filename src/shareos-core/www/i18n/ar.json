@@ -1627,7 +1627,9 @@
 		"Sunday switch off": "الأحد: إيقاف",
 		"Disk": "قرص",
 		"Off": "إيقاف",
-		"Starting": "جارٍ البدء"
+		"Starting": "جارٍ البدء",
+		"No cloud account yet.": "لا يوجد حساب سحابي بعد.",
+		"No job yet. A job copies or mirrors a folder with a cloud account – by hand or on a schedule.": "لا توجد مهمة بعد. تنسخ المهمة مجلدًا أو تعكسه مع حساب سحابي – يدويًا أو وفق جدول."
 	},
 	"patterns": [
 		[

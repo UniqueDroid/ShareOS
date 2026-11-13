@@ -36,6 +36,45 @@ for (const f of ['shareos.css', 'desktop.css']) for (const m of fs.readFileSync(
 for (const f of FILES) for (const m of fs.readFileSync(path.join(ROOT, f), 'utf8').matchAll(/class="([^"$]*)/g)) for (const c of m[1].split(/\s+/)) CLASSES.add(c);
 const isCode = (t) => t.split(/\s+/).every((w) => CLASSES.has(w) || w === 'X' || !w)
 	|| /[{}\[\]]|\$\{|^[\w-]+:[^ ]|;\s*[\w-]+:|^[a-z-]+(, ?[a-z-]+)+$|^[a-z]+(-[a-z]+)+( [a-z]+(-[a-z]+)*)*$/.test(t);
+// template literals of a source (nested ones too): [text with every ${…} as X, position]
+// – a small scanner instead of a regular expression (no backtracking)
+function templates(src) {
+	const out = [];
+	const skipString = (i) => { const q = src[i]; i++; while (i < src.length && src[i] !== q && src[i] !== '\n') i += src[i] === '\\' ? 2 : 1; return i + 1; };
+	function template(i) {           // src[i] is the opening backtick; returns the index after the closing one
+		const at = i;
+		let flat = '';
+		i++;
+		while (i < src.length && src[i] !== '`') {
+			if (src[i] === '\\') { flat += src.slice(i, i + 2); i += 2; continue; }
+			if (src[i] === '$' && src[i + 1] === '{') { i = expression(i + 2); flat += 'X'; continue; }
+			flat += src[i++];
+		}
+		out.push([flat, at]);
+		return i + 1;
+	}
+	function expression(i) {         // after "${"; returns the index after the matching "}"
+		let depth = 0;
+		while (i < src.length) {
+			const c = src[i];
+			if (c === '`') { i = template(i); continue; }
+			if (c === '"' || c === "'") { i = skipString(i); continue; }
+			if (c === '{') depth++;
+			else if (c === '}') { if (!depth) return i + 1; depth--; }
+			i++;
+		}
+		return i;
+	}
+	for (let i = 0; i < src.length;) {
+		const c = src[i];
+		if (c === '`') i = template(i);
+		else if (c === '"' || c === "'") i = skipString(i);
+		else if (c === '/' && src[i + 1] === '/') { while (i < src.length && src[i] !== '\n') i++; }
+		else if (c === '/' && src[i + 1] === '*') { const e = src.indexOf('*/', i + 2); i = e < 0 ? src.length : e + 2; }
+		else i++;
+	}
+	return out;
+}
 const found = new Map();      // text -> file:line
 const add = (t, where) => {
 	t = t.replace(/\s+/g, ' ').trim().replace(/^X(?=[A-Za-z])/, '').replace(/([.!?:)…])X$/, '$1').trim();
@@ -47,18 +86,8 @@ const add = (t, where) => {
 for (const f of FILES) {
 	const src = fs.readFileSync(path.join(ROOT, f), 'utf8');
 	const lineOf = (i) => f + ':' + src.slice(0, i).split('\n').length;
-	const tpl = /`((?:\\.|\$\{(?:[^{}]|\{(?:[^{}]|\{[^{}]*\})*\})*\}|[^`\\])*)`/g;
-	const bodies = [];
-	(function scan(text, base) {
-		const re = new RegExp(tpl.source, 'g');
-		let x;
-		while ((x = re.exec(text))) {
-			bodies.push([x[1], base + x.index]);
-			for (const e of x[1].matchAll(/\$\{((?:[^{}]|\{(?:[^{}]|\{[^{}]*\})*\})*)\}/g)) if (e[1].includes('`')) scan(e[1], base + x.index + 1 + e.index + 2);
-		}
-	})(src, 0);
-	for (const [body, at] of bodies) {
-		const flat = body.replace(/\$\{(?:[^{}]|\{(?:[^{}]|\{[^{}]*\})*\})*\}/g, 'X');
+	const bodies = templates(src);
+	for (const [flat, at] of bodies) {
 		if (!/[<>]/.test(flat)) { if (/ /.test(flat) || /^[A-Z]/.test(flat)) add(flat, lineOf(at)); continue; }
 		for (const part of flat.split(/<[^>]*>/)) add(part, lineOf(at));
 		for (const a of flat.matchAll(/(placeholder|title|aria-label|alt)="([^"]+)"/g)) add(a[2], lineOf(at));

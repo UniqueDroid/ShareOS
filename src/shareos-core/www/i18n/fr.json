@@ -1627,7 +1627,9 @@
 		"Sunday switch off": "dimanche : éteindre",
 		"Disk": "Disque",
 		"Off": "Désactivé",
-		"Starting": "Démarrage"
+		"Starting": "Démarrage",
+		"No cloud account yet.": "Pas encore de compte cloud.",
+		"No job yet. A job copies or mirrors a folder with a cloud account – by hand or on a schedule.": "Pas encore de tâche. Une tâche copie ou met en miroir un dossier avec un compte cloud – à la main ou selon un planning."
 	},
 	"patterns": [
 		[

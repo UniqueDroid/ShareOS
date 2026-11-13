@@ -1627,7 +1627,9 @@
 		"Sunday switch off": "Sonntag ausschalten",
 		"Disk": "Festplatte",
 		"Off": "Aus",
-		"Starting": "Wird gestartet"
+		"Starting": "Wird gestartet",
+		"No cloud account yet.": "Noch kein Cloud-Konto.",
+		"No job yet. A job copies or mirrors a folder with a cloud account – by hand or on a schedule.": "Noch kein Auftrag. Ein Auftrag kopiert oder spiegelt einen Ordner mit einem Cloud-Konto – von Hand oder nach Zeitplan."
 	},
 	"patterns": [
 		[

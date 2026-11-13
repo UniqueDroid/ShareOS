@@ -1627,7 +1627,9 @@
 		"Sunday switch off": "domingo: apagar",
 		"Disk": "Disco",
 		"Off": "Desactivado",
-		"Starting": "Iniciando"
+		"Starting": "Iniciando",
+		"No cloud account yet.": "Aún no hay ninguna cuenta en la nube.",
+		"No job yet. A job copies or mirrors a folder with a cloud account – by hand or on a schedule.": "Aún no hay ninguna tarea. Una tarea copia o refleja una carpeta con una cuenta en la nube, a mano o según una programación."
 	},
 	"patterns": [
 		[

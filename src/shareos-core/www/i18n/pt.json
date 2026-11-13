@@ -1627,7 +1627,9 @@
 		"Sunday switch off": "domingo: desligar",
 		"Disk": "Disco",
 		"Off": "Desligado",
-		"Starting": "Iniciando"
+		"Starting": "Iniciando",
+		"No cloud account yet.": "Ainda não há conta na nuvem.",
+		"No job yet. A job copies or mirrors a folder with a cloud account – by hand or on a schedule.": "Ainda não há tarefa. Uma tarefa copia ou espelha uma pasta com uma conta na nuvem – manualmente ou por agendamento."
 	},
 	"patterns": [
 		[
