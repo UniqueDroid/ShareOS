@@ -110,6 +110,10 @@ function power_off() {
 		log('scheduled switch-off skipped: a storage job is running');
 		return { error: 'a storage job is running' };
 	}
+	if (system((getenv('SHAREOS_UPDATE') ?? '/usr/sbin/shareos-update') + ' busy >/dev/null 2>&1') == 0) {
+		log('scheduled switch-off skipped: firmware is being written');
+		return { error: 'firmware is being written' };
+	}
 	let a = arm();
 	log('scheduled switch-off' + (a.armed ? ', back on ' + a.armed : ''));
 	if (getenv('SHAREOS_POWER_DRY')) { print('poweroff\n'); return a; }

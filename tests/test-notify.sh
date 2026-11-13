@@ -76,5 +76,34 @@ check "SMART rating bad: error with the reasons" "echo '$L' | js \"any(x['key']=
 check "SMART rating warn: SSD wear and CRC" "echo '$L' | js \"any(x['key']=='smart-sdd' and x['level']=='warn' and 'noch 15 %' in x['text_de'] and 'CRC' in x['text_en'] for x in d['items'])\"" "$L"
 check "SMART good again: resolved" "echo '$L' | js \"all(x['resolved'] for x in d['items'] if x['key']=='smart-sdb')\"" "$L"
 
+# SMART is read by the check itself (internal disks, values older than 6 hours)
+mkdir -p "$T/sysblock/sda" "$T/sysblock/sdb" "$T/usb1/sdk"; ln -s "$T/usb1/sdk" "$T/sysblock/sdk"
+cat > "$T/ubus" <<EOF
+#!/bin/sh
+d=\$(echo "\$*" | sed -n 's/.*"disk":"\\(sd[a-z]\\)".*/\\1/p')
+echo "\$d" >> "$T/ubus.calls"
+echo '{"time":2,"passed":false,"rating":"bad","reasons":["failed"]}' > "$R/tmp/shareos-storage/smart-\$d.json"
+EOF
+chmod +x "$T/ubus"
+rm -f "$R/tmp/shareos-storage/smart-sda.json"; touch -d '7 hours ago' "$R/tmp/shareos-storage/smart-sdb.json"
+SHAREOS_TEST_UBUS="$T/ubus" SHAREOS_TEST_SYSBLOCK="$T/sysblock" N check >/dev/null
+check "check reads SMART of an internal disk without values and of one with old values, not of a USB disk" "[ \"\$(sort $T/ubus.calls | tr '\n' ' ')\" = 'sda sdb ' ]" "$(cat "$T/ubus.calls" 2>&1)"
+check "the freshly read values raise the message" "N list | js \"any(x['key']=='smart-sda' and x['level']=='error' and not x.get('resolved') for x in d['items'])\""
+: > "$T/ubus.calls"
+SHAREOS_TEST_UBUS="$T/ubus" SHAREOS_TEST_SYSBLOCK="$T/sysblock" N check >/dev/null
+check "fresh values are not read again" "[ ! -s $T/ubus.calls ]" "$(cat "$T/ubus.calls")"
+
+# temperature: a box with fan control and no fresh reading
+echo 'BOARD_CONTROL="mcu"' > "$R/tmp/sys/board.env"
+touch -d '10 minutes ago' "$R/tmp/sys/temp1_input"
+N check >/dev/null
+check "stale temperature on a box with fan control: error" "N list | js \"any(x['key']=='temp-sensor' and x['level']=='error' and not x.get('resolved') for x in d['items'])\""
+touch "$R/tmp/sys/temp1_input"
+N check >/dev/null
+check "reading is back: resolved" "N list | js \"all(x['resolved'] for x in d['items'] if x['key']=='temp-sensor')\""
+echo 'BOARD_CONTROL="none"' > "$R/tmp/sys/board.env"; rm -f "$R/tmp/sys/temp1_input"
+N delete all >/dev/null; N check >/dev/null
+check "box without fan control and without a sensor: no message" "N list | js \"not any(x['key']=='temp-sensor' for x in d['items'])\""
+
 echo; echo "$pass passed, $failed failed"
 [ $failed -eq 0 ]

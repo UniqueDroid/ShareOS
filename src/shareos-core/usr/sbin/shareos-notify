@@ -10,7 +10,10 @@
 //                                      complete again); "<prefix>-*": all
 //                                      keys starting with "<prefix>-"
 //   shareos-notify check               look at RAID, volumes, temperature,
-//                                      SMART (cached values) and updates (cron)
+//                                      SMART and updates (cron). SMART of the
+//                                      internal disks is read again when the
+//                                      values are older than 6 hours (a
+//                                      sleeping disk is not woken up)
 //   shareos-notify list                JSON for the web interface
 //   shareos-notify read <id|all>       mark as read
 //   shareos-notify delete <id|all>
@@ -27,7 +30,7 @@
 //
 'use strict';
 
-import { readfile, writefile, mkdir, stat, glob, popen, unlink } from 'fs';
+import { readfile, writefile, mkdir, stat, glob, popen, unlink, lsdir, realpath } from 'fs';
 import { cursor } from 'uci';
 
 const ROOT = getenv('SHAREOS_ROOT') ?? '';
@@ -36,6 +39,14 @@ const LEVELS = { info: 1, warn: 2, error: 3 };
 const MAX = 100;
 const RESEND = 24 * 3600;
 const DRY = !!getenv('SHAREOS_NOTIFY_DRY');
+// a temperature older than this is not trusted (as shareos-board and rpcd)
+const TEMP_MAX_AGE = 90;
+// SMART values older than this are read again by "check"
+const SMART_REFRESH = 6 * 3600;
+// tests: a stand-in for ubus and for /sys/block; with a fake root and no
+// stand-in SMART is not read
+const UBUS = getenv('SHAREOS_TEST_UBUS') ?? (ROOT ? null : 'ubus');
+const SYSBLOCK = getenv('SHAREOS_TEST_SYSBLOCK') ?? ROOT + '/sys/block';
 const CA = '/etc/ssl/certs/ca-certificates.crt';
 const CURL = [ 'curl', '-sS', '--max-time', '30', ...(stat(CA) ? [ '--cacert', CA ] : []) ];
 
@@ -300,9 +311,25 @@ function check_volumes(n) {
 	});
 }
 
+// how this box is cooled (S05board: /tmp/sys/board.env); null: nothing regulates
+function board_control() {
+	let m = match(readfile(ROOT + '/tmp/sys/board.env') ?? '', /(^|\n)BOARD_CONTROL="?([a-z-]*)"?/);
+	return m && m[2] != '' && m[2] != 'none' ? m[2] : null;
+}
+
 function check_temp(n) {
-	let t = +trim(readfile(ROOT + '/tmp/sys/temp1_input') ?? '0') / 1000, max = +(n.temp_max ?? 55);
-	if (!(t > 0)) return;
+	let f = ROOT + '/tmp/sys/temp1_input', st = stat(f);
+	let t = st && time() - st.mtime <= TEMP_MAX_AGE ? +trim(readfile(f) ?? '0') / 1000 : 0, max = +(n.temp_max ?? 55);
+	if (!(t > 0)) {
+		// a box with fan control that gives no reading: the MCU daemon or the
+		// sensor is gone, shareos-board has put the fan to full speed
+		if (board_control())
+			cmd_send('error', 'system', 'temp-sensor', 'Temperatur der Box nicht lesbar', 'Temperature of the box cannot be read',
+				'Seit über 90 Sekunden kommt kein Wert; der Lüfter läuft sicherheitshalber mit voller Drehzahl. Die Box neu starten, wenn es so bleibt.',
+				'No value for more than 90 seconds; the fan runs at full speed to be safe. Restart the box if it stays that way.');
+		return;
+	}
+	cmd_clear('temp-sensor');
 	if (t >= max)
 		cmd_send('warn', 'system', 'temp', 'Box zu warm: ' + int(t) + ' °C', 'Box too warm: ' + int(t) + ' °C',
 			'Lüfter, Staub und Aufstellort prüfen (Grenze ' + max + ' °C).', 'Check the fan, dust and where the box stands (limit ' + max + ' °C).');
@@ -333,7 +360,24 @@ function smart_reason(s, r, en) {
 	return sprintf(t[en ? 1 : 0], v ?? '?');
 }
 
+// internal disks (not USB)
+function bay_disks() {
+	return filter(sort(lsdir(SYSBLOCK) ?? []), (d) => match(d, /^sd[a-z]$/) && index(realpath(SYSBLOCK + '/' + d) ?? '', '/usb') < 0);
+}
+// Read SMART of the internal disks when there are no values yet or they are
+// older than SMART_REFRESH. rpcd reads with "smartctl -n standby": a sleeping
+// disk stays asleep and is asked again at the next check.
+function smart_refresh() {
+	if (!UBUS) return;
+	for (let d in bay_disks()) {
+		let st = stat(ROOT + '/tmp/shareos-storage/smart-' + d + '.json');
+		if (st && time() - st.mtime < SMART_REFRESH) continue;
+		sh_out(sprintf('%s -t 120 call shareos.storage smart %s 2>/dev/null', UBUS, shq(sprintf('{"disk":"%s"}', d))));
+	}
+}
+
 function check_smart() {
+	smart_refresh();
 	for (let f in glob(ROOT + '/tmp/shareos-storage/smart-*.json')) {
 		let disk = match(f, /smart-(sd[a-z]+)\.json$/)?.[1], s = null;
 		if (!disk) continue;

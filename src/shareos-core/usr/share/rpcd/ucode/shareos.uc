@@ -29,6 +29,12 @@ import { readfile, writefile, popen, glob, stat, lstat, lsdir, realpath, readlin
 import { cursor } from 'uci';
 
 const UPDATER = '/usr/sbin/shareos-update';
+// Switching off or restarting while kernel, initramfs or the system are being
+// written leaves a box that may not start any more: refused until the write
+// has finished (shareos-update busy; also asked by shareos-power,
+// shareos-buttons and shareos-board).
+const FLASH_BUSY = 'firmware is being written – wait until it has finished';
+function flash_busy() { return system(UPDATER + ' busy >/dev/null 2>&1') == 0; }
 const NET = '/usr/sbin/shareos-net';
 const NET_ST = '/tmp/shareos-net';
 const NET_ROLLBACK = '/etc/shareos/network.rollback';
@@ -719,6 +725,26 @@ function board_read() {
 	return b;
 }
 function board() { return memo('board', fstamp('/tmp/sys/board.env'), 0, board_read); }
+
+// The box's temperature (m°C). A value older than TEMP_MAX_AGE seconds is not
+// shown: the MCU or the sensor does not answer any more (shareos-board and
+// shareos-notify use the same limit).
+const TEMP_MAX_AGE = 90;
+function box_temp() {
+	let st = stat('/tmp/sys/temp1_input');
+	return st && time() - st.mtime <= TEMP_MAX_AGE ? read_int('/tmp/sys/temp1_input') : null;
+}
+// Is the fan control of this box at work? control: how this model is cooled
+// (mcu | hwmon | mcu-temp; null: unknown box, nothing regulates), running:
+// shareos-board (and on MCU boxes dns320l-daemon) is alive, sensor: a fresh
+// temperature is there.
+function board_control() {
+	let c = board().control ?? '';
+	if (c == '' || c == 'none') return { control: null, running: false, sensor: false };
+	let names = proc_names();
+	return { control: c, running: running('shareos-board', names) && (c != 'mcu' || running('dns320l-daemon', names)),
+		sensor: box_temp() != null };
+}
 // the RTC: the MCU's battery clock (dns320l-daemon) or the kernel's /dev/rtc0
 function rtc_kind() {
 	let k = board().rtc ?? (stat(RTC_TOOL) ? 'mcu' : 'kernel');
@@ -2104,7 +2130,7 @@ function sys_info() {
 		hostname: read_trim('/proc/sys/kernel/hostname'), kernel: read_trim('/proc/sys/kernel/osrelease'),
 		time: time(), uptime: +up[0], load: [ +load[0], +load[1], +load[2] ], procs: load[3] ?? '',
 		cpu: cpustat(), cores: length(filter(split(readfile('/proc/cpuinfo') ?? '', '\n'), (l) => match(l, /^processor\s*:/))) || 1,
-		memory: meminfo(), temperature: read_int('/tmp/sys/temp1_input'), fan_pwm: read_int('/tmp/sys/pwm1'),
+		memory: meminfo(), temperature: box_temp(), fan_pwm: read_int('/tmp/sys/pwm1'), board_control: memo('boardctl', '', 10, board_control),
 		network: { speed: read_int(net + 'speed'), rx_bytes: read_int(net + 'statistics/rx_bytes'), tx_bytes: read_int(net + 'statistics/tx_bytes') },
 		volumes: memo('sysvol', '', 20, sys_volumes),
 		// standby: CHECK POWER MODE does not wake a sleeping disk; USB disks have
@@ -2284,7 +2310,7 @@ function widget_status() {
 	let up = split(read_trim('/proc/uptime') ?? '0', ' ');
 	let load = split(read_trim('/proc/loadavg') ?? '', ' ');
 	let m = meminfo();
-	let t = read_int('/tmp/sys/temp1_input');
+	let t = box_temp();
 	let alerts = [];
 	let vols = [];
 	for (let v in volumes()) {
@@ -2833,7 +2859,7 @@ return {
 					load: [ +load[0], +load[1], +load[2] ],
 					cpu: cpustat(),
 					memory: meminfo(),
-					temperature: read_int('/tmp/sys/temp1_input'),   // m°C, from dns320l-daemon
+					temperature: box_temp(),   // m°C, from dns320l-daemon or shareos-board
 					fan_pwm: read_int('/tmp/sys/pwm1'),
 					network: {
 						eth0: {
@@ -2877,6 +2903,7 @@ return {
 
 		reboot: {
 			call: function() {
+				if (flash_busy()) return { error: FLASH_BUSY };
 				system('(sleep 2; reboot) >/dev/null 2>&1 &');
 				return { rebooting: true };
 			}
@@ -2887,6 +2914,7 @@ return {
 			call: function(req) {
 				if (req.args.confirm !== true)
 					return { error: 'confirm must be true' };
+				if (flash_busy()) return { error: FLASH_BUSY };
 				// the next switch-on of the power schedule first (wake-up alarm)
 				system('(sleep 2; /usr/sbin/shareos-power arm; poweroff) >/dev/null 2>&1 &');
 				return { poweroff: true };
@@ -3108,7 +3136,7 @@ return {
 		get: {
 			call: function() {
 				return { fan: fan_settings(), led: led_settings(), presets: FAN_PRESETS,
-					temperature: read_int('/tmp/sys/temp1_input'), fan_pwm: read_int('/tmp/sys/pwm1') };
+					temperature: box_temp(), fan_pwm: read_int('/tmp/sys/pwm1'), board_control: memo('boardctl', '', 10, board_control) };
 			}
 		},
 

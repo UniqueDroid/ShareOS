@@ -52,6 +52,9 @@ check "off: arms, then powers off" "run off | grep -qx poweroff && grep -q 'Writ
 mkdir -p $T/tmp/shareos-storage/lock
 check "off: not while a storage job runs" "run off | js \"'storage job' in d.get('error','')\""
 rmdir $T/tmp/shareos-storage/lock
+printf '#!/bin/sh\n[ "$1" = busy ]\n' > $T/updater; chmod 755 $T/updater
+: > $T/daemon.log
+check "off: not while firmware is being written" "SHAREOS_UPDATE=$T/updater run off | js \"'firmware' in d.get('error','')\" && ! grep -q WriteAlarm $T/daemon.log"
 sed -i "s/option enabled '1'/option enabled '0'/" $T/etc/config/shareos
 : > $T/daemon.log
 check "schedule off: alarm disabled, no switch-off" "run arm | js \"d['armed'] is None\" && grep -qx -- '-x WriteAlarm disable' $T/daemon.log && run off | js \"'off' in d.get('error','')\""

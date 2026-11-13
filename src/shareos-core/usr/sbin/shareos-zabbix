@@ -170,7 +170,9 @@ function version() {
 }
 
 function box_values() {
-	let t = read_int(ROOT + '/tmp/sys/temp1_input');
+	// a reading older than 90 s is not reported (MCU or sensor silent)
+	let ts = stat(ROOT + '/tmp/sys/temp1_input');
+	let t = ts && time() - ts.mtime <= 90 ? read_int(ROOT + '/tmp/sys/temp1_input') : null;
 	return {
 		temperature: t == null ? null : t >= 1000 ? t / 1000.0 : t,
 		fan_rpm: read_int(ROOT + '/tmp/sys/fan1_input'),

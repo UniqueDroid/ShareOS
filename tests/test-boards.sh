@@ -68,5 +68,15 @@ echo 56000 > $SHAREOS_ROOT/tmp/sys/temp1_input
 SHAREOS_BOARD_ONCE=1 sh $O/usr/sbin/shareos-board
 check "DNS-320L: MCU temperature -> pwm1 for the daemon, kernel fans left alone" "[ \"\$(cat $SHAREOS_ROOT/tmp/sys/pwm1)\" = 255 ] && [ ! -e $SHAREOS_ROOT/sys/class/hwmon/hwmon0/pwm1 ]"
 
+echo 30000 > $SHAREOS_ROOT/tmp/sys/temp1_input; echo 100 > $SHAREOS_ROOT/tmp/sys/pwm1
+touch -d '10 minutes ago' $SHAREOS_ROOT/tmp/sys/temp1_input
+SHAREOS_BOARD_ONCE=1 sh $O/usr/sbin/shareos-board
+check "DNS-320L: one cycle without a fresh reading changes nothing" "[ \"\$(cat $SHAREOS_ROOT/tmp/sys/pwm1)\" = 100 ]"
+SHAREOS_BOARD_ONCE=1 SHAREOS_BOARD_MISS_MAX=1 sh $O/usr/sbin/shareos-board
+check "DNS-320L: stale temperature (MCU silent) -> fan to full speed" "[ \"\$(cat $SHAREOS_ROOT/tmp/sys/pwm1)\" = 255 ]"
+touch $SHAREOS_ROOT/tmp/sys/temp1_input; echo 100 > $SHAREOS_ROOT/tmp/sys/pwm1
+SHAREOS_BOARD_ONCE=1 SHAREOS_BOARD_MISS_MAX=1 sh $O/usr/sbin/shareos-board
+check "DNS-320L: a fresh reading of 30 °C leaves the fan at half speed" "[ \"\$(cat $SHAREOS_ROOT/tmp/sys/pwm1)\" = 100 ]"
+
 echo; echo "$pass passed, $failed failed"
 [ $failed -eq 0 ]
