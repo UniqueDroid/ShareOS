@@ -1647,7 +1647,13 @@
 		"Off",
 		"Starting",
 		"No cloud account yet.",
-		"No job yet. A job copies or mirrors a folder with a cloud account – by hand or on a schedule."
+		"No job yet. A job copies or mirrors a folder with a cloud account – by hand or on a schedule.",
+		"Initial sync: waiting",
+		"Recovery: waiting",
+		"Check: waiting",
+		"shared inbox · no token",
+		"The Let's Encrypt certificate could not be fetched.",
+		"Checked once a minute"
 	],
 	"patterns": [
 		[
@@ -3097,6 +3103,10 @@
 		[
 			"^Snapshots: (.*)$",
 			"Snapshots: $1"
+		],
+		[
+			"^personal inbox of (.+) · no token$",
+			"personal inbox of $1 · no token"
 		]
 	],
 	"words": [

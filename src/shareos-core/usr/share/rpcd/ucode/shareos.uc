@@ -462,17 +462,34 @@ function storage_job() {
 	return length(j) ? j : null;
 }
 
+// the device of a volume. Must not touch the disks: this runs on every poll of
+// the storage page and the status page, and a probe wakes sleeping disks
+// (issue #155). A mounted volume: from /proc/mounts. Otherwise blkid – it
+// reads every partition – kept for 10 minutes and as long as the same block
+// devices exist.
+function volume_device(uuid, mp, mounts) {
+	for (let line in split(mounts, '\n')) {
+		let f = split(line, ' ');
+		if (f[1] == mp && index(f[0], '/dev/') == 0) return f[0];
+	}
+	if (!uuid) return null;
+	return memo('voldev:' + uuid, join(',', glob('/sys/class/block/*')), 600, () => {
+		let d = trim(sh('blkid -o device -t UUID=' + shq(uuid) + ' /dev/sd[a-z]* /dev/md[0-9]* /dev/loop[0-9]* 2>/dev/null | head -1').out);
+		return length(d) ? d : null;
+	});
+}
+
 function volumes() {
 	let list = [];
 	let c = cursor();
 	let mounts = readfile('/proc/mounts') ?? '';
 	c.foreach('storage', 'volume', function(s) {
 		let name = s['.name'];
-		let dev = s.uuid ? trim(sh('blkid -o device -t UUID=' + shq(s.uuid) + ' /dev/sd[a-z]* /dev/md[0-9]* /dev/loop[0-9]* 2>/dev/null | head -1').out) : null;
 		let mp = '/mnt/' + name;
+		let dev = volume_device(s.uuid, mp, mounts);
 		let mounted = index(mounts, ' ' + mp + ' ') >= 0;
 		let v = { name, uuid: s.uuid, fstype: s.fstype, layout: s.layout, enabled: s.enabled != '0',
-			device: dev && length(dev) ? dev : null, mountpoint: mp, mounted };
+			device: dev, mountpoint: mp, mounted };
 		if (mounted) {
 			let f = split(trim(split(sh('df -k ' + shq(mp)).out, '\n')[1] ?? ''), /\s+/);
 			if (length(f) >= 4) { v.size = +f[1] * 1024; v.used = +f[2] * 1024; v.avail = +f[3] * 1024; }
@@ -2090,7 +2107,12 @@ function sys_info() {
 		memory: meminfo(), temperature: read_int('/tmp/sys/temp1_input'), fan_pwm: read_int('/tmp/sys/pwm1'),
 		network: { speed: read_int(net + 'speed'), rx_bytes: read_int(net + 'statistics/rx_bytes'), tx_bytes: read_int(net + 'statistics/tx_bytes') },
 		volumes: memo('sysvol', '', 20, sys_volumes),
-		disks: memo('sysdisks', '', 60, () => map(disks(), (d) => ({ ...d, standby: !!match(sh('hdparm -C /dev/' + d.name).out, /standby/) })))
+		// standby: CHECK POWER MODE does not wake a sleeping disk; USB disks have
+		// no sleep state here (null), like on the storage page
+		disks: memo('sysdisks', '', 60, () => map(disks(), (d) => {
+			let usb = is_usb(d.name);
+			return { ...d, usb, standby: usb ? null : !!match(sh('hdparm -C /dev/' + d.name).out, /standby/) };
+		}))
 	};
 }
 

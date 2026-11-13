@@ -2051,3 +2051,10 @@ E1645	Aún no hay ninguna cuenta en la nube.
 E1646	Aún no hay ninguna tarea. Una tarea copia o refleja una carpeta con una cuenta en la nube, a mano o según una programación.
 F0	Compartido
 F1	Copias USB
+E1647	Sincronización inicial: en espera
+E1648	Recuperación: en espera
+E1649	Comprobación: en espera
+E1650	bandeja compartida · sin token
+P362	bandeja personal de $1 · sin token
+E1651	No se pudo obtener el certificado de Let's Encrypt.
+E1652	Se comprueba una vez por minuto

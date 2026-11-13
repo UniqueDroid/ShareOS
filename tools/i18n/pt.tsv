@@ -2051,3 +2051,10 @@ E1645	Ainda não há conta na nuvem.
 E1646	Ainda não há tarefa. Uma tarefa copia ou espelha uma pasta com uma conta na nuvem – manualmente ou por agendamento.
 F0	Compartilhado
 F1	Cópias USB
+E1647	Sincronização inicial: aguardando
+E1648	Recuperação: aguardando
+E1649	Verificação: aguardando
+E1650	caixa compartilhada · sem token
+P362	caixa pessoal de $1 · sem token
+E1651	Não foi possível obter o certificado Let's Encrypt.
+E1652	Verificado uma vez por minuto

@@ -2051,3 +2051,10 @@ E1645	Pas encore de compte cloud.
 E1646	Pas encore de tâche. Une tâche copie ou met en miroir un dossier avec un compte cloud – à la main ou selon un planning.
 F0	Partagé
 F1	Copies USB
+E1647	Synchronisation initiale : en attente
+E1648	Récupération : en attente
+E1649	Vérification : en attente
+E1650	boîte partagée · pas de jeton
+P362	boîte personnelle de $1 · pas de jeton
+E1651	Le certificat Let's Encrypt n’a pas pu être obtenu.
+E1652	Vérifié une fois par minute

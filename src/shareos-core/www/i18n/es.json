@@ -1629,7 +1629,13 @@
 		"Off": "Desactivado",
 		"Starting": "Iniciando",
 		"No cloud account yet.": "Aún no hay ninguna cuenta en la nube.",
-		"No job yet. A job copies or mirrors a folder with a cloud account – by hand or on a schedule.": "Aún no hay ninguna tarea. Una tarea copia o refleja una carpeta con una cuenta en la nube, a mano o según una programación."
+		"No job yet. A job copies or mirrors a folder with a cloud account – by hand or on a schedule.": "Aún no hay ninguna tarea. Una tarea copia o refleja una carpeta con una cuenta en la nube, a mano o según una programación.",
+		"Initial sync: waiting": "Sincronización inicial: en espera",
+		"Recovery: waiting": "Recuperación: en espera",
+		"Check: waiting": "Comprobación: en espera",
+		"shared inbox · no token": "bandeja compartida · sin token",
+		"The Let's Encrypt certificate could not be fetched.": "No se pudo obtener el certificado de Let's Encrypt.",
+		"Checked once a minute": "Se comprueba una vez por minuto"
 	},
 	"patterns": [
 		[
@@ -1903,6 +1909,10 @@
 		[
 			"^The name “(.+)” is already taken\\.$",
 			"El nombre «$1» ya está en uso."
+		],
+		[
+			"^personal inbox of (.+) · no token$",
+			"bandeja personal de $1 · sin token"
 		],
 		[
 			"^Share: (\\d+) file\\(s\\) not saved – (.*)$",

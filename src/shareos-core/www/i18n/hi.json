@@ -1629,7 +1629,13 @@
 		"Off": "बंद",
 		"Starting": "शुरू हो रहा है",
 		"No cloud account yet.": "अभी कोई क्लाउड खाता नहीं है।",
-		"No job yet. A job copies or mirrors a folder with a cloud account – by hand or on a schedule.": "अभी कोई कार्य नहीं है। कार्य किसी फ़ोल्डर को क्लाउड खाते के साथ कॉपी या मिरर करता है – हाथ से या समय-सारणी पर।"
+		"No job yet. A job copies or mirrors a folder with a cloud account – by hand or on a schedule.": "अभी कोई कार्य नहीं है। कार्य किसी फ़ोल्डर को क्लाउड खाते के साथ कॉपी या मिरर करता है – हाथ से या समय-सारणी पर।",
+		"Initial sync: waiting": "प्रारंभिक सिंक: प्रतीक्षा में",
+		"Recovery: waiting": "पुनर्प्राप्ति: प्रतीक्षा में",
+		"Check: waiting": "जाँच: प्रतीक्षा में",
+		"shared inbox · no token": "साझा इनबॉक्स · कोई टोकन नहीं",
+		"The Let's Encrypt certificate could not be fetched.": "Let's Encrypt प्रमाणपत्र प्राप्त नहीं हो सका।",
+		"Checked once a minute": "हर मिनट एक बार जाँचा जाता है"
 	},
 	"patterns": [
 		[
@@ -1903,6 +1909,10 @@
 		[
 			"^The name “(.+)” is already taken\\.$",
 			"नाम „$1“ पहले से लिया गया है।"
+		],
+		[
+			"^personal inbox of (.+) · no token$",
+			"$1 का निजी इनबॉक्स · कोई टोकन नहीं"
 		],
 		[
 			"^Share: (\\d+) file\\(s\\) not saved – (.*)$",

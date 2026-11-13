@@ -2035,3 +2035,10 @@ E1645	Noch kein Cloud-Konto.
 E1646	Noch kein Auftrag. Ein Auftrag kopiert oder spiegelt einen Ordner mit einem Cloud-Konto – von Hand oder nach Zeitplan.
 F0	Geteilt
 F1	USB-Kopien
+E1647	Erst-Synchronisierung: wartet
+E1648	Wiederherstellung: wartet
+E1649	Prüfung: wartet
+E1650	gemeinsamer Eingang · kein Token
+P362	persönlicher Eingang von $1 · kein Token
+E1651	Das Let's-Encrypt-Zertifikat konnte nicht geholt werden.
+E1652	Wird einmal pro Minute geprüft

@@ -1629,7 +1629,13 @@
 		"Off": "إيقاف",
 		"Starting": "جارٍ البدء",
 		"No cloud account yet.": "لا يوجد حساب سحابي بعد.",
-		"No job yet. A job copies or mirrors a folder with a cloud account – by hand or on a schedule.": "لا توجد مهمة بعد. تنسخ المهمة مجلدًا أو تعكسه مع حساب سحابي – يدويًا أو وفق جدول."
+		"No job yet. A job copies or mirrors a folder with a cloud account – by hand or on a schedule.": "لا توجد مهمة بعد. تنسخ المهمة مجلدًا أو تعكسه مع حساب سحابي – يدويًا أو وفق جدول.",
+		"Initial sync: waiting": "المزامنة الأولية: في الانتظار",
+		"Recovery: waiting": "الاستعادة: في الانتظار",
+		"Check: waiting": "الفحص: في الانتظار",
+		"shared inbox · no token": "صندوق وارد مشترك · بلا رمز",
+		"The Let's Encrypt certificate could not be fetched.": "تعذّر جلب شهادة Let's Encrypt.",
+		"Checked once a minute": "يُفحص مرة كل دقيقة"
 	},
 	"patterns": [
 		[
@@ -1903,6 +1909,10 @@
 		[
 			"^The name “(.+)” is already taken\\.$",
 			"الاسم «$1» مستخدم بالفعل."
+		],
+		[
+			"^personal inbox of (.+) · no token$",
+			"صندوق الوارد الشخصي لـ $1 · بلا رمز"
 		],
 		[
 			"^Share: (\\d+) file\\(s\\) not saved – (.*)$",

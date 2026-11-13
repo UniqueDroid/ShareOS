@@ -122,6 +122,17 @@ S=$(run ubus call shareos.storage status)
 [ -n "${VERBOSE:-}" ] && echo "$S" | head -20
 check "status: volume daten mounted with size" "echo '$S' | python3 -c \"import json,sys; d=json.load(sys.stdin); v=[x for x in d['volumes'] if x['name']=='daten'][0]; sys.exit(0 if v['mounted'] and v['size']>0 and v['layout']=='single' else 1)\""
 check "status: job and spindown reported" "echo '$S' | python3 -c \"import json,sys; d=json.load(sys.stdin); sys.exit(0 if d['spindown']==30 and d['job']['state']=='done' else 1)\""
+# the status must not touch the disks (it is polled every 15 s and would keep
+# them from sleeping, #155): count the reads on the test disks around a call
+# (after a first one, as on the box, where the poll repeats)
+ios() { for l in $A $B $C; do awk '{printf "%s ", $1}' /sys/block/$l/stat; done; }
+# (the partition watcher of this test reads the disks itself: paused meanwhile)
+run ubus call shareos.storage status >/dev/null
+kill -STOP $WATCH; sleep 1
+io1=$(ios); run ubus call shareos.storage status >/dev/null; io2=$(ios)
+kill -CONT $WATCH
+check "status: no reads on the disks (mounted volumes need no probe)" "[ '$io1' = '$io2' ]"
+[ "$io1" = "$io2" ] || echo "      reads before: $io1 after: $io2"
 # disk health: self-test schedule into the crontab, test on an unknown disk refused
 E=$(run ubus call shareos.storage smart_schedule "'{\"mode\":\"short_weekly\"}'")
 check "smart: weekly short self-test scheduled (crontab)" "echo '$E' | grep -q short_weekly && run uci get storage.global.smart_test | grep -qx short_weekly && grep -q 'shareos-storage smart-test short' $R/etc/crontabs/root && run ubus call shareos.storage status | grep -q '\"smart_schedule\": \"short_weekly\"'"

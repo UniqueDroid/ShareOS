@@ -1074,16 +1074,20 @@ function statusTiles(rows, table) {
 	return html`<div class="tiles">${rows.map(([k, v, n]) => html`<div class="tile"><div class="k">${k}</div><div class="v">${v}</div><div class="s">${n}</div></div>`)}</div>`;
 }
 
+// internal disks in standby (hdparm -C, read at most once a minute by the box,
+// #154): dimmed dot and ASLEEP; USB disks have no sleep state here
+const usbDisk = (d) => d.usb || d.removable;
+const asleep = (d) => (d.standby ? html` <span class="tag" title="Checked once a minute">ASLEEP</span>` : '');
 function diskCards(i, table = false) {
 	const disks = i.disks || [];
 	if (!disks.length)
 		return html`<div class="panel"><div class="empty">${svg(I.info)}<span>No hard disk or USB storage detected. ShareOS runs entirely from the internal flash – drives appear here as soon as they are attached.</span></div></div>`;
 	if (table) return html`<div class="tw"><table class="t" style="min-width:480px"><thead><tr><th>DRIVE</th><th>TYPE</th><th>MODEL</th><th>SIZE</th></tr></thead>
-		<tbody>${disks.map((d) => html`<tr><td><b>${d.name}</b> <span class="mut">/dev/${d.name}</span></td><td>${d.removable ? 'USB' : 'Disk'}</td><td>${d.model || 'unknown model'}</td><td>${fmtBytes(d.size)}</td></tr>`)}</tbody></table></div>`;
+		<tbody>${disks.map((d) => html`<tr><td><b>${d.name}</b> <span class="mut">/dev/${d.name}</span>${asleep(d)}</td><td>${usbDisk(d) ? 'USB' : 'Disk'}</td><td>${d.model || 'unknown model'}</td><td>${fmtBytes(d.size)}</td></tr>`)}</tbody></table></div>`;
 	return html`<div class="grid">${disks.map((d) => html`
 		<div class="card">
-			<div class="icon">${svg(d.removable ? I.usb : I.disk)}<span class="dot up"></span></div>
-			<div class="info"><div class="name">${d.removable ? 'USB' : 'Disk'} · ${d.name}</div>
+			<div class="icon">${svg(usbDisk(d) ? I.usb : I.disk)}<span class="dot${d.standby ? '' : ' up'}"></span></div>
+			<div class="info"><div class="name">${usbDisk(d) ? 'USB' : 'Disk'} · ${d.name}${asleep(d)}</div>
 				<div class="desc">${d.model || 'unknown model'} · ${fmtBytes(d.size)}</div>
 				<div class="ip">/dev/${d.name}</div></div>
 		</div>`)}</div>`;
@@ -1612,7 +1616,7 @@ function paperlessView() {
 			: html`<div class="grid">${d.inboxes.map((ib) => html`<div class="card${ib.enabled ? '' : ' off'}">
 				<div class="icon">${svg(I.doc)}<span class="dot ${ib.enabled && ib.token_set ? 'up' : 'down'}"></span></div>
 				<div class="info"><div class="name">${ib.name}</div>
-					<div class="desc">${ib.owner ? 'personal inbox of ' + ib.owner : 'shared inbox'} · token ${ib.token_hint || 'missing'}</div>
+					<div class="desc">${ib.owner ? `personal inbox of ${ib.owner} · ` : 'shared inbox · '}${ib.token_hint ? 'token ' + ib.token_hint : 'no token'}</div>
 					<div class="desc" style="margin-top:6px">${ib.waiting ? ib.waiting + ' file(s) waiting' : 'nothing waiting'}</div>
 					${ib.recent.slice(0, 3).map((x) => html`<div class="desc" style="margin-top:4px;font-size:12px">${plStateTag(x)} ${x.file} <span class="mut">${fmtTime(x.time)}</span></div>`)}
 					<div class="ip">${inboxWhere(ib)}</div>
@@ -4452,7 +4456,7 @@ async function loadNetExtra() {
 	if (a) S.acme = a;
 	// Let's Encrypt runs in the background: look again until it is done
 	clearTimeout(S.acmeTimer);
-	if (S.acme?.running) S.acmeTimer = setTimeout(async () => { if (S.route.sub !== 'network') return; const was = S.acme.running; await loadNetExtra(); if (was && !S.acme.running) { toast(S.acme.active ? 'Let\'s Encrypt certificate active – the page reconnects.' : 'Let\'s Encrypt: ' + (S.acme.error || 'failed'), !S.acme.active); if (S.acme.active) afterWebRestart(); } renderMain(); }, 5000);
+	if (S.acme?.running) S.acmeTimer = setTimeout(async () => { if (S.route.sub !== 'network') return; const was = S.acme.running; await loadNetExtra(); if (was && !S.acme.running) { toast(S.acme.active ? 'Let\'s Encrypt certificate active – the page reconnects.' : (S.acme.error ? 'Let\'s Encrypt: ' + S.acme.error : 'The Let\'s Encrypt certificate could not be fetched.'), !S.acme.active); if (S.acme.active) afterWebRestart(); } renderMain(); }, 5000);
 }
 
 function pemDownload(pem, name) {

@@ -1629,7 +1629,13 @@
 		"Off": "关闭",
 		"Starting": "正在启动",
 		"No cloud account yet.": "还没有云账户。",
-		"No job yet. A job copies or mirrors a folder with a cloud account – by hand or on a schedule.": "还没有任务。任务会将文件夹复制或镜像到云账户——手动或按计划执行。"
+		"No job yet. A job copies or mirrors a folder with a cloud account – by hand or on a schedule.": "还没有任务。任务会将文件夹复制或镜像到云账户——手动或按计划执行。",
+		"Initial sync: waiting": "初始同步：等待中",
+		"Recovery: waiting": "恢复：等待中",
+		"Check: waiting": "检查：等待中",
+		"shared inbox · no token": "共享收件箱 · 无令牌",
+		"The Let's Encrypt certificate could not be fetched.": "无法获取 Let's Encrypt 证书。",
+		"Checked once a minute": "每分钟检查一次"
 	},
 	"patterns": [
 		[
@@ -1903,6 +1909,10 @@
 		[
 			"^The name “(.+)” is already taken\\.$",
 			"名称“$1”已被使用。"
+		],
+		[
+			"^personal inbox of (.+) · no token$",
+			"$1 的个人收件箱 · 无令牌"
 		],
 		[
 			"^Share: (\\d+) file\\(s\\) not saved – (.*)$",
