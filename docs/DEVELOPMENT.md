@@ -164,7 +164,7 @@ the box for why the web server was not running.
 
 | Time | What happened |
 |---|---|
-| 08:30 | Jan: "it does not start by itself" – `tailscaled` only ran once an app pressed *Verbinden*, and the submitted Tailscale app talked to an interface the box does not have. Claude starts the daemon on install and at boot (ShareOS #48) and ports the app to `ShareOS.tailscale` with a real QR code (ShareOS-Apps #22). |
+| 08:30 | Jan: "it does not start by itself" – `tailscaled` only ran once an app pressed *Connect*, and the submitted Tailscale app talked to an interface the box does not have. Claude starts the daemon on install and at boot (ShareOS #48) and ports the app to `ShareOS.tailscale` with a real QR code (ShareOS-Apps #22). |
 | 09:22 | Jan: "Can this be simpler with system apps?" Every service had its own init script and its own hook – Jan's rename to `tailscaled` had orphaned exactly that hook. Since then the service is declared in the system app's `app.json` (`"service"`), one init script starts them all, the control stays in the firmware. Jan decides: system apps are submitted to the ShareOS repo, ShareOS-Apps only takes web apps – with one example each for a program and a service. |
 | 11:28 | Jan's app ShareNotes goes into the store. His requirement: accounts without "Files" should keep their notes on the box too. Jan picks a private folder per app and account on the apps drive; the account's folders, shares and file browser stay closed. |
 | 15:03 | autobrr for the box (outside PR #20 had only the interface): Claude builds autobrr 1.84 for ARMv5 (32 MB including its web interface, about 45 MB RAM in the emulator). Jan decides: one autobrr for the whole box, set up by admins; matches go through a hand-over folder to the Transmission of a chosen account; plus autobrr's own web interface. |
@@ -238,7 +238,7 @@ the box for why the web server was not running.
 
 | Time | What happened |
 |---|---|
-| 15:22 | System → Netzwerk gets dynamic DNS (DuckDNS, dynv6, Cloudflare, No-IP, any dyndns2 address; IPv4 and IPv6), an own certificate authority for the box and other devices in the home network, and Let's Encrypt over DNS – no port has to be open (#108). |
+| 15:22 | System → Network gets dynamic DNS (DuckDNS, dynv6, Cloudflare, No-IP, any dyndns2 address; IPv4 and IPv6), an own certificate authority for the box and other devices in the home network, and Let's Encrypt over DNS – no port has to be open (#108). |
 | 16:17 | USB printers in the network (#109): ipp-usb for current printers – driverless printing and scanning; the firmware's avahi has no D-Bus, so a patch makes ipp-usb announce the devices through static service files. Older printers over port 9100 with p910nd. |
 | 17:23 | UPS over USB with Network UPS Tools (#110): charge and runtime, messages on a power failure, a clean shutdown on battery and the UPS switching the box on again with the power. Everything goes into `v0.2.0-beta.18`. |
 | 22:48 | Jan publishes `v0.2.0-beta.18`. |
@@ -256,7 +256,7 @@ the box for why the web server was not running.
 | 14:20 | Jan publishes `v0.2.0-beta.19`. |
 | 16:47 | Transmission used most of the 800 MHz CPU (#115). Every account's daemon gets lighter defaults once: 60 peers in total, 30 per torrent, a download queue of 3, µTP off – its congestion control in user space costs more CPU than all TCP peers together – and nice 10, so file shares stay quick. What the user sets afterwards stays. |
 | 18:40 | Syncthing per account (#88, #117): a system app built without its own web interface; the app *Syncthing* talks to its REST API over a Unix socket through the box, which only lets through what a remote control needs and only folders of the account. Passing Syncthing's own interface through the apps web server was the first plan – its two long-polling requests would have taken two of the three CGI slots. |
-| 20:20 | The firmware page shows the newest 3 GitHub versions, *Alle anzeigen* opens the rest (#118). |
+| 20:20 | The firmware page shows the newest 3 GitHub versions, *Show all (n)* opens the rest (#118). |
 | 21:51 | App permission `zabbix` for the Zabbix Agent Config app (#119). Its tests found two old faults in `shareos-zabbix`: called from rpcd it asked rpcd for the SMART values and waited for itself, and a stopped agent left worker processes behind that kept its pid file locked. |
 
 ### Friday, 06.11.2026
@@ -282,7 +282,7 @@ the box for why the web server was not running.
 | Time | What happened |
 |---|---|
 | 06:50 | **0.3.0-beta.3** is out (Paperless as a module). Measurement of AdGuard Home v0.107.80 (official ARMv5 build) in the ShareOS userland: default list (188,000 rules) 45 MB of Go memory, 30 MB with `GOMEMLIMIT=32MiB`; 696,000 rules 107 and 77 MB – plus the program code. Much more than Pi-hole (lists in SQLite). Jan decides: AdGuard Home with guard rails. |
-| 07:30 | **DNS filter as the second module:** system app "DNS filter", controller `shareos-dnsfilter`, tab DNS-FILTER. Set up through AdGuard's own setup API, memory limit, query log and statistics in RAM only, warning from 300,000 rules on. AdGuard's user switch drops root too early (port 53 fails) – it runs as root. `test-dnsfilter` with 34 checks, blocking over port 53 included. |
+| 07:30 | **DNS filter as the second module:** system app "DNS filter", controller `shareos-dnsfilter`, tab DNS FILTER. Set up through AdGuard's own setup API, memory limit, query log and statistics in RAM only, warning from 300,000 rules on. AdGuard's user switch drops root too early (port 53 fails) – it runs as root. `test-dnsfilter` with 34 checks, blocking over port 53 included. |
 | 10:17 | **Project website** on GitHub Pages: [uniquedroid.github.io/ShareOS](https://uniquedroid.github.io/ShareOS/) – features, downloads per model, the app catalog, discussions and these docs as a wiki. It builds itself from the repository on every push, release and once a day. |
 | 15:30 | **DNS filter:** AdGuard's interface over HTTPS with the box's certificate (redirect only with a trusted certificate – HSTS), and the box keeps its local name when the filter is the network's DNS server (rewrites for its names, local domain to the router). Reported by Jan: the Chromebook could no longer reach the box. Plus own local entries (name → IP) on the tab, so AdGuard's interface is only needed for fine-tuning. |
 | 13:00 | **Cloud as the third module:** system app "Cloud", CLOUD tab and "My ShareOS" part only while it is installed. Boxes with jobs, accounts or rclone get it by themselves on the update. All three planned modules are done; *Areas* now only switches Apps. |

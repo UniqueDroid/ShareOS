@@ -211,7 +211,7 @@ The DNS filter is a **module** (AdGuard Home). It needs the apps drive.
 9. **Apps → Installed → DNS filter → Remove:** tab gone, `nslookup … 127.0.0.1` no longer answers. Install again: lists and password are as before.
 10. **HTTPS (0.3.0-beta.5):** after the update *DNS FILTER → Save* once (restarts the filter). The link *Open AdGuard Home ↗* now opens `https://<box>:8054`. With the self-signed certificate the browser warns once, `http://<box>:8053` stays open. With the own CA (*System → Certificate*, CA installed on the PC) `http://<box>:8053` redirects to HTTPS and the browser shows no warning.
 11. **Local name (0.3.0-beta.5):** PC/Chromebook with the box as DNS server: `https://shareos.skynet.lan` (your box name) opens the box; `nslookup shareos.skynet.lan <box-ip>` answers the box's address; another local device (e.g. the router by name) still resolves. The tab lists the names under *Local names*.
-12. **Local entries (0.3.0-beta.5):** *DNS FILTER → LOCAL ENTRIES*: name `drucker.skynet.lan`, IP `192.168.1.50` → *Add entry*. `nslookup drucker.skynet.lan <box-ip>` answers `192.168.1.50`; the entry also appears in AdGuard under *Filter → DNS rewrites*. The box's own name is refused. *Entfernen* removes it again.
+12. **Local entries (0.3.0-beta.5):** *DNS FILTER → LOCAL ENTRIES*: name `printer.skynet.lan`, IP `192.168.1.50` → *Add entry*. `nslookup printer.skynet.lan <box-ip>` answers `192.168.1.50`; the entry also appears in AdGuard under *Filter → DNS rewrites*. The box's own name is refused. *Remove* removes it again.
 
 ## 9. Cloud sync
 
@@ -292,7 +292,7 @@ The desktop view is a **module**. The classic view stays next to it.
 - File systems **ext3**, **ext2** and **FAT32** can be chosen for disks too (FAT32: files up to 4 GB).
 - **Repair a mirror:** with a disk of a mirror missing (card: "one disk missing (U_)") and a disk in the free bay, *Repair mirror* erases that disk and adds it; the card then shows "Recovery … %".
 - **Mirror after a reboot (disks that spin up one after the other, e.g. DNS-325):** reboot with a complete mirror several times; each time `cat /proc/mdstat` shows `[2/2] [UU]` and `dmesg | grep md/raid1` shows "active with 2 out of 2 mirrors", even when the second disk comes up seconds later (`dmesg | grep 'SATA link up'`). With one disk pulled the box waits up to 40 s, then starts the mirror with one disk and logs "RAID incomplete after 40s" (`grep shareos-storage /var/log/messages`).
-- **Health (SMART):** *Storage → Health* shows a card per disk. With a healthy disk: *GOOD*, "Nothing unusual.", temperature, running time, sectors 0. *Read again* wakes a sleeping disk and reads again. *Short test* starts the self-test: the card shows "Running – … % left" and *Abort test*; after about 2 minutes (*Read again*) the last test reads *OK*. In the terminal: `smartctl -l selftest /dev/sda` shows the same test. *All values* opens the attribute table. With an SSD: "SSD life" with a bar. Schedule *Kurztest jeden Sonntag*: `grep smart-test /etc/crontabs/root` shows `30 3 * * 0 … smart-test short`; run it by hand with `shareos-storage smart-test short`, after a few minutes `grep shareos-storage /var/log/messages` shows "SMART short self-test started".
+- **Health (SMART):** *Storage → Health* shows a card per disk. With a healthy disk: *GOOD*, "Nothing unusual.", temperature, running time, sectors 0. *Read again* wakes a sleeping disk and reads again. *Short test* starts the self-test: the card shows "Running – … % left" and *Abort test*; after about 2 minutes (*Read again*) the last test reads *OK*. In the terminal: `smartctl -l selftest /dev/sda` shows the same test. *All values* opens the attribute table. With an SSD: "SSD life" with a bar. Schedule *Short test every Sunday (3:30 am)*: `grep smart-test /etc/crontabs/root` shows `30 3 * * 0 … smart-test short`; run it by hand with `shareos-storage smart-test short`, after a few minutes `grep shareos-storage /var/log/messages` shows "SMART short self-test started".
 
 ## 14. Time and languages
 
@@ -375,7 +375,7 @@ Needs a drive (Storage) and the files `transmission-daemon-4.1.0.sapp` (release 
 
 1. Apps → Store → *Install package*: `transmission-daemon-4.1.0.sapp`, then `transmission-1.1.0.sapp` (or Transmission from the store). The install dialog shows "Own torrents (Transmission)".
 2. As **root**: open Transmission. After a few seconds "● Connected"; *Settings* shows the download folder `data/Downloads` (your volume) and the peer port 51413.
-3. *+ Torrent* → link tab: a magnet link (e.g. of a Linux ISO), *Durchsuchen* → choose a folder, *Add*: it downloads into that folder.
+3. *+ Torrent* → link tab: a magnet link (e.g. of a Linux ISO), *Browse* → choose a folder, *Add*: it downloads into that folder.
 4. Sign in as a **user** with web access and file browser, open Transmission from *My ShareOS*: an empty list (root's torrents are not there), download folder "My folder/Downloads". Add a torrent: the files belong to the user (file browser).
 5. In the terminal: `ps | grep transmission-daemon` – one daemon per account (root and the user); `ls /tmp/shareos-transmission/`.
 6. Restart the box: the torrents go on by themselves, without opening the app.
@@ -386,14 +386,14 @@ Needs a drive (Storage) and the files `transmission-daemon-4.1.0.sapp` (release 
 Needs a drive, some media on it (a video, e.g. `.mkv` or `.mp4`, and a music file) and the files `ffmpeg-6.1.5.sapp` (release of the firmware) and `mediatranscoder-1.0.0.sapp` (app store, or from the ShareOS-Apps release).
 
 1. Apps → Store: install MediaTranscoder (brings the system app `ffmpeg` along) – or *Install package* with `ffmpeg-6.1.5.sapp`, then `mediatranscoder-1.0.0.sapp`. The install dialog shows the permission "Convert media (FFmpeg)".
-2. As **root** open MediaTranscoder: "FFmpeg bereit" at the top right.
-3. *Choose file …* → a video: length, size, video and audio tracks appear; preset is *Container wechseln* to MP4 (MKV for an MP4 file). *Umwandeln starten*: the job runs with progress, the new file is in the same folder and plays in WinWeb Player (*Im WinWeb Player abspielen*).
-4. *Audio umwandeln / herausholen*, format MP3, 192 kbit/s, *Ausschnitt* from `00:01:00`, length `30`, change the target folder: a 30 s MP3 in the chosen folder. On the box this takes about as long as the piece itself or less.
-5. Start a long job and *Cancel*: state "abgebrochen", no (half) file in the folder (no hidden `.name.<id>.mp3` either).
-6. The same file name again: "A file with this name already exists in the target folder schon." – nothing is overwritten.
+2. As **root** open MediaTranscoder: "FFmpeg ready" at the top right.
+3. *Choose file …* → a video: length, size, video and audio tracks appear; preset is *Change container* to MP4 (MKV for an MP4 file). *Start converting*: the job runs with progress, the new file is in the same folder and plays in WinWeb Player (*Play in WinWeb Player*).
+4. *Convert / extract audio*, format MP3, 192 kbit/s, *Excerpt* from `00:01:00`, length `30`, change the target folder: a 30 s MP3 in the chosen folder. On the box this takes about as long as the piece itself or less.
+5. Start a long job and *Cancel*: state "cancelled", no (half) file in the folder (no hidden `.name.<id>.mp3` either).
+6. The same file name again: "A file with this name already exists in the target folder." – nothing is overwritten.
 7. As a **user** with web access and file browser: MediaTranscoder in *My ShareOS*, only the own folder can be chosen, root's jobs are not shown; the result belongs to the user (file browser).
 8. In the terminal during a job: `ps | grep ffmpeg` – runs with `nice` 19; `ls /tmp/shareos-media/jobs/`.
-9. Apps → Installed → ffmpeg → *Remove* (asks, because MediaTranscoder needs it): running jobs stop, the app shows "FFmpeg fehlt".
+9. Apps → Installed → ffmpeg → *Remove* (asks, because MediaTranscoder needs it): running jobs stop, the app shows "FFmpeg missing".
 
 **Store sections and Bash (0.2.0-beta.5):** Apps → Store: under "Available apps" the sections (Media, Network, Tools, System …) with counts; a click shows only that section, *All* everything again; "Search …" filters while typing. Install Bash from the store (section Tools), in the terminal `bash`, then `echo $BASH_VERSION` → `5.2.37…`, `exit`.
 
@@ -401,14 +401,14 @@ Needs a drive, some media on it (a video, e.g. `.mkv` or `.mp4`, and a music fil
 
 Needs two drives with ext4 or Btrfs (e.g. the disk and a USB disk) and a share with some files.
 
-1. Storage → **Snapshots** → *New snapshot job*: name `fotos`, *Was sichern* = the share, *TARGET DRIVE* = the other drive, *Daily* 03:15, keep 3 · 7 · 4 · 6, exclusion `*.tmp` → *Save*. A FAT32/exFAT drive is greyed out as a target.
+1. Storage → **Snapshots** → *New snapshot job*: name `photos`, *WHAT TO SAVE* = the share, *TARGET DRIVE* = the other drive, *Daily* 03:15, keep 3 · 7 · 4 · 6, exclusion `*.tmp` → *Save*. A FAT32/exFAT drive is greyed out as a target.
 2. *Back up now*: "running", then "OK" with the number of files and the size. The first snapshot copies everything – with many GB that takes a while (disk to disk about as long as copying).
 3. In the share change a file, delete one, add one; *Back up now*: "N changed" is small, the second snapshot is quick.
 4. *Snapshots (2)* → on the older one *Open in the file browser*: the deleted file is there, with the old content of the changed one. Copy the file back into the share.
-5. In the terminal: `du -sh /mnt/<target>/Snapshots/fotos/*` – the second snapshot takes almost nothing (hard links); `ls -ld /mnt/<target>/Snapshots` → `drwx------ root`.
-6. Save a big folder, after a few seconds *Stop*: "abgebrochen"; the next *Back up now* continues.
+5. In the terminal: `du -sh /mnt/<target>/Snapshots/photos/*` – the second snapshot takes almost nothing (hard links); `ls -ld /mnt/<target>/Snapshots` → `drwx------ root`.
+6. Save a big folder, after a few seconds *Stop*: "cancelled"; the next *Back up now* continues.
 7. *Log* on the job: the rsync summary. Unplug the target USB disk, *Back up now*: "Error" and a message (bell, e-mail/push if set up).
-8. `cat /etc/crontabs/root`: a line `15 3 * * * /usr/sbin/shareos-snapshot run fotos`. The next morning the snapshot of 3:15 is there.
+8. `cat /etc/crontabs/root`: a line `15 3 * * * /usr/sbin/shareos-snapshot run photos`. The next morning the snapshot of 3:15 is there.
 9. *Remove* → "Delete the snapshots too?" → *Delete snapshots*: job and folder are gone.
 
 ## 14k. Media server (0.2.0-beta.6)
@@ -416,7 +416,7 @@ Needs two drives with ext4 or Btrfs (e.g. the disk and a USB disk) and a share w
 Needs a drive with a share with music (MP3/FLAC) and one with videos (MP4/MKV) and the file `minidlna-1.3.3.sapp` (release of the firmware; or MiniDLNA from the store). Plus a TV or VLC in the same network.
 
 1. Services → **Media server**: without the system app a hint with *Install from the store*. Install MiniDLNA (store or *Install package*).
-2. *Settings*: music share → "music only", video share → "videos only", name e.g. "Wohnzimmer", *Medienserver eingeschaltet* → *Save*: "running", "reading folders …", the numbers go up.
+2. *Settings*: music share → "music only", video share → "videos only", name e.g. "Living room", *Media server switched on* → *Save*: "running", "reading folders …", the numbers go up.
 3. VLC (View → Playlist → Local Network → Universal Plug'n'Play) or the TV (sources/media server): "Wohnzimmer" shows up, music and videos play, seek in a video.
 4. Copy a new file into the music share: after a short while "TRACKS" counts one more, without a restart.
 5. Services → Status: "Media server (DLNA)" runs; restart the box: the server starts by itself and does not read everything again (the library is in `/mnt/<drive>/.shareos/minidlna`).
@@ -429,49 +429,49 @@ Needs a drive with a share with music (MP3/FLAC) and one with videos (MP4/MKV) a
 Needs an OpenVPN profile (`.ovpn`, e.g. from the office router or a VPN provider) with embedded certificates, the file `openvpn-2.6.20.sapp` (release of the firmware) and NetTunnel (store or `nettunnel-1.0.0.sapp`).
 
 1. As **root**: Apps → Store → install NetTunnel (brings `openvpn` along). NetTunnel opens inside the interface.
-2. *Vom Computer …* → the `.ovpn`: keep the name; if the profile asks for a login, enter user name/password → *Einspielen*. If the profile had e.g. an `up` script, NetTunnel says "Entfernt: up".
-3. *Verbinden*: after a few seconds "VPN verbunden" with the tunnel address; in the header of the ShareOS interface the chip **VPN · 10.x.x.x**, a click opens NetTunnel.
-4. In the terminal: `ip addr show tun0`, `ip route` – with "Gesamten Verkehr der Box durch den Tunnel" two routes `0.0.0.0/1` and `128.0.0.0/1` via tun0; without, only the VPN networks. A computer in the VPN network answers `ping`.
-5. *Edit* → *Beim Start der Box verbinden* → restart the box: the connection comes up by itself after about half a minute.
+2. *From the computer …* → the `.ovpn`: keep the name; if the profile asks for a login, enter user name/password → *Import*. If the profile had e.g. an `up` script, NetTunnel says "Removed: up".
+3. *Connect*: after a few seconds "VPN connected" with the tunnel address; in the header of the ShareOS interface the chip **VPN · 10.x.x.x**, a click opens NetTunnel.
+4. In the terminal: `ip addr show tun0`, `ip route` – with "All traffic of the box through the tunnel" two routes `0.0.0.0/1` and `128.0.0.0/1` via tun0; without, only the VPN networks. A computer in the VPN network answers `ping`.
+5. *Edit* → *Connect when the box starts* → restart the box: the connection comes up by itself after about half a minute.
 6. A profile with `ca /path/ca.crt` instead of `<ca>…</ca>`: "The profile refers to files …". A server profile: refused.
 7. As a **user** (not admin): NetTunnel is not visible or says "administrators only".
-8. A user's Transmission downloads something → header chip **TORRENT · ↓ 1** (from 0.2.0-beta.7 only while something is downloaded or uploaded; paused: no chip) (admin: own service; user: in "My ShareOS"). System → Appearance → *Anzeigen im Kopf*: untick → the chip disappears (this browser only).
+8. A user's Transmission downloads something → header chip **TORRENT · ↓ 1** (from 0.2.0-beta.7 only while something is downloaded or uploaded; paused: no chip) (admin: own service; user: in "My ShareOS"). System → Appearance → *HEADER INDICATORS*: untick → the chip disappears (this browser only).
 9. Apps → Installed → openvpn → *Remove*: the connection ends, the chip goes.
 
 **Server mode** (reach home from anywhere; needs a phone with the app "OpenVPN Connect" and mobile data instead of Wi-Fi):
 
-10. Install openvpn again, NetTunnel → *Box als Server*. Address in the internet (DynDNS name of the router), port 1194, UDP, VPN network 10.8.0.0, *Server eingeschaltet* → *Save*: the first time takes a while (certificates), then "running"; header chip **VPN-SERVER · 0 devices**. VPN network = home network (e.g. 192.168.1.0): refused.
+10. Install openvpn again, NetTunnel → *Box as server*. Address in the internet (DynDNS name of the router), port 1194, UDP, VPN network 10.8.0.0, *Server switched on* → *Save*: the first time takes a while (certificates), then "running"; header chip **VPN-SERVER · 0 devices**. VPN network = home network (e.g. 192.168.1.0): refused.
 11. Set up the port forwarding from the hint in the router (UDP 1194 → IP of the box).
-12. Name `handy-test` → *Add device*: `ShareOS-handy-test.ovpn` is downloaded. Bring it to the phone (or *Auf der Box speichern* and fetch it from the share on the phone), import it in OpenVPN Connect, Wi-Fi off, connect.
+12. Name `handy-test` → *Add device*: `ShareOS-handy-test.ovpn` is downloaded. Bring it to the phone (or *Save on the box* and fetch it from the share on the phone), import it in OpenVPN Connect, Wi-Fi off, connect.
 13. NetTunnel lists the device as "connected" with VPN address 10.8.0.2 and traffic; the chip shows **1 device**. On the phone, browser `http://10.8.0.1` → the ShareOS interface.
-14. *Auch das Heimnetz erreichbar machen* + static route 10.8.0.0/24 → IP of the box in the router: the phone reaches the router (e.g. `http://192.168.1.1`).
+14. *Make the home network reachable too* + static route 10.8.0.0/24 → IP of the box in the router: the phone reaches the router (e.g. `http://192.168.1.1`).
 15. *Remove* the device: the connection on the phone drops and does not come back. Restart the box: the server runs again by itself.
 
 ## 14m. Shares by rights – for apps and Linux too (0.2.0-beta.6)
 
 Needs a drive with ext4 or Btrfs, the users **anna** and **lisa** (role user, "Files" switched on) and ShareCommander 1.3 (store).
 
-1. Shares → new share `fotos`: anna *read & write*, lisa *read only*, copy a few files into it.
-2. Sign in as **anna** → *My ShareOS* → **Files**: choice "Personal folder" and "fotos". Create a folder in `fotos`: works.
-3. As **lisa**: "fotos (nur lesen)"; *New folder*, *Upload*, *Rename*, *Delete* are greyed out, downloading works.
-4. lisa opens **ShareCommander**: left the personal folder, right "🔒 fotos (nur lesen)". **F7** in fotos: "read only – you may not change anything here". No `/etc` in the browser storage any more.
-5. A user without rights on `fotos` does not see the share anywhere.
+1. Shares → new share `photos`: anna *read & write*, lisa *read only*, copy a few files into it.
+2. Sign in as **anna** → *My ShareOS* → **Files**: choice "Personal folder" and "photos". Create a folder in `photos`: works.
+3. As **lisa**: "photos (read only)"; *New folder*, *Upload*, *Rename*, *Delete* are greyed out, downloading works.
+4. lisa opens **ShareCommander**: left the personal folder, right "🔒 photos (read only)". **F7** in photos: "read only – you may not change anything here". No `/etc` in the browser storage any more.
+5. A user without rights on `photos` does not see the share anywhere.
 6. A user without "Files": ShareCommander shows the hint "No access to the folders of the box …" instead of silently showing only the browser storage.
-7. Linux level in the terminal (as root): `getfacl /mnt/<drive>/<fotos folder>` shows `user:anna:rwx`, `user:lisa:r-x`, `other::---`. `su -s /bin/sh lisa -c 'touch /mnt/<drive>/<fotos folder>/x'` → "Permission denied".
+7. Linux level in the terminal (as root): `getfacl /mnt/<drive>/<photos folder>` shows `user:anna:rwx`, `user:lisa:r-x`, `other::---`. `su -s /bin/sh lisa -c 'touch /mnt/<drive>/<photos folder>/x'` → "Permission denied".
 8. Over SMB from a computer: lisa can read, not write; anna both; lisa can open new files of anna.
 9. Change the rights (remove lisa) → after a short while (longer with many files, it runs in the background) lisa has no access any more, not even to subfolders.
-10. Over SMB, access through a group: put lisa in a group `familie`, give the share `fotos` to the group (`@familie`) only and remove lisa as a user of it. Sign in from macOS (Finder) as lisa: the share opens (before ksmbd-tools 3.5.3 the Finder said "the original item can't be found").
+10. Over SMB, access through a group: put lisa in a group `family`, give the share `photos` to the group (`@family`) only and remove lisa as a user of it. Sign in from macOS (Finder) as lisa: the share opens (before ksmbd-tools 3.5.3 the Finder said "the original item can't be found").
 ## 14n. Tailscale and large system apps on the drive (0.2.0-beta.7)
 
 Needs a Tailscale account (free), a phone or computer with Tailscale, the file `tailscaled-<version>.sapp` (release of the firmware) and an app with the permission `tailscale` (ShareOS-Apps).
 
 1. Before the update note `df -h /` in the terminal. After the update (restart) the box moves large system apps (FFmpeg, Transmission, MiniDLNA, OpenVPN) to the drive: `ls -l /opt/shareos/sysapps` shows `-> /mnt/<drive>/.shareos/sysapps/…` for them, nano/htop/bash stay folders. `df -h /` shows more free. Transmission, media server and VPN work as before.
 2. Apps → Store → system apps → install **tailscaled**: `ls -l /opt/shareos/sysapps/tailscaled` is a link to the drive, `df -h /` hardly changes. Without anything else the daemon runs: `ps | grep [t]ailscaled` (from 0.2.0-beta.9).
-3. Open the Tailscale app → *Verbinden*: a sign-in link (or QR code) appears. Open it on the phone, confirm with the Tailscale account. After a few seconds "connected", header chip **TAILSCALE · 100.x.y.z**.
+3. Open the Tailscale app → *Connect*: a sign-in link (or QR code) appears. Open it on the phone, confirm with the Tailscale account. After a few seconds "connected", header chip **TAILSCALE · 100.x.y.z**.
 4. On the phone (mobile data, Wi-Fi off, Tailscale on): `http://100.x.y.z` → the ShareOS interface; shares over SMB at `\\100.x.y.z`.
 5. In the terminal: `ip addr show tailscale0`; `TS_BE_CLI=1 tailscaled --socket=/tmp/shareos-tailscale/tailscaled.sock status` lists the devices. `ps` shows `tailscaled`, `cat /proc/$(cat /tmp/shareos-tailscale/pid)/status | grep VmRSS` – below about 60 MB.
 6. Restart the box: after about a minute it is back in the tailnet by itself.
-7. In the app *Trennen*: the chip shows "disconnected"; *Log out*: the box leaves the tailnet (Tailscale admin console).
+7. In the app *Disconnect*: the chip shows "disconnected"; *Log out*: the box leaves the tailnet (Tailscale admin console).
 8. Apps → Installed → tailscaled → *Remove*: the service stops, the folder on the drive is gone.
 
 ## 14o. Apps in the page (0.2.0-beta.7)
@@ -485,7 +485,7 @@ Needs a Tailscale account (free), a phone or computer with Tailscale, the file `
 
 ## 14w. Trash in the file browser (0.2.0-beta.12)
 
-1. *Shares → Files* (or *My ShareOS → Files* as a user): select a file and a folder, *Delete* → the dialog says "in den Papierkorb", the entries disappear from the list.
+1. *Shares → Files* (or *My ShareOS → Files* as a user): select a file and a folder, *Delete* → the dialog says "to the trash", the entries disappear from the list.
 2. *Trash*: both entries with origin and time. Select one → *Restore*: it is back in its folder. If a file with that name exists by then, it comes back as `name (2).ext`.
 3. *Delete for good* / *Empty trash* remove for good. In the terminal: `ls -la /mnt/<drive>/home/<user>/.shareos-trash/` (personal folder) or `ls -la /mnt/<drive>/<share folder>/.shareos-trash/`.
 4. Below the browser (admins): switch the trash off → *Delete* deletes at once again (red dialog). Days: 7–90 or never; older entries go when that trash is opened or used next.
@@ -496,7 +496,7 @@ Needs a Tailscale account (free), a phone or computer with Tailscale, the file `
 2. Plug in a USB stick with a few files. Press the USB button briefly: the USB light blinks; afterwards a message "USB copy done" with the number of files. `ls /mnt/data/USB-Kopien/` shows `2026-…_…-<stick name>` with the files. The stick stays mounted.
 3. Press again: a second folder, the first one is untouched.
 4. Hold the button 3 s or longer: the stick is ejected (as before).
-5. *Copy now* on the page does the same. A stick larger than the free space: message "Zu wenig Platz", nothing copied.
+5. *Copy now* on the page does the same. A stick larger than the free space: message "Not enough space", nothing copied.
 6. Untick: a short press only ejects again.
 
 ## 14v. My ShareOS, "Share with", file dialog with shares (0.2.0-beta.11)
@@ -514,7 +514,7 @@ Needs the DNS filter on with the default list. Best with the router handing out 
 
 1. *Services*: the DNS filter shows "running" (green).
 2. `cat /etc/resolv.conf`: if the box's own address is the only DNS server from the network, the router follows as a second `nameserver` line.
-3. DNS-FILTER tab: untick *DNS-Filter einschalten*, *Save* → "off"; *Services* shows it as stopped. On the box `nslookup github.com` still answers (through the router).
+3. DNS FILTER tab: untick *Switch on the DNS filter*, *Save* → "off"; *Services* shows it as stopped. On the box `nslookup github.com` still answers (through the router).
 4. Tick it again, *Save* → "starting …" for about a minute, then "running" with the rule count of the list (not 0). The moment it shows "running", `nslookup doubleclick.net 127.0.0.1` answers `0.0.0.0`.
 5. Wait two minutes: still "running"; `uci get dnsfilter.main.enabled` = `1`; *Services* shows it running.
 6. The status shows *Local names* (the box's names); `nslookup <box name>.<local domain> 127.0.0.1` gives the box's address, and another device of the local domain resolves through the router.
@@ -530,16 +530,16 @@ Needs the system app `transmission-daemon`, the Transmission app 1.4.0+ (ShareOS
 4. With the box password or a wrong password: "401" / sign-in fails. Five wrong passwords in a row: the program gets "too many wrong passwords" for 10 minutes (`ls /tmp/shareos-tremote/`).
 5. `curl -u anna:<password> -H 'Origin: http://x' -d '{"method":"session-get"}' http://<box>:9091/transmission/rpc` → 403 (no browser access); `http://<box>:9091/` in the browser → 404, there is no web interface.
 6. From outside the home network (e.g. a port forwarding to 9091 for the test, phone on mobile data): refused (403 "only from the home network"). Over Tailscale or the VPN of the box it works.
-7. App → *Neues Passwort*: the program loses access until the new one is entered. Admin → *Services → Torrents* → *Revoke password* for anna: the same. App: untick → `/etc/shareos/tremote/anna` is gone.
+7. App → *New password*: the program loses access until the new one is entered. Admin → *Services → Torrents* → *Revoke password* for anna: the same. App: untick → `/etc/shareos/tremote/anna` is gone.
 8. Switch the remote access off under *Services → Torrents*: ports 9091/9092 are closed; after a restart it stays off (or on, if it was on).
 
 ## 14zp. Vault shares (0.3.0-beta.5)
 
 Needs a drive with ext4 (or Btrfs) and two users with SMB access, e.g. `jan` (admin) and `anna`.
-1. *Shares → New share* `tresor`, *jan* and *anna* "read & write", tick *As a vault …*, default time 15 minutes, *Save*. *Guests* and *NFS* are greyed out. The card shows *VAULT* and *locked*.
-2. On a PC: `\\<box>` does not list `tresor`, `\\<box>\tresor` is refused. In the terminal: `getfacl /mnt/<drive>/tresor` shows no `user:anna` / `user:jan`.
-3. Log in as `anna` → *My ShareOS*: the card *tresor* has *Unlock*. A wrong password: "wrong password". The right one with 5 minutes: *offen bis HH:MM*, `\\<box>\tresor` works for anna (copy a file in). Log in to the share as `jan` from another PC: refused.
-4. Admin *Shares*: the card shows *anna: offen bis …* and *Lock now*. Wait until the time is over (or *Lock now*): within a minute the share disappears; an open Explorer window of anna gets "access denied".
+1. *Shares → New share* `vault`, *jan* and *anna* "read & write", tick *As a vault …*, default time 15 minutes, *Save*. *Guests* and *NFS* are greyed out. The card shows *VAULT* and *locked*.
+2. On a PC: `\\<box>` does not list `vault`, `\\<box>\vault` is refused. In the terminal: `getfacl /mnt/<drive>/vault` shows no `user:anna` / `user:jan`.
+3. Log in as `anna` → *My ShareOS*: the card *vault* has *Unlock*. A wrong password: "wrong password". The right one with 5 minutes: *open until HH:MM*, `\\<box>\vault` works for anna (copy a file in). Log in to the share as `jan` from another PC: refused.
+4. Admin *Shares*: the card shows *anna: open until …* and *Lock now*. Wait until the time is over (or *Lock now*): within a minute the share disappears; an open Explorer window of anna gets "access denied".
 5. `reboot`: every vault is locked after the start.
 6. Edit the share, untick *As a vault*: it is a normal share again for jan and anna.
 
@@ -563,10 +563,10 @@ Needs a box you may reset (factory reset deletes the settings, not the data disk
 1. Update a box that is in use: it keeps its password, SSH works as before (no lock on updates).
 2. *System → Power & reset → Reset to factory settings* (or reset button ≥ 15 s). After the restart the login page says "This box is not set up yet …"; `ssh root@<box>` is refused.
 3. Choose a password without pressing the button: "Set password" stays greyed out.
-4. Press the USB button on the front briefly: the page says "Taste erkannt …". Type a password twice (min. 8), *Set password*: you are logged in, the wizard has no password step. SSH works with the new password.
+4. Press the USB button on the front briefly: the page says "Button detected …". Type a password twice (min. 8), *Set password*: you are logged in, the wizard has no password step. SSH works with the new password.
 5. Wait more than 2 minutes after the button: the window is closed again ("press the USB button first").
 6. Reset button 5–10 s (access reset): after the restart the box asks to be claimed again; data, users and shares are kept.
-7. ShareOS Desktop 0.2.3, *Box einrichten* on such a box: it asks for the USB button and the password, then continues with the setup.
+7. ShareOS Desktop 0.2.3, *Set up box* on such a box: it asks for the USB button and the password, then continues with the setup.
 
 ## 14zl. Folder browser, copy and paste (0.3.0-beta.2)
 
@@ -574,7 +574,7 @@ Needs a box you may reset (factory reset deletes the settings, not the data disk
 2. *Services → Media server* → *Add subfolder*: first the shares, then their folders (e.g. `Medien/TV Shows` – with a space). Choose, set *videos only*, *Save*. In the terminal: `grep media_dir /tmp/shareos-dlna/minidlna.conf` shows `media_dir=V,/mnt/<drive>/Medien/TV Shows`; the TV shows only that folder.
 3. *Remove* on the row and *Save*: the folder is gone from the media server.
 4. *Cloud → New job*: choose a share, *Browse …* next to *SUBFOLDERS*, pick a folder, upload. Only that folder arrives in the cloud. The job list shows `Freigabe <name> / <folder>`.
-5. As a plain user with *Files* under *Meine Cloud*: the browser shows only the own shares and the personal folder. Without *Files*: the dialog says the folder has to be typed.
+5. As a plain user with *Files* under *MY CLOUD*: the browser shows only the own shares and the personal folder. Without *Files*: the dialog says the folder has to be typed.
 6. *Shares → Files*: select files, *Copy* → *Paste (n)* appears. Go into another folder (or switch the drive/share), *Paste*: the files are there, the originals too. *Paste* again: "already exists". *×* removes the button.
 7. *Cut* → paste in another folder: the files are moved, the button is gone. In a read-only share *Paste* is greyed out; *Copy* still works there.
 
@@ -593,25 +593,25 @@ Needs a box you may reset (factory reset deletes the settings, not the data disk
 
 ## 14zi. Settings backup with recovery mode (0.3.0-beta.1)
 
-1. System → General → *Sichern*: without a password, *HTTPS-Zertifikat mitsichern* and *Include the own CA* are greyed out. Enter a password (at least 6 characters): both can be chosen. *Download backup*. The file shows `host`, `created` and `version` in plain text, everything else is encrypted.
+1. System → General → *BACK UP*: without a password, *Include the HTTPS certificate (with key)* and *Include the own CA* are greyed out. Enter a password (at least 6 characters): both can be chosen. *Download backup*. The file shows `host`, `created` and `version` in plain text, everything else is encrypted.
 2. Change something that differs from the backup (e.g. delete a user, delete a share).
 3. *Restore*: choose the file, password, *Verify*. The preview lists users, groups, shares, services, apps, certificate and own CA. *Restore* → *Restore and restart*.
-4. After the restart, log in with the root password **from the backup**: the **Recovery-Modus** page appears. Everything is ticked; network and device name are already right.
+4. After the restart, log in with the root password **from the backup**: the **recovery mode** page appears. Everything is ticked; network and device name are already right.
 5. Untick an app, for example, then *Apply and restart*. Afterwards users and shares are back (Shares → User; log in over SMB from a PC with the old password).
 6. Apps → *Installed*: the chosen apps are installed after the start (internet needed; `logread | grep shareos-restore-apps`). Without internet, *APPS FROM THE BACKUP* with *Install apps from the backup* shows up at the top.
-7. With an own CA: the certificates issued for other devices are listed again under certificates, and a PC with the CA installed keeps trusting the box. If *HTTPS-Zertifikat wiederverwenden* was chosen, the fingerprint is the same as before.
+7. With an own CA: the certificates issued for other devices are listed again under certificates, and a PC with the CA installed keeps trusting the box. If *Reuse the HTTPS certificate from the backup* was chosen, the fingerprint is the same as before.
 8. Restore once more and choose *Take over nothing else* in recovery mode: the box stays as it is; only password, network, name, time zone and drives came from the backup.
 
 ## 14zh. Syncthing, Transmission on a small CPU, Zabbix for apps (0.2.0-beta.20)
 
 1. **Syncthing:** Apps → Store → **Syncthing** (brings the system app "syncthing", 12 MB). Open it as root: after a few seconds *● Running*. *ID of this device* shows the ID and a QR code.
-2. On a PC (Syncthing installed) or a phone (Syncthing app): add the box's ID as a device. The app shows the request at the top → *Add …* → *Save*. *Other devices* shows it as *verbunden*.
+2. On a PC (Syncthing installed) or a phone (Syncthing app): add the box's ID as a device. The app shows the request at the top → *Add …* → *Save*. *Other devices* shows it as *connected*.
 3. *＋ Folder*: name `Test`, folder `data/SyncTest` (it is created), share with the PC → *Save*. On the PC, accept the folder. A file put into it on the PC arrives on the box (file browser), and one put in on the box arrives on the PC. The folder shows *up to date*.
 4. Share a folder from the PC to the box: the app shows *… wants to share the folder …* → *Accept …*, choose the folder, *Save*.
 5. A **user** opens Syncthing from *My ShareOS*: a different ID, no devices or folders of root. Folders only inside "My folder" and the user's shares; synced files belong to the user. `ps` shows one `syncthing serve` per account, `netstat -ltn` no port 8384; the sync ports are 22000 (root) and 22000 + n.
-6. *System → Prozesse*: note the memory of `syncthing` (expected about 40–60 MB per account).
+6. `top` in System → Terminal: note the memory of `syncthing` (expected about 40–60 MB per account).
 7. **Transmission:** on a new account (or after deleting `.shareos-defaults` and the `settings.json` in its state folder), Transmission's preferences show 60/30 peers, a download queue of 3 and µTP off; `top` shows `transmission-daemon` with NI 10. Change a value and restart the box: the value stays.
-8. **Firmware page:** System → Firmware → *Verify*: *Versionen von GitHub* lists 3 versions, *Alle anzeigen (n)* the rest, *Show fewer* folds them again.
+8. **Firmware page:** System → Firmware → *Verify*: *VERSIONS from GitHub* lists 3 versions, *Show all (n)* the rest, *Show fewer* folds them again.
 9. **Transmission watch folder** (once the Transmission app offers it): set a watch folder in "My folder", copy a `.torrent` file into it with the app closed – the torrent shows up in the app, the file is renamed to `.torrent.added`. It is still set after a restart of the box. For the account autobrr hands its torrents to, the watch folder cannot be set.
 10. **Zabbix for apps** (once the Zabbix Agent Config app uses `ShareOS.zabbix`): as an admin, change the server in the app → `shareos-zabbix status` shows it; set a PSK → the app only shows that a key is set. As a user, the app gets no access.
 
@@ -625,9 +625,9 @@ Needs a box you may reset (factory reset deletes the settings, not the data disk
 
 1. **Dynamic DNS:** create a name at duckdns.org. System → Network → DynDNS: *DuckDNS*, name and token, *Save*. After a few seconds the right side shows *up to date* with the public address; `nslookup <name>.duckdns.org 1.1.1.1` shows it. A wrong token: *Error* and a message.
 2. **Own CA:** *Create certificate authority*, *Use for this box* (the page reconnects), download *Root certificate* and install it on the PC as a trusted root CA: `https://<box>/` opens without a warning. Issue a certificate for another device (e.g. `router.home.lan, 192.168.1.1`), download certificate and key.
-3. **Let's Encrypt** (dynamic DNS with DuckDNS or Cloudflare): *Zertifikat holen* with *Testmodus* – after up to 3 minutes *aktiv (Test)*. Then without test mode. On errors: `cat /tmp/shareos-acme.log`. *Switch off* goes back to the self-signed certificate.
+3. **Let's Encrypt** (dynamic DNS with DuckDNS or Cloudflare): *Get certificate* with *Test mode (test CA, browsers warn)* – after up to 3 minutes *active (test)*. Then without test mode. On errors: `cat /tmp/shareos-acme.log`. *Switch off* goes back to the self-signed certificate.
 4. **Printers:** install the system app *ipp-usb + p910nd*, connect the printer over USB, Services → Printer → *Share printers in the network*. A current printer shows *Without driver (IPP over USB)*; Windows 10/11 finds it under "Add printer", a multifunction device scans with the "Scan" app or "Mopria Scan". An older printer shows port 9100; *Test page*. Unplug the printer: it disappears after a few seconds.
-5. **UPS:** install the system app *Network UPS Tools*, connect the UPS over USB, Services → UPS → *Monitor the UPS*, shutdown *After some time on battery*, 2 minutes. Charge and model show up. Pull the UPS's mains plug: message "Stromausfall", after 2 minutes the box shuts down, then the UPS switches off; plug it back in: UPS and box come on. On problems: `shareos-ups status`, `cat /tmp/shareos-ups/driver.log`.
+5. **UPS:** install the system app *Network UPS Tools*, connect the UPS over USB, Services → UPS → *Monitor the UPS*, shutdown *After some time on battery*, 2 minutes. Charge and model show up. Pull the UPS's mains plug: message "Power failure", after 2 minutes the box shuts down, then the UPS switches off; plug it back in: UPS and box come on. On problems: `shareos-ups status`, `cat /tmp/shareos-ups/driver.log`.
 
 ## 14ze. Take over an existing drive (0.2.0-beta.17)
 
@@ -648,14 +648,14 @@ Needs a box you may reset (factory reset deletes the settings, not the data disk
 1. SMB signing through the crypto engine: `lsmod | grep marvell_cesa` shows the module, `cat /sys/module/ksmbd/parameters/cbc_cmac` shows `Y`. Copy a big file from a Windows PC: about 18–23 MB/s (6–11 before). In PowerShell `Get-SmbConnection | fl Dialect,Signed` shows `3.1.1` and `True`.
 2. Shares → Services → SMB → switch on *Compatibility mode (SMB 2.1 at most)*, *Save*; reconnect on the PC: `Dialect` is `2.1`. Switch it off again: `3.1.1`.
 3. Put in a disk with data from Alt-F or the D-Link firmware: Storage → Drives shows **“Take over <partition>”**. Click it: the volume appears, the files are there, nothing was erased. A RAID 1 from Alt-F shows up as a mirror.
-4. System → Power & reset: without times it shows *No times set up.* and *off*. *Set up* opens the table; enter today *off* 3 minutes and *on* 6 minutes ahead, *Save*: the overview shows the day with *an … · aus …*, the next switch-on with its date and *active*. The box switches itself off at the off time and on again at the on time. *Power off* at the top right names the next switch-on in its dialog.
+4. System → Power & reset: without times it shows *No times set up.* and *off*. *Set up* opens the table; enter today *off* 3 minutes and *on* 6 minutes ahead, *Save*: the overview shows the day with *on … · off …*, the next switch-on with its date and *active*. The box switches itself off at the off time and on again at the on time. *Power off* at the top right names the next switch-on in its dialog.
 5. Header with several notices (update, message, VPN, apps) in a narrow window: everything stays on one line, the rest is behind **+N**; a click opens the list, a click elsewhere closes it. The "update available" message is not counted in *MESSAGE* while *UPDATE* is shown.
-6. As a user: *My ShareOS* has the tab **APPS** with all apps; the start page shows only the favourites. As admin: System → Allgemein shows *DEVICE & ACCESS* between *App & Widgets* and *About*.
+6. As a user: *My ShareOS* has the tab **APPS** with all apps; the start page shows only the favourites. As admin: System → General shows *DEVICE & ACCESS* between *App & Widgets* and *About*.
 7. DNS-320 rev A (testers wanted): after flashing the box starts and stays up.
 
 ## 14zc. OneDrive (0.2.0-beta.16)
 
-Needs a Microsoft account with OneDrive and rclone (Cloud → rclone installieren).
+Needs a Microsoft account with OneDrive and rclone (Cloud → *Install rclone*).
 
 1. Cloud → *Add account* → Microsoft OneDrive: sign in, paste the address, *Add*. `grep -A6 '^\[<name>\]' /etc/shareos/cloud/rclone.conf` shows `drive_id` and `drive_type`. *Test* lists the folders; a download job runs without SSH.
 2. The same as a user under *My ShareOS* → Cloud: the account goes into the user's `~/.config/rclone/rclone.conf`.
@@ -676,7 +676,7 @@ Needs a Zabbix server 7.0 or newer in the network (e.g. the one at work or a tes
 
 ## 14zb. Start log and power schedule (0.2.0-beta.15)
 
-1. Restart the box, wait 6 minutes. System → Logs → *Start-Protokoll …*: the start is listed with its date; it shows system log, kernel, addresses, routes, ports, processes, mounts and RAID. In the terminal: `shareos-bootlog list`, `ls -l /etc/shareos/bootlog` (a few KB each).
+1. Restart the box, wait 6 minutes. System → Logs → *Start log …*: the start is listed with its date; it shows system log, kernel, addresses, routes, ports, processes, mounts and RAID. In the terminal: `shareos-bootlog list`, `ls -l /etc/shareos/bootlog` (a few KB each).
 2. Restart three more times: `shareos-bootlog list` shows only the newest 3.
 3. System → Power & reset → *Schedule*: switch it on, set switching off today in 5 minutes and switching on 10 minutes later, *Save*. The page shows the next switch-off and switch-on; `shareos-power status` shows the same times and the wake-up alarm under `alarm`.
 4. At the switch-off time the box shuts down cleanly; at the switch-on time it comes on by itself (DNS-320L, DNS-320 rev B, DNS-327L). `grep shareos-power /var/log/messages` or the start log shows "scheduled switch-off, back on …".
@@ -686,7 +686,7 @@ Needs a Zabbix server 7.0 or newer in the network (e.g. the one at work or a tes
 
 1. Open *Paperless*, then *Shares*: the shares page appears (before, the Paperless page stayed).
 2. System → Terminal → *In its own window ↗*: a window (not a tab) opens with a working shell; the page says "The terminal runs in its own window", *Show here* brings it back into the page.
-3. BeatBox → *⚡ An WinWeb*: WinWeb Player opens and can open files from the box (*+ Von der Box*).
+3. BeatBox → *⚡ To WinWeb*: WinWeb Player opens and can open files from the box (*+ From the box*).
 4. SysMon, NetTunnel or another app with more permissions is **not** given access when a simpler app opens it (no files in that window).
 5. (beta.14) `ls -ld /mnt/*/.shareos` shows `drwx--x--x`; the system app autobrr starts (APPS → autobrr, or `shareos-autobrr start`).
 
@@ -723,7 +723,7 @@ Needs the apps SysMon, HomePing and DockerDeck in a version with these permissio
 
 1. As root: Apps → Installed – every web app has a small star at the top right (system apps like nano do not). Click two: the star fills, and the bar **FAV APPS** with both apps appears above "Installed apps" (in the order they were marked). In the table view the star is next to the name.
 2. Overview: the bar sits directly above "Status". A click on an icon opens the app (in the page or in a window of its own, as set).
-3. System → Appearance → **FAV APPS**: "Namen unter den Symbolen zeigen" off → icons only; "App-Leiste anzeigen" off → the bar is gone from the overview and Apps. Switch it on again. In the terminal: `uci show shareos.ui | grep fav`.
+3. System → Appearance → **FAV APPS**: "Show names below the icons" off → icons only; "Show the “FAV APPS” app bar" off → the bar is gone from the overview and Apps. Switch it on again. In the terminal: `uci show shareos.ui | grep fav`.
 4. Log in as a user (e.g. anna): My ShareOS → My apps has stars; a favourite appears as a bar at the top. anna's favourites are independent of root's; Appearance → both switches only affect anna (`uci show accounts.anna | grep fav`).
 5. Appearance in a wide window: the panels stand in two columns; narrow window (or phone): one below the other, full width.
 6. The tabs Apps, Cloud and Paperless no longer show "NEW".

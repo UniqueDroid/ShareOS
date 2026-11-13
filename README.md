@@ -125,7 +125,7 @@ Version in brackets = first release with the feature.
 - HTTPS with a self-signed certificate that follows name and IP, own certificate possible; own certificate authority for the home network and Let's Encrypt over DNS (0.2.0-beta.18)
 - Dynamic DNS: DuckDNS, dynv6, Cloudflare, No-IP or any dyndns2 address, IPv4 and IPv6 (0.2.0-beta.18)
 - Power schedule: switch off and on per weekday (switching on through the wake-up alarm of the DNS-320L/320 rev B/327L; 0.2.0-beta.15; switching off works from 0.2.0-beta.17, the overview shows the date of the next switch-on)
-- Start log: the logs of the last 3 starts are kept on the flash (System → Logs → *Start-Protokoll*), so a box that was unreachable after a start can be looked into afterwards (0.2.0-beta.15)
+- Start log: the logs of the last 3 starts are kept on the flash (System → Logs → *Start log*), so a box that was unreachable after a start can be looked into afterwards (0.2.0-beta.15)
 - Reset button: access reset (5–10 s: network, root password, certificate) or factory reset (≥ 15 s), USB button removes USB drives (beta.9) or copies them into a dated folder (0.2.0-beta.12); the buttons work again on the DNS-320L and DNS-325 (0.2.0-beta.10)
 - Messages: RAID, volumes, temperature, SMART, updates, failed cloud jobs and app tasks – in the interface, by e-mail (SMTP) and push (ntfy, Gotify, webhook) (beta.9), Telegram bot (beta.12)
 - Terminal in the browser (System → Terminal, root shell, beta.12); Apps can be switched off (beta.12); Paperless, Cloud, the DNS filter and the desktop view are modules from the store (0.3.0-beta.3 … beta.5)
