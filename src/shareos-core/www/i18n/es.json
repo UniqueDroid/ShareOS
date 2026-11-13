@@ -1651,7 +1651,9 @@
 		"No messages.": "No hay mensajes.",
 		"Every 10 minutes the box checks RAID, volumes (mounted, how full), temperature, SMART values (read again every 6 hours; a sleeping disk is not woken up) and updates; failed cloud jobs, app tasks and storage jobs report at once. Repeated messages are counted and sent again at most once a day.": "Cada 10 minutos el equipo comprueba RAID, volúmenes (montados, ocupación), temperatura, valores SMART (se leen de nuevo cada 6 horas; no se despierta un disco en reposo) y actualizaciones; los trabajos de nube, tareas de apps y trabajos de almacenamiento fallidos avisan al instante. Los mensajes repetidos se cuentan y se reenvían como máximo una vez al día.",
 		"some files vanished while copying": "algunos archivos desaparecieron durante la copia",
-		"unknown": "desconocido"
+		"unknown": "desconocido",
+		"ShareOS was updated – loading the new interface …": "ShareOS se ha actualizado: cargando la nueva interfaz …",
+		"This takes a while – it goes on in the background …": "Esto tarda un poco: continúa en segundo plano …"
 	},
 	"patterns": [
 		[

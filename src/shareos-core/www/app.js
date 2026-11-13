@@ -492,15 +492,36 @@ function enter() {
 	shareInbox();
 }
 
+// the version the starter (index.html) loaded this interface with, as a query
+// for files loaded later: a new firmware has new addresses, nothing stale
+// comes from the browser's cache
+const verQuery = () => (window.SHAREOS_V ? '?v=' + encodeURIComponent(window.SHAREOS_V) : '');
+
+// The box runs another version than this page was loaded with (a firmware
+// update while the tab was open): load the new interface. Once per version,
+// and not while somebody types or a dialog is open – then at the next tick.
+function reloadIfUpdated(ver) {
+	const mine = window.SHAREOS_V;
+	if (!mine || !ver || ver === mine) return;
+	let done = null;
+	try { done = sessionStorage.getItem('sos-reloaded'); } catch (e) { /* no storage: reload once per page life */ }
+	if (done === ver || S.reloading) return;
+	if (document.querySelector('dialog[open]') || document.activeElement?.matches?.('input, select, textarea')) return;
+	S.reloading = true;
+	try { sessionStorage.setItem('sos-reloaded', ver); } catch (e) { /* see above */ }
+	toast('ShareOS was updated – loading the new interface …');
+	setTimeout(() => location.reload(), 2500);
+}
+
 // the desktop view lives in desktop.js and desktop.css, loaded only when used
 function deskStart() {
 	if (typeof deskRun === 'function') { deskRun(); return; }
 	$('#root').innerHTML = html`<div class="login"><div class="spin"></div></div>`.s;
 	const css = document.createElement('link');
-	css.rel = 'stylesheet'; css.href = 'desktop.css';
+	css.rel = 'stylesheet'; css.href = 'desktop.css' + verQuery();
 	document.head.append(css);
 	const js = document.createElement('script');
-	js.src = 'desktop.js';
+	js.src = 'desktop.js' + verQuery();
 	js.onload = () => deskRun();
 	js.onerror = () => { store.set('view', 'classic'); enter(); };
 	document.head.append(js);
@@ -616,6 +637,7 @@ async function tick() {
 		}
 		S.info = info;
 		S.infoAt = Date.now();
+		reloadIfUpdated(info.release?.version);
 		setOffline(false);
 		renderHeader();
 		const fn = $('#fan-now');
@@ -1297,7 +1319,7 @@ const fmtMB = (mb) => (mb ? fmtBytes(mb * 1e6, 0) : 'unlimited');
 
 async function loadShareData() {
 	try {
-		const [sh, acc, st] = await Promise.all([rpc('shareos.shares', 'list'), rpc('shareos.accounts', 'list'), rpc('shareos.storage', 'status')]);
+		const [sh, acc, st] = await Promise.all([rpc('shareos.shares', 'list'), rpc('shareos.accounts', 'list'), rpc('shareos.storage', 'volumes')]);
 		S.shares = sh; S.acc = acc; S.vols = st.volumes || [];
 	} catch (e) { if (e.code !== 'auth') toast('Shares: ' + e.message, true); }
 	if (S.route.tab === 'shares' && !document.activeElement?.matches('input,select,textarea')) renderMain();
@@ -2149,7 +2171,7 @@ async function loadPrinter() {
 	if (S.route.tab === 'services' && S.route.sub === 'printer') {
 		if (!document.activeElement?.matches('input,select')) renderMain();
 		// printers come and go: look again now and then
-		S.prnTimer = setTimeout(loadPrinter, 10000);
+		S.prnTimer = setTimeout(loadPrinter, 20000);
 	}
 }
 
@@ -2190,7 +2212,7 @@ function printerView() {
 
 function printerAfter() {
 	if (!S.prn) { loadPrinter(); return; }
-	if (!S.prnTimer) S.prnTimer = setTimeout(loadPrinter, 10000);
+	if (!S.prnTimer) S.prnTimer = setTimeout(loadPrinter, 20000);
 	$('#f-prn')?.addEventListener('submit', async (e) => {
 		e.preventDefault();
 		const f = e.target, b = $('button[type=submit]', f); b.disabled = true;
@@ -2209,7 +2231,7 @@ async function loadUps() {
 	try { S.ups = await rpc('shareos.ups', 'status'); } catch (e) { toast('UPS: ' + e.message, true); }
 	if (S.route.tab === 'services' && S.route.sub === 'ups') {
 		if (!document.activeElement?.matches('input,select')) renderMain();
-		S.upsTimer = setTimeout(loadUps, S.ups?.running ? 5000 : 15000);
+		S.upsTimer = setTimeout(loadUps, S.ups?.running ? 10000 : 30000);
 	}
 }
 
@@ -2272,7 +2294,7 @@ function upsView() {
 
 function upsAfter() {
 	if (!S.ups) { loadUps(); return; }
-	if (!S.upsTimer) S.upsTimer = setTimeout(loadUps, 5000);
+	if (!S.upsTimer) S.upsTimer = setTimeout(loadUps, 10000);
 	$('#ups-mode')?.addEventListener('change', (e) => { $('#ups-pct').hidden = e.target.value !== 'percent'; $('#ups-min').hidden = e.target.value !== 'minutes'; });
 	$('#ups-server')?.addEventListener('change', (e) => { $('#ups-net').hidden = !e.target.checked; });
 	$('#f-ups')?.addEventListener('submit', async (e) => {
@@ -4647,7 +4669,13 @@ async function refreshUpdateStatus() {
 		if (S.upd.check && (!S.check || S.upd.check.time >= (S.check.time || 0))) S.check = { ...S.upd.check, current: S.upd.current };
 		if ((S.check?.update_available ? S.check.latest : null) !== had) renderHeader();
 		// no result yet (fresh start) or an old one: ask now (GitHub allows 60 anonymous API calls per hour)
-		if (!S.checking && !S.autoChecked && (!S.upd.check || Date.now() / 1000 - S.upd.check.time > 6 * 3600)) { S.autoChecked = true; checkUpdates(true); }
+		// – in the background on the box (the result arrives with a later status), and
+		// not again within an hour after a check that failed (no internet)
+		const nowS = Date.now() / 1000;
+		if (!S.checking && !S.autoChecked && (!S.upd.check || nowS - S.upd.check.time > 6 * 3600) && !(S.upd.check_failed && nowS - S.upd.check_failed.time < 3600)) {
+			S.autoChecked = true;
+			rpc('shareos.update', 'check_auto').then(() => { clearTimeout(S.updTimer); S.updTimer = setTimeout(refreshUpdateStatus, 8000); }).catch(() => { });
+		}
 		// keep the page while a .bin is being checked/written below
 		if (S.route.tab === 'system' && S.route.sub === 'firmware' && !document.activeElement?.matches('select') && !$('#bin-info:not(:empty)') && !$('#f-bin input')?.files?.length) renderMain();
 		if (prev && prev !== S.upd.state && S.upd.state === 'ready') toast('Update downloaded and verified.');
@@ -5553,11 +5581,25 @@ function fbClip(cut) {
 	fbRender();
 }
 
+// Copy, move and delete: what takes longer than a few seconds goes on in the
+// background on the box (the call answers { running, job }); wait for its
+// result here, so the box stays usable meanwhile.
+async function fileOp(method, args) {
+	const first = await rpc('shareos.files', method, args);
+	let r = first;
+	if (r.running) toast('This takes a while – it goes on in the background …');
+	while (r.running) {
+		await new Promise((res) => { setTimeout(res, 1500); });
+		r = await rpc('shareos.files', 'job', { id: first.job });
+	}
+	return { ...first, ...r, running: false };
+}
+
 async function fbPaste() {
 	const f = S.fb, c = S.fbClip;
 	if (!c) return;
 	try {
-		await rpc('shareos.files', 'move', { root: c.root, path: c.path, names: c.names, dest: f.path, dest_root: f.root, copy: !c.cut });
+		await fileOp('move', { root: c.root, path: c.path, names: c.names, dest: f.path, dest_root: f.root, copy: !c.cut });
 		toast(c.cut ? 'Moved.' : 'Copied.');
 		if (c.cut) S.fbClip = null;   // moved: gone from the old place; a copy can be pasted again
 		fbLoad();
@@ -5655,7 +5697,7 @@ Object.assign(ACTIONS, {
 			if (!await confirmDlg(`Move ${names.length} item(s) to the trash?`, `${list} – can be restored from the trash.`, 'Move to trash')) return;
 		} else if (!await confirmDlg(`Delete ${names.length} item(s)?`, `${list} – folders with their content. This cannot be undone.`, 'Delete', true)) return;
 		try {
-			const r = await rpc('shareos.files', 'delete', { root: S.fb.root, path: S.fb.path, names });
+			const r = await fileOp('delete', { root: S.fb.root, path: S.fb.path, names });
 			toast(r.trash ? 'Moved to the trash.' : 'Deleted.'); fbLoad();
 		} catch (e) { toast('Delete: ' + e.message, true); }
 	},
@@ -5673,7 +5715,7 @@ Object.assign(ACTIONS, {
 		const n = all ? (S.fb.tdata?.items || []).length : ids.length;
 		const title = `Delete ${n} item(s) for good?`;
 		if (!await confirmDlg(all ? 'Empty the trash?' : title, 'This cannot be undone.', all ? 'Empty' : 'Delete for good', true)) return;
-		try { await rpc('shareos.files', 'trash_empty', { root: S.fb.root, ids }); toast(all ? 'Trash emptied.' : 'Deleted for good.'); S.fb.tsel = new Set(); fbTrashLoad(); }
+		try { await fileOp('trash_empty', { root: S.fb.root, ids }); toast(all ? 'Trash emptied.' : 'Deleted for good.'); S.fb.tsel = new Set(); fbTrashLoad(); }
 		catch (e) { toast('Delete: ' + e.message, true); }
 	}
 });

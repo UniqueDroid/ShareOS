@@ -35,6 +35,11 @@ EOF
 # none (UBI, UBIFS, squashfs and overlayfs are built into the kernel).
 
 # The UBI installer is part of both the initramfs and the full system
+# the version for the starter page of the web interface (index.html): it puts
+# it into the addresses of the scripts and style sheets, so a browser does not
+# go on with the files of the firmware before
+[ -d "$TARGET_DIR/www" ] && echo "$VERSION" > "$TARGET_DIR/www/version.txt"
+
 install -D -m 0755 "$BOARD_DIR/initramfs/usr/sbin/shareos-install-ubi" "$TARGET_DIR/usr/sbin/shareos-install-ubi"
 
 # Nothing in the test system needs these

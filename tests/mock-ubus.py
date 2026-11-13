@@ -983,6 +983,8 @@ def call(obj, method, args):
     if obj == 'shareos.storage':
         if method == 'status':
             return storage()
+        if method == 'volumes':
+            return {'volumes': storage()['volumes'], 'apps': storage().get('apps')}
         if method == 'smart_test':
             sm = SMART.get(args.get('disk'))
             if not sm:

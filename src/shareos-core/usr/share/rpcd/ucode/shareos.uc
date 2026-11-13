@@ -25,7 +25,7 @@
 // rpcd's main loop is never blocked; the UI polls shareos.update.status.
 'use strict';
 
-import { readfile, writefile, popen, glob, stat, lstat, lsdir, realpath, readlink, symlink, unlink, rename } from 'fs';
+import { readfile, writefile, open as fopen, popen, glob, stat, lstat, lsdir, realpath, readlink, symlink, unlink, rename } from 'fs';
 import { cursor } from 'uci';
 
 const UPDATER = '/usr/sbin/shareos-update';
@@ -317,13 +317,17 @@ function disks_state() {
 	}));
 }
 // mounted USB partitions: { dev, path, fs }
+// (asked on every file operation and every status: "shareos-usb list" runs
+// only when the mounts or the list of USB partitions changed)
 function usb_mounts() {
-	let l = [];
-	for (let line in split(sh(USB + ' list').out, '\n')) {
-		let f = split(trim(line), ' ');
-		if (length(f) == 3) push(l, { dev: f[0], path: f[1], fs: f[2] });
-	}
-	return l;
+	return memo('usb-mounts', (readfile('/proc/mounts') ?? '') + join(',', lsdir('/tmp/shareos-usb') ?? []), 0, () => {
+		let l = [];
+		for (let line in split(sh(USB + ' list').out, '\n')) {
+			let f = split(trim(line), ' ');
+			if (length(f) == 3) push(l, { dev: f[0], path: f[1], fs: f[2] });
+		}
+		return l;
+	});
 }
 
 function ubiblock_major() {
@@ -331,13 +335,22 @@ function ubiblock_major() {
 	return m ? m[1] : null;
 }
 
-function lsblk() {
+function lsblk_read() {
 	// -e: leave out mtdblock (31), ram (1) and ubiblock devices – only disks matter here
 	let r = sh('lsblk -J -b -e 1,31,' + (ubiblock_major() ?? '31') + ' -o NAME,TYPE,SIZE,FSTYPE,LABEL,UUID,MOUNTPOINT,MODEL,SERIAL,TRAN,RM,ROTA');
 	let j = null;
 	try { j = json(r.out); } catch (e) { }
 	return j?.blockdevices ?? [];
 }
+// The storage page asks every few seconds: the answer is kept for 20 s while
+// the block devices and the mounts are the same. While a storage job runs
+// (it formats, builds arrays) nothing is kept.
+function lsblk() {
+	if (stat(SMART_DIR + '/lock')) { forget('lsblk'); return lsblk_read(); }
+	return memo('lsblk', join(',', glob('/sys/class/block/*')) + (readfile('/proc/mounts') ?? ''), 20, lsblk_read);
+}
+// the sleep state for the storage page: asked at most every 30 s per disk
+function disk_standby_memo(d) { return memo('standby:' + d, '', 30, () => disk_standby(d)); }
 
 // SSD wear from the vendor attributes (normalized value = life left in %)
 const WEAR_ATTRS = [ 'Percent_Lifetime_Remain', 'SSD_Life_Left', 'Remaining_Lifetime_Perc', 'Media_Wearout_Indicator', 'Wear_Leveling_Count', 'Percent_Life_Remaining' ];
@@ -445,6 +458,10 @@ function smart_read(disk, refresh) {
 	}
 	if (!refresh && !st)
 		return null;
+	// old values and the disk asleep (asked every 30 s at most): no smartctl
+	// at every status poll just to hear "standby" again
+	if (!refresh && disk_standby_memo(disk) === true)
+		return { standby: true };
 	// -n standby: do not wake a sleeping disk just for SMART; -a: health,
 	// attributes, error and self-test log; devstat: the SSD endurance indicator
 	let r = sh('smartctl -j -n standby -a -l devstat /dev/' + disk);
@@ -527,12 +544,21 @@ function volumes() {
 		let mfs = mounted ? match(mounts, regexp('(^|\n)\\S+ ' + mp + ' (\\S+) '))?.[2] : null;
 		let v = { name, uuid: s.uuid, fstype: mfs ?? s.fstype, layout: s.layout, enabled: s.enabled != '0',
 			device: dev, mountpoint: mp, mounted };
-		if (mounted) {
-			let f = split(trim(split(sh('df -k ' + shq(mp)).out, '\n')[1] ?? ''), /\s+/);
-			if (length(f) >= 4) { v.size = +f[1] * 1024; v.used = +f[2] * 1024; v.avail = +f[3] * 1024; }
-		}
 		push(list, v);
 	});
+	// sizes: one df for all mounted volumes
+	let mps = map(filter(list, (v) => v.mounted), (v) => v.mountpoint);
+	if (length(mps)) {
+		let by = {};
+		for (let line in split(sh('df -k ' + join(' ', map(mps, shq))).out, '\n')) {
+			let f = split(trim(line), /\s+/);
+			if (length(f) >= 6 && match(f[1], /^[0-9]+$/)) by[f[5]] = f;
+		}
+		for (let v in list) {
+			let f = by[v.mountpoint];
+			if (f) { v.size = +f[1] * 1024; v.used = +f[2] * 1024; v.avail = +f[3] * 1024; }
+		}
+	}
 	return list;
 }
 
@@ -926,22 +952,32 @@ const VAULT_TTLS = [ 5, 15, 30, 60, 120, 240, 480 ];
 function vault_ttl(v) { let n = +(v ?? 15); return n >= 1 && n <= 480 ? int(n) : 15; }
 
 // share -> [{user, until}] of the vaults that are unlocked now
+// (read here as "shareos-shares vault-status" does, without starting it:
+// this is asked with every list of shares – /tmp/shareos-vault/<share> holds
+// "user until" lines, only vaults count, only times that have not run out)
 function vault_state() {
-	let st = {};
-	for (let line in split(sh(SHARES + ' vault-status').out, '\n')) {
-		let m = match(line, /^vault=([^:]+):([^:]+):([0-9]+)$/);
-		if (m) push(st[m[1]] ??= [], { user: m[2], until: +m[3] });
+	let st = {}, c = cursor(), now = time();
+	for (let n in lsdir('/tmp/shareos-vault') ?? []) {
+		if (c.get('shares', n) != 'share' || c.get('shares', n, 'vault') != '1') continue;
+		for (let line in split(readfile('/tmp/shareos-vault/' + n) ?? '', '\n')) {
+			let m = match(line, /^(\S+) ([0-9]+)$/);
+			if (m && +m[2] > now) push(st[n] ??= [], { user: m[1], until: +m[2] });
+		}
 	}
 	return st;
 }
 
 function share_list() {
 	let c = cursor(), list = [];
-	let st = {}, svc = sh(SHARES + ' status').out, open = vault_state();
-	for (let line in split(svc, '\n')) {
-		let m = match(line, /^share=([^:]*):([^:]*):([01])$/);
-		if (m) st[m[1]] = { path: m[2], mounted: m[3] == '1' };
-	}
+	// path and state as "shareos-shares status" gives them, worked out here:
+	// the tool starts several uci programs per share, and this list is asked
+	// by many pages
+	let st = {}, open = vault_state(), mounts = readfile('/proc/mounts') ?? '', names = proc_names();
+	c.foreach('shares', 'share', (x) => {
+		let n = x['.name'], v = x.volume, p = x.path || n;
+		if (v && c.get('storage', v) == 'volume' && substr(p, 0, 1) != '/' && index(p, '..') < 0)
+			st[n] = { path: '/mnt/' + v + '/' + p, mounted: index(mounts, ' /mnt/' + v + ' ') >= 0 };
+	});
 	c.foreach('shares', 'share', (x) => {
 		let n = x['.name'];
 		push(list, {
@@ -958,7 +994,7 @@ function share_list() {
 		smb_enabled: (c.get('shares', 'global', 'smb') ?? '1') != '0',
 		smb_compat: c.get('shares', 'global', 'smb_compat') == '1',
 		nfs_enabled: (c.get('shares', 'global', 'nfs') ?? '1') != '0',
-		smb_running: !!match(svc, /smb=1/), nfs_running: !!match(svc, /nfs=1/)
+		smb_running: running('ksmbd.mountd', names), nfs_running: running('rpc.mountd', names)
 	};
 }
 
@@ -1116,7 +1152,13 @@ function inbox_path(c, name) {
 function paperless_log(path, n) {
 	let out = [];
 	if (!path) return out;
-	let lines = filter(split(readfile(path + '/.paperless/log') ?? '', '\n'), (l) => l != '');
+	// the end of the log is enough for the last entries
+	let st = stat(path + '/.paperless/log'), txt = '';
+	if (st) {
+		let f = fopen(path + '/.paperless/log', 'r');
+		if (f) { if (st.size > 16384) { f.seek(st.size - 16384); f.read('line'); } txt = f.read('all') ?? ''; f.close(); }
+	}
+	let lines = filter(split(txt, '\n'), (l) => l != '');
 	for (let l in slice(lines, -(n ?? 20))) {
 		let f = split(l, '\t');
 		push(out, { time: +f[0], file: f[1], task: f[2], state: f[3], message: f[4] ?? '' });
@@ -1436,7 +1478,8 @@ const SNAP_KEEP = [ 'keep_last', 'keep_daily', 'keep_weekly', 'keep_monthly' ];
 
 function snap_tool(args) {
 	let r = sh(SNAP + ' ' + join(' ', map(args, shq)));
-	let j = json(trim(r.out) || 'null');
+	let j = null;
+	try { j = json(trim(r.out) || 'null'); } catch (e) { }
 	return type(j) == 'object' ? j : { error: trim(r.out) || 'failed' };
 }
 
@@ -1449,8 +1492,11 @@ function snap_jobs() {
 	let list = [];
 	cursor().foreach('snapshots', 'job', (x) => {
 		let n = x['.name'];
-		let st = json(readfile(SNAP_ST + '/' + n + '.state') ?? readfile('/mnt/' + (x.target ?? '-') + '/Snapshots/' + n + '/.state.json') ?? 'null');
-		let l = snap_tool([ 'list', n ]);
+		let st = null;
+		try { st = json(readfile(SNAP_ST + '/' + n + '.state') ?? readfile('/mnt/' + (x.target ?? '-') + '/Snapshots/' + n + '/.state.json') ?? 'null'); } catch (e) { }
+		// the list of snapshots: read again when the job's state changed, a
+		// snapshot was deleted (forget below) or after 30 s – not at every poll
+		let l = memo('snaplist:' + n, fstamp(SNAP_ST + '/' + n + '.state') + (x.target ?? ''), 30, () => snap_tool([ 'list', n ]));
 		let job = { name: n, source: x.source ?? '', target: x.target ?? '', every: x.every ?? 'day', time: x.time ?? '03:15',
 			exclude: type(x.exclude) == 'array' ? x.exclude : (x.exclude ? [ x.exclude ] : []), enabled: x.enabled != '0',
 			running: snap_running(n), last: type(st) == 'object' ? st : null, snapshots: l.snapshots ?? [], path: l.path ?? null,
@@ -1887,6 +1933,42 @@ function new_token() {
 	let t = '';
 	for (let i = 0; i < length(r); i++) t += sprintf('%02x', ord(r, i));
 	return t;
+}
+
+// Copying, moving between drives and deleting can take minutes. rpcd answers
+// one call at a time, so such a command runs in the background: the call
+// waits 3 s for it – most are done by then and answer as before – and
+// otherwise returns { ok, running, job }; "job" (files / appfs) tells later
+// how it ended. Jobs live in FJOBS (in RAM): <id>/user, pid, out, rc.
+const FJOBS = '/tmp/shareos-filejobs';
+function files_job(u, id) {
+	let d = FJOBS + '/' + id;
+	if (type(id) != 'string' || !match(id, /^[0-9a-f]{16}$/) || read_trim(d + '/user') != u) return { error: 'unknown job' };
+	let rc = read_trim(d + '/rc');
+	if (rc == null) {
+		let pid = +(read_trim(d + '/pid') ?? 0);
+		if (pid > 1 && stat('/proc/' + pid)) return { ok: true, running: true, job: id };
+		// the shell is gone without a result: killed
+		system('rm -rf ' + shq(d));
+		return { error: 'the operation was interrupted' };
+	}
+	let r = { rc: +rc, out: readfile(d + '/out') ?? '' };
+	system('rm -rf ' + shq(d));
+	return r.rc == 0 ? { ok: true } : { error: files_err(r) };
+}
+function files_bg(u, cmd, shared) {
+	let id = substr(new_token(), 0, 16), d = FJOBS + '/' + id;
+	// results nobody asked for (a closed tab) are dropped after a day
+	for (let old in lsdir(FJOBS) ?? [])
+		if (match(old, /^[0-9a-f]{16}$/) && time() - (stat(FJOBS + '/' + old)?.mtime ?? 0) > 86400) system('rm -rf ' + shq(FJOBS + '/' + old));
+	system(sprintf('mkdir -p %s && chmod 700 %s && mkdir %s', FJOBS, FJOBS, shq(d)));
+	writefile(d + '/user', u);
+	let full = acc_role(u) == 'admin' ? 'umask 002; ' + cmd
+		: sprintf('su -s /bin/sh %s -c %s', shq(u), shq((shared ? 'umask 002; ' : 'umask 077; ') + cmd));
+	system(sprintf('start-stop-daemon -S -q -b -m -p %s/pid -x /bin/sh -- -c %s',
+		shq(d), shq(sprintf('( %s ) >%s/out 2>&1; echo $? >%s/rc', full, shq(d), shq(d)))));
+	for (let i = 0; i < 30 && !stat(d + '/rc'); i++) sleep(100);
+	return files_job(u, id);
 }
 
 /* ---------- trash of the file browser ----------------------------------------
@@ -3417,6 +3499,12 @@ return {
 	},
 
 	'shareos.storage': {
+		// only the volumes (name, mounted, size): for pages that need no disks,
+		// SMART or arrays – one df instead of a dozen programs
+		volumes: {
+			call: function() { return { volumes: volumes(), apps: cursor().get('storage', 'global', 'apps') }; }
+		},
+
 		status: {
 			call: function() {
 				let disks = [];
@@ -3425,7 +3513,7 @@ return {
 					d.usb = is_usb(d.name);
 					d.smart = d.usb ? null : smart_read(d.name, false);
 					// CHECK POWER MODE does not wake a sleeping disk
-					d.standby = disk_standby(d.name);
+					d.standby = disk_standby_memo(d.name);
 					push(disks, d);
 				}
 				let c = cursor();
@@ -4900,6 +4988,7 @@ return {
 				let n = req.args.name;
 				if (!match(n ?? '', SNAP_JOB_RE) || cursor().get('snapshots', n) != 'job') return { error: 'unknown job' };
 				let r = snap_tool([ 'delete', n, req.args.snapshot ?? '' ]);
+				forget('snaplist:' + n);
 				return r.error ? r : { ok: true, jobs: snap_jobs() };
 			}
 		},
@@ -4978,8 +5067,7 @@ return {
 					if (d.abs == src || index(d.abs + '/', src + '/') == 0) return { error: 'a folder cannot be moved into itself' };
 					if (lstat(d.abs + '/' + n)) return { error: 'already exists: ' + n };
 				}
-				let r = files_sh(u, sprintf('%s -- %s %s', a.copy ? 'cp -a' : 'mv', join(' ', map(a.names, (n) => shq(p.abs + '/' + n))), shq(d.abs + '/')), d.root.share);
-				return r.rc == 0 ? { ok: true } : { error: files_err(r) };
+				return files_bg(u, sprintf('%s -- %s %s', a.copy ? 'cp -a' : 'mv', join(' ', map(a.names, (n) => shq(p.abs + '/' + n))), shq(d.abs + '/')), d.root.share);
 			}
 		},
 
@@ -4998,8 +5086,17 @@ return {
 					trash_purge(u, files_wpath(u, a.root, '', 'dir'));
 					return r;
 				}
-				let r = files_sh(u, 'rm -rf -- ' + join(' ', map(a.names, (n) => shq(p.abs + '/' + n))), p.root.share);
-				return r.rc == 0 ? { ok: true } : { error: files_err(r) };
+				return files_bg(u, 'rm -rf -- ' + join(' ', map(a.names, (n) => shq(p.abs + '/' + n))), p.root.share);
+			}
+		},
+
+		// how a copy, move or delete that went on in the background ended
+		job: {
+			args: { id: '' },
+			call: function(req) {
+				let u = session_user(req);
+				if (!u || !files_allowed(u)) return { error: 'not allowed' };
+				return files_job(u, req.args.id);
 			}
 		},
 
@@ -5054,8 +5151,8 @@ return {
 				let ids = (type(a.ids) == 'array' && length(a.ids)) ? a.ids : map(trash_items(p), (x) => x.id);
 				if (!length(ids)) return { ok: true, removed: 0 };
 				if (!trash_ids_ok(ids)) return { error: 'invalid entry' };
-				let r = files_sh(u, 'rm -rf -- ' + join(' ', map(ids, (i) => shq(t + '/' + i) + ' ' + shq(t + '/' + i + '.json'))), p.root.share);
-				return r.rc == 0 ? { ok: true, removed: length(ids) } : { error: files_err(r) };
+				let r = files_bg(u, 'rm -rf -- ' + join(' ', map(ids, (i) => shq(t + '/' + i) + ' ' + shq(t + '/' + i + '.json'))), p.root.share);
+				return r.error ? r : { ...r, removed: length(ids) };
 			}
 		},
 
@@ -5577,8 +5674,7 @@ return {
 					if (droot == a.root && (d.rel == src || index(d.rel + '/', src + '/') == 0)) return { error: 'a folder cannot be moved into itself' };
 					if (lstat(d.abs + '/' + n)) return { error: 'already exists: ' + n };
 				}
-				let r = files_sh(g.u, sprintf('%s -- %s %s', a.copy ? 'cp -a' : 'mv', join(' ', map(a.names, (n) => shq(p.abs + '/' + n))), shq(d.abs + '/')), d.root.share);
-				return r.rc == 0 ? { ok: true } : { error: files_err(r) };
+				return files_bg(g.u, sprintf('%s -- %s %s', a.copy ? 'cp -a' : 'mv', join(' ', map(a.names, (n) => shq(p.abs + '/' + n))), shq(d.abs + '/')), d.root.share);
 			}
 		},
 
@@ -5591,8 +5687,17 @@ return {
 				for (let n in a.names) if (!name_ok(n)) return { error: 'invalid name' };
 				let p = files_wpath(g, a.root, a.path, 'dir');
 				if (p.error) return p;
-				let r = files_sh(g.u, 'rm -rf -- ' + join(' ', map(a.names, (n) => shq(p.abs + '/' + n))), p.root.share);
-				return r.rc == 0 ? { ok: true } : { error: files_err(r) };
+				return files_bg(g.u, 'rm -rf -- ' + join(' ', map(a.names, (n) => shq(p.abs + '/' + n))), p.root.share);
+			}
+		},
+
+		// how a copy, move or delete that went on in the background ended
+		job: {
+			args: { grant: '', id: '' },
+			call: function(req) {
+				let g = app_grant_user(req.args.grant, true);
+				if (!g) return { error: 'no access' };
+				return files_job(g.u, req.args.id);
 			}
 		},
 
@@ -5881,6 +5986,13 @@ return {
 				let ch = req.args.channel;
 				return run_updater(ch ? [ 'check', ch ] : [ 'check' ]);
 			}
+		},
+
+		// The check the interface starts by itself: in the background. Asking
+		// GitHub takes up to a minute on a box without internet, and rpcd
+		// answers one call at a time – the result comes with "status".
+		check_auto: {
+			call: function() { return spawn_updater([ 'auto' ]); }
 		},
 
 		status: {

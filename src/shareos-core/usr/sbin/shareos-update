@@ -129,7 +129,10 @@ function load_state() {
 function save_state(s) {
 	mkdir(STATE_DIR);
 	s.updated = time();
-	if (BUSY[s.state]) s.pid = self_pid(); else delete s.pid;
+	// the PID of the process doing the work: another updater process that
+	// saves meanwhile (a check while a download runs) must not take it over
+	if (!BUSY[s.state]) delete s.pid;
+	else if (!(s.pid && updater_alive(s.pid))) s.pid = self_pid();
 	writefile(STATE + '.tmp', sprintf('%J', s));
 	rename(STATE + '.tmp', STATE);
 	return s;
@@ -246,7 +249,14 @@ function cmd_check(channel, auto) {
 
 	let list = fetch_releases(cfg);
 	if (type(list) != 'array') {
-		if (auto) { warn('shareos-update: check failed: ' + list.error + '\n'); exit(1); }
+		if (auto) {
+			// noted, so the web interface does not ask again at every page load
+			s = load_state();
+			s.check_failed = { time: time(), error: list.error };
+			save_state(s);
+			warn('shareos-update: check failed: ' + list.error + '\n');
+			exit(1);
+		}
 		fail(s, 'cannot fetch releases from ' + cfg.api + ' (' + cfg.repo + '): ' + list.error);
 	}
 	// the state may have changed while asking GitHub (a download started)
@@ -263,6 +273,7 @@ function cmd_check(channel, auto) {
 		latest: latest?.tag,
 		update_available: !!latest && vcmp(latest.version, rel.SHAREOS_VERSION) > 0
 	};
+	delete s.check_failed;
 	if (s.state == 'error') {
 		s.state = 'idle';
 		delete s.error;

@@ -1651,7 +1651,9 @@
 		"No messages.": "কোনো বার্তা নেই।",
 		"Every 10 minutes the box checks RAID, volumes (mounted, how full), temperature, SMART values (read again every 6 hours; a sleeping disk is not woken up) and updates; failed cloud jobs, app tasks and storage jobs report at once. Repeated messages are counted and sent again at most once a day.": "প্রতি ১০ মিনিটে বক্স RAID, ভলিউম (মাউন্ট করা, কতটা ভর্তি), তাপমাত্রা, SMART মান (প্রতি ৬ ঘণ্টায় আবার পড়া হয়; ঘুমন্ত ডিস্ক জাগানো হয় না) ও আপডেট পরীক্ষা করে; ব্যর্থ ক্লাউড জব, অ্যাপের কাজ ও স্টোরেজ জব সঙ্গে সঙ্গে জানায়। পুনরাবৃত্ত বার্তা গোনা হয় এবং দিনে সর্বোচ্চ একবার আবার পাঠানো হয়।",
 		"some files vanished while copying": "কপি করার সময় কিছু ফাইল হারিয়ে গেছে",
-		"unknown": "অজানা"
+		"unknown": "অজানা",
+		"ShareOS was updated – loading the new interface …": "ShareOS আপডেট হয়েছে – নতুন ইন্টারফেস লোড হচ্ছে …",
+		"This takes a while – it goes on in the background …": "এতে কিছু সময় লাগবে – পটভূমিতে চলতে থাকবে …"
 	},
 	"patterns": [
 		[

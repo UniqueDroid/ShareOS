@@ -4,7 +4,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ShareOS</title>
-<link rel="stylesheet" href="shareos.css">
 <link rel="icon" type="image/png" href="favicon.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="manifest" href="manifest.json">
@@ -20,7 +19,34 @@
   </div>
   <div class="toast" id="toast" aria-live="polite"></div>
 </div>
-<script src="i18n.js"></script>
-<script src="app.js"></script>
+<script>
+// Starter. The box gives no caching rules for its files, so a browser keeps
+// app.js and the style sheet for as long as it guesses is fine – after a
+// firmware update that was the old interface until the cache was emptied.
+// This page therefore loads nothing by a fixed name: it asks the box for its
+// version (version.txt, never from the cache) and loads the style sheet and
+// the scripts with that version in the address. A new firmware has a new
+// version, so the browser fetches the new files. app.js does the same for
+// desktop.js/desktop.css and reloads an open tab when the version of the box
+// changes (SHAREOS_V).
+(function () {
+	function boot(v) {
+		var q = v ? '?v=' + encodeURIComponent(v) : '';
+		window.SHAREOS_V = v;
+		var css = document.createElement('link');
+		css.rel = 'stylesheet'; css.href = 'shareos.css' + q;
+		document.head.appendChild(css);
+		function load(src, next) {
+			var s = document.createElement('script');
+			s.src = src + q; s.onload = next;
+			document.body.appendChild(s);
+		}
+		load('i18n.js', function () { load('app.js'); });
+	}
+	fetch('version.txt?t=' + Date.now(), { cache: 'no-store' })
+		.then(function (r) { return r.ok ? r.text() : ''; })
+		.then(function (t) { boot(t.trim().slice(0, 64)); }, function () { boot(''); });
+})();
+</script>
 </body>
 </html>

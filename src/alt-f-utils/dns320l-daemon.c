@@ -1180,7 +1180,10 @@ int main(int argc, char *argv[]) {
 	unsigned short sleepCount = 0;
 
 	struct sockaddr_un server;
-	int pollTimeMs = 10; // Sleep 10ms
+	/* The loop wakes up this often when no client asks for anything; a
+	 * client's command ends the wait at once. 100 ms: the LED is looked at
+	 * every 500 ms and the temperature every 15 s (both multiples of it). */
+	int pollTimeMs = 100;
 
 	char *xopt = NULL;
 	char xcmd[64];

@@ -1651,7 +1651,9 @@
 		"No messages.": "没有消息。",
 		"Every 10 minutes the box checks RAID, volumes (mounted, how full), temperature, SMART values (read again every 6 hours; a sleeping disk is not woken up) and updates; failed cloud jobs, app tasks and storage jobs report at once. Repeated messages are counted and sent again at most once a day.": "设备每 10 分钟检查一次 RAID、卷（是否挂载、占用情况）、温度、SMART 值（每 6 小时重新读取；不会唤醒休眠的磁盘）和更新；失败的云任务、应用任务和存储任务会立即报告。重复的消息会被计数，每天最多重新发送一次。",
 		"some files vanished while copying": "部分文件在复制过程中消失",
-		"unknown": "未知"
+		"unknown": "未知",
+		"ShareOS was updated – loading the new interface …": "ShareOS 已更新 – 正在加载新界面 …",
+		"This takes a while – it goes on in the background …": "这需要一些时间 – 将在后台继续 …"
 	},
 	"patterns": [
 		[

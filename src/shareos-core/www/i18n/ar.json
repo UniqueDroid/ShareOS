@@ -1651,7 +1651,9 @@
 		"No messages.": "لا توجد رسائل.",
 		"Every 10 minutes the box checks RAID, volumes (mounted, how full), temperature, SMART values (read again every 6 hours; a sleeping disk is not woken up) and updates; failed cloud jobs, app tasks and storage jobs report at once. Repeated messages are counted and sent again at most once a day.": "كل 10 دقائق يفحص الجهاز RAID والمجلدات (موصولة، نسبة الامتلاء) ودرجة الحرارة وقيم SMART (تُقرأ من جديد كل 6 ساعات؛ ولا يُوقَظ قرص نائم) والتحديثات؛ أما مهام السحابة ومهام التطبيقات ومهام التخزين الفاشلة فتُبلَّغ فورًا. تُحصى الرسائل المتكررة ولا تُرسل مجددًا أكثر من مرة في اليوم.",
 		"some files vanished while copying": "اختفت بعض الملفات أثناء النسخ",
-		"unknown": "غير معروف"
+		"unknown": "غير معروف",
+		"ShareOS was updated – loading the new interface …": "تم تحديث ShareOS – جارٍ تحميل الواجهة الجديدة …",
+		"This takes a while – it goes on in the background …": "يستغرق هذا بعض الوقت – يستمر في الخلفية …"
 	},
 	"patterns": [
 		[

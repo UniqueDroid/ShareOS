@@ -388,14 +388,26 @@
 			.then(function (r) { return r.json().catch(function () { return { error: 'HTTP ' + r.status }; }); })
 			.then(function (j) { if (j.error) throw new Error(j.error); return j; });
 	}
+	/* copy, move and remove: the box goes on in the background with what takes
+	   longer than a few seconds ({ running, job }) – wait here for the result,
+	   so the promise resolves when the files are where they should be */
+	function fsLong(op, args) {
+		return fsCall(op, args).then(function wait(j) {
+			if (!j.running) return j;
+			var id = j.job;
+			return new Promise(function (res) { setTimeout(res, 1500); })
+				.then(function () { return fsCall('job', { id: id }); })
+				.then(function (n) { if (n.running) n.job = id; return wait(n); });
+		});
+	}
 	var fs = grant && /^[0-9a-f]{32}$/.test(grant) ? {
 		roots: function () { return fsCall('roots').then(function (j) { return j.roots; }); },
 		list: function (root, path, hidden) { return fsCall('list', { root: root, path: path || '', hidden: !!hidden }); },
 		mkdir: function (root, path, name) { return fsCall('mkdir', { root: root, path: path || '', name: name }); },
 		rename: function (root, path, name, to) { return fsCall('rename', { root: root, path: path || '', name: name, to: to }); },
-		copy: function (root, path, names, destRoot, dest) { return fsCall('move', { root: root, path: path || '', names: names, dest_root: destRoot || root, dest: dest || '', copy: true }); },
-		move: function (root, path, names, destRoot, dest) { return fsCall('move', { root: root, path: path || '', names: names, dest_root: destRoot || root, dest: dest || '' }); },
-		remove: function (root, path, names) { return fsCall('delete', { root: root, path: path || '', names: names }); },
+		copy: function (root, path, names, destRoot, dest) { return fsLong('move', { root: root, path: path || '', names: names, dest_root: destRoot || root, dest: dest || '', copy: true }); },
+		move: function (root, path, names, destRoot, dest) { return fsLong('move', { root: root, path: path || '', names: names, dest_root: destRoot || root, dest: dest || '' }); },
+		remove: function (root, path, names) { return fsLong('delete', { root: root, path: path || '', names: names }); },
 		open: function (root, path, name, o) {
 			o = o || {};
 			return fsCall('open', { root: root, path: path || '', name: name, write: !!o.write, create: !!o.create }).then(function (j) {

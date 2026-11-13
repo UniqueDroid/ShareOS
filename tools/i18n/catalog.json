@@ -1669,7 +1669,9 @@
 		"No messages.",
 		"Every 10 minutes the box checks RAID, volumes (mounted, how full), temperature, SMART values (read again every 6 hours; a sleeping disk is not woken up) and updates; failed cloud jobs, app tasks and storage jobs report at once. Repeated messages are counted and sent again at most once a day.",
 		"some files vanished while copying",
-		"unknown"
+		"unknown",
+		"ShareOS was updated – loading the new interface …",
+		"This takes a while – it goes on in the background …"
 	],
 	"patterns": [
 		[

@@ -17,6 +17,7 @@ const OPS = {
 	rename: [ 'root', 'path', 'name', 'to' ],
 	move: [ 'root', 'path', 'names', 'dest_root', 'dest', 'copy' ],
 	delete: [ 'root', 'path', 'names' ],
+	job: [ 'id' ],
 	open: [ 'root', 'path', 'name', 'write', 'create' ],
 	grant_app: [ 'app' ]
 };

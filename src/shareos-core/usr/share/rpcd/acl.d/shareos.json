@@ -28,10 +28,12 @@
 				],
 				"shareos.storage": [
 					"status",
+					"volumes",
 					"smart"
 				],
 				"shareos.update": [
 					"check",
+					"check_auto",
 					"status",
 					"bin_info"
 				],
@@ -92,6 +94,7 @@
 				],
 				"shareos.files": [
 					"roots",
+					"job",
 					"list",
 					"openers",
 					"trash_list"
@@ -378,6 +381,7 @@
 				],
 				"shareos.files": [
 					"roots",
+					"job",
 					"list",
 					"openers",
 					"trash_list"
