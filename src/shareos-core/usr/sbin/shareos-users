@@ -44,7 +44,7 @@ next_id() {   # first free id >= 1000 in passwd ($1=/etc/passwd) or group
 
 read_password() {
 	IFS= read -r PASS || true
-	[ ${#PASS} -ge 6 ] || die "the password needs at least 6 characters"
+	[ ${#PASS} -ge 8 ] || die "the password needs at least 8 characters"
 	case "$PASS" in *:*) die "the password must not contain ':'" ;; esac
 }
 

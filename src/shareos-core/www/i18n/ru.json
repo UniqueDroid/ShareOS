@@ -1655,7 +1655,9 @@
 		"ShareOS was updated – loading the new interface …": "ShareOS обновлён – загружается новый интерфейс …",
 		"This takes a while – it goes on in the background …": "Это займёт некоторое время – операция продолжается в фоне …",
 		"To learn its public IPv4 address, the box asks api.ipify.org (ipv4.icanhazip.com if that does not answer).": "Чтобы узнать свой публичный IPv4-адрес, устройство обращается к api.ipify.org (к ipv4.icanhazip.com, если тот не отвечает).",
-		"The password needs at least 8 characters.": "Пароль должен содержать не менее 8 символов."
+		"The password needs at least 8 characters.": "Пароль должен содержать не менее 8 символов.",
+		"New password (at least 8 characters). Used for shares and – depending on the role – for the web interface.": "Новый пароль (не менее 8 символов). Используется для общих папок и – в зависимости от роли – для веб-интерфейса.",
+		"Applies to the web interface and SSH. At least 8 characters.": "Действует для веб-интерфейса и SSH. Не менее 8 символов."
 	},
 	"patterns": [
 		[

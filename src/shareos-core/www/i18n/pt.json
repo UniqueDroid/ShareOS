@@ -1655,7 +1655,9 @@
 		"ShareOS was updated – loading the new interface …": "O ShareOS foi atualizado – carregando a nova interface …",
 		"This takes a while – it goes on in the background …": "Isso demora um pouco – continua em segundo plano …",
 		"To learn its public IPv4 address, the box asks api.ipify.org (ipv4.icanhazip.com if that does not answer).": "Para saber o seu endereço IPv4 público, a caixa pergunta a api.ipify.org (ipv4.icanhazip.com se este não responder).",
-		"The password needs at least 8 characters.": "A senha precisa de pelo menos 8 caracteres."
+		"The password needs at least 8 characters.": "A senha precisa de pelo menos 8 caracteres.",
+		"New password (at least 8 characters). Used for shares and – depending on the role – for the web interface.": "Nova senha (pelo menos 8 caracteres). Serve para os compartilhamentos e – conforme a função – para a interface web.",
+		"Applies to the web interface and SSH. At least 8 characters.": "Vale para a interface web e o SSH. Pelo menos 8 caracteres."
 	},
 	"patterns": [
 		[

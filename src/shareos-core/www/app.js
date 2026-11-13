@@ -314,7 +314,7 @@ function promptDlg(title, text, value, okLabel, type = 'text', max = 0) {
 		const d = document.createElement('dialog');
 		d.className = 'dlg';
 		d.innerHTML = html`<form method="dialog"><h3>${title}</h3><p>${text}</p>
-			<label class="f" style="margin-bottom:16px"><input name="v" value="${value}" type="${type}" maxlength="${max || (type === 'password' ? 128 : 32)}"${type === 'password' ? raw(' minlength="6" autocomplete="new-password"') : ''} required></label>
+			<label class="f" style="margin-bottom:16px"><input name="v" value="${value}" type="${type}" maxlength="${max || (type === 'password' ? 128 : 32)}"${type === 'password' ? raw(' minlength="8" autocomplete="new-password"') : ''} required></label>
 			<div class="acts"><button class="btn ghost" type="button" value="no">Cancel</button>
 			<button class="btn primary" type="submit" value="yes">${okLabel}</button></div></form>`.s;
 		$('#app').append(d);
@@ -1497,8 +1497,8 @@ function userEditor(e) {
 			<label class="f"><span>ROLE</span><select name="role">${Object.entries(ROLE_TXT).map(([k, t]) => html`<option value="${k}"${u.role === k ? raw(' selected') : ''}>${t}</option>`)}</select></label>
 			<label class="f"><span>PERSONAL FOLDER</span><select name="home"><option value="">none</option>${S.vols.filter(linuxFs).map((v) => html`<option value="${v.name}"${u.home === v.name ? raw(' selected') : ''}>on ${v.name}</option>`)}</select></label>
 			<label class="f"><span>STORAGE LIMIT (GB)</span><input name="quota" type="number" min="0" step="1" value="${Math.round((u.quota || 0) / 1000)}"></label>
-			${isNew ? html`<label class="f"><span>PASSWORD</span><input name="p1" type="password" minlength="6" autocomplete="new-password" required></label>
-				<label class="f"><span>REPEAT</span><input name="p2" type="password" minlength="6" autocomplete="new-password" required></label>` : ''}
+			${isNew ? html`<label class="f"><span>PASSWORD</span><input name="p1" type="password" minlength="8" autocomplete="new-password" required></label>
+				<label class="f"><span>REPEAT</span><input name="p2" type="password" minlength="8" autocomplete="new-password" required></label>` : ''}
 		</div>
 		<label class="chk" style="margin-top:12px" id="u-web-row"${u.role === 'user' ? '' : raw(' hidden')}><input type="checkbox" name="web"${u.web ? raw(' checked') : ''}>May log in to the web interface (“My ShareOS”)</label>
 		<label class="chk" style="margin-top:6px"><input type="checkbox" name="cloud"${u.cloud ? raw(' checked') : ''}>May create own cloud sync jobs (needs a personal folder)</label>
@@ -2443,8 +2443,8 @@ function userLookView() {
 		<div class="ph"><span class="pt">CHANGE PASSWORD</span></div>
 		<div class="fields" style="grid-template-columns:1fr">
 			<label class="f"><span>CURRENT PASSWORD</span><input name="old" type="password" autocomplete="current-password" required></label>
-			<label class="f"><span>NEW PASSWORD</span><input name="p1" type="password" minlength="6" autocomplete="new-password" required></label>
-			<label class="f"><span>REPEAT</span><input name="p2" type="password" minlength="6" autocomplete="new-password" required></label>
+			<label class="f"><span>NEW PASSWORD</span><input name="p1" type="password" minlength="8" autocomplete="new-password" required></label>
+			<label class="f"><span>REPEAT</span><input name="p2" type="password" minlength="8" autocomplete="new-password" required></label>
 		</div>
 		<p class="note">Used for the shares and this interface.</p>
 		<div class="acts" style="margin-top:12px"><button class="btn primary" type="submit">Change password</button></div>
@@ -3236,7 +3236,7 @@ const SYS = {
 					<label class="f"><span>NEW PASSWORD</span><input name="p1" type="password" minlength="8" autocomplete="new-password" required></label>
 					<label class="f"><span>REPEAT</span><input name="p2" type="password" minlength="8" autocomplete="new-password" required></label>
 				</div>
-				<p class="note">Applies to the web interface and SSH. At least 6 characters.</p>
+				<p class="note">Applies to the web interface and SSH. At least 8 characters.</p>
 				<div class="acts" style="margin-top:14px"><button class="btn primary" type="submit">Change password</button></div>
 			</form>
 		</div>
@@ -4944,7 +4944,7 @@ const ACTIONS = {
 	'u-cancel'() { S.uEdit = null; renderMain(); },
 	async 'u-pass'(el) {
 		const n = el.dataset.name;
-		const p = await promptDlg(`Password for ${n}`, 'New password (at least 6 characters). Used for shares and – depending on the role – for the web interface.', '', 'Set', 'password');
+		const p = await promptDlg(`Password for ${n}`, 'New password (at least 8 characters). Used for shares and – depending on the role – for the web interface.', '', 'Set', 'password');
 		if (p == null) return;
 		try { await rpc('shareos.accounts', 'passwd', { name: n, password: p }); toast(`Password of ${n} changed.`); } catch (e) { toast(e.message, true); }
 	},

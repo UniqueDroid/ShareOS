@@ -1673,7 +1673,9 @@
 		"ShareOS was updated – loading the new interface …",
 		"This takes a while – it goes on in the background …",
 		"To learn its public IPv4 address, the box asks api.ipify.org (ipv4.icanhazip.com if that does not answer).",
-		"The password needs at least 8 characters."
+		"The password needs at least 8 characters.",
+		"New password (at least 8 characters). Used for shares and – depending on the role – for the web interface.",
+		"Applies to the web interface and SSH. At least 8 characters."
 	],
 	"patterns": [
 		[

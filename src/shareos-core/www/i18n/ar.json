@@ -1655,7 +1655,9 @@
 		"ShareOS was updated – loading the new interface …": "تم تحديث ShareOS – جارٍ تحميل الواجهة الجديدة …",
 		"This takes a while – it goes on in the background …": "يستغرق هذا بعض الوقت – يستمر في الخلفية …",
 		"To learn its public IPv4 address, the box asks api.ipify.org (ipv4.icanhazip.com if that does not answer).": "لمعرفة عنوان IPv4 العام، يسأل الجهاز api.ipify.org ‏(ipv4.icanhazip.com إذا لم يُجب).",
-		"The password needs at least 8 characters.": "تحتاج كلمة المرور إلى 8 أحرف على الأقل."
+		"The password needs at least 8 characters.": "تحتاج كلمة المرور إلى 8 أحرف على الأقل.",
+		"New password (at least 8 characters). Used for shares and – depending on the role – for the web interface.": "كلمة مرور جديدة (8 أحرف على الأقل). للمشاركات و– حسب الدور – لواجهة الويب.",
+		"Applies to the web interface and SSH. At least 8 characters.": "تسري على واجهة الويب وSSH. 8 أحرف على الأقل."
 	},
 	"patterns": [
 		[
