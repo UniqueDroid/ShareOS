@@ -301,7 +301,7 @@ the box for why the web server was not running.
 
 | Time | What happened |
 |---|---|
-| 19:40 | **Review of the whole firmware** by a second AI (Claude Fable 5.2), asked for by Jan: "real values, standards, speed" – backend, interface, tools, board scripts and C sources read line by line, about 90 findings. Jan decides point by point; the corrections come as one pull request (#158) in six packages: data and hardware safety (SMART read by the box itself, stale temperature, no switching off while flashing, supervised `rpcd`), displays that show what is, speed and the browser cache, robustness, secrets off the command line, rescue mode with the USB button. Found on the way: the ARM emulator tests never ran on GitHub – they do now. Signed releases are noted as a must-have of their own; splitting `app.js` and `shareos.uc` by areas follows as the next pull request. |
+| 19:40 | **Review of the whole firmware** by a second AI (Claude Fable 5.2), asked for by Jan: "real values, standards, speed" – backend, interface, tools, board scripts and C sources read line by line, 85 findings. Jan decides point by point; the corrections come as one pull request (#158) in six packages: data and hardware safety (SMART read by the box itself, stale temperature, no switching off while flashing, supervised `rpcd`), displays that show what is, speed and the browser cache, robustness, secrets off the command line, rescue mode with the USB button. Found on the way: the ARM emulator tests never ran on GitHub – they do now. Signed releases are noted as a must-have of their own; splitting `app.js` and `shareos.uc` by areas follows as the next pull request. |
 
 ### Thursday, 12.11.2026
 
