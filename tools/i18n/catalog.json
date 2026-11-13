@@ -1653,7 +1653,23 @@
 		"Check: waiting",
 		"shared inbox · no token",
 		"The Let's Encrypt certificate could not be fetched.",
-		"Checked once a minute"
+		"Checked once a minute",
+		"Time of the box",
+		"no board control",
+		"board control not running",
+		"No temperature reading – the fan runs at full speed.",
+		"The fan control of the box is not running.",
+		"zabbix_agentd, passive mode",
+		"zabbix_agentd, active and passive mode",
+		"SMART values of a disk of this volume",
+		"could not be set at the last sync",
+		"Removes all settings and installed packages from flash and reboots. The system and firmware version stay. Afterwards the box has no password: press the USB button on its front, then choose a new one in the web interface.",
+		"All settings and installed packages are erased, then the box reboots. Afterwards it has no password: press the USB button on its front, then choose a new one.",
+		"Credentials stay on the box, readable for root only (passwords obscured by rclone, not encrypted).",
+		"No messages.",
+		"Every 10 minutes the box checks RAID, volumes (mounted, how full), temperature, SMART values (read again every 6 hours; a sleeping disk is not woken up) and updates; failed cloud jobs, app tasks and storage jobs report at once. Repeated messages are counted and sent again at most once a day.",
+		"some files vanished while copying",
+		"unknown"
 	],
 	"patterns": [
 		[
@@ -3107,6 +3123,42 @@
 		[
 			"^personal inbox of (.+) · no token$",
 			"personal inbox of $1 · no token"
+		],
+		[
+			"^Fan stops below (\\d+) °C, full from (\\d+) °C$",
+			"Fan stops below $1 °C, full from $2 °C"
+		],
+		[
+			"^Fan always on, full from (\\d+) °C$",
+			"Fan always on, full from $1 °C"
+		],
+		[
+			"^(\\S+): did not start(.*)$",
+			"$1: did not start$2"
+		],
+		[
+			"^(\\S+): did not stop(.*)$",
+			"$1: did not stop$2"
+		],
+		[
+			"^(\\S+): did not restart(.*)$",
+			"$1: did not restart$2"
+		],
+		[
+			"^(.+), ports (\\d+) and (\\d+)$",
+			"$1, ports $2 and $3"
+		],
+		[
+			"^\\(step (\\d+) of (\\d+)\\) –$",
+			"(step $1 of $2) –"
+		],
+		[
+			"^Login failed: (.*)$",
+			"Login failed: $1"
+		],
+		[
+			"^Schedule saved, but the wake-up alarm could not be set: (.*)$",
+			"Schedule saved, but the wake-up alarm could not be set: $1"
 		]
 	],
 	"words": [

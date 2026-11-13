@@ -63,7 +63,7 @@ box = [
                 'ShareOS: box is hot (over {$SHAREOS.BOX.TEMP.WARN} °C for 5 minutes)', 'WARNING',
                 'The temperature of the box (board sensor). Check the fan and the place of the box.'),
     ]),
-    item('shareos.box[fan_rpm]', 'Box: fan speed', 'UNSIGNED', '1m', 'rpm', [('component', 'environment')]),
+    item('shareos.box[fan_rpm]', 'Box: fan speed (nominal, not measured)', 'UNSIGNED', '1m', 'rpm', [('component', 'environment')]),
     item('shareos.box[fan_pwm]', 'Box: fan level (PWM 0-255)', 'UNSIGNED', '1m', None, [('component', 'environment')]),
     item('shareos.box[version]', 'ShareOS version', 'CHAR', '1h', None, [('component', 'system')], [
         trigger('change(%s)=1' % ref('shareos.box[version]'),

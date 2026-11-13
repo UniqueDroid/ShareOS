@@ -96,7 +96,9 @@ function status() {
 		state: 'Stopped', auth_url: null, self: null, tailnet: null, peers: [], version: null };
 	if (!st.running) return st;
 	let r = cli([ 'status', '--json' ]);
-	let j = json(trim(r.out) || 'null');
+	// while tailscaled starts its answer is no JSON yet
+	let j = null;
+	try { j = json(trim(r.out) || 'null'); } catch (e) { }
 	if (type(j) != 'object') { st.state = 'Starting'; return st; }
 	st.state = j.BackendState ?? 'NoState';
 	st.version = j.Version ? split(j.Version, '-')[0] : null;
@@ -157,7 +159,8 @@ case 'down': {
 }
 case 'logout': {
 	if (!pid()) die('Tailscale is not running');
-	cli([ 'logout' ]);
+	let r = cli([ 'logout' ]);
+	if (r.rc != 0) die(trim(r.out) || 'failed');
 	set_enabled(false);
 	out(status());
 	break;

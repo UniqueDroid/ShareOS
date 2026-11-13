@@ -1635,7 +1635,23 @@
 		"Check: waiting": "检查：等待中",
 		"shared inbox · no token": "共享收件箱 · 无令牌",
 		"The Let's Encrypt certificate could not be fetched.": "无法获取 Let's Encrypt 证书。",
-		"Checked once a minute": "每分钟检查一次"
+		"Checked once a minute": "每分钟检查一次",
+		"Time of the box": "设备时间",
+		"no board control": "无主板控制",
+		"board control not running": "主板控制未运行",
+		"No temperature reading – the fan runs at full speed.": "没有温度读数 – 风扇全速运转。",
+		"The fan control of the box is not running.": "设备的风扇控制未运行。",
+		"zabbix_agentd, passive mode": "zabbix_agentd，被动模式",
+		"zabbix_agentd, active and passive mode": "zabbix_agentd，主动和被动模式",
+		"SMART values of a disk of this volume": "此卷中某块磁盘的 SMART 值",
+		"could not be set at the last sync": "上次同步时未能设置",
+		"Removes all settings and installed packages from flash and reboots. The system and firmware version stay. Afterwards the box has no password: press the USB button on its front, then choose a new one in the web interface.": "从闪存中删除所有设置和已安装的软件包并重新启动。系统和固件版本保留。之后设备没有密码：请按下正面的 USB 按钮，然后在网页界面中设置新密码。",
+		"All settings and installed packages are erased, then the box reboots. Afterwards it has no password: press the USB button on its front, then choose a new one.": "所有设置和已安装的软件包将被清除，然后设备重新启动。之后它没有密码：请按下正面的 USB 按钮，然后设置新密码。",
+		"Credentials stay on the box, readable for root only (passwords obscured by rclone, not encrypted).": "凭据保留在设备上，仅 root 可读（密码由 rclone 混淆，并未加密）。",
+		"No messages.": "没有消息。",
+		"Every 10 minutes the box checks RAID, volumes (mounted, how full), temperature, SMART values (read again every 6 hours; a sleeping disk is not woken up) and updates; failed cloud jobs, app tasks and storage jobs report at once. Repeated messages are counted and sent again at most once a day.": "设备每 10 分钟检查一次 RAID、卷（是否挂载、占用情况）、温度、SMART 值（每 6 小时重新读取；不会唤醒休眠的磁盘）和更新；失败的云任务、应用任务和存储任务会立即报告。重复的消息会被计数，每天最多重新发送一次。",
+		"some files vanished while copying": "部分文件在复制过程中消失",
+		"unknown": "未知"
 	},
 	"patterns": [
 		[
@@ -1795,6 +1811,10 @@
 			"删除 $1 的状态？其他快照保持完整。"
 		],
 		[
+			"^Schedule saved, but the wake-up alarm could not be set: (.*)$",
+			"计划已保存，但无法设置唤醒闹钟：$1"
+		],
+		[
 			"^Everything on (.+) is erased\\. Afterwards it is a (.+) drive “(.+)”\\.$",
 			"$1 上的所有内容都会被清除。之后它将是一个 $2 驱动器“$3”。"
 		],
@@ -1867,6 +1887,10 @@
 			"按计划将于 $1 再次开机。"
 		],
 		[
+			"^Fan stops below (\\d+) °C, full from (\\d+) °C$",
+			"低于 $1 °C 时风扇停止，$2 °C 起全速"
+		],
+		[
 			"^(.+) – can be restored from the trash\\.$",
 			"$1——可从回收站恢复。"
 		],
@@ -1913,6 +1937,10 @@
 		[
 			"^personal inbox of (.+) · no token$",
 			"$1 的个人收件箱 · 无令牌"
+		],
+		[
+			"^Fan always on, full from (\\d+) °C$",
+			"风扇始终运转，$1 °C 起全速"
 		],
 		[
 			"^Share: (\\d+) file\\(s\\) not saved – (.*)$",
@@ -2143,6 +2171,10 @@
 			"收件箱“$1”已移除。"
 		],
 		[
+			"^(\\S+): did not restart(.*)$",
+			"$1：未重新启动$2"
+		],
+		[
 			"^planned · phase (\\d)$",
 			"计划中 · 第 $1 阶段"
 		],
@@ -2259,6 +2291,10 @@
 			"固件文件：$1"
 		],
 		[
+			"^(\\S+): did not start(.*)$",
+			"$1：未启动$2"
+		],
+		[
 			"^(\\d+) % of my limit$",
 			"我的限额的 $1 %"
 		],
@@ -2295,12 +2331,20 @@
 			"媒体服务器：$1"
 		],
 		[
+			"^Login failed: (.*)$",
+			"登录失败：$1"
+		],
+		[
 			"^(.+) · visible to (.+)$",
 			"$1 · 可见范围：$2"
 		],
 		[
 			"^(.*)Linux (\\S+) · Load ([0-9. ]+)$",
 			"$1Linux $2 · 负载 $3"
+		],
+		[
+			"^(\\S+): did not stop(.*)$",
+			"$1：未停止$2"
 		],
 		[
 			"^Latest · Beta$",
@@ -2313,6 +2357,10 @@
 		[
 			"^Drive (\\d+) % used$",
 			"磁盘已用 $1 %"
+		],
+		[
+			"^\\(step (\\d+) of (\\d+)\\) –$",
+			"（第 $1 步，共 $2 步）–"
 		],
 		[
 			"^Password for (\\S+)$",
@@ -2333,6 +2381,10 @@
 		[
 			"^Job “(.+)” saved\\.$",
 			"任务“$1”已保存。"
+		],
+		[
+			"^(.+), ports (\\d+) and (\\d+)$",
+			"$1，端口 $2 和 $3"
 		],
 		[
 			"^Certificate: (.*)$",

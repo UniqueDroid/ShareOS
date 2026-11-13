@@ -149,7 +149,9 @@ function pid() {
 
 function status() {
 	let c = cfg(), active = c.get('vpn', 'global', 'active') ?? '', p = pid();
-	let st = { installed: stat(BIN)?.type == 'file', running: !!p, profile: p ? active : null, state: p ? 'CONNECTING' : 'OFF',
+	// UNKNOWN: OpenVPN runs but does not say what it does (its management
+	// socket gives no answer) – not "connecting"
+	let st = { installed: stat(BIN)?.type == 'file', running: !!p, profile: p ? active : null, state: p ? 'UNKNOWN' : 'OFF',
 		ip: null, remote: null, since: null, bytes_in: 0, bytes_out: 0 };
 	if (!p) return st;
 	let s = mgmt('state');

@@ -1635,7 +1635,23 @@
 		"Check: waiting": "Verificação: aguardando",
 		"shared inbox · no token": "caixa compartilhada · sem token",
 		"The Let's Encrypt certificate could not be fetched.": "Não foi possível obter o certificado Let's Encrypt.",
-		"Checked once a minute": "Verificado uma vez por minuto"
+		"Checked once a minute": "Verificado uma vez por minuto",
+		"Time of the box": "Hora do equipamento",
+		"no board control": "sem controle da placa",
+		"board control not running": "controle da placa parado",
+		"No temperature reading – the fan runs at full speed.": "Sem leitura de temperatura – a ventoinha funciona na velocidade máxima.",
+		"The fan control of the box is not running.": "O controle da ventoinha do equipamento não está em execução.",
+		"zabbix_agentd, passive mode": "zabbix_agentd, modo passivo",
+		"zabbix_agentd, active and passive mode": "zabbix_agentd, modo ativo e passivo",
+		"SMART values of a disk of this volume": "Valores SMART de um disco deste volume",
+		"could not be set at the last sync": "não pôde ser ajustado na última sincronização",
+		"Removes all settings and installed packages from flash and reboots. The system and firmware version stay. Afterwards the box has no password: press the USB button on its front, then choose a new one in the web interface.": "Remove todas as configurações e pacotes instalados da memória flash e reinicia. O sistema e a versão do firmware permanecem. Depois o equipamento fica sem senha: pressione o botão USB na frente e escolha uma nova na interface web.",
+		"All settings and installed packages are erased, then the box reboots. Afterwards it has no password: press the USB button on its front, then choose a new one.": "Todas as configurações e pacotes instalados são apagados e o equipamento reinicia. Depois ele fica sem senha: pressione o botão USB na frente e escolha uma nova.",
+		"Credentials stay on the box, readable for root only (passwords obscured by rclone, not encrypted).": "As credenciais ficam no equipamento, legíveis apenas pelo root (senhas ofuscadas pelo rclone, não criptografadas).",
+		"No messages.": "Nenhuma mensagem.",
+		"Every 10 minutes the box checks RAID, volumes (mounted, how full), temperature, SMART values (read again every 6 hours; a sleeping disk is not woken up) and updates; failed cloud jobs, app tasks and storage jobs report at once. Repeated messages are counted and sent again at most once a day.": "A cada 10 minutos o equipamento verifica RAID, volumes (montados, ocupação), temperatura, valores SMART (lidos novamente a cada 6 horas; um disco em repouso não é acordado) e atualizações; trabalhos de nuvem, tarefas de apps e trabalhos de armazenamento com falha avisam na hora. Mensagens repetidas são contadas e reenviadas no máximo uma vez por dia.",
+		"some files vanished while copying": "alguns arquivos desapareceram durante a cópia",
+		"unknown": "desconhecido"
 	},
 	"patterns": [
 		[
@@ -1795,6 +1811,10 @@
 			"Excluir o estado de $1? Os outros snapshots continuam completos."
 		],
 		[
+			"^Schedule saved, but the wake-up alarm could not be set: (.*)$",
+			"Agenda salva, mas o alarme de ligar não pôde ser ajustado: $1"
+		],
+		[
 			"^Everything on (.+) is erased\\. Afterwards it is a (.+) drive “(.+)”\\.$",
 			"Tudo em $1 é apagado. Depois será uma unidade $2 \"$3\"."
 		],
@@ -1867,6 +1887,10 @@
 			"Pela programação, ele liga de novo em $1."
 		],
 		[
+			"^Fan stops below (\\d+) °C, full from (\\d+) °C$",
+			"A ventoinha para abaixo de $1 °C, máxima a partir de $2 °C"
+		],
+		[
 			"^(.+) – can be restored from the trash\\.$",
 			"$1 – pode ser restaurado da lixeira."
 		],
@@ -1913,6 +1937,10 @@
 		[
 			"^personal inbox of (.+) · no token$",
 			"caixa pessoal de $1 · sem token"
+		],
+		[
+			"^Fan always on, full from (\\d+) °C$",
+			"Ventoinha sempre ligada, máxima a partir de $1 °C"
 		],
 		[
 			"^Share: (\\d+) file\\(s\\) not saved – (.*)$",
@@ -2143,6 +2171,10 @@
 			"Caixa de entrada “$1” removida."
 		],
 		[
+			"^(\\S+): did not restart(.*)$",
+			"$1: não reiniciou$2"
+		],
+		[
 			"^planned · phase (\\d)$",
 			"planejado · fase $1"
 		],
@@ -2259,6 +2291,10 @@
 			"Arquivo de firmware: $1"
 		],
 		[
+			"^(\\S+): did not start(.*)$",
+			"$1: não iniciou$2"
+		],
+		[
 			"^(\\d+) % of my limit$",
 			"$1 % do meu limite"
 		],
@@ -2295,12 +2331,20 @@
 			"Servidor de mídia: $1"
 		],
 		[
+			"^Login failed: (.*)$",
+			"Falha no login: $1"
+		],
+		[
 			"^(.+) · visible to (.+)$",
 			"$1 · visível para $2"
 		],
 		[
 			"^(.*)Linux (\\S+) · Load ([0-9. ]+)$",
 			"$1Linux $2 · Carga $3"
+		],
+		[
+			"^(\\S+): did not stop(.*)$",
+			"$1: não parou$2"
 		],
 		[
 			"^Latest · Beta$",
@@ -2313,6 +2357,10 @@
 		[
 			"^Drive (\\d+) % used$",
 			"Unidade $1 % ocupada"
+		],
+		[
+			"^\\(step (\\d+) of (\\d+)\\) –$",
+			"(etapa $1 de $2) –"
 		],
 		[
 			"^Password for (\\S+)$",
@@ -2333,6 +2381,10 @@
 		[
 			"^Job “(.+)” saved\\.$",
 			"Tarefa «$1» guardada."
+		],
+		[
+			"^(.+), ports (\\d+) and (\\d+)$",
+			"$1, portas $2 e $3"
 		],
 		[
 			"^Certificate: (.*)$",

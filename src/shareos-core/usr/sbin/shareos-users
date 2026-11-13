@@ -58,7 +58,16 @@ set_smb_password() {   # name password
 	command -v ksmbd.adduser >/dev/null || return 0
 	mkdir -p /etc/ksmbd
 	# without -a/-u ksmbd.adduser adds or updates
-	ksmbd.adduser -p "$2" "$1" >/dev/null 2>&1 || log "warning: cannot set the SMB password of $1"
+	# a failure must not pass as "user created": the account then cannot sign
+	# in to shares – it is logged and shown under System → Messages
+	if ksmbd.adduser -p "$2" "$1" >/dev/null 2>&1; then
+		/usr/sbin/shareos-notify clear "smbpw-$1" >/dev/null 2>&1
+	else
+		log "warning: cannot set the SMB password of $1"
+		/usr/sbin/shareos-notify send warn system "smbpw-$1" "SMB-Passwort von $1 nicht gesetzt" "SMB password of $1 not set" \
+			"Die Anmeldung an Freigaben geht für dieses Konto nicht. Das Passwort des Kontos noch einmal setzen." \
+			"This account cannot sign in to shares. Set the password of the account again." >/dev/null 2>&1
+	fi
 }
 del_smb_user() {
 	command -v ksmbd.adduser >/dev/null || return 0

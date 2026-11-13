@@ -855,7 +855,7 @@ async function dkWall() {
 	if (D.wallUrl) { URL.revokeObjectURL(D.wallUrl); D.wallUrl = null; }
 	el.style.backgroundImage = '';
 	el.className = 'dk-wall';
-	if (!D.wall) return;
+	if (!D.wall) return true;
 	try {
 		const t = await rpc('shareos.files', 'ticket', { root: D.wall.root, path: D.wall.path || '', name: D.wall.name, mode: 'get' });
 		const r = await fetch(t.url, { cache: 'no-store' });
@@ -865,7 +865,8 @@ async function dkWall() {
 		D.wallUrl = URL.createObjectURL(new Blob([b], { type: DK_TYPES[ext] || 'image/jpeg' }));
 		el.style.backgroundImage = `url("${D.wallUrl}")`;
 		el.className = 'dk-wall img fit-' + (D.wall.fit === 'contain' || D.wall.fit === 'tile' ? D.wall.fit : 'cover');
-	} catch (e) { toast('Wallpaper: ' + e.message, true); }
+		return true;
+	} catch (e) { toast('Wallpaper: ' + e.message, true); return false; }
 }
 
 // pick an image on the box: the places of the file browser, then folders and images
@@ -913,8 +914,12 @@ function dkWallDlg() {
 		if (b.dataset.place != null) { place = places[+b.dataset.place]; cur = ''; return draw(); }
 		if (b.dataset.dir != null) { cur = join(cur, b.dataset.dir); return draw(); }
 		if (b.dataset.img != null) {
+			// "saved" only for an image that could be loaded; otherwise the
+			// wallpaper stays what it was
+			const before = D.wall;
 			D.wall = { root: place.name, path: cur, name: b.dataset.img, fit };
-			await dkWall(); dkSave(); toast('Wallpaper saved.');
+			if (await dkWall()) { dkSave(); toast('Wallpaper saved.'); }
+			else { D.wall = before; dkWall(); }
 			return draw();
 		}
 		if (b.value === 'up') { if (cur) cur = cur.includes('/') ? cur.slice(0, cur.lastIndexOf('/')) : ''; else place = null; return draw(); }

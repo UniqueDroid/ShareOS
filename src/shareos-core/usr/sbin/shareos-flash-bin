@@ -77,8 +77,12 @@ flash() {   # partition file
 cmd_write() {
 	[ "$2" = --yes ] || die "add --yes: this replaces kernel and initramfs in flash"
 	[ -n "$BOARD_SIG" ] || die "this box is not supported ($BOARD_NAME)"
-	if [ -f $ROOT/tmp/shareos-update/state.json ] && grep -qE '"state": *"(downloading|verifying|flashing)"' $ROOT/tmp/shareos-update/state.json; then
-		die "a firmware update is running"
+	# the updater at work (its state names its PID; a state left by a killed
+	# updater does not block)
+	st=$ROOT/tmp/shareos-update/state.json
+	if [ -f "$st" ] && grep -qE '"state": *"(downloading|verifying|flashing)"' "$st"; then
+		p=$(sed -n 's/.*"pid": *\([0-9][0-9]*\).*/\1/p' "$st")
+		{ [ -z "$p" ] || kill -0 "$p" 2>/dev/null; } && die "a firmware update is running"
 	fi
 	# one write at a time (the lock is released on exit, also after an error;
 	# one left by a killed run is taken over)

@@ -263,22 +263,31 @@ local_path() {   # job -> local directory
 	esac
 }
 
+# a run that cannot start: the reason goes into the job's state (rpcd noted
+# "running" before it started this), so the page shows it instead of a run
+# that never ends
+fail_run() {
+	mkdir -p $ST
+	printf 'state=error\nended=%s\nerror=%s\n' "$(date +%s)" "$*" > $ST/$J.state
+	die "$*"
+}
+
 cmd_run() {
 	J=$1
 	[ "$(uci -q get cloud."$J")" = job ] || die "unknown job $J"
-	rc=$(rclone_bin) || die "rclone is not installed"
+	rc=$(rclone_bin) || fail_run "rclone is not installed"
 	o=$(job owner); o=${o:--}
-	c=$(conf_of "$o") || die "no settings for $o"
+	c=$(conf_of "$o") || fail_run "no settings for $o"
 	src=$(local_path) || true
-	[ -n "$src" ] && [ -d "$src" ] || die "local folder missing ($(job local))"
-	case "$src" in *..*) die "invalid folder" ;; esac
+	[ -n "$src" ] && [ -d "$src" ] || fail_run "local folder missing ($(job local))"
+	case "$src" in *..*) fail_run "invalid folder" ;; esac
 	r=$(job remote):$(job remote_path)
 	case "$(job mode)" in
 		upload) set -- copy "$src" "$r" ;;
 		download) set -- copy "$r" "$src" ;;
 		mirror_up) set -- sync "$src" "$r" ;;
 		mirror_down) set -- sync "$r" "$src" ;;
-		*) die "unknown mode" ;;
+		*) fail_run "unknown mode" ;;
 	esac
 	mkdir -p $ST
 	if ! mkdir $ST/$J.lock 2>/dev/null; then

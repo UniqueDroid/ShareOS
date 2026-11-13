@@ -260,6 +260,17 @@ function running(proc, names) {
 	return !!(names ?? proc_names())[proc];
 }
 
+// Is the process running after an action? A service that was just stopped can
+// take a moment to end, one just started a moment to appear: wait up to 2 s
+// for the state the action should lead to, then say what is.
+function settled(proc, want) {
+	for (let i = 0; i < 10; i++) {
+		if (running(proc) == want) return want;
+		sleep(200);
+	}
+	return running(proc);
+}
+
 function sys_services() {
 	let j = null;
 	try { j = json(sh('/usr/sbin/shareos-apps services list').out); } catch (e) { }
@@ -288,6 +299,23 @@ const FS_DISK = { ext4: 1, ext3: 1, ext2: 1, btrfs: 1, exfat: 1, ntfs: 1, vfat: 
 const FS_USB = { exfat: 1, vfat: 1, ntfs: 1, ext4: 1 };
 // USB sticks/disks hang below a USB host in sysfs; the bays are SATA
 function is_usb(d) { return valid_disk(d) && index(realpath('/sys/block/' + d) ?? '', '/usb') >= 0; }
+// Is an internal disk asleep? CHECK POWER MODE (hdparm -C) does not wake it.
+// true/false; null when it cannot be told (USB disk, hdparm failed).
+function disk_standby(d) {
+	if (is_usb(d)) return null;
+	let o = sh('hdparm -C /dev/' + d).out;
+	return match(o, /drive state is:\s*(standby|sleeping)/) ? true : (match(o, /drive state is:/) ? false : null);
+}
+// The disks for the overview and the apps: USB or bay, asleep or not, and the
+// SMART rating from the values read last (good | warn | bad; null: none yet).
+// Asked at most once a minute.
+function disks_state() {
+	return memo('disks-state', '', 60, () => map(disks(), (d) => {
+		let s = null;
+		try { s = json(readfile(SMART_DIR + '/smart-' + d.name + '.json')); } catch (e) { }
+		return { ...d, usb: is_usb(d.name), standby: disk_standby(d.name), smart: type(s) == 'object' ? (s.rating ?? null) : null };
+	}));
+}
 // mounted USB partitions: { dev, path, fs }
 function usb_mounts() {
 	let l = [];
@@ -494,7 +522,10 @@ function volumes() {
 		let mp = '/mnt/' + name;
 		let dev = volume_device(s.uuid, mp, mounts);
 		let mounted = index(mounts, ' ' + mp + ' ') >= 0;
-		let v = { name, uuid: s.uuid, fstype: s.fstype, layout: s.layout, enabled: s.enabled != '0',
+		// the file system as it is mounted; the one noted in the settings only
+		// while the volume is not mounted
+		let mfs = mounted ? match(mounts, regexp('(^|\n)\\S+ ' + mp + ' (\\S+) '))?.[2] : null;
+		let v = { name, uuid: s.uuid, fstype: mfs ?? s.fstype, layout: s.layout, enabled: s.enabled != '0',
 			device: dev, mountpoint: mp, mounted };
 		if (mounted) {
 			let f = split(trim(split(sh('df -k ' + shq(mp)).out, '\n')[1] ?? ''), /\s+/);
@@ -513,6 +544,12 @@ function spawn_storage(args) {
 /* ---------- web interface: language, logo, HTTPS ---------- */
 
 const CERT = '/usr/sbin/shareos-cert';
+// a Let's Encrypt request is running: its flag file; one older than 15
+// minutes was left by a run that was killed (a request takes a few minutes)
+function acme_running() {
+	let st = stat('/tmp/shareos-acme.running');
+	return !!st && time() - st.mtime < 900;
+}
 
 const THEMES = { dark: 1, light: 1, system: 1 };
 // accent colours – also in www-apps/_shareos/app.js (accepted list) and
@@ -768,15 +805,18 @@ function time_info() {
 		servers: ntp_servers(c),
 		last_sync: last[0] && match(last[0], /^[0-9]+$/) ? +last[0] : null,
 		ntp_running: system('pidof ntpd >/dev/null 2>&1') == 0,
-		rtc: !!rtc_kind()
+		rtc: !!rtc_kind(),
+		// did setting the battery clock work the last time? (null: not set yet)
+		rtc_ok: ((x) => x == 'ok' ? true : x == 'failed' ? false : null)(read_trim('/tmp/shareos-ntp/rtc'))
 	};
 }
 
 // clock -> the MCU's battery clock, so the time survives a power cut
 function rtc_save() {
-	let k = rtc_kind();
-	if (k == 'mcu') system(RTC_TOOL + ' -x systohc >/dev/null 2>&1');
-	else if (k == 'kernel') system('hwclock -w -u >/dev/null 2>&1');
+	let k = rtc_kind(), rc = null;
+	if (k == 'mcu') rc = system(RTC_TOOL + ' -x systohc >/dev/null 2>&1');
+	else if (k == 'kernel') rc = system('hwclock -w -u >/dev/null 2>&1');
+	if (rc != null) { system('mkdir -p /tmp/shareos-ntp'); writefile('/tmp/shareos-ntp/rtc', rc == 0 ? 'ok\n' : 'failed\n'); }
 }
 
 function altf_scan() {
@@ -1028,12 +1068,20 @@ function vault_lock(share, u) {
 	return r.rc == 0 ? { ok: true, share } : tool_result(r);
 }
 
+// A locked vault is closed with the ACL of its folder (shareos-shares
+// vault_gate): that works on drives with Linux permissions only. On exFAT,
+// NTFS or FAT the folder would stay open for apps and other services.
+const VAULT_FS = { ext4: 1, ext3: 1, ext2: 1, btrfs: 1 };
+const VAULT_FS_ERR = 'a vault needs a drive with Linux permissions (ext4 or Btrfs)';
+function vault_fs_ok(c, volume) { return !!VAULT_FS[c.get('storage', volume ?? '', 'fstype') ?? 'ext4']; }
+
 // change the vault settings of a share (admins)
 function vault_set(share, on, ttl) {
 	let c = cursor();
 	if (!valid_name(share) || c.get('shares', share) != 'share') return { error: 'unknown share' };
 	if (on) {
 		if (c.get('shares', share, 'smb') != '1') return { error: 'a vault needs SMB' };
+		if (!vault_fs_ok(c, c.get('shares', share, 'volume'))) return { error: VAULT_FS_ERR };
 		c.set('shares', share, 'guest', '0');
 		c.set('shares', share, 'nfs', '0');
 	}
@@ -1175,6 +1223,21 @@ function cloud_remotes(owner) {
 	return list;
 }
 
+// is the rclone of a job alive? (shareos-cloud keeps its PID while it runs)
+function cloud_job_alive(n) {
+	let pid = +trim(readfile(CLOUD_ST + '/' + n + '.pid') ?? '0');
+	return pid > 1 && stat('/proc/' + pid) != null;
+}
+// Start a job in the background. "running" is noted at once so the page shows
+// it without waiting for rclone; shareos-cloud replaces it with the result –
+// also when the run cannot start. A job that is running is left alone.
+function cloud_job_start(n) {
+	if (cloud_job_alive(n)) return { error: 'the job is already running' };
+	system(sprintf('mkdir -p %s; printf "state=running\\nstarted=%%s\\n" "$(date +%%s)" > %s/%s.state; start-stop-daemon -S -b -x %s -- run %s',
+		CLOUD_ST, CLOUD_ST, n, CLOUD, n));
+	return { started: true };
+}
+
 function cloud_jobs(c, owner) {   // owner null = all
 	let list = [];
 	c.foreach('cloud', 'job', (x) => {
@@ -1185,6 +1248,14 @@ function cloud_jobs(c, owner) {   // owner null = all
 		if (!st.state) {
 			let a = c.get('storage', 'global', 'apps');
 			if (a) st = kv_file('/mnt/' + a + '/.shareos/cloud/logs/' + n + '.state');
+		}
+		// "running" without a living rclone (killed, box out of memory): an
+		// interrupted run, not one that goes on for ever. The first seconds
+		// after the start the PID is not written yet.
+		if (st.state == 'running' && !cloud_job_alive(n) && time() - +(st.started ?? 0) > 20) {
+			st.state = 'error';
+			st.error = 'the run was interrupted';
+			st.ended = st.started;
 		}
 		push(list, { name: n, owner: o, remote: x.remote ?? '', remote_path: x.remote_path ?? '', local: x.local ?? '',
 			mode: x.mode ?? 'upload', schedule: x.schedule ?? '', bwlimit: x.bwlimit ?? '', enabled: x.enabled != '0',
@@ -1305,11 +1376,15 @@ function dlna_status() {
 		let m = match(x, /^([AVP-]),(share:.+)$/), ref = m ? share_ref(m[2]) : null;
 		if (ref) push(media, ref.sub != '' ? { type: m[1], share: ref.share, path: ref.sub } : { type: m[1], share: ref.share });
 	}
+	// counts: null while the media server does not answer (starting, busy) –
+	// not 0, which would read as an empty library
+	let num = (v) => v != null && match(v, /^[0-9]+$/) ? +v : null;
+	let shares = filter(share_list().shares, (x) => x.volume);
 	return { installed: st.installed == '1', enabled: st.enabled == '1', running: st.running == '1', scanning: st.scanning == '1',
-		audio: +(st.audio || 0), video: +(st.video || 0), image: +(st.image || 0), db: st.db ?? null, clients,
+		audio: num(st.audio), video: num(st.video), image: num(st.image), db: st.db ?? null, clients,
 		name: c.get('dlna', 'main', 'name') ?? '', hostname: trim(readfile('/proc/sys/kernel/hostname') ?? ''), media,
-		shares: map(filter(share_list().shares, (x) => x.volume), (x) => x.name),
-		share_dirs: map(filter(share_list().shares, (x) => x.volume), (x) => ({ name: x.name, volume: x.volume, path: x.path })) };
+		shares: map(shares, (x) => x.name),
+		share_dirs: map(shares, (x) => ({ name: x.name, volume: x.volume, path: x.path })) };
 }
 
 /* ---------- printers (system app "printer": ipp-usb, p910nd) ---------- */
@@ -1701,10 +1776,17 @@ function media_file(u, f) {
 
 function media_jobs(u) {
 	let list = [];
+	let wp = +trim(readfile('/tmp/shareos-media/worker.pid') ?? '0'), worker = wp > 1 && stat('/proc/' + wp) != null;
 	for (let f in lsdir(MEDIA_DIR) ?? []) {
 		let m = match(f, /^([0-9a-f]{16})\.json$/);
 		if (!m) continue;
-		let j = json(readfile(MEDIA_DIR + '/' + f) ?? 'null');
+		let j = null;
+		try { j = json(readfile(MEDIA_DIR + '/' + f) ?? 'null'); } catch (e) { }
+		// "running" without the worker (killed, out of memory): interrupted
+		if (type(j) == 'object' && (j.state == 'running' || j.state == 'stopping') && !worker) {
+			j.state = 'error';
+			j.error = 'the job was interrupted';
+		}
 		if (type(j) == 'object' && j.user == u)
 			push(list, { id: j.id, state: j.state, action: j.action, format: j.format, input: j.input_box, output: j.output_box,
 				progress: j.progress ?? 0, error: j.error ?? null, created: j.created, started: j.started ?? null,
@@ -1776,6 +1858,8 @@ function me_info(u) {
 	// ("SPEICHER" table of Mein ShareOS)
 	let vols = home ? [ home ] : [], mounts = readfile('/proc/mounts') ?? '';
 	for (let s in mine) if (s.volume && index(vols, s.volume) < 0) push(vols, s.volume);
+	// is the drive of a share there? (the dot of the share under My ShareOS)
+	for (let s in mine) s.mounted = !!s.volume && index(mounts, ' /mnt/' + s.volume + ' ') >= 0;
 	vols = filter(vols, (v) => match(v, /^[A-Za-z0-9._-]+$/) && index(mounts, ' /mnt/' + v + ' ') >= 0);
 	info.volumes = [];
 	if (length(vols))
@@ -2133,12 +2217,7 @@ function sys_info() {
 		memory: meminfo(), temperature: box_temp(), fan_pwm: read_int('/tmp/sys/pwm1'), board_control: memo('boardctl', '', 10, board_control),
 		network: { speed: read_int(net + 'speed'), rx_bytes: read_int(net + 'statistics/rx_bytes'), tx_bytes: read_int(net + 'statistics/tx_bytes') },
 		volumes: memo('sysvol', '', 20, sys_volumes),
-		// standby: CHECK POWER MODE does not wake a sleeping disk; USB disks have
-		// no sleep state here (null), like on the storage page
-		disks: memo('sysdisks', '', 60, () => map(disks(), (d) => {
-			let usb = is_usb(d.name);
-			return { ...d, usb, standby: usb ? null : !!match(sh('hdparm -C /dev/' + d.name).out, /standby/) };
-		}))
+		disks: disks_state()
 	};
 }
 
@@ -2312,13 +2391,16 @@ function widget_status() {
 	let m = meminfo();
 	let t = box_temp();
 	let alerts = [];
+	// the same limits as the messages (System → Messages), not fixed ones
+	let nc = cursor();
+	let temp_max = +(nc.get('shareos', 'notify', 'temp_max') ?? 55), disk_full = +(nc.get('shareos', 'notify', 'disk_full') ?? 90);
 	let vols = [];
 	for (let v in volumes()) {
 		let x = { name: v.name, mounted: v.mounted };
 		if (v.size) {
 			x.size = v.size; x.free = v.avail;
 			x.used_pct = int(v.used * 100 / v.size + 0.5);
-			if (x.used_pct >= 90) push(alerts, 'volume ' + v.name + ' ' + x.used_pct + '% full');
+			if (x.used_pct >= disk_full) push(alerts, 'volume ' + v.name + ' ' + x.used_pct + '% full');
 		}
 		if (v.enabled && !v.mounted) push(alerts, 'volume ' + v.name + ' not mounted');
 		push(vols, x);
@@ -2329,7 +2411,12 @@ function widget_status() {
 		if (a.health && index(a.health, '_') >= 0) push(alerts, n + ' degraded [' + a.health + ']');
 		push(raid, x);
 	}
-	if (t != null && t >= 55000) push(alerts, 'temperature ' + int(t / 1000) + ' °C');
+	if (t != null && t >= temp_max * 1000) push(alerts, 'temperature ' + int(t / 1000) + ' °C');
+	// a box with fan control that gives no reading, and disks whose SMART
+	// values are not good, are not "ok" either
+	if (t == null && board_control().control) push(alerts, 'temperature cannot be read');
+	for (let d in disks_state())
+		if (d.smart == 'bad' || d.smart == 'warn') push(alerts, 'disk ' + d.name + ': SMART ' + (d.smart == 'bad' ? 'critical' : 'caution'));
 	let r = release();
 	return {
 		host: read_trim('/proc/sys/kernel/hostname'),
@@ -2777,7 +2864,7 @@ return {
 		acme_get: {
 			call: function() {
 				let j = json(trim(sh('/usr/sbin/shareos-acme status').out) || 'null') ?? {};
-				j.running = !!stat('/tmp/shareos-acme.running');
+				j.running = acme_running();
 				return j;
 			}
 		},
@@ -2787,7 +2874,7 @@ return {
 			call: function(req) {
 				let m = req.args.email ?? '';
 				if (m != '' && !match(m, /^[^@ ]+@[^@ ]+\.[^@ ]+$/)) return { error: 'invalid e-mail address' };
-				if (stat('/tmp/shareos-acme.running')) return { error: 'already running' };
+				if (acme_running()) return { error: 'already running' };
 				let c = cursor();
 				c.set('shareos', 'acme', 'acme');
 				if (m == '') c.delete('shareos', 'acme', 'email'); else c.set('shareos', 'acme', 'email', m);
@@ -2873,7 +2960,8 @@ return {
 						}
 					},
 					filesystems: memo('df', '', 30, filesystems),
-					disks: disks()
+					disks: disks_state(),
+					board_control: memo('boardctl', '', 10, board_control)
 				};
 			}
 		},
@@ -2946,9 +3034,15 @@ return {
 				}
 				c.set('shareos', 'power', 'enabled', a.enabled ? '1' : '0');
 				c.commit('shareos');
-				system('/usr/sbin/shareos-cron sync >/dev/null 2>&1; /usr/sbin/shareos-power arm >/dev/null 2>&1');
-				let j = json(trim(sh('/usr/sbin/shareos-power status').out) || 'null');
-				return type(j) == 'object' ? j : { ok: true };
+				system('/usr/sbin/shareos-cron sync >/dev/null 2>&1');
+				// set the wake-up alarm now and say so when the box did not take it:
+				// the page must not promise a switch-on that is not armed
+				let arm = null, j = null;
+				try { arm = json(trim(sh('/usr/sbin/shareos-power arm').out) || 'null'); } catch (e) { }
+				try { j = json(trim(sh('/usr/sbin/shareos-power status').out) || 'null'); } catch (e) { }
+				if (type(j) != 'object') j = { ok: true };
+				if (a.enabled && type(arm) == 'object' && arm.error) j.arm_error = arm.error;
+				return j;
 			}
 		},
 
@@ -2999,19 +3093,30 @@ return {
 	'shareos.service': {
 		list: {
 			call: function() {
-				let list = [], names = proc_names(), off = autostart_off();
+				let list = [], names = proc_names(), off = autostart_off(), c = cursor();
+				// descriptions that depend on the settings
+				let desc = (name, d) => {
+					if (name == 'uhttpd')
+						return c.get('shareos', 'web', 'https') != '0' && stat(c.get('shareos', 'web', 'cert') ?? '/etc/ssl/shareos/server.crt')
+							? 'uhttpd, ports 80 and 443' : 'uhttpd, port 80';
+					if (name == 'zabbix') {
+						let act = !!c.get('zabbix', 'main', 'server'), pas = c.get('zabbix', 'main', 'passive') == '1';
+						return act && pas ? 'zabbix_agentd, active and passive mode' : pas ? 'zabbix_agentd, passive mode' : 'zabbix_agentd, active mode';
+					}
+					return d;
+				};
 				for (let name in sort(keys(SERVICES))) {
 					let s = SERVICES[name];
 					if (!init_script(name) || (s.needs && !stat(s.needs)))
 						continue;
 					// the board service is the MCU daemon only on boxes with that MCU
 					let proc = name == 'board' && board().control && board().control != 'mcu' ? 'shareos-board' : s.proc;
-					push(list, { name, label: s.label, desc: s.desc, running: running(proc, names), essential: !!ESSENTIAL[name],
+					push(list, { name, label: s.label, desc: desc(name, s.desc), running: running(proc, names), essential: !!ESSENTIAL[name],
 						autostart: !(name in off) });
 				}
 				for (let s in sys_services()) {
 					let t = SYS_SVC_TEXT[s.control];
-					push(list, { name: s.control, label: t?.label ?? s.name, desc: t?.desc ?? s.id, running: running(t?.proc ?? s.proc, names),
+					push(list, { name: s.control, label: t?.label ?? s.name, desc: desc(s.control, t?.desc ?? s.id), running: running(t?.proc ?? s.proc, names),
 						essential: false, autostart: !(s.control in off), sysapp: s.id });
 				}
 				return { services: list };
@@ -3030,7 +3135,7 @@ return {
 					// start = what the boot does (the controller follows its settings)
 					let ctl = '/usr/sbin/shareos-' + svc.control;
 					let r = sh(act == 'start' ? ctl + ' boot' : act == 'stop' ? ctl + ' stop-all' : ctl + ' stop-all; ' + ctl + ' boot');
-					return { ok: r.rc == 0, output: trim(r.out), running: running(SYS_SVC_TEXT[svc.control]?.proc ?? svc.proc) };
+					return { ok: r.rc == 0, output: trim(r.out), running: settled(SYS_SVC_TEXT[svc.control]?.proc ?? svc.proc, act != 'stop') };
 				}
 				if (!script)
 					return { error: 'unknown service' };
@@ -3042,7 +3147,8 @@ return {
 					return { ok: true, delayed: true };
 				}
 				let r = sh(shq(script) + ' ' + act);
-				return { ok: r.rc == 0, output: trim(r.out), running: running(SERVICES[name].proc) };
+				let proc = name == 'board' && board().control && board().control != 'mcu' ? 'shareos-board' : SERVICES[name].proc;
+				return { ok: r.rc == 0, output: trim(r.out), running: settled(proc, act != 'stop') };
 			}
 		},
 
@@ -3319,7 +3425,7 @@ return {
 					d.usb = is_usb(d.name);
 					d.smart = d.usb ? null : smart_read(d.name, false);
 					// CHECK POWER MODE does not wake a sleeping disk
-					d.standby = d.usb ? null : !!match(sh('hdparm -C /dev/' + d.name).out, /standby/);
+					d.standby = disk_standby(d.name);
 					push(disks, d);
 				}
 				let c = cursor();
@@ -3660,6 +3766,7 @@ return {
 				let vault = a.vault ?? (c.get('shares', a.name, 'vault') == '1');
 				if (vault && (!a.smb || a.guest || a.nfs)) return { error: 'a vault is shared over SMB only, without guests and NFS' };
 				if (vault && !length([ ...(a.rw ?? []), ...(a.ro ?? []) ])) return { error: 'a vault needs at least one user or group' };
+				if (vault && !vault_fs_ok(c, a.volume)) return { error: VAULT_FS_ERR };
 				if (a.vault_ttl != null && a.vault_ttl !== 0 && !(+a.vault_ttl >= 1 && +a.vault_ttl <= 480)) return { error: 'invalid time (1–480 minutes)' };
 				c.set('shares', 'global', 'global');
 				c.set('shares', a.name, 'share');
@@ -3926,9 +4033,7 @@ return {
 				let u = session_user(req), c = cursor();
 				if (!u || !me_cloud_allowed(u)) return { error: 'not allowed' };
 				if (c.get('cloud', req.args.name) != 'job' || c.get('cloud', req.args.name, 'owner') != u) return { error: 'unknown job' };
-				system(sprintf('mkdir -p %s; printf "state=running\\nstarted=%%s\\n" "$(date +%%s)" > %s/%s.state; start-stop-daemon -S -b -x %s -- run %s',
-					CLOUD_ST, CLOUD_ST, req.args.name, CLOUD, req.args.name));
-				return { started: true };
+				return cloud_job_start(req.args.name);
 			}
 		},
 
@@ -4282,9 +4387,7 @@ return {
 			args: { name: '' },
 			call: function(req) { if (!module_on('cloud')) return CLOUD_OFF;
 				if (cursor().get('cloud', req.args.name) != 'job') return { error: 'unknown job' };
-				system(sprintf('mkdir -p %s; printf "state=running\\nstarted=%%s\\n" "$(date +%%s)" > %s/%s.state; start-stop-daemon -S -b -x %s -- run %s',
-					CLOUD_ST, CLOUD_ST, req.args.name, CLOUD, req.args.name));
-				return { started: true };
+				return cloud_job_start(req.args.name);
 			}
 		},
 

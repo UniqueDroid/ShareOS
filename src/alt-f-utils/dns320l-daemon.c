@@ -364,7 +364,13 @@ int gettemperature_cmd(char *mcmd, char *retMessage, int retSize) {
 		return 1;
     }
 		
-	temp = ThermalTable[(int)buf[5]];
+	/* the MCU answers with an index into the table; a byte beyond its end
+	 * (line noise, a broken answer) is no temperature */
+	if ((unsigned char) buf[5] >= sizeof(ThermalTable)) {
+		strncpy(retMessage, "ERR", retSize);
+		return 1;
+	}
+	temp = ThermalTable[(unsigned char) buf[5]];
 	snprintf(retMessage, retSize, "%d", temp*1000);
 	write_str_to_file(sys_temp_input, retMessage);
 	return 0;
@@ -494,7 +500,8 @@ int readrtc_cmd(char *mcmd, char *retMessage, int retSize) {
 	strTime.tm_min = buf[6];
 	strTime.tm_sec = buf[5];
 	strTime.tm_isdst = -1;   
-	rtcTime = mktime(&strTime);
+	/* the RTC keeps UTC (see systohc/hctosys): shown as local time */
+	rtcTime = timegm(&strTime);
 	strcpy(timeStr, ctime(&rtcTime));
 	timeStr[strlen(timeStr)-1] = '\0';
 	snprintf(retMessage, retSize, "%s", timeStr);

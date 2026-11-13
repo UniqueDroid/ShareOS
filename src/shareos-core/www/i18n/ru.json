@@ -1635,7 +1635,23 @@
 		"Check: waiting": "Проверка: ожидание",
 		"shared inbox · no token": "общая входящая папка · нет токена",
 		"The Let's Encrypt certificate could not be fetched.": "Не удалось получить сертификат Let's Encrypt.",
-		"Checked once a minute": "Проверяется раз в минуту"
+		"Checked once a minute": "Проверяется раз в минуту",
+		"Time of the box": "Время устройства",
+		"no board control": "нет управления платой",
+		"board control not running": "управление платой не работает",
+		"No temperature reading – the fan runs at full speed.": "Нет данных о температуре – вентилятор работает на полной скорости.",
+		"The fan control of the box is not running.": "Управление вентилятором устройства не работает.",
+		"zabbix_agentd, passive mode": "zabbix_agentd, пассивный режим",
+		"zabbix_agentd, active and passive mode": "zabbix_agentd, активный и пассивный режимы",
+		"SMART values of a disk of this volume": "Значения SMART одного из дисков этого тома",
+		"could not be set at the last sync": "не удалось установить при последней синхронизации",
+		"Removes all settings and installed packages from flash and reboots. The system and firmware version stay. Afterwards the box has no password: press the USB button on its front, then choose a new one in the web interface.": "Удаляет все настройки и установленные пакеты из флеш-памяти и перезагружает устройство. Система и версия прошивки сохраняются. После этого у устройства нет пароля: нажмите кнопку USB на передней панели и задайте новый пароль в веб-интерфейсе.",
+		"All settings and installed packages are erased, then the box reboots. Afterwards it has no password: press the USB button on its front, then choose a new one.": "Все настройки и установленные пакеты будут удалены, затем устройство перезагрузится. После этого у него нет пароля: нажмите кнопку USB на передней панели и задайте новый.",
+		"Credentials stay on the box, readable for root only (passwords obscured by rclone, not encrypted).": "Учётные данные остаются на устройстве и доступны для чтения только root (пароли скрыты средствами rclone, но не зашифрованы).",
+		"No messages.": "Сообщений нет.",
+		"Every 10 minutes the box checks RAID, volumes (mounted, how full), temperature, SMART values (read again every 6 hours; a sleeping disk is not woken up) and updates; failed cloud jobs, app tasks and storage jobs report at once. Repeated messages are counted and sent again at most once a day.": "Каждые 10 минут устройство проверяет RAID, тома (подключены ли, насколько заполнены), температуру, значения SMART (считываются заново каждые 6 часов; спящий диск не будится) и обновления; о сбоях облачных заданий, задач приложений и заданий хранилища сообщается сразу. Повторяющиеся сообщения подсчитываются и отправляются повторно не чаще раза в день.",
+		"some files vanished while copying": "некоторые файлы исчезли во время копирования",
+		"unknown": "неизвестно"
 	},
 	"patterns": [
 		[
@@ -1795,6 +1811,10 @@
 			"Удалить состояние от $1? Остальные снимки останутся полными."
 		],
 		[
+			"^Schedule saved, but the wake-up alarm could not be set: (.*)$",
+			"Расписание сохранено, но будильник включения установить не удалось: $1"
+		],
+		[
 			"^Everything on (.+) is erased\\. Afterwards it is a (.+) drive “(.+)”\\.$",
 			"Всё на $1 будет стёрто. Затем это будет накопитель $2 «$3»."
 		],
@@ -1867,6 +1887,10 @@
 			"По расписанию оно снова включится $1."
 		],
 		[
+			"^Fan stops below (\\d+) °C, full from (\\d+) °C$",
+			"Вентилятор останавливается ниже $1 °C, полная скорость от $2 °C"
+		],
+		[
 			"^(.+) – can be restored from the trash\\.$",
 			"$1 – можно восстановить из корзины."
 		],
@@ -1913,6 +1937,10 @@
 		[
 			"^personal inbox of (.+) · no token$",
 			"личная входящая папка $1 · нет токена"
+		],
+		[
+			"^Fan always on, full from (\\d+) °C$",
+			"Вентилятор всегда включён, полная скорость от $1 °C"
 		],
 		[
 			"^Share: (\\d+) file\\(s\\) not saved – (.*)$",
@@ -2143,6 +2171,10 @@
 			"Входящая папка «$1» удалена."
 		],
 		[
+			"^(\\S+): did not restart(.*)$",
+			"$1: не перезапустилась$2"
+		],
+		[
 			"^planned · phase (\\d)$",
 			"запланировано · этап $1"
 		],
@@ -2259,6 +2291,10 @@
 			"Файл прошивки: $1"
 		],
 		[
+			"^(\\S+): did not start(.*)$",
+			"$1: не запустилась$2"
+		],
+		[
 			"^(\\d+) % of my limit$",
 			"$1 % от моего лимита"
 		],
@@ -2295,12 +2331,20 @@
 			"Медиасервер: $1"
 		],
 		[
+			"^Login failed: (.*)$",
+			"Не удалось войти: $1"
+		],
+		[
 			"^(.+) · visible to (.+)$",
 			"$1 · видно: $2"
 		],
 		[
 			"^(.*)Linux (\\S+) · Load ([0-9. ]+)$",
 			"$1Linux $2 · Нагрузка $3"
+		],
+		[
+			"^(\\S+): did not stop(.*)$",
+			"$1: не остановилась$2"
 		],
 		[
 			"^Latest · Beta$",
@@ -2313,6 +2357,10 @@
 		[
 			"^Drive (\\d+) % used$",
 			"Диск занят на $1 %"
+		],
+		[
+			"^\\(step (\\d+) of (\\d+)\\) –$",
+			"(шаг $1 из $2) –"
 		],
 		[
 			"^Password for (\\S+)$",
@@ -2333,6 +2381,10 @@
 		[
 			"^Job “(.+)” saved\\.$",
 			"Задание «$1» сохранено."
+		],
+		[
+			"^(.+), ports (\\d+) and (\\d+)$",
+			"$1, порты $2 и $3"
 		],
 		[
 			"^Certificate: (.*)$",
