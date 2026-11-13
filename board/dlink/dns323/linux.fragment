@@ -1,0 +1,252 @@
+# ShareOS Lite – D-Link DNS-323 rev A1/B1/C1 (Marvell Orion 88F5181/88F5182)
+# Applied on top of orion5x_defconfig. Budget: uImage <= 1572864 bytes
+# (U-Boot of the DNS-323 copies only 1.5 MB of the kernel, but 6.2 MB of the
+# initramfs). So the kernel keeps only what cannot be a module (core, IPv4,
+# PCI, serial); drivers needed to find the system on the disk (SATA, md,
+# ext2, squashfs, overlayfs, Ethernet, board hardware) are modules in the
+# initramfs, everything else is a module on the disk.
+
+# --- size ---
+CONFIG_KERNEL_XZ=y
+# CONFIG_KERNEL_GZIP is not set
+CONFIG_CC_OPTIMIZE_FOR_SIZE=y
+CONFIG_LD_DEAD_CODE_DATA_ELIMINATION=y
+CONFIG_DEBUG_INFO_NONE=y
+# CONFIG_IKCONFIG is not set
+CONFIG_LOG_BUF_SHIFT=14
+CONFIG_EXPERT=y
+# CONFIG_KALLSYMS_ALL is not set
+# CONFIG_FTRACE is not set
+# CONFIG_PERF_EVENTS is not set
+# CONFIG_PROFILING is not set
+# CONFIG_IO_URING is not set
+# CONFIG_BPF_SYSCALL is not set
+# CONFIG_KEXEC is not set
+# CONFIG_LEGACY_PTYS is not set
+# CONFIG_SUSPEND is not set
+# CONFIG_DEBUG_BUGVERBOSE is not set
+# (CONFIG_EXPERT selects DEBUG_KERNEL; the debug options below stay off)
+# CONFIG_MAGIC_SYSRQ is not set
+# CONFIG_SCHED_DEBUG is not set
+# CONFIG_SLUB_DEBUG is not set
+
+# --- only the DNS-323 board file (the stock U-Boot boots with a mach-id,
+#     no device tree; ShareOS prepends the 1542 mach-id fix like Alt-F) ---
+CONFIG_MACH_DNS323=y
+# CONFIG_MACH_RD88F5182_DT is not set
+# CONFIG_MACH_KUROBOX_PRO is not set
+# CONFIG_MACH_TS209 is not set
+# CONFIG_MACH_TERASTATION_PRO2 is not set
+# CONFIG_MACH_LINKSTATION_PRO is not set
+# CONFIG_MACH_LINKSTATION_MINI is not set
+# CONFIG_MACH_TS409 is not set
+# CONFIG_MACH_TS78XX is not set
+# CONFIG_MACH_MV2120 is not set
+# CONFIG_MACH_NET2BIG is not set
+# CONFIG_MACH_D2NET_DT is not set
+# CONFIG_MACH_MSS2_DT is not set
+# CONFIG_ARCH_ORION5X_DT is not set
+
+# --- initramfs modules: NOR, SATA (A1: SiI3512 on PCI, B1/C1: sata_mv), disk system ---
+CONFIG_BLK_DEV_INITRD=y
+CONFIG_RD_XZ=y
+# CONFIG_RD_GZIP is not set
+# CONFIG_RD_BZIP2 is not set
+# CONFIG_RD_LZMA is not set
+# CONFIG_RD_LZO is not set
+# CONFIG_RD_LZ4 is not set
+# CONFIG_RD_ZSTD is not set
+CONFIG_DEVTMPFS=y
+CONFIG_DEVTMPFS_MOUNT=y
+CONFIG_MTD=m
+CONFIG_MTD_CFI=m
+CONFIG_MTD_CFI_AMDSTD=m
+CONFIG_MTD_PHYSMAP=m
+# CONFIG_MTD_NAND_ORION is not set
+# CONFIG_MTD_RAW_NAND is not set
+# CONFIG_MTD_UBI is not set
+CONFIG_PCI=y
+CONFIG_SCSI=m
+CONFIG_ATA=m
+CONFIG_SATA_MV=m
+CONFIG_SATA_SIL=m
+# CONFIG_PATA_ARTOP is not set
+CONFIG_BLK_DEV_SD=m
+CONFIG_MD=y
+CONFIG_BLK_DEV_MD=m
+CONFIG_MD_RAID1=m
+# CONFIG_MD_RAID0 is not set
+# CONFIG_MD_RAID10 is not set
+# CONFIG_MD_RAID456 is not set
+# CONFIG_BLK_DEV_DM is not set
+# system partition is ext2 (small driver, overlay upper needs xattrs);
+# data volumes use ext4, loaded as a module from the system partition
+CONFIG_EXT2_FS=m
+CONFIG_EXT2_FS_XATTR=y
+CONFIG_EXT4_FS=m
+CONFIG_SQUASHFS=m
+CONFIG_SQUASHFS_XZ=y
+# CONFIG_SQUASHFS_ZLIB is not set
+CONFIG_OVERLAY_FS=m
+CONFIG_TMPFS=y
+CONFIG_SWAP=y
+# CONFIG_JFFS2_FS is not set
+# CONFIG_ISO9660_FS is not set
+# CONFIG_UDF_FS is not set
+
+# --- initramfs modules: network, board hardware ---
+CONFIG_MV643XX_ETH=m
+CONFIG_MARVELL_PHY=m
+CONFIG_I2C=m
+CONFIG_I2C_CHARDEV=m
+CONFIG_I2C_MV64XXX=m
+CONFIG_HWMON=m
+CONFIG_SENSORS_G760A=m
+CONFIG_SENSORS_LM75=m
+CONFIG_SENSORS_GPIO_FAN=m
+CONFIG_RTC_CLASS=y
+CONFIG_RTC_DRV_M41T80=m
+CONFIG_INPUT_EVDEV=m
+CONFIG_KEYBOARD_GPIO=m
+CONFIG_NEW_LEDS=y
+CONFIG_LEDS_CLASS=y
+CONFIG_LEDS_GPIO=m
+CONFIG_LEDS_TRIGGERS=y
+CONFIG_LEDS_TRIGGER_TIMER=y
+CONFIG_LEDS_TRIGGER_DISK=y
+CONFIG_WATCHDOG=y
+CONFIG_ORION_WATCHDOG=m
+
+# --- more size ---
+# CONFIG_KPROBES is not set
+# CONFIG_KALLSYMS is not set
+# CONFIG_COREDUMP is not set
+# CONFIG_ELF_CORE is not set
+# CONFIG_PROC_KCORE is not set
+# CONFIG_LATENCYTOP is not set
+# CONFIG_BPF is not set
+# CONFIG_BPF_JIT is not set
+# CONFIG_CGROUPS is not set
+# CONFIG_NAMESPACES is not set
+# CONFIG_POSIX_MQUEUE is not set
+# CONFIG_AUDIT is not set
+# CONFIG_SECCOMP is not set
+# CONFIG_DNOTIFY is not set
+# CONFIG_SYSVIPC is not set
+# CONFIG_HIGH_RES_TIMERS is not set
+# CONFIG_SECURITY is not set
+# CONFIG_DEBUG_FS is not set
+# CONFIG_CRAMFS is not set
+CONFIG_FAT_FS=m
+CONFIG_MSDOS_FS=m
+# CONFIG_IP_PNP is not set
+# CONFIG_ETHTOOL_NETLINK is not set
+# CONFIG_IP_ADVANCED_ROUTER is not set
+# CONFIG_IP_MROUTE is not set
+# CONFIG_NET_IPIP is not set
+# CONFIG_NET_IPGRE_DEMUX is not set
+# CONFIG_INET_AH is not set
+# CONFIG_INET_ESP is not set
+# CONFIG_INET_IPCOMP is not set
+# CONFIG_XFRM_USER is not set
+# CONFIG_NET_KEY is not set
+# CONFIG_TCP_CONG_ADVANCED is not set
+# CONFIG_NET_SCHED is not set
+# CONFIG_VLAN_8021Q is not set
+# CONFIG_BRIDGE is not set
+# CONFIG_NETLABEL is not set
+# CONFIG_DNS_RESOLVER is not set
+# CONFIG_SCSI_LOWLEVEL is not set
+# CONFIG_SERIO is not set
+# CONFIG_INPUT_MOUSEDEV is not set
+# CONFIG_INPUT_KEYBOARD_ATKBD is not set
+# CONFIG_PCIEPORTBUS is not set
+
+# TRIM_UNUSED_KSYMS keeps only the exports used by modules of this same
+# build. Phase 2: build kernel and all modules (initramfs and disk) in one
+# run, or turn this off – a module built later fails with "Unknown symbol".
+CONFIG_TRIM_UNUSED_KSYMS=y
+CONFIG_SLUB_TINY=y
+# CONFIG_BASE_FULL is not set
+# CONFIG_VM_EVENT_COUNTERS is not set
+# CONFIG_COMPACTION is not set
+# CONFIG_MIGRATION is not set
+# CONFIG_KSM is not set
+# CONFIG_ADVISE_SYSCALLS is not set
+# CONFIG_MEMBARRIER is not set
+# CONFIG_KCMP is not set
+# CONFIG_RSEQ is not set
+# CONFIG_CROSS_MEMORY_ATTACH is not set
+# CONFIG_USELIB is not set
+# CONFIG_SYSFS_SYSCALL is not set
+# CONFIG_UID16 is not set
+# CONFIG_MQ_IOSCHED_KYBER is not set
+# CONFIG_IOSCHED_BFQ is not set
+# CONFIG_BLK_DEV_BSG is not set
+# CONFIG_BLK_DEBUG_FS is not set
+# CONFIG_PARTITION_ADVANCED is not set
+CONFIG_SERIAL_8250_NR_UARTS=2
+CONFIG_SERIAL_8250_RUNTIME_UARTS=2
+# CONFIG_SERIAL_8250_EXTENDED is not set
+# CONFIG_PCI_QUIRKS is not set
+# CONFIG_PCI_MSI is not set
+# CONFIG_SCSI_PROC_FS is not set
+# CONFIG_SCSI_CONSTANTS is not set
+# CONFIG_SCSI_LOGGING is not set
+# CONFIG_SATA_PMP is not set
+# CONFIG_ATA_VERBOSE_ERROR is not set
+# CONFIG_MTD_CFI_INTELEXT is not set
+# CONFIG_MTD_BLOCK is not set
+# CONFIG_MTD_OOPS is not set
+
+# --- modules on the disk ---
+CONFIG_MODULES=y
+CONFIG_MODULE_UNLOAD=y
+CONFIG_SMB_SERVER=m
+CONFIG_NFSD=m
+CONFIG_NFSD_V4=y
+# CONFIG_NFS_FS is not set
+CONFIG_CIFS=m
+CONFIG_IPV6=m
+CONFIG_USB=m
+CONFIG_USB_EHCI_HCD=m
+CONFIG_USB_EHCI_HCD_ORION=m
+CONFIG_USB_STORAGE=m
+CONFIG_VFAT_FS=m
+CONFIG_EXFAT_FS=m
+CONFIG_NTFS3_FS=m
+CONFIG_FUSE_FS=m
+CONFIG_TUN=m
+CONFIG_WIREGUARD=m
+CONFIG_CRYPTO_DEV_MARVELL_CESA=m
+# CONFIG_NETFILTER is not set
+# CONFIG_BTRFS_FS is not set
+# CONFIG_XFS_FS is not set
+# CONFIG_JFS_FS is not set
+# CONFIG_REISERFS_FS is not set
+# CONFIG_ISCSI_TCP is not set
+# CONFIG_SCSI_ISCSI_ATTRS is not set
+# CONFIG_SOUND is not set
+# CONFIG_MEDIA_SUPPORT is not set
+# CONFIG_WLAN is not set
+# CONFIG_WIRELESS is not set
+# CONFIG_CFG80211 is not set
+# CONFIG_BT is not set
+# CONFIG_HID is not set
+# CONFIG_VT is not set
+# CONFIG_FB is not set
+# CONFIG_DRM is not set
+# CONFIG_PPP is not set
+# CONFIG_NET_DSA is not set
+# CONFIG_INET_DIAG is not set
+# CONFIG_NETWORK_FILESYSTEMS_NFS_ROOT is not set
+# CONFIG_ROOT_NFS is not set
+
+# --- hardening (as in #128) ---
+CONFIG_STRICT_KERNEL_RWX=y
+CONFIG_STACKPROTECTOR_STRONG=y
+CONFIG_FORTIFY_SOURCE=y
+CONFIG_HARDENED_USERCOPY=y
+# SLAB_FREELIST_RANDOM is not available with SLUB_TINY
+CONFIG_DEFAULT_MMAP_MIN_ADDR=32768
+CONFIG_SECURITY_DMESG_RESTRICT=y
