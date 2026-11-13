@@ -3233,8 +3233,8 @@ const SYS = {
 			<form class="panel" id="f-pass">
 				<div class="ph"><span class="pt">ACCESS · ${S.user}</span></div>
 				<div class="fields" style="grid-template-columns:1fr">
-					<label class="f"><span>NEW PASSWORD</span><input name="p1" type="password" minlength="6" autocomplete="new-password" required></label>
-					<label class="f"><span>REPEAT</span><input name="p2" type="password" minlength="6" autocomplete="new-password" required></label>
+					<label class="f"><span>NEW PASSWORD</span><input name="p1" type="password" minlength="8" autocomplete="new-password" required></label>
+					<label class="f"><span>REPEAT</span><input name="p2" type="password" minlength="8" autocomplete="new-password" required></label>
 				</div>
 				<p class="note">Applies to the web interface and SSH. At least 6 characters.</p>
 				<div class="acts" style="margin-top:14px"><button class="btn primary" type="submit">Change password</button></div>
@@ -4458,7 +4458,7 @@ function frCollect() {
 		const p1 = $('#fr-p1').value, p2 = $('#fr-p2').value;
 		if (p1 || p2) {
 			if (p1 !== p2) return 'The passwords do not match.';
-			if (p1.length < 6) return 'The password needs at least 6 characters.';
+			if (p1.length < 8) return 'The password needs at least 8 characters.';
 		}
 		f.password = p1;
 	}

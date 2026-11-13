@@ -1654,7 +1654,8 @@
 		"unknown": "inconnu",
 		"ShareOS was updated – loading the new interface …": "ShareOS a été mis à jour – chargement de la nouvelle interface …",
 		"This takes a while – it goes on in the background …": "Cela prend un moment – l'opération continue en arrière-plan …",
-		"To learn its public IPv4 address, the box asks api.ipify.org (ipv4.icanhazip.com if that does not answer).": "Pour connaître son adresse IPv4 publique, le boîtier interroge api.ipify.org (ipv4.icanhazip.com s’il ne répond pas)."
+		"To learn its public IPv4 address, the box asks api.ipify.org (ipv4.icanhazip.com if that does not answer).": "Pour connaître son adresse IPv4 publique, le boîtier interroge api.ipify.org (ipv4.icanhazip.com s’il ne répond pas).",
+		"The password needs at least 8 characters.": "Le mot de passe doit comporter au moins 8 caractères."
 	},
 	"patterns": [
 		[

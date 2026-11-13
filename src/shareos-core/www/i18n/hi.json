@@ -1654,7 +1654,8 @@
 		"unknown": "अज्ञात",
 		"ShareOS was updated – loading the new interface …": "ShareOS अपडेट हो गया – नया इंटरफ़ेस लोड हो रहा है …",
 		"This takes a while – it goes on in the background …": "इसमें कुछ समय लगेगा – यह पृष्ठभूमि में चलता रहेगा …",
-		"To learn its public IPv4 address, the box asks api.ipify.org (ipv4.icanhazip.com if that does not answer).": "अपना सार्वजनिक IPv4 पता जानने के लिए बॉक्स api.ipify.org से पूछता है (उत्तर न मिलने पर ipv4.icanhazip.com से)।"
+		"To learn its public IPv4 address, the box asks api.ipify.org (ipv4.icanhazip.com if that does not answer).": "अपना सार्वजनिक IPv4 पता जानने के लिए बॉक्स api.ipify.org से पूछता है (उत्तर न मिलने पर ipv4.icanhazip.com से)।",
+		"The password needs at least 8 characters.": "पासवर्ड में कम से कम 8 अक्षर चाहिए।"
 	},
 	"patterns": [
 		[

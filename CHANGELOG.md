@@ -29,6 +29,7 @@ Result of a review of the whole firmware ("real values, standards, speed"). No n
   - **The web interface has no direct access to the settings (`uci`) any more.** The update channel is set with the new method `shareos.update set_channel`; `tests/check-acl.py` refuses direct access for every role.
   - The encryption of settings backups uses private file names; the iteration count read from a backup file is limited.
 - **Rescue mode:** when the box ends in the rescue system after a failure, SSH (root, password "shareos") is closed until the **USB button** on the front is pressed, and then open for 30 minutes (the LED blinks fast). With `shareos.rescue` on the kernel command line it is open at once, as before.
+- **Root's password needs at least 8 characters everywhere** (it was 6 under *System → General* and in the first set-up, 8 when claiming a new box). Existing passwords stay valid; passwords of user accounts keep their minimum of 6.
 - Smaller things: one definition of the fan presets (`/usr/lib/shareos/fan-presets`), one function each for root's password and the host name, the dynamic DNS page names the services asked for the public address, bounds checks in `dns320l-daemon` (temperature table, help text), the release workflow pins the third-party release action to a commit.
 - Tests: new `tests/test-rescue.sh`; additions in `test-notify`, `test-boards`, `test-power`, `test-buttons`, `test-ddns`; the ARM emulator tests (`run-stack-qemu --check`, `test-users`, `test-storage`, `test-cloud-paperless` …) now run in the firmware build on GitHub.
 

@@ -900,9 +900,11 @@ function altf_scan() {
 	return a;
 }
 
-// root's password (System → General and the first set-up); null or an error text
+// root's password (System → General, the first set-up, claiming a new box):
+// one minimum length; null or an error text
+const ROOT_PW_MIN = 8;
 function set_password(pw) {
-	if (type(pw) != 'string' || length(pw) < 6) return 'password too short (min. 6)';
+	if (type(pw) != 'string' || length(pw) < ROOT_PW_MIN) return 'password too short (min. ' + ROOT_PW_MIN + ')';
 	if (match(pw, /[\n\r:]/)) return 'password contains invalid characters';
 	let p = popen('chpasswd -c sha512 >/dev/null 2>&1', 'w');
 	if (!p) return 'chpasswd not available';
@@ -3470,7 +3472,7 @@ return {
 				if (!root_locked()) return { error: 'already claimed' };
 				if (!claim_window()) return { error: 'press the USB button first' };
 				let pw = req.args.password ?? '';
-				if (length(pw) < 8) return { error: 'password too short (min. 8)' };
+				if (length(pw) < ROOT_PW_MIN) return { error: 'password too short (min. ' + ROOT_PW_MIN + ')' };
 				if (lc(pw) == 'shareos') return { error: 'choose your own password' };
 				let e = set_password(pw);
 				if (e) return { error: e };
