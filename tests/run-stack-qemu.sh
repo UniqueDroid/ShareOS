@@ -69,7 +69,10 @@ if [ "$CHECK" = "--check" ]; then
 	t "login works, shareos-admin granted" "$L" "'shareos-admin' in d['result'][1]['acls']['access-group']"
 	SID=$(printf '%s' "$L" | python3 -c "import json,sys;print(json.load(sys.stdin)['result'][1]['ubus_rpc_session'])")
 	t "shareos.system info" "$(rpc $SID shareos.system info)" "d['result'][1]['release']['fwname']=='DNS-320L-rev-Ax'"
-	t "uci get shareos" "$(rpc $SID uci get '{"config":"shareos"}')" "d['result'][1]['values']['update']['repo']=='UniqueDroid/ShareOS'"
+	t "no direct access to the settings (uci) for web sessions" "$(rpc $SID uci get '{"config":"shareos"}')" "d['error']['code']==-32002"
+	t "update channel: invalid value rejected" "$(rpc $SID shareos.update set_channel '{"channel":"nightly"}')" "'invalid channel' in d['result'][1]['error']"
+	t "update channel set" "$(rpc $SID shareos.update set_channel '{"channel":"beta"}')" "d['result'][1]['ok'] and d['result'][1]['channel']=='beta'"
+	t "update channel set back" "$(rpc $SID shareos.update set_channel '{"channel":"stable"}')" "d['result'][1]['ok']"
 	t "apply needs confirm" "$(rpc $SID shareos.update apply '{"tag":"v0"}')" "'confirm' in d['result'][1]['error']"
 	t "update status" "$(rpc $SID shareos.update status)" "'state' in d['result'][1]"
 	t "info: cpu, net counters, filesystems" "$(rpc $SID shareos.system info)" "d['result'][1]['cpu']['total']>0 and 'rx_bytes' in d['result'][1]['network']['eth0'] and 'filesystems' in d['result'][1]"

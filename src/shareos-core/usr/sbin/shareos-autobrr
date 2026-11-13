@@ -266,6 +266,11 @@ function cmd_api() {
 	// is none yet) the sign-up runs – not one more request before every call
 	let s = secret();
 	let r = s.key ? call(m, a.path, a.body, s.key) : null;
+	// no answer at all: autobrr was just (re)started – give it a few seconds
+	for (let i = 0; r && r.status == 0 && i < 10 && pid(); i++) {
+		sleep(500);
+		r = call(m, a.path, a.body, s.key);
+	}
 	if (!r || r.status == 401 || r.status == 403) {
 		s = setup();
 		r = call(m, a.path, a.body, s.key);

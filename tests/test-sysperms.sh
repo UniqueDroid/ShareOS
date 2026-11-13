@@ -82,7 +82,12 @@ check "sysinfo: info with CPU, memory, volumes" "cgi sysinfo $GR '{\"op\":\"info
 run "sleep 300 & echo \$! > /tmp/sleeper.pid" >/dev/null
 SP=$(cat $R/tmp/sleeper.pid)
 check "sysinfo: processes with user, memory and CPU ticks" "cgi sysinfo $GR '{\"op\":\"processes\"}' | js \"d['cpu']['total']>0 and any(p['pid']==$SP and p['name']=='sleep' and p['user']=='root' and p['rss']>0 and 'ticks' in p for p in d['processes']) and any(p['name']=='rpcd' for p in d['processes'])\""
-RP=$(pgrep -f '/sbin/rpcd' | head -1)
+# rpcd itself and the program that restarts it (its command line names rpcd too)
+RP=; SV=
+for p in $(pgrep -f '/sbin/rpcd'); do
+	case "$(cat /proc/$p/comm 2>/dev/null)" in rpcd) RP=$p ;; shareos-supervi*) SV=$p ;; esac
+done
+check "sysinfo: the program that restarts rpcd cannot be ended" "[ -n \"$SV\" ] && cgi sysinfo $GR \"{\\\"op\\\":\\\"kill\\\",\\\"pid\\\":$SV}\" | grep -q 'keeps ShareOS running'"
 check "sysinfo: init, kernel threads and rpcd cannot be ended" "cgi sysinfo $GR '{\"op\":\"kill\",\"pid\":1}' | grep -q 'invalid process' && cgi sysinfo $GR '{\"op\":\"kill\",\"pid\":2}' | grep -q 'kernel threads\|no such process' && cgi sysinfo $GR \"{\\\"op\\\":\\\"kill\\\",\\\"pid\\\":$RP}\" | grep -q 'keeps ShareOS running' && cgi sysinfo $GR \"{\\\"op\\\":\\\"kill\\\",\\\"pid\\\":$SP,\\\"signal\\\":\\\"STOP\\\"}\" | grep -q 'invalid signal'"
 o=$(cgi sysinfo $GR "{\"op\":\"kill\",\"pid\":$SP}")
 sleep 0.5

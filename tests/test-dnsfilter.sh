@@ -103,6 +103,7 @@ BOXIP=$(ip -4 -o addr show dev eth0 2>/dev/null | sed -n 's/.*inet \([0-9.]*\).*
 check "switch on: starts in the background" "ub set '{\"enabled\":true}' | js \"d.get('ok')\""
 wait_ready 180
 check "first start: running and ready" "ub status | js \"d['ready'] and d['web_port']==8053 and d['version']\""
+ub status | js "d['ready']" 2>/dev/null || { echo "      status: $(ub status | tr '\n' ' ' | cut -c1-600)"; echo "      log: $(df log | tr '\n' ' ' | tail -c 1500)"; echo "      port 53 on this host: $(ss -lnup 2>/dev/null | grep ':53 ' | tr '\n' ' ' | cut -c1-300)"; }
 Y=$R/etc/shareos/dnsfilter/AdGuardHome.yaml
 check "settings written by AdGuard's setup" "grep -q '^schema_version:' $Y && grep -q 'address: 0.0.0.0:8053' $Y"
 check "guard rail: query log in RAM, no file" "grep -A8 '^querylog:' $Y | grep -q 'file_enabled: false' && grep -A8 '^querylog:' $Y | grep -q 'dir_path: /tmp/shareos-dnsfilter/data'"

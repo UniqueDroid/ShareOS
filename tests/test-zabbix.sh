@@ -112,14 +112,20 @@ check "PSK too short refused" "z '{\"psk\":\"abcd\",\"psk_identity\":\"x\"}' | j
 z '{"psk":"00112233445566778899AABBCCDDEEFF00112233445566778899aabbccddeeff","psk_identity":"nas-test PSK"}' >/dev/null
 check "PSK: encrypted connections, key root-only, for the agent group-readable" "grep -q '^TLSConnect=psk$' $C && grep -q '^TLSPSKIdentity=nas-test PSK$' $C && [ \$(stat -c %a $R/etc/shareos/zabbix.psk) = 600 ] && [ \$(stat -c %a $R/tmp/shareos-zabbix/psk) = 640 ] && [ \$(stat -c %g $R/tmp/shareos-zabbix/psk) = \$(run 'id -g zabbix') ] && grep -qx '00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff' $R/etc/shareos/zabbix.psk"
 # a second fake server that takes only TLS with this key
-ZBX_PSK_IDENTITY="nas-test PSK" ZBX_PSK=00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff \
-	python3 "$TOP/tests/zabbix-fake-server.py" $((PORT + 1)) "$T/server-psk.json" agent.ping 'shareos.disk[sda,temperature]' &
-SRV2=$!
-sleep 1
-z "{\"server\":\"127.0.0.1:$((PORT + 1))\"}" >/dev/null
-i=0; until python3 -c "import json,sys; d=json.load(open('$T/server-psk.json')); sys.exit(0 if d['values'].get('agent.ping')=='1' else 1)" 2>/dev/null || [ $i -ge 60 ]; do sleep 1; i=$((i + 1)); done
-check "PSK: the values arrive over TLS" "python3 -c \"import json,sys; d=json.load(open('$T/server-psk.json')); sys.exit(0 if d['values'].get('shareos.disk[sda,temperature]')=='38' and 'TLSv1.2' in d['tls'] else 1)\""
-kill $SRV2 2>/dev/null
+# (TLS with a pre-shared key on the server side needs Python 3.13)
+SRV2=
+if python3 -c "import ssl, sys; sys.exit(0 if hasattr(ssl.SSLContext, 'set_psk_server_callback') else 1)"; then
+	ZBX_PSK_IDENTITY="nas-test PSK" ZBX_PSK=00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff \
+		python3 "$TOP/tests/zabbix-fake-server.py" $((PORT + 1)) "$T/server-psk.json" agent.ping 'shareos.disk[sda,temperature]' &
+	SRV2=$!
+	sleep 1
+	z "{\"server\":\"127.0.0.1:$((PORT + 1))\"}" >/dev/null
+	i=0; until python3 -c "import json,sys; d=json.load(open('$T/server-psk.json')); sys.exit(0 if d['values'].get('agent.ping')=='1' else 1)" 2>/dev/null || [ $i -ge 60 ]; do sleep 1; i=$((i + 1)); done
+	check "PSK: the values arrive over TLS" "python3 -c \"import json,sys; d=json.load(open('$T/server-psk.json')); sys.exit(0 if d['values'].get('shareos.disk[sda,temperature]')=='38' and 'TLSv1.2' in d['tls'] else 1)\""
+else
+	echo "SKIP  PSK: the values arrive over TLS (this Python has no TLS-PSK server; needs 3.13)"
+fi
+[ -n "$SRV2" ] && kill $SRV2 2>/dev/null
 z "{\"server\":\"127.0.0.1:$PORT\"}" >/dev/null
 check "PSK in the settings backup" "run 'ubus call shareos.backup export \"{}\"' | grep -q zabbix.psk"
 check "PSK removed: unencrypted again" "z '{\"psk\":\"\",\"psk_identity\":\"\"}' | js \"not d['psk'] and d['running']\" && grep -q '^TLSConnect=unencrypted$' $C && [ ! -e $R/tmp/shareos-zabbix/psk ]"

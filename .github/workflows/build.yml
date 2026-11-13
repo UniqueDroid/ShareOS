@@ -189,6 +189,12 @@ jobs:
           for f in "rclone-v$v-linux-arm.zip" SHA256SUMS; do
             curl -fsSL --retry 3 -o "rclone-dl/v$v/$f" "https://github.com/rclone/rclone/releases/download/v$v/$f"
           done
+          # RAID layouts of test-storage need the md personalities of this machine
+          sudo modprobe -a raid0 raid1 linear 2>/dev/null || true
+          # AdGuard Home of test-dnsfilter binds port 53 of this machine: free it
+          # (names are then resolved by the servers systemd-resolved had found)
+          sudo systemctl stop systemd-resolved
+          sudo ln -sf /run/systemd/resolve/resolv.conf /etc/resolv.conf
           rc=0
           run() { echo "::group::$1"; shift; if sudo "$@"; then echo "::endgroup::"; else echo "::endgroup::"; echo "::error::failed: $*"; rc=1; fi; }
           run "stack (rpcd, uhttpd, JSON-RPC)" tests/run-stack-qemu.sh "$O" 8080 --check

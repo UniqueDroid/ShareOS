@@ -2373,7 +2373,9 @@ function sys_processes() {
 }
 
 // processes an app may not end: init and what keeps ShareOS and its interface running
-const SYS_KEEP = { init: 1, ubusd: 1, rpcd: 1, uhttpd: 1, 'dns320l-daemon': 1, syslogd: 1, klogd: 1 };
+// (the kernel keeps 15 characters of a name: shareos-supervise, which restarts
+// ubusd and rpcd – ending it ends them)
+const SYS_KEEP = { init: 1, ubusd: 1, rpcd: 1, uhttpd: 1, 'dns320l-daemon': 1, syslogd: 1, klogd: 1, 'shareos-supervi': 1 };
 
 /* ---------- permission "docker": Docker hosts the admin added (Docker Engine API) ---------- */
 
