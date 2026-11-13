@@ -100,9 +100,17 @@ function memo(key, stamp, ttl, fn) {
 	return v;
 }
 function forget(key) { delete MEMO[key]; }
-// stamp of files: size and modification time (missing files count too)
+// stamp of files: size and modification time (missing files count too).
+// Modification times count in seconds: a file changed a moment ago can change
+// again without its stamp changing, so such a stamp is made to match nothing.
 function fstamp(...paths) {
-	return join('|', map(paths, (p) => { let st = stat(p); return st ? st.size + ':' + st.mtime : '-'; }));
+	let now = time(), fresh = false;
+	let s = join('|', map(paths, (p) => {
+		let st = stat(p);
+		if (st && st.mtime >= now - 1) fresh = true;
+		return st ? st.size + ':' + st.mtime : '-';
+	}));
+	return fresh ? s + '|' + join('.', clock()) : s;
 }
 
 function sh(cmd) {

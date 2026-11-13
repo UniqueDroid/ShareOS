@@ -144,6 +144,8 @@ check "https: the same port as HTTP refused" "ub set '{\"https_port\":8053}' | g
 
 # --- block lists ----------------------------------------------------------------------
 check "list added" "ub filter_add '{\"name\":\"Test\",\"url\":\"http://127.0.0.1:$LPORT/list.txt\"}' | js \"[f for f in d['filters'] if f['name']=='Test' and f['rules']==3]\""
+# AdGuard takes the new list into its filter a moment after it has answered
+i=0; until [ "$(dnsq ads.shareos-test.example)" = 0.0.0.0 ] || [ $i -ge 60 ]; do sleep 1; i=$((i + 1)); done
 [ "$(dnsq ads.shareos-test.example)" = 0.0.0.0 ] || { echo "      answers: $(dnsq ads.shareos-test.example) $(dnsq banner.shareos-test.example)"; echo "      status: $(ub status | tr '\n' ' ' | cut -c1-700)"; }
 check "blocked name answered with 0.0.0.0" "[ \"\$(dnsq ads.shareos-test.example)\" = 0.0.0.0 ] && [ \"\$(dnsq banner.shareos-test.example)\" = 0.0.0.0 ]"
 check "status: rules, queries, blocked, estimate" "ub status | js \"d['rules']>=3 and d['blocked']>=2 and d['queries']>=2 and d['estimate_mb']>=25 and not d['warn']\""
@@ -194,10 +196,10 @@ while [ $i -lt 240 ]; do
 	echo "$st" | js "d.get('starting') or not d.get('running')" || break
 	sleep 1; i=$((i + 1))
 done
+[ "$first" = "$BOXIP" ] || echo "      first answer after ready: '$first' (expected $BOXIP), after $i s; now: '$(dnsq shareos-u.test.lan)'"
 check "switched on: not ready before DNS answers (port 53)" "[ \"$first\" = $BOXIP ]"
 sleep 15
 check "switched on: stays on (setting, process, DNS, Services page)" "[ \"\$(run 'uci -q get dnsfilter.main.enabled')\" = 1 ] && ub status | js \"d['enabled'] and d['running'] and d['ready']\" && [ \"\$(dnsq shareos-u.test.lan)\" = $BOXIP ] && svc True"
-echo "      local.json: $(tr '\n' ' ' < $R/etc/shareos/dnsfilter/local.json 2>/dev/null | cut -c1-300) | upstream: $(curl -sk -u admin:$PW https://127.0.0.1:8064/control/dns_info | cut -c1-400)"
 check "the box as its own DNS server: local domain to the gateway ($GW)" "[ -z \"$GW\" ] || { i=0; until [ -s $R/etc/shareos/dnsfilter/local.json ] && grep -q '$GW' $R/etc/shareos/dnsfilter/local.json || [ \$i -ge 30 ]; do sleep 1; i=\$((i + 1)); done; curl -sk -u admin:$PW https://127.0.0.1:8064/control/dns_info | js \"'[/test.lan/]$GW' in d['upstream_dns']\"; }"
 check "removed: stopped, tab gone, settings kept" "run 'shareos-apps remove dnsfilter' >/dev/null; ! [ -e $R/tmp/shareos-dnsfilter/pid ] && run 'ubus call shareos.ui get' | js \"d['areas']['dnsfilter']==False\" && [ -f $Y ]"
 
