@@ -212,14 +212,21 @@ if [ -n "$V" ]; then
 	check "usb copy: no target set -> error, nothing copied" "echo '$o' | grep -q rc=1 && grep -q 'error=no target set' $R/tmp/shareos-usb.copy/state"
 	run "uci set shareos.usbcopy=usbcopy; uci set shareos.usbcopy.enabled=1; uci set shareos.usbcopy.volume=$V; uci commit shareos" >/dev/null
 	o=$(usb shareos-usb copy; echo rc=$?)
-	check "usb copy: the stick into a new dated folder on $V" "echo '$o' | grep -q rc=0 && grep -qx data $R/mnt/$V/USB-Kopien/*-mein_stick/f && grep -q state=done $R/tmp/shareos-usb.copy/state && grep -q files=1 $R/tmp/shareos-usb.copy/state"
+	check "usb copy: the stick into a new dated folder on $V" "echo '$o' | grep -q rc=0 && grep -qx data \"$R/mnt/$V/USB copies/\"*-mein_stick/f && grep -q state=done $R/tmp/shareos-usb.copy/state && grep -q files=1 $R/tmp/shareos-usb.copy/state"
 	usb shareos-usb copy >/dev/null
-	check "usb copy: again -> a second folder, nothing overwritten" "[ \$(ls -d $R/mnt/$V/USB-Kopien/*mein_stick* | wc -l) = 2 ]"
+	check "usb copy: again -> a second folder, nothing overwritten" "[ \$(ls -d \"$R/mnt/$V/USB copies/\"*mein_stick* | wc -l) = 2 ]"
 	check "usb copy: the stick stays mounted" "grep -q \" $R/mnt/usb-mein_stick \" /proc/mounts"
 	run "uci set shareos.usbcopy.path='../x'; uci commit shareos" >/dev/null
 	o=$(usb shareos-usb copy; echo rc=$?)
 	check "usb copy: a target outside the drive is refused" "echo '$o' | grep -q rc=1 && grep -q 'invalid target' $R/tmp/shareos-usb.copy/state"
 	run "uci delete shareos.usbcopy; uci commit shareos" >/dev/null
+	# the default folder is named in the language of the box and kept once saved (rpcd)
+	run '/etc/init.d/S12ubus start; /etc/init.d/S13rpcd start' >/dev/null; sleep 1
+	run "uci set shareos.ui.lang=de; uci commit shareos" >/dev/null
+	o=$(run ubus call shareos.storage usb_copy_config "'{\"enabled\":false,\"volume\":\"\",\"path\":\"\"}'")
+	check "usb copy: default folder in the language of the box (de: USB-Kopien), kept after a language change" "[ \"\$(run uci -q get shareos.usbcopy.path)\" = USB-Kopien ] && run 'uci set shareos.ui.lang=en; uci commit shareos' >/dev/null && run ubus call shareos.storage status | grep -q '\"path\": \"USB-Kopien\"'"
+	run "uci delete shareos.usbcopy; uci -q delete shareos.ui.lang; uci commit shareos" >/dev/null
+	check "usb copy: default folder of an English box" "run ubus call shareos.storage status | grep -q '\"path\": \"USB copies\"'"
 else
 	echo "SKIP  usb copy (no volume mounted here)"
 fi

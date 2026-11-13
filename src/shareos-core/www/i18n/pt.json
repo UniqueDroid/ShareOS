@@ -1797,10 +1797,6 @@
 			"$1 – pastas com seu conteúdo. Não dá para desfazer."
 		],
 		[
-			"^(\\d+) file\\(s\\) saved to “Geteilt” in your personal folder\\.$",
-			"$1 arquivo(s) salvo(s) em “Geteilt” na sua pasta pessoal."
-		],
-		[
 			"^(.+) swap per disk, app area on \"(.+)\" \\(unless one exists\\)\\.$",
 			"$1 de swap por disco, área de apps em \"$2\" (se ainda não houver uma)."
 		],
@@ -1823,6 +1819,10 @@
 		[
 			"^Needed by: (.+) – these apps will no longer work\\.$",
 			"Necessário para: $1 – esses apps deixarão de funcionar."
+		],
+		[
+			"^(\\d+) file\\(s\\) saved to “(.+)” in your personal folder\\.$",
+			"$1 arquivo(s) salvo(s) em “$2” na sua pasta pessoal."
 		],
 		[
 			"^ShareOS shuts down and the box switches off\\. (.+)$",
@@ -3275,5 +3275,9 @@
 			"todos os utilizadores",
 			"g"
 		]
-	]
+	],
+	"folders": {
+		"shared": "Compartilhado",
+		"usb": "Cópias USB"
+	}
 }

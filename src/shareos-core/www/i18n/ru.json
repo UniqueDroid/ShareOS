@@ -1797,10 +1797,6 @@
 			"$1 – папки вместе с содержимым. Это нельзя отменить."
 		],
 		[
-			"^(\\d+) file\\(s\\) saved to “Geteilt” in your personal folder\\.$",
-			"$1 файл(ов) сохранено в «Geteilt» в вашей личной папке."
-		],
-		[
 			"^(.+) swap per disk, app area on \"(.+)\" \\(unless one exists\\)\\.$",
 			"$1 swap на диск, область приложений на «$2» (если её ещё нет)."
 		],
@@ -1823,6 +1819,10 @@
 		[
 			"^Needed by: (.+) – these apps will no longer work\\.$",
 			"Нужно для: $1 – эти приложения перестанут работать."
+		],
+		[
+			"^(\\d+) file\\(s\\) saved to “(.+)” in your personal folder\\.$",
+			"$1 файл(ов) сохранено в «$2» в вашей личной папке."
 		],
 		[
 			"^ShareOS shuts down and the box switches off\\. (.+)$",
@@ -3275,5 +3275,9 @@
 			"все пользователи",
 			"g"
 		]
-	]
+	],
+	"folders": {
+		"shared": "Общие",
+		"usb": "Копии USB"
+	}
 }

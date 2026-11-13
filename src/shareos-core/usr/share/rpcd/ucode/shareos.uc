@@ -114,6 +114,28 @@ function read_int(path) {
 	return v != null && match(v, /^-?[0-9]+$/) ? +v : null;
 }
 
+// names of folders the box creates on the disks, in the language of the box
+// ("folders" of /www/i18n/<code>.json). Only used when a folder is created:
+// an existing one keeps its name, also after the language changed.
+const FOLDER_EN = { shared: 'Shared', usb: 'USB copies' };
+function folder_names(lang) {
+	if (!lang || lang == 'en' || !match(lang, /^[a-z]{2,3}$/)) return FOLDER_EN;
+	let j = null;
+	try { j = json(readfile('/www/i18n/' + lang + '.json') ?? 'null'); } catch (e) {}
+	return { ...FOLDER_EN, ...(type(j?.folders) == 'object' ? j.folders : {}) };
+}
+function folder_name(id) { return folder_names(cursor().get('shareos', 'ui', 'lang'))[id]; }
+// every name a folder has in any language (to find one made earlier)
+function folder_all_names(id) {
+	let out = [ FOLDER_EN[id] ];
+	for (let f in glob('/www/i18n/*.json')) {
+		let m = match(f, /\/([a-z]{2,3})\.json$/);
+		let n = m ? folder_names(m[1])[id] : null;
+		if (n && index(out, n) < 0) push(out, n);
+	}
+	return out;
+}
+
 function release() {
 	let r = {};
 	for (let line in split(readfile('/etc/shareos-release') ?? '', '\n')) {
@@ -376,7 +398,7 @@ function usb_copy_info() {
 	}
 	if (st.state == 'running' && !stat('/tmp/shareos-usb.copy.lock')) { st.state = 'error'; st.error ??= 'stopped'; }
 	return { enabled: c.get('shareos', 'usbcopy', 'enabled') == '1', volume: c.get('shareos', 'usbcopy', 'volume') ?? '',
-		path: c.get('shareos', 'usbcopy', 'path') ?? 'USB-Kopien', last: length(st) ? st : null };
+		path: c.get('shareos', 'usbcopy', 'path') ?? folder_name('usb'), last: length(st) ? st : null };
 }
 
 function smart_read(disk, refresh) {
@@ -1446,7 +1468,6 @@ function apps_for(u) {
 /* ---------- file browser ---------- */
 
 const FILES_TICKETS = '/tmp/shareos-files';
-const SHARE_IN = 'Geteilt';   // folder for "Teilen mit" in the personal folder
 const APP_TICKETS = '/tmp/shareos-appfiles';     // read by /www-apps/_shareos/cgi/file
 const FILES_MAX = 2000;            // entries listed per folder
 
@@ -3421,7 +3442,7 @@ return {
 			call: function(req) {
 				let a = req.args, c = cursor();
 				if (type(a.enabled) != 'bool') return { error: 'invalid value' };
-				let path = trim(a.path ?? '') || 'USB-Kopien';
+				let path = trim(a.path ?? '') || folder_name('usb');
 				for (let part in split(path, '/')) if (!name_ok(part) || substr(part, 0, 1) == '.') return { error: 'invalid folder' };
 				if (a.enabled || a.volume) {
 					if (!valid_name(a.volume) || c.get('storage', a.volume) != 'volume') return { error: 'unknown volume' };
@@ -3658,9 +3679,11 @@ return {
 	},
 
 	'shareos.me': {
-		// "Teilen mit" of the installed app (Web Share Target): an upload
-		// ticket for one shared file into <personal folder>/Geteilt; a name
-		// that is taken gets " (2)", " (3)" … – nothing is replaced
+		// "Share with" of the installed app (Web Share Target): an upload
+		// ticket for one shared file into the folder for shared files in the
+		// personal folder ("Shared", named in the language of the box; one made
+		// earlier in another language is used as it is); a name that is taken
+		// gets " (2)", " (3)" … – nothing is replaced
 		share_ticket: {
 			args: { name: '' },
 			call: function(req) {
@@ -3674,8 +3697,9 @@ return {
 					h = r?.path;
 				}
 				if (!h) return { error: 'no personal folder' };
-				let d = h + '/' + SHARE_IN;
-				if (lstat(d) && stat(d)?.type != 'directory') return { error: 'not a folder: ' + SHARE_IN };
+				let folder = filter(folder_all_names('shared'), (x) => stat(h + '/' + x)?.type == 'directory')[0] ?? folder_name('shared');
+				let d = h + '/' + folder;
+				if (lstat(d) && stat(d)?.type != 'directory') return { error: 'not a folder: ' + folder };
 				if (!lstat(d)) {
 					let r = files_sh(u, 'mkdir -- ' + shq(d), false);
 					if (r.rc != 0) return { error: files_err(r) };
@@ -3690,7 +3714,7 @@ return {
 				system('find ' + FILES_TICKETS + ' -type f -mmin +5 -delete 2>/dev/null');
 				let t = new_token();
 				writefile(FILES_TICKETS + '/' + t, sprintf('put\n%s\n%s\n%d\n%s\n', acc_role(u) == 'admin' ? 'root' : u, d + '/' + n, time() + 120, pct_enc(n)));
-				return { url: '/cgi-bin/files?t=' + t, name: n, folder: SHARE_IN };
+				return { url: '/cgi-bin/files?t=' + t, name: n, folder };
 			}
 		},
 

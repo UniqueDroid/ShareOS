@@ -1452,7 +1452,7 @@ E1137	Maison connectée (Tuya)
 E1138	Peut rechercher depuis le boîtier les appareils Tuya du réseau domestique, lire leur état et les commuter (en local, sans cloud) – administrateurs uniquement.
 P271	Fichier $1
 P272	Partage : $1 fichier(s) non enregistré(s) – $2
-P273	$1 fichier(s) enregistré(s) dans « Geteilt » de votre dossier personnel.
+P273	$1 fichier(s) enregistré(s) dans « $2 » de votre dossier personnel.
 E1139	Aucun disque monté pour vous.
 E1140	CONTIENT
 P274	$1 % de ma limite
@@ -2049,3 +2049,5 @@ P360	Logo : $1
 P361	Instantanés : $1
 E1645	Pas encore de compte cloud.
 E1646	Pas encore de tâche. Une tâche copie ou met en miroir un dossier avec un compte cloud – à la main ou selon un planning.
+F0	Partagé
+F1	Copies USB

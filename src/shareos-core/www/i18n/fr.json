@@ -1797,10 +1797,6 @@
 			"$1 – dossiers avec leur contenu. C'est irréversible."
 		],
 		[
-			"^(\\d+) file\\(s\\) saved to “Geteilt” in your personal folder\\.$",
-			"$1 fichier(s) enregistré(s) dans « Geteilt » de votre dossier personnel."
-		],
-		[
 			"^(.+) swap per disk, app area on \"(.+)\" \\(unless one exists\\)\\.$",
 			"$1 de swap par disque, espace des apps sur « $2 » (s'il n'en existe pas déjà un)."
 		],
@@ -1823,6 +1819,10 @@
 		[
 			"^Needed by: (.+) – these apps will no longer work\\.$",
 			"Utilisé par : $1 – ces apps ne fonctionneront plus."
+		],
+		[
+			"^(\\d+) file\\(s\\) saved to “(.+)” in your personal folder\\.$",
+			"$1 fichier(s) enregistré(s) dans « $2 » de votre dossier personnel."
 		],
 		[
 			"^ShareOS shuts down and the box switches off\\. (.+)$",
@@ -3275,5 +3275,9 @@
 			"tous les utilisateurs",
 			"g"
 		]
-	]
+	],
+	"folders": {
+		"shared": "Partagé",
+		"usb": "Copies USB"
+	}
 }

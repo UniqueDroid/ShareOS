@@ -1797,10 +1797,6 @@
 			"$1 – Ordner samt Inhalt. Das lässt sich nicht rückgängig machen."
 		],
 		[
-			"^(\\d+) file\\(s\\) saved to “Geteilt” in your personal folder\\.$",
-			"$1 Datei(en) in „Geteilt“ in deinem persönlichen Ordner gespeichert."
-		],
-		[
 			"^(.+) swap per disk, app area on \"(.+)\" \\(unless one exists\\)\\.$",
 			"Je Platte $1 Swap, Apps-Bereich auf „$2“ (falls noch keiner besteht)."
 		],
@@ -1823,6 +1819,10 @@
 		[
 			"^Needed by: (.+) – these apps will no longer work\\.$",
 			"Gebraucht von: $1 – diese Apps funktionieren danach nicht mehr."
+		],
+		[
+			"^(\\d+) file\\(s\\) saved to “(.+)” in your personal folder\\.$",
+			"$1 Datei(en) in „$2“ in deinem persönlichen Ordner gespeichert."
 		],
 		[
 			"^ShareOS shuts down and the box switches off\\. (.+)$",
@@ -3275,5 +3275,9 @@
 			"alle Benutzer",
 			"g"
 		]
-	]
+	],
+	"folders": {
+		"shared": "Geteilt",
+		"usb": "USB-Kopien"
+	}
 }

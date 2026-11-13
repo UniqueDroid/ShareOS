@@ -13,6 +13,7 @@ pre-releases for test devices only.
   - Translations also apply to attributes (`title`, `placeholder`, `aria-label`) that change after the page was drawn.
   - Checks: `tests/check-i18n.py` (every language built from the current catalog, placeholders, valid and not hidden patterns) and `tests/check-i18n-coverage.js` (no German text in the sources, every English text translated).
   - The docs, the CHANGELOG and the test mock use the English UI names and English sample data.
+- **Folders the box creates are named in the language of the box:** the folder for files shared from the phone ("Share with") in the personal folder and the default folder of the USB copy were always German (`Geteilt`, `USB-Kopien`). They are now named in the box's language – English `Shared` and `USB copies`, German `Geteilt` and `USB-Kopien`, French `Partagé` and `Copies USB` … (new section `folders` in the translations). Nothing is renamed: an existing shared folder in any language is used as it is, and the USB copy keeps the folder saved in its settings. Tests: `test-users` (+2), `test-storage` (+2).
 
 ## 0.3.0-beta.7
 

@@ -1797,10 +1797,6 @@
 			"$1 – फ़ोल्डर अपनी सामग्री के साथ। इसे वापस नहीं किया जा सकता।"
 		],
 		[
-			"^(\\d+) file\\(s\\) saved to “Geteilt” in your personal folder\\.$",
-			"$1 फ़ाइल(लें) आपके निजी फ़ोल्डर में “Geteilt” में सहेजी गईं।"
-		],
-		[
 			"^(.+) swap per disk, app area on \"(.+)\" \\(unless one exists\\)\\.$",
 			"हर डिस्क पर $1 स्वैप, ऐप क्षेत्र \"$2\" पर (अगर पहले से कोई न हो)।"
 		],
@@ -1823,6 +1819,10 @@
 		[
 			"^Needed by: (.+) – these apps will no longer work\\.$",
 			"इनको चाहिए: $1 – ये ऐप्स फिर काम नहीं करेंगे।"
+		],
+		[
+			"^(\\d+) file\\(s\\) saved to “(.+)” in your personal folder\\.$",
+			"$1 फ़ाइल(लें) आपके निजी फ़ोल्डर में “$2” में सहेजी गईं।"
 		],
 		[
 			"^ShareOS shuts down and the box switches off\\. (.+)$",
@@ -3275,5 +3275,9 @@
 			"सभी उपयोगकर्ता",
 			"g"
 		]
-	]
+	],
+	"folders": {
+		"shared": "साझा",
+		"usb": "USB प्रतियाँ"
+	}
 }

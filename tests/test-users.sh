@@ -208,17 +208,25 @@ run 'su -s /bin/sh lisa -c "echo alt > /mnt/daten/home/lisa/.shareos-trash/1000-
 printf '{"name":"alt.txt","path":"","time":1000,"user":"lisa","type":"file","size":4}' > $R/mnt/daten/home/lisa/.shareos-trash/1000-aaaaaaaa.json
 check "trash: entries older than 30 days are purged" "fs trash_list '\"root\":\"home\"' | js \"d['items']==[]\" && [ ! -e $R/mnt/daten/home/lisa/.shareos-trash/1000-aaaaaaaa ]"
 check "trash: settings only for admins" "fs trash_config '\"enabled\":false,\"days\":7' | grep -q 'not allowed'"
-# --- "Teilen mit" of the installed app: into <personal folder>/Geteilt ---------
+# --- "Share with" of the installed app: into <personal folder>/Shared ----------
 st() { rpc shareos.me share_ticket "{\"ubus_rpc_session\":\"${2:-$SL}\",\"name\":\"$1\"}"; }
 S1=$(st 'Foto 1.jpg')
 TK=$(echo "$S1" | python3 -c 'import json,sys; print(json.load(sys.stdin)["url"].split("t=")[1])')
 o=$(run "QUERY_STRING=t=$TK REQUEST_METHOD=POST CONTENT_LENGTH=11 /www/cgi-bin/files < /tmp/up.txt")
-check "share: ticket into Geteilt, folder made for the user (0700), upload" "echo '$S1' | js \"d['name']=='Foto 1.jpg' and d['folder']=='Geteilt'\" && echo \"\$o\" | grep -q 'Status: 200' && [ \"\$(cat '$R/mnt/daten/home/lisa/Geteilt/Foto 1.jpg')\" = 'hallo welt' ] && [ \"\$(run 'stat -c %U:%a /mnt/daten/home/lisa/Geteilt')\" = lisa:700 ]"
+check "share: ticket into Shared, folder made for the user (0700), upload" "echo '$S1' | js \"d['name']=='Foto 1.jpg' and d['folder']=='Shared'\" && echo \"\$o\" | grep -q 'Status: 200' && [ \"\$(cat '$R/mnt/daten/home/lisa/Shared/Foto 1.jpg')\" = 'hallo welt' ] && [ \"\$(run 'stat -c %U:%a /mnt/daten/home/lisa/Shared')\" = lisa:700 ]"
 check "share: a taken name gets a number, nothing is replaced" "st 'Foto 1.jpg' | js \"d['name']=='Foto 1 (2).jpg'\" && st 'notiz' | js \"d['name']=='notiz'\""
 check "share: bad names rejected" "st 'a/b' | grep -q 'invalid name' && st '.profile' | grep -q 'invalid name'"
 check "share: account without a personal folder is refused" "st 'x.txt' '$SID' | grep -q 'no personal folder'"
 check "me: drives of the personal folder with free space" "rpc shareos.me get '{\"ubus_rpc_session\":\"$SL\"}' | js \"[v['name'] for v in d['volumes']]==['daten'] and d['volumes'][0]['avail']>0 and d['volumes'][0]['size']>=d['volumes'][0]['used']\""
+# the folder is named in the language of the box; one made earlier in another language is kept
+rm -rf "$R/mnt/daten/home/lisa/Shared"
+run 'su -s /bin/sh lisa -c "mkdir /mnt/daten/home/lisa/Geteilt"'
+check "share: a folder made earlier in another language (Geteilt) is used as it is" "st 'b.txt' | js \"d['folder']=='Geteilt'\" && [ ! -e '$R/mnt/daten/home/lisa/Shared' ]"
 rm -rf "$R/mnt/daten/home/lisa/Geteilt"
+run "uci set shareos.ui.lang=fr; uci commit shareos" >/dev/null
+check "share: a new folder gets the name in the language of the box (fr: Partagé)" "st 'c.txt' | js \"d['folder']=='Partagé'\" && [ -d '$R/mnt/daten/home/lisa/Partagé' ]"
+run "uci -q delete shareos.ui.lang; uci commit shareos" >/dev/null
+rm -rf "$R/mnt/daten/home/lisa/Partagé"
 LJ=$(rpc session login '{"username":"jan","password":"geheim1"}')
 SJ=$(echo "$LJ" | python3 -c 'import json,sys; print(json.load(sys.stdin)["ubus_rpc_session"])' 2>/dev/null)
 rpc shareos.me bind "{\"username\":\"jan\",\"password\":\"geheim1\",\"ubus_rpc_session\":\"$SJ\"}" >/dev/null

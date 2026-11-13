@@ -1797,10 +1797,6 @@
 			"$1 – المجلدات مع محتواها. لا يمكن التراجع عن ذلك."
 		],
 		[
-			"^(\\d+) file\\(s\\) saved to “Geteilt” in your personal folder\\.$",
-			"تم حفظ $1 ملف في «Geteilt» في مجلدك الشخصي."
-		],
-		[
 			"^(.+) swap per disk, app area on \"(.+)\" \\(unless one exists\\)\\.$",
 			"$1 Swap لكل قرص، منطقة التطبيقات على «$2» (إن لم توجد واحدة)."
 		],
@@ -1823,6 +1819,10 @@
 		[
 			"^Needed by: (.+) – these apps will no longer work\\.$",
 			"تحتاجه: $1 – لن تعمل هذه التطبيقات بعد ذلك."
+		],
+		[
+			"^(\\d+) file\\(s\\) saved to “(.+)” in your personal folder\\.$",
+			"تم حفظ $1 ملف في «$2» في مجلدك الشخصي."
 		],
 		[
 			"^ShareOS shuts down and the box switches off\\. (.+)$",
@@ -3275,5 +3275,9 @@
 			"كل المستخدمين",
 			"g"
 		]
-	]
+	],
+	"folders": {
+		"shared": "مشترك",
+		"usb": "نسخ USB"
+	}
 }

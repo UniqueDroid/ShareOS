@@ -505,7 +505,8 @@ function setView(v) { store.set('view', v); location.reload(); }
 
 /* ---------- share target ("share with" on the phone, see sw.js) ----------------
  * what was shared with the installed app waits in IndexedDB until someone is
- * logged in; then it goes into <personal folder>/Geteilt of that account */
+ * logged in; then it goes into the folder for shared files in the personal
+ * folder of that account, named in the language of the box */
 
 function shareDb() {
 	return new Promise((resolve, reject) => {
@@ -531,7 +532,7 @@ async function shareInbox() {
 	let db, items;
 	try { db = await shareDb(); items = await shareTx(db, 'readonly', (st) => st.getAll()); } catch (e) { return; }
 	if (!items?.length) { db.close(); return; }
-	let ok = 0, bad = [];
+	let ok = 0, bad = [], folder = '';
 	for (const it of items) {
 		const list = (it.files || []).map((f, i) => ({ name: shareName(f.name, i), blob: f }));
 		// only text or a link: kept as a small text file
@@ -545,7 +546,7 @@ async function shareInbox() {
 			try {
 				const t = await rpc('shareos.me', 'share_ticket', { name: x.name });
 				await fbSend(t.url, x.blob, () => { });
-				ok++;
+				ok++; folder = t.folder;
 			} catch (e) { bad.push(`${x.name}: ${e.message}`); }
 		}
 		// done either way – a file that cannot be stored would otherwise come back at every login
@@ -554,10 +555,10 @@ async function shareInbox() {
 	db.close();
 	if (bad.length) toast(`Share: ${bad.length} file(s) not saved – ${bad[0]}`, true);
 	if (ok) {
-		toast(`${ok} file(s) saved to “Geteilt” in your personal folder.`);
+		toast(`${ok} file(s) saved to “${folder}” in your personal folder.`);
 		// show them in the file browser when there is one
 		if (!isUser() || S.me?.files) {
-			S.fb = null; fbInit(); S.fb.root = 'home'; S.fb.path = 'Geteilt';
+			S.fb = null; fbInit(); S.fb.root = 'home'; S.fb.path = folder;
 			location.hash = isUser() ? '#/files' : '#/shares/files';
 		}
 	}
@@ -2607,7 +2608,7 @@ const closeX = (act) => html`<button class="bx" type="button" data-act="${act}" 
 const USB_COPY_ERR = { 'no USB drive': 'No USB drive plugged in.', 'not enough space': 'Not enough space on the target – nothing copied.',
 	'target drive not mounted': 'The target drive is not mounted.', 'no target set': 'No target set.' };
 function usbCopyPanel(st) {
-	const u = st.usb_copy || { enabled: false, volume: '', path: 'USB-Kopien' }, last = u.last;
+	const u = st.usb_copy || { enabled: false, volume: '', path: '' }, last = u.last;
 	return html`<form class="panel" id="f-usbcopy">
 		<div class="ph"><span class="pt">USB BUTTON</span>${u.enabled ? html`<span class="tag ml ok">copies</span>` : ''}</div>
 		<label class="chk"><input type="checkbox" name="enabled"${u.enabled ? raw(' checked') : ''}>A short press copies the USB drives, holding 3 s ejects them</label>

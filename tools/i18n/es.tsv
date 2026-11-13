@@ -1452,7 +1452,7 @@ E1137	Hogar inteligente (Tuya)
 E1138	Puede buscar desde la caja dispositivos Tuya en la red doméstica, leer su estado y conmutarlos (en local, sin la nube) – solo administradores.
 P271	Archivo $1
 P272	Compartir: $1 archivo(s) no guardado(s) – $2
-P273	$1 archivo(s) guardado(s) en «Geteilt» de tu carpeta personal.
+P273	$1 archivo(s) guardado(s) en «$2» de tu carpeta personal.
 E1139	No hay ninguna unidad montada para ti.
 E1140	CONTIENE
 P274	$1 % de mi límite
@@ -2049,3 +2049,5 @@ P360	Logotipo: $1
 P361	Instantáneas: $1
 E1645	Aún no hay ninguna cuenta en la nube.
 E1646	Aún no hay ninguna tarea. Una tarea copia o refleja una carpeta con una cuenta en la nube, a mano o según una programación.
+F0	Compartido
+F1	Copias USB

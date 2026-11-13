@@ -1869,7 +1869,7 @@ P269	Aus den Favoriten nehmen: $1
 P270	Favoriten: $1
 P271	Datei $1
 P272	Teilen: $1 Datei(en) nicht gespeichert – $2
-P273	$1 Datei(en) in „Geteilt“ in deinem persönlichen Ordner gespeichert.
+P273	$1 Datei(en) in „$2“ in deinem persönlichen Ordner gespeichert.
 P274	$1 % von meinem Limit
 P275	Laufwerk $1 % belegt
 P276	$1 Sektoren wurden schon ersetzt (umgelagert).
@@ -2033,3 +2033,5 @@ P360	Logo: $1
 P361	Snapshots: $1
 E1645	Noch kein Cloud-Konto.
 E1646	Noch kein Auftrag. Ein Auftrag kopiert oder spiegelt einen Ordner mit einem Cloud-Konto – von Hand oder nach Zeitplan.
+F0	Geteilt
+F1	USB-Kopien

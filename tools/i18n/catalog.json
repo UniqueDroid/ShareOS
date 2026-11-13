@@ -2743,8 +2743,8 @@
 			"Share: $1 file(s) not saved – $2"
 		],
 		[
-			"^(\\d+) file\\(s\\) saved to “Geteilt” in your personal folder\\.$",
-			"$1 file(s) saved to “Geteilt” in your personal folder."
+			"^(\\d+) file\\(s\\) saved to “(.+)” in your personal folder\\.$",
+			"$1 file(s) saved to “$2” in your personal folder."
 		],
 		[
 			"^(\\d+) % of my limit$",
@@ -3314,6 +3314,16 @@
 			"\\ball users\\b",
 			"all users",
 			"g"
+		]
+	],
+	"folders": [
+		[
+			"shared",
+			"Shared"
+		],
+		[
+			"usb",
+			"USB copies"
 		]
 	]
 }

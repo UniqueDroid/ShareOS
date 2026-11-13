@@ -11,7 +11,7 @@ English texts to that language. No code changes are needed.
 
 | File | What it is |
 |---|---|
-| `tools/i18n/catalog.json` | All English texts of the interface: `exact` (whole texts), `patterns` (texts with values) and `words` (words left over in composed texts) |
+| `tools/i18n/catalog.json` | All English texts of the interface: `exact` (whole texts), `patterns` (texts with values), `words` (words left over in composed texts) and `folders` (names of folders the box creates) |
 | `tools/i18n/<code>.tsv` | The translation of one language, one line per entry: `E<n>`, `P<n>` or `W<n>`, a tab, the translated text |
 | `src/shareos-core/www/i18n/<code>.json` | Built from the two with `tools/i18n/build-lang.py` – this is what the box loads |
 | `src/shareos-core/www/i18n/languages.json` | The languages offered under System → Appearance → Language |
@@ -82,6 +82,7 @@ A language with `"dir": "rtl"` in `languages.json` and its code in `RTL` in
 | `exact` | Whole texts | `"Unmount"` → `"Aushängen"` |
 | `patterns` | Texts that contain values (sizes, names, versions). A regular expression on the whole English text; `$1`, `$2` … insert the captured parts | `["^Channel (\\S+)$", "Channel $1"]` → `"Kanal $1"` |
 | `words` | Words left over in composed texts, applied in order after the other two | `["\\brunning\\b", "running", "g"]` → `"läuft"` |
+| `folders` | Names of folders the box creates on the disks (`F<n>` in the `.tsv`): the shared folder in the personal folder, the default folder of the USB copy. Only used when the folder is created; an existing folder keeps its name | `["shared", "Shared"]` → `"Geteilt"` |
 
 Order of evaluation: `exact`, then the first matching `pattern` (whose result
 also goes through `words`), then `words` alone. Patterns are sorted so that

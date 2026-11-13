@@ -18,6 +18,18 @@ from pathlib import Path
 WWW = Path(__file__).resolve().parent.parent / 'src/shareos-core/www'
 SID = 'c0ffee00c0ffee00c0ffee00c0ffee00'
 T0 = time.time()
+
+
+def mock_folder(fid):
+    """name of a folder the box creates, in the language of the box (i18n/<lang>.json "folders")"""
+    en = {'shared': 'Shared', 'usb': 'USB copies'}
+    try:
+        with open(os.path.join(WWW, 'i18n', STATE['lang'] + '.json'), encoding='utf-8') as f:
+            return json.load(f).get('folders', {}).get(fid) or en[fid]
+    except (OSError, ValueError, KeyError):
+        return en[fid]
+
+
 STATE = {'setup_done': False, 'fan': {'preset': 'balanced', 'off_temp': 0, 'full_temp': 50, 'half_temp': 45}, 'led': {'status': 'heartbeat', 'power': 'on', 'disks': 'off'}, 'logo': True, 'lang': 'en', 'channel': 'beta', 'job': None, 'https': True, 'redirect': False, 'theme': 'dark', 'accent': 'blue', 'autostart_off': ['crond'],
          'users': {'jan': {'role': 'admin', 'fullname': 'Jan', 'groups': ['family'], 'home': 'data', 'quota': 0, 'web': True, 'pw': 'shareos'},
                    'anna': {'role': 'user', 'fullname': 'Anna', 'groups': ['family'], 'home': 'data', 'quota': 200000, 'web': True, 'cloud': True, 'files': True, 'pw': 'anna123'},
@@ -104,7 +116,7 @@ def storage():
                     'health': 'UU', 'sync': {'action': 'recovery' if STATE.get('repair_t') else 'resync', 'percent': pct, 'finish': '412.5min'}}},
         'volumes': [{'name': 'data', 'uuid': '1b4e28ba-2fa1-11d2-883f-0016d3cca427', 'fstype': 'ext4', 'layout': 'mirror', 'enabled': True,
                      'device': '/dev/md0', 'mountpoint': '/mnt/data', 'mounted': True, 'size': 3936 << 30, 'used': 1210 << 30, 'avail': 2726 << 30}],
-        'spindown': 20, 'smart_schedule': STATE.get('smart_schedule', ''), 'job': STATE['job'], 'usb_copy': STATE.setdefault('usb_copy', {'enabled': False, 'volume': '', 'path': 'USB-Kopien', 'last': None})}
+        'spindown': 20, 'smart_schedule': STATE.get('smart_schedule', ''), 'job': STATE['job'], 'usb_copy': STATE.setdefault('usb_copy', {'enabled': False, 'volume': '', 'path': mock_folder('usb'), 'last': None})}
 
 
 SERVICES = [('board', 'Board control', 'fan, temperature, buttons, MCU clock', True), ('crond', 'Scheduler', 'cron', False),
@@ -459,9 +471,10 @@ def call(obj, method, args):
             VAULT.get(args['share'], {}).pop(u, None)
             return {'ok': True, **me(u)}
         if method == 'share_ticket':
-            d = FS['home'].setdefault('Geteilt', [])
-            if not any(n == 'Geteilt' for n, _, _ in FS['home']['']):
-                FS['home'][''].insert(0, ('Geteilt', 'dir', 0))
+            sh = mock_folder('shared')
+            d = FS['home'].setdefault(sh, [])
+            if not any(n == sh for n, _, _ in FS['home']['']):
+                FS['home'][''].insert(0, (sh, 'dir', 0))
             base, dot, ext = args['name'].rpartition('.')
             if not dot or not base:
                 base, ext = args['name'], ''
@@ -471,9 +484,9 @@ def call(obj, method, args):
             while any(x[0] == n for x in d):
                 n = f'{base} ({i}){ext}'; i += 1
             t = os.urandom(16).hex()
-            TICKETS[t] = ('home', 'Geteilt', n, 'put')
+            TICKETS[t] = ('home', sh, n, 'put')
             SHARED.append(n)
-            return {'url': '/cgi-bin/files?t=' + t, 'name': n, 'folder': 'Geteilt'}
+            return {'url': '/cgi-bin/files?t=' + t, 'name': n, 'folder': sh}
         if method in ('desk_get', 'desk_set'):
             if 'desktop' not in APPS['installed']:
                 return {'error': 'not installed'}
@@ -983,11 +996,11 @@ def call(obj, method, args):
                 sm['test_running']['remaining'] = max(0, sm['test_running']['remaining'] - 10)
             return sm or {'error': 'no SMART data'}
         if method == 'usb_copy_config':
-            u = STATE.setdefault('usb_copy', {'enabled': False, 'volume': '', 'path': 'USB-Kopien', 'last': None})
-            u.update(enabled=bool(args.get('enabled')), volume=args.get('volume', ''), path=args.get('path') or 'USB-Kopien')
+            u = STATE.setdefault('usb_copy', {'enabled': False, 'volume': '', 'path': mock_folder('usb'), 'last': None})
+            u.update(enabled=bool(args.get('enabled')), volume=args.get('volume', ''), path=args.get('path') or mock_folder('usb'))
             return u
         if method == 'usb_copy':
-            u = STATE.setdefault('usb_copy', {'enabled': False, 'volume': '', 'path': 'USB-Kopien', 'last': None})
+            u = STATE.setdefault('usb_copy', {'enabled': False, 'volume': '', 'path': mock_folder('usb'), 'last': None})
             if not u['volume']:
                 return {'error': 'no target set'}
             u['last'] = {'state': 'done', 'time': int(time.time()), 'files': 128, 'bytes': 734_003_200, 'dest': f"/mnt/{u['volume']}/{u['path']}/2026-10-25_1130-stick"}

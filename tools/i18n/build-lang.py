@@ -10,7 +10,8 @@ The interface is written in English. tools/i18n/catalog.json lists its texts:
 text, the English text with $1 …]) for texts with values, "words" ([regular
 expression, English, flags]) applied to what is left. The TSV has one line per
 translated entry: "E<n>\\ttext", "P<n>\\ttext" (with the same $1 … as the
-English), "W<n>\\ttext"; numbers as printed by --list. Missing entries stay
+English), "W<n>\\ttext", "F<n>\\tname" (names of folders the box creates, see
+"folders"); numbers as printed by --list. Missing entries stay
 English.
 """
 import glob
@@ -80,6 +81,16 @@ def build(code, name, tsv):
         if v is not None:
             words.append([w[0], v] + ([w[2]] if len(w) > 2 and w[2] else []))
     out['words'] = words
+    # names of folders the box creates on the disks (only when it creates them:
+    # an existing folder keeps its name)
+    folders = OrderedDict()
+    for i, (fid, en) in enumerate(cat.get('folders', [])):
+        v = tr.get(f'F{i}')
+        if v is not None:
+            if not v.strip() or '/' in v or v.startswith('.'):
+                errors.append(f'{code} F{i}: not a folder name: {v!r}')
+            folders[fid] = v
+    out['folders'] = folders
     if errors:
         print('\n'.join(errors))
         return False
@@ -97,6 +108,8 @@ if sys.argv[1:2] == ['--list']:
         print(f'P{i}\t{p[1]}\t[{p[0]}]')
     for i, w in enumerate(cat['words']):
         print(f'W{i}\t{w[1]}\t[{w[0]}]')
+    for i, f in enumerate(cat.get('folders', [])):
+        print(f'F{i}\t{f[1]}\t[folder {f[0]}]')
     sys.exit(0)
 if sys.argv[1:2] == ['--all']:
     ok = True

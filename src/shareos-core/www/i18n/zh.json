@@ -1797,10 +1797,6 @@
 			"$1 – 文件夹连同其内容。此操作无法撤销。"
 		],
 		[
-			"^(\\d+) file\\(s\\) saved to “Geteilt” in your personal folder\\.$",
-			"已将 $1 个文件保存到个人文件夹的“Geteilt”中。"
-		],
-		[
 			"^(.+) swap per disk, app area on \"(.+)\" \\(unless one exists\\)\\.$",
 			"每块硬盘 $1 交换分区，应用区位于“$2” (如尚未存在)。"
 		],
@@ -1823,6 +1819,10 @@
 		[
 			"^Needed by: (.+) – these apps will no longer work\\.$",
 			"被以下应用使用：$1 – 这些应用将无法再工作。"
+		],
+		[
+			"^(\\d+) file\\(s\\) saved to “(.+)” in your personal folder\\.$",
+			"已将 $1 个文件保存到个人文件夹的“$2”中。"
 		],
 		[
 			"^ShareOS shuts down and the box switches off\\. (.+)$",
@@ -3275,5 +3275,9 @@
 			"所有用户",
 			"g"
 		]
-	]
+	],
+	"folders": {
+		"shared": "共享",
+		"usb": "USB 副本"
+	}
 }

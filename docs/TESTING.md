@@ -492,8 +492,8 @@ Needs a Tailscale account (free), a phone or computer with Tailscale, the file `
 5. Over SMB from a PC a deleted file is gone at once (the `.shareos-trash` folder is hidden; leave it alone).
 ## 14x. USB copy with the USB button (0.2.0-beta.12)
 
-1. *Storage → Settings → USB button*: tick, target drive (e.g. `data`), folder `USB-Kopien`, *Save*.
-2. Plug in a USB stick with a few files. Press the USB button briefly: the USB light blinks; afterwards a message "USB copy done" with the number of files. `ls /mnt/data/USB-Kopien/` shows `2026-…_…-<stick name>` with the files. The stick stays mounted.
+1. *Storage → Settings → USB button*: tick, target drive (e.g. `data`), folder `USB copies` (the default, named in the language of the box), *Save*.
+2. Plug in a USB stick with a few files. Press the USB button briefly: the USB light blinks; afterwards a message "USB copy done" with the number of files. `ls "/mnt/data/USB copies/"` shows `2026-…_…-<stick name>` with the files. The stick stays mounted.
 3. Press again: a second folder, the first one is untouched.
 4. Hold the button 3 s or longer: the stick is ejected (as before).
 5. *Copy now* on the page does the same. A stick larger than the free space: message "Not enough space", nothing copied.
@@ -503,7 +503,7 @@ Needs a Tailscale account (free), a phone or computer with Tailscale, the file `
 
 1. Log in as a plain user: the tabs read *MY SHAREOS*, (*FILES*,) *SETTINGS*. *Settings* has the look on the left and *Change password* on the right; changing the password works as before. The old address `#/appearance` opens *Settings*.
 2. *My ShareOS*: *STORAGE* is a table over the full width – one row per drive with what lies there (personal folder, shares), own use, limit, bar and free space. With a limit the bar shows the share of the limit, without one how full the drive is.
-3. "Share with" (Android, Chrome, interface opened with a trusted certificate, e.g. `https://shareos.skynet.lan`): menu ⋮ → *Install app*. Then share a photo from the gallery → *ShareOS*. ShareOS opens; after the login (if needed) the toast says "1 file(s) saved to “Geteilt” …" and the file browser shows `Personal folder / Geteilt`. In the terminal: `ls -la /mnt/<drive>/home/<user>/Geteilt/` – the file belongs to the user, the folder is `drwx------`.
+3. "Share with" (Android, Chrome, interface opened with a trusted certificate, e.g. `https://shareos.skynet.lan`): menu ⋮ → *Install app*. Then share a photo from the gallery → *ShareOS*. ShareOS opens; after the login (if needed) the toast says "1 file(s) saved to “Shared” …" and the file browser shows `Personal folder / Shared` (on a German box `Geteilt`; a folder made earlier in another language is used as it is). In the terminal: `ls -la /mnt/<drive>/home/<user>/Shared/` – the file belongs to the user, the folder is `drwx------`.
 4. Share the same photo again: it arrives as `name (2).jpg`. Share a link from the browser: a file `Link <date time>.txt` with the address.
 5. An account without a personal folder: sharing shows "no personal folder"; the shared item is dropped and does not come back at the next login.
 6. File dialog of an app for an account **without** *Files* (e.g. Webpad → *Open*): the list of folders shows *App data* first, then *My folder* and the user's shares; read-only shares are marked and are missing when saving. The app still keeps its own files in *App data*.
