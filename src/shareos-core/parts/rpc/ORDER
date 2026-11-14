@@ -1,0 +1,27 @@
+# Order in which build-parts.sh joins the parts to shareos.uc.
+# ucode knows a function only after its definition, so a part that uses the
+# helpers of another part comes after it (tests/check-ucode-order.py checks
+# the result). The methods of all parts are joined after all helpers.
+core.uc
+storage.uc
+web.uc
+network.uc
+system.uc
+time.uc
+accounts.uc
+me.uc
+paperless.uc
+cloud.uc
+devices.uc
+snapshots.uc
+apps.uc
+files.uc
+trash.uc
+media.uc
+torrent.uc
+app-perms.uc
+app-services.uc
+backup.uc
+notify.uc
+update.uc
+end.uc

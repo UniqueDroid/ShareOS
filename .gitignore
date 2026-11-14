@@ -7,3 +7,6 @@
 /initramfs
 __pycache__/
 /node_modules/
+# put together from src/shareos-core/parts by build-parts.sh
+/src/shareos-core/www/app.js
+/src/shareos-core/usr/share/rpcd/ucode/shareos.uc

@@ -24,6 +24,7 @@ endif
 
 # password encryption for settings backups (AES-256-GCM via mbedTLS)
 define SHAREOS_CORE_BUILD_CMDS
+	sh $(@D)/build-parts.sh $(@D)
 	$(TARGET_CC) $(TARGET_CFLAGS) $(TARGET_LDFLAGS) -o $(@D)/shareos-crypt $(@D)/src/shareos-crypt.c -lmbedcrypto
 endef
 

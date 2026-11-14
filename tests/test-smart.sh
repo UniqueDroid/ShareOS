@@ -13,6 +13,7 @@ T=$(mktemp -d); trap 'rm -rf "$T"' EXIT
 pass=0; failed=0
 check() { if eval "$2"; then echo "PASS  $1"; pass=$((pass+1)); else echo "FAIL  $1"; echo "      $(cat $T/out)"; failed=$((failed+1)); fi; }
 # the SMART part of the plugin, between its first constant and smart_read
+"$TOP/src/shareos-core/build-parts.sh"   # shareos.uc is put together from its parts
 sed -n '/^\/\/ SSD wear from the vendor attributes/,/^function smart_read(/p' "$TOP/src/shareos-core/usr/share/rpcd/ucode/shareos.uc" | sed '$d' > $T/smart.uc
 grep -q '^function smart_parse' $T/smart.uc || { echo "smart_parse not found in shareos.uc"; exit 1; }
 cat >> $T/smart.uc <<'UC'

@@ -4,6 +4,10 @@ Changes per release (newest first). The section of a version is added to its
 GitHub release automatically when the release is built. Test versions are
 pre-releases for test devices only.
 
+## 0.3.0-beta.10
+
+- **The source is split by area.** The web interface (`app.js`, 6300 lines) and the rpcd plugin (`shareos.uc`, 6200 lines) are now 26 and 23 files under `src/shareos-core/parts`, one per area with the same name on both sides (`web/cloud.js`, `rpc/cloud.uc`); none has more than about 560 lines. The build joins them to the same two files as before – nothing changes on the box, also not the loading time. `parts/README.md` lists what is where.
+
 ## 0.3.0-beta.9
 
 Result of a review of the whole firmware ("real values, standards, speed"). No new functions; many displays, checks and paths were corrected.

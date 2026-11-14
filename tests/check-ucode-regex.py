@@ -5,6 +5,9 @@ every "s"). Use [:space:], [:digit:], [:alnum:] there.
 
   tests/check-ucode-regex.py [files...]
 """
+# app.js and shareos.uc are put together from their parts (src/shareos-core/parts)
+import subprocess, pathlib
+subprocess.run([str(pathlib.Path(__file__).resolve().parent.parent / 'src/shareos-core/build-parts.sh')], check=True)
 import re
 import sys
 

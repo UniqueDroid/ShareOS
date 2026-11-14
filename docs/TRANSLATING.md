@@ -48,7 +48,7 @@ survive a reboot.
 
 ## New texts in the interface
 
-Every visible text in `app.js` and `desktop.js` is English. A new text needs
+Every visible text in `app.js` (its parts are in `src/shareos-core/parts/web`) and `desktop.js` is English. A new text needs
 an entry in `tools/i18n/catalog.json` (at the end of `exact` or `patterns`,
 so the numbers of the existing entries stay the same) and a line with the new
 number in every `tools/i18n/<code>.tsv`; then `build-lang.py --all`.

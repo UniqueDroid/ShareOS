@@ -1,6 +1,7 @@
 // Static analysis of the web interface (ESLint, see tests/static-analysis.sh
 // and the "static-analysis" job in .github/workflows/build.yml).
-// app.js, desktop.js and i18n.js are classic scripts of one page: they share
+// app.js (joined from src/shareos-core/parts/web by build-parts.sh, which
+// tests/static-analysis.sh calls), desktop.js and i18n.js are classic scripts of one page: they share
 // their top-level names. Those are read from the files themselves, so a name
 // that exists in none of them is still reported (no-undef).
 import fs from 'node:fs';

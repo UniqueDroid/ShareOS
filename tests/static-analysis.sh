@@ -16,6 +16,8 @@
 # in the pinned version when it is missing.
 set -u
 cd "$(dirname "$0")/.." || exit 1
+# app.js and shareos.uc are put together from their parts
+src/shareos-core/build-parts.sh || exit 1
 REPORT=0
 [ "${1:-}" = --report ] && REPORT=1
 ESLINT_VER=9.39.1

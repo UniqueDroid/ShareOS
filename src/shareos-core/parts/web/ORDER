@@ -1,0 +1,29 @@
+# Order in which build-parts.sh joins the parts to app.js: the core first, the
+# start last. Between them the order matters only where a part uses a
+# constant of another part while the page loads.
+core.js
+ui.js
+session.js
+layout.js
+overview.js
+services.js
+shares.js
+dnsfilter.js
+paperless.js
+cloud.js
+media.js
+snapshots.js
+devices.js
+me.js
+storage.js
+smart.js
+system-general.js
+system-network.js
+system-firmware.js
+system-messages.js
+firstrun.js
+pwa.js
+files.js
+apps.js
+events.js
+start.js

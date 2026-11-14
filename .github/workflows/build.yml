@@ -92,6 +92,7 @@ jobs:
           tests/check-i18n.py
           node tests/check-i18n-coverage.js
           LD_LIBRARY_PATH="$HOME/hostroot/lib" "$HOME/hostroot/bin/ucode" -c -o /tmp/apps.ucc src/shareos-core/usr/sbin/shareos-apps
+          src/shareos-core/build-parts.sh
           LD_LIBRARY_PATH="$HOME/hostroot/lib" "$HOME/hostroot/bin/ucode" -c -o /tmp/shareos.ucc src/shareos-core/usr/share/rpcd/ucode/shareos.uc
 
   firmware:
