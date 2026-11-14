@@ -6,6 +6,9 @@ uses a function or constant declared further down fails at run time with
 
     tests/check-ucode-order.py src/shareos-core/usr/share/rpcd/ucode/shareos.uc
 """
+# app.js and shareos.uc are put together from their parts (src/shareos-core/parts)
+import subprocess, pathlib
+subprocess.run([str(pathlib.Path(__file__).resolve().parent.parent / 'src/shareos-core/build-parts.sh')], check=True)
 import re
 import sys
 

@@ -6,6 +6,9 @@ method of the plugin, which checks the value.
 
   tests/check-acl.py [shareos.uc] [acl.d/shareos.json]
 """
+# app.js and shareos.uc are put together from their parts (src/shareos-core/parts)
+import subprocess, pathlib
+subprocess.run([str(pathlib.Path(__file__).resolve().parent.parent / 'src/shareos-core/build-parts.sh')], check=True)
 import json
 import re
 import sys

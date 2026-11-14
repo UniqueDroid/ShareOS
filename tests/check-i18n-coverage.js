@@ -15,6 +15,8 @@
 const fs = require('fs');
 const path = require('path');
 const ROOT = path.join(__dirname, '..', 'src/shareos-core/www');
+// app.js is put together from its parts (src/shareos-core/parts/web)
+require('child_process').execFileSync(path.join(__dirname, '..', 'src/shareos-core/build-parts.sh'), { stdio: 'inherit' });
 const FILES = ['app.js', 'desktop.js'];
 const de = JSON.parse(fs.readFileSync(path.join(ROOT, 'i18n/de.json'), 'utf8'));
 const exact = de.exact, patterns = de.patterns.map(([r, x]) => [new RegExp(r), x]), words = de.words.map(([r, x, f]) => [new RegExp(r, f || ''), x]);

@@ -7,6 +7,9 @@ counts every top-level function/const/let/class name over all three files
 (and index.html): a name that appears only where it is declared is unused.
 Exit code 1 when there is one.
 """
+# app.js and shareos.uc are put together from their parts (src/shareos-core/parts)
+import subprocess, pathlib
+subprocess.run([str(pathlib.Path(__file__).resolve().parent.parent / 'src/shareos-core/build-parts.sh')], check=True)
 import pathlib
 import re
 import sys
