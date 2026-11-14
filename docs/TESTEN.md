@@ -536,7 +536,7 @@ Nichts Neues zu bedienen; die Schritte prüfen, ob die Korrekturen auf einer ech
 8. `killall dns320l-daemon`. Nach etwa 90 s zeigt die Übersicht „–“ bei der Temperatur, und die Hardware-Seite meldet die Gerätesteuerung nicht mehr als aktiv.
 9. `shareos-notify check`: *System → Meldungen* zeigt *Temperatur der Box nicht lesbar*.
 10. `/etc/init.d/S05board restart`: Temperatur und Lüfter sind wieder da; nach dem nächsten `shareos-notify check` ist die Meldung weg.
-11. `killall rpcd`: Die Oberfläche ist nach wenigen Sekunden wieder da (neu anmelden); `logread | grep shareos-supervise` zeigt den Neustart.
+11. `killall rpcd`: Die Oberfläche ist nach wenigen Sekunden wieder da (neu anmelden); `grep shareos-supervise /var/log/messages` zeigt den Neustart.
 
 **SMART**
 
@@ -652,7 +652,7 @@ Braucht eine Box, die zurückgesetzt werden darf (Werkseinstellungen löschen di
 3. *Wiederherstellen*: Datei wählen, Passwort, *Prüfen*. Die Vorschau zeigt Benutzer, Gruppen, Freigaben, Dienste, Apps, Zertifikat und eigene CA. *Wiederherstellen* → *Wiederherstellen und neu starten*.
 4. Nach dem Neustart mit dem root-Passwort **aus der Sicherung** anmelden: die Seite **Recovery-Modus** erscheint. Alles ist angehakt; Netzwerk und Gerätename stimmen schon.
 5. Z. B. eine App abwählen, *Übernehmen und neu starten*. Danach sind Benutzer und Freigaben wieder da (Freigaben → Benutzer; vom PC aus mit dem alten Passwort per SMB anmelden).
-6. Apps → *Installiert*: die gewählten Apps werden nach dem Start installiert (Internet nötig; `logread | grep shareos-restore-apps`). Ohne Internet erscheint oben *Apps aus der Sicherung* mit *Apps aus Sicherung installieren*.
+6. Apps → *Installiert*: die gewählten Apps werden nach dem Start installiert (Internet nötig; `grep shareos-restore-apps /var/log/messages`). Ohne Internet erscheint oben *Apps aus der Sicherung* mit *Apps aus Sicherung installieren*.
 7. Mit eigener CA: unter Zertifikate stehen die für andere Geräte ausgestellten Zertifikate wieder in der Liste, ein PC mit installierter CA vertraut der Box weiter. Wenn *HTTPS-Zertifikat wiederverwenden* gewählt war, ist der Fingerabdruck derselbe wie vorher.
 8. Noch einmal wiederherstellen und im Recovery-Modus *Nichts weiter übernehmen*: die Box bleibt so, nur Passwort, Netzwerk, Name, Zeitzone und Laufwerke kamen aus der Sicherung.
 
