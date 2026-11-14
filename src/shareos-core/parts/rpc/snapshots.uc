@@ -73,3 +73,84 @@ function snap_save(a) {
 	return { ok: true };
 }
 
+/* ========== methods (joined after the helpers of all parts, see build-parts.sh) ========== */
+
+add_methods({
+	'shareos.snapshots': {
+		status: {
+			call: function() {
+				let src = snap_tool([ 'sources' ]);
+				return { jobs: snap_jobs(), volumes: src.volumes ?? [], sources: src.sources ?? [], rsync: stat('/usr/bin/rsync') != null };
+			}
+		},
+
+		job_set: {
+			args: { name: '', new: false, source: '', target: '', every: '', time: '', keep_last: 0, keep_daily: 0, keep_weekly: 0,
+				keep_monthly: 0, exclude: [], enabled: true },
+			call: function(req) {
+				let r = snap_save(req.args);
+				return r.error ? r : { ok: true, jobs: snap_jobs() };
+			}
+		},
+
+		// data: also remove the snapshots of the job (in the background)
+		job_del: {
+			args: { name: '', data: false },
+			call: function(req) {
+				let n = req.args.name, c = cursor();
+				if (!match(n ?? '', SNAP_JOB_RE) || c.get('snapshots', n) != 'job') return { error: 'unknown job' };
+				if (snap_running(n)) return { error: 'the snapshot is running – stop it first' };
+				if (req.args.data === true) {
+					let r = sh(SNAP + ' purge ' + shq(n));
+					if (r.rc != 0) return { error: trim(r.out) || 'failed' };
+				}
+				c.delete('snapshots', n); c.commit('snapshots');
+				sh(CRON + ' sync');
+				return { ok: true, jobs: snap_jobs() };
+			}
+		},
+
+		run: {
+			args: { name: '' },
+			call: function(req) {
+				let n = req.args.name;
+				if (!match(n ?? '', SNAP_JOB_RE) || cursor().get('snapshots', n) != 'job') return { error: 'unknown job' };
+				if (snap_running(n)) return { error: 'already running' };
+				system('start-stop-daemon -S -b -x ' + SNAP + ' -- run ' + shq(n));
+				// the worker writes its pid at once; show "running" right away
+				for (let i = 0; i < 20 && !snap_running(n); i++) system('sleep 0.1');
+				return { started: true };
+			}
+		},
+
+		stop: {
+			args: { name: '' },
+			call: function(req) {
+				let n = req.args.name;
+				if (!match(n ?? '', SNAP_JOB_RE) || cursor().get('snapshots', n) != 'job') return { error: 'unknown job' };
+				return snap_tool([ 'stop', n ]);
+			}
+		},
+
+		remove: {
+			args: { name: '', snapshot: '' },
+			call: function(req) {
+				let n = req.args.name;
+				if (!match(n ?? '', SNAP_JOB_RE) || cursor().get('snapshots', n) != 'job') return { error: 'unknown job' };
+				let r = snap_tool([ 'delete', n, req.args.snapshot ?? '' ]);
+				forget('snaplist:' + n);
+				return r.error ? r : { ok: true, jobs: snap_jobs() };
+			}
+		},
+
+		log: {
+			args: { name: '' },
+			call: function(req) {
+				let n = req.args.name, c = cursor();
+				if (!match(n ?? '', SNAP_JOB_RE) || c.get('snapshots', n) != 'job') return { error: 'unknown job' };
+				let t = readfile('/mnt/' + (c.get('snapshots', n, 'target') ?? '-') + '/Snapshots/' + n + '/.log') ?? '';
+				return { log: length(t) > 16384 ? substr(t, length(t) - 16384) : t };
+			}
+		}
+	}
+});

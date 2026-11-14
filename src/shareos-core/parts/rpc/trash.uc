@@ -131,4 +131,3 @@ function same_token(a, b) {
 	for (let i = 0; i < length(a); i++) d |= ord(a, i) ^ ord(b, i);
 	return d == 0;
 }
-

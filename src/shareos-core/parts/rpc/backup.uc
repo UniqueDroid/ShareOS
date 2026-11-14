@@ -246,3 +246,91 @@ function recovery_apply(b, a) {
 	return { ok: true, done, apps, reboot: true };
 }
 
+/* ========== methods (joined after the helpers of all parts, see build-parts.sh) ========== */
+
+add_methods({
+	'shareos.backup': {
+		// what can go into a backup: certificate, own CA (with issued certificates)
+		offer: { call: function() { return backup_offer(); } },
+
+		// certificate / ca: also the private keys – only in an encrypted backup
+		export: {
+			args: { password: '', certificate: false, ca: false },
+			call: function(req) {
+				let pass = req.args.password ?? '';
+				if (pass != '' && length(pass) < 6) return { error: 'the password needs at least 6 characters' };
+				if (pass == '' && (req.args.certificate || req.args.ca)) return { error: 'certificate and CA keys need an encrypted backup' };
+				let b = backup_build({ certificate: !!req.args.certificate, ca: !!req.args.ca });
+				let text = sprintf('%J', b);
+				let name = sprintf('shareos-%s-%s', b.host, replace(trim(sh('date +%Y%m%d-%H%M').out), /[^0-9-]/, ''));
+				if (pass == '')
+					return { filename: name + '.json', encrypted: false, content: text, ...backup_summary(b) };
+				let r = crypt('enc', pass, text);
+				if (r.error) return r;
+				// date, box and version stay readable, so a list of backups can show them
+				let wrap = { shareos_backup: 2, encrypted: true, cipher: 'AES-256-GCM, PBKDF2-SHA256',
+					host: b.host, created: b.created, version: b.version, data: b64enc(r.data) };
+				return { filename: name + '.json', encrypted: true, content: sprintf('%J', wrap), ...backup_summary(b) };
+			}
+		},
+
+		// apply: false = only show what is inside; true = take over what the
+		// box needs to run, keep the rest for the recovery mode (after a reboot)
+		restore: {
+			args: { content: '', password: '', apply: false },
+			call: function(req) {
+				let j = jparse(req.args.content ?? '');
+				if (type(j) != 'object' || index([ 1, 2 ], j.shareos_backup) < 0) return { error: 'not a ShareOS settings backup' };
+				if (j.encrypted) {
+					if (!req.args.password) return { error: 'password required', encrypted: true };
+					let r = crypt('dec', req.args.password, b64dec(j.data ?? '') ?? '');
+					if (r.error) return { ...r, encrypted: true };
+					j = jparse(r.data);
+					if (type(j) != 'object' || index([ 1, 2 ], j.shareos_backup) < 0) return { error: 'damaged backup' };
+				}
+				j = backup_upgrade(j);
+				if (!req.args.apply) return { ok: true, preview: true, encrypted: !!req.args.password, ...backup_summary(j) };
+				let essentials = restore_essentials(j);
+				return { ok: true, reboot: true, recovery: true, essentials };
+			}
+		}
+	},
+
+	// after restoring a settings backup: pick what else comes back
+	'shareos.recovery': {
+		status: {
+			call: function() {
+				let b = jparse(readfile(RECOVERY) ?? 'null');
+				let pending = recovery_pending_apps();
+				let pid = read_trim('/tmp/shareos-restore-apps.run');
+				let job = !!pid && match(pid, /^[0-9]+$/) && stat('/proc/' + pid) != null;
+				if (type(b) != 'object') return { active: false, pending_apps: pending, apps_running: job };
+				return { active: true, ...backup_summary(b), pending_apps: pending, apps_running: job };
+			}
+		},
+
+		// users: users and groups; services: names; apps: ids to install;
+		// certificate: reuse the backed-up one; ca: own CA with issued certificates
+		apply: {
+			args: { users: false, shares: false, services: [], apps: [], certificate: false, ca: false },
+			call: function(req) {
+				let b = jparse(readfile(RECOVERY) ?? 'null');
+				if (type(b) != 'object') return { error: 'not in recovery mode' };
+				return recovery_apply(b, req.args);
+			}
+		},
+
+		// keep the box as it is now (only the essentials of the backup)
+		discard: { call: function() { unlink(RECOVERY); return { ok: true }; } },
+
+		// apps of the backup that are not installed yet (apps page)
+		apps_install: {
+			call: function() {
+				let p = recovery_pending_apps();
+				if (!length(p)) return { error: 'no apps to install' };
+				return { started: recovery_start_apps(p, true), apps: p };
+			}
+		},
+		apps_dismiss: { call: function() { unlink(RECOVERY_APPS); return { ok: true }; } }
+	}
+});

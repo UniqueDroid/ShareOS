@@ -253,3 +253,180 @@ function vault_set(share, on, ttl) {
 	return { ok: true };
 }
 
+/* ========== methods (joined after the helpers of all parts, see build-parts.sh) ========== */
+
+add_methods({
+	'shareos.accounts': {
+		list: {
+			call: function() { return accounts(); }
+		},
+
+		add: {
+			args: { name: '', role: '', password: '', fullname: '', groups: [], home: '', quota: 0, web: true, cloud: false, files: false },
+			call: function(req) {
+				let a = req.args;
+				if (!acc_name_ok(a.name)) return { error: 'invalid name (a-z, 0-9 and _, starting with a letter)' };
+				if (!(a.role in { admin: 1, user: 1, share: 1 })) return { error: 'invalid role' };
+				let o = { ...a }; delete o.role;
+				let r = tool_result(sh_pass(sprintf('%s add %s %s %s', USERS, shq(a.name), a.role, opt_args(o)), a.password));
+				return r.error ? r : { ok: true, ...accounts() };
+			}
+		},
+
+		set: {
+			args: { name: '', role: '', fullname: '', groups: [], home: '', quota: 0, web: true, cloud: false, files: false },
+			call: function(req) {
+				let a = req.args;
+				if (!acc_name_ok(a.name)) return { error: 'invalid name' };
+				let r = tool_result(sh(sprintf('%s set %s %s', USERS, shq(a.name), opt_args(a))));
+				return r.error ? r : { ok: true, ...accounts() };
+			}
+		},
+
+		passwd: {
+			args: { name: '', password: '' },
+			call: function(req) {
+				let n = req.args.name;
+				if (!(n == 'root' || acc_name_ok(n))) return { error: 'invalid name' };
+				return tool_result(sh_pass(sprintf('%s passwd %s', USERS, shq(n)), req.args.password));
+			}
+		},
+
+		del: {
+			args: { name: '', remove_home: false },
+			call: function(req) {
+				let n = req.args.name;
+				if (!acc_name_ok(n)) return { error: 'invalid name' };
+				if (n == session_user(req)) return { error: 'you cannot delete your own account' };
+				let r = tool_result(sh(sprintf('%s del %s%s', USERS, shq(n), req.args.remove_home ? ' --remove-home' : '')));
+				return r.error ? r : { ok: true, ...accounts() };
+			}
+		},
+
+		group_add: {
+			args: { name: '', desc: '' },
+			call: function(req) {
+				let g = req.args.name;
+				if (!acc_name_ok(g)) return { error: 'invalid name' };
+				let r = tool_result(sh(sprintf('%s group-add %s %s', USERS, shq(g), shq('--desc=' + (req.args.desc ?? '')))));
+				return r.error ? r : { ok: true, ...accounts() };
+			}
+		},
+
+		group_del: {
+			args: { name: '' },
+			call: function(req) {
+				let g = req.args.name;
+				if (!acc_name_ok(g)) return { error: 'invalid name' };
+				let r = tool_result(sh(sprintf('%s group-del %s', USERS, shq(g))));
+				return r.error ? r : { ok: true, ...accounts() };
+			}
+		},
+
+		import_altf: {
+			call: function() {
+				let r = sh(USERS + ' import-altf');
+				if (r.rc != 0) return tool_result(r);
+				let im = match(r.out, /imported=([^\n]*)/), sk = match(r.out, /skipped=([^\n]*)/);
+				return { ok: true, imported: im && im[1] != '' ? split(im[1], ' ') : [], skipped: sk && sk[1] != '' ? split(sk[1], ' ') : [], ...accounts() };
+			}
+		}
+	},
+
+	'shareos.shares': {
+		list: {
+			call: function() { return share_list(); }
+		},
+
+		// create or change a share
+		set: {
+			args: { name: '', volume: '', path: '', comment: '', smb: true, nfs: false, guest: false,
+				rw: [], ro: [], nfs_rw: false, nfs_hosts: [], vault: false, vault_ttl: 0 },
+			call: function(req) {
+				let a = req.args, c = cursor();
+				if (!valid_name(a.name)) return { error: 'invalid name (a-z, 0-9, - and _, max. 16)' };
+				if (a.name == 'homes' || a.name == 'global' || a.name == 'ipc') return { error: 'this name is reserved' };
+				if (c.get('storage', a.volume) != 'volume') return { error: 'unknown volume' };
+				let path = a.path ?? a.name;
+				if (path == '' || !match(path, /^[A-Za-z0-9 ._-]+(\/[A-Za-z0-9 ._-]+)*$/) || match(path, /(^|\/)\.\.?(\/|$)/))
+					return { error: 'invalid folder (letters, digits, space . _ - and /)' };
+				if (match(a.comment ?? '', /[\n\r\[\]]/)) return { error: 'invalid description' };
+				let accs = accounts(), known = {};
+				for (let u in accs.users) known[u.name] = true;
+				for (let g in accs.groups) known['@' + g.name] = true;
+				for (let x in [ ...(a.rw ?? []), ...(a.ro ?? []) ]) if (!known[x]) return { error: 'unknown user or group ' + x };
+				for (let h in a.nfs_hosts ?? [])
+					if (!match(h, /^([0-9]{1,3}\.){3}[0-9]{1,3}(\/[0-9]{1,2})?$|^\*$|^[A-Za-z0-9.-]+$/)) return { error: 'invalid NFS client ' + h };
+				// a vault: only over SMB, only for named users (no guests, no NFS)
+				let vault = a.vault ?? (c.get('shares', a.name, 'vault') == '1');
+				if (vault && (!a.smb || a.guest || a.nfs)) return { error: 'a vault is shared over SMB only, without guests and NFS' };
+				if (vault && !length([ ...(a.rw ?? []), ...(a.ro ?? []) ])) return { error: 'a vault needs at least one user or group' };
+				if (vault && !vault_fs_ok(c, a.volume)) return { error: VAULT_FS_ERR };
+				if (a.vault_ttl != null && a.vault_ttl !== 0 && !(+a.vault_ttl >= 1 && +a.vault_ttl <= 480)) return { error: 'invalid time (1–480 minutes)' };
+				c.set('shares', 'global', 'global');
+				c.set('shares', a.name, 'share');
+				c.set('shares', a.name, 'volume', a.volume);
+				c.set('shares', a.name, 'path', path);
+				c.set('shares', a.name, 'comment', a.comment ?? '');
+				for (let k in [ 'smb', 'nfs', 'guest', 'nfs_rw' ]) c.set('shares', a.name, k, a[k] ? '1' : '0');
+				for (let k in [ 'rw', 'ro', 'nfs_hosts' ]) {
+					c.delete('shares', a.name, k);
+					if (length(a[k] ?? [])) c.set('shares', a.name, k, a[k]);
+				}
+				let was = c.get('shares', a.name, 'vault') == '1';
+				c.set('shares', a.name, 'vault', vault ? '1' : '0');
+				if (a.vault_ttl) c.set('shares', a.name, 'vault_ttl', '' + int(+a.vault_ttl));
+				c.commit('shares');
+				// switched off: forget who unlocked it; on or off: the cron entry
+				if (was && !vault) sh(SHARES + ' vault-lock ' + shq(a.name));
+				sh(SHARES + ' apply');
+				if (was != vault) sh(CRON + ' sync');
+				return { ok: true, ...share_list() };
+			}
+		},
+
+		del: {
+			args: { name: '' },
+			call: function(req) {
+				let c = cursor();
+				if (!valid_name(req.args.name) || c.get('shares', req.args.name) != 'share') return { error: 'unknown share' };
+				let was = c.get('shares', req.args.name, 'vault') == '1';
+				if (was) sh(SHARES + ' vault-lock ' + shq(req.args.name));
+				c.delete('shares', req.args.name);
+				c.commit('shares');
+				sh(SHARES + ' apply');
+				if (was) sh(CRON + ' sync');
+				return { ok: true, ...share_list() };   // the folder and its files stay
+			}
+		},
+
+		// lock a vault now (for everybody, or for one user)
+		vault_lock: {
+			args: { name: '', user: '' },
+			call: function(req) {
+				let u = req.args.user;
+				if (u && !acc_name_ok(u)) return { error: 'unknown user' };
+				let r = vault_lock(req.args.name, u || null);
+				return r.error ? r : { ok: true, ...share_list() };
+			}
+		},
+
+		global: {
+			args: { workgroup: '', smb: true, nfs: true, smb_compat: true },
+			call: function(req) {
+				let a = req.args, c = cursor();
+				c.set('shares', 'global', 'global');
+				if (a.workgroup) {
+					if (!match(a.workgroup, /^[A-Za-z0-9_-]{1,15}$/)) return { error: 'invalid workgroup' };
+					c.set('shares', 'global', 'workgroup', uc(a.workgroup));
+				}
+				if (a.smb != null) c.set('shares', 'global', 'smb', a.smb ? '1' : '0');
+				if (a.nfs != null) c.set('shares', 'global', 'nfs', a.nfs ? '1' : '0');
+				if (a.smb_compat != null) c.set('shares', 'global', 'smb_compat', a.smb_compat ? '1' : '0');
+				c.commit('shares');
+				sh(SHARES + ' apply');
+				return { ok: true, ...share_list() };
+			}
+		}
+	}
+});

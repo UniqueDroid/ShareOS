@@ -279,3 +279,256 @@ function spawn_storage(args) {
 	return { started: true };
 }
 
+/* ========== methods (joined after the helpers of all parts, see build-parts.sh) ========== */
+
+add_methods({
+	'shareos.storage': {
+		// only the volumes (name, mounted, size): for pages that need no disks,
+		// SMART or arrays – one df instead of a dozen programs
+		volumes: {
+			call: function() { return { volumes: volumes(), apps: cursor().get('storage', 'global', 'apps') }; }
+		},
+
+		status: {
+			call: function() {
+				let disks = [];
+				for (let d in lsblk()) {
+					if (d.type != 'disk' || !match(d.name, /^sd[a-z]$/)) continue;
+					d.usb = is_usb(d.name);
+					d.smart = d.usb ? null : smart_read(d.name, false);
+					// CHECK POWER MODE does not wake a sleeping disk
+					d.standby = disk_standby_memo(d.name);
+					push(disks, d);
+				}
+				let c = cursor();
+				let swaps = [];
+				for (let line in slice(split(readfile('/proc/swaps') ?? '', '\n'), 1)) {
+					let f = split(trim(line), /\s+/);
+					if (length(f) >= 4) push(swaps, { device: f[0], size: +f[2] * 1024, used: +f[3] * 1024 });
+				}
+				return {
+					disks,
+					swaps,
+					apps: c.get('storage', 'global', 'apps'),
+					arrays: mdstat(),
+					volumes: volumes(),
+					spindown: +(c.get('storage', 'global', 'spindown') ?? 0),
+					smart_schedule: c.get('storage', 'global', 'smart_test') ?? '',
+					usb: usb_mounts(),
+					usb_copy: usb_copy_info(),
+					job: storage_job()
+				};
+			}
+		},
+
+		smart: {
+			args: { disk: '' },
+			call: function(req) {
+				if (!valid_disk(req.args.disk))
+					return { error: 'unknown disk' };
+				return smart_read(req.args.disk, true);
+			}
+		},
+
+		// SMART self-test: short (minutes) | long (hours, reads the whole
+		// disk) | abort; the disk wakes up for it. The values are read again
+		// right away, so the running test shows.
+		smart_test: {
+			args: { disk: '', type: '' },
+			call: function(req) {
+				let d = req.args.disk, t = req.args.type;
+				if (!valid_disk(d) || is_usb(d)) return { error: 'unknown disk' };
+				let opt = { short: '-t short', long: '-t long', abort: '-X' }[t];
+				if (!opt) return { error: 'invalid test' };
+				let r = sh('smartctl ' + opt + ' /dev/' + d);
+				// exit bits 0-2: command line, open, SMART command failed (the others are the disk's state)
+				if (r.rc & 7) { let l = filter(split(trim(r.out), '\n'), (x) => length(trim(x))); return { error: trim(l[length(l) - 1] ?? '') || 'failed' }; }
+				return smart_read(d, true);
+			}
+		},
+
+		// self-tests by schedule: '' (none) | short_weekly (Sunday 03:30) |
+		// long_monthly (1st of the month, 03:30) – see shareos-cron
+		smart_schedule: {
+			args: { mode: '' },
+			call: function(req) {
+				let m = req.args.mode ?? '';
+				if (index([ '', 'short_weekly', 'long_monthly' ], m) < 0) return { error: 'invalid value' };
+				let c = cursor();
+				if (c.get('storage', 'global') != 'global') c.set('storage', 'global', 'global');
+				if (m == '') c.delete('storage', 'global', 'smart_test'); else c.set('storage', 'global', 'smart_test', m);
+				c.save('storage'); c.commit('storage');
+				system(CRON + ' sync >/dev/null 2>&1');
+				return { ok: true, mode: m };
+			}
+		},
+
+		setup: {
+			// layout mirror (RAID 1) | stripe (RAID 0) | span (JBOD): name + disks[2];
+			// layout single: volumes [{name, disk}]
+			// fs: ext4 (default), ext3, ext2, btrfs, exfat, ntfs, vfat – volumes may carry their own
+			args: { layout: '', name: '', disks: [], volumes: [], swap: 1024, fs: '', confirm: false },
+			call: function(req) {
+				let a = req.args;
+				if (a.confirm !== true)
+					return { error: 'confirm must be true' };
+				let swap = a.swap == null ? 1024 : +a.swap;
+				if (!(swap >= 0 && swap <= 8192))
+					return { error: 'invalid swap size' };
+				let sw = '--swap=' + int(swap);
+				let fs = a.fs || 'ext4';
+				if (!FS_DISK[fs]) return { error: 'invalid file system' };
+				let j = storage_job();
+				if (j?.state == 'running')
+					return { error: 'a storage job is already running' };
+				if (a.layout == 'mirror' || a.layout == 'stripe' || a.layout == 'span') {
+					if (!valid_name(a.name)) return { error: 'invalid name' };
+					if (type(a.disks) != 'array' || length(a.disks) != 2 || a.disks[0] == a.disks[1] ||
+					    !valid_disk(a.disks[0]) || !valid_disk(a.disks[1]))
+						return { error: 'two different disks are needed' };
+					if (is_usb(a.disks[0]) || is_usb(a.disks[1]))
+						return { error: 'USB drives are formatted with usb_format' };
+					return spawn_storage([ 'setup', a.layout, a.name, a.disks[0], a.disks[1], sw, '--fs=' + fs, '--yes' ]);
+				}
+				if (a.layout == 'single') {
+					if (type(a.volumes) != 'array' || !length(a.volumes))
+						return { error: 'no disks given' };
+					let args = [ 'setup', 'single' ], seen = {};
+					for (let v in a.volumes) {
+						if (!valid_name(v?.name) || !valid_disk(v?.disk) || seen[v.name] || seen[v.disk])
+							return { error: 'invalid name or disk' };
+						if (v.fs && !FS_DISK[v.fs]) return { error: 'invalid file system' };
+						if (is_usb(v.disk)) return { error: 'USB drives are formatted with usb_format' };
+						seen[v.name] = seen[v.disk] = true;
+						push(args, v.name + '=' + v.disk + ':' + (v.fs || fs));
+					}
+					push(args, sw, '--yes');
+					return spawn_storage(args);
+				}
+				return { error: 'unknown layout' };
+			}
+		},
+
+		// a mirror with a missing disk: erase a disk and add it
+		repair: {
+			args: { name: '', disk: '', confirm: false },
+			call: function(req) {
+				let a = req.args;
+				if (a.confirm !== true) return { error: 'confirm must be true' };
+				if (!valid_name(a.name)) return { error: 'invalid name' };
+				if (cursor().get('storage', a.name, 'layout') != 'mirror') return { error: 'not a mirror' };
+				if (!valid_disk(a.disk)) return { error: 'invalid disk' };
+				if (is_usb(a.disk)) return { error: 'USB drives cannot be part of a mirror' };
+				if (storage_job()?.state == 'running') return { error: 'a storage job is already running' };
+				return spawn_storage([ 'repair', a.name, a.disk, '--yes' ]);
+			}
+		},
+
+		// a partition that already has a file system (Alt-F, D-Link) becomes
+		// a volume as it is – nothing is erased
+		adopt: {
+			args: { name: '', part: '' },
+			call: function(req) {
+				let n = req.args.name, p = req.args.part;
+				if (!valid_name(n)) return { error: 'invalid name' };
+				if (!match(p ?? '', /^(sd[a-z]+[0-9]+|md[0-9]+)$/)) return { error: 'invalid partition' };
+				if (storage_job()?.state == 'running') return { error: 'a storage job is running' };
+				let r = sh(STORAGE + ' adopt ' + shq(n) + ' ' + shq(p));
+				if (r.rc != 0) return { error: trim(replace(r.out, /^.*ERROR: /s, '')) || 'adopt failed' };
+				system(USERS + ' sync >/dev/null 2>&1');
+				return { ok: true };
+			}
+		},
+
+		volume: {
+			args: { name: '', action: '' },
+			call: function(req) {
+				let n = req.args.name, act = req.args.action;
+				if (!valid_name(n)) return { error: 'invalid name' };
+				if (!(act in { mount: 1, umount: 1, forget: 1 })) return { error: 'unknown action' };
+				let r = sh(STORAGE + ' ' + act + ' ' + shq(n));
+				if (r.rc == 0) system(USERS + ' sync >/dev/null 2>&1');
+				return r.rc == 0 ? { ok: true } : { error: trim(r.out) || act + ' failed' };
+			}
+		},
+
+		// USB stick/disk: unmount and power down, then it can be pulled
+		usb_eject: {
+			args: { disk: '' },
+			call: function(req) {
+				if (!is_usb(req.args.disk)) return { error: 'not a USB drive' };
+				let r = sh(USB + ' eject ' + req.args.disk);
+				if (r.rc != 0) return { error: replace(trim(r.out), /^error: /, '') || 'eject failed' };
+				return { ok: true };
+			}
+		},
+
+		// erase a USB stick/disk: one partition, fs: exfat (default), vfat, ntfs, ext4
+		// USB button: short press copies the USB drives into volume/path
+		usb_copy_config: {
+			args: { enabled: false, volume: '', path: '' },
+			call: function(req) {
+				let a = req.args, c = cursor();
+				if (type(a.enabled) != 'bool') return { error: 'invalid value' };
+				let path = trim(a.path ?? '') || folder_name('usb');
+				for (let part in split(path, '/')) if (!name_ok(part) || substr(part, 0, 1) == '.') return { error: 'invalid folder' };
+				if (a.enabled || a.volume) {
+					if (!valid_name(a.volume) || c.get('storage', a.volume) != 'volume') return { error: 'unknown volume' };
+				}
+				if (c.get('shareos', 'usbcopy') != 'usbcopy') c.set('shareos', 'usbcopy', 'usbcopy');
+				c.set('shareos', 'usbcopy', 'enabled', a.enabled ? '1' : '0');
+				c.set('shareos', 'usbcopy', 'volume', a.volume ?? '');
+				c.set('shareos', 'usbcopy', 'path', path);
+				c.save('shareos'); c.commit('shareos');
+				return usb_copy_info();
+			}
+		},
+
+		// copy now (like a short press of the USB button)
+		usb_copy: {
+			call: function() {
+				let i = usb_copy_info();
+				if (!i.volume) return { error: 'no target set' };
+				if (stat('/tmp/shareos-usb.copy.lock')) return { error: 'already running' };
+				if (!length(usb_mounts())) return { error: 'no USB drive' };
+				system(sprintf('start-stop-daemon -S -b -x %s -- copy', USB));
+				return { started: true };
+			}
+		},
+
+		usb_format: {
+			args: { disk: '', fs: '', name: '', confirm: false },
+			call: function(req) {
+				let a = req.args;
+				if (a.confirm !== true) return { error: 'confirm must be true' };
+				if (!is_usb(a.disk)) return { error: 'not a USB drive' };
+				let fs = a.fs || 'exfat';
+				if (!FS_USB[fs]) return { error: 'invalid file system' };
+				if (type(a.name) != 'string' || !match(a.name, /^[A-Za-z0-9 _-]{1,16}$/)) return { error: 'invalid name' };
+				if (storage_job()?.state == 'running') return { error: 'a storage job is already running' };
+				system(sprintf('start-stop-daemon -S -b -x %s -- format %s %s %s --yes', USB, a.disk, fs, shq(a.name)));
+				return { started: true };
+			}
+		},
+
+		// hide the message of a finished or failed setup job
+		job_clear: {
+			call: function() {
+				if (storage_job()?.state == 'running')
+					return { error: 'a storage job is running' };
+				unlink(SMART_DIR + '/job');
+				return { ok: true };
+			}
+		},
+
+		spindown: {
+			args: { minutes: 0 },
+			call: function(req) {
+				let m = +req.args.minutes;
+				if (m < 0 || m > 330) return { error: 'invalid value' };
+				let r = sh(STORAGE + ' spindown ' + m);
+				return r.rc == 0 ? { ok: true, minutes: m } : { error: trim(r.out) };
+			}
+		}
+	}
+});

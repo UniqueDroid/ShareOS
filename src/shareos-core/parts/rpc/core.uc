@@ -328,4 +328,18 @@ function init_script(name) {
 	return length(s) == 1 ? s[0] : null;
 }
 
+// random name for tokens, jobs and temporary files
+function new_token() {
+	let r = readfile('/dev/urandom', 16) ?? '';
+	let t = '';
+	for (let i = 0; i < length(r); i++) t += sprintf('%02x', ord(r, i));
+	return t;
+}
 
+/* ---------- the ubus objects and their methods ----------
+   Every part adds its objects with add_methods(); the last part returns the
+   table to rpcd. */
+const METHODS = {};
+function add_methods(objects) {
+	for (let name, object in objects) METHODS[name] = object;
+}

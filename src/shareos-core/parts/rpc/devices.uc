@@ -38,3 +38,69 @@ function ups_status() {
 			killpower: g('killpower', '1') != '0', server: g('server', '0') == '1', password_set: !!g('password', '') } };
 }
 
+/* ========== methods (joined after the helpers of all parts, see build-parts.sh) ========== */
+
+add_methods({
+	'shareos.printer': {
+		status: { call: function() { return printer_status(); } },
+
+		set: {
+			args: { enabled: false, mode: '' },
+			call: function(req) {
+				let a = req.args, c = cursor();
+				if (a.mode && !(a.mode in { auto: 1, raw: 1 })) return { error: 'invalid mode' };
+				c.set('printer', 'main', 'printer');
+				c.set('printer', 'main', 'enabled', a.enabled === true ? '1' : '0');
+				if (a.mode) c.set('printer', 'main', 'mode', a.mode);
+				c.commit('printer');
+				let r = sh(PRINTER + (a.enabled === true ? ' restart' : ' stop'));
+				let m = match(r.out, /error: ([^\n]*)/);
+				if (m || r.rc != 0) return { error: m ? m[1] : (trim(r.out) || 'failed') };
+				sleep(500);
+				return printer_status();
+			}
+		},
+
+		test: {
+			args: { lp: '' },
+			call: function(req) {
+				if (!match(req.args.lp ?? '', /^lp[0-9]$/)) return { error: 'no such printer' };
+				let r = sh(PRINTER + ' test ' + req.args.lp);
+				let m = match(r.out, /error: ([^\n]*)/);
+				return m || r.rc != 0 ? { error: m ? m[1] : 'failed' } : { ok: true };
+			}
+		}
+	},
+
+	'shareos.ups': {
+		status: { call: function() { return ups_status(); } },
+
+		set: {
+			args: { enabled: false, driver: '', shutdown: '', percent: 0, minutes: 0, killpower: true, server: false, password: '' },
+			call: function(req) {
+				let a = req.args, c = cursor();
+				if (a.driver && !(a.driver in { auto: 1, 'usbhid-ups': 1, nutdrv_qx: 1, blazer_usb: 1 })) return { error: 'invalid driver' };
+				if (a.shutdown && !(a.shutdown in { low: 1, percent: 1, minutes: 1 })) return { error: 'invalid shutdown' };
+				if (a.percent != null && a.percent != 0 && (a.percent < 10 || a.percent > 90)) return { error: 'percent: 10 … 90' };
+				if (a.minutes != null && a.minutes != 0 && (a.minutes < 1 || a.minutes > 120)) return { error: 'minutes: 1 … 120' };
+				let pw = a.password ?? '';
+				if (pw != '' && !match(pw, /^[A-Za-z0-9._-]{6,64}$/)) return { error: 'password: 6 … 64 letters, digits, . _ -' };
+				c.set('ups', 'main', 'ups');
+				c.set('ups', 'main', 'enabled', a.enabled === true ? '1' : '0');
+				if (a.driver) c.set('ups', 'main', 'driver', a.driver);
+				if (a.shutdown) c.set('ups', 'main', 'shutdown', a.shutdown);
+				if (a.percent) c.set('ups', 'main', 'percent', '' + a.percent);
+				if (a.minutes) c.set('ups', 'main', 'minutes', '' + a.minutes);
+				if (a.killpower != null) c.set('ups', 'main', 'killpower', a.killpower ? '1' : '0');
+				if (a.server != null) c.set('ups', 'main', 'server', a.server ? '1' : '0');
+				if (pw != '') c.set('ups', 'main', 'password', pw);
+				if (a.server && !c.get('ups', 'main', 'password')) return { error: 'the network needs a password' };
+				c.commit('ups');
+				let r = sh(UPS + (a.enabled === true ? ' restart' : ' stop'));
+				let m = match(r.out, /error: ([^\n]*)/);
+				if (m || r.rc != 0) return { error: m ? m[1] : (trim(r.out) || 'failed') };
+				return ups_status();
+			}
+		}
+	}
+});

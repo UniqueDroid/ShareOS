@@ -70,3 +70,109 @@ function inbox_save(c, name, a) {
 
 function token_ok(t) { return type(t) == 'string' && match(t, /^[A-Za-z0-9]{20,128}$/); }
 
+/* ========== methods (joined after the helpers of all parts, see build-parts.sh) ========== */
+
+add_methods({
+	'shareos.paperless': {
+		get: {
+			call: function() {
+				if (!module_on('paperless')) return { error: 'Paperless is not installed (system app paperless)' };
+				let c = cursor(), list = [];
+				c.foreach('paperless', 'inbox', (x) => { push(list, inbox_info(c, x['.name'])); });
+				return { ...paperless_global(c), inboxes: list };
+			}
+		},
+
+		set_global: {
+			args: { url: '', enabled: true, interval: 2, after: '' },
+			call: function(req) {
+				if (!module_on('paperless')) return { error: 'Paperless is not installed (system app paperless)' };
+				let a = req.args, c = cursor();
+				if (a.url != null && a.url != '' && !match(a.url, /^https?:\/\/[A-Za-z0-9.:\[\]_-]+(:[0-9]+)?(\/[^[:space:]]*)?$/)) return { error: 'invalid URL (http://… or https://…)' };
+				if (a.interval != null && !(+a.interval >= 1 && +a.interval <= 60)) return { error: 'interval 1–60 minutes' };
+				if (a.after && !(a.after in { delete: 1, keep: 1 })) return { error: 'invalid value' };
+				c.set('paperless', 'global', 'global');
+				if (a.url != null) c.set('paperless', 'global', 'url', replace(a.url, /\/+$/, ''));
+				if (a.enabled != null) c.set('paperless', 'global', 'enabled', a.enabled ? '1' : '0');
+				if (a.interval != null) c.set('paperless', 'global', 'interval', '' + int(+a.interval));
+				if (a.after) c.set('paperless', 'global', 'after', a.after);
+				c.commit('paperless');
+				sh(CRON + ' sync');
+				return paperless_global(c);
+			}
+		},
+
+		test: {
+			args: { url: '', token: '', inbox: '' },
+			call: function(req) {
+				if (!module_on('paperless')) return { error: 'Paperless is not installed (system app paperless)' };
+				let c = cursor(), tok = req.args.token || (req.args.inbox ? c.get('paperless', req.args.inbox, 'token') : null);
+				let url = req.args.url || c.get('paperless', 'global', 'url');
+				if (!url || !tok) return { error: 'URL and token needed' };
+				let r = sh_in(sprintf('%s test %s', PAPERLESS, shq(url)), tok + '\n');
+				let m = match(r.out, /ok documents=([0-9?]+)/);
+				return m ? { ok: true, documents: m[1] } : tool_result(r);
+			}
+		},
+
+		// admin inboxes: one per user (owner) or a shared one on a share
+		inbox_set: {
+			args: { name: '', owner: '', share: '', token: '', tags: [], enabled: true },
+			call: function(req) {
+				if (!module_on('paperless')) return { error: 'Paperless is not installed (system app paperless)' };
+				let a = req.args, c = cursor();
+				if (!match(a.name ?? '', /^[a-z][a-z0-9_]{0,31}$/)) return { error: 'invalid name (a-z, 0-9 and _)' };
+				let exists = c.get('paperless', a.name) == 'inbox';
+				if (a.owner) {
+					if (c.get('accounts', a.owner) != 'user') return { error: 'unknown user' };
+					if (!c.get('accounts', a.owner, 'home')) return { error: 'the user has no personal folder' };
+					a.share = '';
+				} else if (c.get('shares', a.share) != 'share') return { error: 'choose a share for a shared inbox' };
+				if (a.token && !token_ok(a.token)) return { error: 'invalid token' };
+				if (!a.token && !exists) return { error: 'token needed (Paperless → profile → API token)' };
+				inbox_save(c, a.name, a);
+				return { ok: true, inbox: inbox_info(c, a.name) };
+			}
+		},
+
+		inbox_del: {
+			args: { name: '' },
+			call: function(req) {
+				if (!module_on('paperless')) return { error: 'Paperless is not installed (system app paperless)' };
+				let c = cursor();
+				if (c.get('paperless', req.args.name) != 'inbox') return { error: 'unknown inbox' };
+				c.delete('paperless', req.args.name); c.commit('paperless');
+				sh(CRON + ' sync');
+				return { ok: true };   // the folder and its files stay
+			}
+		},
+
+		run: {
+			call: function() {
+				if (!module_on('paperless')) return { error: 'Paperless is not installed (system app paperless)' };
+				system('start-stop-daemon -S -b -x ' + PAPERLESS + ' -- run');
+				return { started: true };
+			}
+		},
+
+		tags: {
+			args: { inbox: '' },
+			call: function(req) {
+				if (!module_on('paperless')) return { error: 'Paperless is not installed (system app paperless)' };
+				if (!match(req.args.inbox ?? '', /^[a-z][a-z0-9_]{0,31}$/)) return { error: 'invalid inbox' };
+				let j = jparse(sh(PAPERLESS + ' tags ' + shq(req.args.inbox)).out);
+				return { tags: map(j?.results ?? [], (t) => ({ id: t.id, name: t.name })) };
+			}
+		},
+
+		log: {
+			args: { inbox: '' },
+			call: function(req) {
+				if (!module_on('paperless')) return { error: 'Paperless is not installed (system app paperless)' };
+				let c = cursor();
+				if (c.get('paperless', req.args.inbox) != 'inbox') return { error: 'unknown inbox' };
+				return { entries: paperless_log(inbox_path(c, req.args.inbox), 100) };
+			}
+		}
+	}
+});

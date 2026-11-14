@@ -74,3 +74,141 @@ function docker_hosts(c) {
 // shareos-autobrr <args> (JSON on stdin for set, password, api)
 const AUTOBRR = '/usr/sbin/shareos-autobrr';
 
+/* ========== methods (joined after the helpers of all parts, see build-parts.sh) ========== */
+
+add_methods({
+	// called only by /_shareos/cgi/sysinfo: the box's values, admin accounts only
+	'shareos.appsys': {
+		info: { args: { grant: '' }, call: function(req) { return app_grant_perm(req.args.grant, 'sysinfo') ? sys_info() : { error: 'no access' }; } },
+		processes: { args: { grant: '' }, call: function(req) { return app_grant_perm(req.args.grant, 'sysinfo') ? sys_processes() : { error: 'no access' }; } },
+		kill: {
+			args: { grant: '', pid: 0, signal: '' },
+			call: function(req) {
+				let a = req.args;
+				if (!app_grant_perm(a.grant, 'sysinfo')) return { error: 'no access' };
+				let pid = +a.pid, sig = a.signal ?? 'TERM';
+				if (!(sig in { TERM: 1, KILL: 1, HUP: 1 })) return { error: 'invalid signal' };
+				if (!(pid > 1)) return { error: 'invalid process' };
+				let name = trim(readfile('/proc/' + pid + '/comm') ?? '');
+				if (name == '') return { error: 'no such process' };
+				if (readfile('/proc/' + pid + '/cmdline') == '') return { error: 'kernel threads cannot be ended' };
+				if (SYS_KEEP[name]) return { error: 'this process keeps ShareOS running' };
+				let r = sh(sprintf('kill -%s %d', sig, pid));
+				return r.rc == 0 ? { ok: true, pid, name, signal: sig } : { error: trim(r.out) || 'failed' };
+			}
+		}
+	},
+
+	// called only by /_shareos/cgi/netcheck: may this app check hosts from the box?
+	'shareos.appnet': {
+		allowed: { args: { grant: '' }, call: function(req) { return app_grant_perm(req.args.grant, 'netcheck') ? { ok: true } : { error: 'no access' }; } }
+	},
+
+	// called only by /_shareos/cgi/notify: messages of an app (permission
+	// "notify", admins) – checked and sent by shareos-apps notify
+	// called only by /_shareos/cgi/vault: vault shares of the account that
+	// opened the app (permissions "files" + "vault"); set: admins only
+	'shareos.appvault': {
+		status: {
+			args: { grant: '' },
+			call: function(req) {
+				let g = app_grant_perm(req.args.grant, 'vault');
+				if (!g) return { error: 'no access' };
+				return { user: g.u, host: trim(readfile('/proc/sys/kernel/hostname') ?? ''), vaults: vault_list(g.u) };
+			}
+		},
+		unlock: {
+			args: { grant: '', share: '', minutes: 0, password: '' },
+			call: function(req) {
+				let a = req.args, g = app_grant_perm(a.grant, 'vault');
+				if (!g) return { error: 'no access' };
+				return vault_unlock(g.u, a.share, a.minutes || null, a.password);
+			}
+		},
+		lock: {
+			args: { grant: '', share: '' },
+			call: function(req) {
+				let a = req.args, g = app_grant_perm(a.grant, 'vault');
+				if (!g) return { error: 'no access' };
+				let admin = acc_role(g.u) == 'admin';
+				if (!valid_name(a.share) || !(admin || vault_access(cursor(), a.share, g.u))) return { error: 'not a vault' };
+				// users lock their own access, admins the whole vault
+				return vault_lock(a.share, admin ? null : g.u);
+			}
+		},
+		set: {
+			args: { grant: '', share: '', vault: false, default_ttl: 0 },
+			call: function(req) {
+				let a = req.args, g = app_grant_perm(a.grant, 'vault');
+				if (!g) return { error: 'no access' };
+				if (acc_role(g.u) != 'admin') return { error: 'admins only' };
+				return vault_set(a.share, a.vault, a.default_ttl || null);
+			}
+		}
+	},
+
+	'shareos.appnotify': {
+		send: {
+			args: { grant: '', level: '', key: '', title: '', text: '' },
+			call: function(req) {
+				let g = app_grant_perm(req.args.grant, 'notify'), a = req.args;
+				if (!g) return { error: 'no access' };
+				return app_notify_tool([ 'send', '' + (a.level || 'info'), '' + (a.key ?? ''), '' + (a.title ?? ''), '' + (a.text ?? '') ], g.app.id);
+			}
+		},
+		clear: {
+			args: { grant: '', key: '' },
+			call: function(req) {
+				let g = app_grant_perm(req.args.grant, 'notify');
+				if (!g) return { error: 'no access' };
+				return app_notify_tool([ 'clear', '' + (req.args.key ?? '') ], g.app.id);
+			}
+		}
+	},
+
+	// called only by /_shareos/cgi/docker: the Docker hosts (admin accounts only)
+	'shareos.appdocker': {
+		hosts: { args: { grant: '' }, call: function(req) { return app_grant_perm(req.args.grant, 'docker') ? { hosts: docker_hosts(cursor()) } : { error: 'no access' }; } },
+		host_set: {
+			args: { grant: '', name: '', label: '', url: '', insecure: false },
+			call: function(req) {
+				let a = req.args, c = cursor();
+				if (!app_grant_perm(a.grant, 'docker')) return { error: 'no access' };
+				if (!match(a.name ?? '', /^[a-z][a-z0-9_]{0,31}$/)) return { error: 'invalid name' };
+				if (!docker_url_ok(a.url)) return { error: 'invalid address (http://host:2375 or https://host:2376)' };
+				if (c.get('dockerhosts', a.name) == null && length(docker_hosts(c)) >= 16) return { error: 'at most 16 hosts' };
+				c.set('dockerhosts', a.name, 'host');
+				c.set('dockerhosts', a.name, 'label', substr(trim(a.label ?? '') || a.name, 0, 40));
+				c.set('dockerhosts', a.name, 'url', replace(a.url, /\/$/, ''));
+				c.set('dockerhosts', a.name, 'insecure', a.insecure ? '1' : '0');
+				c.commit('dockerhosts');
+				return { hosts: docker_hosts(cursor()) };
+			}
+		},
+		host_del: {
+			args: { grant: '', name: '' },
+			call: function(req) {
+				let a = req.args, c = cursor();
+				if (!app_grant_perm(a.grant, 'docker')) return { error: 'no access' };
+				if (c.get('dockerhosts', a.name ?? '') != 'host') return { error: 'unknown host' };
+				c.delete('dockerhosts', a.name); c.commit('dockerhosts');
+				return { hosts: docker_hosts(cursor()) };
+			}
+		},
+		// address of one host for the CGI, which talks to it
+		target: {
+			args: { grant: '', host: '' },
+			call: function(req) {
+				let a = req.args, c = cursor();
+				if (!app_grant_perm(a.grant, 'docker')) return { error: 'no access' };
+				let h = filter(docker_hosts(c), (x) => x.name == a.host)[0];
+				return h && docker_url_ok(h.url) ? { url: h.url, insecure: h.insecure } : { error: 'unknown host' };
+			}
+		}
+	},
+
+	// called only by /_shareos/cgi/tuya: may this app talk to Tuya devices?
+	'shareos.apptuya': {
+		allowed: { args: { grant: '' }, call: function(req) { return app_grant_perm(req.args.grant, 'tuya') ? { ok: true } : { error: 'no access' }; } }
+	}
+});

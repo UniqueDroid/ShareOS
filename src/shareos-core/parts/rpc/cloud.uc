@@ -194,3 +194,105 @@ function cloud_log(c, name, n) {
 
 function me_cloud_allowed(u) { return u != 'root' && cursor().get('accounts', u, 'cloud') == '1' && !!cursor().get('accounts', u, 'home'); }
 
+/* ========== methods (joined after the helpers of all parts, see build-parts.sh) ========== */
+
+add_methods({
+	'shareos.cloud': {
+		status: { call: function() { if (!module_on('cloud')) return CLOUD_OFF; return cloud_status(); } },
+
+		install: {
+			call: function() { if (!module_on('cloud')) return CLOUD_OFF;
+				let st = cloud_status();
+				if (!st.apps) return { error: 'no apps area – set up a volume first (Storage)' };
+				system('mkdir -p ' + CLOUD_ST + ' && echo state=installing > ' + CLOUD_ST + '/install');
+				system('start-stop-daemon -S -b -x ' + CLOUD + ' -- install');
+				return { started: true };
+			}
+		},
+
+		remotes: { call: function() { if (!module_on('cloud')) return CLOUD_OFF; return { remotes: cloud_remotes('-') }; } },
+
+		remote_add: {
+			args: { name: '', type: '', params: {}, raw: '' },
+			call: function(req) { if (!module_on('cloud')) return CLOUD_OFF; let r = cloud_remote_add('', req.args); return r.error ? r : { ok: true, remotes: cloud_remotes('-') }; }
+		},
+
+		auth_start: {
+			args: { type: '' },
+			call: function(req) { if (!module_on('cloud')) return CLOUD_OFF; return cloud_auth_start('', req.args.type); }
+		},
+
+		auth_finish: {
+			args: { url: '' },
+			call: function(req) { if (!module_on('cloud')) return CLOUD_OFF; return cloud_auth_finish('', req.args.url); }
+		},
+
+		remote_del: {
+			args: { name: '' },
+			call: function(req) { if (!module_on('cloud')) return CLOUD_OFF;
+				if (!match(req.args.name ?? '', /^[a-z][a-z0-9_]{0,31}$/)) return { error: 'invalid name' };
+				let r = tool_result(sh(CLOUD + ' remote-del - ' + shq(req.args.name)));
+				return r.error ? r : { ok: true, remotes: cloud_remotes('-') };
+			}
+		},
+
+		remote_test: {
+			args: { name: '' },
+			call: function(req) { if (!module_on('cloud')) return CLOUD_OFF;
+				if (!match(req.args.name ?? '', /^[a-z][a-z0-9_]{0,31}$/)) return { error: 'invalid name' };
+				let r = sh(CLOUD + ' remote-test - ' + shq(req.args.name));
+				let m = match(r.out, /ok folders=([0-9]+)/);
+				return m ? { ok: true, folders: +m[1] } : tool_result(r);
+			}
+		},
+
+		jobs: { call: function() { if (!module_on('cloud')) return CLOUD_OFF; return { jobs: cloud_jobs(cursor(), null) }; } },
+
+		job_set: {
+			args: { name: '', remote: '', remote_path: '', local: '', mode: '', schedule: '', bwlimit: '', enabled: true },
+			call: function(req) { if (!module_on('cloud')) return CLOUD_OFF;
+				let c = cursor();
+				// the admin edits system jobs here; a user's job keeps its owner
+				let owner = c.get('cloud', req.args.name) == 'job' ? (c.get('cloud', req.args.name, 'owner') ?? '') : '';
+				let r = cloud_job_save(c, owner, req.args);
+				return r.error ? r : { ok: true, jobs: cloud_jobs(cursor(), null) };
+			}
+		},
+
+		job_del: {
+			args: { name: '' },
+			call: function(req) { if (!module_on('cloud')) return CLOUD_OFF;
+				let c = cursor();
+				if (c.get('cloud', req.args.name) != 'job') return { error: 'unknown job' };
+				c.delete('cloud', req.args.name); c.commit('cloud');
+				sh(CRON + ' sync');
+				return { ok: true, jobs: cloud_jobs(cursor(), null) };
+			}
+		},
+
+		job_run: {
+			args: { name: '' },
+			call: function(req) { if (!module_on('cloud')) return CLOUD_OFF;
+				if (cursor().get('cloud', req.args.name) != 'job') return { error: 'unknown job' };
+				return cloud_job_start(req.args.name);
+			}
+		},
+
+		job_stop: {
+			args: { name: '' },
+			call: function(req) { if (!module_on('cloud')) return CLOUD_OFF;
+				if (cursor().get('cloud', req.args.name) != 'job') return { error: 'unknown job' };
+				return tool_result(sh(CLOUD + ' stop ' + shq(req.args.name)));
+			}
+		},
+
+		job_log: {
+			args: { name: '' },
+			call: function(req) { if (!module_on('cloud')) return CLOUD_OFF;
+				let c = cursor();
+				if (c.get('cloud', req.args.name) != 'job') return { error: 'unknown job' };
+				return { lines: cloud_log(c, req.args.name, 80) };
+			}
+		}
+	}
+});
