@@ -314,7 +314,7 @@ function promptDlg(title, text, value, okLabel, type = 'text', max = 0) {
 		const d = document.createElement('dialog');
 		d.className = 'dlg';
 		d.innerHTML = html`<form method="dialog"><h3>${title}</h3><p>${text}</p>
-			<label class="f" style="margin-bottom:16px"><input name="v" value="${value}" type="${type}" maxlength="${max || (type === 'password' ? 128 : 32)}"${type === 'password' ? raw(' minlength="6" autocomplete="new-password"') : ''} required></label>
+			<label class="f" style="margin-bottom:16px"><input name="v" value="${value}" type="${type}" maxlength="${max || (type === 'password' ? 128 : 32)}"${type === 'password' ? raw(' minlength="8" autocomplete="new-password"') : ''} required></label>
 			<div class="acts"><button class="btn ghost" type="button" value="no">Cancel</button>
 			<button class="btn primary" type="submit" value="yes">${okLabel}</button></div></form>`.s;
 		$('#app').append(d);
@@ -464,8 +464,13 @@ async function login(user, pass, keep) {
 	store.set('sid', S.sid, keep);
 	store.set('user', user, true);
 	// tell the box which account this session belongs to (role, own area)
+	// If the box cannot say which role the account has, only root is taken
+	// for an admin; anybody else gets the error instead of the admin pages.
 	try { S.me = await rpc('shareos.me', 'bind', { username: user, password: pass }); }
-	catch (e) { S.me = { name: user, role: 'admin' }; }
+	catch (e) {
+		if (user !== 'root') throw e;
+		S.me = { name: user, role: 'admin' };
+	}
 }
 
 // admins get the full interface, everybody else "My ShareOS"
@@ -487,15 +492,36 @@ function enter() {
 	shareInbox();
 }
 
+// the version the starter (index.html) loaded this interface with, as a query
+// for files loaded later: a new firmware has new addresses, nothing stale
+// comes from the browser's cache
+const verQuery = () => (window.SHAREOS_V ? '?v=' + encodeURIComponent(window.SHAREOS_V) : '');
+
+// The box runs another version than this page was loaded with (a firmware
+// update while the tab was open): load the new interface. Once per version,
+// and not while somebody types or a dialog is open – then at the next tick.
+function reloadIfUpdated(ver) {
+	const mine = window.SHAREOS_V;
+	if (!mine || !ver || ver === mine) return;
+	let done = null;
+	try { done = sessionStorage.getItem('sos-reloaded'); } catch (e) { /* no storage: reload once per page life */ }
+	if (done === ver || S.reloading) return;
+	if (document.querySelector('dialog[open]') || document.activeElement?.matches?.('input, select, textarea')) return;
+	S.reloading = true;
+	try { sessionStorage.setItem('sos-reloaded', ver); } catch (e) { /* see above */ }
+	toast('ShareOS was updated – loading the new interface …');
+	setTimeout(() => location.reload(), 2500);
+}
+
 // the desktop view lives in desktop.js and desktop.css, loaded only when used
 function deskStart() {
 	if (typeof deskRun === 'function') { deskRun(); return; }
 	$('#root').innerHTML = html`<div class="login"><div class="spin"></div></div>`.s;
 	const css = document.createElement('link');
-	css.rel = 'stylesheet'; css.href = 'desktop.css';
+	css.rel = 'stylesheet'; css.href = 'desktop.css' + verQuery();
 	document.head.append(css);
 	const js = document.createElement('script');
-	js.src = 'desktop.js';
+	js.src = 'desktop.js' + verQuery();
 	js.onload = () => deskRun();
 	js.onerror = () => { store.set('view', 'classic'); enter(); };
 	document.head.append(js);
@@ -585,10 +611,17 @@ document.addEventListener('visibilitychange', () => {
 	loadChips();
 });
 
+// A tick that fails – the box does not answer, answers with an HTTP error or
+// not within 15 s (rpcd hangs) – shows OFFLINE and dims the live values; the
+// next good tick clears it.
+const TICK_TIMEOUT = 15000;
 async function tick() {
-	if (away()) return;
+	if (away() || S.ticking) return;
+	S.ticking = true;
+	let timer;
 	try {
-		const info = await rpc('shareos.system', 'info');
+		const info = await Promise.race([rpc('shareos.system', 'info'),
+			new Promise((_, rej) => { timer = setTimeout(() => rej(new RpcError('Box not reachable', 'offline')), TICK_TIMEOUT); })]);
 		const prev = S.info;
 		if (prev?.cpu && info.cpu) {
 			const dt = info.cpu.total - prev.cpu.total, di = info.cpu.idle - prev.cpu.idle;
@@ -603,11 +636,29 @@ async function tick() {
 			if (S.rxHist.length > 120) { S.rxHist.shift(); S.txHist.shift(); }
 		}
 		S.info = info;
+		S.infoAt = Date.now();
+		reloadIfUpdated(info.release?.version);
+		setOffline(false);
 		renderHeader();
+		const fn = $('#fan-now');
+		if (fn) fn.textContent = fanNow();
+		if ((S.route.tab === 'overview' || S.route.tab === 'services') && Date.now() - (S.svcAt || 0) > 30000) loadServices();
 		if (S.route.tab === 'overview' && !S.fr) renderMain();
 	} catch (e) {
-		if (e.code === 'offline') renderHeader(true);
+		if (e.code !== 'auth') { setOffline(true); renderHeader(); }
+	} finally {
+		clearTimeout(timer);
+		S.ticking = false;
 	}
+}
+// the clock of the box: its last answer plus the time gone by since then
+// (null before the first answer) – not the clock of the browser
+function boxNow() {
+	return S.info?.time ? new Date(S.info.time * 1000 + (Date.now() - (S.infoAt || Date.now()))) : null;
+}
+function setOffline(on) {
+	S.offline = on;
+	$('#app')?.classList.toggle('stale', on);
 }
 
 function startPolling() {
@@ -690,7 +741,7 @@ function renderLogin(msg = '') {
 			await login(f.user.value.trim(), f.pass.value, f.keep.checked);
 			enter();
 		} catch (err) {
-			$('#login-err').textContent = err.code === 'offline' ? 'Box not reachable.' : 'Wrong user or password.';
+			$('#login-err').textContent = err.code === 'offline' ? 'Box not reachable.' : err.code === 'auth' ? 'Wrong user or password.' : 'Login failed: ' + err.message;
 			btn.disabled = false;
 			f.pass.select();
 		}
@@ -818,12 +869,12 @@ function chipsPanel() {
 	</div>`;
 }
 
-function renderHeader(offline = false) {
+function renderHeader() {
 	const hd = $('#hd');
 	if (!hd) return;
 	if (S.me && S.me.role !== 'admin') { renderUserHeader(); return; }
 	const i = S.info || {}, r = i.release || {}, ip = i.network?.eth0?.ipv4?.address;
-	const now = new Date();
+	const now = boxNow();
 	const upd = S.check?.update_available ? S.check.latest : null;
 	// unread messages; the update one is left out while the UPDATE chip shows it anyway
 	const nu = (S.notes?.items || []).filter((x) => !x.read && !x.resolved && !(upd && x.source === 'update'));
@@ -838,14 +889,14 @@ function renderHeader(offline = false) {
 				${upd ? html`<a class="chip warn" href="#/system/firmware"><i></i>UPDATE ${upd.replace(/^v/, '')} <small>available</small></a>` : ''}
 				${chipsHtml()}
 				<button class="chip more" type="button" data-act="chips-more" hidden></button>
-				${offline ? html`<span class="chip warn keep"><i></i>OFFLINE</span>`
+				${S.offline ? html`<span class="chip warn keep"><i></i>OFFLINE</span>`
 					: html`<span class="chip keep"><i></i>ONLINE <small>for ${fmtUptime(i.uptime)}</small></span>`}
 				${deskOn() ? html`<button class="ib" type="button" data-act="desk-view" aria-label="Desktop view" title="Desktop view">${svg(I.desk)}</button>` : ''}
 				<button class="ib" type="button" data-act="theme" aria-label="Toggle light/dark" title="Toggle light/dark">${svg(I.moon)}</button>
 				<button class="ib" type="button" data-act="logout" aria-label="Log out">${svg(I.power)}</button>
 			</div>
-			<div class="clock">${now.toLocaleTimeString(LOC, { hour: '2-digit', minute: '2-digit' })}</div>
-			<div class="meta">${now.toLocaleDateString(LOC, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</div>
+			<div class="clock" title="Time of the box">${now ? now.toLocaleTimeString(LOC, { hour: '2-digit', minute: '2-digit' }) : '–'}</div>
+			<div class="meta">${now ? now.toLocaleDateString(LOC, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) : ''}</div>
 		</div>`.s;
 	fitChips();
 	const ft = $('#ft');
@@ -1077,7 +1128,11 @@ function statusTiles(rows, table) {
 // internal disks in standby (hdparm -C, read at most once a minute by the box,
 // #154): dimmed dot and ASLEEP; USB disks have no sleep state here
 const usbDisk = (d) => d.usb || d.removable;
-const asleep = (d) => (d.standby ? html` <span class="tag" title="Checked once a minute">ASLEEP</span>` : '');
+const asleep = (d) => html`${d.standby ? html` <span class="tag" title="Checked once a minute">ASLEEP</span>` : ''}${d.smart && d.smart !== 'good' ? html` <span class="tag ${SMART_RATING[d.smart][0]}">${SMART_RATING[d.smart][1]}</span>` : ''}`;
+// dot of a disk: red/amber by the SMART values read last, green only with
+// good values and awake; dimmed when asleep or when nothing is known (no
+// SMART values yet, USB disk, sleep state not readable)
+const diskDot = (d) => (d.smart === 'bad' ? ' down' : d.smart === 'warn' ? ' warn' : d.smart === 'good' && d.standby === false ? ' up' : '');
 function diskCards(i, table = false) {
 	const disks = i.disks || [];
 	if (!disks.length)
@@ -1086,11 +1141,25 @@ function diskCards(i, table = false) {
 		<tbody>${disks.map((d) => html`<tr><td><b>${d.name}</b> <span class="mut">/dev/${d.name}</span>${asleep(d)}</td><td>${usbDisk(d) ? 'USB' : 'Disk'}</td><td>${d.model || 'unknown model'}</td><td>${fmtBytes(d.size)}</td></tr>`)}</tbody></table></div>`;
 	return html`<div class="grid">${disks.map((d) => html`
 		<div class="card">
-			<div class="icon">${svg(usbDisk(d) ? I.usb : I.disk)}<span class="dot${d.standby ? '' : ' up'}"></span></div>
+			<div class="icon">${svg(usbDisk(d) ? I.usb : I.disk)}<span class="dot${diskDot(d)}"></span></div>
 			<div class="info"><div class="name">${usbDisk(d) ? 'USB' : 'Disk'} · ${d.name}${asleep(d)}</div>
 				<div class="desc">${d.model || 'unknown model'} · ${fmtBytes(d.size)}</div>
 				<div class="ip">/dev/${d.name}</div></div>
 		</div>`)}</div>`;
+}
+
+// The fan has no speed sensor: what is shown is the setting the box asked for
+// (pwm1: 0 = off, 1–127 = half, 128–255 = full, as dns320l-daemon and gpio-fan
+// apply it).
+const fanTxt = (pwm) => (pwm == null ? '–' : pwm === 0 ? 'off' : pwm < 128 ? 'half' : 'full');
+// warn colour of the temperature bar: the default limit of the messages (temp_max)
+const TEMP_WARN = 55;
+// is the fan control at work? (rpcd board_control: shareos-board and, on boxes
+// with an MCU, dns320l-daemon run and a fresh temperature is there)
+function boardTag(bc) {
+	if (!bc || !bc.control) return html`<span class="tag ml">no board control</span>`;
+	return bc.running && bc.sensor ? html`<span class="tag ml ok">board control active</span>`
+		: html`<span class="tag ml err" title="${bc.running ? 'No temperature reading – the fan runs at full speed.' : 'The fan control of the box is not running.'}">board control not running</span>`;
 }
 
 const fsLabel = { '/overlay': 'Settings & packages', '/rom': 'System (read-only)', '/tmp': 'RAM (tmp)' };
@@ -1110,12 +1179,12 @@ const VIEWS = {
 			<h2 class="gh">SYSTEM <span>live · every 5 s</span></h2>
 			<div class="g2">
 				<div class="panel">
-					<div class="ph"><span class="pt">LOAD</span><span class="tag ml ${i.fan_pwm != null ? 'ok' : ''}">${i.fan_pwm != null ? 'board control active' : 'no MCU data'}</span></div>
+					<div class="ph"><span class="pt">LOAD</span>${boardTag(i.board_control)}</div>
 					<div class="mbars">
 						${mrow('CPU', S.cpu ?? 0, S.cpu == null ? '…' : S.cpu.toFixed(0) + ' %')}
 						${mrow('RAM', pct(used, m.memtotal), fmtBytes(used, 0))}
-						${mrow('TEMP', t == null ? 0 : pct(t, 65), t == null ? '–' : t.toFixed(0) + ' °C', t >= 50 ? 'warn' : '')}
-						${mrow('FAN', i.fan_pwm == null ? 0 : pct(i.fan_pwm, 255), i.fan_pwm == null ? '–' : i.fan_pwm === 0 ? 'off' : i.fan_pwm < 200 ? 'half' : 'full')}
+						${mrow('TEMP', t == null ? 0 : pct(t, 65), t == null ? '–' : t.toFixed(0) + ' °C', t >= TEMP_WARN ? 'warn' : '')}
+						${mrow('FAN', i.fan_pwm == null ? 0 : pct(i.fan_pwm, 255), fanTxt(i.fan_pwm))}
 						${ov ? mrow('FLASH', pct(ov.used, ov.size), fmtBytes(ov.used, 0)) : ''}
 					</div>
 					<p class="note">${i.model ? i.model + ' · ' : ''}Linux ${i.kernel} · Load ${(i.load || []).map((x) => x.toFixed(2)).join(' ')}</p>
@@ -1136,7 +1205,7 @@ const VIEWS = {
 		<section class="sec" data-part="status">
 			${secHead('status', 'STATUS')}
 			${statusTiles([
-				['Firmware', i.release?.version || '–', S.check?.update_available ? 'Update ' + S.check.latest + ' available' : 'Channel ' + (S.check?.channel || 'stable')],
+				['Firmware', i.release?.version || '–', S.check?.update_available ? 'Update ' + S.check.latest + ' available' : S.check?.channel ? 'Channel ' + S.check.channel : 'not checked yet'],
 				['Booted from', bootTxt, i.boot === 'flash' ? 'Settings are kept' : 'Changes are lost on reboot'],
 				['Uptime', fmtUptime(i.uptime), 'since the last boot'],
 				['Services', svcUp == null ? '…' : `${svcUp} / ${S.services.length}`, 'running'],
@@ -1227,7 +1296,14 @@ function autostartView() {
 	</section>`;
 }
 
+// the list is loaded when a page that shows it opens (not again within 5 s:
+// renderMain runs this hook after every draw) and every 30 s by tick()
+function loadServicesFresh() {
+	if (S.services && Date.now() - (S.svcAt || 0) < 5000) return;
+	loadServices();
+}
 async function loadServices() {
+	S.svcAt = Date.now();
 	try {
 		S.services = (await rpc('shareos.service', 'list')).services;
 		if (S.route.tab === 'services' || S.route.tab === 'overview') renderMain();
@@ -1243,7 +1319,7 @@ const fmtMB = (mb) => (mb ? fmtBytes(mb * 1e6, 0) : 'unlimited');
 
 async function loadShareData() {
 	try {
-		const [sh, acc, st] = await Promise.all([rpc('shareos.shares', 'list'), rpc('shareos.accounts', 'list'), rpc('shareos.storage', 'status')]);
+		const [sh, acc, st] = await Promise.all([rpc('shareos.shares', 'list'), rpc('shareos.accounts', 'list'), rpc('shareos.storage', 'volumes')]);
 		S.shares = sh; S.acc = acc; S.vols = st.volumes || [];
 	} catch (e) { if (e.code !== 'auth') toast('Shares: ' + e.message, true); }
 	if (S.route.tab === 'shares' && !document.activeElement?.matches('input,select,textarea')) renderMain();
@@ -1390,7 +1466,7 @@ function usersView() {
 				<td style="font-size:12px;min-width:160px">${usageLine(u)}</td>
 				<td><div class="acts">${userActions(u)}</div></td></tr>`)}</tbody></table></div>`
 		: html`<div class="grid">${a.users.map((u) => html`<div class="card">
-			<div class="icon">${svg(I.user)}<span class="dot up"></span></div>
+			<div class="icon">${svg(I.user)}</div>
 			<div class="info"><div class="name">${u.name} ${roleTag(u)}</div>
 				<div class="desc">${u.fullname || ''}${u.groups.length ? (u.fullname ? ' · ' : '') + u.groups.join(', ') : ''}</div>
 				<div class="desc" style="margin-top:8px;font-size:12px">${usageLine(u)}</div>
@@ -1421,8 +1497,8 @@ function userEditor(e) {
 			<label class="f"><span>ROLE</span><select name="role">${Object.entries(ROLE_TXT).map(([k, t]) => html`<option value="${k}"${u.role === k ? raw(' selected') : ''}>${t}</option>`)}</select></label>
 			<label class="f"><span>PERSONAL FOLDER</span><select name="home"><option value="">none</option>${S.vols.filter(linuxFs).map((v) => html`<option value="${v.name}"${u.home === v.name ? raw(' selected') : ''}>on ${v.name}</option>`)}</select></label>
 			<label class="f"><span>STORAGE LIMIT (GB)</span><input name="quota" type="number" min="0" step="1" value="${Math.round((u.quota || 0) / 1000)}"></label>
-			${isNew ? html`<label class="f"><span>PASSWORD</span><input name="p1" type="password" minlength="6" autocomplete="new-password" required></label>
-				<label class="f"><span>REPEAT</span><input name="p2" type="password" minlength="6" autocomplete="new-password" required></label>` : ''}
+			${isNew ? html`<label class="f"><span>PASSWORD</span><input name="p1" type="password" minlength="8" autocomplete="new-password" required></label>
+				<label class="f"><span>REPEAT</span><input name="p2" type="password" minlength="8" autocomplete="new-password" required></label>` : ''}
 		</div>
 		<label class="chk" style="margin-top:12px" id="u-web-row"${u.role === 'user' ? '' : raw(' hidden')}><input type="checkbox" name="web"${u.web ? raw(' checked') : ''}>May log in to the web interface (“My ShareOS”)</label>
 		<label class="chk" style="margin-top:6px"><input type="checkbox" name="cloud"${u.cloud ? raw(' checked') : ''}>May create own cloud sync jobs (needs a personal folder)</label>
@@ -1552,7 +1628,7 @@ function dnsfilterView() {
 
 /* ---------- Paperless ----------------------------------------------------------- */
 
-const PL_STATE = { SUCCESS: ['ok', 'accepted'], PENDING: ['', 'processing'], FAILURE: ['err', 'Error'], UNKNOWN: ['warn', 'unbekannt'] };
+const PL_STATE = { SUCCESS: ['ok', 'accepted'], PENDING: ['', 'processing'], FAILURE: ['err', 'Error'], UNKNOWN: ['warn', 'unknown'] };
 const fmtTime = (t) => (t ? new Date(t * 1000).toLocaleString(LOC, { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '–');
 
 async function loadPaperless() {
@@ -1614,7 +1690,7 @@ function paperlessView() {
 					<td>${ib.recent[0] ? html`${plStateTag(ib.recent[0])} <span class="mut" style="font-size:12px">${ib.recent[0].file}</span>` : html`<span class="mut">–</span>`}</td>
 					<td><div class="acts">${inboxActions(ib)}</div></td></tr>`)}</tbody></table></div>`
 			: html`<div class="grid">${d.inboxes.map((ib) => html`<div class="card${ib.enabled ? '' : ' off'}">
-				<div class="icon">${svg(I.doc)}<span class="dot ${ib.enabled && ib.token_set ? 'up' : 'down'}"></span></div>
+				<div class="icon">${svg(I.doc)}<span class="dot ${!(ib.enabled && ib.token_set) ? 'down' : ib.recent[0]?.state === 'FAILURE' ? 'warn' : 'up'}"></span></div>
 				<div class="info"><div class="name">${ib.name}</div>
 					<div class="desc">${ib.owner ? `personal inbox of ${ib.owner} · ` : 'shared inbox · '}${ib.token_hint ? 'token ' + ib.token_hint : 'no token'}</div>
 					<div class="desc" style="margin-top:6px">${ib.waiting ? ib.waiting + ' file(s) waiting' : 'nothing waiting'}</div>
@@ -1758,7 +1834,7 @@ function cloudSection(scope) {
 			</div>
 			<div class="panel">
 				<div class="ph"><span class="pt">NOTES</span></div>
-				<p class="mut" style="margin:0;font-size:13px;line-height:1.6"><span>Credentials stay encrypted on the box.</span> <span>For Google Drive, OneDrive, Dropbox and similar services you sign in in the browser; for other services paste the finished section from “rclone config”.</span> <span>Jobs run with little memory (2 transfers at a time); a bandwidth limit like</span> <code>2M</code> <span>keeps the network free.</span>${scope === 'me' ? html` <span>Your credentials are kept in your personal folder; what you download counts towards your storage limit.</span>` : ''}</p>
+				<p class="mut" style="margin:0;font-size:13px;line-height:1.6"><span>Credentials stay on the box, readable for root only (passwords obscured by rclone, not encrypted).</span> <span>For Google Drive, OneDrive, Dropbox and similar services you sign in in the browser; for other services paste the finished section from “rclone config”.</span> <span>Jobs run with little memory (2 transfers at a time); a bandwidth limit like</span> <code>2M</code> <span>keeps the network free.</span>${scope === 'me' ? html` <span>Your credentials are kept in your personal folder; what you download counts towards your storage limit.</span>` : ''}</p>
 			</div>
 		</div>
 		${re ? remoteEditor(scope, re) : ''}
@@ -1772,7 +1848,7 @@ function cloudSection(scope) {
 					<td style="font-size:12px">${jobRoute(d, j)}</td><td class="mut">${schedTxt(j.schedule)}${j.enabled ? '' : ' · off'}</td><td>${jobState(j)}</td>
 					<td><div class="acts">${jobActions(scope, j)}</div></td></tr>`)}</tbody></table></div>`
 			: html`<div class="grid">${d.jobs.map((j) => html`<div class="card${j.enabled ? '' : ' off'}">
-				<div class="icon">${svg(I.cloud)}<span class="dot ${j.state === 'error' ? 'down' : j.state === 'running' ? 'warn' : 'up'}"></span></div>
+				<div class="icon">${svg(I.cloud)}<span class="dot ${j.state === 'error' ? 'down' : j.state === 'running' ? 'warn' : j.state === 'ok' && j.enabled ? 'up' : ''}"></span></div>
 				<div class="info"><div class="name">${j.name}</div>
 					<div class="desc" style="font-size:12px">${jobRoute(d, j)}</div>
 					<div class="desc" style="margin-top:6px">${schedTxt(j.schedule)}${scope === 'admin' && j.owner ? html` · <span>${'owner: ' + j.owner}</span>` : ''}</div>
@@ -1906,9 +1982,9 @@ function dlnaView() {
 			<div class="panel">
 				<div class="ph"><span class="pt">MEDIA SERVER</span>${d.running ? html`<span class="tag ok ml">running</span>` : html`<span class="tag ml">off</span>`}${d.scanning ? html` <span class="tag">reading folders …</span>` : ''}</div>
 				${d.running ? html`<div class="tiles" style="margin:0">
-					<div class="tile"><div class="k">TRACKS</div><div class="v">${d.audio}</div></div>
-					<div class="tile"><div class="k">VIDEOS</div><div class="v">${d.video}</div></div>
-					<div class="tile"><div class="k">PICTURES</div><div class="v">${d.image}</div></div></div>
+					<div class="tile"><div class="k">TRACKS</div><div class="v">${d.audio ?? '–'}</div></div>
+					<div class="tile"><div class="k">VIDEOS</div><div class="v">${d.video ?? '–'}</div></div>
+					<div class="tile"><div class="k">PICTURES</div><div class="v">${d.image ?? '–'}</div></div></div>
 					<p class="note"><span>In the network as</span> <b>${d.name || d.hostname}</b> · <code>http://${host}:8200/</code></p>
 					${d.clients.length ? html`<div class="pt" style="margin:12px 0 6px">DEVICES</div><div style="display:grid;gap:4px;font-size:13px">${d.clients.map((c) => html`<div>${c.type} <span class="mut">· ${c.ip}</span></div>`)}</div>` : ''}
 					<div class="acts" style="margin-top:12px"><button class="btn" type="button" data-act="dlna-rescan" ${d.scanning ? 'disabled' : ''}>Read everything again</button></div>`
@@ -1983,7 +2059,8 @@ function snapSummary(j) {
 	if (!l || j.running) return '';
 	if (l.state === 'error') return html`<div class="desc" style="margin-top:4px;font-size:12px;color:var(--red)">${l.error || ''}</div>`;
 	if (l.state !== 'ok') return '';
-	return html`<div class="desc mut" style="margin-top:4px;font-size:12px"><span>${l.files} files</span> · <span>${l.changed} changed</span> (${fmtBytes(l.bytes)})${l.removed ? html` · <span>${l.removed} old ones removed</span>` : ''}</div>`;
+	return html`<div class="desc mut" style="margin-top:4px;font-size:12px"><span>${l.files} files</span> · <span>${l.changed} changed</span> (${fmtBytes(l.bytes)})${l.removed ? html` · <span>${l.removed} old ones removed</span>` : ''}</div>
+		${l.warning ? html`<div class="desc" style="margin-top:4px;font-size:12px;color:var(--amber)">${l.warning}</div>` : ''}`;
 }
 function snapActions(j) {
 	return html`${j.running ? html`<button class="btn sm danger" type="button" data-act="sn-stop" data-name="${j.name}">Stop</button>`
@@ -2025,7 +2102,7 @@ function snapshotsView() {
 					<td style="font-size:12px">${snapEveryTxt(j)}${j.enabled ? '' : ' · off'}<div class="mut">${snapKeepTxt(j)}</div></td>
 					<td>${snapState(j)}${snapSummary(j)}</td><td><div class="acts">${snapActions(j)}</div></td></tr>`)}</tbody></table></div>`
 			: html`<div class="grid">${d.jobs.map((j) => html`<div class="card${j.enabled ? '' : ' off'}">
-				<div class="icon">${svg(I.disk)}<span class="dot ${j.last?.state === 'error' ? 'down' : j.running ? 'warn' : 'up'}"></span></div>
+				<div class="icon">${svg(I.disk)}<span class="dot ${j.last?.state === 'error' ? 'down' : j.running || j.last?.warning ? 'warn' : j.last?.state === 'ok' && j.enabled ? 'up' : ''}"></span></div>
 				<div class="info"><div class="name">${j.name}</div>
 					<div class="desc" style="font-size:12px">${snapSourceTxt(d, j.source)} → ${j.target}</div>
 					<div class="desc" style="margin-top:6px">${snapEveryTxt(j)}${j.enabled ? '' : html` · <span>off</span>`}</div>
@@ -2094,7 +2171,7 @@ async function loadPrinter() {
 	if (S.route.tab === 'services' && S.route.sub === 'printer') {
 		if (!document.activeElement?.matches('input,select')) renderMain();
 		// printers come and go: look again now and then
-		S.prnTimer = setTimeout(loadPrinter, 10000);
+		S.prnTimer = setTimeout(loadPrinter, 20000);
 	}
 }
 
@@ -2135,7 +2212,7 @@ function printerView() {
 
 function printerAfter() {
 	if (!S.prn) { loadPrinter(); return; }
-	if (!S.prnTimer) S.prnTimer = setTimeout(loadPrinter, 10000);
+	if (!S.prnTimer) S.prnTimer = setTimeout(loadPrinter, 20000);
 	$('#f-prn')?.addEventListener('submit', async (e) => {
 		e.preventDefault();
 		const f = e.target, b = $('button[type=submit]', f); b.disabled = true;
@@ -2154,7 +2231,7 @@ async function loadUps() {
 	try { S.ups = await rpc('shareos.ups', 'status'); } catch (e) { toast('UPS: ' + e.message, true); }
 	if (S.route.tab === 'services' && S.route.sub === 'ups') {
 		if (!document.activeElement?.matches('input,select')) renderMain();
-		S.upsTimer = setTimeout(loadUps, S.ups?.running ? 5000 : 15000);
+		S.upsTimer = setTimeout(loadUps, S.ups?.running ? 10000 : 30000);
 	}
 }
 
@@ -2171,7 +2248,7 @@ function upsView() {
 	return html`<section class="sec">
 		<div class="g2">
 			<div class="panel">
-				<div class="ph"><span class="pt">UPS</span>${!d.running ? html`<span class="tag ml">off</span>` : lb ? html`<span class="tag err ml">Battery almost empty</span>` : ob ? html`<span class="tag warn ml">on battery</span>` : d.status ? html`<span class="tag ok ml">on mains</span>` : html`<span class="tag warn ml">no data</span>`}</div>
+				<div class="ph"><span class="pt">UPS</span>${!d.running ? html`<span class="tag ml">off</span>` : lb ? html`<span class="tag err ml">Battery almost empty</span>` : ob ? html`<span class="tag warn ml">on battery</span>` : st.includes('OL') ? html`<span class="tag ok ml">on mains</span>` : d.status ? html`<span class="tag warn ml" data-i18n-skip title="ups.status">${d.status}</span>` : html`<span class="tag warn ml">no data</span>`}</div>
 				${d.running && d.status ? html`<div class="tiles" style="margin:0">
 					<div class="tile"><div class="k">BATTERY</div><div class="v">${d.charge != null ? d.charge + ' %' : '–'}</div></div>
 					<div class="tile"><div class="k">RUNTIME</div><div class="v">${d.runtime != null ? Math.round(d.runtime / 60) + ' min' : '–'}</div></div>
@@ -2217,7 +2294,7 @@ function upsView() {
 
 function upsAfter() {
 	if (!S.ups) { loadUps(); return; }
-	if (!S.upsTimer) S.upsTimer = setTimeout(loadUps, 5000);
+	if (!S.upsTimer) S.upsTimer = setTimeout(loadUps, 10000);
 	$('#ups-mode')?.addEventListener('change', (e) => { $('#ups-pct').hidden = e.target.value !== 'percent'; $('#ups-min').hidden = e.target.value !== 'minutes'; });
 	$('#ups-server')?.addEventListener('change', (e) => { $('#ups-net').hidden = !e.target.checked; });
 	$('#f-ups')?.addEventListener('submit', async (e) => {
@@ -2366,8 +2443,8 @@ function userLookView() {
 		<div class="ph"><span class="pt">CHANGE PASSWORD</span></div>
 		<div class="fields" style="grid-template-columns:1fr">
 			<label class="f"><span>CURRENT PASSWORD</span><input name="old" type="password" autocomplete="current-password" required></label>
-			<label class="f"><span>NEW PASSWORD</span><input name="p1" type="password" minlength="6" autocomplete="new-password" required></label>
-			<label class="f"><span>REPEAT</span><input name="p2" type="password" minlength="6" autocomplete="new-password" required></label>
+			<label class="f"><span>NEW PASSWORD</span><input name="p1" type="password" minlength="8" autocomplete="new-password" required></label>
+			<label class="f"><span>REPEAT</span><input name="p2" type="password" minlength="8" autocomplete="new-password" required></label>
 		</div>
 		<p class="note">Used for the shares and this interface.</p>
 		<div class="acts" style="margin-top:12px"><button class="btn primary" type="submit">Change password</button></div>
@@ -2501,7 +2578,7 @@ function renderUserHome() {
 	<section class="sec">
 		<h2 class="gh">MY SHARES <span>${(m.shares || []).length}</span></h2>
 		${(m.shares || []).length ? html`<div class="grid">${m.shares.map((x) => html`<div class="card">
-			<div class="icon">${svg(I.folder)}<span class="dot up"></span></div>
+			<div class="icon">${svg(I.folder)}<span class="dot ${x.mounted === false ? 'down' : 'up'}"></span></div>
 			<div class="info"><div class="name">${x.name}</div><div class="desc">${x.comment || ''}</div>
 				<div class="desc" style="margin-top:6px"><span class="tag ${x.access === 'rw' ? 'ok' : ''}">${ACCESS_TXT[x.access]}</span>
 					${x.vault ? html` <span class="tag warn">VAULT</span> ${x.vault_until ? html`<span class="tag ok">open until ${vaultTime(x.vault_until)}</span>` : html`<span class="tag">locked</span>`}` : ''}</div>
@@ -2578,6 +2655,21 @@ function arrayOf(st, dev) {
 	const name = (dev || '').replace('/dev/', '');
 	return st?.arrays?.[name] || null;
 }
+
+// worst SMART rating of the disks a volume lies on (null: no values read)
+function volSmart(st, v) {
+	const md = arrayOf(st, v.device);
+	const base = (x) => String(x || '').replace('/dev/', '').replace(/[0-9]+$/, '');
+	const devs = md ? (md.members || []).map(base) : [base(v.device)];
+	let worst = null;
+	for (const d of st.disks || []) {
+		if (!devs.includes(d.name) || !d.smart || d.smart.standby || d.smart.error) continue;
+		const r = smartRating(d.smart);
+		if (r === 'bad' || !worst || (r === 'warn' && worst === 'good')) worst = r;
+	}
+	return worst;
+}
+const volSmartTag = (sm) => (sm && sm !== 'good' ? html`<span class="tag ${SMART_RATING[sm][0]}" title="SMART values of a disk of this volume">${SMART_RATING[sm][1]}</span>` : '');
 
 function diskUse(st, d) {
 	// what is on a disk: ShareOS volume / RAID member / foreign file system / empty
@@ -2673,7 +2765,7 @@ function storageView() {
 		</div>
 	</section>
 	<section class="sec">
-		<h2 class="gh">INTERNAL FLASH <span>128 MB NAND · UBI</span></h2>
+		<h2 class="gh">INTERNAL FLASH <span>NAND · UBI</span></h2>
 		<div class="tw"><table class="t" style="min-width:560px">
 			<thead><tr><th>AREA</th><th>MOUNTED</th><th>USED</th><th style="width:30%">LOAD</th></tr></thead>
 			<tbody>${(i.filesystems || []).map((f) => html`<tr>
@@ -2702,14 +2794,14 @@ function volActions(v, running) {
 function volumeTable(st, running) {
 	return html`<div class="tw"><table class="t" style="min-width:760px"><thead><tr><th>NAME</th><th>LAYOUT</th><th>USED</th><th style="width:18%">LOAD</th><th>HEALTH</th><th></th></tr></thead>
 		<tbody>${st.volumes.map((v) => {
-			const md = arrayOf(st, v.device), degraded = md && md.health && md.health.includes('_'), p = pct(v.used, v.size);
+			const md = arrayOf(st, v.device), degraded = md && md.health && md.health.includes('_'), p = pct(v.used, v.size), sm = volSmart(st, v);
 			return html`<tr>
 				<td><b>${v.name}</b>${S.storage?.apps === v.name ? html` <span class="tag">APPS</span>` : ''}<div class="mut" style="font-size:12px">${v.mountpoint}</div></td>
-				<td>${LAYOUT_TXT[v.layout] || v.layout || ''} · ${FS_NAME[v.fstype] || v.fstype || 'ext4'}${md ? html`<div class="mut" style="font-size:12px">${md.name} · ${md.health || '?'}</div>` : ''}</td>
+				<td>${LAYOUT_TXT[v.layout] || v.layout || ''} · ${FS_NAME[v.fstype] || v.fstype || '?'}${md ? html`<div class="mut" style="font-size:12px">${md.name} · ${md.health || '?'}</div>` : ''}</td>
 				<td>${v.mounted ? html`${fmtBytes(v.used)} / ${fmtBytes(v.size)}` : '–'}</td>
 				<td>${v.mounted ? html`<div class="bar"><i class="${p > 90 ? 'crit' : p > 80 ? 'warn' : ''}" style="width:${p.toFixed(0)}%"></i></div>` : ''}</td>
 				<td>${!v.mounted ? html`<span class="tag err">not mounted</span>` : degraded ? html`<span class="tag warn">a disk is missing</span>`
-					: md?.sync ? html`<span class="tag warn">Sync ${md.sync.delayed ? 'waiting' : md.sync.percent.toFixed(1) + ' %'}</span>` : html`<span class="tag ok">OK</span>`}</td>
+					: md?.sync ? html`<span class="tag warn">Sync ${md.sync.delayed ? 'waiting' : md.sync.percent.toFixed(1) + ' %'}</span>` : sm && sm !== 'good' ? '' : html`<span class="tag ok">OK</span>`} ${v.mounted ? volSmartTag(sm) : ''}</td>
 				<td><div class="acts">${volActions(v, running)}</div></td></tr>`;
 		})}</tbody></table></div>`;
 }
@@ -2829,12 +2921,12 @@ function diskTable(st, running) {
 function volumeCard(st, v, running) {
 	const md = arrayOf(st, v.device);
 	const degraded = md && md.health && md.health.includes('_');
-	const p = pct(v.used, v.size);
+	const p = pct(v.used, v.size), sm = volSmart(st, v);
 	return html`<div class="card${v.mounted ? '' : ' off'}">
-		<div class="icon">${svg(I.disk)}<span class="dot ${!v.mounted ? 'down' : degraded ? 'warn' : 'up'}"></span></div>
+		<div class="icon">${svg(I.disk)}<span class="dot ${!v.mounted || sm === 'bad' ? 'down' : degraded || sm === 'warn' ? 'warn' : 'up'}"></span></div>
 		<div class="info">
-			<div class="name">${v.name}${S.storage?.apps === v.name ? html` <span class="tag" title="Packages and app data live in .shareos">APPS</span>` : ''}</div>
-			<div class="desc">${LAYOUT_TXT[v.layout] || v.layout || ''} · ${FS_NAME[v.fstype] || v.fstype || 'ext4'}${v.mounted ? html` · ${fmtBytes(v.avail)} free of ${fmtBytes(v.size)}` : ' · not mounted'}</div>
+			<div class="name">${v.name}${S.storage?.apps === v.name ? html` <span class="tag" title="Packages and app data live in .shareos">APPS</span>` : ''} ${volSmartTag(sm)}</div>
+			<div class="desc">${LAYOUT_TXT[v.layout] || v.layout || ''} · ${FS_NAME[v.fstype] || v.fstype || '?'}${v.mounted ? html` · ${fmtBytes(v.avail)} free of ${fmtBytes(v.size)}` : ' · not mounted'}</div>
 			${v.mounted ? html`<div class="bar" style="margin-top:10px"><i class="${p > 90 ? 'crit' : p > 80 ? 'warn' : ''}" style="width:${p.toFixed(0)}%"></i></div>` : ''}
 			${md ? html`<div class="desc" style="margin-top:8px">${md.name}: ${degraded ? html`<span style="color:var(--amber)">one disk missing (${md.health})</span>` : html`both disks active (${md.health || '?'})`}</div>` : ''}
 			${degraded && !md.sync && v.layout === 'mirror' && !repairCandidates(st, md).length ? html`<div class="desc" style="margin-top:6px">Put a new disk into the free bay, then “Repair mirror”.</div>` : ''}
@@ -2884,7 +2976,7 @@ function diskCard(st, d, running) {
 	const use = diskUse(st, d);
 	const sm = d.smart;
 	return html`<div class="card">
-		<div class="icon">${svg(d.rm || d.tran === 'usb' ? I.usb : I.disk)}<span class="dot ${sm && !sm.standby && !sm.error && smartRating(sm) !== 'good' ? 'warn' : 'up'}"></span></div>
+		<div class="icon">${svg(d.rm || d.tran === 'usb' ? I.usb : I.disk)}<span class="dot${diskDot({ smart: sm && !sm.standby && !sm.error ? smartRating(sm) : null, standby: d.standby })}"></span></div>
 		<div class="info">
 			<div class="name">${d.usb || d.tran === 'usb' ? 'USB' : 'Bay'} · ${d.name}${d.standby ? html` <span class="tag">ASLEEP</span>` : ''}</div>
 			<div class="desc">${d.model || 'unknown model'} · ${fmtBytes(d.size)}${d.serial ? ' · ' + d.serial : ''}</div>
@@ -3008,7 +3100,9 @@ async function loadStorage() {
 /* ---------- system sub pages ------------------------------------------------ */
 
 const STEP_NAMES = ['Download', 'Verify', 'Ready', 'Write', 'Restart'];
-// flashing sub-steps reported by shareos-update -> [progress %, label]
+// flashing sub-steps reported by shareos-update -> [place of the bar, label].
+// The updater reports the step it is in, not a measured share: the page says
+// "step 3 of 8" and the bar only shows how far down the list that is.
 const FLASH_STEPS = {
 	'check bundle': [5, 'Checking the package again'],
 	'stage rootfs': [20, 'Preparing the system for the restart'],
@@ -3053,7 +3147,7 @@ const SYS = {
 						<div class="steps">${STEP_NAMES.map((n, k) => html`<div class="step ${k < si || u.state === 'flashed' ? 'done' : k === si ? 'act' : ''}"><div class="n">${k + 1}${k < si || (u.state === 'flashed' && k <= si) ? ' ✓' : k === si ? ' · RUNNING' : ''}</div>${n}</div>`)}</div>
 						${prog != null ? html`<div class="bar big busy" style="margin-top:12px"><i style="width:${prog.toFixed(0)}%"></i></div><p class="note">${fmtBytes(u.progress.bytes)} of ${fmtBytes(u.progress.total)}</p>` : ''}
 						${u.state === 'verifying' ? html`<div class="bar big busy" style="margin-top:12px"><i style="width:100%"></i></div><p class="note"><b>Checking the bundle …</b> SHA-256 and contents, takes about half a minute.</p>` : ''}
-						${u.state === 'flashing' ? (() => { const [fp, fl] = FLASH_STEPS[u.step] || [2, 'Starting']; return html`<div class="bar big busy" style="margin-top:12px"><i style="width:${fp}%"></i></div><p class="note"><b>${fl} …</b> (${fp} %) – <b>do not switch off</b>, this takes about 1–2 minutes.</p>`; })() : ''}
+						${u.state === 'flashing' ? (() => { const [fp, fl] = FLASH_STEPS[u.step] || [2, 'Starting'], fn = Object.keys(FLASH_STEPS).indexOf(u.step) + 1; return html`<div class="bar big busy" style="margin-top:12px"><i style="width:${fp}%"></i></div><p class="note"><b>${fl} …</b> (step ${fn || 1} of ${Object.keys(FLASH_STEPS).length}) – <b>do not switch off</b>, this takes about 1–2 minutes.</p>`; })() : ''}
 						${u.state === 'flashed' ? html`<div class="bar big" style="margin-top:12px"><i style="width:100%"></i></div><p class="note"><b>Installation finished</b> (100 %) – restart now.</p>` : ''}
 						${u.state === 'ready' ? html`<div class="acts" style="margin-top:14px"><button class="btn primary" type="button" data-act="apply" data-tag="${u.release.tag}" data-ver="${u.release.version}" ${bootOk ? '' : 'disabled'}>Install ${svg(I.dl)}${u.release.version}</button><button class="btn ghost" type="button" data-act="cancel">Discard</button></div>
 							<p class="note">${u.release.local ? (u.release.sha_checked ? 'Uploaded file – verified: SHA-256 of the .sha256 file, checksums of all parts, made for this device.' : 'Uploaded file – verified: checksums of all parts, made for this device (without .sha256 file).') : 'Verified: SHA-256, checksums of all parts, made for this device.'} Settings and packages are kept.</p>` : ''}`
@@ -3139,10 +3233,10 @@ const SYS = {
 			<form class="panel" id="f-pass">
 				<div class="ph"><span class="pt">ACCESS · ${S.user}</span></div>
 				<div class="fields" style="grid-template-columns:1fr">
-					<label class="f"><span>NEW PASSWORD</span><input name="p1" type="password" minlength="6" autocomplete="new-password" required></label>
-					<label class="f"><span>REPEAT</span><input name="p2" type="password" minlength="6" autocomplete="new-password" required></label>
+					<label class="f"><span>NEW PASSWORD</span><input name="p1" type="password" minlength="8" autocomplete="new-password" required></label>
+					<label class="f"><span>REPEAT</span><input name="p2" type="password" minlength="8" autocomplete="new-password" required></label>
 				</div>
-				<p class="note">Applies to the web interface and SSH. At least 6 characters.</p>
+				<p class="note">Applies to the web interface and SSH. At least 8 characters.</p>
 				<div class="acts" style="margin-top:14px"><button class="btn primary" type="submit">Change password</button></div>
 			</form>
 		</div>
@@ -3168,8 +3262,8 @@ const SYS = {
 					${(de ? x.text_de : x.text_en) ? html`<p class="mut" style="margin:6px 0 0;font-size:13px">${de ? x.text_de : x.text_en}</p>` : ''}
 					<div class="acts" style="margin-top:10px">${x.read || x.resolved ? '' : html`<button class="btn sm" type="button" data-act="note-read" data-id="${x.id}">Read</button>`}
 						<button class="btn sm ghost" type="button" data-act="note-del" data-id="${x.id}">Delete</button></div></div>`)}</div>`
-				: html`<div class="panel"><div class="empty">${svg(I.ok)}<span>No messages – everything is fine.</span></div></div>`}
-				<p class="note">Every 10 minutes the box checks RAID, volumes (mounted, how full), temperature, SMART values and updates; failed cloud jobs, app tasks and storage jobs report at once. Repeated messages are counted and sent again at most once a day.</p>
+				: html`<div class="panel"><div class="empty">${svg(I.ok)}<span>No messages.</span></div></div>`}
+				<p class="note">Every 10 minutes the box checks RAID, volumes (mounted, how full), temperature, SMART values (read again every 6 hours; a sleeping disk is not woken up) and updates; failed cloud jobs, app tasks and storage jobs report at once. Repeated messages are counted and sent again at most once a day.</p>
 			</section>
 			<aside class="aside">
 				<form class="panel" id="f-notify">
@@ -3220,7 +3314,7 @@ const SYS = {
 				<dl class="kv" style="margin-top:14px">
 					<dt>Time sync</dt><dd>${t.ntp ? (t.ntp_running ? 'from the internet (NTP)' : html`<span style="color:var(--amber)">NTP switched on but not running</span>`) : 'by hand'}</dd>
 					<dt>Last synced</dt><dd>${last || (t.ntp ? 'not yet' : '–')}</dd>
-					${t.rtc ? html`<dt>Battery clock</dt><dd>is set after every sync</dd>` : ''}
+					${t.rtc ? html`<dt>Battery clock</dt><dd>${t.rtc_ok === false ? html`<span style="color:var(--amber)">could not be set at the last sync</span>` : 'is set after every sync'}</dd>` : ''}
 				</dl>
 				<div class="acts" style="margin-top:14px"><button class="btn" type="button" data-act="time-sync">${svg(I.reboot)}Sync now</button></div>
 			</div>
@@ -3252,14 +3346,15 @@ const SYS = {
 		const h = S.hw;
 		if (!h) return html`<div class="panel"><div class="empty"><div class="spin" style="margin:0"></div><span>Loading …</span></div></div>`;
 		const f = h.fan, l = h.led;
-		const t = h.temperature != null ? (h.temperature / 1000).toFixed(0) + ' °C' : '–';
-		const fs = h.fan_pwm == null ? '–' : h.fan_pwm === 0 ? 'off' : h.fan_pwm < 128 ? 'half' : 'full';
-		const presets = [['quiet', 'Quiet', 'Fan stops below 40 °C, full from 55 °C'], ['balanced', 'Balanced', 'Fan always on, full from 50 °C'],
-			['cool', 'Cool', 'Fan always on, full from 45 °C'], ['custom', 'Custom values', 'Set the temperatures yourself']];
+		// the temperatures of the presets come from the box (one list for the
+		// fan control and this page)
+		const pd = (id) => { const p = h.presets?.[id]; return !p ? '' : p.off_temp ? `Fan stops below ${p.off_temp} °C, full from ${p.full_temp} °C` : `Fan always on, full from ${p.full_temp} °C`; };
+		const presets = [['quiet', 'Quiet', pd('quiet')], ['balanced', 'Balanced', pd('balanced')],
+			['cool', 'Cool', pd('cool')], ['custom', 'Custom values', 'Set the temperatures yourself']];
 		const sel = (id, cur, opts) => html`<select id="${id}">${opts.map(([v, t2]) => html`<option value="${v}"${cur === v ? raw(' selected') : ''}>${t2}</option>`)}</select>`;
 		return html`<div class="g2">
 			<form class="panel" id="f-fan">
-				<div class="ph"><span class="pt">FAN</span><span class="tag ml">now: ${t} · ${fs}</span></div>
+				<div class="ph"><span class="pt">FAN</span><span class="tag ml" id="fan-now">${fanNow()}</span></div>
 				<div style="display:grid;gap:8px">${presets.map(([id, name, d]) => html`
 					<label style="display:flex;gap:10px;align-items:flex-start;cursor:pointer;font-size:13px"><input type="radio" name="preset" value="${id}"${f.preset === id ? raw(' checked') : ''} style="accent-color:var(--accent);margin-top:3px">
 						<span><b>${name}</b><br><span class="mut" style="font-size:12px">${d}</span></span></label>`)}</div>
@@ -3349,7 +3444,7 @@ const SYS = {
 			</div>
 			<div class="panel">
 				<div class="ph"><span class="pt">FACTORY RESET</span><span class="tag err ml">erases settings</span></div>
-				<p class="mut" style="margin:0 0 12px;font-size:13px">Removes all settings and installed packages from flash and reboots. The system and firmware version stay. Afterwards the password is again <code>shareos</code>.</p>
+				<p class="mut" style="margin:0 0 12px;font-size:13px">Removes all settings and installed packages from flash and reboots. The system and firmware version stay. Afterwards the box has no password: press the USB button on its front, then choose a new one in the web interface.</p>
 				<button class="btn danger" type="button" data-act="factory">Reset to factory settings</button>
 			</div>
 		</div>
@@ -3431,6 +3526,7 @@ const SYS = {
 					<label class="chk"><input type="checkbox" name="ipv6"${d.ipv6 ? raw(' checked') : ''}>IPv6</label>
 				</div>
 				<p class="note">The box reports its public address every 5 minutes when it has changed. Many connections (DS-Lite, fibre, mobile) have no IPv4 address of their own – then use IPv6. For access from outside, the router has to forward the port (or open it for IPv6).</p>
+				<p class="note">To learn its public IPv4 address, the box asks api.ipify.org (ipv4.icanhazip.com if that does not answer).</p>
 				<div class="acts" style="margin-top:12px"><button class="btn primary" type="submit">Save</button>
 					${d.enabled ? html`<button class="btn" type="button" data-act="ddns-now">Refresh now</button>` : ''}</div>
 			</form>
@@ -3662,7 +3758,8 @@ const VIEWS_AFTER = {
 				try {
 					S.pwr = await rpc('shareos.system', 'power_schedule_set', { enabled: f.enabled.checked, days });
 					S.pwrEdit = false;
-					toast(!S.pwr.enabled ? 'Schedule saved (switched off).' : S.pwr.next_on ? `Schedule saved – the box switches on on ${fmtPwr(S.pwr.next_on)}.` : 'Schedule saved – no switch-on planned.');
+					if (S.pwr.arm_error) toast(`Schedule saved, but the wake-up alarm could not be set: ${S.pwr.arm_error}`, true);
+					else toast(!S.pwr.enabled ? 'Schedule saved (switched off).' : S.pwr.next_on ? `Schedule saved – the box switches on on ${fmtPwr(S.pwr.next_on)}.` : 'Schedule saved – no switch-on planned.');
 					renderMain();
 				}
 				catch (err) { toast('Schedule: ' + err.message, true); }
@@ -3755,7 +3852,7 @@ const VIEWS_AFTER = {
 						f.reset();
 						toast('Uploaded – the bundle is being checked.');
 						S.updPending = { state: 'verifying', until: Date.now() + 15000 };
-						S.upd = { ...S.upd, state: 'verifying', release: { tag: 'local', version: file.name.replace(/^ShareOS-|-DNS-.*$/g, '') } };
+						S.upd = { ...S.upd, state: 'verifying', release: { tag: 'local', version: '' } };
 						renderMain();
 						refreshUpdateStatus();
 					} catch (err) { toast('Firmware file: ' + err.message, true); }
@@ -3910,8 +4007,7 @@ const VIEWS_AFTER = {
 		if (sub === 'firmware') {
 			$('#channel')?.addEventListener('change', async (e) => {
 				try {
-					await rpc('uci', 'set', { config: 'shareos', section: 'update', values: { channel: e.target.value } });
-					await rpc('uci', 'commit', { config: 'shareos' });
+					await rpc('shareos.update', 'set_channel', { channel: e.target.value });
 					checkUpdates();
 				} catch (err) { toast('Channel: ' + err.message, true); }
 			});
@@ -4044,7 +4140,7 @@ const VIEWS_AFTER = {
 		if (S.route.sub === 'printer') { printerAfter(); return; }
 		if (S.route.sub === 'ups') { upsAfter(); return; }
 		if (S.route.sub === 'torrent') { tremoteAfter(); return; }
-		if (!S.services) loadServices();
+		loadServicesFresh();
 		document.querySelectorAll('.as-toggle').forEach((c) => c.addEventListener('change', async () => {
 			c.disabled = true;
 			try {
@@ -4057,7 +4153,7 @@ const VIEWS_AFTER = {
 		}));
 	},
 	overview() {
-		if (!S.services) loadServices();
+		loadServicesFresh();
 		// the FAV APPS bar needs the installed apps (asked once)
 		if (tabOn('apps') && !S.apps?.installed && !S.apps?.tried) { S.apps = { ...S.apps, tried: true }; loadApps(['installed']); }
 	}
@@ -4112,6 +4208,11 @@ async function loadTime() {
 	if (S.route.tab === 'system' && S.route.sub === 'time') renderMain();
 }
 
+// "now: 41 °C · half" of the fan panel: the values of the last tick (every 5 s)
+function fanNow() {
+	const i = S.info || S.hw || {};
+	return `now: ${i.temperature != null ? (i.temperature / 1000).toFixed(0) + ' °C' : '–'} · ${fanTxt(i.fan_pwm)}`;
+}
 async function loadHw() {
 	try { S.hw = await rpc('shareos.hw', 'get'); } catch (e) { toast('Hardware: ' + e.message, true); }
 	if (S.route.sub === 'power') renderMain();
@@ -4357,7 +4458,7 @@ function frCollect() {
 		const p1 = $('#fr-p1').value, p2 = $('#fr-p2').value;
 		if (p1 || p2) {
 			if (p1 !== p2) return 'The passwords do not match.';
-			if (p1.length < 6) return 'The password needs at least 6 characters.';
+			if (p1.length < 8) return 'The password needs at least 8 characters.';
 		}
 		f.password = p1;
 	}
@@ -4568,7 +4669,13 @@ async function refreshUpdateStatus() {
 		if (S.upd.check && (!S.check || S.upd.check.time >= (S.check.time || 0))) S.check = { ...S.upd.check, current: S.upd.current };
 		if ((S.check?.update_available ? S.check.latest : null) !== had) renderHeader();
 		// no result yet (fresh start) or an old one: ask now (GitHub allows 60 anonymous API calls per hour)
-		if (!S.checking && !S.autoChecked && (!S.upd.check || Date.now() / 1000 - S.upd.check.time > 6 * 3600)) { S.autoChecked = true; checkUpdates(true); }
+		// – in the background on the box (the result arrives with a later status), and
+		// not again within an hour after a check that failed (no internet)
+		const nowS = Date.now() / 1000;
+		if (!S.checking && !S.autoChecked && (!S.upd.check || nowS - S.upd.check.time > 6 * 3600) && !(S.upd.check_failed && nowS - S.upd.check_failed.time < 3600)) {
+			S.autoChecked = true;
+			rpc('shareos.update', 'check_auto').then(() => { clearTimeout(S.updTimer); S.updTimer = setTimeout(refreshUpdateStatus, 8000); }).catch(() => { });
+		}
 		// keep the page while a .bin is being checked/written below
 		if (S.route.tab === 'system' && S.route.sub === 'firmware' && !document.activeElement?.matches('select') && !$('#bin-info:not(:empty)') && !$('#f-bin input')?.files?.length) renderMain();
 		if (prev && prev !== S.upd.state && S.upd.state === 'ready') toast('Update downloaded and verified.');
@@ -4837,7 +4944,7 @@ const ACTIONS = {
 	'u-cancel'() { S.uEdit = null; renderMain(); },
 	async 'u-pass'(el) {
 		const n = el.dataset.name;
-		const p = await promptDlg(`Password for ${n}`, 'New password (at least 6 characters). Used for shares and – depending on the role – for the web interface.', '', 'Set', 'password');
+		const p = await promptDlg(`Password for ${n}`, 'New password (at least 8 characters). Used for shares and – depending on the role – for the web interface.', '', 'Set', 'password');
 		if (p == null) return;
 		try { await rpc('shareos.accounts', 'passwd', { name: n, password: p }); toast(`Password of ${n} changed.`); } catch (e) { toast(e.message, true); }
 	},
@@ -5018,7 +5125,11 @@ const ACTIONS = {
 		try {
 			const r = await rpc('shareos.service', 'action', { name, action: op });
 			if (r.delayed) { waitForBox('Service is restarting', 'waiting for the box', false); return; }
-			toast(`${name}: ${op === 'start' ? 'started' : op === 'stop' ? 'stopped' : 'restarted'}`);
+			// the box says what the service does now: success only when that fits
+			const done = r.ok !== false && (op === 'stop' ? r.running !== true : r.running !== false);
+			const why = String(r.output || '').trim().split('\n').pop();
+			if (done) toast(`${name}: ${op === 'start' ? 'started' : op === 'stop' ? 'stopped' : 'restarted'}`);
+			else toast(name + ': ' + (op === 'start' ? 'did not start' : op === 'stop' ? 'did not stop' : 'did not restart') + (why ? ' – ' + why : ''), true);
 		} catch (e) { toast(`${name}: ${e.message}`, true); }
 		loadServices();
 	},
@@ -5140,7 +5251,7 @@ const ACTIONS = {
 	},
 
 	async factory() {
-		if (!await confirmDlg('Factory reset?', 'All settings and installed packages are erased, then the box reboots. The password is "shareos" again afterwards.', 'Reset', true)) return;
+		if (!await confirmDlg('Factory reset?', 'All settings and installed packages are erased, then the box reboots. Afterwards it has no password: press the USB button on its front, then choose a new one.', 'Reset', true)) return;
 		try { await rpc('shareos.system', 'factory_reset', { confirm: true }); } catch (e) { toast(e.message, true); return; }
 		stopPolling();
 		store.del('sid');
@@ -5208,11 +5319,24 @@ window.addEventListener('hashchange', () => {
 	window.scrollTo(0, 0);
 });
 
-// clock in the header without waiting for the next poll
+// clock in the header without waiting for the next poll: for admins the
+// clock of the box (boxNow), for plain users – who get no box time – the
+// browser's
 setInterval(() => {
 	const c = $('.clock');
-	if (c) c.textContent = new Date().toLocaleTimeString(LOC, { hour: '2-digit', minute: '2-digit' });
+	if (!c) return;
+	const now = isUser() ? new Date() : boxNow();
+	if (now) c.textContent = now.toLocaleTimeString(LOC, { hour: '2-digit', minute: '2-digit' });
 }, 10000);
+
+// "My ShareOS": storage use, shares and open vaults change without the user
+// doing anything (uploads from a PC, a vault that closes) – the data is read
+// again every minute while that page is shown and nobody types in it
+setInterval(async () => {
+	if (!isUser() || !S.sid || S.utab !== 'me' || S.desk || document.hidden) return;
+	if (document.querySelector('dialog[open]') || document.activeElement?.matches?.('input, select, textarea')) return;
+	try { S.me = { ...S.me, ...(await rpc('shareos.me', 'get')) }; renderUserMain(); } catch (e) { /* the next round tries again */ }
+}, 60000);
 
 /* ---------- file browser (admins: all volumes, users: personal folder + shares by rights) */
 
@@ -5457,11 +5581,25 @@ function fbClip(cut) {
 	fbRender();
 }
 
+// Copy, move and delete: what takes longer than a few seconds goes on in the
+// background on the box (the call answers { running, job }); wait for its
+// result here, so the box stays usable meanwhile.
+async function fileOp(method, args) {
+	const first = await rpc('shareos.files', method, args);
+	let r = first;
+	if (r.running) toast('This takes a while – it goes on in the background …');
+	while (r.running) {
+		await new Promise((res) => { setTimeout(res, 1500); });
+		r = await rpc('shareos.files', 'job', { id: first.job });
+	}
+	return { ...first, ...r, running: false };
+}
+
 async function fbPaste() {
 	const f = S.fb, c = S.fbClip;
 	if (!c) return;
 	try {
-		await rpc('shareos.files', 'move', { root: c.root, path: c.path, names: c.names, dest: f.path, dest_root: f.root, copy: !c.cut });
+		await fileOp('move', { root: c.root, path: c.path, names: c.names, dest: f.path, dest_root: f.root, copy: !c.cut });
 		toast(c.cut ? 'Moved.' : 'Copied.');
 		if (c.cut) S.fbClip = null;   // moved: gone from the old place; a copy can be pasted again
 		fbLoad();
@@ -5559,7 +5697,7 @@ Object.assign(ACTIONS, {
 			if (!await confirmDlg(`Move ${names.length} item(s) to the trash?`, `${list} – can be restored from the trash.`, 'Move to trash')) return;
 		} else if (!await confirmDlg(`Delete ${names.length} item(s)?`, `${list} – folders with their content. This cannot be undone.`, 'Delete', true)) return;
 		try {
-			const r = await rpc('shareos.files', 'delete', { root: S.fb.root, path: S.fb.path, names });
+			const r = await fileOp('delete', { root: S.fb.root, path: S.fb.path, names });
 			toast(r.trash ? 'Moved to the trash.' : 'Deleted.'); fbLoad();
 		} catch (e) { toast('Delete: ' + e.message, true); }
 	},
@@ -5577,7 +5715,7 @@ Object.assign(ACTIONS, {
 		const n = all ? (S.fb.tdata?.items || []).length : ids.length;
 		const title = `Delete ${n} item(s) for good?`;
 		if (!await confirmDlg(all ? 'Empty the trash?' : title, 'This cannot be undone.', all ? 'Empty' : 'Delete for good', true)) return;
-		try { await rpc('shareos.files', 'trash_empty', { root: S.fb.root, ids }); toast(all ? 'Trash emptied.' : 'Deleted for good.'); S.fb.tsel = new Set(); fbTrashLoad(); }
+		try { await fileOp('trash_empty', { root: S.fb.root, ids }); toast(all ? 'Trash emptied.' : 'Deleted for good.'); S.fb.tsel = new Set(); fbTrashLoad(); }
 		catch (e) { toast('Delete: ' + e.message, true); }
 	}
 });

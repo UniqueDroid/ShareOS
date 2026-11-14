@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Every method of the ShareOS rpcd plugin must be granted by an ACL group,
 otherwise the web interface gets "access denied" and logs the user out.
+No group may reach the settings directly (uci): every setting goes through a
+method of the plugin, which checks the value.
 
   tests/check-acl.py [shareos.uc] [acl.d/shareos.json]
 """
@@ -11,7 +13,7 @@ import sys
 UC = sys.argv[1] if len(sys.argv) > 1 else 'src/shareos-core/usr/share/rpcd/ucode/shareos.uc'
 ACL = sys.argv[2] if len(sys.argv) > 2 else 'src/shareos-core/usr/share/rpcd/acl.d/shareos.json'
 # called only as root (CGIs, CLI), never from a web session
-INTERNAL = {('shareos.widget', 'status')} | {('shareos.appfs', m) for m in ('roots', 'list', 'mkdir', 'rename', 'move', 'delete', 'open', 'grant_app')} | {('shareos.apptorrent', m) for m in ('session', 'remote_session', 'remote_get', 'remote_set', 'path', 'watch', 'port')} | {('shareos.appsyncthing', m) for m in ('session', 'path', 'restart')} | {('shareos.appmedia', m) for m in ('probe', 'start', 'jobs', 'cancel', 'remove')} | {('shareos.appvpn', m) for m in ('list', 'status', 'log', 'disconnect', 'import', 'set', 'remove', 'connect', 'server_status', 'server_log', 'server_set', 'device_add', 'device_profile', 'device_remove')} | {('shareos.appstatus', m) for m in ('set', 'clear')} | {('shareos.apptailscale', m) for m in ('status', 'log', 'up', 'login', 'down', 'logout', 'ping')} | {('shareos.appautobrr', m) for m in ('status', 'log', 'start', 'set', 'password', 'api', 'accounts')} | {('shareos.appzabbix', m) for m in ('status', 'log', 'restart', 'set')} | {('shareos.appsys', m) for m in ('info', 'processes', 'kill')} | {('shareos.appnet', 'allowed')} | {('shareos.apptuya', 'allowed')} | {('shareos.appnotify', m) for m in ('send', 'clear')} | {('shareos.appvault', m) for m in ('status', 'unlock', 'lock', 'set')} | {('shareos.appdocker', m) for m in ('hosts', 'host_set', 'host_del', 'target')}
+INTERNAL = {('shareos.widget', 'status')} | {('shareos.appfs', m) for m in ('roots', 'list', 'mkdir', 'rename', 'move', 'delete', 'job', 'open', 'grant_app')} | {('shareos.apptorrent', m) for m in ('session', 'remote_session', 'remote_get', 'remote_set', 'path', 'watch', 'port')} | {('shareos.appsyncthing', m) for m in ('session', 'path', 'restart')} | {('shareos.appmedia', m) for m in ('probe', 'start', 'jobs', 'cancel', 'remove')} | {('shareos.appvpn', m) for m in ('list', 'status', 'log', 'disconnect', 'import', 'set', 'remove', 'connect', 'server_status', 'server_log', 'server_set', 'device_add', 'device_profile', 'device_remove')} | {('shareos.appstatus', m) for m in ('set', 'clear')} | {('shareos.apptailscale', m) for m in ('status', 'log', 'up', 'login', 'down', 'logout', 'ping')} | {('shareos.appautobrr', m) for m in ('status', 'log', 'start', 'set', 'password', 'api', 'accounts')} | {('shareos.appzabbix', m) for m in ('status', 'log', 'restart', 'set')} | {('shareos.appsys', m) for m in ('info', 'processes', 'kill')} | {('shareos.appnet', 'allowed')} | {('shareos.apptuya', 'allowed')} | {('shareos.appnotify', m) for m in ('send', 'clear')} | {('shareos.appvault', m) for m in ('status', 'unlock', 'lock', 'set')} | {('shareos.appdocker', m) for m in ('hosts', 'host_set', 'host_del', 'target')}
 
 objs, cur = {}, None
 for line in open(UC, encoding='utf-8'):
@@ -26,9 +28,11 @@ for line in open(UC, encoding='utf-8'):
     if re.match(r'^\t\},?$', line):
         cur = None
 
-granted = {}
-for group in json.load(open(ACL, encoding='utf-8')).values():
+granted, direct = {}, []
+for name, group in json.load(open(ACL, encoding='utf-8')).items():
     for rw in ('read', 'write'):
+        if 'uci' in group.get(rw, {}) or 'uci' in group.get(rw, {}).get('ubus', {}):
+            direct.append(f'{name} ({rw})')
         for obj, methods in group.get(rw, {}).get('ubus', {}).items():
             granted.setdefault(obj, set()).update(methods)
 
@@ -42,4 +46,6 @@ if bad:
     print('methods without ACL (web sessions get "access denied"):', ', '.join(bad))
 if unknown:
     print('ACL grants methods that do not exist:', ', '.join(unknown))
-sys.exit(1 if bad or unknown else 0)
+if direct:
+    print('groups with direct access to the settings (uci):', ', '.join(direct))
+sys.exit(1 if bad or unknown or direct else 0)

@@ -1635,7 +1635,29 @@
 		"Check: waiting": "الفحص: في الانتظار",
 		"shared inbox · no token": "صندوق وارد مشترك · بلا رمز",
 		"The Let's Encrypt certificate could not be fetched.": "تعذّر جلب شهادة Let's Encrypt.",
-		"Checked once a minute": "يُفحص مرة كل دقيقة"
+		"Checked once a minute": "يُفحص مرة كل دقيقة",
+		"Time of the box": "وقت الجهاز",
+		"no board control": "لا يوجد تحكم بالجهاز",
+		"board control not running": "التحكم بالجهاز لا يعمل",
+		"No temperature reading – the fan runs at full speed.": "لا توجد قراءة لدرجة الحرارة – المروحة تعمل بأقصى سرعة.",
+		"The fan control of the box is not running.": "التحكم بمروحة الجهاز لا يعمل.",
+		"zabbix_agentd, passive mode": "zabbix_agentd، الوضع السلبي",
+		"zabbix_agentd, active and passive mode": "zabbix_agentd، الوضعان النشط والسلبي",
+		"SMART values of a disk of this volume": "قيم SMART لأحد أقراص هذا المجلد",
+		"could not be set at the last sync": "تعذّر ضبطها عند آخر مزامنة",
+		"Removes all settings and installed packages from flash and reboots. The system and firmware version stay. Afterwards the box has no password: press the USB button on its front, then choose a new one in the web interface.": "يزيل جميع الإعدادات والحزم المثبتة من الذاكرة ثم يعيد التشغيل. يبقى النظام وإصدار البرنامج الثابت. بعد ذلك لا تكون للجهاز كلمة مرور: اضغط زر USB في الواجهة الأمامية ثم اختر كلمة مرور جديدة في واجهة الويب.",
+		"All settings and installed packages are erased, then the box reboots. Afterwards it has no password: press the USB button on its front, then choose a new one.": "تُمحى جميع الإعدادات والحزم المثبتة ثم يُعاد تشغيل الجهاز. بعد ذلك لا تكون له كلمة مرور: اضغط زر USB في الواجهة الأمامية ثم اختر كلمة مرور جديدة.",
+		"Credentials stay on the box, readable for root only (passwords obscured by rclone, not encrypted).": "تبقى بيانات الاعتماد على الجهاز ولا يقرؤها إلا root (كلمات المرور مموّهة بواسطة rclone وليست مشفّرة).",
+		"No messages.": "لا توجد رسائل.",
+		"Every 10 minutes the box checks RAID, volumes (mounted, how full), temperature, SMART values (read again every 6 hours; a sleeping disk is not woken up) and updates; failed cloud jobs, app tasks and storage jobs report at once. Repeated messages are counted and sent again at most once a day.": "كل 10 دقائق يفحص الجهاز RAID والمجلدات (موصولة، نسبة الامتلاء) ودرجة الحرارة وقيم SMART (تُقرأ من جديد كل 6 ساعات؛ ولا يُوقَظ قرص نائم) والتحديثات؛ أما مهام السحابة ومهام التطبيقات ومهام التخزين الفاشلة فتُبلَّغ فورًا. تُحصى الرسائل المتكررة ولا تُرسل مجددًا أكثر من مرة في اليوم.",
+		"some files vanished while copying": "اختفت بعض الملفات أثناء النسخ",
+		"unknown": "غير معروف",
+		"ShareOS was updated – loading the new interface …": "تم تحديث ShareOS – جارٍ تحميل الواجهة الجديدة …",
+		"This takes a while – it goes on in the background …": "يستغرق هذا بعض الوقت – يستمر في الخلفية …",
+		"To learn its public IPv4 address, the box asks api.ipify.org (ipv4.icanhazip.com if that does not answer).": "لمعرفة عنوان IPv4 العام، يسأل الجهاز api.ipify.org ‏(ipv4.icanhazip.com إذا لم يُجب).",
+		"The password needs at least 8 characters.": "تحتاج كلمة المرور إلى 8 أحرف على الأقل.",
+		"New password (at least 8 characters). Used for shares and – depending on the role – for the web interface.": "كلمة مرور جديدة (8 أحرف على الأقل). للمشاركات و– حسب الدور – لواجهة الويب.",
+		"Applies to the web interface and SSH. At least 8 characters.": "تسري على واجهة الويب وSSH. 8 أحرف على الأقل."
 	},
 	"patterns": [
 		[
@@ -1795,6 +1817,10 @@
 			"حذف حالة $1؟ تبقى اللقطات الأخرى كاملة."
 		],
 		[
+			"^Schedule saved, but the wake-up alarm could not be set: (.*)$",
+			"تم حفظ الجدول، لكن تعذّر ضبط منبّه التشغيل: $1"
+		],
+		[
 			"^Everything on (.+) is erased\\. Afterwards it is a (.+) drive “(.+)”\\.$",
 			"يُمسح كل شيء على $1. بعدها يصبح قرص $2 باسم «$3»."
 		],
@@ -1867,6 +1893,10 @@
 			"وفق الجدول يعمل مجدداً في $1."
 		],
 		[
+			"^Fan stops below (\\d+) °C, full from (\\d+) °C$",
+			"تتوقف المروحة تحت $1 °م، وأقصى سرعة من $2 °م"
+		],
+		[
 			"^(.+) – can be restored from the trash\\.$",
 			"$1 – يمكن استعادته من السلة."
 		],
@@ -1913,6 +1943,10 @@
 		[
 			"^personal inbox of (.+) · no token$",
 			"صندوق الوارد الشخصي لـ $1 · بلا رمز"
+		],
+		[
+			"^Fan always on, full from (\\d+) °C$",
+			"المروحة تعمل دائمًا، وأقصى سرعة من $1 °م"
 		],
 		[
 			"^Share: (\\d+) file\\(s\\) not saved – (.*)$",
@@ -2143,6 +2177,10 @@
 			"تمت إزالة صندوق الوارد “$1”."
 		],
 		[
+			"^(\\S+): did not restart(.*)$",
+			"$1: لم تتم إعادة التشغيل$2"
+		],
+		[
 			"^planned · phase (\\d)$",
 			"مخطط · المرحلة $1"
 		],
@@ -2259,6 +2297,10 @@
 			"ملف البرنامج الثابت: $1"
 		],
 		[
+			"^(\\S+): did not start(.*)$",
+			"$1: لم يبدأ$2"
+		],
+		[
 			"^(\\d+) % of my limit$",
 			"$1 % من حدّي"
 		],
@@ -2295,12 +2337,20 @@
 			"خادم الوسائط: $1"
 		],
 		[
+			"^Login failed: (.*)$",
+			"فشل تسجيل الدخول: $1"
+		],
+		[
 			"^(.+) · visible to (.+)$",
 			"$1 · مرئي لـ $2"
 		],
 		[
 			"^(.*)Linux (\\S+) · Load ([0-9. ]+)$",
 			"$1Linux $2 · الحمل $3"
+		],
+		[
+			"^(\\S+): did not stop(.*)$",
+			"$1: لم يتوقف$2"
 		],
 		[
 			"^Latest · Beta$",
@@ -2313,6 +2363,10 @@
 		[
 			"^Drive (\\d+) % used$",
 			"القرص مستخدم بنسبة $1 %"
+		],
+		[
+			"^\\(step (\\d+) of (\\d+)\\) –$",
+			"(الخطوة $1 من $2) –"
 		],
 		[
 			"^Password for (\\S+)$",
@@ -2333,6 +2387,10 @@
 		[
 			"^Job “(.+)” saved\\.$",
 			"حُفظت المهمة «$1»."
+		],
+		[
+			"^(.+), ports (\\d+) and (\\d+)$",
+			"$1، المنفذان $2 و$3"
 		],
 		[
 			"^Certificate: (.*)$",

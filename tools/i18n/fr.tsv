@@ -2058,3 +2058,34 @@ E1650	boîte partagée · pas de jeton
 P362	boîte personnelle de $1 · pas de jeton
 E1651	Le certificat Let's Encrypt n’a pas pu être obtenu.
 E1652	Vérifié une fois par minute
+E1653	Heure du boîtier
+E1654	pas de contrôle matériel
+E1655	contrôle matériel arrêté
+E1656	Aucune mesure de température – le ventilateur tourne à pleine vitesse.
+E1657	Le contrôle du ventilateur du boîtier ne fonctionne pas.
+P363	Le ventilateur s'arrête sous $1 °C, à fond à partir de $2 °C
+P364	Ventilateur toujours actif, à fond à partir de $1 °C
+P365	$1 : n'a pas démarré$2
+P366	$1 : ne s'est pas arrêté$2
+P367	$1 : n'a pas redémarré$2
+P368	$1, ports $2 et $3
+E1658	zabbix_agentd, mode passif
+E1659	zabbix_agentd, modes actif et passif
+E1660	Valeurs SMART d'un disque de ce volume
+P369	(étape $1 sur $2) –
+E1661	n'a pas pu être réglée lors de la dernière synchronisation
+E1662	Supprime tous les réglages et paquets installés de la mémoire flash, puis redémarre. Le système et la version du firmware restent. Ensuite le boîtier n'a plus de mot de passe : appuyez sur le bouton USB en façade, puis choisissez-en un nouveau dans l'interface web.
+E1663	Tous les réglages et paquets installés sont effacés, puis le boîtier redémarre. Ensuite il n'a plus de mot de passe : appuyez sur le bouton USB en façade, puis choisissez-en un nouveau.
+E1664	Les identifiants restent sur le boîtier, lisibles uniquement par root (mots de passe masqués par rclone, non chiffrés).
+E1665	Aucun message.
+E1666	Toutes les 10 minutes, le boîtier vérifie le RAID, les volumes (montés, taux de remplissage), la température, les valeurs SMART (relues toutes les 6 heures ; un disque en veille n'est pas réveillé) et les mises à jour ; les tâches cloud, tâches d'applications et tâches de stockage en échec sont signalées immédiatement. Les messages répétés sont comptés et renvoyés au plus une fois par jour.
+P370	Échec de la connexion : $1
+E1667	certains fichiers ont disparu pendant la copie
+E1668	inconnu
+P371	Planification enregistrée, mais l'alarme de réveil n'a pas pu être réglée : $1
+E1669	ShareOS a été mis à jour – chargement de la nouvelle interface …
+E1670	Cela prend un moment – l'opération continue en arrière-plan …
+E1671	Pour connaître son adresse IPv4 publique, le boîtier interroge api.ipify.org (ipv4.icanhazip.com s’il ne répond pas).
+E1672	Le mot de passe doit comporter au moins 8 caractères.
+E1673	Nouveau mot de passe (au moins 8 caractères). Sert pour les partages et – selon le rôle – pour l'interface web.
+E1674	Vaut pour l'interface web et SSH. Au moins 8 caractères.

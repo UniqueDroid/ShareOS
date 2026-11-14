@@ -14,14 +14,23 @@
 # The curve comes from UCI shareos.fan (presets or custom temperatures) and is
 # re-read every cycle, so changes apply within seconds.
 #
+# A reading older than MAX_AGE seconds is not used (the MCU or the sensor does
+# not answer any more): after MISS_MAX cycles without a fresh value the fan
+# goes to full speed until readings come back. The web interface and
+# shareos-notify use the same age limit.
+#
 
 . "${SHAREOS_BOARD_LIB:-/usr/lib/shareos/board.sh}"
 board_detect
 R=${SHAREOS_ROOT:-}          # tests: fake root; SHAREOS_BOARD_ONCE=1: one cycle
 
+PRESETS=${SHAREOS_BOARD_LIB:-/usr/lib/shareos/board.sh}; PRESETS=${PRESETS%/*}/fan-presets
 OFF=0; HALF=100; FULL=255
+MAX_AGE=90
+MISS_MAX=${SHAREOS_BOARD_MISS_MAX:-6}
 armed=0
 state=half
+misses=0
 
 # --- kernel sensors (hwmon) ---
 hwmon() {   # name of the hwmon device -> its folder
@@ -56,6 +65,9 @@ read_temp() {
 		mcu-temp)
 			v=$(mcu_temp) && echo "$v" > $R/tmp/sys/temp1_input ;;
 	esac
+	# only a value written in the last MAX_AGE seconds counts
+	m=$(stat -c %Y $R/tmp/sys/temp1_input 2>/dev/null) || return 1
+	[ $(($(date +%s) - m)) -le $MAX_AGE ] || return 1
 	cat $R/tmp/sys/temp1_input 2>/dev/null
 }
 
@@ -65,21 +77,26 @@ read_button() {
 	gpioget --numeric -c "${BOARD_POWER_BUTTON%%:*}" "${BOARD_POWER_BUTTON#*:}" 2>/dev/null
 }
 
+# "off full half" (°C) of a preset
+preset_curve() {
+	awk -v p="$1" '$1 == p && $2 ~ /^[0-9]+$/ && $3 ~ /^[0-9]+$/ && $4 ~ /^[0-9]+$/ {print $2, $3, $4; exit}' "$PRESETS" 2>/dev/null
+}
+
 # sets OFF_T FULL_T HALF_T (millidegrees; OFF_T=0 means never stop)
 read_curve() {
 	p=$(uci -q get shareos.fan.preset || echo balanced)
-	case "$p" in
-		quiet)  OFF_T=40000; FULL_T=55000; HALF_T=50000 ;;
-		cool)   OFF_T=0;     FULL_T=45000; HALF_T=42000 ;;
-		custom)
-			o=$(uci -q get shareos.fan.off_temp || echo 0)
-			f=$(uci -q get shareos.fan.full_temp || echo 50)
-			h=$(uci -q get shareos.fan.half_temp || echo 45)
-			OFF_T=$((o * 1000)); FULL_T=$((f * 1000)); HALF_T=$((h * 1000))
-			[ $HALF_T -lt $FULL_T ] || HALF_T=$((FULL_T - 3000))
-			;;
-		*)      OFF_T=0;     FULL_T=50000; HALF_T=45000 ;;
-	esac
+	if [ "$p" = custom ]; then
+		o=$(uci -q get shareos.fan.off_temp || echo 0)
+		f=$(uci -q get shareos.fan.full_temp || echo 50)
+		h=$(uci -q get shareos.fan.half_temp || echo 45)
+	else
+		# the presets are defined in one file (the web interface reads it too);
+		# an unknown name or a missing file: the fan never stops
+		c=$(preset_curve "$p"); [ -n "$c" ] || c=$(preset_curve balanced); [ -n "$c" ] || c="0 50 45"
+		o=${c%% *}; h=${c##* }; f=${c#* }; f=${f% *}
+	fi
+	OFF_T=$((o * 1000)); FULL_T=$((f * 1000)); HALF_T=$((h * 1000))
+	[ $HALF_T -lt $FULL_T ] || HALF_T=$((FULL_T - 3000))
 }
 
 set_fan() {
@@ -88,7 +105,7 @@ set_fan() {
 	echo $v > $R/tmp/sys/pwm1
 	# gpio-fan: the kernel picks the nearest speed of the box's speed map
 	[ -n "$FAN_HW" ] && echo $v > "$FAN_HW/pwm1" 2>/dev/null
-	logger -t shareos-board "temperature ${t}m°C, fan $1"
+	logger -t shareos-board "temperature ${t:-unknown }m°C, fan $1"
 	state=$1
 }
 
@@ -98,8 +115,17 @@ while true; do
 	read_curve
 	t=$(read_temp)
 	case "$t" in
-		''|*[!0-9]*) ;;
+		''|*[!0-9]*)
+			# no fresh reading: after a while cool as much as possible
+			t=
+			misses=$((misses + 1))
+			if [ $misses -eq "$MISS_MAX" ]; then
+				logger -t shareos-board "no temperature reading for $MISS_MAX cycles - fan to full speed"
+				set_fan full
+			fi
+			;;
 		*)
+			misses=0
 			if [ "$t" -ge "$FULL_T" ]; then
 				set_fan full
 			elif [ "$state" = full ] && [ "$t" -gt "$HALF_T" ]; then
@@ -126,9 +152,15 @@ while true; do
 		if [ "$b" = 1 ]; then
 			armed=1
 		elif [ "$b" = 0 ] && [ $armed = 1 ]; then
-			logger -t shareos-board "power button pressed, powering off"
-			/sbin/poweroff
-			exit 0
+			# not while kernel or system are being written
+			if /usr/sbin/shareos-update busy >/dev/null 2>&1; then
+				logger -t shareos-board "power button ignored: firmware is being written"
+				armed=0
+			else
+				logger -t shareos-board "power button pressed, powering off"
+				/sbin/poweroff
+				exit 0
+			fi
 		fi
 		sleep 0.5
 		i=$((i + 1))

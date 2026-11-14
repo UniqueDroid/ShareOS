@@ -1635,7 +1635,29 @@
 		"Check: waiting": "जाँच: प्रतीक्षा में",
 		"shared inbox · no token": "साझा इनबॉक्स · कोई टोकन नहीं",
 		"The Let's Encrypt certificate could not be fetched.": "Let's Encrypt प्रमाणपत्र प्राप्त नहीं हो सका।",
-		"Checked once a minute": "हर मिनट एक बार जाँचा जाता है"
+		"Checked once a minute": "हर मिनट एक बार जाँचा जाता है",
+		"Time of the box": "बॉक्स का समय",
+		"no board control": "बोर्ड नियंत्रण नहीं",
+		"board control not running": "बोर्ड नियंत्रण नहीं चल रहा",
+		"No temperature reading – the fan runs at full speed.": "तापमान का मान नहीं मिला – पंखा पूरी गति से चल रहा है।",
+		"The fan control of the box is not running.": "बॉक्स का पंखा नियंत्रण नहीं चल रहा है।",
+		"zabbix_agentd, passive mode": "zabbix_agentd, पैसिव मोड",
+		"zabbix_agentd, active and passive mode": "zabbix_agentd, एक्टिव और पैसिव मोड",
+		"SMART values of a disk of this volume": "इस वॉल्यूम की एक डिस्क के SMART मान",
+		"could not be set at the last sync": "पिछले सिंक में सेट नहीं हो सकी",
+		"Removes all settings and installed packages from flash and reboots. The system and firmware version stay. Afterwards the box has no password: press the USB button on its front, then choose a new one in the web interface.": "फ्लैश से सभी सेटिंग और इंस्टॉल किए गए पैकेज हटाकर रीबूट करता है। सिस्टम और फ़र्मवेयर संस्करण बने रहते हैं। इसके बाद बॉक्स का कोई पासवर्ड नहीं रहता: सामने का USB बटन दबाएँ, फिर वेब इंटरफ़ेस में नया पासवर्ड चुनें।",
+		"All settings and installed packages are erased, then the box reboots. Afterwards it has no password: press the USB button on its front, then choose a new one.": "सभी सेटिंग और इंस्टॉल किए गए पैकेज मिटा दिए जाएँगे, फिर बॉक्स रीबूट होगा। इसके बाद इसका कोई पासवर्ड नहीं रहेगा: सामने का USB बटन दबाएँ, फिर नया पासवर्ड चुनें।",
+		"Credentials stay on the box, readable for root only (passwords obscured by rclone, not encrypted).": "क्रेडेंशियल बॉक्स पर ही रहते हैं और केवल root पढ़ सकता है (पासवर्ड rclone द्वारा छिपाए गए हैं, एन्क्रिप्ट नहीं)।",
+		"No messages.": "कोई संदेश नहीं।",
+		"Every 10 minutes the box checks RAID, volumes (mounted, how full), temperature, SMART values (read again every 6 hours; a sleeping disk is not woken up) and updates; failed cloud jobs, app tasks and storage jobs report at once. Repeated messages are counted and sent again at most once a day.": "हर 10 मिनट में बॉक्स RAID, वॉल्यूम (माउंट, कितना भरा), तापमान, SMART मान (हर 6 घंटे में दोबारा पढ़े जाते हैं; सोई हुई डिस्क को जगाया नहीं जाता) और अपडेट जाँचता है; विफल क्लाउड जॉब, ऐप कार्य और स्टोरेज जॉब तुरंत सूचित करते हैं। दोहराए गए संदेश गिने जाते हैं और दिन में अधिकतम एक बार फिर भेजे जाते हैं।",
+		"some files vanished while copying": "कॉपी करते समय कुछ फ़ाइलें गायब हो गईं",
+		"unknown": "अज्ञात",
+		"ShareOS was updated – loading the new interface …": "ShareOS अपडेट हो गया – नया इंटरफ़ेस लोड हो रहा है …",
+		"This takes a while – it goes on in the background …": "इसमें कुछ समय लगेगा – यह पृष्ठभूमि में चलता रहेगा …",
+		"To learn its public IPv4 address, the box asks api.ipify.org (ipv4.icanhazip.com if that does not answer).": "अपना सार्वजनिक IPv4 पता जानने के लिए बॉक्स api.ipify.org से पूछता है (उत्तर न मिलने पर ipv4.icanhazip.com से)।",
+		"The password needs at least 8 characters.": "पासवर्ड में कम से कम 8 अक्षर चाहिए।",
+		"New password (at least 8 characters). Used for shares and – depending on the role – for the web interface.": "नया पासवर्ड (कम से कम 8 अक्षर)। शेयर के लिए और – भूमिका के अनुसार – वेब इंटरफ़ेस के लिए।",
+		"Applies to the web interface and SSH. At least 8 characters.": "वेब इंटरफ़ेस और SSH के लिए। कम से कम 8 अक्षर।"
 	},
 	"patterns": [
 		[
@@ -1795,6 +1817,10 @@
 			"$1 की स्थिति हटाएँ? बाकी स्नैपशॉट पूरे रहेंगे।"
 		],
 		[
+			"^Schedule saved, but the wake-up alarm could not be set: (.*)$",
+			"शेड्यूल सहेजा गया, लेकिन वेक-अप अलार्म सेट नहीं हो सका: $1"
+		],
+		[
 			"^Everything on (.+) is erased\\. Afterwards it is a (.+) drive “(.+)”\\.$",
 			"$1 पर सब कुछ मिट जाता है। उसके बाद यह $2 ड्राइव \"$3\" होगी।"
 		],
@@ -1867,6 +1893,10 @@
 			"शेड्यूल के अनुसार यह $1 को फिर चालू होगा।"
 		],
 		[
+			"^Fan stops below (\\d+) °C, full from (\\d+) °C$",
+			"$1 °C से नीचे पंखा बंद, $2 °C से पूरी गति"
+		],
+		[
 			"^(.+) – can be restored from the trash\\.$",
 			"$1 – रीसायकल बिन से वापस लाया जा सकता है।"
 		],
@@ -1913,6 +1943,10 @@
 		[
 			"^personal inbox of (.+) · no token$",
 			"$1 का निजी इनबॉक्स · कोई टोकन नहीं"
+		],
+		[
+			"^Fan always on, full from (\\d+) °C$",
+			"पंखा हमेशा चालू, $1 °C से पूरी गति"
 		],
 		[
 			"^Share: (\\d+) file\\(s\\) not saved – (.*)$",
@@ -2143,6 +2177,10 @@
 			"इनबॉक्स “$1” हटाया गया।"
 		],
 		[
+			"^(\\S+): did not restart(.*)$",
+			"$1: पुनः शुरू नहीं हुआ$2"
+		],
+		[
 			"^planned · phase (\\d)$",
 			"योजना में · चरण $1"
 		],
@@ -2259,6 +2297,10 @@
 			"फ़र्मवेयर फ़ाइल: $1"
 		],
 		[
+			"^(\\S+): did not start(.*)$",
+			"$1: शुरू नहीं हुआ$2"
+		],
+		[
 			"^(\\d+) % of my limit$",
 			"मेरी सीमा का $1 %"
 		],
@@ -2295,12 +2337,20 @@
 			"मीडिया सर्वर: $1"
 		],
 		[
+			"^Login failed: (.*)$",
+			"लॉगिन विफल: $1"
+		],
+		[
 			"^(.+) · visible to (.+)$",
 			"$1 · किसे दिखे: $2"
 		],
 		[
 			"^(.*)Linux (\\S+) · Load ([0-9. ]+)$",
 			"$1Linux $2 · लोड $3"
+		],
+		[
+			"^(\\S+): did not stop(.*)$",
+			"$1: बंद नहीं हुआ$2"
 		],
 		[
 			"^Latest · Beta$",
@@ -2313,6 +2363,10 @@
 		[
 			"^Drive (\\d+) % used$",
 			"ड्राइव $1 % भरी"
+		],
+		[
+			"^\\(step (\\d+) of (\\d+)\\) –$",
+			"(चरण $1 / $2) –"
 		],
 		[
 			"^Password for (\\S+)$",
@@ -2333,6 +2387,10 @@
 		[
 			"^Job “(.+)” saved\\.$",
 			"काम „$1“ सहेजा गया।"
+		],
+		[
+			"^(.+), ports (\\d+) and (\\d+)$",
+			"$1, पोर्ट $2 और $3"
 		],
 		[
 			"^Certificate: (.*)$",

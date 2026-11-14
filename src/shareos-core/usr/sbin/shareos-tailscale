@@ -24,6 +24,10 @@
 import { readfile, writefile, unlink, stat, popen, mkdir } from 'fs';
 import { cursor } from 'uci';
 
+// JSON text -> value; null when the text is not JSON (never an exception:
+// a damaged file or a tool that printed an error must not end the call)
+function jparse(s) { try { return json(s); } catch (e) { return null; } }
+
 const BIN = '/opt/shareos/bin/tailscaled';
 const STATE = '/etc/shareos/tailscale';
 const RUN = '/tmp/shareos-tailscale';
@@ -42,7 +46,7 @@ function sh(cmd) {
 }
 function out(o) { print(sprintf('%J\n', o)); }
 function die(msg) { out({ error: msg }); exit(1); }
-function stdin_json() { let j = json(readfile('/dev/stdin') ?? 'null'); return type(j) == 'object' ? j : {}; }
+function stdin_json() { let j = jparse(readfile('/dev/stdin') ?? 'null'); return type(j) == 'object' ? j : {}; }
 function installed() { return stat(BIN)?.type == 'file'; }
 function hostname() { return trim(readfile('/proc/sys/kernel/hostname') ?? 'shareos'); }
 
@@ -96,7 +100,9 @@ function status() {
 		state: 'Stopped', auth_url: null, self: null, tailnet: null, peers: [], version: null };
 	if (!st.running) return st;
 	let r = cli([ 'status', '--json' ]);
-	let j = json(trim(r.out) || 'null');
+	// while tailscaled starts its answer is no JSON yet
+	let j = null;
+	try { j = json(trim(r.out) || 'null'); } catch (e) { }
 	if (type(j) != 'object') { st.state = 'Starting'; return st; }
 	st.state = j.BackendState ?? 'NoState';
 	st.version = j.Version ? split(j.Version, '-')[0] : null;
@@ -119,9 +125,18 @@ function up(reauth) {
 	start();
 	set_enabled(true);
 	let args = [ 'up', '--reset', '--netfilter-mode=off', '--accept-dns=false', '--hostname=' + hostname() ];
-	if (a.authkey) push(args, '--auth-key=' + a.authkey);
+	// the key goes in through a file only root can read ("file:" is tailscale's
+	// own way), not onto the command line (ps); removed once "up" has ended
+	let kf = null;
+	if (a.authkey) {
+		kf = RUN + '/.authkey';
+		sh('mkdir -p ' + shq(RUN) + ' && umask 077 && rm -f ' + shq(kf) + ' && : > ' + shq(kf));
+		writefile(kf, a.authkey + '\n');
+		push(args, '--auth-key=file:' + kf);
+	}
 	if (reauth) push(args, '--force-reauth');
 	let cmd = 'TS_BE_CLI=1 ' + shq(BIN) + ' --socket=' + shq(SOCK) + ' ' + join(' ', map(args, shq));
+	if (kf) cmd += '; rm -f ' + shq(kf);
 	sh('(timeout 600 sh -c ' + shq(cmd) + ' >>' + shq(LOG) + ' 2>&1 &) </dev/null >/dev/null 2>&1');
 	// at most about 15 s (the web interface waits for the answer): the app polls
 	// status afterwards until the link or the connection is there
@@ -157,7 +172,8 @@ case 'down': {
 }
 case 'logout': {
 	if (!pid()) die('Tailscale is not running');
-	cli([ 'logout' ]);
+	let r = cli([ 'logout' ]);
+	if (r.rc != 0) die(trim(r.out) || 'failed');
 	set_enabled(false);
 	out(status());
 	break;

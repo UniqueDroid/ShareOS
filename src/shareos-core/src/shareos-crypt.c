@@ -24,6 +24,7 @@
 #include <mbedtls/platform_util.h>
 
 #define ITERATIONS 100000
+#define ITERATIONS_MAX (10 * ITERATIONS)
 #define MAX_INPUT (8 * 1024 * 1024)
 
 static unsigned char *read_all(size_t *len)
@@ -137,7 +138,9 @@ int main(int argc, char **argv)
 			goto done;
 		}
 		iter = (unsigned)data[4] << 24 | data[5] << 16 | data[6] << 8 | data[7];
-		if (iter < 1000 || iter > 10000000) {
+		/* the count comes from the file: a prepared backup must not keep
+		   the box (and rpcd, which waits for this) busy for minutes */
+		if (iter < 1000 || iter > ITERATIONS_MAX) {
 			rc = 2;
 			goto done;
 		}

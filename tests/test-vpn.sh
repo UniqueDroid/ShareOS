@@ -149,7 +149,7 @@ check "the device reaches the box through the tunnel" "run 'ping -c 2 -W 2 10.77
 i=0; while ! sv server_status | js "d['online']==1" && [ $i -lt 40 ]; do sleep 1; i=$((i + 1)); done
 check "server status: the device is online with its tunnel address" "sv server_status | js \"[x for x in d['devices'] if x['name']=='handy'][0]['online'] and [x for x in d['devices'] if x['name']=='handy'][0]['ip'].startswith('10.77.0.')\""
 sleep 31
-check "header chip: VPN server with one device" "chips | js \"[c for c in d['chips'] if c['id']=='svc:vpnserver'][0]['detail']=='1 Gerät'\""
+check "header chip: VPN server with one device" "chips | js \"[c for c in d['chips'] if c['id']=='svc:vpnserver'][0]['detail']=='1 device'\""
 check "server: profile can be fetched again" "sv device_profile '{\"name\":\"handy\"}' | js \"'BEGIN' in d['profile']\""
 sv device_remove '{"name":"handy"}' >/dev/null
 run "kill \$(cat /tmp/handy.pid)" >/dev/null 2>&1; sleep 1; : > $R/tmp/handy.log

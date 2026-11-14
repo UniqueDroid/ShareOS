@@ -57,8 +57,9 @@ a file).
 **If the installation fails** (no stick, no network, broken package), the box
 stays in **rescue mode**: the orange USB LED blinks slowly. Copy the
 `.sysupgrade.tar` to a USB stick, plug it in and switch the box off and on.
-The reason is in `/tmp/firstinstall.err` (`ssh root@<IP>`, password
-`shareos`).
+The reason is in `/tmp/firstinstall.err`: press the **USB button** on the
+front (the LED blinks fast, SSH is open for 30 minutes), then
+`ssh root@<IP>`, password `shareos`.
 
 ## ShareOS → Alt-F
 

@@ -89,15 +89,15 @@ def info():
         'time': int(time.time()), 'uptime': up, 'load': [0.42, 0.38, 0.35],
         'cpu': {'total': int(up * 100), 'idle': int(up * 85)},
         'memory': {'memtotal': 253092 * 1024, 'memavailable': 160000 * 1024},
-        'temperature': 41000, 'fan_pwm': 100,
+        'temperature': 41000, 'fan_pwm': 100, 'board_control': {'control': 'mcu', 'running': True, 'sensor': True},
         'network': {'eth0': {'ipv4': {'address': '10.241.1.106', 'prefix': 24}, 'gateway': '10.241.1.1', 'dns': ['10.243.1.100'],
                              'speed': 1000, 'mac': 'c4:a8:1d:81:f3:c2', 'rx_bytes': int(up * 2_000_000), 'tx_bytes': int(up * 150_000)}},
         'filesystems': [
             {'source': 'ubi0:rootfs_data', 'mount': '/overlay', 'size': 46 << 20, 'used': 3 << 20, 'avail': 43 << 20},
             {'source': '/dev/ubiblock0_0', 'mount': '/rom', 'size': 9 << 20, 'used': 9 << 20, 'avail': 0},
             {'source': 'tmpfs', 'mount': '/tmp', 'size': 123 << 20, 'used': 1 << 20, 'avail': 122 << 20}],
-        'disks': [{'name': 'sda', 'model': 'WDC WD40EFPX', 'size': 4000787030016, 'removable': False, 'usb': False, 'standby': False},
-                  {'name': 'sdb', 'model': 'WDC WD40EFPX', 'size': 4000787030016, 'removable': False, 'usb': False, 'standby': True}]}
+        'disks': [{'name': 'sda', 'model': 'WDC WD40EFPX', 'size': 4000787030016, 'removable': False, 'usb': False, 'standby': False, 'smart': 'good'},
+                  {'name': 'sdb', 'model': 'WDC WD40EFPX', 'size': 4000787030016, 'removable': False, 'usb': False, 'standby': True, 'smart': 'good'}]}
 
 
 def storage():
@@ -820,7 +820,9 @@ def call(obj, method, args):
         if method == 'set_led':
             STATE['led'].update({k: v for k, v in args.items() if v})
         return {'fan': STATE['fan'], 'led': STATE['led'], 'temperature': 41000, 'fan_pwm': 100,
-                'presets': {'quiet': {'off_temp': 40, 'full_temp': 55, 'half_temp': 50}}}
+                'presets': {'quiet': {'off_temp': 40, 'full_temp': 55, 'half_temp': 50}, 'balanced': {'off_temp': 0, 'full_temp': 50, 'half_temp': 45},
+                            'cool': {'off_temp': 0, 'full_temp': 45, 'half_temp': 42}},
+                'board_control': {'control': 'mcu', 'running': True, 'sensor': True}}
     if obj == 'shareos.printer':
         pr = STATE.setdefault('printer', {'installed': True, 'enabled': False, 'mode': 'auto', 'ippusb': False, 'hostname': 'skynet-nas', 'printers': [
             {'id': '03f0:5c11', 'ipp': True, 'lp': 'lp0', 'via': 'ipp-usb', 'port': None, 'maker': 'HP', 'model': 'Smart Tank 5100 series'},
@@ -981,6 +983,8 @@ def call(obj, method, args):
     if obj == 'shareos.storage':
         if method == 'status':
             return storage()
+        if method == 'volumes':
+            return {'volumes': storage()['volumes'], 'apps': storage().get('apps')}
         if method == 'smart_test':
             sm = SMART.get(args.get('disk'))
             if not sm:
@@ -1011,6 +1015,11 @@ def call(obj, method, args):
             STATE['repair_t'] = time.time()
         return {'ok': True}
     if obj == 'shareos.update':
+        if method == 'set_channel':
+            if args.get('channel') not in ('stable', 'beta'):
+                return {'error': 'invalid channel'}
+            STATE['channel'] = args['channel']
+            return {'ok': True, 'channel': STATE['channel']}
         if method == 'apply':
             STATE['apply_t'] = time.time()
             return {'started': True}
@@ -1055,12 +1064,6 @@ def call(obj, method, args):
         if STATE.get('acked'):
             del r['last_upgrade']
         return r
-    if obj == 'uci':
-        if method == 'get':
-            return {'values': {}}
-        if method == 'set' and args.get('section') == 'update':
-            STATE['channel'] = args['values'].get('channel', STATE['channel'])
-        return {}
     return 3
 
 

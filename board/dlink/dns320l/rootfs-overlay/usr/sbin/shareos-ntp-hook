@@ -3,15 +3,19 @@
 mkdir -p /tmp/shareos-ntp
 case "$1" in
 	step|stratum)
+		# the battery clock: set from the synced time, and noted whether that
+		# worked (/tmp/shareos-ntp/rtc: "ok" or "failed") for the Time page
+		rtc=
 		if [ "$(date +%Y)" -ge 2025 ]; then
 			# the RTC of this box: the MCU (dns320l-daemon) or the kernel's
 			if grep -q '^BOARD_RTC="mcu"' /tmp/sys/board.env 2>/dev/null; then
-				/usr/sbin/dns320l-daemon -x systohc >/dev/null 2>&1
+				/usr/sbin/dns320l-daemon -x systohc >/dev/null 2>&1 && rtc=ok || rtc=failed
 			elif [ -e /dev/rtc0 ]; then
-				hwclock -w -u 2>/dev/null
+				hwclock -w -u 2>/dev/null && rtc=ok || rtc=failed
 			fi
 		fi
-		logger -t ntpd "clock $1, RTC updated: $(date '+%F %T')"
+		[ -n "$rtc" ] && echo "$rtc" > /tmp/shareos-ntp/rtc
+		logger -t ntpd "clock $1, battery clock: ${rtc:-not set}, $(date '+%F %T')"
 		echo "$(date +%s) $1" > /tmp/shareos-ntp/last
 		;;
 	periodic)

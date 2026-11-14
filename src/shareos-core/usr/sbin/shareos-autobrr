@@ -25,8 +25,12 @@
 // hand-over folder /mnt/<apps>/.shareos/autobrr-drop, which that account's
 // Transmission watches (shareos-transmission). Go is held to a memory limit.
 //
-import { readfile, writefile, unlink, stat, popen, mkdir } from 'fs';
+import { readfile, writefile, unlink, stat, popen, mkdir, rename } from 'fs';
 import { cursor } from 'uci';
+
+// JSON text -> value; null when the text is not JSON (never an exception:
+// a damaged file or a tool that printed an error must not end the call)
+function jparse(s) { try { return json(s); } catch (e) { return null; } }
 
 const BIN = '/opt/shareos/bin/autobrr';
 const SECRET = '/etc/shareos/autobrr';           // admin password, API key (root only)
@@ -49,7 +53,7 @@ function sh(cmd) {
 }
 function out(o) { print(sprintf('%J\n', o)); }
 function die(msg) { out({ error: msg }); exit(1); }
-function stdin_json() { let j = json(readfile('/dev/stdin') ?? 'null'); return type(j) == 'object' ? j : {}; }
+function stdin_json() { let j = jparse(readfile('/dev/stdin') ?? 'null'); return type(j) == 'object' ? j : {}; }
 function installed() { return stat(BIN)?.type == 'file'; }
 function token(n) {
 	let r = readfile('/dev/urandom', n) ?? '', t = '';
@@ -74,7 +78,7 @@ function apps_base() {
 function data_dir() { let b = apps_base(); return b ? b + '/autobrr' : null; }
 function drop_dir() { let b = apps_base(); return b ? b + '/autobrr-drop' : null; }
 
-function secret() { let j = json(readfile(SECRET + '/secret.json') ?? 'null'); return type(j) == 'object' ? j : {}; }
+function secret() { let j = jparse(readfile(SECRET + '/secret.json') ?? 'null'); return type(j) == 'object' ? j : {}; }
 function secret_set(s) {
 	sh('mkdir -p ' + SECRET + ' && chmod 700 ' + SECRET + ' && umask 077 && : > ' + SECRET + '/secret.json');
 	writefile(SECRET + '/secret.json', sprintf('%J', s));
@@ -94,9 +98,16 @@ function account_ok(u) {
 // curl to autobrr's API; key: the API key (else a cookie jar for the sign-up)
 function call(method, path, body, key, jar) {
 	let args = [ 'curl', '-s', '-m', '20', '-X', method, '-o', '-', '-w', '\n%{http_code}', '-H', 'Content-Type: application/json' ];
-	if (key) push(args, '-H', 'X-API-Token: ' + key);
+	// the key goes through a curl config only root can read, not onto the
+	// command line (every local user could read it in the process list)
+	let f = null, kf = null;
+	if (key) {
+		kf = RUN + '/.key.' + substr(token(6), 0, 12);
+		sh('umask 077; : > ' + shq(kf));
+		writefile(kf, 'header = ' + sprintf('%J', 'X-API-Token: ' + key) + '\n');
+		push(args, '-K', kf);
+	}
 	if (jar) push(args, '-b', jar, '-c', jar);
-	let f = null;
 	if (body != null) {
 		f = RUN + '/.req.' + substr(token(6), 0, 12);
 		sh('umask 077; : > ' + shq(f));
@@ -106,6 +117,7 @@ function call(method, path, body, key, jar) {
 	push(args, API + path);
 	let r = sh(join(' ', map(args, shq)));
 	if (f) unlink(f);
+	if (kf) unlink(kf);
 	let i = rindex(r.out, '\n');
 	return { status: i >= 0 ? +substr(r.out, i + 1) : 0, body: i >= 0 ? substr(r.out, 0, i) : r.out };
 }
@@ -126,7 +138,7 @@ function setup() {
 	if (l.status >= 300) { unlink(jar); die('autobrr sign-in failed – was its database set up by hand? Set a new password with "password".'); }
 	let k = call('POST', '/api/keys', { name: 'ShareOS', scopes: [] }, null, jar);
 	unlink(jar);
-	let kj = json(k.body || 'null');
+	let kj = jparse(k.body || 'null');
 	if (k.status >= 300 || !kj?.key) die('autobrr API key failed (' + k.status + ')');
 	s = { password: pw, key: kj.key };
 	secret_set(s);
@@ -143,7 +155,7 @@ function group_add(u) {
 		let m = filter(split(f[3], ','), (x) => x != '');
 		if (index(m, u) < 0) { push(m, u); f[3] = join(',', m); lines[i] = join(':', f); changed = true; }
 	}
-	if (changed) writefile('/etc/group', join('\n', lines));
+	if (changed) { writefile('/etc/group.new', join('\n', lines)); sh('chmod 644 /etc/group.new; sync'); rename('/etc/group.new', '/etc/group'); }
 }
 
 // the account's Transmission watches the hand-over folder (shareos-transmission
@@ -250,8 +262,19 @@ function cmd_api() {
 	// the key of ShareOS and the sign-in stay ShareOS's business
 	if (match(a.path, /^\/api\/(keys|auth)(\/|\?|$)/)) die('not allowed');
 	if (!pid()) die('autobrr is not running');
-	let s = setup();
-	let r = call(m, a.path, a.body, s.key);
+	// the stored key is used as it is; only when autobrr refuses it (or there
+	// is none yet) the sign-up runs – not one more request before every call
+	let s = secret();
+	let r = s.key ? call(m, a.path, a.body, s.key) : null;
+	// no answer at all: autobrr was just (re)started – give it a few seconds
+	for (let i = 0; r && r.status == 0 && i < 10 && pid(); i++) {
+		sleep(500);
+		r = call(m, a.path, a.body, s.key);
+	}
+	if (!r || r.status == 401 || r.status == 403) {
+		s = setup();
+		r = call(m, a.path, a.body, s.key);
+	}
 	let j = null;
 	try { j = json(r.body); } catch (e) { }
 	out({ status: r.status, data: j, text: j == null ? substr(r.body, 0, 65536) : null });

@@ -55,17 +55,17 @@ run "uci set shares.global.smb=0; uci set shares.global.nfs=0; uci commit shares
 # --- shareos-users ------------------------------------------------------------
 o=$(run "shareos-users group-add familie --desc=Familie")
 check "group added" "run 'uci get accounts.familie' | grep -qx group && grep -q '^familie:x:1[0-9][0-9][0-9]:' $R/etc/group"
-o=$(run "echo geheim1 | shareos-users add jan admin --fullname=Jan --groups=familie --home=daten")
+o=$(run "echo geheim-1 | shareos-users add jan admin --fullname=Jan --groups=familie --home=daten")
 check "admin added" "grep -q '^jan:x:1[0-9][0-9][0-9]:100:Jan:/mnt/daten/home/jan:/bin/sh\$' $R/etc/passwd"
 o=$(run "echo anna1234 | shareos-users add anna user --groups=familie --quota=5000")
 check "user added without SSH shell" "grep -q '^anna:.*:/bin/false\$' $R/etc/passwd"
-o=$(run "echo tvtvtv | shareos-users add tv share")
+o=$(run "echo tvtvtv-1 | shareos-users add tv share")
 check "share-only user added" "run 'uci get accounts.tv.role' | grep -qx share"
 o=$(run "echo short | shareos-users add bob share")
-check "short password rejected" "echo \"\$o\" | grep -q '6 characters' && ! grep -q '^bob:' $R/etc/passwd"
-o=$(run "echo geheim1 | shareos-users add root share")
+check "short password rejected" "echo \"\$o\" | grep -q '8 characters' && ! grep -q '^bob:' $R/etc/passwd"
+o=$(run "echo geheim-1 | shareos-users add root share")
 check "reserved name rejected" "echo \"\$o\" | grep -q reserved"
-o=$(run "echo geheim1 | shareos-users add Bad share")
+o=$(run "echo geheim-1 | shareos-users add Bad share")
 check "invalid name rejected" "echo \"\$o\" | grep -q 'invalid name'"
 check "group members written" "grep -qE '^familie:x:[0-9]+:(jan,anna|anna,jan)\$' $R/etc/group"
 check "home folder created, private" "[ -d $R/mnt/daten/home/jan ] && [ \"\$(stat -c %a $R/mnt/daten/home/jan)\" = 700 ]"
@@ -88,7 +88,7 @@ check "user can log in" "[ -n \"\$SID\" ]"
 check "user may check and end the own session" "echo '$L' | js \"sorted(d['acls']['ubus']['session'])==['access','destroy']\""
 check "user session is valid (reload)" "rpc session access '{\"ubus_rpc_session\":\"$SID\",\"scope\":\"ubus\",\"object\":\"session\",\"function\":\"access\"}' | js \"d['access']\""
 check "user has only the own-area ACL" "echo '$L' | js \"'shareos.me' in d['acls']['ubus'] and 'shareos.system' not in d['acls']['ubus']\""
-check "share-only user cannot log in" "! rpc session login '{\"username\":\"tv\",\"password\":\"tvtvtv\"}' | grep -q ubus_rpc_session"
+check "share-only user cannot log in" "! rpc session login '{\"username\":\"tv\",\"password\":\"tvtvtv-1\"}' | grep -q ubus_rpc_session"
 check "bind with a wrong password fails" "rpc shareos.me bind '{\"username\":\"anna\",\"password\":\"nope\",\"ubus_rpc_session\":\"$SID\"}' | grep -q 'login failed'"
 B=$(rpc shareos.me bind "{\"username\":\"anna\",\"password\":\"anna1234\",\"ubus_rpc_session\":\"$SID\"}")
 check "bind returns the own account" "echo '$B' | js \"d['name']=='anna' and d['role']=='user' and d['quota']==5000\""
@@ -98,8 +98,8 @@ check "me: password change needs the old one" "rpc shareos.me passwd '{\"old\":\
 check "me: password changed" "rpc shareos.me passwd '{\"old\":\"anna1234\",\"password\":\"neu12345\",\"ubus_rpc_session\":\"$SID\"}' | js \"d['ok']\" && rpc session login '{\"username\":\"anna\",\"password\":\"neu12345\"}' | grep -q ubus_rpc_session"
 A=$(rpc shareos.accounts list '{}')
 check "accounts list" "echo '$A' | js \"[u['name'] for u in d['users']]==['anna','jan','tv'] and d['groups'][0]['members']==['anna','jan'] or d['groups'][0]['members']==['jan','anna']\""
-check "rpc: add with an invalid role rejected" "rpc shareos.accounts add '{\"name\":\"max\",\"role\":\"boss\",\"password\":\"geheim1\"}' | grep -q 'invalid role'"
-check "rpc: add" "rpc shareos.accounts add '{\"name\":\"max\",\"role\":\"share\",\"password\":\"geheim1\",\"groups\":[\"familie\"]}' | js \"any(u['name']=='max' for u in d['users'])\""
+check "rpc: add with an invalid role rejected" "rpc shareos.accounts add '{\"name\":\"max\",\"role\":\"boss\",\"password\":\"geheim-1\"}' | grep -q 'invalid role'"
+check "rpc: add" "rpc shareos.accounts add '{\"name\":\"max\",\"role\":\"share\",\"password\":\"geheim-1\",\"groups\":[\"familie\"]}' | js \"any(u['name']=='max' for u in d['users'])\""
 check "rpc: unknown group rejected" "rpc shareos.accounts set '{\"name\":\"max\",\"groups\":[\"nope\"]}' | grep -q 'unknown group'"
 
 # --- shares -------------------------------------------------------------------
@@ -227,9 +227,9 @@ run "uci set shareos.ui.lang=fr; uci commit shareos" >/dev/null
 check "share: a new folder gets the name in the language of the box (fr: Partagé)" "st 'c.txt' | js \"d['folder']=='Partagé'\" && [ -d '$R/mnt/daten/home/lisa/Partagé' ]"
 run "uci -q delete shareos.ui.lang; uci commit shareos" >/dev/null
 rm -rf "$R/mnt/daten/home/lisa/Partagé"
-LJ=$(rpc session login '{"username":"jan","password":"geheim1"}')
+LJ=$(rpc session login '{"username":"jan","password":"geheim-1"}')
 SJ=$(echo "$LJ" | python3 -c 'import json,sys; print(json.load(sys.stdin)["ubus_rpc_session"])' 2>/dev/null)
-rpc shareos.me bind "{\"username\":\"jan\",\"password\":\"geheim1\",\"ubus_rpc_session\":\"$SJ\"}" >/dev/null
+rpc shareos.me bind "{\"username\":\"jan\",\"password\":\"geheim-1\",\"ubus_rpc_session\":\"$SJ\"}" >/dev/null
 check "files: admins see whole volumes" "rpc shareos.files list '{\"ubus_rpc_session\":\"$SJ\",\"root\":\"daten\",\"path\":\"\"}' | js \"'home' in [e['name'] for e in d['entries']] and d['free']>0\""
 check "trash: admin switches it off, then delete is direct" "rpc shareos.files trash_config '{\"ubus_rpc_session\":\"$SJ\",\"enabled\":false,\"days\":7}' | js \"d=={'enabled':False,'days':7}\" && run 'uci get shareos.files.trash' | grep -qx 0 && printf x > $R/mnt/daten/home/lisa/off.txt && fs delete '\"root\":\"home\",\"path\":\"\",\"names\":[\"off.txt\"]' | js \"d['ok'] and not d.get('trash')\" && [ ! -e $R/mnt/daten/home/lisa/off.txt ] && rpc shareos.files roots '{\"ubus_rpc_session\":\"$SL\"}' | js \"d['trash']['enabled']==False\""
 check "trash: invalid settings refused, on again" "rpc shareos.files trash_config '{\"ubus_rpc_session\":\"$SJ\",\"enabled\":true,\"days\":999}' | grep -q 'invalid value' && rpc shareos.files trash_config '{\"ubus_rpc_session\":\"$SJ\",\"enabled\":true,\"days\":30}' | js \"d['enabled']\""

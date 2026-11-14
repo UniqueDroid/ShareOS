@@ -4,7 +4,7 @@ PID=/var/run/rpcd.pid
 case "$1" in
 	start)
 		printf "Starting rpcd: "
-		start-stop-daemon -S -q -b -m -p $PID -x /usr/sbin/rpcd -- -s /var/run/ubus/ubus.sock -t 30 \
+		start-stop-daemon -S -q -b -m -p $PID -x /usr/sbin/shareos-supervise -- rpcd /usr/sbin/rpcd -s /var/run/ubus/ubus.sock -t 30 \
 			&& echo "OK" || echo "FAIL"
 		;;
 	stop)

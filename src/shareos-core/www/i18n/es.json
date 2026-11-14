@@ -1635,7 +1635,29 @@
 		"Check: waiting": "Comprobación: en espera",
 		"shared inbox · no token": "bandeja compartida · sin token",
 		"The Let's Encrypt certificate could not be fetched.": "No se pudo obtener el certificado de Let's Encrypt.",
-		"Checked once a minute": "Se comprueba una vez por minuto"
+		"Checked once a minute": "Se comprueba una vez por minuto",
+		"Time of the box": "Hora del equipo",
+		"no board control": "sin control de placa",
+		"board control not running": "el control de placa no funciona",
+		"No temperature reading – the fan runs at full speed.": "Sin lectura de temperatura: el ventilador funciona a máxima velocidad.",
+		"The fan control of the box is not running.": "El control del ventilador del equipo no está funcionando.",
+		"zabbix_agentd, passive mode": "zabbix_agentd, modo pasivo",
+		"zabbix_agentd, active and passive mode": "zabbix_agentd, modo activo y pasivo",
+		"SMART values of a disk of this volume": "Valores SMART de un disco de este volumen",
+		"could not be set at the last sync": "no se pudo ajustar en la última sincronización",
+		"Removes all settings and installed packages from flash and reboots. The system and firmware version stay. Afterwards the box has no password: press the USB button on its front, then choose a new one in the web interface.": "Elimina todos los ajustes y paquetes instalados de la memoria flash y reinicia. El sistema y la versión del firmware se conservan. Después el equipo no tiene contraseña: pulse el botón USB del frontal y elija una nueva en la interfaz web.",
+		"All settings and installed packages are erased, then the box reboots. Afterwards it has no password: press the USB button on its front, then choose a new one.": "Se borran todos los ajustes y paquetes instalados y el equipo se reinicia. Después no tiene contraseña: pulse el botón USB del frontal y elija una nueva.",
+		"Credentials stay on the box, readable for root only (passwords obscured by rclone, not encrypted).": "Las credenciales se quedan en el equipo y solo root puede leerlas (contraseñas ofuscadas por rclone, no cifradas).",
+		"No messages.": "No hay mensajes.",
+		"Every 10 minutes the box checks RAID, volumes (mounted, how full), temperature, SMART values (read again every 6 hours; a sleeping disk is not woken up) and updates; failed cloud jobs, app tasks and storage jobs report at once. Repeated messages are counted and sent again at most once a day.": "Cada 10 minutos el equipo comprueba RAID, volúmenes (montados, ocupación), temperatura, valores SMART (se leen de nuevo cada 6 horas; no se despierta un disco en reposo) y actualizaciones; los trabajos de nube, tareas de apps y trabajos de almacenamiento fallidos avisan al instante. Los mensajes repetidos se cuentan y se reenvían como máximo una vez al día.",
+		"some files vanished while copying": "algunos archivos desaparecieron durante la copia",
+		"unknown": "desconocido",
+		"ShareOS was updated – loading the new interface …": "ShareOS se ha actualizado: cargando la nueva interfaz …",
+		"This takes a while – it goes on in the background …": "Esto tarda un poco: continúa en segundo plano …",
+		"To learn its public IPv4 address, the box asks api.ipify.org (ipv4.icanhazip.com if that does not answer).": "Para conocer su dirección IPv4 pública, la caja pregunta a api.ipify.org (ipv4.icanhazip.com si no responde).",
+		"The password needs at least 8 characters.": "La contraseña necesita al menos 8 caracteres.",
+		"New password (at least 8 characters). Used for shares and – depending on the role – for the web interface.": "Nueva contraseña (al menos 8 caracteres). Sirve para las carpetas compartidas y – según el rol – para la interfaz web.",
+		"Applies to the web interface and SSH. At least 8 characters.": "Vale para la interfaz web y SSH. Al menos 8 caracteres."
 	},
 	"patterns": [
 		[
@@ -1795,6 +1817,10 @@
 			"¿Eliminar el estado del $1? Las demás instantáneas quedan completas."
 		],
 		[
+			"^Schedule saved, but the wake-up alarm could not be set: (.*)$",
+			"Horario guardado, pero no se pudo ajustar la alarma de encendido: $1"
+		],
+		[
 			"^Everything on (.+) is erased\\. Afterwards it is a (.+) drive “(.+)”\\.$",
 			"Todo lo que hay en $1 se borra. Después es una unidad $2 «$3»."
 		],
@@ -1867,6 +1893,10 @@
 			"Según el horario vuelve a encenderse el $1."
 		],
 		[
+			"^Fan stops below (\\d+) °C, full from (\\d+) °C$",
+			"El ventilador se detiene por debajo de $1 °C, al máximo desde $2 °C"
+		],
+		[
 			"^(.+) – can be restored from the trash\\.$",
 			"$1: se puede restaurar desde la papelera."
 		],
@@ -1913,6 +1943,10 @@
 		[
 			"^personal inbox of (.+) · no token$",
 			"bandeja personal de $1 · sin token"
+		],
+		[
+			"^Fan always on, full from (\\d+) °C$",
+			"Ventilador siempre encendido, al máximo desde $1 °C"
 		],
 		[
 			"^Share: (\\d+) file\\(s\\) not saved – (.*)$",
@@ -2143,6 +2177,10 @@
 			"Bandeja «$1» eliminada."
 		],
 		[
+			"^(\\S+): did not restart(.*)$",
+			"$1: no se reinició$2"
+		],
+		[
 			"^planned · phase (\\d)$",
 			"previsto · fase $1"
 		],
@@ -2259,6 +2297,10 @@
 			"Archivo de firmware: $1"
 		],
 		[
+			"^(\\S+): did not start(.*)$",
+			"$1: no se inició$2"
+		],
+		[
 			"^(\\d+) % of my limit$",
 			"$1 % de mi límite"
 		],
@@ -2295,12 +2337,20 @@
 			"Servidor multimedia: $1"
 		],
 		[
+			"^Login failed: (.*)$",
+			"Error al iniciar sesión: $1"
+		],
+		[
 			"^(.+) · visible to (.+)$",
 			"$1 · visible para $2"
 		],
 		[
 			"^(.*)Linux (\\S+) · Load ([0-9. ]+)$",
 			"$1Linux $2 · Carga $3"
+		],
+		[
+			"^(\\S+): did not stop(.*)$",
+			"$1: no se detuvo$2"
 		],
 		[
 			"^Latest · Beta$",
@@ -2313,6 +2363,10 @@
 		[
 			"^Drive (\\d+) % used$",
 			"Unidad al $1 % de uso"
+		],
+		[
+			"^\\(step (\\d+) of (\\d+)\\) –$",
+			"(paso $1 de $2) –"
 		],
 		[
 			"^Password for (\\S+)$",
@@ -2333,6 +2387,10 @@
 		[
 			"^Job “(.+)” saved\\.$",
 			"Tarea «$1» guardada."
+		],
+		[
+			"^(.+), ports (\\d+) and (\\d+)$",
+			"$1, puertos $2 y $3"
 		],
 		[
 			"^Certificate: (.*)$",

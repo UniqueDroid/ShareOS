@@ -2042,3 +2042,34 @@ E1650	gemeinsamer Eingang · kein Token
 P362	persönlicher Eingang von $1 · kein Token
 E1651	Das Let's-Encrypt-Zertifikat konnte nicht geholt werden.
 E1652	Wird einmal pro Minute geprüft
+E1653	Uhrzeit der Box
+E1654	keine Gerätesteuerung
+E1655	Gerätesteuerung läuft nicht
+E1656	Kein Temperaturwert – der Lüfter läuft mit voller Drehzahl.
+E1657	Die Lüftersteuerung der Box läuft nicht.
+P363	Lüfter stoppt unter $1 °C, voll ab $2 °C
+P364	Lüfter läuft immer, voll ab $1 °C
+P365	$1: nicht gestartet$2
+P366	$1: nicht gestoppt$2
+P367	$1: nicht neu gestartet$2
+P368	$1, Ports $2 und $3
+E1658	zabbix_agentd, Passiv-Modus
+E1659	zabbix_agentd, Aktiv- und Passiv-Modus
+E1660	SMART-Werte einer Platte dieses Laufwerks
+P369	(Schritt $1 von $2) –
+E1661	konnte beim letzten Abgleich nicht gestellt werden
+E1662	Entfernt alle Einstellungen und installierten Pakete aus dem Flash und startet neu. System und Firmware-Version bleiben. Danach hat die Box kein Passwort: die USB-Taste an der Front drücken, dann in der Weboberfläche ein neues wählen.
+E1663	Alle Einstellungen und installierten Pakete werden gelöscht, dann startet die Box neu. Danach hat sie kein Passwort: die USB-Taste an der Front drücken, dann ein neues wählen.
+E1664	Zugangsdaten bleiben auf der Box, nur für root lesbar (Passwörter von rclone verschleiert, nicht verschlüsselt).
+E1665	Keine Meldungen.
+E1666	Alle 10 Minuten prüft die Box RAID, Laufwerke (eingehängt, Füllstand), Temperatur, SMART-Werte (alle 6 Stunden neu gelesen; eine schlafende Platte wird nicht geweckt) und Updates; fehlgeschlagene Cloud-Jobs, App-Aufgaben und Speicher-Jobs melden sich sofort. Wiederholte Meldungen werden gezählt und höchstens einmal am Tag erneut gesendet.
+P370	Anmeldung fehlgeschlagen: $1
+E1667	einige Dateien sind während des Kopierens verschwunden
+E1668	unbekannt
+P371	Zeitplan gespeichert, aber der Weckalarm konnte nicht gestellt werden: $1
+E1669	ShareOS wurde aktualisiert – die neue Oberfläche wird geladen …
+E1670	Das dauert etwas – es läuft im Hintergrund weiter …
+E1671	Um ihre öffentliche IPv4-Adresse zu erfahren, fragt die Box api.ipify.org (ipv4.icanhazip.com, falls das nicht antwortet).
+E1672	Das Passwort braucht mindestens 8 Zeichen.
+E1673	Neues Passwort (mindestens 8 Zeichen). Gilt für Freigaben und – je nach Rolle – für die Weboberfläche.
+E1674	Gilt für die Weboberfläche und SSH. Mindestens 8 Zeichen.

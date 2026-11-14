@@ -197,8 +197,14 @@ while (true) {
 		if (value == 1) usb_at = t;
 		else if (usb_at != null) { usb_released(t - usb_at); usb_at = null; }
 	} else if (code == KEY_POWER && value == 1) {
-		log('power button – shutting down');
-		run('/sbin/poweroff');
+		// not while kernel or system are being written (a half-written kernel
+		// does not start)
+		if (system((getenv('SHAREOS_UPDATE') ?? '/usr/sbin/shareos-update') + ' busy >/dev/null 2>&1') == 0)
+			log('power button ignored: firmware is being written');
+		else {
+			log('power button – shutting down');
+			run('/sbin/poweroff');
+		}
 	}
 }
 f.close();

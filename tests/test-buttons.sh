@@ -26,6 +26,7 @@ seqs = {'short': [(100, R, 1), (102.5, R, 0)],
         'factory': [(100, R, 1), (116, R, 0)],
         'usb': [(100, U, 1), (100.2, U, 0)],
         'usb-long': [(100, U, 1), (100.5, U, 2), (103.6, U, 0)],
+        'power': [(100, 0x74, 1), (100.2, 0x74, 0)],
         'release-only': [(100, R, 0)]}
 for n, q in seqs.items():
     open(f'{T}/{n}.ev', 'wb').write(b''.join(ev(*e) + syn(e[0]) for e in q))
@@ -43,6 +44,9 @@ o=$(btn access);  check "reset 5-10 s: access reset" "echo \"\$o\" | grep -qx 'r
 o=$(btn cancel);  check "reset 10-15 s: cancelled" "! echo \"\$o\" | grep -q '^run:' && echo \"\$o\" | grep -q cancelled" "$o"
 o=$(btn factory); check "reset >= 15 s: factory reset" "echo \"\$o\" | grep -qx 'run: /usr/sbin/shareos-factory-reset --yes'" "$o"
 o=$(btn release-only); check "release without press ignored" "[ -z \"\$o\" ]" "$o"
+o=$(SHAREOS_UPDATE=/bin/false btn power); check "power button: shuts down" "echo \"\$o\" | grep -qx 'run: /sbin/poweroff'" "$o"
+printf '#!/bin/sh\n[ "$1" = busy ]\n' > $T/updater; chmod 755 $T/updater
+o=$(SHAREOS_UPDATE=$T/updater btn power); check "power button while firmware is being written: ignored" "! echo \"\$o\" | grep -q '^run:' && echo \"\$o\" | grep -q 'firmware is being written'" "$o"
 o=$(btn usb "$(printf '/dev/sdc1 /mnt/usb-A vfat\n/dev/sdc2 /mnt/usb-B ext4\n/dev/sdd1 /mnt/usb-C exfat')")
 check "USB button ejects every USB disk once" "[ \"\$(echo \"\$o\" | grep -c '^run: /usr/sbin/shareos-usb eject')\" = 2 ] && echo \"\$o\" | grep -q 'eject sdc$' && echo \"\$o\" | grep -q 'eject sdd$'" "$o"
 o=$(btn usb "");  check "USB button without drives: only a log line" "! echo \"\$o\" | grep -q '^run:' && echo \"\$o\" | grep -q 'no USB drive'" "$o"

@@ -95,8 +95,12 @@ function port_of(pl) {
 
 // Syncthing's REST API over the socket
 function api(u, method, path, body) {
-	let args = [ 'curl', '-s', '-m', '20', '-X', method, '-o', '-', '-w', '\n%{http_code}', '--unix-socket', sock_of(u),
-		'-H', 'X-API-Key: ' + trim(readfile(key_of(u)) ?? '') ];
+	// the key goes through a curl config only root can read, not onto the
+	// command line (every local user could read it in the process list)
+	let kf = dir_of(u) + '/.key.' + token(6);
+	sh('umask 077; : > ' + shq(kf));
+	writefile(kf, 'header = ' + sprintf('%J', 'X-API-Key: ' + trim(readfile(key_of(u)) ?? '')) + '\n');
+	let args = [ 'curl', '-s', '-m', '20', '-X', method, '-o', '-', '-w', '\n%{http_code}', '--unix-socket', sock_of(u), '-K', kf ];
 	let f = null;
 	if (body != null) {
 		f = dir_of(u) + '/.req.' + token(6);
@@ -106,6 +110,7 @@ function api(u, method, path, body) {
 	push(args, 'http://localhost' + path);
 	let r = sh(join(' ', map(args, shq)));
 	if (f) unlink(f);
+	unlink(kf);
 	let i = rindex(r.out, '\n');
 	let code = i >= 0 ? +substr(r.out, i + 1) : 0, txt = i >= 0 ? substr(r.out, 0, i) : r.out;
 	let j = null;

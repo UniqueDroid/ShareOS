@@ -86,7 +86,7 @@ Einstellungssicherung.
 | Schlüssel | Wert |
 |---|---|
 | `shareos.box[temperature]` | Temperatur der Box in °C |
-| `shareos.box[fan_rpm]`, `shareos.box[fan_pwm]` | Lüfter (Drehzahl, Stufe 0–255) |
+| `shareos.box[fan_rpm]`, `shareos.box[fan_pwm]` | Lüfter: Nenndrehzahl der eingestellten Stufe (0, 3000 oder 6000 – die Boxen haben keinen Drehzahlsensor, gemessen wird nichts) und Stufe 0–255 |
 | `shareos.box[version]`, `shareos.box[board]` | ShareOS-Version, Modell |
 | `shareos.disk.discovery` | Platten in den Schächten (keine USB-Laufwerke): `{#DISK}`, `{#MODEL}`, `{#SERIAL}` |
 | `shareos.disk[<platte>,<wert>]` | `rating` (0 gut, 1 Achtung, 2 kritisch – wie *Speicher → Gesundheit*), `passed`, `temperature`, `temperature_max`, `reallocated`, `pending`, `uncorrectable`, `crc_errors`, `error_count`, `life_left` (SSD), `power_on_hours`, `power_cycles`, `standby`, `age`, `model`, `serial` |

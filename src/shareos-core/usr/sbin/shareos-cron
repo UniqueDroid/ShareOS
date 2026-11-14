@@ -119,7 +119,10 @@ cmd_sync() {
 		{ echo "$BEGIN"; echo "$lines"; echo "$END"; } >> "$new"
 	fi
 	if ! cmp -s "$new" $TAB; then
-		cat "$new" > $TAB
+		# in one step: a power cut must not leave half a crontab
+		# (the temporary file is in /tmp: copy it beside the crontab first –
+		# not into /etc/crontabs, crond reads every file there)
+		cp "$new" /etc/crontab.shareos.new && chmod 600 /etc/crontab.shareos.new && mv -f /etc/crontab.shareos.new $TAB
 		# busybox crond rereads changed crontabs once a minute; poke it anyway
 		touch /etc/crontabs/cron.update 2>/dev/null
 	fi

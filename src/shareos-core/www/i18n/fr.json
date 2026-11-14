@@ -1635,7 +1635,29 @@
 		"Check: waiting": "Vérification : en attente",
 		"shared inbox · no token": "boîte partagée · pas de jeton",
 		"The Let's Encrypt certificate could not be fetched.": "Le certificat Let's Encrypt n’a pas pu être obtenu.",
-		"Checked once a minute": "Vérifié une fois par minute"
+		"Checked once a minute": "Vérifié une fois par minute",
+		"Time of the box": "Heure du boîtier",
+		"no board control": "pas de contrôle matériel",
+		"board control not running": "contrôle matériel arrêté",
+		"No temperature reading – the fan runs at full speed.": "Aucune mesure de température – le ventilateur tourne à pleine vitesse.",
+		"The fan control of the box is not running.": "Le contrôle du ventilateur du boîtier ne fonctionne pas.",
+		"zabbix_agentd, passive mode": "zabbix_agentd, mode passif",
+		"zabbix_agentd, active and passive mode": "zabbix_agentd, modes actif et passif",
+		"SMART values of a disk of this volume": "Valeurs SMART d'un disque de ce volume",
+		"could not be set at the last sync": "n'a pas pu être réglée lors de la dernière synchronisation",
+		"Removes all settings and installed packages from flash and reboots. The system and firmware version stay. Afterwards the box has no password: press the USB button on its front, then choose a new one in the web interface.": "Supprime tous les réglages et paquets installés de la mémoire flash, puis redémarre. Le système et la version du firmware restent. Ensuite le boîtier n'a plus de mot de passe : appuyez sur le bouton USB en façade, puis choisissez-en un nouveau dans l'interface web.",
+		"All settings and installed packages are erased, then the box reboots. Afterwards it has no password: press the USB button on its front, then choose a new one.": "Tous les réglages et paquets installés sont effacés, puis le boîtier redémarre. Ensuite il n'a plus de mot de passe : appuyez sur le bouton USB en façade, puis choisissez-en un nouveau.",
+		"Credentials stay on the box, readable for root only (passwords obscured by rclone, not encrypted).": "Les identifiants restent sur le boîtier, lisibles uniquement par root (mots de passe masqués par rclone, non chiffrés).",
+		"No messages.": "Aucun message.",
+		"Every 10 minutes the box checks RAID, volumes (mounted, how full), temperature, SMART values (read again every 6 hours; a sleeping disk is not woken up) and updates; failed cloud jobs, app tasks and storage jobs report at once. Repeated messages are counted and sent again at most once a day.": "Toutes les 10 minutes, le boîtier vérifie le RAID, les volumes (montés, taux de remplissage), la température, les valeurs SMART (relues toutes les 6 heures ; un disque en veille n'est pas réveillé) et les mises à jour ; les tâches cloud, tâches d'applications et tâches de stockage en échec sont signalées immédiatement. Les messages répétés sont comptés et renvoyés au plus une fois par jour.",
+		"some files vanished while copying": "certains fichiers ont disparu pendant la copie",
+		"unknown": "inconnu",
+		"ShareOS was updated – loading the new interface …": "ShareOS a été mis à jour – chargement de la nouvelle interface …",
+		"This takes a while – it goes on in the background …": "Cela prend un moment – l'opération continue en arrière-plan …",
+		"To learn its public IPv4 address, the box asks api.ipify.org (ipv4.icanhazip.com if that does not answer).": "Pour connaître son adresse IPv4 publique, le boîtier interroge api.ipify.org (ipv4.icanhazip.com s’il ne répond pas).",
+		"The password needs at least 8 characters.": "Le mot de passe doit comporter au moins 8 caractères.",
+		"New password (at least 8 characters). Used for shares and – depending on the role – for the web interface.": "Nouveau mot de passe (au moins 8 caractères). Sert pour les partages et – selon le rôle – pour l'interface web.",
+		"Applies to the web interface and SSH. At least 8 characters.": "Vaut pour l'interface web et SSH. Au moins 8 caractères."
 	},
 	"patterns": [
 		[
@@ -1795,6 +1817,10 @@
 			"Supprimer l'état du $1 ? Les autres instantanés restent complets."
 		],
 		[
+			"^Schedule saved, but the wake-up alarm could not be set: (.*)$",
+			"Planification enregistrée, mais l'alarme de réveil n'a pas pu être réglée : $1"
+		],
+		[
 			"^Everything on (.+) is erased\\. Afterwards it is a (.+) drive “(.+)”\\.$",
 			"Tout le contenu de $1 est effacé. Ensuite, c'est un disque $2 « $3 »."
 		],
@@ -1867,6 +1893,10 @@
 			"Selon le planning, il se rallume le $1."
 		],
 		[
+			"^Fan stops below (\\d+) °C, full from (\\d+) °C$",
+			"Le ventilateur s'arrête sous $1 °C, à fond à partir de $2 °C"
+		],
+		[
 			"^(.+) – can be restored from the trash\\.$",
 			"$1 – restaurable depuis la corbeille."
 		],
@@ -1913,6 +1943,10 @@
 		[
 			"^personal inbox of (.+) · no token$",
 			"boîte personnelle de $1 · pas de jeton"
+		],
+		[
+			"^Fan always on, full from (\\d+) °C$",
+			"Ventilateur toujours actif, à fond à partir de $1 °C"
 		],
 		[
 			"^Share: (\\d+) file\\(s\\) not saved – (.*)$",
@@ -2143,6 +2177,10 @@
 			"Boîte de dépôt « $1 » supprimée."
 		],
 		[
+			"^(\\S+): did not restart(.*)$",
+			"$1 : n'a pas redémarré$2"
+		],
+		[
 			"^planned · phase (\\d)$",
 			"prévu · phase $1"
 		],
@@ -2259,6 +2297,10 @@
 			"Fichier de firmware : $1"
 		],
 		[
+			"^(\\S+): did not start(.*)$",
+			"$1 : n'a pas démarré$2"
+		],
+		[
 			"^(\\d+) % of my limit$",
 			"$1 % de ma limite"
 		],
@@ -2295,12 +2337,20 @@
 			"Serveur multimédia : $1"
 		],
 		[
+			"^Login failed: (.*)$",
+			"Échec de la connexion : $1"
+		],
+		[
 			"^(.+) · visible to (.+)$",
 			"$1 · visible par $2"
 		],
 		[
 			"^(.*)Linux (\\S+) · Load ([0-9. ]+)$",
 			"$1Linux $2 · Charge $3"
+		],
+		[
+			"^(\\S+): did not stop(.*)$",
+			"$1 : ne s'est pas arrêté$2"
 		],
 		[
 			"^Latest · Beta$",
@@ -2313,6 +2363,10 @@
 		[
 			"^Drive (\\d+) % used$",
 			"Disque utilisé à $1 %"
+		],
+		[
+			"^\\(step (\\d+) of (\\d+)\\) –$",
+			"(étape $1 sur $2) –"
 		],
 		[
 			"^Password for (\\S+)$",
@@ -2333,6 +2387,10 @@
 		[
 			"^Job “(.+)” saved\\.$",
 			"Tâche « $1 » enregistrée."
+		],
+		[
+			"^(.+), ports (\\d+) and (\\d+)$",
+			"$1, ports $2 et $3"
 		],
 		[
 			"^Certificate: (.*)$",

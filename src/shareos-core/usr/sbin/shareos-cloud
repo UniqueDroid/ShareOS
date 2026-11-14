@@ -138,13 +138,22 @@ cmd_remote_add() {   # owner name type [k=v...]; secrets on stdin
 		echo "$sect" | sed "1s/.*/[$n]/" >> "$c"
 	else
 		for kv; do echo "$kv" | grep -qE '^[a-z_]+=' || die "invalid option $kv"; done
-		# secrets from stdin, appended to the arguments
-		while IFS= read -r kv; do [ -n "$kv" ] && set -- "$@" "$kv"; done
+		# secrets from stdin. They stay off every command line (each local
+		# user could read them in the process list): rclone creates the
+		# connection without them, then they are written into its section
+		sec=
+		while IFS= read -r kv; do
+			[ -n "$kv" ] || continue
+			echo "$kv" | grep -qE '^[a-z_]+=' || die "invalid option"
+			sec="$sec$kv
+"
+		done
 		case "$type" in gdrive|gphotos|onedrive|dropbox|box|pcloud|yandex)
 			[ -s $ST/auth.token ] && [ "$(cat $ST/auth.owner 2>/dev/null)" = "$o" ] && [ "$(cat $ST/auth.type 2>/dev/null)" = "$type" ] \
 				|| die "sign in first (the sign-in is missing or for another service)"
 			tok=$(cat $ST/auth.token)
-			set -- "$@" "token=$tok"
+			sec="${sec}token=$tok
+"
 			# OneDrive: rclone only asks for the drive interactively, and
 			# without drive_id/drive_type the remote does not work (#92)
 			if [ "$type" = onedrive ]; then
@@ -157,6 +166,23 @@ cmd_remote_add() {   # owner name type [k=v...]; secrets on stdin
 		as_owner "$o" "$rc" config create "$n" "$btype" "$@" --obscure --non-interactive --config "$c" >/dev/null 2>$ST.err \
 			|| { e=$(tail -n1 $ST.err); rm -f $ST.err; die "${e:-rclone config failed}"; }
 		rm -f $ST.err
+		if [ -n "$sec" ]; then
+			# passwords in rclone's own obscured form (as --obscure does)
+			lines=$(printf '%s' "$sec" | while IFS= read -r kv; do
+				k=${kv%%=*} v=${kv#*=}
+				case "$k" in pass|password) v=$(printf '%s' "$v" | "$rc" obscure -) && [ -n "$v" ] || exit 1 ;; esac
+				printf '%s = %s\n' "$k" "$v"
+			done) && [ -n "$lines" ] && (umask 077; SEC="$lines" awk -v n="[$n]" '
+				function put() { if (in_s && !done) { print ENVIRON["SEC"]; done = 1 } }
+				/^\[/ { put(); in_s = ($0 == n) }
+				/^[ \t]*$/ { put() }
+				{ print }
+				END { put() }' "$c" > "$c.new") && chmod 600 "$c.new" && mv -f "$c.new" "$c" || {
+					rm -f "$c.new"
+					as_owner "$o" "$rc" config delete "$n" --config "$c" >/dev/null 2>&1
+					die "cannot write the connection"
+				}
+		fi
 		# the sign-in is used up only now: after a failure "Add" can be tried again
 		rm -f $ST/auth.token
 	fi
@@ -263,22 +289,31 @@ local_path() {   # job -> local directory
 	esac
 }
 
+# a run that cannot start: the reason goes into the job's state (rpcd noted
+# "running" before it started this), so the page shows it instead of a run
+# that never ends
+fail_run() {
+	mkdir -p $ST
+	printf 'state=error\nended=%s\nerror=%s\n' "$(date +%s)" "$*" > $ST/$J.state
+	die "$*"
+}
+
 cmd_run() {
 	J=$1
 	[ "$(uci -q get cloud."$J")" = job ] || die "unknown job $J"
-	rc=$(rclone_bin) || die "rclone is not installed"
+	rc=$(rclone_bin) || fail_run "rclone is not installed"
 	o=$(job owner); o=${o:--}
-	c=$(conf_of "$o") || die "no settings for $o"
+	c=$(conf_of "$o") || fail_run "no settings for $o"
 	src=$(local_path) || true
-	[ -n "$src" ] && [ -d "$src" ] || die "local folder missing ($(job local))"
-	case "$src" in *..*) die "invalid folder" ;; esac
+	[ -n "$src" ] && [ -d "$src" ] || fail_run "local folder missing ($(job local))"
+	case "$src" in *..*) fail_run "invalid folder" ;; esac
 	r=$(job remote):$(job remote_path)
 	case "$(job mode)" in
 		upload) set -- copy "$src" "$r" ;;
 		download) set -- copy "$r" "$src" ;;
 		mirror_up) set -- sync "$src" "$r" ;;
 		mirror_down) set -- sync "$r" "$src" ;;
-		*) die "unknown mode" ;;
+		*) fail_run "unknown mode" ;;
 	esac
 	mkdir -p $ST
 	if ! mkdir $ST/$J.lock 2>/dev/null; then

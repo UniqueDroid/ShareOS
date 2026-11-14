@@ -2058,3 +2058,34 @@ E1650	caixa compartilhada · sem token
 P362	caixa pessoal de $1 · sem token
 E1651	Não foi possível obter o certificado Let's Encrypt.
 E1652	Verificado uma vez por minuto
+E1653	Hora do equipamento
+E1654	sem controle da placa
+E1655	controle da placa parado
+E1656	Sem leitura de temperatura – a ventoinha funciona na velocidade máxima.
+E1657	O controle da ventoinha do equipamento não está em execução.
+P363	A ventoinha para abaixo de $1 °C, máxima a partir de $2 °C
+P364	Ventoinha sempre ligada, máxima a partir de $1 °C
+P365	$1: não iniciou$2
+P366	$1: não parou$2
+P367	$1: não reiniciou$2
+P368	$1, portas $2 e $3
+E1658	zabbix_agentd, modo passivo
+E1659	zabbix_agentd, modo ativo e passivo
+E1660	Valores SMART de um disco deste volume
+P369	(etapa $1 de $2) –
+E1661	não pôde ser ajustado na última sincronização
+E1662	Remove todas as configurações e pacotes instalados da memória flash e reinicia. O sistema e a versão do firmware permanecem. Depois o equipamento fica sem senha: pressione o botão USB na frente e escolha uma nova na interface web.
+E1663	Todas as configurações e pacotes instalados são apagados e o equipamento reinicia. Depois ele fica sem senha: pressione o botão USB na frente e escolha uma nova.
+E1664	As credenciais ficam no equipamento, legíveis apenas pelo root (senhas ofuscadas pelo rclone, não criptografadas).
+E1665	Nenhuma mensagem.
+E1666	A cada 10 minutos o equipamento verifica RAID, volumes (montados, ocupação), temperatura, valores SMART (lidos novamente a cada 6 horas; um disco em repouso não é acordado) e atualizações; trabalhos de nuvem, tarefas de apps e trabalhos de armazenamento com falha avisam na hora. Mensagens repetidas são contadas e reenviadas no máximo uma vez por dia.
+P370	Falha no login: $1
+E1667	alguns arquivos desapareceram durante a cópia
+E1668	desconhecido
+P371	Agenda salva, mas o alarme de ligar não pôde ser ajustado: $1
+E1669	O ShareOS foi atualizado – carregando a nova interface …
+E1670	Isso demora um pouco – continua em segundo plano …
+E1671	Para saber o seu endereço IPv4 público, a caixa pergunta a api.ipify.org (ipv4.icanhazip.com se este não responder).
+E1672	A senha precisa de pelo menos 8 caracteres.
+E1673	Nova senha (pelo menos 8 caracteres). Serve para os compartilhamentos e – conforme a função – para a interface web.
+E1674	Vale para a interface web e o SSH. Pelo menos 8 caracteres.

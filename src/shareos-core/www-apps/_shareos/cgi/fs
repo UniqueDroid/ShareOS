@@ -10,6 +10,10 @@
 import { stdin, stdout } from 'fs';
 import * as ubus from 'ubus';
 
+// JSON text -> value; null when the text is not JSON (never an exception:
+// a damaged file or a tool that printed an error must not end the call)
+function jparse(s) { try { return json(s); } catch (e) { return null; } }
+
 const OPS = {
 	roots: [],
 	list: [ 'root', 'path', 'hidden' ],
@@ -17,6 +21,7 @@ const OPS = {
 	rename: [ 'root', 'path', 'name', 'to' ],
 	move: [ 'root', 'path', 'names', 'dest_root', 'dest', 'copy' ],
 	delete: [ 'root', 'path', 'names' ],
+	job: [ 'id' ],
 	open: [ 'root', 'path', 'name', 'write', 'create' ],
 	grant_app: [ 'app' ]
 };
@@ -31,7 +36,7 @@ if (!g) reply('403 Forbidden', { error: 'no access' });
 if (getenv('REQUEST_METHOD') != 'POST') reply('405 Method Not Allowed', { error: 'method not allowed' });
 let len = +(getenv('CONTENT_LENGTH') ?? 0);
 if (!(len > 0) || len > 65536) reply('413 Payload Too Large', { error: 'invalid request' });
-let req = json(stdin.read(len) ?? 'null');
+let req = jparse(stdin.read(len) ?? 'null');
 if (type(req) != 'object' || type(req.op) != 'string' || !exists(OPS, req.op))
 	reply('400 Bad Request', { error: 'invalid request' });
 

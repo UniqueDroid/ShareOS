@@ -357,7 +357,7 @@ mkapp $T/va vaulter 1.0.0 && python3 -c "import json; f='$T/va/app.json'; d=json
 check "vault: the permission needs files" "run 'shareos-apps install-file /tmp/pkg/vault-bad.sapp' | grep -q 'vault.*needs'"
 python3 -c "import json; f='$T/va/app.json'; d=json.load(open(f)); d['permissions']=['files','vault']; json.dump(d,open(f,'w'))" && pack $T/va $P/vaulter.sapp
 run 'shareos-apps install-file /tmp/pkg/vaulter.sapp' >/dev/null
-run "echo maxmax1 | shareos-users add max share" >/dev/null
+run "echo maxmax-1 | shareos-users add max share" >/dev/null
 rpc shareos.shares set '{"name":"tresor","volume":"daten","smb":true,"rw":["max"]}' >/dev/null
 GV=$(rpc shareos.files app_grant "$(s ',"app":"vaulter"')" | python3 -c 'import json,sys; print(json.load(sys.stdin).get("grant",""))')
 vt() { curl -s -X POST --data-binary "$1" "http://127.0.0.1:$PORT/_shareos/cgi/vault?g=${2:-$GV}"; }

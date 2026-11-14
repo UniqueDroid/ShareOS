@@ -16,6 +16,12 @@
 # (dropbear) and the serial console, with the flash tools and
 # shareos-install-ubi available. The USB LED (orange/red) blinks in rescue mode.
 #
+# SSH in rescue mode means root with the well-known password "shareos". After a
+# failure it is therefore closed until someone at the box presses the USB
+# button on the front; it then stays open for 30 minutes (the LED blinks
+# fast). With shareos.rescue on the kernel command line – that needs the
+# serial console – it is open at once.
+#
 
 export PATH=/sbin:/bin:/usr/sbin:/usr/bin
 
@@ -93,19 +99,75 @@ apply_upgrade() {
 	led "$LED" none
 }
 
+# the event device of the buttons (gpio-keys; "gpio_keys" on DNS-325/DNS-320)
+button_dev() {
+	for d in "${SHAREOS_INIT_SYS:-/sys}"/class/input/event*; do
+		case "$(cat "$d/device/name" 2>/dev/null)" in
+			gpio-keys|gpio_keys) echo "${SHAREOS_INIT_DEV:-/dev}/input/${d##*/}"; return 0 ;;
+		esac
+	done
+	return 1
+}
+
+blink() {
+	[ -d "/sys/class/leds/$LED" ] || return 0
+	for d in delay_on delay_off; do echo "$1" > "/sys/class/leds/$LED/$d"; done
+}
+
+ssh_open() {
+	mkdir -p /etc/dropbear 2>/dev/null
+	dropbear -R -P "$RUN/dropbear.pid" 2>/dev/null
+}
+
+# Rescue mode after a failure: SSH opens when the USB button is pressed and
+# closes again after RESCUE_SSH_TIME seconds (sessions that are open stay).
+# A box without the buttons' device could not be reached at all: open at once.
+RESCUE_SSH_TIME=${SHAREOS_INIT_SSH_TIME:-1800}
+RUN=${SHAREOS_INIT_RUN:-/run}
+ssh_gate() {
+	dev=$(button_dev) || { log "no buttons found – SSH is open"; ssh_open; return; }
+	log "SSH is closed: press the USB button on the front to open it for $((RESCUE_SSH_TIME / 60)) minutes"
+	while :; do
+		# one event of the kernel (16 bytes): seconds, microseconds, type,
+		# code, value – od -d prints them as 16-bit numbers after the offset.
+		# type 1 = key; code 133 (KEY_COPY) or 161 (KEY_EJECTCD) = USB button
+		ev=$(dd if="$dev" bs=16 count=1 2>/dev/null | od -d | head -n 1)
+		[ -n "$ev" ] || { sleep 1; continue; }
+		read -r _ _ _ _ _ typ code _ <<-EOF
+		$ev
+		EOF
+		[ "$typ" = 1 ] || continue
+		case "$code" in 133|161) ;; *) continue ;; esac
+		log "USB button: SSH is open for $((RESCUE_SSH_TIME / 60)) minutes"
+		ssh_open
+		blink 100
+		sleep "$RESCUE_SSH_TIME"
+		kill "$(cat "$RUN/dropbear.pid" 2>/dev/null)" 2>/dev/null
+		blink 500
+		log "SSH is closed again (USB button: open it once more)"
+	done
+}
+
+RESCUE_ASKED=0
 rescue() {
 	log "RESCUE MODE: $*"
 	led "$LED" timer
 	# slow blink (the first installation blinks fast)
-	for d in delay_on delay_off; do echo 500 > /sys/class/leds/$LED/$d 2>/dev/null; done
+	blink 500
 	net_up || udhcpc -i eth0 -b -s /usr/share/udhcpc/default.script -x hostname:shareos
-	mkdir -p /etc/dropbear
-	dropbear -R 2>/dev/null
 	ip=$(ip -4 addr show eth0 | sed -n 's/.*inet \([0-9.]*\).*/\1/p')
+	if [ "$RESCUE_ASKED" = 1 ]; then
+		ssh_open
+		how="ssh root@${ip:-<no ip>}   (password: shareos)"
+	else
+		ssh_gate &
+		how="press the USB button on the front, then within $((RESCUE_SSH_TIME / 60)) minutes:
+	  ssh root@${ip:-<no ip>}   (password: shareos)"
+	fi
 	cat > /etc/motd <<-EOF
 
 	ShareOS rescue system – $*
-	  ssh root@${ip:-<no ip>}   (password: shareos)
+	  $how
 	  shareos-install-ubi <rootfs.squashfs>   install the system into flash
 	  reboot
 
@@ -133,7 +195,7 @@ first_install() {
 	  and restart the box, or check the network cable. Log: /tmp/firstinstall.log"
 }
 
-has shareos.rescue && rescue "requested on the kernel command line"
+has shareos.rescue && { RESCUE_ASKED=1; rescue "requested on the kernel command line"; }
 
 NETROOT=$(arg shareos.netroot)
 

@@ -1635,7 +1635,29 @@
 		"Check: waiting": "যাচাই: অপেক্ষায়",
 		"shared inbox · no token": "শেয়ার করা ইনবক্স · কোনো টোকেন নেই",
 		"The Let's Encrypt certificate could not be fetched.": "Let's Encrypt সার্টিফিকেট আনা যায়নি।",
-		"Checked once a minute": "প্রতি মিনিটে একবার যাচাই করা হয়"
+		"Checked once a minute": "প্রতি মিনিটে একবার যাচাই করা হয়",
+		"Time of the box": "বক্সের সময়",
+		"no board control": "বোর্ড নিয়ন্ত্রণ নেই",
+		"board control not running": "বোর্ড নিয়ন্ত্রণ চলছে না",
+		"No temperature reading – the fan runs at full speed.": "তাপমাত্রার মান নেই – ফ্যান পূর্ণ গতিতে চলছে।",
+		"The fan control of the box is not running.": "বক্সের ফ্যান নিয়ন্ত্রণ চলছে না।",
+		"zabbix_agentd, passive mode": "zabbix_agentd, প্যাসিভ মোড",
+		"zabbix_agentd, active and passive mode": "zabbix_agentd, অ্যাক্টিভ ও প্যাসিভ মোড",
+		"SMART values of a disk of this volume": "এই ভলিউমের একটি ডিস্কের SMART মান",
+		"could not be set at the last sync": "শেষ সিঙ্কে সেট করা যায়নি",
+		"Removes all settings and installed packages from flash and reboots. The system and firmware version stay. Afterwards the box has no password: press the USB button on its front, then choose a new one in the web interface.": "ফ্ল্যাশ থেকে সব সেটিংস ও ইনস্টল করা প্যাকেজ মুছে রিবুট করে। সিস্টেম ও ফার্মওয়্যার সংস্করণ থাকে। এরপর বক্সের কোনো পাসওয়ার্ড থাকে না: সামনের USB বোতাম চাপুন, তারপর ওয়েব ইন্টারফেসে নতুন পাসওয়ার্ড বেছে নিন।",
+		"All settings and installed packages are erased, then the box reboots. Afterwards it has no password: press the USB button on its front, then choose a new one.": "সব সেটিংস ও ইনস্টল করা প্যাকেজ মুছে ফেলা হবে, তারপর বক্স রিবুট হবে। এরপর এর কোনো পাসওয়ার্ড থাকবে না: সামনের USB বোতাম চাপুন, তারপর নতুন পাসওয়ার্ড বেছে নিন।",
+		"Credentials stay on the box, readable for root only (passwords obscured by rclone, not encrypted).": "লগইন তথ্য বক্সেই থাকে, শুধু root পড়তে পারে (পাসওয়ার্ড rclone দিয়ে আড়াল করা, এনক্রিপ্ট করা নয়)।",
+		"No messages.": "কোনো বার্তা নেই।",
+		"Every 10 minutes the box checks RAID, volumes (mounted, how full), temperature, SMART values (read again every 6 hours; a sleeping disk is not woken up) and updates; failed cloud jobs, app tasks and storage jobs report at once. Repeated messages are counted and sent again at most once a day.": "প্রতি ১০ মিনিটে বক্স RAID, ভলিউম (মাউন্ট করা, কতটা ভর্তি), তাপমাত্রা, SMART মান (প্রতি ৬ ঘণ্টায় আবার পড়া হয়; ঘুমন্ত ডিস্ক জাগানো হয় না) ও আপডেট পরীক্ষা করে; ব্যর্থ ক্লাউড জব, অ্যাপের কাজ ও স্টোরেজ জব সঙ্গে সঙ্গে জানায়। পুনরাবৃত্ত বার্তা গোনা হয় এবং দিনে সর্বোচ্চ একবার আবার পাঠানো হয়।",
+		"some files vanished while copying": "কপি করার সময় কিছু ফাইল হারিয়ে গেছে",
+		"unknown": "অজানা",
+		"ShareOS was updated – loading the new interface …": "ShareOS আপডেট হয়েছে – নতুন ইন্টারফেস লোড হচ্ছে …",
+		"This takes a while – it goes on in the background …": "এতে কিছু সময় লাগবে – পটভূমিতে চলতে থাকবে …",
+		"To learn its public IPv4 address, the box asks api.ipify.org (ipv4.icanhazip.com if that does not answer).": "নিজের পাবলিক IPv4 ঠিকানা জানতে বক্সটি api.ipify.org-কে জিজ্ঞাসা করে (সেটি উত্তর না দিলে ipv4.icanhazip.com)।",
+		"The password needs at least 8 characters.": "পাসওয়ার্ডে অন্তত ৮ অক্ষর দরকার।",
+		"New password (at least 8 characters). Used for shares and – depending on the role – for the web interface.": "নতুন পাসওয়ার্ড (অন্তত ৮ অক্ষর)। শেয়ারের জন্য এবং – ভূমিকা অনুযায়ী – ওয়েব ইন্টারফেসের জন্য।",
+		"Applies to the web interface and SSH. At least 8 characters.": "ওয়েব ইন্টারফেস ও SSH-এর জন্য। অন্তত ৮ অক্ষর।"
 	},
 	"patterns": [
 		[
@@ -1795,6 +1817,10 @@
 			"$1-এর অবস্থা মুছবেন? অন্য স্ন্যাপশট সম্পূর্ণ থাকবে।"
 		],
 		[
+			"^Schedule saved, but the wake-up alarm could not be set: (.*)$",
+			"সময়সূচি সংরক্ষিত, কিন্তু জাগানোর অ্যালার্ম সেট করা যায়নি: $1"
+		],
+		[
 			"^Everything on (.+) is erased\\. Afterwards it is a (.+) drive “(.+)”\\.$",
 			"$1-এর সবকিছু মুছে যায়। এরপর এটি একটি $2 ড্রাইভ \"$3\" হবে।"
 		],
@@ -1867,6 +1893,10 @@
 			"সময়সূচি অনুযায়ী এটি $1-এ আবার চালু হবে।"
 		],
 		[
+			"^Fan stops below (\\d+) °C, full from (\\d+) °C$",
+			"$1 °C-এর নিচে ফ্যান বন্ধ, $2 °C থেকে পূর্ণ গতি"
+		],
+		[
 			"^(.+) – can be restored from the trash\\.$",
 			"$1 – রিসাইকেল বিন থেকে ফেরানো যায়।"
 		],
@@ -1913,6 +1943,10 @@
 		[
 			"^personal inbox of (.+) · no token$",
 			"$1-এর ব্যক্তিগত ইনবক্স · কোনো টোকেন নেই"
+		],
+		[
+			"^Fan always on, full from (\\d+) °C$",
+			"ফ্যান সবসময় চালু, $1 °C থেকে পূর্ণ গতি"
 		],
 		[
 			"^Share: (\\d+) file\\(s\\) not saved – (.*)$",
@@ -2143,6 +2177,10 @@
 			"ইনবক্স “$1” সরানো হয়েছে।"
 		],
 		[
+			"^(\\S+): did not restart(.*)$",
+			"$1: পুনরায় চালু হয়নি$2"
+		],
+		[
 			"^planned · phase (\\d)$",
 			"পরিকল্পিত · পর্যায় $1"
 		],
@@ -2259,6 +2297,10 @@
 			"ফার্মওয়্যার ফাইল: $1"
 		],
 		[
+			"^(\\S+): did not start(.*)$",
+			"$1: চালু হয়নি$2"
+		],
+		[
 			"^(\\d+) % of my limit$",
 			"আমার সীমার $1 %"
 		],
@@ -2295,12 +2337,20 @@
 			"মিডিয়া সার্ভার: $1"
 		],
 		[
+			"^Login failed: (.*)$",
+			"লগইন ব্যর্থ: $1"
+		],
+		[
 			"^(.+) · visible to (.+)$",
 			"$1 · কারা দেখবে: $2"
 		],
 		[
 			"^(.*)Linux (\\S+) · Load ([0-9. ]+)$",
 			"$1Linux $2 · লোড $3"
+		],
+		[
+			"^(\\S+): did not stop(.*)$",
+			"$1: বন্ধ হয়নি$2"
 		],
 		[
 			"^Latest · Beta$",
@@ -2313,6 +2363,10 @@
 		[
 			"^Drive (\\d+) % used$",
 			"ড্রাইভ $1 % ব্যবহৃত"
+		],
+		[
+			"^\\(step (\\d+) of (\\d+)\\) –$",
+			"(ধাপ $1 / $2) –"
 		],
 		[
 			"^Password for (\\S+)$",
@@ -2333,6 +2387,10 @@
 		[
 			"^Job “(.+)” saved\\.$",
 			"কাজ „$1“ সংরক্ষিত।"
+		],
+		[
+			"^(.+), ports (\\d+) and (\\d+)$",
+			"$1, পোর্ট $2 ও $3"
 		],
 		[
 			"^Certificate: (.*)$",

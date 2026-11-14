@@ -36,7 +36,9 @@ mini firmware 10 MB, config 5 MB. `shareos-install-ubi` accepts both sizes.
      → rescue with the reason in `/tmp/firstinstall.err`.
    - **`shareos.rescue`** or any failure: stay in the initramfs – DHCP, SSH
      (dropbear), serial login, flash tools, `shareos-install-ubi`. Orange USB
-     LED blinks.
+     LED blinks. After a failure SSH (root, password "shareos") is closed
+     until the USB button on the front is pressed; it is then open for 30
+     minutes (LED blinks fast). With `shareos.rescue` it is open at once.
 3. The squashfs root runs BusyBox init and the normal ShareOS services.
 
 The initramfs never attaches mtd3 unless it already carries UBI. Foreign data

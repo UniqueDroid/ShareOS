@@ -106,6 +106,10 @@
 import { readfile, writefile, mkdir, stat, lstat, lsdir, unlink, rename, popen, readlink } from 'fs';
 import { cursor } from 'uci';
 
+// JSON text -> value; null when the text is not JSON (never an exception:
+// a damaged file or a tool that printed an error must not end the call)
+function jparse(s) { try { return json(s); } catch (e) { return null; } }
+
 const ROOT = getenv('SHAREOS_ROOT') ?? '';
 const APPS = ROOT + '/www-apps';
 const SYS = ROOT + '/opt/shareos/sysapps';
@@ -138,7 +142,22 @@ function capture(cmd) {
 
 function out(o) { print(sprintf('%J\n', o)); return o; }
 
-function die(msg) { out({ error: msg }); exit(1); }
+// An install in progress (job.json: downloading, verifying, installing) keeps
+// the PID of this process, so "status" can tell a run that was killed from one
+// that still works; a run that ends with die() leaves its reason there.
+const JOB_BUSY = { downloading: 1, verifying: 1, installing: 1 };
+let job_now = null;
+function self_pid() { return +(split(readfile('/proc/self/stat') ?? '', ' ')[0]) || 0; }
+function pid_alive(p) { return p > 1 && stat('/proc/' + p) != null; }
+
+function die(msg) {
+	if (job_now) {
+		writefile(ST + '/job.json', sprintf('%J', { state: 'error', id: job_now.id, error: msg, time: time() }));
+		job_now = null;
+	}
+	out({ error: msg });
+	exit(1);
+}
 
 function vparse(v) {
 	let m = match(v ?? '', /^v?([0-9]+)\.([0-9]+)(\.([0-9]+))?(-(.+))?$/);
@@ -245,8 +264,15 @@ function data_dir(id) {
 }
 
 function job_state(id, j) {
-	let st = json(readfile(ST + '/jobs/' + id + '.' + j + '.json') ?? 'null');
+	let st = null;
+	try { st = json(readfile(ST + '/jobs/' + id + '.' + j + '.json') ?? 'null'); } catch (e) { }
 	return type(st) == 'object' ? st : null;
+}
+// does a scheduled job of an app run? (its lock folder and a living process;
+// a lock left by a killed run does not count)
+function job_running(id, j) {
+	let base = ST + '/jobs/' + id + '.' + j;
+	return stat(base + '.lock') != null && pid_alive(+trim(readfile(base + '.pid') ?? '0'));
 }
 
 function jobs_of(id, a, c) {
@@ -256,7 +282,7 @@ function jobs_of(id, a, c) {
 		push(list, { id: j.id, name: j.name ?? j.id, command: j.command, timeout: +(j.timeout ?? 300),
 			schedule: c.get('apps', s, 'schedule') ?? j.schedule, default_schedule: j.schedule,
 			enabled: c.get('apps', s, 'enabled') != '0', last: job_state(id, j.id),
-			running: stat(ST + '/jobs/' + id + '.' + j.id + '.lock') != null });
+			running: job_running(id, j.id) });
 	}
 	return list;
 }
@@ -353,7 +379,18 @@ function setup_jobs(a, c) {
 
 function job(o) {
 	mkdir(ST);
-	writefile(ST + '/job.json', sprintf('%J', { ...o, time: time() }));
+	job_now = JOB_BUSY[o.state] ? o : null;
+	writefile(ST + '/job.json', sprintf('%J', { ...o, time: time(), ...(job_now ? { pid: self_pid() } : {}) }));
+}
+// the install job for the web interface; a busy state whose process is gone
+// is an interrupted install
+function job_status() {
+	let j = null;
+	try { j = json(readfile(ST + '/job.json') ?? 'null'); } catch (e) { }
+	if (type(j) != 'object') return { state: 'idle' };
+	if (JOB_BUSY[j.state] && j.pid != null && !pid_alive(j.pid))
+		return { state: 'error', id: j.id, error: 'the installation was interrupted', time: j.time };
+	return j;
 }
 
 /* ---------- installed apps ---------- */
@@ -382,7 +419,7 @@ function installed() {
 	for (let base in [ APPS, SYS ])
 	for (let id in sort(lsdir(base) ?? [])) {
 		if (!match(id, ID_RE) || seen[id]) continue;
-		let a = json(readfile(base + '/' + id + '/app.json') ?? 'null');
+		let a = jparse(readfile(base + '/' + id + '/app.json') ?? 'null');
 		if (type(a) != 'object') continue;
 		seen[id] = true;
 		let s = sect(id);
@@ -409,7 +446,7 @@ function fetch_catalog(url) {
 		let m = match(r.out, /curl: \([0-9]+\)[^\n]*/);
 		return { error: m ? m[0] : 'curl exit ' + r.rc };
 	}
-	let d = json(r.out);
+	let d = jparse(r.out);
 	if (type(d) != 'object' || type(d.apps) != 'array') return { error: 'not a ShareOS app catalog' };
 	return d;
 }
@@ -454,8 +491,8 @@ function cmd_catalog() {
 
 function cmd_cached() {
 	let K = conf(), channel = K.channel, sources = K.sources;
-	let cats = json(readfile(ST + '/catalogs.json') ?? '[]') ?? [];
-	let errors = json(readfile(ST + '/catalog-errors.json') ?? '[]') ?? [];
+	let cats = jparse(readfile(ST + '/catalogs.json') ?? '[]') ?? [];
+	let errors = jparse(readfile(ST + '/catalog-errors.json') ?? '[]') ?? [];
 	return out({ time: +(readfile(ST + '/catalog-time') ?? 0), channel, sources, errors, apps: merge(cats, channel) });
 }
 
@@ -557,7 +594,7 @@ function service_run(svc, verb, bg, delay) {
 }
 
 function sysapp_json(id) {
-	let a = json(readfile(SYS + '/' + id + '/app.json') ?? 'null');
+	let a = jparse(readfile(SYS + '/' + id + '/app.json') ?? 'null');
 	return type(a) == 'object' && a.id == id ? a : null;
 }
 
@@ -687,7 +724,7 @@ function check_requires(a) {
 }
 
 function check_app(dir) {
-	let a = json(readfile(dir + '/app.json') ?? 'null');
+	let a = jparse(readfile(dir + '/app.json') ?? 'null');
 	if (type(a) != 'object') return { error: 'app.json is not valid JSON' };
 	if (!match(a.id ?? '', ID_RE)) return { error: 'invalid app id (a-z, 0-9 and -)' };
 	let re = check_requires(a);
@@ -790,7 +827,7 @@ let ensure_requires;
 // from the catalog: download, verify, install – apps it needs first
 function install_catalog(id, version, depth) {
 	if (!match(id ?? '', ID_RE)) return { error: 'invalid app id' };
-	let cats = json(readfile(ST + '/catalogs.json') ?? '[]') ?? [];
+	let cats = jparse(readfile(ST + '/catalogs.json') ?? '[]') ?? [];
 	let channel = conf().channel;
 	let app = filter(merge(cats, 'beta'), (a) => a.id == id)[0];
 	if (!app) return { error: depth ? id + ' is not in the store' : 'unknown app – refresh the store first' };
@@ -865,7 +902,7 @@ const NOTIFY_LEVELS = { info: 1, warn: 1, error: 1 };
 const NOTIFY_SPOOL_MAX = 10;
 function notify_app(id) {
 	let d = match(id ?? '', ID_RE) ? app_dir(id) : null;
-	let a = d ? json(readfile(d + '/app.json') ?? 'null') : null;
+	let a = d ? jparse(readfile(d + '/app.json') ?? 'null') : null;
 	return type(a) == 'object' && index(a.permissions ?? [], 'notify') >= 0 ? a : null;
 }
 function notify_text_ok(s, max, nl) {
@@ -894,7 +931,7 @@ function app_notify(id, op, level, key, title, text) {
 	writefile(rf, join('\n', sent) + '\n');
 	let t = (a.name ?? id) + ': ' + title;
 	let r = capture(sprintf('/usr/sbin/shareos-notify send %s apps %s %s %s %s %s', level, shq(full), shq(t), shq(t), shq(text), shq(text)));
-	let j = json(trim(r.out) || 'null');
+	let j = jparse(trim(r.out) || 'null');
 	return type(j) == 'object' && j.ok ? { ok: true, sent: j.sent } : { error: 'sending failed' };
 }
 
@@ -954,12 +991,18 @@ function cmd_remove(id, force) {
 // run a job: as the app's user, in its data folder, with a time limit; one at a time
 function cmd_run_job(id, j) {
 	if (!match(id ?? '', ID_RE) || !match(j ?? '', JOB_RE)) die('invalid app or job');
-	let a = json(readfile(APPS + '/' + id + '/app.json') ?? 'null');
+	let a = jparse(readfile(APPS + '/' + id + '/app.json') ?? 'null');
 	let def = type(a) == 'object' ? filter(a.jobs ?? [], (x) => x.id == j)[0] : null;
 	if (!def || index(a.permissions ?? [], 'cron') < 0) die('unknown job');
 	mkdir(ST); mkdir(ST + '/jobs');
 	let base = ST + '/jobs/' + id + '.' + j, lock = base + '.lock';
-	if (!mkdir(lock)) die('job is already running');
+	if (!mkdir(lock)) {
+		// a lock without a living process was left by a killed run
+		if (job_running(id, j)) die('job is already running');
+		system('rmdir ' + shq(lock));
+		if (!mkdir(lock)) die('job is already running');
+	}
+	writefile(base + '.pid', self_pid() + '\n');
 	let u = app_user(id), d = data_dir(id), t0 = time();
 	let uid = trim(capture('id -u ' + u).out);
 	if (!match(uid, /^[0-9]+$/) || +uid < 100) { system('rmdir ' + shq(lock)); die('the app user is missing – reinstall the app'); }
@@ -993,6 +1036,7 @@ exit $rc`, shq(d), id, shq(APPS + '/' + id), shq(d), shq(d), spool ? ' SHAREOS_N
 	let st = { time: t0, duration: time() - t0, rc: r.rc, timeout: stat(base + '.timeout') != null };
 	unlink(base + '.timeout');
 	writefile(base + '.json', sprintf('%J', st));
+	unlink(base + '.pid');
 	system('rmdir ' + shq(lock));
 	if (spool) notify_spool(id, spool, uid);
 	system(sprintf('logger -t shareos-apps "job %s/%s finished (exit %d, %d s)"', id, j, r.rc, st.duration));
@@ -1067,7 +1111,7 @@ case 'modules':
 case 'install': cmd_install(ARGV[1], ARGV[2]); break;
 case 'install-file': cmd_install_file(ARGV[1]); break;
 case 'remove': cmd_remove(ARGV[1], ARGV[2]); break;
-case 'status': out(json(readfile(ST + '/job.json') ?? 'null') ?? { state: 'idle' }); break;
+case 'status': out(job_status()); break;
 case 'run-job': cmd_run_job(ARGV[1], ARGV[2]); break;
 case 'job-log': cmd_job_log(ARGV[1], ARGV[2]); break;
 case 'notify': cmd_notify(ARGV[1], ARGV[2], ARGV[3], ARGV[4], ARGV[5], ARGV[6]); break;

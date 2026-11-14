@@ -86,6 +86,8 @@ kbd{font:inherit;font-size:11px;color:var(--muted);border:1px solid var(--line);
 .icon{position:relative;flex:none;width:44px;height:44px;display:grid;place-items:center;border-radius:10px;background:rgba(var(--rgb),.08);border:1px solid var(--line);color:var(--accent)}
 .icon svg{width:22px;height:22px}
 .icon.sm{width:36px;height:36px}.icon.sm svg{width:18px;height:18px}
+/* the box does not answer: the live values are old */
+.stale [data-part=load] .mbars,.stale [data-part=load] .rates,.stale [data-part=status] .tiles{opacity:.45}
 .dot{position:absolute;right:-4px;top:-4px;width:11px;height:11px;border-radius:50%;border:2px solid var(--panel);background:var(--line)}
 .dot.up{background:var(--ok);box-shadow:0 0 8px var(--ok)}
 .dot.down{background:var(--red);box-shadow:0 0 8px var(--red)}

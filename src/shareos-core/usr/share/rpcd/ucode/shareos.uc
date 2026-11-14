@@ -25,10 +25,20 @@
 // rpcd's main loop is never blocked; the UI polls shareos.update.status.
 'use strict';
 
-import { readfile, writefile, popen, glob, stat, lstat, lsdir, realpath, readlink, symlink, unlink, rename } from 'fs';
+import { readfile, writefile, open as fopen, popen, glob, stat, lstat, lsdir, realpath, readlink, symlink, unlink, rename } from 'fs';
 import { cursor } from 'uci';
 
+// JSON text -> value; null when the text is not JSON (never an exception:
+// a damaged file or a tool that printed an error must not end the call)
+function jparse(s) { try { return json(s); } catch (e) { return null; } }
+
 const UPDATER = '/usr/sbin/shareos-update';
+// Switching off or restarting while kernel, initramfs or the system are being
+// written leaves a box that may not start any more: refused until the write
+// has finished (shareos-update busy; also asked by shareos-power,
+// shareos-buttons and shareos-board).
+const FLASH_BUSY = 'firmware is being written – wait until it has finished';
+function flash_busy() { return system(UPDATER + ' busy >/dev/null 2>&1') == 0; }
 const NET = '/usr/sbin/shareos-net';
 const NET_ST = '/tmp/shareos-net';
 const NET_ROLLBACK = '/etc/shareos/network.rollback';
@@ -90,9 +100,17 @@ function memo(key, stamp, ttl, fn) {
 	return v;
 }
 function forget(key) { delete MEMO[key]; }
-// stamp of files: size and modification time (missing files count too)
+// stamp of files: size and modification time (missing files count too).
+// Modification times count in seconds: a file changed a moment ago can change
+// again without its stamp changing, so such a stamp is made to match nothing.
 function fstamp(...paths) {
-	return join('|', map(paths, (p) => { let st = stat(p); return st ? st.size + ':' + st.mtime : '-'; }));
+	let now = time(), fresh = false;
+	let s = join('|', map(paths, (p) => {
+		let st = stat(p);
+		if (st && st.mtime >= now - 1) fresh = true;
+		return st ? st.size + ':' + st.mtime : '-';
+	}));
+	return fresh ? s + '|' + join('.', clock()) : s;
 }
 
 function sh(cmd) {
@@ -102,6 +120,37 @@ function sh(cmd) {
 	let out = p.read('all') ?? '';
 	let rc = p.close();
 	return { rc, out };
+}
+
+// like sh(), but without the error output: for tools whose answer is parsed
+// (JSON) – a warning on stderr in the middle of it would make it unreadable
+function sh_quiet(cmd) {
+	let p = popen(cmd + ' 2>/dev/null', 'r');
+	if (!p)
+		return { rc: -1, out: '' };
+	let out = p.read('all') ?? '';
+	let rc = p.close();
+	return { rc, out };
+}
+
+// run a command with secret text on its standard input. The text goes through
+// a file only root can read (in RAM) and never onto a command line, where every
+// local user could read it in the process list.
+const SH_IN_DIR = '/tmp/.shareos-in';
+function sh_in_file(input) {
+	let rnd = readfile('/dev/urandom', 12) ?? '';
+	let name = '';
+	for (let i = 0; i < length(rnd); i++) name += sprintf('%02x', ord(rnd, i));
+	let f = SH_IN_DIR + '/' + (name != '' ? name : '' + time());
+	system(sprintf('mkdir -p %s && chmod 700 %s && umask 077 && : > %s', SH_IN_DIR, SH_IN_DIR, f));
+	writefile(f, input ?? '');
+	return f;
+}
+function sh_in(cmd, input) {
+	let f = sh_in_file(input);
+	let r = sh(sprintf('( %s ) < %s', cmd, f));
+	unlink(f);
+	return r;
 }
 
 function read_trim(path) {
@@ -254,6 +303,17 @@ function running(proc, names) {
 	return !!(names ?? proc_names())[proc];
 }
 
+// Is the process running after an action? A service that was just stopped can
+// take a moment to end, one just started a moment to appear: wait up to 2 s
+// for the state the action should lead to, then say what is.
+function settled(proc, want) {
+	for (let i = 0; i < 10; i++) {
+		if (running(proc) == want) return want;
+		sleep(200);
+	}
+	return running(proc);
+}
+
 function sys_services() {
 	let j = null;
 	try { j = json(sh('/usr/sbin/shareos-apps services list').out); } catch (e) { }
@@ -282,14 +342,35 @@ const FS_DISK = { ext4: 1, ext3: 1, ext2: 1, btrfs: 1, exfat: 1, ntfs: 1, vfat: 
 const FS_USB = { exfat: 1, vfat: 1, ntfs: 1, ext4: 1 };
 // USB sticks/disks hang below a USB host in sysfs; the bays are SATA
 function is_usb(d) { return valid_disk(d) && index(realpath('/sys/block/' + d) ?? '', '/usb') >= 0; }
+// Is an internal disk asleep? CHECK POWER MODE (hdparm -C) does not wake it.
+// true/false; null when it cannot be told (USB disk, hdparm failed).
+function disk_standby(d) {
+	if (is_usb(d)) return null;
+	let o = sh('hdparm -C /dev/' + d).out;
+	return match(o, /drive state is:\s*(standby|sleeping)/) ? true : (match(o, /drive state is:/) ? false : null);
+}
+// The disks for the overview and the apps: USB or bay, asleep or not, and the
+// SMART rating from the values read last (good | warn | bad; null: none yet).
+// Asked at most once a minute.
+function disks_state() {
+	return memo('disks-state', '', 60, () => map(disks(), (d) => {
+		let s = null;
+		try { s = json(readfile(SMART_DIR + '/smart-' + d.name + '.json')); } catch (e) { }
+		return { ...d, usb: is_usb(d.name), standby: disk_standby(d.name), smart: type(s) == 'object' ? (s.rating ?? null) : null };
+	}));
+}
 // mounted USB partitions: { dev, path, fs }
+// (asked on every file operation and every status: "shareos-usb list" runs
+// only when the mounts or the list of USB partitions changed)
 function usb_mounts() {
-	let l = [];
-	for (let line in split(sh(USB + ' list').out, '\n')) {
-		let f = split(trim(line), ' ');
-		if (length(f) == 3) push(l, { dev: f[0], path: f[1], fs: f[2] });
-	}
-	return l;
+	return memo('usb-mounts', (readfile('/proc/mounts') ?? '') + join(',', lsdir('/tmp/shareos-usb') ?? []), 0, () => {
+		let l = [];
+		for (let line in split(sh(USB + ' list').out, '\n')) {
+			let f = split(trim(line), ' ');
+			if (length(f) == 3) push(l, { dev: f[0], path: f[1], fs: f[2] });
+		}
+		return l;
+	});
 }
 
 function ubiblock_major() {
@@ -297,13 +378,22 @@ function ubiblock_major() {
 	return m ? m[1] : null;
 }
 
-function lsblk() {
+function lsblk_read() {
 	// -e: leave out mtdblock (31), ram (1) and ubiblock devices – only disks matter here
-	let r = sh('lsblk -J -b -e 1,31,' + (ubiblock_major() ?? '31') + ' -o NAME,TYPE,SIZE,FSTYPE,LABEL,UUID,MOUNTPOINT,MODEL,SERIAL,TRAN,RM,ROTA');
+	let r = sh_quiet('lsblk -J -b -e 1,31,' + (ubiblock_major() ?? '31') + ' -o NAME,TYPE,SIZE,FSTYPE,LABEL,UUID,MOUNTPOINT,MODEL,SERIAL,TRAN,RM,ROTA');
 	let j = null;
 	try { j = json(r.out); } catch (e) { }
 	return j?.blockdevices ?? [];
 }
+// The storage page asks every few seconds: the answer is kept for 20 s while
+// the block devices and the mounts are the same. While a storage job runs
+// (it formats, builds arrays) nothing is kept.
+function lsblk() {
+	if (stat(SMART_DIR + '/lock')) { forget('lsblk'); return lsblk_read(); }
+	return memo('lsblk', join(',', glob('/sys/class/block/*')) + (readfile('/proc/mounts') ?? ''), 20, lsblk_read);
+}
+// the sleep state for the storage page: asked at most every 30 s per disk
+function disk_standby_memo(d) { return memo('standby:' + d, '', 30, () => disk_standby(d)); }
 
 // SSD wear from the vendor attributes (normalized value = life left in %)
 const WEAR_ATTRS = [ 'Percent_Lifetime_Remain', 'SSD_Life_Left', 'Remaining_Lifetime_Perc', 'Media_Wearout_Indicator', 'Wear_Leveling_Count', 'Percent_Life_Remaining' ];
@@ -411,9 +501,13 @@ function smart_read(disk, refresh) {
 	}
 	if (!refresh && !st)
 		return null;
+	// old values and the disk asleep (asked every 30 s at most): no smartctl
+	// at every status poll just to hear "standby" again
+	if (!refresh && disk_standby_memo(disk) === true)
+		return { standby: true };
 	// -n standby: do not wake a sleeping disk just for SMART; -a: health,
 	// attributes, error and self-test log; devstat: the SSD endurance indicator
-	let r = sh('smartctl -j -n standby -a -l devstat /dev/' + disk);
+	let r = sh_quiet('smartctl -j -n standby -a -l devstat /dev/' + disk);
 	let j = null;
 	try { j = json(r.out); } catch (e) { }
 	if (!j)
@@ -488,14 +582,26 @@ function volumes() {
 		let mp = '/mnt/' + name;
 		let dev = volume_device(s.uuid, mp, mounts);
 		let mounted = index(mounts, ' ' + mp + ' ') >= 0;
-		let v = { name, uuid: s.uuid, fstype: s.fstype, layout: s.layout, enabled: s.enabled != '0',
+		// the file system as it is mounted; the one noted in the settings only
+		// while the volume is not mounted
+		let mfs = mounted ? match(mounts, regexp('(^|\n)\\S+ ' + mp + ' (\\S+) '))?.[2] : null;
+		let v = { name, uuid: s.uuid, fstype: mfs ?? s.fstype, layout: s.layout, enabled: s.enabled != '0',
 			device: dev, mountpoint: mp, mounted };
-		if (mounted) {
-			let f = split(trim(split(sh('df -k ' + shq(mp)).out, '\n')[1] ?? ''), /\s+/);
-			if (length(f) >= 4) { v.size = +f[1] * 1024; v.used = +f[2] * 1024; v.avail = +f[3] * 1024; }
-		}
 		push(list, v);
 	});
+	// sizes: one df for all mounted volumes
+	let mps = map(filter(list, (v) => v.mounted), (v) => v.mountpoint);
+	if (length(mps)) {
+		let by = {};
+		for (let line in split(sh('df -k ' + join(' ', map(mps, shq))).out, '\n')) {
+			let f = split(trim(line), /\s+/);
+			if (length(f) >= 6 && match(f[1], /^[0-9]+$/)) by[f[5]] = f;
+		}
+		for (let v in list) {
+			let f = by[v.mountpoint];
+			if (f) { v.size = +f[1] * 1024; v.used = +f[2] * 1024; v.avail = +f[3] * 1024; }
+		}
+	}
 	return list;
 }
 
@@ -507,6 +613,12 @@ function spawn_storage(args) {
 /* ---------- web interface: language, logo, HTTPS ---------- */
 
 const CERT = '/usr/sbin/shareos-cert';
+// a Let's Encrypt request is running: its flag file; one older than 15
+// minutes was left by a run that was killed (a request takes a few minutes)
+function acme_running() {
+	let st = stat('/tmp/shareos-acme.running');
+	return !!st && time() - st.mtime < 900;
+}
 
 const THEMES = { dark: 1, light: 1, system: 1 };
 // accent colours – also in www-apps/_shareos/app.js (accepted list) and
@@ -643,11 +755,16 @@ function cert_refresh() {
 
 /* ---------- hardware settings, first run, Alt-F ---------- */
 
-const FAN_PRESETS = {
-	quiet:    { off_temp: 40, full_temp: 55, half_temp: 50 },
-	balanced: { off_temp: 0,  full_temp: 50, half_temp: 45 },
-	cool:     { off_temp: 0,  full_temp: 45, half_temp: 42 }
-};
+// The fan curves are defined in one file; shareos-board regulates by it.
+function fan_presets() {
+	let p = {};
+	for (let l in split(readfile('/usr/lib/shareos/fan-presets') ?? '', '\n')) {
+		let m = match(l, /^([a-z]+)[ \t]+([0-9]+)[ \t]+([0-9]+)[ \t]+([0-9]+)[ \t]*$/);
+		if (m) p[m[1]] = { off_temp: +m[2], full_temp: +m[3], half_temp: +m[4] };
+	}
+	return p;
+}
+const FAN_PRESETS = fan_presets();
 
 function fan_settings() {
 	let c = cursor();
@@ -719,6 +836,26 @@ function board_read() {
 	return b;
 }
 function board() { return memo('board', fstamp('/tmp/sys/board.env'), 0, board_read); }
+
+// The box's temperature (m°C). A value older than TEMP_MAX_AGE seconds is not
+// shown: the MCU or the sensor does not answer any more (shareos-board and
+// shareos-notify use the same limit).
+const TEMP_MAX_AGE = 90;
+function box_temp() {
+	let st = stat('/tmp/sys/temp1_input');
+	return st && time() - st.mtime <= TEMP_MAX_AGE ? read_int('/tmp/sys/temp1_input') : null;
+}
+// Is the fan control of this box at work? control: how this model is cooled
+// (mcu | hwmon | mcu-temp; null: unknown box, nothing regulates), running:
+// shareos-board (and on MCU boxes dns320l-daemon) is alive, sensor: a fresh
+// temperature is there.
+function board_control() {
+	let c = board().control ?? '';
+	if (c == '' || c == 'none') return { control: null, running: false, sensor: false };
+	let names = proc_names();
+	return { control: c, running: running('shareos-board', names) && (c != 'mcu' || running('dns320l-daemon', names)),
+		sensor: box_temp() != null };
+}
 // the RTC: the MCU's battery clock (dns320l-daemon) or the kernel's /dev/rtc0
 function rtc_kind() {
 	let k = board().rtc ?? (stat(RTC_TOOL) ? 'mcu' : 'kernel');
@@ -742,15 +879,18 @@ function time_info() {
 		servers: ntp_servers(c),
 		last_sync: last[0] && match(last[0], /^[0-9]+$/) ? +last[0] : null,
 		ntp_running: system('pidof ntpd >/dev/null 2>&1') == 0,
-		rtc: !!rtc_kind()
+		rtc: !!rtc_kind(),
+		// did setting the battery clock work the last time? (null: not set yet)
+		rtc_ok: ((x) => x == 'ok' ? true : x == 'failed' ? false : null)(read_trim('/tmp/shareos-ntp/rtc'))
 	};
 }
 
 // clock -> the MCU's battery clock, so the time survives a power cut
 function rtc_save() {
-	let k = rtc_kind();
-	if (k == 'mcu') system(RTC_TOOL + ' -x systohc >/dev/null 2>&1');
-	else if (k == 'kernel') system('hwclock -w -u >/dev/null 2>&1');
+	let k = rtc_kind(), rc = null;
+	if (k == 'mcu') rc = system(RTC_TOOL + ' -x systohc >/dev/null 2>&1');
+	else if (k == 'kernel') rc = system('hwclock -w -u >/dev/null 2>&1');
+	if (rc != null) { system('mkdir -p /tmp/shareos-ntp'); writefile('/tmp/shareos-ntp/rtc', rc == 0 ? 'ok\n' : 'failed\n'); }
 }
 
 function altf_scan() {
@@ -768,8 +908,11 @@ function altf_scan() {
 	return a;
 }
 
+// root's password (System → General, the first set-up, claiming a new box):
+// one minimum length; null or an error text
+const ROOT_PW_MIN = 8;
 function set_password(pw) {
-	if (length(pw ?? '') < 6) return 'password too short (min. 6)';
+	if (type(pw) != 'string' || length(pw) < ROOT_PW_MIN) return 'password too short (min. ' + ROOT_PW_MIN + ')';
 	if (match(pw, /[\n\r:]/)) return 'password contains invalid characters';
 	let p = popen('chpasswd -c sha512 >/dev/null 2>&1', 'w');
 	if (!p) return 'chpasswd not available';
@@ -777,10 +920,15 @@ function set_password(pw) {
 	return p.close() == 0 ? null : 'chpasswd failed';
 }
 
+// the update channels there are (first set-up and Firmware page)
+function channel_ok(ch) { return type(ch) == 'string' && ch in { stable: 1, beta: 1 }; }
+
 function set_hostname(h) {
 	if (!match(h ?? '', /^[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?$/)) return false;
 	writefile('/etc/hostname', h + '\n');
 	sh('hostname ' + shq(h));
+	// mDNS name (<hostname>.local) follows
+	system('[ -x /etc/init.d/S50avahi-daemon ] && pidof avahi-daemon >/dev/null && /etc/init.d/S50avahi-daemon restart >/dev/null 2>&1 &');
 	return true;
 }
 
@@ -797,7 +945,7 @@ function acc_name_ok(n) { return type(n) == 'string' && match(n, ACC_RE); }
 
 // run a tool with the password on stdin (never on the command line)
 function sh_pass(cmd, pass) {
-	return sh(sprintf("printf '%%s\\n' %s | %s", shq(pass ?? ''), cmd));
+	return sh_in(cmd, (pass ?? '') + '\n');
 }
 function tool_result(r) {
 	if (r.rc == 0) return { ok: true, output: trim(r.out) };
@@ -860,22 +1008,32 @@ const VAULT_TTLS = [ 5, 15, 30, 60, 120, 240, 480 ];
 function vault_ttl(v) { let n = +(v ?? 15); return n >= 1 && n <= 480 ? int(n) : 15; }
 
 // share -> [{user, until}] of the vaults that are unlocked now
+// (read here as "shareos-shares vault-status" does, without starting it:
+// this is asked with every list of shares – /tmp/shareos-vault/<share> holds
+// "user until" lines, only vaults count, only times that have not run out)
 function vault_state() {
-	let st = {};
-	for (let line in split(sh(SHARES + ' vault-status').out, '\n')) {
-		let m = match(line, /^vault=([^:]+):([^:]+):([0-9]+)$/);
-		if (m) push(st[m[1]] ??= [], { user: m[2], until: +m[3] });
+	let st = {}, c = cursor(), now = time();
+	for (let n in lsdir('/tmp/shareos-vault') ?? []) {
+		if (c.get('shares', n) != 'share' || c.get('shares', n, 'vault') != '1') continue;
+		for (let line in split(readfile('/tmp/shareos-vault/' + n) ?? '', '\n')) {
+			let m = match(line, /^(\S+) ([0-9]+)$/);
+			if (m && +m[2] > now) push(st[n] ??= [], { user: m[1], until: +m[2] });
+		}
 	}
 	return st;
 }
 
 function share_list() {
 	let c = cursor(), list = [];
-	let st = {}, svc = sh(SHARES + ' status').out, open = vault_state();
-	for (let line in split(svc, '\n')) {
-		let m = match(line, /^share=([^:]*):([^:]*):([01])$/);
-		if (m) st[m[1]] = { path: m[2], mounted: m[3] == '1' };
-	}
+	// path and state as "shareos-shares status" gives them, worked out here:
+	// the tool starts several uci programs per share, and this list is asked
+	// by many pages
+	let st = {}, open = vault_state(), mounts = readfile('/proc/mounts') ?? '', names = proc_names();
+	c.foreach('shares', 'share', (x) => {
+		let n = x['.name'], v = x.volume, p = x.path || n;
+		if (v && c.get('storage', v) == 'volume' && substr(p, 0, 1) != '/' && index(p, '..') < 0)
+			st[n] = { path: '/mnt/' + v + '/' + p, mounted: index(mounts, ' /mnt/' + v + ' ') >= 0 };
+	});
 	c.foreach('shares', 'share', (x) => {
 		let n = x['.name'];
 		push(list, {
@@ -892,7 +1050,7 @@ function share_list() {
 		smb_enabled: (c.get('shares', 'global', 'smb') ?? '1') != '0',
 		smb_compat: c.get('shares', 'global', 'smb_compat') == '1',
 		nfs_enabled: (c.get('shares', 'global', 'nfs') ?? '1') != '0',
-		smb_running: !!match(svc, /smb=1/), nfs_running: !!match(svc, /nfs=1/)
+		smb_running: running('ksmbd.mountd', names), nfs_running: running('rpc.mountd', names)
 	};
 }
 
@@ -912,7 +1070,7 @@ function password_ok(user, pass) {
 	let m = match(hash, /^\$([156])\$([^$]+)\$/);
 	let method = m ? { '1': 'md5', '5': 'sha256', '6': 'sha512' }[m[1]] : 'des';
 	let salt = m ? m[2] : substr(hash, 0, 2);
-	let r = sh(sprintf("printf '%%s' %s | mkpasswd -P 0 -m %s -S %s", shq(pass), method, shq(salt)));
+	let r = sh_in(sprintf('mkpasswd -P 0 -m %s -S %s', method, shq(salt)), pass);
 	return trim(r.out) == hash;
 }
 
@@ -1002,12 +1160,20 @@ function vault_lock(share, u) {
 	return r.rc == 0 ? { ok: true, share } : tool_result(r);
 }
 
+// A locked vault is closed with the ACL of its folder (shareos-shares
+// vault_gate): that works on drives with Linux permissions only. On exFAT,
+// NTFS or FAT the folder would stay open for apps and other services.
+const VAULT_FS = { ext4: 1, ext3: 1, ext2: 1, btrfs: 1 };
+const VAULT_FS_ERR = 'a vault needs a drive with Linux permissions (ext4 or Btrfs)';
+function vault_fs_ok(c, volume) { return !!VAULT_FS[c.get('storage', volume ?? '', 'fstype') ?? 'ext4']; }
+
 // change the vault settings of a share (admins)
 function vault_set(share, on, ttl) {
 	let c = cursor();
 	if (!valid_name(share) || c.get('shares', share) != 'share') return { error: 'unknown share' };
 	if (on) {
 		if (c.get('shares', share, 'smb') != '1') return { error: 'a vault needs SMB' };
+		if (!vault_fs_ok(c, c.get('shares', share, 'volume'))) return { error: VAULT_FS_ERR };
 		c.set('shares', share, 'guest', '0');
 		c.set('shares', share, 'nfs', '0');
 	}
@@ -1042,7 +1208,13 @@ function inbox_path(c, name) {
 function paperless_log(path, n) {
 	let out = [];
 	if (!path) return out;
-	let lines = filter(split(readfile(path + '/.paperless/log') ?? '', '\n'), (l) => l != '');
+	// the end of the log is enough for the last entries
+	let st = stat(path + '/.paperless/log'), txt = '';
+	if (st) {
+		let f = fopen(path + '/.paperless/log', 'r');
+		if (f) { if (st.size > 16384) { f.seek(st.size - 16384); f.read('line'); } txt = f.read('all') ?? ''; f.close(); }
+	}
+	let lines = filter(split(txt, '\n'), (l) => l != '');
 	for (let l in slice(lines, -(n ?? 20))) {
 		let f = split(l, '\t');
 		push(out, { time: +f[0], file: f[1], task: f[2], state: f[3], message: f[4] ?? '' });
@@ -1149,6 +1321,21 @@ function cloud_remotes(owner) {
 	return list;
 }
 
+// is the rclone of a job alive? (shareos-cloud keeps its PID while it runs)
+function cloud_job_alive(n) {
+	let pid = +trim(readfile(CLOUD_ST + '/' + n + '.pid') ?? '0');
+	return pid > 1 && stat('/proc/' + pid) != null;
+}
+// Start a job in the background. "running" is noted at once so the page shows
+// it without waiting for rclone; shareos-cloud replaces it with the result –
+// also when the run cannot start. A job that is running is left alone.
+function cloud_job_start(n) {
+	if (cloud_job_alive(n)) return { error: 'the job is already running' };
+	system(sprintf('mkdir -p %s; printf "state=running\\nstarted=%%s\\n" "$(date +%%s)" > %s/%s.state; start-stop-daemon -S -b -x %s -- run %s',
+		CLOUD_ST, CLOUD_ST, n, CLOUD, n));
+	return { started: true };
+}
+
 function cloud_jobs(c, owner) {   // owner null = all
 	let list = [];
 	c.foreach('cloud', 'job', (x) => {
@@ -1159,6 +1346,14 @@ function cloud_jobs(c, owner) {   // owner null = all
 		if (!st.state) {
 			let a = c.get('storage', 'global', 'apps');
 			if (a) st = kv_file('/mnt/' + a + '/.shareos/cloud/logs/' + n + '.state');
+		}
+		// "running" without a living rclone (killed, box out of memory): an
+		// interrupted run, not one that goes on for ever. The first seconds
+		// after the start the PID is not written yet.
+		if (st.state == 'running' && !cloud_job_alive(n) && time() - +(st.started ?? 0) > 20) {
+			st.state = 'error';
+			st.error = 'the run was interrupted';
+			st.ended = st.started;
 		}
 		push(list, { name: n, owner: o, remote: x.remote ?? '', remote_path: x.remote_path ?? '', local: x.local ?? '',
 			mode: x.mode ?? 'upload', schedule: x.schedule ?? '', bwlimit: x.bwlimit ?? '', enabled: x.enabled != '0',
@@ -1236,7 +1431,7 @@ function cloud_remote_add(owner, a) {
 	if (!match(a.name ?? '', /^[a-z][a-z0-9_]{0,31}$/)) return { error: 'invalid name (a-z, 0-9 and _)' };
 	if (a.type == 'raw') {
 		if (!match(a.raw ?? '', /^\[[A-Za-z0-9_-]+\]\n/)) return { error: 'paste an rclone.conf section starting with [name]' };
-		return tool_result(sh(sprintf("printf '%%s\\n' %s | %s remote-add %s %s raw", shq(a.raw), CLOUD, shq(o), shq(a.name))));
+		return tool_result(sh_in(sprintf('%s remote-add %s %s raw', CLOUD, shq(o), shq(a.name)), a.raw + '\n'));
 	}
 	let keys = REMOTE_KEYS[a.type];
 	if (!keys) return { error: 'unknown type' };
@@ -1249,7 +1444,7 @@ function cloud_remote_add(owner, a) {
 		if (match('' + a.params[k], /[\n\r]/)) return { error: 'invalid ' + k };
 		push(secrets, k + '=' + a.params[k]);
 	}
-	return tool_result(sh(sprintf("printf '%%s\\n' %s | %s remote-add %s %s %s %s", shq(join('\n', secrets)), CLOUD, shq(o), shq(a.name), a.type, join(' ', args))));
+	return tool_result(sh_in(sprintf('%s remote-add %s %s %s %s', CLOUD, shq(o), shq(a.name), a.type, join(' ', args)), join('\n', secrets) + '\n'));
 }
 
 function cloud_log(c, name, n) {
@@ -1279,11 +1474,15 @@ function dlna_status() {
 		let m = match(x, /^([AVP-]),(share:.+)$/), ref = m ? share_ref(m[2]) : null;
 		if (ref) push(media, ref.sub != '' ? { type: m[1], share: ref.share, path: ref.sub } : { type: m[1], share: ref.share });
 	}
+	// counts: null while the media server does not answer (starting, busy) –
+	// not 0, which would read as an empty library
+	let num = (v) => v != null && match(v, /^[0-9]+$/) ? +v : null;
+	let shares = filter(share_list().shares, (x) => x.volume);
 	return { installed: st.installed == '1', enabled: st.enabled == '1', running: st.running == '1', scanning: st.scanning == '1',
-		audio: +(st.audio || 0), video: +(st.video || 0), image: +(st.image || 0), db: st.db ?? null, clients,
+		audio: num(st.audio), video: num(st.video), image: num(st.image), db: st.db ?? null, clients,
 		name: c.get('dlna', 'main', 'name') ?? '', hostname: trim(readfile('/proc/sys/kernel/hostname') ?? ''), media,
-		shares: map(filter(share_list().shares, (x) => x.volume), (x) => x.name),
-		share_dirs: map(filter(share_list().shares, (x) => x.volume), (x) => ({ name: x.name, volume: x.volume, path: x.path })) };
+		shares: map(shares, (x) => x.name),
+		share_dirs: map(shares, (x) => ({ name: x.name, volume: x.volume, path: x.path })) };
 }
 
 /* ---------- printers (system app "printer": ipp-usb, p910nd) ---------- */
@@ -1335,7 +1534,8 @@ const SNAP_KEEP = [ 'keep_last', 'keep_daily', 'keep_weekly', 'keep_monthly' ];
 
 function snap_tool(args) {
 	let r = sh(SNAP + ' ' + join(' ', map(args, shq)));
-	let j = json(trim(r.out) || 'null');
+	let j = null;
+	try { j = json(trim(r.out) || 'null'); } catch (e) { }
 	return type(j) == 'object' ? j : { error: trim(r.out) || 'failed' };
 }
 
@@ -1348,8 +1548,11 @@ function snap_jobs() {
 	let list = [];
 	cursor().foreach('snapshots', 'job', (x) => {
 		let n = x['.name'];
-		let st = json(readfile(SNAP_ST + '/' + n + '.state') ?? readfile('/mnt/' + (x.target ?? '-') + '/Snapshots/' + n + '/.state.json') ?? 'null');
-		let l = snap_tool([ 'list', n ]);
+		let st = null;
+		try { st = json(readfile(SNAP_ST + '/' + n + '.state') ?? readfile('/mnt/' + (x.target ?? '-') + '/Snapshots/' + n + '/.state.json') ?? 'null'); } catch (e) { }
+		// the list of snapshots: read again when the job's state changed, a
+		// snapshot was deleted (forget below) or after 30 s – not at every poll
+		let l = memo('snaplist:' + n, fstamp(SNAP_ST + '/' + n + '.state') + (x.target ?? ''), 30, () => snap_tool([ 'list', n ]));
 		let job = { name: n, source: x.source ?? '', target: x.target ?? '', every: x.every ?? 'day', time: x.time ?? '03:15',
 			exclude: type(x.exclude) == 'array' ? x.exclude : (x.exclude ? [ x.exclude ] : []), enabled: x.enabled != '0',
 			running: snap_running(n), last: type(st) == 'object' ? st : null, snapshots: l.snapshots ?? [], path: l.path ?? null,
@@ -1431,7 +1634,7 @@ const APPS_UPLOAD = '/tmp/shareos-apps/upload.sapp';
 
 function apps_json(args) {
 	let r = sh(APPS_TOOL + ' ' + join(' ', map(args, shq)));
-	let j = json(trim(r.out) || 'null');
+	let j = jparse(trim(r.out) || 'null');
 	return type(j) == 'object' ? j : { error: trim(r.out) || 'failed' };
 }
 
@@ -1651,7 +1854,7 @@ function media_secs(v) {
 function media_probe(u, abs) {
 	if (stat(FFPROBE)?.type != 'file') return { error: 'ffmpeg is not installed (system app "ffmpeg" in the store)' };
 	let r = files_sh(u, sprintf('timeout 30 %s -v error -protocol_whitelist file -show_format -show_streams -of json -- %s', shq(FFPROBE), shq(abs)));
-	let d = json(r.out ?? '');
+	let d = jparse(r.out ?? '');
 	if (r.rc != 0 || type(d) != 'object') return { error: 'not a media file' + (trim(r.out) ? ': ' + substr(trim(r.out), 0, 200) : '') };
 	let f = d.format ?? {};
 	return {
@@ -1675,10 +1878,17 @@ function media_file(u, f) {
 
 function media_jobs(u) {
 	let list = [];
+	let wp = +trim(readfile('/tmp/shareos-media/worker.pid') ?? '0'), worker = wp > 1 && stat('/proc/' + wp) != null;
 	for (let f in lsdir(MEDIA_DIR) ?? []) {
 		let m = match(f, /^([0-9a-f]{16})\.json$/);
 		if (!m) continue;
-		let j = json(readfile(MEDIA_DIR + '/' + f) ?? 'null');
+		let j = null;
+		try { j = json(readfile(MEDIA_DIR + '/' + f) ?? 'null'); } catch (e) { }
+		// "running" without the worker (killed, out of memory): interrupted
+		if (type(j) == 'object' && (j.state == 'running' || j.state == 'stopping') && !worker) {
+			j.state = 'error';
+			j.error = 'the job was interrupted';
+		}
 		if (type(j) == 'object' && j.user == u)
 			push(list, { id: j.id, state: j.state, action: j.action, format: j.format, input: j.input_box, output: j.output_box,
 				progress: j.progress ?? 0, error: j.error ?? null, created: j.created, started: j.started ?? null,
@@ -1750,6 +1960,8 @@ function me_info(u) {
 	// ("SPEICHER" table of Mein ShareOS)
 	let vols = home ? [ home ] : [], mounts = readfile('/proc/mounts') ?? '';
 	for (let s in mine) if (s.volume && index(vols, s.volume) < 0) push(vols, s.volume);
+	// is the drive of a share there? (the dot of the share under My ShareOS)
+	for (let s in mine) s.mounted = !!s.volume && index(mounts, ' /mnt/' + s.volume + ' ') >= 0;
 	vols = filter(vols, (v) => match(v, /^[A-Za-z0-9._-]+$/) && index(mounts, ' /mnt/' + v + ' ') >= 0);
 	info.volumes = [];
 	if (length(vols))
@@ -1777,6 +1989,42 @@ function new_token() {
 	let t = '';
 	for (let i = 0; i < length(r); i++) t += sprintf('%02x', ord(r, i));
 	return t;
+}
+
+// Copying, moving between drives and deleting can take minutes. rpcd answers
+// one call at a time, so such a command runs in the background: the call
+// waits 3 s for it – most are done by then and answer as before – and
+// otherwise returns { ok, running, job }; "job" (files / appfs) tells later
+// how it ended. Jobs live in FJOBS (in RAM): <id>/user, pid, out, rc.
+const FJOBS = '/tmp/shareos-filejobs';
+function files_job(u, id) {
+	let d = FJOBS + '/' + id;
+	if (type(id) != 'string' || !match(id, /^[0-9a-f]{16}$/) || read_trim(d + '/user') != u) return { error: 'unknown job' };
+	let rc = read_trim(d + '/rc');
+	if (rc == null) {
+		let pid = +(read_trim(d + '/pid') ?? 0);
+		if (pid > 1 && stat('/proc/' + pid)) return { ok: true, running: true, job: id };
+		// the shell is gone without a result: killed
+		system('rm -rf ' + shq(d));
+		return { error: 'the operation was interrupted' };
+	}
+	let r = { rc: +rc, out: readfile(d + '/out') ?? '' };
+	system('rm -rf ' + shq(d));
+	return r.rc == 0 ? { ok: true } : { error: files_err(r) };
+}
+function files_bg(u, cmd, shared) {
+	let id = substr(new_token(), 0, 16), d = FJOBS + '/' + id;
+	// results nobody asked for (a closed tab) are dropped after a day
+	for (let old in lsdir(FJOBS) ?? [])
+		if (match(old, /^[0-9a-f]{16}$/) && time() - (stat(FJOBS + '/' + old)?.mtime ?? 0) > 86400) system('rm -rf ' + shq(FJOBS + '/' + old));
+	system(sprintf('mkdir -p %s && chmod 700 %s && mkdir %s', FJOBS, FJOBS, shq(d)));
+	writefile(d + '/user', u);
+	let full = acc_role(u) == 'admin' ? 'umask 002; ' + cmd
+		: sprintf('su -s /bin/sh %s -c %s', shq(u), shq((shared ? 'umask 002; ' : 'umask 077; ') + cmd));
+	system(sprintf('start-stop-daemon -S -q -b -m -p %s/pid -x /bin/sh -- -c %s',
+		shq(d), shq(sprintf('( %s ) >%s/out 2>&1; echo $? >%s/rc', full, shq(d), shq(d)))));
+	for (let i = 0; i < 30 && !stat(d + '/rc'); i++) sleep(100);
+	return files_job(u, id);
 }
 
 /* ---------- trash of the file browser ----------------------------------------
@@ -1929,10 +2177,10 @@ function vpn_tool(args, input) {
 		cmd += ' < ' + shq(f);
 		let r = sh(cmd);
 		unlink(f);
-		let j = json(trim(r.out) || 'null');
+		let j = jparse(trim(r.out) || 'null');
 		return type(j) == 'object' ? j : { error: trim(r.out) || 'failed' };
 	}
-	let j = json(trim(sh(cmd).out) || 'null');
+	let j = jparse(trim(sh(cmd).out) || 'null');
 	return type(j) == 'object' ? j : { error: 'failed' };
 }
 
@@ -1948,7 +2196,7 @@ function ts_tool(args, input) {
 	}
 	let r = sh(cmd);
 	if (f) unlink(f);
-	let j = json(trim(r.out) || 'null');
+	let j = jparse(trim(r.out) || 'null');
 	return type(j) == 'object' ? j : { error: trim(r.out) || 'failed' };
 }
 
@@ -2040,10 +2288,10 @@ function torrent_user(args) {
 
 // the account's daemon, started when needed: what the CGI needs
 function torrent_session(u) {
-	let st = json(sh('/usr/sbin/shareos-transmission status ' + shq(u)).out ?? '') ?? {};
+	let st = jparse(sh('/usr/sbin/shareos-transmission status ' + shq(u)).out ?? '') ?? {};
 	if (!st.running) {
 		let r = sh('/usr/sbin/shareos-transmission start ' + shq(u));
-		st = json(r.out ?? '') ?? { error: trim(r.out) || 'cannot start' };
+		st = jparse(r.out ?? '') ?? { error: trim(r.out) || 'cannot start' };
 		if (st.error) return { error: st.error, installed: st.installed };
 	}
 	return { user: u, socket: st.socket, watch: st.watch, watch_autobrr: !!st.watch_autobrr, peer_port: st.peer_port,
@@ -2061,7 +2309,7 @@ function tremote_new_pass() {
 
 // the admin page: settings, whether it runs, the accounts with a remote password
 function tremote_status() {
-	let st = json(sh('/usr/sbin/shareos-transmission status root').out ?? '') ?? {};
+	let st = jparse(sh('/usr/sbin/shareos-transmission status root').out ?? '') ?? {};
 	return { ...tremote_conf(), installed: st.installed === true,
 		running: system("pgrep -f 'uhttpd .*-h /www-tremote' >/dev/null") == 0,
 		accounts: sort(filter(map(glob(TREMOTE_KEYS + '/*'), (f) => substr(f, length(TREMOTE_KEYS) + 1)), (u) => u == 'root' || acc_name_ok(u))),
@@ -2071,7 +2319,7 @@ function tremote_status() {
 // permission "notify": shareos-apps checks the message and the rate
 function app_notify_tool(args, id) {
 	let r = sh('/usr/sbin/shareos-apps notify ' + shq(id) + ' ' + join(' ', map(args, shq)));
-	let j = json(trim(r.out) || 'null');
+	let j = jparse(trim(r.out) || 'null');
 	return type(j) == 'object' ? j : { error: 'failed' };
 }
 
@@ -2104,15 +2352,10 @@ function sys_info() {
 		hostname: read_trim('/proc/sys/kernel/hostname'), kernel: read_trim('/proc/sys/kernel/osrelease'),
 		time: time(), uptime: +up[0], load: [ +load[0], +load[1], +load[2] ], procs: load[3] ?? '',
 		cpu: cpustat(), cores: length(filter(split(readfile('/proc/cpuinfo') ?? '', '\n'), (l) => match(l, /^processor\s*:/))) || 1,
-		memory: meminfo(), temperature: read_int('/tmp/sys/temp1_input'), fan_pwm: read_int('/tmp/sys/pwm1'),
+		memory: meminfo(), temperature: box_temp(), fan_pwm: read_int('/tmp/sys/pwm1'), board_control: memo('boardctl', '', 10, board_control),
 		network: { speed: read_int(net + 'speed'), rx_bytes: read_int(net + 'statistics/rx_bytes'), tx_bytes: read_int(net + 'statistics/tx_bytes') },
 		volumes: memo('sysvol', '', 20, sys_volumes),
-		// standby: CHECK POWER MODE does not wake a sleeping disk; USB disks have
-		// no sleep state here (null), like on the storage page
-		disks: memo('sysdisks', '', 60, () => map(disks(), (d) => {
-			let usb = is_usb(d.name);
-			return { ...d, usb, standby: usb ? null : !!match(sh('hdparm -C /dev/' + d.name).out, /standby/) };
-		}))
+		disks: disks_state()
 	};
 }
 
@@ -2138,7 +2381,9 @@ function sys_processes() {
 }
 
 // processes an app may not end: init and what keeps ShareOS and its interface running
-const SYS_KEEP = { init: 1, ubusd: 1, rpcd: 1, uhttpd: 1, 'dns320l-daemon': 1, syslogd: 1, klogd: 1 };
+// (the kernel keeps 15 characters of a name: shareos-supervise, which restarts
+// ubusd and rpcd – ending it ends them)
+const SYS_KEEP = { init: 1, ubusd: 1, rpcd: 1, uhttpd: 1, 'dns320l-daemon': 1, syslogd: 1, klogd: 1, 'shareos-supervi': 1 };
 
 /* ---------- permission "docker": Docker hosts the admin added (Docker Engine API) ---------- */
 
@@ -2188,7 +2433,7 @@ function zb_tool(args, input) {
 	}
 	let r = sh(cmd);
 	if (f) unlink(f);
-	let j = json(trim(r.out) || 'null');
+	let j = jparse(trim(r.out) || 'null');
 	return type(j) == 'object' ? j : { error: trim(r.out) || 'failed' };
 }
 function ab_tool(args, input) {
@@ -2202,7 +2447,7 @@ function ab_tool(args, input) {
 	}
 	let r = sh(cmd);
 	if (f) unlink(f);
-	let j = json(trim(r.out) || 'null');
+	let j = jparse(trim(r.out) || 'null');
 	return type(j) == 'object' ? j : { error: trim(r.out) || 'failed' };
 }
 
@@ -2228,7 +2473,7 @@ function torrent_activity(u) {
 	let r = call();
 	if (r && r.code == 409 && r.token) { writefile(tokf, r.token); r = call(); }
 	if (!r || r.code != 200) return null;
-	let j = json(r.body);
+	let j = jparse(r.body);
 	let down = 0, up = 0;
 	for (let x in j?.arguments?.torrents ?? []) {
 		if (x.status == 4) down++;                              // downloading
@@ -2272,7 +2517,7 @@ function status_chips(u) {
 	for (let f in lsdir(APPSTATUS + '/' + u) ?? []) {
 		let m = match(f, /^([a-z][a-z0-9-]{1,31})\.json$/), a = m ? ids[m[1]] : null;
 		if (!a || index(a.permissions ?? [], 'status') < 0) continue;
-		let x = json(readfile(APPSTATUS + '/' + u + '/' + f) ?? 'null');
+		let x = jparse(readfile(APPSTATUS + '/' + u + '/' + f) ?? 'null');
 		if (type(x) != 'object' || +x.until < now) continue;
 		push(chips, { id: 'app:' + a.id, label: x.text, state: x.state, app: a.id, name: a.name });
 	}
@@ -2284,15 +2529,18 @@ function widget_status() {
 	let up = split(read_trim('/proc/uptime') ?? '0', ' ');
 	let load = split(read_trim('/proc/loadavg') ?? '', ' ');
 	let m = meminfo();
-	let t = read_int('/tmp/sys/temp1_input');
+	let t = box_temp();
 	let alerts = [];
+	// the same limits as the messages (System → Messages), not fixed ones
+	let nc = cursor();
+	let temp_max = +(nc.get('shareos', 'notify', 'temp_max') ?? 55), disk_full = +(nc.get('shareos', 'notify', 'disk_full') ?? 90);
 	let vols = [];
 	for (let v in volumes()) {
 		let x = { name: v.name, mounted: v.mounted };
 		if (v.size) {
 			x.size = v.size; x.free = v.avail;
 			x.used_pct = int(v.used * 100 / v.size + 0.5);
-			if (x.used_pct >= 90) push(alerts, 'volume ' + v.name + ' ' + x.used_pct + '% full');
+			if (x.used_pct >= disk_full) push(alerts, 'volume ' + v.name + ' ' + x.used_pct + '% full');
 		}
 		if (v.enabled && !v.mounted) push(alerts, 'volume ' + v.name + ' not mounted');
 		push(vols, x);
@@ -2303,7 +2551,12 @@ function widget_status() {
 		if (a.health && index(a.health, '_') >= 0) push(alerts, n + ' degraded [' + a.health + ']');
 		push(raid, x);
 	}
-	if (t != null && t >= 55000) push(alerts, 'temperature ' + int(t / 1000) + ' °C');
+	if (t != null && t >= temp_max * 1000) push(alerts, 'temperature ' + int(t / 1000) + ' °C');
+	// a box with fan control that gives no reading, and disks whose SMART
+	// values are not good, are not "ok" either
+	if (t == null && board_control().control) push(alerts, 'temperature cannot be read');
+	for (let d in disks_state())
+		if (d.smart == 'bad' || d.smart == 'warn') push(alerts, 'disk ' + d.name + ': SMART ' + (d.smart == 'bad' ? 'critical' : 'caution'));
 	let r = release();
 	return {
 		host: read_trim('/proc/sys/kernel/hostname'),
@@ -2349,9 +2602,10 @@ const WEB_CERT_OPTS = [ 'cert', 'key', 'source' ];
 
 // run shareos-crypt: the password is the first line of its input
 function crypt(mode, pass, data) {
-	let tin = '/tmp/.sos-crypt-in', tout = '/tmp/.sos-crypt-out';
-	system('umask 077; : > ' + tin);
-	writefile(tin, pass + '\n' + data);
+	// own file names per call in a directory only root can enter: nobody can
+	// put a link there beforehand, and two calls cannot mix up their data
+	let tin = sh_in_file(pass + '\n' + data), tout = tin + '.out';
+	system('umask 077; : > ' + tout);
 	let r = sh(sprintf('%s %s < %s > %s', CRYPT, mode, tin, tout));
 	let out = readfile(tout);
 	unlink(tin); unlink(tout);
@@ -2435,10 +2689,14 @@ function backup_summary(b) {
 		ca: !!b.ca?.['ca.key'], ca_certs: map(ca_certs, (k) => replace(k, /^certs\/(.*)\.crt$/, '$1')) };
 }
 
+// Files are written beside their place and moved there: a power cut leaves
+// the old or the new file, never a cut-off one.
 function put_file(path, data, private) {
 	system('mkdir -p ' + shq(replace(path, /\/[^\/]+$/, '')));
-	writefile(path, data);
-	if (private) system('chmod 600 ' + shq(path));
+	let tmp = path + '.new';
+	writefile(tmp, data);
+	system('chmod ' + (private ? '600 ' : '644 ') + shq(tmp) + '; sync');
+	rename(tmp, path);
 }
 
 // step 1: what the box needs to run; the rest goes to the recovery mode
@@ -2464,8 +2722,7 @@ function restore_essentials(b) {
 	if (type(b.files?.['/etc/hostname']) == 'string') system('hostname ' + shq(trim(b.files['/etc/hostname'])));
 	let root = filter(b.accounts?.shadow ?? [], (l) => field(l, 0) == 'root' && length(split(l, ':')) >= 2)[0];
 	if (root)
-		writefile('/etc/shadow', join('\n', map(lines_of('/etc/shadow'), (l) => field(l, 0) == 'root' ? root : l)) + '\n');
-	system('chmod 600 /etc/shadow');
+		put_file('/etc/shadow', join('\n', map(lines_of('/etc/shadow'), (l) => field(l, 0) == 'root' ? root : l)) + '\n', true);
 	put_file(RECOVERY, sprintf('%J', b), true);
 	return [ 'root', 'network', 'hostname', 'timezone', 'storage', 'web' ];
 }
@@ -2483,10 +2740,9 @@ function restore_accounts(b) {
 	let sysnames = map(passwd, (l) => field(l, 0));
 	let shadow = [ ...filter(lines_of('/etc/shadow'), (l) => index(sysnames, field(l, 0)) >= 0 && index(names, field(l, 0)) < 0), ...sh_new ];
 	let group = [ ...keep('/etc/group', (l) => !(+field(l, 2) >= 1000 && +field(l, 2) < 65534)), ...grp ];
-	writefile('/etc/passwd', join('\n', passwd) + '\n');
-	writefile('/etc/shadow', join('\n', shadow) + '\n');
-	system('chmod 600 /etc/shadow');
-	writefile('/etc/group', join('\n', group) + '\n');
+	put_file('/etc/passwd', join('\n', passwd) + '\n');
+	put_file('/etc/shadow', join('\n', shadow) + '\n', true);
+	put_file('/etc/group', join('\n', group) + '\n');
 	if (type(b.files?.['/etc/ksmbd/ksmbdpwd.db']) == 'string') put_file('/etc/ksmbd/ksmbdpwd.db', b.files['/etc/ksmbd/ksmbdpwd.db'], true);
 	system(USERS + ' sync >/dev/null 2>&1');
 }
@@ -2650,7 +2906,7 @@ return {
 
 		// dynamic DNS (shareos-ddns); the token is never sent back
 		ddns_get: {
-			call: function() { return json(trim(sh('/usr/sbin/shareos-ddns status').out) || 'null') ?? { error: 'shareos-ddns failed' }; }
+			call: function() { return jparse(trim(sh('/usr/sbin/shareos-ddns status').out) || 'null') ?? { error: 'shareos-ddns failed' }; }
 		},
 
 		ddns_set: {
@@ -2687,8 +2943,8 @@ return {
 		// own certificate authority (shareos-ca)
 		ca_get: {
 			call: function() {
-				let i = json(trim(sh('/usr/sbin/shareos-ca info').out) || 'null') ?? { exists: false };
-				i.certs = i.exists ? (json(trim(sh('/usr/sbin/shareos-ca list').out) || '[]') ?? []) : [];
+				let i = jparse(trim(sh('/usr/sbin/shareos-ca info').out) || 'null') ?? { exists: false };
+				i.certs = i.exists ? (jparse(trim(sh('/usr/sbin/shareos-ca list').out) || '[]') ?? []) : [];
 				i.web = cursor().get('shareos', 'web', 'source') == 'ca';
 				return i;
 			}
@@ -2750,8 +3006,8 @@ return {
 		// Let's Encrypt for the DynDNS name (shareos-acme, takes up to a few minutes)
 		acme_get: {
 			call: function() {
-				let j = json(trim(sh('/usr/sbin/shareos-acme status').out) || 'null') ?? {};
-				j.running = !!stat('/tmp/shareos-acme.running');
+				let j = jparse(trim(sh('/usr/sbin/shareos-acme status').out) || 'null') ?? {};
+				j.running = acme_running();
 				return j;
 			}
 		},
@@ -2761,7 +3017,7 @@ return {
 			call: function(req) {
 				let m = req.args.email ?? '';
 				if (m != '' && !match(m, /^[^@ ]+@[^@ ]+\.[^@ ]+$/)) return { error: 'invalid e-mail address' };
-				if (stat('/tmp/shareos-acme.running')) return { error: 'already running' };
+				if (acme_running()) return { error: 'already running' };
 				let c = cursor();
 				c.set('shareos', 'acme', 'acme');
 				if (m == '') c.delete('shareos', 'acme', 'email'); else c.set('shareos', 'acme', 'email', m);
@@ -2786,7 +3042,8 @@ return {
 			call: function(req) {
 				let crt = req.args.cert ?? '', key = req.args.key ?? '';
 				if (length(crt) > 65536 || length(key) > 16384) return { error: 'file too large' };
-				let d = trim(sh('mktemp -d').out);
+				let d = trim(sh_quiet('mktemp -d').out);
+				if (!match(d, /^\/tmp\/[A-Za-z0-9._-]+$/)) return { error: 'no room for temporary files' };
 				writefile(d + '/crt', crt);
 				writefile(d + '/key', key);
 				let r = sh(CERT + ' install ' + shq(d + '/crt') + ' ' + shq(d + '/key')); forget('cert');
@@ -2833,7 +3090,7 @@ return {
 					load: [ +load[0], +load[1], +load[2] ],
 					cpu: cpustat(),
 					memory: meminfo(),
-					temperature: read_int('/tmp/sys/temp1_input'),   // m°C, from dns320l-daemon
+					temperature: box_temp(),   // m°C, from dns320l-daemon or shareos-board
 					fan_pwm: read_int('/tmp/sys/pwm1'),
 					network: {
 						eth0: {
@@ -2847,7 +3104,8 @@ return {
 						}
 					},
 					filesystems: memo('df', '', 30, filesystems),
-					disks: disks()
+					disks: disks_state(),
+					board_control: memo('boardctl', '', 10, board_control)
 				};
 			}
 		},
@@ -2870,13 +3128,14 @@ return {
 		// the kept snapshots of the last starts (shareos-bootlog)
 		bootlogs: {
 			call: function() {
-				let j = json(trim(sh('/usr/sbin/shareos-bootlog list').out) || 'null');
+				let j = jparse(trim(sh('/usr/sbin/shareos-bootlog list').out) || 'null');
 				return type(j) == 'object' ? j : { logs: [] };
 			}
 		},
 
 		reboot: {
 			call: function() {
+				if (flash_busy()) return { error: FLASH_BUSY };
 				system('(sleep 2; reboot) >/dev/null 2>&1 &');
 				return { rebooting: true };
 			}
@@ -2887,6 +3146,7 @@ return {
 			call: function(req) {
 				if (req.args.confirm !== true)
 					return { error: 'confirm must be true' };
+				if (flash_busy()) return { error: FLASH_BUSY };
 				// the next switch-on of the power schedule first (wake-up alarm)
 				system('(sleep 2; /usr/sbin/shareos-power arm; poweroff) >/dev/null 2>&1 &');
 				return { poweroff: true };
@@ -2896,7 +3156,7 @@ return {
 		// power schedule: switch off and on by weekday (shareos-power)
 		power_schedule: {
 			call: function() {
-				let j = json(trim(sh('/usr/sbin/shareos-power status').out) || 'null');
+				let j = jparse(trim(sh('/usr/sbin/shareos-power status').out) || 'null');
 				return type(j) == 'object' ? j : { error: 'failed' };
 			}
 		},
@@ -2918,9 +3178,15 @@ return {
 				}
 				c.set('shareos', 'power', 'enabled', a.enabled ? '1' : '0');
 				c.commit('shareos');
-				system('/usr/sbin/shareos-cron sync >/dev/null 2>&1; /usr/sbin/shareos-power arm >/dev/null 2>&1');
-				let j = json(trim(sh('/usr/sbin/shareos-power status').out) || 'null');
-				return type(j) == 'object' ? j : { ok: true };
+				system('/usr/sbin/shareos-cron sync >/dev/null 2>&1');
+				// set the wake-up alarm now and say so when the box did not take it:
+				// the page must not promise a switch-on that is not armed
+				let arm = null, j = null;
+				try { arm = json(trim(sh('/usr/sbin/shareos-power arm').out) || 'null'); } catch (e) { }
+				try { j = json(trim(sh('/usr/sbin/shareos-power status').out) || 'null'); } catch (e) { }
+				if (type(j) != 'object') j = { ok: true };
+				if (a.enabled && type(arm) == 'object' && arm.error) j.arm_error = arm.error;
+				return j;
 			}
 		},
 
@@ -2940,16 +3206,8 @@ return {
 		set_password: {
 			args: { password: '' },
 			call: function(req) {
-				let pw = req.args.password ?? '';
-				if (length(pw) < 6)
-					return { error: 'password too short (min. 6)' };
-				if (match(pw, /[\n\r:]/))
-					return { error: 'password contains invalid characters' };
-				let p = popen('chpasswd -c sha512 >/dev/null 2>&1', 'w');
-				if (!p)
-					return { error: 'chpasswd not available' };
-				p.write('root:' + pw + '\n');
-				return p.close() == 0 ? { ok: true } : { error: 'chpasswd failed' };
+				let e = set_password(req.args.password);
+				return e ? { error: e } : { ok: true };
 			}
 		},
 
@@ -2957,12 +3215,7 @@ return {
 			args: { hostname: '' },
 			call: function(req) {
 				let h = req.args.hostname ?? '';
-				if (!match(h, /^[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?$/))
-					return { error: 'invalid hostname' };
-				writefile('/etc/hostname', h + '\n');
-				sh('hostname ' + shq(h));
-				// mDNS name (<hostname>.local) follows
-				system('[ -x /etc/init.d/S50avahi-daemon ] && pidof avahi-daemon >/dev/null && /etc/init.d/S50avahi-daemon restart >/dev/null 2>&1 &');
+				if (!set_hostname(h)) return { error: 'invalid hostname' };
 				return { ok: true, hostname: h, cert_renewed: cert_refresh() };
 			}
 		}
@@ -2971,19 +3224,30 @@ return {
 	'shareos.service': {
 		list: {
 			call: function() {
-				let list = [], names = proc_names(), off = autostart_off();
+				let list = [], names = proc_names(), off = autostart_off(), c = cursor();
+				// descriptions that depend on the settings
+				let desc = (name, d) => {
+					if (name == 'uhttpd')
+						return c.get('shareos', 'web', 'https') != '0' && stat(c.get('shareos', 'web', 'cert') ?? '/etc/ssl/shareos/server.crt')
+							? 'uhttpd, ports 80 and 443' : 'uhttpd, port 80';
+					if (name == 'zabbix') {
+						let act = !!c.get('zabbix', 'main', 'server'), pas = c.get('zabbix', 'main', 'passive') == '1';
+						return act && pas ? 'zabbix_agentd, active and passive mode' : pas ? 'zabbix_agentd, passive mode' : 'zabbix_agentd, active mode';
+					}
+					return d;
+				};
 				for (let name in sort(keys(SERVICES))) {
 					let s = SERVICES[name];
 					if (!init_script(name) || (s.needs && !stat(s.needs)))
 						continue;
 					// the board service is the MCU daemon only on boxes with that MCU
 					let proc = name == 'board' && board().control && board().control != 'mcu' ? 'shareos-board' : s.proc;
-					push(list, { name, label: s.label, desc: s.desc, running: running(proc, names), essential: !!ESSENTIAL[name],
+					push(list, { name, label: s.label, desc: desc(name, s.desc), running: running(proc, names), essential: !!ESSENTIAL[name],
 						autostart: !(name in off) });
 				}
 				for (let s in sys_services()) {
 					let t = SYS_SVC_TEXT[s.control];
-					push(list, { name: s.control, label: t?.label ?? s.name, desc: t?.desc ?? s.id, running: running(t?.proc ?? s.proc, names),
+					push(list, { name: s.control, label: t?.label ?? s.name, desc: desc(s.control, t?.desc ?? s.id), running: running(t?.proc ?? s.proc, names),
 						essential: false, autostart: !(s.control in off), sysapp: s.id });
 				}
 				return { services: list };
@@ -3002,7 +3266,7 @@ return {
 					// start = what the boot does (the controller follows its settings)
 					let ctl = '/usr/sbin/shareos-' + svc.control;
 					let r = sh(act == 'start' ? ctl + ' boot' : act == 'stop' ? ctl + ' stop-all' : ctl + ' stop-all; ' + ctl + ' boot');
-					return { ok: r.rc == 0, output: trim(r.out), running: running(SYS_SVC_TEXT[svc.control]?.proc ?? svc.proc) };
+					return { ok: r.rc == 0, output: trim(r.out), running: settled(SYS_SVC_TEXT[svc.control]?.proc ?? svc.proc, act != 'stop') };
 				}
 				if (!script)
 					return { error: 'unknown service' };
@@ -3014,7 +3278,8 @@ return {
 					return { ok: true, delayed: true };
 				}
 				let r = sh(shq(script) + ' ' + act);
-				return { ok: r.rc == 0, output: trim(r.out), running: running(SERVICES[name].proc) };
+				let proc = name == 'board' && board().control && board().control != 'mcu' ? 'shareos-board' : SERVICES[name].proc;
+				return { ok: r.rc == 0, output: trim(r.out), running: settled(proc, act != 'stop') };
 			}
 		},
 
@@ -3108,7 +3373,7 @@ return {
 		get: {
 			call: function() {
 				return { fan: fan_settings(), led: led_settings(), presets: FAN_PRESETS,
-					temperature: read_int('/tmp/sys/temp1_input'), fan_pwm: read_int('/tmp/sys/pwm1') };
+					temperature: box_temp(), fan_pwm: read_int('/tmp/sys/pwm1'), board_control: memo('boardctl', '', 10, board_control) };
 			}
 		},
 
@@ -3116,7 +3381,7 @@ return {
 			args: { preset: '', off_temp: 0, full_temp: 0, half_temp: 0 },
 			call: function(req) {
 				let a = req.args, c = cursor();
-				if (!(a.preset in { quiet: 1, balanced: 1, cool: 1, custom: 1 })) return { error: 'unknown preset' };
+				if (a.preset != 'custom' && !FAN_PRESETS[a.preset ?? '']) return { error: 'unknown preset' };
 				c.set('shareos', 'fan', 'fan');
 				c.set('shareos', 'fan', 'preset', a.preset);
 				if (a.preset == 'custom') {
@@ -3217,7 +3482,7 @@ return {
 				if (!root_locked()) return { error: 'already claimed' };
 				if (!claim_window()) return { error: 'press the USB button first' };
 				let pw = req.args.password ?? '';
-				if (length(pw) < 8) return { error: 'password too short (min. 8)' };
+				if (length(pw) < ROOT_PW_MIN) return { error: 'password too short (min. ' + ROOT_PW_MIN + ')' };
 				if (lc(pw) == 'shareos') return { error: 'choose your own password' };
 				let e = set_password(pw);
 				if (e) return { error: e };
@@ -3259,7 +3524,7 @@ return {
 				if (a.hostname) { if (!set_hostname(a.hostname)) return { error: 'invalid hostname' }; push(done, 'hostname'); }
 				if (a.timezone) { if (!set_timezone(a.timezone)) return { error: 'unknown time zone' }; push(done, 'timezone'); }
 				if (a.channel) {
-					if (!(a.channel in { stable: 1, beta: 1 })) return { error: 'invalid channel' };
+					if (!channel_ok(a.channel)) return { error: 'invalid channel' };
 					c.set('shareos', 'update', 'channel', a.channel); push(done, 'channel');
 				}
 				if (a.password) { let e = set_password(a.password); if (e) return { error: e }; push(done, 'password'); }
@@ -3283,6 +3548,12 @@ return {
 	},
 
 	'shareos.storage': {
+		// only the volumes (name, mounted, size): for pages that need no disks,
+		// SMART or arrays – one df instead of a dozen programs
+		volumes: {
+			call: function() { return { volumes: volumes(), apps: cursor().get('storage', 'global', 'apps') }; }
+		},
+
 		status: {
 			call: function() {
 				let disks = [];
@@ -3291,7 +3562,7 @@ return {
 					d.usb = is_usb(d.name);
 					d.smart = d.usb ? null : smart_read(d.name, false);
 					// CHECK POWER MODE does not wake a sleeping disk
-					d.standby = d.usb ? null : !!match(sh('hdparm -C /dev/' + d.name).out, /standby/);
+					d.standby = disk_standby_memo(d.name);
 					push(disks, d);
 				}
 				let c = cursor();
@@ -3632,6 +3903,7 @@ return {
 				let vault = a.vault ?? (c.get('shares', a.name, 'vault') == '1');
 				if (vault && (!a.smb || a.guest || a.nfs)) return { error: 'a vault is shared over SMB only, without guests and NFS' };
 				if (vault && !length([ ...(a.rw ?? []), ...(a.ro ?? []) ])) return { error: 'a vault needs at least one user or group' };
+				if (vault && !vault_fs_ok(c, a.volume)) return { error: VAULT_FS_ERR };
 				if (a.vault_ttl != null && a.vault_ttl !== 0 && !(+a.vault_ttl >= 1 && +a.vault_ttl <= 480)) return { error: 'invalid time (1–480 minutes)' };
 				c.set('shares', 'global', 'global');
 				c.set('shares', a.name, 'share');
@@ -3810,7 +4082,7 @@ return {
 				if (a.test) {
 					let tok = a.token || c.get('paperless', name, 'token');
 					if (!tok) return { error: 'token needed' };
-					let r = sh(sprintf("printf '%%s\\n' %s | %s test %s", shq(tok), PAPERLESS, shq(c.get('paperless', 'global', 'url'))));
+					let r = sh_in(sprintf('%s test %s', PAPERLESS, shq(c.get('paperless', 'global', 'url'))), tok + '\n');
 					let m = match(r.out, /ok documents=([0-9?]+)/);
 					return m ? { ok: true, documents: m[1] } : tool_result(r);
 				}
@@ -3898,9 +4170,7 @@ return {
 				let u = session_user(req), c = cursor();
 				if (!u || !me_cloud_allowed(u)) return { error: 'not allowed' };
 				if (c.get('cloud', req.args.name) != 'job' || c.get('cloud', req.args.name, 'owner') != u) return { error: 'unknown job' };
-				system(sprintf('mkdir -p %s; printf "state=running\\nstarted=%%s\\n" "$(date +%%s)" > %s/%s.state; start-stop-daemon -S -b -x %s -- run %s',
-					CLOUD_ST, CLOUD_ST, req.args.name, CLOUD, req.args.name));
-				return { started: true };
+				return cloud_job_start(req.args.name);
 			}
 		},
 
@@ -4019,13 +4289,13 @@ return {
 		restore: {
 			args: { content: '', password: '', apply: false },
 			call: function(req) {
-				let j = json(req.args.content ?? '');
+				let j = jparse(req.args.content ?? '');
 				if (type(j) != 'object' || index([ 1, 2 ], j.shareos_backup) < 0) return { error: 'not a ShareOS settings backup' };
 				if (j.encrypted) {
 					if (!req.args.password) return { error: 'password required', encrypted: true };
 					let r = crypt('dec', req.args.password, b64dec(j.data ?? '') ?? '');
 					if (r.error) return { ...r, encrypted: true };
-					j = json(r.data);
+					j = jparse(r.data);
 					if (type(j) != 'object' || index([ 1, 2 ], j.shareos_backup) < 0) return { error: 'damaged backup' };
 				}
 				j = backup_upgrade(j);
@@ -4040,7 +4310,7 @@ return {
 	'shareos.recovery': {
 		status: {
 			call: function() {
-				let b = json(readfile(RECOVERY) ?? 'null');
+				let b = jparse(readfile(RECOVERY) ?? 'null');
 				let pending = recovery_pending_apps();
 				let pid = read_trim('/tmp/shareos-restore-apps.run');
 				let job = !!pid && match(pid, /^[0-9]+$/) && stat('/proc/' + pid) != null;
@@ -4054,7 +4324,7 @@ return {
 		apply: {
 			args: { users: false, shares: false, services: [], apps: [], certificate: false, ca: false },
 			call: function(req) {
-				let b = json(readfile(RECOVERY) ?? 'null');
+				let b = jparse(readfile(RECOVERY) ?? 'null');
 				if (type(b) != 'object') return { error: 'not in recovery mode' };
 				return recovery_apply(b, req.args);
 			}
@@ -4110,7 +4380,7 @@ return {
 				let c = cursor(), tok = req.args.token || (req.args.inbox ? c.get('paperless', req.args.inbox, 'token') : null);
 				let url = req.args.url || c.get('paperless', 'global', 'url');
 				if (!url || !tok) return { error: 'URL and token needed' };
-				let r = sh(sprintf("printf '%%s\\n' %s | %s test %s", shq(tok), PAPERLESS, shq(url)));
+				let r = sh_in(sprintf('%s test %s', PAPERLESS, shq(url)), tok + '\n');
 				let m = match(r.out, /ok documents=([0-9?]+)/);
 				return m ? { ok: true, documents: m[1] } : tool_result(r);
 			}
@@ -4161,7 +4431,7 @@ return {
 			call: function(req) {
 				if (!module_on('paperless')) return { error: 'Paperless is not installed (system app paperless)' };
 				if (!match(req.args.inbox ?? '', /^[a-z][a-z0-9_]{0,31}$/)) return { error: 'invalid inbox' };
-				let j = json(sh(PAPERLESS + ' tags ' + shq(req.args.inbox)).out);
+				let j = jparse(sh(PAPERLESS + ' tags ' + shq(req.args.inbox)).out);
 				return { tags: map(j?.results ?? [], (t) => ({ id: t.id, name: t.name })) };
 			}
 		},
@@ -4254,9 +4524,7 @@ return {
 			args: { name: '' },
 			call: function(req) { if (!module_on('cloud')) return CLOUD_OFF;
 				if (cursor().get('cloud', req.args.name) != 'job') return { error: 'unknown job' };
-				system(sprintf('mkdir -p %s; printf "state=running\\nstarted=%%s\\n" "$(date +%%s)" > %s/%s.state; start-stop-daemon -S -b -x %s -- run %s',
-					CLOUD_ST, CLOUD_ST, req.args.name, CLOUD, req.args.name));
-				return { started: true };
+				return cloud_job_start(req.args.name);
 			}
 		},
 
@@ -4769,6 +5037,7 @@ return {
 				let n = req.args.name;
 				if (!match(n ?? '', SNAP_JOB_RE) || cursor().get('snapshots', n) != 'job') return { error: 'unknown job' };
 				let r = snap_tool([ 'delete', n, req.args.snapshot ?? '' ]);
+				forget('snaplist:' + n);
 				return r.error ? r : { ok: true, jobs: snap_jobs() };
 			}
 		},
@@ -4847,8 +5116,7 @@ return {
 					if (d.abs == src || index(d.abs + '/', src + '/') == 0) return { error: 'a folder cannot be moved into itself' };
 					if (lstat(d.abs + '/' + n)) return { error: 'already exists: ' + n };
 				}
-				let r = files_sh(u, sprintf('%s -- %s %s', a.copy ? 'cp -a' : 'mv', join(' ', map(a.names, (n) => shq(p.abs + '/' + n))), shq(d.abs + '/')), d.root.share);
-				return r.rc == 0 ? { ok: true } : { error: files_err(r) };
+				return files_bg(u, sprintf('%s -- %s %s', a.copy ? 'cp -a' : 'mv', join(' ', map(a.names, (n) => shq(p.abs + '/' + n))), shq(d.abs + '/')), d.root.share);
 			}
 		},
 
@@ -4867,8 +5135,17 @@ return {
 					trash_purge(u, files_wpath(u, a.root, '', 'dir'));
 					return r;
 				}
-				let r = files_sh(u, 'rm -rf -- ' + join(' ', map(a.names, (n) => shq(p.abs + '/' + n))), p.root.share);
-				return r.rc == 0 ? { ok: true } : { error: files_err(r) };
+				return files_bg(u, 'rm -rf -- ' + join(' ', map(a.names, (n) => shq(p.abs + '/' + n))), p.root.share);
+			}
+		},
+
+		// how a copy, move or delete that went on in the background ended
+		job: {
+			args: { id: '' },
+			call: function(req) {
+				let u = session_user(req);
+				if (!u || !files_allowed(u)) return { error: 'not allowed' };
+				return files_job(u, req.args.id);
 			}
 		},
 
@@ -4923,8 +5200,8 @@ return {
 				let ids = (type(a.ids) == 'array' && length(a.ids)) ? a.ids : map(trash_items(p), (x) => x.id);
 				if (!length(ids)) return { ok: true, removed: 0 };
 				if (!trash_ids_ok(ids)) return { error: 'invalid entry' };
-				let r = files_sh(u, 'rm -rf -- ' + join(' ', map(ids, (i) => shq(t + '/' + i) + ' ' + shq(t + '/' + i + '.json'))), p.root.share);
-				return r.rc == 0 ? { ok: true, removed: length(ids) } : { error: files_err(r) };
+				let r = files_bg(u, 'rm -rf -- ' + join(' ', map(ids, (i) => shq(t + '/' + i) + ' ' + shq(t + '/' + i + '.json'))), p.root.share);
+				return r.error ? r : { ...r, removed: length(ids) };
 			}
 		},
 
@@ -5114,7 +5391,7 @@ return {
 				let g = app_grant_user(req.args.grant);
 				if (!g || index(g.app.permissions ?? [], 'media') < 0) return { error: 'no access' };
 				if (!match(req.args.id ?? '', /^[0-9a-f]{16}$/)) return { error: 'invalid job' };
-				let f = MEDIA_DIR + '/' + req.args.id + '.json', j = json(readfile(f) ?? 'null');
+				let f = MEDIA_DIR + '/' + req.args.id + '.json', j = jparse(readfile(f) ?? 'null');
 				if (type(j) != 'object' || j.user != g.u) return { error: 'unknown job' };
 				if (j.state == 'queued' || j.state == 'running') {
 					// the worker sees the stop file, ends ffmpeg and removes the half file;
@@ -5135,7 +5412,7 @@ return {
 				let g = app_grant_user(req.args.grant);
 				if (!g || index(g.app.permissions ?? [], 'media') < 0) return { error: 'no access' };
 				if (!match(req.args.id ?? '', /^[0-9a-f]{16}$/)) return { error: 'invalid job' };
-				let j = json(readfile(MEDIA_DIR + '/' + req.args.id + '.json') ?? 'null');
+				let j = jparse(readfile(MEDIA_DIR + '/' + req.args.id + '.json') ?? 'null');
 				if (type(j) != 'object' || j.user != g.u) return { error: 'unknown job' };
 				if (j.state == 'queued' || j.state == 'running' || j.state == 'stopping') return { error: 'job still running' };
 				for (let x in [ '.json', '.log', '.stop' ]) unlink(MEDIA_DIR + '/' + j.id + x);
@@ -5175,7 +5452,7 @@ return {
 					if (c && c.hash == hash && c.until > time() && same_token(c.pass, pass)) ok = true;
 					else {
 						let m = match(hash, /^\$5\$([^$]+)\$/);
-						let r = m ? sh(sprintf("printf '%%s' %s | mkpasswd -P 0 -m sha256 -S %s", shq(pass), shq(m[1]))) : null;
+						let r = m ? sh_in(sprintf('mkpasswd -P 0 -m sha256 -S %s', shq(m[1])), pass) : null;
 						ok = !!r && trim(r.out) == hash;
 						if (ok) tremote_ok[u] = { pass, hash, until: time() + 300 };
 					}
@@ -5221,7 +5498,7 @@ return {
 				if (!req.args.on) unlink(f);
 				else if (req.args.regen || tremote_hash(g.u) == '') {
 					let p = tremote_new_pass();
-					let r = sh(sprintf("printf '%%s' %s | mkpasswd -P 0 -m sha256", shq(p)));
+					let r = sh_in('mkpasswd -P 0 -m sha256', p);
 					let h = trim(r.out);
 					if (!match(h, /^\$5\$/)) return { error: 'cannot make a password' };
 					system(sprintf('mkdir -p %s && chmod 700 %s && umask 077 && : > %s', TREMOTE_KEYS, TREMOTE_KEYS, shq(f)));
@@ -5259,7 +5536,7 @@ return {
 					abs = realpath(p.abs);
 				}
 				let r = sh('/usr/sbin/shareos-transmission watch ' + shq(g.u) + ' ' + shq(abs));
-				return json(trim(r.out) || 'null') ?? { error: trim(r.out) || 'failed' };
+				return jparse(trim(r.out) || 'null') ?? { error: trim(r.out) || 'failed' };
 			}
 		},
 
@@ -5273,7 +5550,7 @@ return {
 				let p = req.args.port;
 				if (type(p) != 'int' || p < 0 || p > 65535) return { error: 'the peer port must be a number' };
 				let r = sh('/usr/sbin/shareos-transmission port ' + shq(g.u) + ' ' + shq(p == 0 ? '' : '' + p));
-				return json(trim(r.out) || 'null') ?? { error: trim(r.out) || 'failed' };
+				return jparse(trim(r.out) || 'null') ?? { error: trim(r.out) || 'failed' };
 			}
 		}
 	},
@@ -5325,10 +5602,10 @@ return {
 			call: function(req) {
 				let g = app_grant_user(req.args.grant);
 				if (!g || index(g.app.permissions ?? [], 'syncthing') < 0) return { error: 'no access' };
-				let st = json(sh('/usr/sbin/shareos-syncthing status ' + shq(g.u)).out ?? '') ?? {};
+				let st = jparse(sh('/usr/sbin/shareos-syncthing status ' + shq(g.u)).out ?? '') ?? {};
 				if (!st.running) {
 					let r = sh('/usr/sbin/shareos-syncthing start ' + shq(g.u));
-					st = json(r.out ?? '') ?? { error: trim(r.out) || 'cannot start' };
+					st = jparse(r.out ?? '') ?? { error: trim(r.out) || 'cannot start' };
 					if (st.error) return { error: st.error, installed: st.installed };
 				}
 				return { user: g.u, socket: st.socket, key: trim(readfile('/tmp/shareos-syncthing/' + g.u + '/apikey') ?? ''),
@@ -5355,7 +5632,7 @@ return {
 				let g = app_grant_user(req.args.grant);
 				if (!g || index(g.app.permissions ?? [], 'syncthing') < 0) return { error: 'no access' };
 				let r = sh('/usr/sbin/shareos-syncthing restart ' + shq(g.u));
-				return json(r.out ?? '') ?? { error: trim(r.out) || 'failed' };
+				return jparse(r.out ?? '') ?? { error: trim(r.out) || 'failed' };
 			}
 		}
 	},
@@ -5446,8 +5723,7 @@ return {
 					if (droot == a.root && (d.rel == src || index(d.rel + '/', src + '/') == 0)) return { error: 'a folder cannot be moved into itself' };
 					if (lstat(d.abs + '/' + n)) return { error: 'already exists: ' + n };
 				}
-				let r = files_sh(g.u, sprintf('%s -- %s %s', a.copy ? 'cp -a' : 'mv', join(' ', map(a.names, (n) => shq(p.abs + '/' + n))), shq(d.abs + '/')), d.root.share);
-				return r.rc == 0 ? { ok: true } : { error: files_err(r) };
+				return files_bg(g.u, sprintf('%s -- %s %s', a.copy ? 'cp -a' : 'mv', join(' ', map(a.names, (n) => shq(p.abs + '/' + n))), shq(d.abs + '/')), d.root.share);
 			}
 		},
 
@@ -5460,8 +5736,17 @@ return {
 				for (let n in a.names) if (!name_ok(n)) return { error: 'invalid name' };
 				let p = files_wpath(g, a.root, a.path, 'dir');
 				if (p.error) return p;
-				let r = files_sh(g.u, 'rm -rf -- ' + join(' ', map(a.names, (n) => shq(p.abs + '/' + n))), p.root.share);
-				return r.rc == 0 ? { ok: true } : { error: files_err(r) };
+				return files_bg(g.u, 'rm -rf -- ' + join(' ', map(a.names, (n) => shq(p.abs + '/' + n))), p.root.share);
+			}
+		},
+
+		// how a copy, move or delete that went on in the background ended
+		job: {
+			args: { grant: '', id: '' },
+			call: function(req) {
+				let g = app_grant_user(req.args.grant, true);
+				if (!g) return { error: 'no access' };
+				return files_job(g.u, req.args.id);
 			}
 		},
 
@@ -5744,12 +6029,33 @@ return {
 	},
 
 	'shareos.update': {
+		// the one setting of the Firmware page. It has a method of its own, so
+		// that web sessions need no general write access to the settings (uci)
+		set_channel: {
+			args: { channel: '' },
+			call: function(req) {
+				if (!channel_ok(req.args.channel)) return { error: 'invalid channel' };
+				let c = cursor();
+				c.set('shareos', 'update', 'update');
+				c.set('shareos', 'update', 'channel', req.args.channel);
+				c.commit('shareos');
+				return { ok: true, channel: req.args.channel };
+			}
+		},
+
 		check: {
 			args: { channel: 'stable' },
 			call: function(req) {
 				let ch = req.args.channel;
 				return run_updater(ch ? [ 'check', ch ] : [ 'check' ]);
 			}
+		},
+
+		// The check the interface starts by itself: in the background. Asking
+		// GitHub takes up to a minute on a box without internet, and rpcd
+		// answers one call at a time – the result comes with "status".
+		check_auto: {
+			call: function() { return spawn_updater([ 'auto' ]); }
 		},
 
 		status: {

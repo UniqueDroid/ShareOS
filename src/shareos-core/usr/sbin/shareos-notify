@@ -10,7 +10,10 @@
 //                                      complete again); "<prefix>-*": all
 //                                      keys starting with "<prefix>-"
 //   shareos-notify check               look at RAID, volumes, temperature,
-//                                      SMART (cached values) and updates (cron)
+//                                      SMART and updates (cron). SMART of the
+//                                      internal disks is read again when the
+//                                      values are older than 6 hours (a
+//                                      sleeping disk is not woken up)
 //   shareos-notify list                JSON for the web interface
 //   shareos-notify read <id|all>       mark as read
 //   shareos-notify delete <id|all>
@@ -27,8 +30,12 @@
 //
 'use strict';
 
-import { readfile, writefile, mkdir, stat, glob, popen, unlink } from 'fs';
+import { readfile, writefile, mkdir, stat, glob, popen, unlink, lsdir, realpath } from 'fs';
 import { cursor } from 'uci';
+
+// JSON text -> value; null when the text is not JSON (never an exception:
+// a damaged file or a tool that printed an error must not end the call)
+function jparse(s) { try { return json(s); } catch (e) { return null; } }
 
 const ROOT = getenv('SHAREOS_ROOT') ?? '';
 const DB = ROOT + '/etc/shareos/notifications.json';
@@ -36,6 +43,14 @@ const LEVELS = { info: 1, warn: 2, error: 3 };
 const MAX = 100;
 const RESEND = 24 * 3600;
 const DRY = !!getenv('SHAREOS_NOTIFY_DRY');
+// a temperature older than this is not trusted (as shareos-board and rpcd)
+const TEMP_MAX_AGE = 90;
+// SMART values older than this are read again by "check"
+const SMART_REFRESH = 6 * 3600;
+// tests: a stand-in for ubus and for /sys/block; with a fake root and no
+// stand-in SMART is not read
+const UBUS = getenv('SHAREOS_TEST_UBUS') ?? (ROOT ? null : 'ubus');
+const SYSBLOCK = getenv('SHAREOS_TEST_SYSBLOCK') ?? ROOT + '/sys/block';
 const CA = '/etc/ssl/certs/ca-certificates.crt';
 const CURL = [ 'curl', '-sS', '--max-time', '30', ...(stat(CA) ? [ '--cacert', CA ] : []) ];
 
@@ -132,10 +147,23 @@ function telegram(token, method, body) {
 	let r = run(argv, body != null ? sprintf('%J', body) : null);
 	if (!DRY) unlink(cfg);
 	if (DRY) return { ok: true, result: [] };
-	let j = json(r.out || 'null');
+	let j = jparse(r.out || 'null');
 	if (type(j) != 'object') return { error: 'telegram: ' + (trim(r.out) || 'curl exit ' + r.rc) };
 	if (!j.ok) return { error: 'telegram: ' + (j.description ?? 'failed') };
 	return j;
+}
+
+// token and address of a push service (a webhook address is a secret by
+// itself): through a curl config only root can read, not onto the command
+// line, where every local user could read them in the process list.
+// Returns the file to remove afterwards.
+function secret_args(argv, hdr, url) {
+	if (DRY) { if (hdr) push(argv, '-H', hdr); push(argv, url); return null; }
+	let cfg = '/tmp/shareos-notify-push.' + newid();
+	system('umask 077; : > ' + shq(cfg));
+	writefile(cfg, (hdr ? 'header = ' + sprintf('%J', hdr) + '\n' : '') + 'url = ' + sprintf('%J', url) + '\n');
+	push(argv, '-K', cfg);
+	return cfg;
 }
 
 function send_push(n, m) {
@@ -150,23 +178,25 @@ function send_push(n, m) {
 	}
 	if (!url || !match(url, /^https?:\/\/[^ ]+$/)) return 'push: invalid address';
 	let prio = { info: 3, warn: 4, error: 5 }[m.level] ?? 3;
-	let argv = [ ...CURL, '-f', '-H', 'Content-Type: application/json' ], body;
+	let argv = [ ...CURL, '-f', '-H', 'Content-Type: application/json' ], body, hdr = null;
 	if (typ == 'ntfy') {
 		let u = match(url, /^(https?:\/\/[^\/]+)\/([^\/?#]+)$/);
 		if (!u) return 'push: ntfy address must be like https://ntfy.sh/<topic>';
 		body = { topic: u[2], title, message: text, priority: prio, tags: [ m.level == 'error' ? 'rotating_light' : m.level == 'warn' ? 'warning' : 'information_source' ] };
 		url = u[1];
-		if (n.push_token) push(argv, '-H', 'Authorization: Bearer ' + n.push_token);
+		if (n.push_token) hdr = 'Authorization: Bearer ' + n.push_token;
 	} else if (typ == 'gotify') {
 		body = { title, message: text, priority: prio * 2 - 2 };
 		url = replace(url, /\/+$/, '') + '/message';
-		if (n.push_token) push(argv, '-H', 'X-Gotify-Key: ' + n.push_token);
+		if (n.push_token) hdr = 'X-Gotify-Key: ' + n.push_token;
 	} else {
 		body = { host: hostname(), level: m.level, source: m.source, key: m.key, title, text, time: m.last };
-		if (n.push_token) push(argv, '-H', 'Authorization: Bearer ' + n.push_token);
+		if (n.push_token) hdr = 'Authorization: Bearer ' + n.push_token;
 	}
-	push(argv, '-X', 'POST', '--data-binary', '@-', url);
+	push(argv, '-X', 'POST', '--data-binary', '@-');
+	let cfg = secret_args(argv, hdr, url);
 	let r = run(argv, sprintf('%J', body));
+	if (cfg) unlink(cfg);
 	return r.rc == 0 ? null : 'push: ' + (trim(r.out) || 'curl exit ' + r.rc);
 }
 
@@ -300,9 +330,25 @@ function check_volumes(n) {
 	});
 }
 
+// how this box is cooled (S05board: /tmp/sys/board.env); null: nothing regulates
+function board_control() {
+	let m = match(readfile(ROOT + '/tmp/sys/board.env') ?? '', /(^|\n)BOARD_CONTROL="?([a-z-]*)"?/);
+	return m && m[2] != '' && m[2] != 'none' ? m[2] : null;
+}
+
 function check_temp(n) {
-	let t = +trim(readfile(ROOT + '/tmp/sys/temp1_input') ?? '0') / 1000, max = +(n.temp_max ?? 55);
-	if (!(t > 0)) return;
+	let f = ROOT + '/tmp/sys/temp1_input', st = stat(f);
+	let t = st && time() - st.mtime <= TEMP_MAX_AGE ? +trim(readfile(f) ?? '0') / 1000 : 0, max = +(n.temp_max ?? 55);
+	if (!(t > 0)) {
+		// a box with fan control that gives no reading: the MCU daemon or the
+		// sensor is gone, shareos-board has put the fan to full speed
+		if (board_control())
+			cmd_send('error', 'system', 'temp-sensor', 'Temperatur der Box nicht lesbar', 'Temperature of the box cannot be read',
+				'Seit über 90 Sekunden kommt kein Wert; der Lüfter läuft sicherheitshalber mit voller Drehzahl. Die Box neu starten, wenn es so bleibt.',
+				'No value for more than 90 seconds; the fan runs at full speed to be safe. Restart the box if it stays that way.');
+		return;
+	}
+	cmd_clear('temp-sensor');
 	if (t >= max)
 		cmd_send('warn', 'system', 'temp', 'Box zu warm: ' + int(t) + ' °C', 'Box too warm: ' + int(t) + ' °C',
 			'Lüfter, Staub und Aufstellort prüfen (Grenze ' + max + ' °C).', 'Check the fan, dust and where the box stands (limit ' + max + ' °C).');
@@ -333,7 +379,24 @@ function smart_reason(s, r, en) {
 	return sprintf(t[en ? 1 : 0], v ?? '?');
 }
 
+// internal disks (not USB)
+function bay_disks() {
+	return filter(sort(lsdir(SYSBLOCK) ?? []), (d) => match(d, /^sd[a-z]$/) && index(realpath(SYSBLOCK + '/' + d) ?? '', '/usb') < 0);
+}
+// Read SMART of the internal disks when there are no values yet or they are
+// older than SMART_REFRESH. rpcd reads with "smartctl -n standby": a sleeping
+// disk stays asleep and is asked again at the next check.
+function smart_refresh() {
+	if (!UBUS) return;
+	for (let d in bay_disks()) {
+		let st = stat(ROOT + '/tmp/shareos-storage/smart-' + d + '.json');
+		if (st && time() - st.mtime < SMART_REFRESH) continue;
+		sh_out(sprintf('%s -t 120 call shareos.storage smart %s 2>/dev/null', UBUS, shq(sprintf('{"disk":"%s"}', d))));
+	}
+}
+
 function check_smart() {
+	smart_refresh();
 	for (let f in glob(ROOT + '/tmp/shareos-storage/smart-*.json')) {
 		let disk = match(f, /smart-(sd[a-z]+)\.json$/)?.[1], s = null;
 		if (!disk) continue;

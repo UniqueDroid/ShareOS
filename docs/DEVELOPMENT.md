@@ -297,6 +297,12 @@ the box for why the web server was not running.
 |---|---|
 | 13:00 | **Static analysis** (Jan: "AI projects are criticised for this – where do we stand?"). There were already project-specific checks (ucode compile, forward references, ACL, i18n) and the weekly CVE overview; new: ShellCheck over all shell scripts, ESLint for the web interface and the app SDK, a check for unused top-level code, a complexity report (`tests/static-analysis.sh`, CI job `static-analysis`) and CodeQL for JavaScript and Python (taint analysis, `codeql.yml`). Findings fixed: three loops over `ls` output, one unused function, two needless escapes. The monthly audit now looks at the report. |
 
+### Friday, 13.11.2026
+
+| Time | What happened |
+|---|---|
+| 19:40 | **Review of the whole firmware** by a second AI (Claude Fable 5.2), asked for by Jan: "real values, standards, speed" – backend, interface, tools, board scripts and C sources read line by line, 85 findings. Jan decides point by point; the corrections come as one pull request (#158) in six packages: data and hardware safety (SMART read by the box itself, stale temperature, no switching off while flashing, supervised `rpcd`), displays that show what is, speed and the browser cache, robustness, secrets off the command line, rescue mode with the USB button. Found on the way: the ARM emulator tests never ran on GitHub – they do now. Signed releases are noted as a must-have of their own; splitting `app.js` and `shareos.uc` by areas follows as the next pull request. |
+
 ### Thursday, 12.11.2026
 
 | Time | What happened |

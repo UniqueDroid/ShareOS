@@ -1,0 +1,28 @@
+#!/bin/sh
+#
+# Runs a service of the core stack in the foreground and starts it again when
+# it exits (crash, out of memory, kill), so the web interface comes back on its
+# own. Every exit is logged to syslog. Used for ubusd and rpcd (S12ubus,
+# S13rpcd); uhttpd has its own loop (shareos-uhttpd).
+#
+#   shareos-supervise <name> <command> [arguments …]
+#
+# ubusd: its clients do not find a new ubusd by themselves, so rpcd and uhttpd
+# are ended as well – their own loops start them again. The logins of the web
+# interface live in rpcd: after a restart of rpcd one signs in again.
+#
+name=$1; shift
+child=
+trap '[ -n "$child" ] && kill $child 2>/dev/null; exit 0' TERM INT
+while :; do
+	start=$(date +%s)
+	"$@" &
+	child=$!
+	wait $child
+	rc=$?
+	child=
+	logger -t shareos-supervise "$name exited with status $rc$([ $rc -gt 128 ] && echo " (signal $((rc - 128)))"), restarting"
+	[ "$name" = ubusd ] && killall rpcd uhttpd 2>/dev/null
+	# a service that does not stay up is not started in a tight loop
+	if [ $(($(date +%s) - start)) -lt 10 ]; then sleep 5; else sleep 1; fi
+done

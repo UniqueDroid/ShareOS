@@ -165,12 +165,19 @@ check "rpc: invalid volume name rejected" "echo '$E' | grep -q 'invalid name'"
 run '/etc/init.d/S13rpcd stop; /etc/init.d/S12ubus stop' >/dev/null 2>&1
 
 if [ -e /proc/mdstat ]; then
-	run shareos-storage setup mirror spiegel $A $B --swap=32 --yes >/dev/null
+	o=$(run shareos-storage setup mirror spiegel $A $B --swap=32 --yes)
+	# qemu-user does not pass on the md calls of mdadm ("Not a tty")
+	if echo "$o" | grep -q 'failed to set array info.*Not a tty'; then MD_EMU=0; else MD_EMU=1; fi
+	[ $MD_EMU = 1 ] || echo "SKIP  mirror, stripe, span (this emulator does not pass on the md calls of mdadm)"
+	[ $MD_EMU = 1 ] &&
 	check "mirror setup" "run shareos-storage job | grep -q 'state=done' && mounted spiegel && grep -q md /proc/mdstat"
+	[ $MD_EMU = 0 ] || run shareos-storage job | grep -q 'state=done' || { echo "      job: $(run shareos-storage job | tr '\n' ' ')"; echo "      mdstat: $(tr '\n' ' ' < /proc/mdstat)"; echo "      output: $(echo "$o" | tail -n 6 | tr '\n' ' ' | cut -c1-900)"; }
 	run shareos-storage shutdown >/dev/null
 	for l in stripe span; do
+		[ $MD_EMU = 1 ] || break
 		run shareos-storage setup $l gross $A $B --swap=0 --yes >/dev/null
 		check "$l setup (RAID 0 / JBOD)" "run shareos-storage job | grep -q 'state=done' && mounted gross && run uci get storage.gross.layout | grep -qx $l"
+		run shareos-storage job | grep -q 'state=done' || echo "      job: $(run shareos-storage job | tr '\n' ' ')"
 		run shareos-storage shutdown >/dev/null
 	done
 else
@@ -210,7 +217,8 @@ check "usb: MBR partition type 83" "ptype $C ${C}p1 | grep -qx 83"
 echo data > $R/mnt/usb-mein_stick/f
 usb shareos-usb umount-all >/dev/null
 check "usb: umount-all" "! grep -q \" $R/mnt/usb-mein_stick \" /proc/mounts && [ ! -d $R/mnt/usb-mein_stick ]"
-usb shareos-usb mount-all >/dev/null
+o=$(usb shareos-usb mount-all 2>&1)
+grep -qx data $R/mnt/usb-mein_stick/f 2>/dev/null || echo "      mount-all: $(echo "$o" | tr '\n' ' ' | cut -c1-400) | list: $(usb shareos-usb list 2>&1 | tr '\n' ' ' | cut -c1-300) | blkid: $(run "blkid /dev/${C}p1" 2>&1 | cut -c1-200)"
 check "usb: mount-all finds it again, data there" "grep -qx data $R/mnt/usb-mein_stick/f"
 check "usb: internal disks are not touched by mount-all" "! grep -q \" $R/mnt/usb-.*${B}\" /proc/mounts"
 usb shareos-usb umount-all >/dev/null

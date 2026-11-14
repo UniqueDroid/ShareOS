@@ -13,12 +13,13 @@ UCODE=${BIN:+$BIN/}ucode
 P="$TOP/src/shareos-core/usr/sbin/shareos-ddns"
 T=$(mktemp -d); trap 'rm -rf "$T"' EXIT
 mkdir -p $T/etc/config $T/tmp
-# fake curl: logs the URL (last argument) and the config from stdin, answers by URL
+# fake curl: logs the URL and the config (both from stdin), answers by URL
 cat > $T/curl <<'C'
 #!/bin/sh
 D=$(dirname "$0")
 cfg=$(cat)
-for a; do url=$a; done
+url=$(printf '%s\n' "$cfg" | sed -n 's/^url = "\(.*\)"$/\1/p' | sed 's/\\\//\//g')
+cfg=$(printf '%s\n' "$cfg" | grep -v '^url = ')
 args="$*"
 echo "URL $url" >> $D/curl.log
 echo "ARGS $args" >> $D/curl.log
@@ -81,6 +82,7 @@ check "custom: placeholders and dyndns2 error badauth" "run update | js \"'passw
 
 conf provider=cloudflare host=nas.home.example.org token=cftoken
 check "cloudflare: zone found, A record created" "run update | js \"d.get('ok')\" && grep -q 'URL https://api.cloudflare.com/client/v4/zones/Z1/dns_records\$' $T/curl.log && grep -q 'ARGS.*-X POST' $T/curl.log"
+check "the address (with the token of DuckDNS) is not on the command line" "! grep '^ARGS' $T/curl.log | grep -q 'https://'"
 check "cloudflare: token through the config" "grep -q 'CFG header = \"Authorization: Bearer cftoken\"' $T/curl.log && ! grep '^ARGS' $T/curl.log | grep -q cftoken"
 conf provider=cloudflare host=nas.home.example.org token=cftoken; touch $T/cf-has
 check "cloudflare: existing record changed (PUT)" "run update | js \"d.get('ok')\" && grep -q 'URL https://api.cloudflare.com/client/v4/zones/Z1/dns_records/R1' $T/curl.log && grep -q 'ARGS.*-X PUT' $T/curl.log"

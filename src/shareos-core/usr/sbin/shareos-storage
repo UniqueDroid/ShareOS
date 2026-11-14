@@ -123,7 +123,7 @@ volume_dev() {   # name -> block device of the file system (by UUID)
 is_mounted() { grep -q " $1 " /proc/mounts; }
 
 mount_volume() {
-	local n=$1 dev fs
+	local n=$1 dev fs rc
 	[ "$(uci -q get storage.$n)" = volume ] || { echo "unknown volume $n" >&2; return 1; }
 	is_mounted /mnt/$n && return 0
 	dev=$(volume_dev $n) || { log "volume $n: file system not found"; return 1; }
@@ -132,6 +132,16 @@ mount_volume() {
 	opts=noatime
 	if [ "$fs" = ext4 ]; then
 		e2fsck -p "$dev" >/dev/null 2>&1
+		rc=$?
+		# 4 and above: errors are left that the automatic check must not fix
+		if [ $rc -ge 4 ]; then
+			log "volume $n: the file system check left errors (e2fsck exit $rc)"
+			/usr/sbin/shareos-notify send error storage "fsck-$n" "Laufwerk $n: Fehler im Dateisystem" "Volume $n: file system errors" \
+				"Die automatische Prüfung beim Einhängen konnte nicht alles reparieren. Daten sichern und das Dateisystem von Hand prüfen (e2fsck)." \
+				"The automatic check at mounting could not repair everything. Back up the data and check the file system by hand (e2fsck)." >/dev/null 2>&1
+		else
+			/usr/sbin/shareos-notify clear "fsck-$n" >/dev/null 2>&1
+		fi
 		# storage limits per user: the ext4 "quota" feature keeps the usage in
 		# hidden inodes (older volumes get it here, it needs the volume unmounted)
 		if quota_supported; then
@@ -152,10 +162,17 @@ mount_volume() {
 	log "volume $n mounted ($dev)"
 }
 
+# umount_volume <name> [lazy]. A volume that is still in use is not unmounted
+# (the caller reports "busy"); only the shutdown detaches it anyway (lazy).
 umount_volume() {
 	is_mounted /mnt/$1 || return 0
 	sync
-	umount /mnt/$1 2>/dev/null || umount -l /mnt/$1 || return 1
+	if ! umount /mnt/$1 2>/dev/null; then
+		[ "$2" = lazy ] || return 1
+		umount -l /mnt/$1 || return 1
+		log "volume $1 was still in use, detached"
+		return 0
+	fi
 	log "volume $1 unmounted"
 }
 
@@ -183,7 +200,7 @@ apply_spindown() {
 	for d in /sys/block/sd?; do
 		[ -e "$d" ] || continue
 		[ "$(cat $d/removable 2>/dev/null)" = 1 ] && continue
-		hdparm -q -S "$v" /dev/${d##*/} 2>/dev/null
+		hdparm -q -S "$v" /dev/${d##*/} 2>/dev/null || log "/dev/${d##*/} did not take the spin-down time"
 	done
 }
 
@@ -553,7 +570,7 @@ cmd_adopt() {   # name partition
 cmd_shutdown() {
 	for sw in $(find_dev LABEL=shareos-swap); do swapoff $sw 2>/dev/null; done
 	for n in $(uci -q show storage | sed -n "s/^storage\.\([^.=]*\)=volume$/\1/p"); do
-		umount_volume $n
+		umount_volume $n lazy
 	done
 	mdadm --stop --scan >/dev/null 2>&1
 	return 0

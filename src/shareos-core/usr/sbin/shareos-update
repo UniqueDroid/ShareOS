@@ -7,6 +7,10 @@
 //   shareos-update apply <tag>           install a verified download, then reboot
 //   shareos-update status                current state (JSON)
 //   shareos-update cancel                forget a download
+//   shareos-update busy                  exit 0 while firmware is being written
+//                                        (this updater or shareos-flash-bin):
+//                                        switching off or restarting then
+//                                        would leave a half-written kernel
 //   shareos-update local <file> [sha256] verify an uploaded .sysupgrade.tar (no internet
 //                                        needed); then "apply local" installs it
 //
@@ -31,6 +35,10 @@
 
 import { readfile, writefile, mkdir, stat, unlink, rename, popen, glob } from 'fs';
 import { cursor } from 'uci';
+
+// JSON text -> value; null when the text is not JSON (never an exception:
+// a damaged file or a tool that printed an error must not end the call)
+function jparse(s) { try { return json(s); } catch (e) { return null; } }
 
 // SHAREOS_ROOT lets the test suite run this against a fake root on a build host
 const ROOT = getenv('SHAREOS_ROOT') ?? '';
@@ -103,18 +111,43 @@ function config() {
 	};
 }
 
+// states in which an updater process is at work; its PID is kept in the
+// state, so a run that was killed does not look as if it were still going on
+const BUSY = { downloading: 1, verifying: 1, flashing: 1 };
+function self_pid() { return +(split(readfile('/proc/self/stat') ?? '', ' ')[0]) || null; }
+function updater_alive(p) { return p > 1 && index(readfile('/proc/' + p + '/cmdline') ?? '', 'shareos-update') >= 0; }
+
 function load_state() {
-	let d = readfile(STATE);
-	let s = d ? json(d) : null;
-	return type(s) == 'object' ? s : { state: 'idle' };
+	let s = null;
+	try { s = json(readfile(STATE) ?? 'null'); } catch (e) { }
+	if (type(s) != 'object') return { state: 'idle' };
+	if (BUSY[s.state] && s.pid != null && !updater_alive(s.pid)) {
+		s.error = 'the update was interrupted (' + s.state + (s.step ? ', ' + s.step : '') + ')';
+		s.state = 'error';
+		delete s.pid;
+		delete s.step;
+	}
+	return s;
 }
 
 function save_state(s) {
 	mkdir(STATE_DIR);
 	s.updated = time();
+	// the PID of the process doing the work: another updater process that
+	// saves meanwhile (a check while a download runs) must not take it over
+	if (!BUSY[s.state]) delete s.pid;
+	else if (!(s.pid && updater_alive(s.pid))) s.pid = self_pid();
 	writefile(STATE + '.tmp', sprintf('%J', s));
 	rename(STATE + '.tmp', STATE);
 	return s;
+}
+
+// is firmware being written right now? (kernel, initramfs or the staged system)
+function flash_busy() {
+	let s = load_state();
+	if (s.state == 'flashing') return true;
+	let p = +trim(readfile(ROOT + '/tmp/shareos-flash-bin.lock/pid') ?? '0');
+	return p > 1 && stat('/proc/' + p) != null;
 }
 
 function out(o) {
@@ -169,7 +202,7 @@ function fetch_releases(cfg) {
 		let m = match(r.out, /curl: \([0-9]+\)[^\n]*/);
 		return { error: m ? m[0] : 'curl exit ' + r.rc };
 	}
-	let list = json(r.out);
+	let list = jparse(r.out);
 	return type(list) == 'array' ? list : { error: 'unexpected answer from GitHub' };
 }
 
@@ -220,7 +253,14 @@ function cmd_check(channel, auto) {
 
 	let list = fetch_releases(cfg);
 	if (type(list) != 'array') {
-		if (auto) { warn('shareos-update: check failed: ' + list.error + '\n'); exit(1); }
+		if (auto) {
+			// noted, so the web interface does not ask again at every page load
+			s = load_state();
+			s.check_failed = { time: time(), error: list.error };
+			save_state(s);
+			warn('shareos-update: check failed: ' + list.error + '\n');
+			exit(1);
+		}
 		fail(s, 'cannot fetch releases from ' + cfg.api + ' (' + cfg.repo + '): ' + list.error);
 	}
 	// the state may have changed while asking GitHub (a download started)
@@ -237,6 +277,7 @@ function cmd_check(channel, auto) {
 		latest: latest?.tag,
 		update_available: !!latest && vcmp(latest.version, rel.SHAREOS_VERSION) > 0
 	};
+	delete s.check_failed;
 	if (s.state == 'error') {
 		s.state = 'idle';
 		delete s.error;
@@ -560,6 +601,7 @@ case 'download': cmd_download(ARGV[1]); break;
 case 'apply':    cmd_apply(ARGV[1]); break;
 case 'status':   cmd_status(); break;
 case 'cancel':   cmd_cancel(); break;
+case 'busy':     exit(flash_busy() ? 0 : 1);
 case 'local':    cmd_local(ARGV[1], ARGV[2]); break;
 case 'ack':      cmd_ack(); break;
 default:

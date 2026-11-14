@@ -2058,3 +2058,34 @@ E1650	bandeja compartida · sin token
 P362	bandeja personal de $1 · sin token
 E1651	No se pudo obtener el certificado de Let's Encrypt.
 E1652	Se comprueba una vez por minuto
+E1653	Hora del equipo
+E1654	sin control de placa
+E1655	el control de placa no funciona
+E1656	Sin lectura de temperatura: el ventilador funciona a máxima velocidad.
+E1657	El control del ventilador del equipo no está funcionando.
+P363	El ventilador se detiene por debajo de $1 °C, al máximo desde $2 °C
+P364	Ventilador siempre encendido, al máximo desde $1 °C
+P365	$1: no se inició$2
+P366	$1: no se detuvo$2
+P367	$1: no se reinició$2
+P368	$1, puertos $2 y $3
+E1658	zabbix_agentd, modo pasivo
+E1659	zabbix_agentd, modo activo y pasivo
+E1660	Valores SMART de un disco de este volumen
+P369	(paso $1 de $2) –
+E1661	no se pudo ajustar en la última sincronización
+E1662	Elimina todos los ajustes y paquetes instalados de la memoria flash y reinicia. El sistema y la versión del firmware se conservan. Después el equipo no tiene contraseña: pulse el botón USB del frontal y elija una nueva en la interfaz web.
+E1663	Se borran todos los ajustes y paquetes instalados y el equipo se reinicia. Después no tiene contraseña: pulse el botón USB del frontal y elija una nueva.
+E1664	Las credenciales se quedan en el equipo y solo root puede leerlas (contraseñas ofuscadas por rclone, no cifradas).
+E1665	No hay mensajes.
+E1666	Cada 10 minutos el equipo comprueba RAID, volúmenes (montados, ocupación), temperatura, valores SMART (se leen de nuevo cada 6 horas; no se despierta un disco en reposo) y actualizaciones; los trabajos de nube, tareas de apps y trabajos de almacenamiento fallidos avisan al instante. Los mensajes repetidos se cuentan y se reenvían como máximo una vez al día.
+P370	Error al iniciar sesión: $1
+E1667	algunos archivos desaparecieron durante la copia
+E1668	desconocido
+P371	Horario guardado, pero no se pudo ajustar la alarma de encendido: $1
+E1669	ShareOS se ha actualizado: cargando la nueva interfaz …
+E1670	Esto tarda un poco: continúa en segundo plano …
+E1671	Para conocer su dirección IPv4 pública, la caja pregunta a api.ipify.org (ipv4.icanhazip.com si no responde).
+E1672	La contraseña necesita al menos 8 caracteres.
+E1673	Nueva contraseña (al menos 8 caracteres). Sirve para las carpetas compartidas y – según el rol – para la interfaz web.
+E1674	Vale para la interfaz web y SSH. Al menos 8 caracteres.

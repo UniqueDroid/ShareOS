@@ -84,7 +84,7 @@ backup.
 | Key | Value |
 |---|---|
 | `shareos.box[temperature]` | temperature of the box in °C |
-| `shareos.box[fan_rpm]`, `shareos.box[fan_pwm]` | fan (speed, level 0–255) |
+| `shareos.box[fan_rpm]`, `shareos.box[fan_pwm]` | fan: nominal speed of the level set (0, 3000 or 6000 – the boxes have no speed sensor, nothing is measured) and level 0–255 |
 | `shareos.box[version]`, `shareos.box[board]` | ShareOS version, model |
 | `shareos.disk.discovery` | disks in the bays (no USB drives): `{#DISK}`, `{#MODEL}`, `{#SERIAL}` |
 | `shareos.disk[<disk>,<value>]` | `rating` (0 good, 1 warning, 2 critical – as *Storage → Health*), `passed`, `temperature`, `temperature_max`, `reallocated`, `pending`, `uncorrectable`, `crc_errors`, `error_count`, `life_left` (SSD), `power_on_hours`, `power_cycles`, `standby`, `age`, `model`, `serial` |

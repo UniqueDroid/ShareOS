@@ -364,7 +364,13 @@ int gettemperature_cmd(char *mcmd, char *retMessage, int retSize) {
 		return 1;
     }
 		
-	temp = ThermalTable[(int)buf[5]];
+	/* the MCU answers with an index into the table; a byte beyond its end
+	 * (line noise, a broken answer) is no temperature */
+	if ((unsigned char) buf[5] >= sizeof(ThermalTable)) {
+		strncpy(retMessage, "ERR", retSize);
+		return 1;
+	}
+	temp = ThermalTable[(unsigned char) buf[5]];
 	snprintf(retMessage, retSize, "%d", temp*1000);
 	write_str_to_file(sys_temp_input, retMessage);
 	return 0;
@@ -494,7 +500,8 @@ int readrtc_cmd(char *mcmd, char *retMessage, int retSize) {
 	strTime.tm_min = buf[6];
 	strTime.tm_sec = buf[5];
 	strTime.tm_isdst = -1;   
-	rtcTime = mktime(&strTime);
+	/* the RTC keeps UTC (see systohc/hctosys): shown as local time */
+	rtcTime = timegm(&strTime);
 	strcpy(timeStr, ctime(&rtcTime));
 	timeStr[strlen(timeStr)-1] = '\0';
 	snprintf(retMessage, retSize, "%s", timeStr);
@@ -712,13 +719,13 @@ int quit_cmd(char *mcmd, char *retMessage, int retSize) {
 int help_cmd(char *mcmd, char *retMessage, int retSize) {
 	int i;
 	
-	strncpy(retMessage, "Available Commands:\n\n", retSize);
-	for (i = 0; i < sizeof(cmds)/sizeof(cmd_t); i++) {
-		strncat(retMessage, cmds[i].ucmd, retSize);
-		strncat(retMessage, ", ", retSize);
-	}
-	retMessage[strlen(retMessage)-2] = 0;
-	strncat(retMessage, ".", retSize);
+	/* strncat's size is the room that is left, not the size of the buffer:
+	   count what is used and stop before the buffer is full */
+	int n = snprintf(retMessage, retSize, "Available Commands:\n\n");
+	for (i = 0; i < sizeof(cmds)/sizeof(cmd_t) && n >= 0 && n < retSize; i++)
+		n += snprintf(retMessage + n, retSize - n, "%s%s", i ? ", " : "", cmds[i].ucmd);
+	if (n >= 0 && n < retSize)
+		snprintf(retMessage + n, retSize - n, ".");
 	return 1;
 }
 
@@ -1173,7 +1180,10 @@ int main(int argc, char *argv[]) {
 	unsigned short sleepCount = 0;
 
 	struct sockaddr_un server;
-	int pollTimeMs = 10; // Sleep 10ms
+	/* The loop wakes up this often when no client asks for anything; a
+	 * client's command ends the wait at once. 100 ms: the LED is looked at
+	 * every 500 ms and the temperature every 15 s (both multiples of it). */
+	int pollTimeMs = 100;
 
 	char *xopt = NULL;
 	char xcmd[64];

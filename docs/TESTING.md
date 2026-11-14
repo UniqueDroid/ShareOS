@@ -509,6 +509,54 @@ Needs a Tailscale account (free), a phone or computer with Tailscale, the file `
 5. An account without a personal folder: sharing shows "no personal folder"; the shared item is dropped and does not come back at the next login.
 6. File dialog of an app for an account **without** *Files* (e.g. Webpad → *Open*): the list of folders shows *App data* first, then *My folder* and the user's shares; read-only shares are marked and are missing when saving. The app still keeps its own files in *App data*.
 
+## 14zs. Review fixes (0.3.0-beta.9)
+
+Nothing new to operate; these steps check that the corrections work on a real box. All commands as root over SSH.
+
+**Browser cache**
+
+1. Install the update from *System → Firmware* as usual, with the page open in a second browser tab as well.
+2. After the restart the page shows the new version without clearing the browser cache, and the second tab reloads by itself once ("ShareOS was updated – loading the new interface …").
+3. `curl -sk https://<box>/version.txt` shows the installed version.
+
+**Displays**
+
+4. *Overview*: a disk in standby has a dimmed dot and ASLEEP (wait for the standby time or run `hdparm -y /dev/sda`).
+5. *Services*: stop and start a service – the list follows within seconds. `killall ksmbd.mountd`: the page shows the service as stopped after its next refresh (at most 30 s) without reloading.
+6. Pull the network cable for 30 s: the header shows OFFLINE, with the cable back ONLINE.
+7. *System → Firmware*: change the *Update channel* to beta and back; `uci get shareos.update.channel` follows each time.
+
+**Temperature and supervision** (takes about 15 minutes; the fan keeps its current speed while the daemon is stopped)
+
+8. `killall dns320l-daemon`. After about 90 s the overview shows "–" for the temperature and the hardware page no longer says the device control is active.
+9. `shareos-notify check`: *System → Messages* shows *Temperature of the box cannot be read*.
+10. `/etc/init.d/S05board restart`: temperature and fan are back; after the next `shareos-notify check` the message is gone.
+11. `killall rpcd`: the web interface is back after a few seconds (sign in again); `logread | grep shareos-supervise` shows the restart.
+
+**SMART**
+
+12. `rm -f /tmp/shareos-storage/smart-*.json; shareos-notify check`: the files are there again (the check reads SMART itself when the values are older than 6 hours). A disk in standby is not woken for it.
+
+**Secrets**
+
+13. *Shares → Users*: set a new password for a user and sign in to a share with it from a PC (the SMB password goes to `ksmbd.adduser` on its standard input now).
+14. *Cloud*: add a WebDAV or SFTP connection with a password, run a job with it. `grep -A6 '^\[<name>\]' /etc/shareos/cloud/rclone.conf` shows `pass = ` with an obscured value.
+15. *System → Notifications*: *Test message* arrives (e-mail and push).
+16. If used: dynamic DNS *Refresh now*, the DNS filter page, autobrr, Syncthing and Tailscale (*Connect* with an auth key) work as before.
+17. While clicking through 13–16: `while :; do ps w | grep -E 'curl|mkpasswd|ksmbd.adduser|rclone' | grep -v grep; sleep 0.2; done` in a second SSH window shows no password, token or key.
+
+**Files**
+
+18. *Files*: copy a folder of several GB – the interface stays usable while it runs, and the folder is complete afterwards.
+
+**Switching off during an update**
+
+19. Start an update and press *Restart* in a second tab while the kernel or the system is written: refused with "firmware is being written – wait until it has finished". (The power button is ignored in that phase too – do not test that by holding the button.)
+
+**Rescue mode** (do not provoke it; only if the box ever ends there – slow blinking orange USB LED)
+
+20. `ssh root@<IP>` is refused. Press the USB button: the LED blinks fast, `ssh root@<IP>` (password `shareos`) works for 30 minutes.
+
 ## 14zr. DNS filter: switching off and on (0.3.0-beta.7)
 
 Needs the DNS filter on with the default list. Best with the router handing out the box as DNS server.

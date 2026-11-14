@@ -103,6 +103,7 @@ BOXIP=$(ip -4 -o addr show dev eth0 2>/dev/null | sed -n 's/.*inet \([0-9.]*\).*
 check "switch on: starts in the background" "ub set '{\"enabled\":true}' | js \"d.get('ok')\""
 wait_ready 180
 check "first start: running and ready" "ub status | js \"d['ready'] and d['web_port']==8053 and d['version']\""
+ub status | js "d['ready']" 2>/dev/null || { echo "      status: $(ub status | tr '\n' ' ' | cut -c1-600)"; echo "      log: $(df log | tr '\n' ' ' | tail -c 1500)"; echo "      port 53 on this host: $(ss -lnup 2>/dev/null | grep ':53 ' | tr '\n' ' ' | cut -c1-300)"; }
 Y=$R/etc/shareos/dnsfilter/AdGuardHome.yaml
 check "settings written by AdGuard's setup" "grep -q '^schema_version:' $Y && grep -q 'address: 0.0.0.0:8053' $Y"
 check "guard rail: query log in RAM, no file" "grep -A8 '^querylog:' $Y | grep -q 'file_enabled: false' && grep -A8 '^querylog:' $Y | grep -q 'dir_path: /tmp/shareos-dnsfilter/data'"
@@ -143,9 +144,12 @@ check "https: the same port as HTTP refused" "ub set '{\"https_port\":8053}' | g
 
 # --- block lists ----------------------------------------------------------------------
 check "list added" "ub filter_add '{\"name\":\"Test\",\"url\":\"http://127.0.0.1:$LPORT/list.txt\"}' | js \"[f for f in d['filters'] if f['name']=='Test' and f['rules']==3]\""
+# AdGuard takes the new list into its filter a moment after it has answered
+i=0; until [ "$(dnsq ads.shareos-test.example)" = 0.0.0.0 ] || [ $i -ge 60 ]; do sleep 1; i=$((i + 1)); done
+[ "$(dnsq ads.shareos-test.example)" = 0.0.0.0 ] || { echo "      answers: $(dnsq ads.shareos-test.example) $(dnsq banner.shareos-test.example)"; echo "      status: $(ub status | tr '\n' ' ' | cut -c1-700)"; }
 check "blocked name answered with 0.0.0.0" "[ \"\$(dnsq ads.shareos-test.example)\" = 0.0.0.0 ] && [ \"\$(dnsq banner.shareos-test.example)\" = 0.0.0.0 ]"
 check "status: rules, queries, blocked, estimate" "ub status | js \"d['rules']>=3 and d['blocked']>=2 and d['queries']>=2 and d['estimate_mb']>=25 and not d['warn']\""
-check "list switched off: name no longer blocked" "ub filter_enable '{\"url\":\"http://127.0.0.1:$LPORT/list.txt\",\"enabled\":false}' | js \"[f for f in d['filters'] if f['name']=='Test' and not f['enabled']]\" && [ \"\$(dnsq tracker.shareos-test.example)\" != 0.0.0.0 ]"
+check "list switched off: name no longer blocked" "ub filter_enable '{\"url\":\"http://127.0.0.1:$LPORT/list.txt\",\"enabled\":false}' | js \"[f for f in d['filters'] if f['name']=='Test' and not f['enabled']]\" && { i=0; until [ \"\$(dnsq tracker.shareos-test.example)\" != 0.0.0.0 ] || [ \$i -ge 60 ]; do sleep 1; i=\$((i + 1)); done; [ \"\$(dnsq tracker.shareos-test.example)\" != 0.0.0.0 ]; }"
 check "list removed" "ub filter_remove '{\"url\":\"http://127.0.0.1:$LPORT/list.txt\"}' | js \"not [f for f in d['filters'] if f['name']=='Test']\""
 check "invalid list address refused" "ub filter_add '{\"name\":\"x\",\"url\":\"file:///etc/shadow\"}' | grep -q 'http(s) address'"
 check "lists refreshed" "ub refresh | js \"'filters' in d\""
@@ -166,7 +170,8 @@ check "invalid upstream refused" "ub set '{\"upstream\":[\"rm -rf /\"]}' | grep 
 check "port of the box refused" "ub set '{\"web_port\":443}' | grep -q 'not a port of the box'"
 check "filtering paused and on again" "ub set '{\"protection\":false}' | js \"d['protection']==False\" && ub set '{\"protection\":true}' | js \"d['protection']==True\""
 check "web port changed: restarted on the new ports (HTTPS one above)" "ub set '{\"web_port\":8063}' | js \"d['ready'] and d['web_port']==8063 and d['https_port']==8064\" && curl -s -o /dev/null -w '%{http_code}' -u admin:$PW http://127.0.0.1:8063/control/status | grep -q 307 && curl -sk -o /dev/null -w '%{http_code}' -u admin:$PW https://127.0.0.1:8064/control/status | grep -q 200"
-check "settings kept over a restart" "df restart | js \"d['ready'] and d['upstream'][0]=='https://dns.quad9.net/dns-query'\""
+o=$(df restart); echo "$o" | js "d['ready']" 2>/dev/null || echo "      restart: $(echo "$o" | tr '\n' ' ' | cut -c1-500)"
+check "settings kept over a restart" "echo '$o' | js \"d['ready'] and d['upstream'][0]=='https://dns.quad9.net/dns-query'\""
 
 # --- switching off, boot, removal -------------------------------------------------------
 check "switched off: stopped" "ub set '{\"enabled\":false}' | js \"not d['running'] and not d['enabled']\" && [ \"\$(dnsq ads.shareos-test.example)\" = timeout ]"
@@ -187,10 +192,12 @@ check "switched on in operation: starts in the background" "ub set '{\"enabled\"
 first=; i=0
 while [ $i -lt 240 ]; do
 	st=$(ub status)
-	if echo "$st" | js "d.get('ready')"; then first=$(dnsq shareos-u.test.lan); break; fi
+	# (under the emulator the very first answer can take longer than one query waits)
+	if echo "$st" | js "d.get('ready')"; then for n in 1 2 3; do first=$(dnsq shareos-u.test.lan); [ "$first" = timeout ] || break; done; break; fi
 	echo "$st" | js "d.get('starting') or not d.get('running')" || break
 	sleep 1; i=$((i + 1))
 done
+[ "$first" = "$BOXIP" ] || echo "      first answer after ready: '$first' (expected $BOXIP), after $i s; now: '$(dnsq shareos-u.test.lan)'"
 check "switched on: not ready before DNS answers (port 53)" "[ \"$first\" = $BOXIP ]"
 sleep 15
 check "switched on: stays on (setting, process, DNS, Services page)" "[ \"\$(run 'uci -q get dnsfilter.main.enabled')\" = 1 ] && ub status | js \"d['enabled'] and d['running'] and d['ready']\" && [ \"\$(dnsq shareos-u.test.lan)\" = $BOXIP ] && svc True"

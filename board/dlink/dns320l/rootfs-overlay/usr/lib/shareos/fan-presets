@@ -1,0 +1,6 @@
+# Fan curves of ShareOS (System → Hardware → Fan). The one place they are
+# defined: shareos-board regulates by them, the web interface shows them.
+# name  stops below (°C; 0 = never stops)  full from (°C)  half from (°C)
+quiet    40 55 50
+balanced 0  50 45
+cool     0  45 42

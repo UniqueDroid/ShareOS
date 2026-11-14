@@ -4,6 +4,35 @@ Changes per release (newest first). The section of a version is added to its
 GitHub release automatically when the release is built. Test versions are
 pre-releases for test devices only.
 
+## 0.3.0-beta.9
+
+Result of a review of the whole firmware ("real values, standards, speed"). No new functions; many displays, checks and paths were corrected.
+
+- **Data and hardware safety**
+  - **SMART is read by the box itself** every 6 hours (by the check that runs every 10 minutes). Before, the health check only looked at values someone had read by hand – after a restart a failing disk was not reported.
+  - **Temperature that stopped updating:** a value older than 90 s counts as "no value". The fan then goes to full speed, the interface shows "–", and a message *Temperature of the box cannot be read* is raised. Before, the fan kept regulating by the last value without any alarm.
+  - **No switching off while the system is written:** restart, power off (interface, schedule, power button) are refused while an update writes kernel or system.
+  - **`ubusd` and `rpcd` are restarted** when they exit (crash, out of memory). Before, the web interface stayed dead until the box was restarted.
+- **Displays show what is**
+  - Drive cards: the dot follows SMART and standby; ASLEEP now also works on a real box (in beta.8 the backend did not deliver the state). *Services* reports a failed start or stop, reloads itself and describes the services by their settings.
+  - ONLINE turns to OFFLINE when the box does not answer; the clock in the header is the time of the box.
+  - "Running" states are checked against the process: cloud jobs, app installation, updater, Let's Encrypt and media jobs no longer show "running" forever after a crash.
+  - Corrected texts: factory reset (the box has to be claimed again, the password is not "shareos"), cloud credentials (kept on the box, readable only by root – not "encrypted"), sign-in errors, the flash progress ("step 2 of 5" instead of invented percentages).
+  - Unmounting is strict (a busy drive is reported as busy; only shutdown detaches lazily), a failed file system check and a failed SMB password raise a message.
+- **Speed and stale browser files**
+  - **No more clearing of the browser cache after an update:** `index.html` is a small starter that asks the box for its version and loads the scripts and styles with that version in the address; open tabs reload themselves once after an update.
+  - Copying, moving and deleting files run in the background (the interface no longer stands still, no time-out with large folders); the automatic update check runs in the background and remembers failed attempts.
+  - Fewer program starts per status request (drive list, shares, vaults, snapshots, USB drives); UPS and printer pages ask less often; the MCU daemon wakes 10 instead of 100 times per second.
+- **Robustness:** a damaged JSON file (`app.json`, `settings.json`, a wrong backup file …) no longer breaks whole pages; `/etc/passwd`, `/etc/shadow`, `/etc/group`, the crontab and Transmission's settings are replaced in one step.
+- **Secrets**
+  - Passwords, tokens and keys are no longer handed to programs on the command line (where every local user could read them in the process list): password checks, SMB passwords (`ksmbd.adduser`, with a small patch), cloud connections (rclone), push services, dynamic DNS, AdGuard Home, autobrr, Syncthing, Tailscale, Paperless.
+  - **The web interface has no direct access to the settings (`uci`) any more.** The update channel is set with the new method `shareos.update set_channel`; `tests/check-acl.py` refuses direct access for every role.
+  - The encryption of settings backups uses private file names; the iteration count read from a backup file is limited.
+- **Rescue mode:** when the box ends in the rescue system after a failure, SSH (root, password "shareos") is closed until the **USB button** on the front is pressed, and then open for 30 minutes (the LED blinks fast). With `shareos.rescue` on the kernel command line it is open at once, as before.
+- **Passwords need at least 8 characters everywhere:** root's password (it was 6 under *System → General* and in the first set-up, 8 when claiming a new box) and the passwords of user accounts (6 before). Existing passwords stay valid.
+- Smaller things: one definition of the fan presets (`/usr/lib/shareos/fan-presets`), one function each for root's password and the host name, the dynamic DNS page names the services asked for the public address, bounds checks in `dns320l-daemon` (temperature table, help text), the release workflow pins the third-party release action to a commit.
+- Tests: new `tests/test-rescue.sh`; additions in `test-notify`, `test-boards`, `test-power`, `test-buttons`, `test-ddns`; the ARM emulator tests (`run-stack-qemu --check`, `test-users`, `test-storage`, `test-cloud-paperless` …) now run in the firmware build on GitHub.
+
 ## 0.3.0-beta.8
 
 - **English is the source language of the web interface.** All texts in `app.js`, `desktop.js`, `index.html`, the manifest and the service list of the ucode plugin are English; German is a translation like the other eight languages. Before, the interface was written in German and English was the translation, so every other language was translated from a translation, and German UI names leaked into the docs and release texts.
