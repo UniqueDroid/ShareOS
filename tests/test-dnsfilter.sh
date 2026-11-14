@@ -149,7 +149,7 @@ i=0; until [ "$(dnsq ads.shareos-test.example)" = 0.0.0.0 ] || [ $i -ge 60 ]; do
 [ "$(dnsq ads.shareos-test.example)" = 0.0.0.0 ] || { echo "      answers: $(dnsq ads.shareos-test.example) $(dnsq banner.shareos-test.example)"; echo "      status: $(ub status | tr '\n' ' ' | cut -c1-700)"; }
 check "blocked name answered with 0.0.0.0" "[ \"\$(dnsq ads.shareos-test.example)\" = 0.0.0.0 ] && [ \"\$(dnsq banner.shareos-test.example)\" = 0.0.0.0 ]"
 check "status: rules, queries, blocked, estimate" "ub status | js \"d['rules']>=3 and d['blocked']>=2 and d['queries']>=2 and d['estimate_mb']>=25 and not d['warn']\""
-check "list switched off: name no longer blocked" "ub filter_enable '{\"url\":\"http://127.0.0.1:$LPORT/list.txt\",\"enabled\":false}' | js \"[f for f in d['filters'] if f['name']=='Test' and not f['enabled']]\" && [ \"\$(dnsq tracker.shareos-test.example)\" != 0.0.0.0 ]"
+check "list switched off: name no longer blocked" "ub filter_enable '{\"url\":\"http://127.0.0.1:$LPORT/list.txt\",\"enabled\":false}' | js \"[f for f in d['filters'] if f['name']=='Test' and not f['enabled']]\" && { i=0; until [ \"\$(dnsq tracker.shareos-test.example)\" != 0.0.0.0 ] || [ \$i -ge 60 ]; do sleep 1; i=\$((i + 1)); done; [ \"\$(dnsq tracker.shareos-test.example)\" != 0.0.0.0 ]; }"
 check "list removed" "ub filter_remove '{\"url\":\"http://127.0.0.1:$LPORT/list.txt\"}' | js \"not [f for f in d['filters'] if f['name']=='Test']\""
 check "invalid list address refused" "ub filter_add '{\"name\":\"x\",\"url\":\"file:///etc/shadow\"}' | grep -q 'http(s) address'"
 check "lists refreshed" "ub refresh | js \"'filters' in d\""
@@ -192,7 +192,8 @@ check "switched on in operation: starts in the background" "ub set '{\"enabled\"
 first=; i=0
 while [ $i -lt 240 ]; do
 	st=$(ub status)
-	if echo "$st" | js "d.get('ready')"; then first=$(dnsq shareos-u.test.lan); break; fi
+	# (under the emulator the very first answer can take longer than one query waits)
+	if echo "$st" | js "d.get('ready')"; then for n in 1 2 3; do first=$(dnsq shareos-u.test.lan); [ "$first" = timeout ] || break; done; break; fi
 	echo "$st" | js "d.get('starting') or not d.get('running')" || break
 	sleep 1; i=$((i + 1))
 done

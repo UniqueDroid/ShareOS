@@ -217,7 +217,8 @@ check "usb: MBR partition type 83" "ptype $C ${C}p1 | grep -qx 83"
 echo data > $R/mnt/usb-mein_stick/f
 usb shareos-usb umount-all >/dev/null
 check "usb: umount-all" "! grep -q \" $R/mnt/usb-mein_stick \" /proc/mounts && [ ! -d $R/mnt/usb-mein_stick ]"
-usb shareos-usb mount-all >/dev/null
+o=$(usb shareos-usb mount-all 2>&1)
+grep -qx data $R/mnt/usb-mein_stick/f 2>/dev/null || echo "      mount-all: $(echo "$o" | tr '\n' ' ' | cut -c1-400) | list: $(usb shareos-usb list 2>&1 | tr '\n' ' ' | cut -c1-300) | blkid: $(run "blkid /dev/${C}p1" 2>&1 | cut -c1-200)"
 check "usb: mount-all finds it again, data there" "grep -qx data $R/mnt/usb-mein_stick/f"
 check "usb: internal disks are not touched by mount-all" "! grep -q \" $R/mnt/usb-.*${B}\" /proc/mounts"
 usb shareos-usb umount-all >/dev/null
