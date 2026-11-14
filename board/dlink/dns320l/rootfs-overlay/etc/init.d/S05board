@@ -63,6 +63,11 @@ start() {
 	if [ "$BOARD_CONTROL" = mcu ]; then
 		start-stop-daemon -S -q -b -m -p "$PIDFILE" -x "$DAEMON" -- -f
 	fi
+	# The fan control and the button watcher are shell scripts: start-stop-daemon
+	# cannot tell that one already runs. Without this a second "start" (the
+	# device control shown as stopped in Services, because only the MCU daemon
+	# had ended) left two of each running – a button press then acted twice.
+	stop_helpers
 	start-stop-daemon -S -q -b -m -p "$BOARDPID" -x /usr/sbin/shareos-board
 	# reset button (access/factory reset), USB button (remove USB drives), power button
 	start-stop-daemon -S -q -b -m -p "$BUTTONPID" -x /usr/sbin/shareos-buttons
@@ -79,6 +84,19 @@ start() {
 	echo "OK"
 }
 
+# ends the fan control and the button watcher: by their pid files and, for any
+# that lost its pid file, by name
+stop_helpers() {
+	start-stop-daemon -K -q -p "$BOARDPID" 2>/dev/null
+	start-stop-daemon -K -q -p "$BUTTONPID" 2>/dev/null
+	# its dd would wait for the next button press before it notices that nobody reads it
+	start-stop-daemon -K -q -p "$BUTTONDDPID" 2>/dev/null
+	rm -f "$BUTTONDDPID"
+	for n in shareos-board shareos-buttons; do
+		for pid in $(pidof "$n"); do kill "$pid" 2>/dev/null; done
+	done
+}
+
 stop() {
 	printf "Stopping board support: "
 	# keep the RTC in sync, but never write a clock that was never set
@@ -87,11 +105,7 @@ stop() {
 		elif [ -e /dev/rtc0 ]; then hwclock -w -u 2>/dev/null
 		fi
 	fi
-	start-stop-daemon -K -q -p "$BOARDPID" 2>/dev/null
-	start-stop-daemon -K -q -p "$BUTTONPID" 2>/dev/null
-	# its dd would wait for the next button press before it notices that nobody reads it
-	start-stop-daemon -K -q -p "$BUTTONDDPID" 2>/dev/null
-	rm -f "$BUTTONDDPID"
+	stop_helpers
 	start-stop-daemon -K -q -p "$PIDFILE" 2>/dev/null
 	sleep 1
 	# shut down on UPS battery: the UPS switches its output off now and on

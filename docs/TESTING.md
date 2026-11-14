@@ -531,7 +531,7 @@ Nothing new to operate; these steps check that the corrections work on a real bo
 8. `killall dns320l-daemon`. After about 90 s the overview shows "–" for the temperature and the hardware page no longer says the device control is active.
 9. `shareos-notify check`: *System → Messages* shows *Temperature of the box cannot be read*.
 10. `/etc/init.d/S05board restart`: temperature and fan are back; after the next `shareos-notify check` the message is gone.
-11. `killall rpcd`: the web interface is back after a few seconds (sign in again); `logread | grep shareos-supervise` shows the restart.
+11. `killall rpcd`: the web interface is back after a few seconds (sign in again); `grep shareos-supervise /var/log/messages` shows the restart.
 
 **SMART**
 
@@ -647,7 +647,7 @@ Needs a box you may reset (factory reset deletes the settings, not the data disk
 3. *Restore*: choose the file, password, *Verify*. The preview lists users, groups, shares, services, apps, certificate and own CA. *Restore* → *Restore and restart*.
 4. After the restart, log in with the root password **from the backup**: the **recovery mode** page appears. Everything is ticked; network and device name are already right.
 5. Untick an app, for example, then *Apply and restart*. Afterwards users and shares are back (Shares → User; log in over SMB from a PC with the old password).
-6. Apps → *Installed*: the chosen apps are installed after the start (internet needed; `logread | grep shareos-restore-apps`). Without internet, *APPS FROM THE BACKUP* with *Install apps from the backup* shows up at the top.
+6. Apps → *Installed*: the chosen apps are installed after the start (internet needed; `grep shareos-restore-apps /var/log/messages`). Without internet, *APPS FROM THE BACKUP* with *Install apps from the backup* shows up at the top.
 7. With an own CA: the certificates issued for other devices are listed again under certificates, and a PC with the CA installed keeps trusting the box. If *Reuse the HTTPS certificate from the backup* was chosen, the fingerprint is the same as before.
 8. Restore once more and choose *Take over nothing else* in recovery mode: the box stays as it is; only password, network, name, time zone and drives came from the backup.
 
