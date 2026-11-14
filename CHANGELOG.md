@@ -7,6 +7,7 @@ pre-releases for test devices only.
 ## 0.3.0-beta.10
 
 - **The source is split by area.** The web interface (`app.js`, 6300 lines) and the rpcd plugin (`shareos.uc`, 6200 lines) are now 26 and 23 files under `src/shareos-core/parts`, one per area with the same name on both sides (`web/cloud.js`, `rpc/cloud.uc`); none has more than about 560 lines. The build joins them to the same two files as before – nothing changes on the box, also not the loading time. `parts/README.md` lists what is where.
+- **App CGIs share one file.** Ten of the CGIs under `/_shareos/cgi` were copies of each other (request check, call to rpcd, answer). They now only name their rpcd object and their operations; the rest is in `/usr/share/shareos/app-cgi.uc`. All of them read the request body completely now (half of them read it only once).
 
 ## 0.3.0-beta.9
 

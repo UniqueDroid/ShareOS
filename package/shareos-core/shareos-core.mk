@@ -56,6 +56,7 @@ define SHAREOS_CORE_INSTALL_TARGET_CMDS
 	$(INSTALL) -D -m 0755 $(@D)/www-apps/_shareos/cgi/fs $(TARGET_DIR)/www-apps/_shareos/cgi/fs
 	$(INSTALL) -D -m 0755 $(@D)/www-apps/_shareos/cgi/transmission $(TARGET_DIR)/www-apps/_shareos/cgi/transmission
 	$(INSTALL) -D -m 0644 $(@D)/usr/share/shareos/transmission-rpc.uc $(TARGET_DIR)/usr/share/shareos/transmission-rpc.uc
+	$(INSTALL) -D -m 0644 $(@D)/usr/share/shareos/app-cgi.uc $(TARGET_DIR)/usr/share/shareos/app-cgi.uc
 	$(INSTALL) -D -m 0755 $(@D)/www-tremote/transmission/rpc $(TARGET_DIR)/www-tremote/transmission/rpc
 	$(INSTALL) -D -m 0755 $(@D)/www-apps/_shareos/cgi/media $(TARGET_DIR)/www-apps/_shareos/cgi/media
 	$(INSTALL) -D -m 0755 $(@D)/usr/sbin/shareos-media $(TARGET_DIR)/usr/sbin/shareos-media
