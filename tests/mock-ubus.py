@@ -10,21 +10,21 @@ update available.
 """
 import json
 import os
+import subprocess
 import sys
 import time
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
 WWW = Path(__file__).resolve().parent.parent / 'src/shareos-core/www'
+# app.js is put together from its parts (src/shareos-core/parts/web)
+subprocess.run([str(WWW.parent / 'build-parts.sh')], check=True)
 SID = 'c0ffee00c0ffee00c0ffee00c0ffee00'
 T0 = time.time()
 
 
 def mock_folder(fid):
     """name of a folder the box creates, in the language of the box (i18n/<lang>.json "folders")"""
-# app.js and shareos.uc are put together from their parts (src/shareos-core/parts)
-import subprocess, pathlib
-subprocess.run([str(pathlib.Path(__file__).resolve().parent.parent / 'src/shareos-core/build-parts.sh')], check=True)
     en = {'shared': 'Shared', 'usb': 'USB copies'}
     try:
         with open(os.path.join(WWW, 'i18n', STATE['lang'] + '.json'), encoding='utf-8') as f:

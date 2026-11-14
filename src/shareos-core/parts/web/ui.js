@@ -167,4 +167,3 @@ async function waitForBox(title, text, minDown = true) {
 		if (el) el.textContent = `(${s} s)`;
 	}
 }
-

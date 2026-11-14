@@ -178,3 +178,26 @@ function diskCard(st, d, running) {
 		</div></div>`;
 }
 
+/* --- clicks (data-act) --- */
+
+Object.assign(ACTIONS, {
+	async smart(el) {
+		el.disabled = true;
+		try { await rpc('shareos.storage', 'smart', { disk: el.dataset.disk }); } catch (e) { toast('SMART: ' + e.message, true); }
+		loadStorage();
+	},
+	async 'smart-test'(el) {
+		const disk = el.dataset.disk, t = el.dataset.t;
+		if (t === 'long' && !await confirmDlg('Start the long test?', `The long test reads the whole disk ${disk} – many hours for large disks. The box stays usable, the disk is a bit slower.`, 'Start')) return;
+		el.disabled = true;
+		try { await rpc('shareos.storage', 'smart_test', { disk, type: t }); toast(t === 'abort' ? 'Self-test aborted.' : 'Self-test started.'); }
+		catch (e) { toast('Self-test: ' + e.message, true); }
+		loadStorage();
+	},
+	'smart-attrs'(el) {
+		S.hOpen = S.hOpen || new Set();
+		const d = el.dataset.disk;
+		if (S.hOpen.has(d)) S.hOpen.delete(d); else S.hOpen.add(d);
+		renderMain();
+	}
+});

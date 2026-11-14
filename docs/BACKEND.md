@@ -33,7 +33,7 @@ libubox (buildroot 2026.08.1), see the `.mk` files.
 |---|---|
 | `/etc/config/shareos` | ShareOS settings (UCI), section `update`: `repo`, `channel`, `api` |
 | `/etc/config/rpcd` | web logins (`root`, checked against `/etc/shadow`) |
-| `/usr/share/rpcd/ucode/shareos.uc` | ubus objects `shareos.system`, `shareos.update` |
+| `/usr/share/rpcd/ucode/shareos.uc` | all ubus objects `shareos.*`; joined at build time from `src/shareos-core/parts/rpc/*.uc`, one file per area (see `parts/README.md`) |
 | `/usr/share/rpcd/acl.d/shareos.json` | ACL group `shareos-admin` |
 | `/usr/share/rpcd/acl.d/unauthenticated.json` | anonymous clients may only call `session.login` |
 | `/usr/sbin/shareos-update` | updater (ucode CLI, also usable from SSH) |

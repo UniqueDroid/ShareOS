@@ -209,5 +209,128 @@ function groupsView() {
 	</section>`;
 }
 
+/* --- after the page is drawn: listeners, loading --- */
 
+Object.assign(VIEWS_AFTER, {
+	shares() {
+		if (S.route.sub === 'files') return;
+		// Paperless loads shares and accounts too, but not the volumes
+		if (!S.shares || !S.acc || !S.vols) { loadShareData(); return; }
+		$('#opt-smb')?.addEventListener('change', (e) => shareGlobal({ smb: e.target.checked }));
+		$('#opt-nfs')?.addEventListener('change', (e) => shareGlobal({ nfs: e.target.checked }));
+		$('#opt-wg')?.addEventListener('change', (e) => shareGlobal({ workgroup: e.target.value.trim() }));
+		$('#opt-smbcompat')?.addEventListener('change', (e) => shareGlobal({ smb_compat: e.target.checked }));
+		$('#f-user select[name=role]')?.addEventListener('change', (e) => { $('#u-web-row').hidden = e.target.value !== 'user'; });
+		// a vault: SMB only, no guests, no NFS
+		const vaultSync = () => {
+			const f = $('#f-share'); if (!f) return;
+			const v = f.vault.checked;
+			for (const n of ['guest', 'nfs', 'nfs_rw']) { if (v) f[n].checked = false; f[n].disabled = v; }
+			if (v) f.smb.checked = true;
+			f.smb.disabled = v; f.vault_ttl.disabled = !v;
+		};
+		$('#f-share input[name=vault]')?.addEventListener('change', vaultSync);
+		vaultSync();
+		$('#f-share')?.addEventListener('submit', async (e) => {
+			e.preventDefault();
+			const f = e.target, rw = [], ro = [];
+			document.querySelectorAll('#f-share select.acl').forEach((s2) => { if (s2.value === 'rw') rw.push(s2.dataset.tag); if (s2.value === 'ro') ro.push(s2.dataset.tag); });
+			const args = { name: f.name.value.trim().toLowerCase(), volume: f.volume.value, path: f.path.value.trim() || f.name.value.trim().toLowerCase(), comment: f.comment.value.trim(),
+				smb: f.smb.checked, guest: f.guest.checked, nfs: f.nfs.checked, nfs_rw: f.nfs_rw.checked,
+				nfs_hosts: f.nfs_hosts.value.split(/[\s,;]+/).filter(Boolean), rw, ro, vault: f.vault.checked, vault_ttl: +f.vault_ttl.value };
+			if (args.vault) { args.guest = false; args.nfs = false; }
+			if (args.nfs && !args.nfs_hosts.length) { toast('Enter at least one client (IP or network) for NFS.', true); return; }
+			try { S.shares = await rpc('shareos.shares', 'set', args); S.shEdit = null; toast(`Share “${args.name}” saved.`); renderMain(); }
+			catch (err) { toast('Share: ' + err.message, true); }
+		});
+		$('#f-user')?.addEventListener('submit', async (e) => {
+			e.preventDefault();
+			const f = e.target, isNew = S.uEdit.mode === 'new';
+			const args = { name: f.name.value.trim().toLowerCase(), fullname: f.fullname.value.trim(), role: f.role.value, home: f.home.value,
+				quota: Math.max(0, Math.round(+f.quota.value || 0)) * 1000, web: f.web.checked, cloud: f.cloud.checked, files: f.files.checked,
+				groups: [...document.querySelectorAll('#f-user .u-group:checked')].map((x) => x.value) };
+			if (isNew) {
+				if (f.p1.value !== f.p2.value) { toast('The passwords do not match.', true); return; }
+				args.password = f.p1.value;
+			}
+			try { S.acc = await rpc('shareos.accounts', isNew ? 'add' : 'set', args); S.uEdit = null; toast(isNew ? `User “${args.name}” created.` : `User “${args.name}” saved.`); renderMain(); }
+			catch (err) { toast('User: ' + err.message, true); }
+		});
+	}
+});
 
+/* --- clicks (data-act) --- */
+
+Object.assign(ACTIONS, {
+	'sh-new'() {
+		S.shEdit = { mode: 'new', data: { name: '', volume: S.vols[0]?.name || '', path: '', comment: '', smb: true, guest: false, nfs: false, nfs_rw: false, nfs_hosts: [], rw: [], ro: [] } };
+		renderMain(); window.scrollTo(0, 0);
+	},
+	'sh-edit'(el) { S.shEdit = { mode: 'edit', data: structuredClone(S.shares.shares.find((x) => x.name === el.dataset.name)) }; renderMain(); window.scrollTo(0, 0); },
+	'sh-cancel'() { S.shEdit = null; renderMain(); },
+	async 'sh-browse'() {
+		const f = $('#f-share'), v = f.volume.value;
+		const r = await folderDlg('Choose folder', [{ name: v, root: v, base: '' }], { path: f.path.value.trim() || f.name.value.trim() });
+		if (r) f.path.value = r.path;
+	},
+	async 'vault-unlock'(el) {
+		const r0 = await vaultDlg(el.dataset.share, +el.dataset.ttl || 15);
+		if (!r0) return;
+		try {
+			const r = await rpc('shareos.me', 'vault_unlock', { share: el.dataset.share, minutes: r0.minutes, password: r0.password });
+			toast(`Vault “${el.dataset.share}” is open until ${vaultTime(r.until)}.`);
+			if (isUser()) { S.me = { ...S.me, ...r }; renderUserMain(); } else loadShareData();
+		} catch (e) { toast('Vault: ' + e.message, true); }
+	},
+	async 'vault-lock'(el) {
+		try { S.me = { ...S.me, ...await rpc('shareos.me', 'vault_lock', { share: el.dataset.share }) }; toast(`Vault “${el.dataset.share}” locked.`); renderUserMain(); }
+		catch (e) { toast('Vault: ' + e.message, true); }
+	},
+	async 'sh-vlock'(el) {
+		const n = el.dataset.name;
+		if (!await confirmDlg(`Lock vault “${n}” now?`, 'The vault disappears from the network for everyone who unlocked it. Open connections lose access.', 'Lock')) return;
+		try { S.shares = await rpc('shareos.shares', 'vault_lock', { name: n }); toast(`Vault “${n}” locked.`); renderMain(); } catch (e) { toast(e.message, true); }
+	},
+	async 'sh-del'(el) {
+		const n = el.dataset.name;
+		if (!await confirmDlg(`Remove share “${n}”?`, 'The share disappears from the network. The folder and all files in it stay on the drive.', 'Remove')) return;
+		try { S.shares = await rpc('shareos.shares', 'del', { name: n }); toast(`Share “${n}” removed.`); renderMain(); } catch (e) { toast(e.message, true); }
+	},
+	'u-new'() {
+		S.uEdit = { mode: 'new', data: { name: '', fullname: '', role: 'share', home: S.vols.filter(linuxFs)[0]?.name || '', quota: 0, web: true, groups: [] } };
+		renderMain(); window.scrollTo(0, 0);
+	},
+	'u-edit'(el) { S.uEdit = { mode: 'edit', data: structuredClone(S.acc.users.find((x) => x.name === el.dataset.name)) }; renderMain(); window.scrollTo(0, 0); },
+	'u-cancel'() { S.uEdit = null; renderMain(); },
+	async 'u-pass'(el) {
+		const n = el.dataset.name;
+		const p = await promptDlg(`Password for ${n}`, 'New password (at least 8 characters). Used for shares and – depending on the role – for the web interface.', '', 'Set', 'password');
+		if (p == null) return;
+		try { await rpc('shareos.accounts', 'passwd', { name: n, password: p }); toast(`Password of ${n} changed.`); } catch (e) { toast(e.message, true); }
+	},
+	async 'u-del'(el) {
+		const n = el.dataset.name, u = S.acc.users.find((x) => x.name === n);
+		if (!await confirmDlg(`Delete user “${n}”?`, `The account is removed; rights on shares are dropped.${u?.home ? ' The personal folder is kept.' : ''}`, 'Delete', true)) return;
+		try { S.acc = await rpc('shareos.accounts', 'del', { name: n }); toast(`User “${n}” deleted.`); loadShareData(); } catch (e) { toast(e.message, true); }
+	},
+	async 'u-altf'() {
+		if (!await confirmDlg('Import users from Alt-F?', 'Users and groups from the kept Alt-F settings are created (role “Shares only”). Passwords are taken over where Alt-F stored them.', 'Apply')) return;
+		try {
+			const r = await rpc('shareos.accounts', 'import_altf');
+			S.acc = r;
+			toast(r.imported.length ? `Imported: ${r.imported.join(', ')}` : 'No new users found.');
+			if (r.skipped.length) toast(`Skipped: ${r.skipped.join(', ')}`, true);
+			renderMain();
+		} catch (e) { toast('Alt-F: ' + e.message, true); }
+	},
+	async 'g-new'() {
+		const g = ((await promptDlg('New group', 'Group name (a–z, 0–9 and _, starting with a letter):', '', 'Create')) || '').toLowerCase();
+		if (!g) return;
+		try { S.acc = await rpc('shareos.accounts', 'group_add', { name: g }); toast(`Group “${g}” created.`); renderMain(); } catch (e) { toast(e.message, true); }
+	},
+	async 'g-del'(el) {
+		const g = el.dataset.name;
+		if (!await confirmDlg(`Delete group “${g}”?`, 'The members stay, but lose the permissions given through this group.', 'Delete', true)) return;
+		try { S.acc = await rpc('shareos.accounts', 'group_del', { name: g }); toast(`Group “${g}” deleted.`); loadShareData(); } catch (e) { toast(e.message, true); }
+	}
+});

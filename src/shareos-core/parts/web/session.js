@@ -227,4 +227,3 @@ function stopPolling() {
 	clearInterval(S.noteTimer); S.noteTimer = null;
 	clearTimeout(S.updTimer); S.updTimer = null;
 }
-

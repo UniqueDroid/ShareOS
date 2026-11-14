@@ -152,4 +152,3 @@ async function loadLog() {
 		box.scrollTop = box.scrollHeight;
 	} catch (e) { box.textContent = 'Error: ' + e.message; }
 }
-

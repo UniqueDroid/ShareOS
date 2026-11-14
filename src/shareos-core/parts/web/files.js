@@ -430,4 +430,3 @@ for (const ev of ['dragover', 'dragleave', 'drop']) {
 		if (ev === 'drop') fbUpload(e.dataTransfer.files);
 	});
 }
-

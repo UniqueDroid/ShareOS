@@ -297,6 +297,13 @@ the box for why the web server was not running.
 |---|---|
 | 13:00 | **Static analysis** (Jan: "AI projects are criticised for this – where do we stand?"). There were already project-specific checks (ucode compile, forward references, ACL, i18n) and the weekly CVE overview; new: ShellCheck over all shell scripts, ESLint for the web interface and the app SDK, a check for unused top-level code, a complexity report (`tests/static-analysis.sh`, CI job `static-analysis`) and CodeQL for JavaScript and Python (taint analysis, `codeql.yml`). Findings fixed: three loops over `ls` output, one unused function, two needless escapes. The monthly audit now looks at the report. |
 
+### Saturday, 14.11.2026
+
+| Time | What happened |
+|---|---|
+| 08:00 | 0.3.0-beta.9 released by Jan (review fixes, #158). The night before the ARM emulator tests ran on GitHub for the first time – six runs until they were green; `test-dnsfilter` stays a warning because AdGuard Home starts too irregularly under the emulator. |
+| 08:48 | **Source by area.** Jan had asked for this for a long time: two files of more than 6000 lines are hard to read for people. `app.js` and `shareos.uc` become one file per area (`parts/web`, `parts/rpc`), joined by the build. First a pure cut whose result is byte-identical, then pages, set-up and clicks of each area moved into its file; every page of the old and the new interface compared in the browser. |
+
 ### Friday, 13.11.2026
 
 | Time | What happened |

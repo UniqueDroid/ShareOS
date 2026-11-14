@@ -196,3 +196,48 @@ function frEnd(next) {
 	else { location.hash = '#/overview'; renderMain(); }
 }
 
+/* --- clicks (data-act) --- */
+
+Object.assign(ACTIONS, {
+	async 'rec-apply'() {
+		const on = (k) => !!$(`input[data-rec="${k}"]`)?.checked;
+		const pick = (p) => [...document.querySelectorAll(`input[data-rec^="${p}:"]`)].filter((x) => x.checked).map((x) => x.dataset.rec.slice(p.length + 1));
+		const args = { users: on('users'), shares: on('shares'), services: pick('svc'), apps: pick('app'), certificate: on('certificate'), ca: on('ca') };
+		if (!await confirmDlg('Apply the selection?', 'The box applies the chosen settings and restarts.', 'Apply and restart')) return;
+		recoveryEnd(args);
+	},
+	async 'rec-discard'() {
+		if (!await confirmDlg('Take over nothing else?', 'The box stays as it is now: only password, network, name, time zone and drives come from the backup. The backup can be restored again later.', 'End recovery', true)) return;
+		recoveryEnd(null);
+	},
+	async 'rec-apps-install'() {
+		try { await rpc('shareos.recovery', 'apps_install'); S.recApps.running = true; toast('The apps are being installed in the background.'); renderMain(); }
+		catch (err) { toast('Apps: ' + err.message, true); }
+	},
+	async 'rec-apps-dismiss'() {
+		try { await rpc('shareos.recovery', 'apps_dismiss'); S.recApps = { pending: [], running: false }; renderMain(); }
+		catch (err) { toast('Apps: ' + err.message, true); }
+	},
+	'fr-next'() { const e = frCollect(); if (e) { toast(e, true); return; } frGo(1); },
+	'fr-back'() { frCollect(); frGo(-1); },
+	async 'fr-skip'() {
+		if (!await confirmDlg('Skip first-time setup?', S.fr?.st?.default_password !== false ? 'Everything can be set later under System. The password stays "shareos" until you change it.' : 'Everything can be set later under System.', 'Skip')) return;
+		try { await rpc('shareos.setup', 'apply', {}); } catch (e) { }
+		frEnd('overview');
+	},
+	async 'fr-finish'(el) {
+		const f = S.fr;
+		el.disabled = true;
+		try {
+			const tzChanged = f.timezone !== f.st.timezone;
+			await rpc('shareos.setup', 'apply', { altf: f.altf.found && f.use_altf, password: f.password,
+				hostname: f.hostname !== f.st.hostname ? f.hostname : '', timezone: tzChanged ? f.timezone : '', channel: f.channel });
+			toast('First-time setup finished.');
+			frEnd(el.dataset.next);
+		} catch (e) { toast(e.message, true); el.disabled = false; }
+	},
+	async 'fr-again'() {
+		try { await rpc('shareos.setup', 'reset'); try { sessionStorage.setItem('shareos.frstep', '0'); } catch (e) { } checkFirstRun(true); }
+		catch (e) { toast(e.message, true); }
+	}
+});

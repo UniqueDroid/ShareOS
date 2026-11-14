@@ -423,3 +423,26 @@ function renderError(e) {
 		<button class="btn" type="button" data-act="page-reload">Reload</button></div></div>`;
 }
 
+/* --- clicks (data-act) --- */
+
+Object.assign(ACTIONS, {
+	'chips-more'() { S.chipsAll = !S.chipsAll; fitChips(); },
+	'page-reload': () => location.reload(),
+	'desk-view': () => setView('desktop'),
+	theme() {
+		S.theme = effTheme() === 'light' ? 'dark' : 'light';
+		if (isUser()) S.me.ui = { ...S.me.ui, theme: S.theme };
+		applyTheme(); renderHeader();
+		if (isUser()) { renderUserHeader(); if (S.utab === 'settings') renderUserMain(); }
+		else if (S.route.sub === 'appearance') renderMain();
+		// plain users change it only for themselves (the look for everyone is an admin setting)
+		saveLook({ theme: S.theme });
+	},
+	logout,
+	view(el) {
+		const id = el.dataset.id;
+		S.views[id] = isTable(id) ? 'tiles' : 'table';
+		store.set('views', JSON.stringify(S.views));
+		renderMain();
+	}
+});

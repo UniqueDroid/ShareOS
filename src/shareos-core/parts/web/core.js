@@ -276,3 +276,14 @@ function secHead(id, title, sub = '') {
 	return html`<h2 class="gh">${title}${sub ? html` <span>${sub}</span>` : ''}<button class="vt" type="button" data-act="view" data-id="${id}" aria-pressed="${t}" title="${t ? 'Tile view' : 'Table view'}" aria-label="${t ? 'Tile view' : 'Table view'}">${svg(t ? I.grid : I.table)}</button></h2>`;
 }
 
+/* ---------- tables the parts fill ---------------------------------------------- */
+
+// clicks: data-act="name" on an element calls ACTIONS.name(element)
+const ACTIONS = {};
+// after a tab of the main menu is drawn (listeners, loading): VIEWS_AFTER.tab()
+const VIEWS_AFTER = {};
+// the sub pages of System: SYS.page() returns the page
+const SYS = {};
+// after a sub page of System is drawn; a page can have several of these
+const SYS_AFTER = {};
+function afterSystemPage(page, fn) { (SYS_AFTER[page] ||= []).push(fn); }

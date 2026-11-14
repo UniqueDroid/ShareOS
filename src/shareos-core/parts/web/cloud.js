@@ -221,3 +221,87 @@ function cloudAfter(scope) {
 	});
 }
 
+/* --- after the page is drawn: listeners, loading --- */
+
+Object.assign(VIEWS_AFTER, {
+	cloud() {
+		if (S.cloud?.scope !== 'admin') { loadCloud('admin'); return; }
+		cloudAfter('admin');
+	}
+});
+
+/* --- clicks (data-act) --- */
+
+Object.assign(ACTIONS, {
+	async 'cl-install'() {
+		try { await rpc('shareos.cloud', 'install'); S.cloud.data.status.installing = true; renderMain(); setTimeout(() => loadCloud('admin'), 3000); }
+		catch (e) { toast('rclone: ' + e.message, true); }
+	},
+	'cl-rnew'(el) { S.cloud.remoteEdit = { type: 'webdav' }; el.dataset.scope === 'admin' ? renderMain() : renderUserMain(); },
+	async 'cl-auth'(el) {
+		const scope = el.dataset.scope, re = S.cloud.remoteEdit, f = $('#f-remote');
+		re.name = f.name.value;
+		const w = window.open('about:blank', '_blank');
+		el.disabled = true;
+		try {
+			const r = scope === 'admin' ? await rpc('shareos.cloud', 'auth_start', { type: re.type }) : await rpc('shareos.me', 'cloud_auth_start', { type: re.type });
+			if (w) w.location.href = r.url; else window.open(r.url, '_blank');
+			re.authUrl = r.url; re.authed = false;
+		} catch (e) { w?.close(); toast('Sign in: ' + e.message, true); }
+		scope === 'admin' ? renderMain() : renderUserMain();
+	},
+	async 'cl-authfin'(el) {
+		const scope = el.dataset.scope, re = S.cloud.remoteEdit, f = $('#f-remote');
+		re.name = f.name.value;
+		el.disabled = true;
+		try {
+			const url = f.auth_url.value.trim();
+			if (scope === 'admin') await rpc('shareos.cloud', 'auth_finish', { url }); else await rpc('shareos.me', 'cloud_auth_finish', { url });
+			re.authed = true; toast('Signed in – now “Add”.');
+		} catch (e) { toast('Sign in: ' + e.message, true); }
+		scope === 'admin' ? renderMain() : renderUserMain();
+	},
+	'cl-rcancel'(el) { S.cloud.remoteEdit = null; el.dataset.scope === 'admin' ? renderMain() : renderUserMain(); },
+	async 'cl-rtest'(el) {
+		el.disabled = true;
+		try { const r = await CLOUD_API[el.dataset.scope].testRemote(el.dataset.name); toast(`${el.dataset.name}: connection OK (${r.folders} folders).`); }
+		catch (e) { toast(`${el.dataset.name}: ${e.message}`, true); }
+		el.disabled = false;
+	},
+	async 'cl-rdel'(el) {
+		const n = el.dataset.name;
+		if (!await confirmDlg(`Remove account “${n}”?`, 'The credentials are deleted. Jobs using this account stop working. Nothing is deleted in the cloud.', 'Remove')) return;
+		try { await CLOUD_API[el.dataset.scope].delRemote(n); toast(`Account “${n}” removed.`); loadCloud(el.dataset.scope); } catch (e) { toast(e.message, true); }
+	},
+	'cl-jnew'(el) {
+		const d = S.cloud.data;
+		S.cloud.jobEdit = { mode: 'new', data: { name: '', local: d.locals[0]?.[0] || '', remote: d.remotes[0]?.name || '', remote_path: '', mode: 'upload', schedule: '30 2 * * *', bwlimit: '', enabled: true } };
+		el.dataset.scope === 'admin' ? renderMain() : renderUserMain(); window.scrollTo(0, 0);
+	},
+	'cl-jedit'(el) {
+		S.cloud.jobEdit = { mode: 'edit', data: structuredClone(S.cloud.data.jobs.find((j) => j.name === el.dataset.name)) };
+		el.dataset.scope === 'admin' ? renderMain() : renderUserMain(); window.scrollTo(0, 0);
+	},
+	'cl-jcancel'(el) { S.cloud.jobEdit = null; el.dataset.scope === 'admin' ? renderMain() : renderUserMain(); },
+	async 'cl-jrun'(el) {
+		el.disabled = true;
+		try { await CLOUD_API[el.dataset.scope].runJob(el.dataset.name); toast(`Job “${el.dataset.name}” started.`); setTimeout(() => loadCloud(el.dataset.scope), 1500); }
+		catch (e) { toast(e.message, true); el.disabled = false; }
+	},
+	async 'cl-jstop'(el) { try { await CLOUD_API[el.dataset.scope].stopJob(el.dataset.name); toast('Stopped.'); setTimeout(() => loadCloud(el.dataset.scope), 1500); } catch (e) { toast(e.message, true); } },
+	async 'cl-jlog'(el) {
+		try { S.cloud.log = { name: el.dataset.name, lines: (await CLOUD_API[el.dataset.scope].log(el.dataset.name)).lines }; renderMain(); } catch (e) { toast(e.message, true); }
+	},
+	'cl-logclose'(el) { S.cloud.log = null; el.dataset.scope === 'admin' ? renderMain() : renderUserMain(); },
+	async 'cl-jdel'(el) {
+		const n = el.dataset.name;
+		if (!await confirmDlg(`Remove job “${n}”?`, 'The job will not run any more. Files on the NAS and in the cloud stay as they are.', 'Remove')) return;
+		try { await CLOUD_API[el.dataset.scope].delJob(n); toast(`Job “${n}” removed.`); loadCloud(el.dataset.scope); } catch (e) { toast(e.message, true); }
+	},
+	async 'cl-browse'(el) {
+		const f = $('#f-job'), p = S.cloud?.data?.places?.[f.local.value];
+		if (!p) return;
+		const r = await folderDlg('Choose folder', [p], { path: f.sub.value.trim() });
+		if (r) f.sub.value = r.path;
+	}
+});

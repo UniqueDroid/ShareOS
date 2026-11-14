@@ -298,6 +298,13 @@ direkt auf der Box nachgesehen, warum der Webserver nicht lief.
 |---|---|
 | 13:00 | **Statische Codeanalyse** (Jan: „Bei KI-Projekten wird das immer bemängelt – wie stehen wir dazu?“). Es gab schon projekteigene Prüfungen (ucode übersetzen, Vorwärtsverweise, ACL, i18n) und die wöchentliche CVE-Übersicht; neu: ShellCheck über alle Shell-Skripte, ESLint für die Oberfläche und das App-SDK, eine Prüfung auf ungenutzten Code, ein Komplexitätsbericht (`tests/static-analysis.sh`, CI-Job `static-analysis`) und CodeQL für JavaScript und Python (Taint-Analyse, `codeql.yml`). Behoben: drei Schleifen über `ls`-Ausgaben, eine ungenutzte Funktion, zwei überflüssige Escapes. Das monatliche Audit wertet den Bericht aus. |
 
+### Samstag, 14.11.2026
+
+| Zeit | Was passiert ist |
+|---|---|
+| 08:00 | 0.3.0-beta.9 von Jan veröffentlicht (Korrekturen aus dem Review, #158). In der Nacht davor liefen die ARM-Emulator-Tests zum ersten Mal auf GitHub – sechs Läufe, bis sie grün waren; `test-dnsfilter` bleibt eine Warnung, weil AdGuard Home unter dem Emulator zu unregelmäßig startet. |
+| 08:48 | **Quelltext nach Bereichen.** Jan hatte das lange gefordert: Zwei Dateien mit über 6000 Zeilen sind für Menschen schwer zu lesen. `app.js` und `shareos.uc` werden zu einer Datei je Bereich (`parts/web`, `parts/rpc`), der Bau fügt sie zusammen. Zuerst ein reiner Schnitt, dessen Ergebnis byte-gleich ist, dann wandern Seiten, Setup und Klicks jedes Bereichs in seine Datei; jede Seite der alten und der neuen Oberfläche im Browser verglichen. |
+
 ### Freitag, 13.11.2026
 
 | Zeit | Was passiert ist |

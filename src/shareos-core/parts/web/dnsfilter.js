@@ -99,3 +99,54 @@ function dnsfilterView() {
 	</section>` : ''}`;
 }
 
+/* --- after the page is drawn: listeners, loading --- */
+
+Object.assign(VIEWS_AFTER, {
+	dnsfilter() {
+		if (!S.df) { loadDnsfilter(); return; }
+		$('#f-df')?.addEventListener('submit', async (e) => {
+			e.preventDefault();
+			const f = e.target, args = { enabled: f.enabled.checked, web_port: +f.web_port.value, https_port: +f.https_port.value };
+			if (f.protection) args.protection = f.protection.checked;
+			if (f.upstream) args.upstream = f.upstream.value.split('\n').map((x) => x.trim()).filter(Boolean);
+			const b = $('button[type=submit]', f); b.disabled = true;
+			try {
+				const r = await rpc('shareos.dnsfilter', 'set', args);
+				// switched on: show "starting …" at once, the status follows every 3 s
+				if (args.enabled && !S.df.running) { S.dfStarting = true; S.df = { ...S.df, enabled: true, start_error: null }; renderMain(); }
+				toast(r.ok && args.enabled && !S.df.running ? 'DNS filter is starting …' : 'Saved.'); loadDnsfilter();
+			} catch (err) { b.disabled = false; toast('DNS filter: ' + err.message, true); }
+		});
+		$('#f-dfadd')?.addEventListener('submit', async (e) => {
+			e.preventDefault();
+			const f = e.target;
+			try { await rpc('shareos.dnsfilter', 'filter_add', { name: f.name.value.trim(), url: f.url.value.trim() }); toast('List added.'); loadDnsfilter(); }
+			catch (err) { toast('List: ' + err.message, true); }
+		});
+		$('#f-dfrw')?.addEventListener('submit', async (e) => {
+			e.preventDefault();
+			const f = e.target;
+			try { await rpc('shareos.dnsfilter', 'rewrite_add', { domain: f.domain.value.trim(), answer: f.answer.value.trim() }); f.reset(); toast('Entry added.'); loadDnsfilter(); }
+			catch (err) { toast('Entry: ' + err.message, true); }
+		});
+		document.querySelectorAll('.df-en').forEach((c) => c.addEventListener('change', async () => {
+			try { await rpc('shareos.dnsfilter', 'filter_enable', { url: c.dataset.url, enabled: c.checked }); loadDnsfilter(); }
+			catch (err) { toast('List: ' + err.message, true); }
+		}));
+	}
+});
+
+/* --- clicks (data-act) --- */
+
+Object.assign(ACTIONS, {
+	async 'df-pass'() { try { S.dfPass = S.dfPass ? null : await rpc('shareos.dnsfilter', 'password'); renderMain(); } catch (e) { toast(e.message, true); } },
+	async 'df-refresh'() { try { await rpc('shareos.dnsfilter', 'refresh'); toast('Lists updated.'); loadDnsfilter(); } catch (e) { toast(e.message, true); } },
+	async 'df-rwdel'(el) {
+		if (!await confirmDlg('Remove entry?', el.dataset.domain + ' → ' + el.dataset.answer, 'Remove', true)) return;
+		try { await rpc('shareos.dnsfilter', 'rewrite_remove', { domain: el.dataset.domain, answer: el.dataset.answer }); toast('Entry removed.'); loadDnsfilter(); } catch (e) { toast(e.message, true); }
+	},
+	async 'df-del'(el) {
+		if (!await confirmDlg('Remove list?', el.dataset.url, 'Remove', true)) return;
+		try { await rpc('shareos.dnsfilter', 'filter_remove', { url: el.dataset.url }); toast('List removed.'); loadDnsfilter(); } catch (e) { toast(e.message, true); }
+	}
+});

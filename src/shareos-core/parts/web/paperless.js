@@ -103,3 +103,58 @@ function inboxEditor(e) {
 	</form></section>`;
 }
 
+/* --- after the page is drawn: listeners, loading --- */
+
+Object.assign(VIEWS_AFTER, {
+	paperless() {
+		if (!S.pl || !S.acc || !S.shares) { loadPaperless(); return; }
+		const kind = $('#f-inbox select[name=kind]');
+		const syncKind = () => { if (!kind) return; $('#ib-owner').hidden = kind.value !== 'user'; $('#ib-share').hidden = kind.value !== 'share'; };
+		kind?.addEventListener('change', syncKind); syncKind();
+		$('#f-pl')?.addEventListener('submit', async (e) => {
+			e.preventDefault();
+			const f = e.target;
+			try { await rpc('shareos.paperless', 'set_global', { url: f.url.value.trim(), interval: +f.interval.value, after: f.after.value, enabled: f.enabled.checked }); toast('Saved.'); loadPaperless(); }
+			catch (err) { toast('Paperless: ' + err.message, true); }
+		});
+		$('#f-inbox')?.addEventListener('submit', async (e) => {
+			e.preventDefault();
+			const f = e.target, ed = S.plEdit, x = ed.data, kindv = f.kind.value;
+			const owner = ed.mode === 'new' ? (kindv === 'user' ? f.owner.value : '') : x.owner;
+			const share = ed.mode === 'new' ? (kindv === 'share' ? f.share.value : '') : x.share;
+			const name = ed.mode === 'new' ? (owner ? 'u_' + owner : share.replace(/-/g, '_')) : x.name;
+			const args = { name, owner, share, token: f.token.value.trim(), enabled: f.enabled.checked };
+			if (ed.tags) args.tags = [...document.querySelectorAll('#f-inbox .ib-tag:checked')].map((c) => +c.value);
+			try { await rpc('shareos.paperless', 'inbox_set', args); S.plEdit = null; toast(`Inbox “${name}” saved.`); loadPaperless(); }
+			catch (err) { toast('Inbox: ' + err.message, true); }
+		});
+	}
+});
+
+/* --- clicks (data-act) --- */
+
+Object.assign(ACTIONS, {
+	async 'pl-run'() { try { await rpc('shareos.paperless', 'run'); toast('Transfer started.'); setTimeout(loadPaperless, 5000); } catch (e) { toast(e.message, true); } },
+	'pl-new'() { S.plEdit = { mode: 'new', data: { name: '', owner: '', share: '', tags: [], enabled: true } }; renderMain(); },
+	async 'pl-edit'(el) {
+		const ib = S.pl.inboxes.find((x) => x.name === el.dataset.name);
+		S.plEdit = { mode: 'edit', data: structuredClone(ib), tags: null };
+		renderMain();
+		try { S.plEdit.tags = (await rpc('shareos.paperless', 'tags', { inbox: ib.name })).tags; renderMain(); } catch (e) { }
+	},
+	'pl-cancel'() { S.plEdit = null; renderMain(); },
+	async 'pl-test'() {
+		const f = $('#f-inbox'), ed = S.plEdit;
+		try {
+			const r = await rpc('shareos.paperless', 'test', { url: S.pl.url, token: f.token.value.trim(), inbox: ed.mode === 'edit' ? ed.data.name : '' });
+			toast(`Connection OK – ${r.documents} documents in Paperless.`);
+		} catch (e) { toast('Paperless: ' + e.message, true); }
+	},
+	async 'pl-log'(el) { try { S.plLog = { name: el.dataset.name, entries: (await rpc('shareos.paperless', 'log', { inbox: el.dataset.name })).entries }; renderMain(); } catch (e) { toast(e.message, true); } },
+	'pl-log-close'() { S.plLog = null; renderMain(); },
+	async 'pl-del'(el) {
+		const n = el.dataset.name;
+		if (!await confirmDlg(`Remove inbox “${n}”?`, 'Nothing will be sent any more. The folder and the files in it are kept.', 'Remove')) return;
+		try { await rpc('shareos.paperless', 'inbox_del', { name: n }); toast(`Inbox “${n}” removed.`); loadPaperless(); } catch (e) { toast(e.message, true); }
+	}
+});

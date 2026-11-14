@@ -147,3 +147,48 @@ function dlnaAfter() {
 	});
 }
 
+/* --- clicks (data-act) --- */
+
+Object.assign(ACTIONS, {
+	'sn-new'() {
+		const d = S.snap.data, t = d.volumes.find((v) => v.links), src = d.sources.find((x) => x.kind === 'share') || d.sources[0];
+		S.snap.edit = { mode: 'new', data: { name: '', source: src?.id || '', target: (d.volumes.find((v) => v.links && v.name !== (src?.volume || src?.name)) || t)?.name || '',
+			every: 'day', time: '03:15', keep_last: 3, keep_daily: 7, keep_weekly: 4, keep_monthly: 6, exclude: [], enabled: true } };
+		renderMain(); window.scrollTo(0, 0);
+	},
+	'sn-edit'(el) { S.snap.edit = { mode: 'edit', data: structuredClone(S.snap.data.jobs.find((j) => j.name === el.dataset.name)) }; renderMain(); window.scrollTo(0, 0); },
+	'sn-cancel'() { S.snap.edit = null; renderMain(); },
+	async 'sn-run'(el) {
+		el.disabled = true;
+		try { await rpc('shareos.snapshots', 'run', { name: el.dataset.name }); toast(`Snapshot “${el.dataset.name}” is running.`); } catch (e) { toast(e.message, true); }
+		loadSnapshots();
+	},
+	async 'sn-stop'(el) {
+		el.disabled = true;
+		try { await rpc('shareos.snapshots', 'stop', { name: el.dataset.name }); } catch (e) { toast(e.message, true); }
+		setTimeout(loadSnapshots, 1500);
+	},
+	'sn-list'(el) { S.snap.open = S.snap.open === el.dataset.name ? null : el.dataset.name; renderMain(); },
+	'sn-listclose'() { S.snap.open = null; renderMain(); },
+	async 'sn-log'(el) {
+		try { S.snap.log = { name: el.dataset.name, text: (await rpc('shareos.snapshots', 'log', { name: el.dataset.name })).log }; renderMain(); } catch (e) { toast(e.message, true); }
+	},
+	'sn-logclose'() { S.snap.log = null; renderMain(); },
+	async 'sn-rm'(el) {
+		const n = el.dataset.name, x = el.dataset.snap, j = S.snap.data.jobs.find((y) => y.name === n), sn = j?.snapshots.find((y) => y.name === x);
+		if (!await confirmDlg('Delete snapshot?', `Delete the state of ${fmtTime(sn?.time)}? The other snapshots stay complete.`, 'Delete', true)) return;
+		try { S.snap.data.jobs = (await rpc('shareos.snapshots', 'remove', { name: n, snapshot: x })).jobs; toast('Snapshot deleted.'); renderMain(); } catch (e) { toast(e.message, true); }
+	},
+	'sn-browse'(el) {
+		const j = S.snap.data.jobs.find((y) => y.name === el.dataset.name);
+		const f = fbInit();
+		f.root = j.target; f.path = `Snapshots/${j.name}/${el.dataset.snap}`; f.data = null; f.sel = new Set();
+		location.hash = '#/shares/files';
+	},
+	async 'sn-del'(el) {
+		const n = el.dataset.name, j = S.snap.data.jobs.find((y) => y.name === n);
+		if (!await confirmDlg(`Remove job “${n}”?`, 'No new snapshots will be taken.', 'Remove')) return;
+		const data = j.snapshots.length > 0 && await confirmDlg('Delete the snapshots too?', `Also delete the ${j.snapshots.length} snapshots in ${j.target}/Snapshots/${n}? Otherwise they stay there.`, 'Delete snapshots', true);
+		try { S.snap.data.jobs = (await rpc('shareos.snapshots', 'job_del', { name: n, data })).jobs; toast(`Job “${n}” removed.`); renderMain(); } catch (e) { toast(e.message, true); }
+	}
+});

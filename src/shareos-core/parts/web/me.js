@@ -214,4 +214,3 @@ function renderUserHome() {
 		} catch (err) { toast('Paperless: ' + err.message, true); }
 	});
 }
-

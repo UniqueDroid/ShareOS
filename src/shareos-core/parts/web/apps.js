@@ -507,3 +507,8 @@ Object.assign(ACTIONS, {
 	}
 });
 
+/* --- after the page is drawn: listeners, loading --- */
+
+Object.assign(VIEWS_AFTER, {
+	apps() { appsAfter(); }
+});

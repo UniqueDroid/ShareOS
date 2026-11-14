@@ -144,3 +144,11 @@ function upsAfter() {
 	});
 }
 
+/* --- clicks (data-act) --- */
+
+Object.assign(ACTIONS, {
+	async 'prn-test'(el) {
+		try { await rpc('shareos.printer', 'test', { lp: el.dataset.id }); toast('Test page sent.'); }
+		catch (e) { toast('Test page: ' + e.message, true); }
+	}
+});
