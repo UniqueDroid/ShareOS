@@ -302,7 +302,7 @@ check "backup: keys only encrypted" "rpc shareos.backup export '{\"certificate\"
 check "backup: short password rejected" "rpc shareos.backup export '{\"password\":\"abc\"}' | grep -q '6 characters'"
 E2=$(rpc shareos.backup export '{"password":"backup-pw","certificate":true,"ca":true}')
 echo "$E2" | python3 -c 'import json,sys; print(json.load(sys.stdin)["content"])' > $T/enc.json
-check "backup: encrypted file hides the content, date and box readable" "python3 -c \"import json; d=json.load(open('$T/enc.json')); assert d['encrypted'] and 'accounts' not in d and d['host'] and d['created'] > 0\" && ! grep -q jan $T/enc.json"
+check "backup: encrypted file hides the content, date and box readable" "python3 -c \"import json; d=json.load(open('$T/enc.json')); assert d['encrypted'] and 'accounts' not in d and d['host'] and d['created'] > 0\" && ! grep -q 'jan:' $T/enc.json"   # 'jan:' = a passwd line; plain 'jan' turns up in the base64 of the ciphertext by chance
 check "backup: summary names certificate, CA and the issued certificate" "echo '$E2' | js \"d['certificate'] and d['ca'] and d['ca_certs']==['drucker'] and 'familie' in d['groups']\""
 cat > $T/req.py <<'PY'
 import json, sys

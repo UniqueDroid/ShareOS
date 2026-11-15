@@ -2098,13 +2098,17 @@ E1679	SIGNATURE (.SIG, FACULTATIF)
 E1680	Installer un micrologiciel non signé ?
 E1681	Ce fichier ne porte pas la signature du projet ShareOS. Ne l’installez que si vous l’avez compilé vous-même ou si vous faites confiance à sa provenance.
 E1682	Installer quand même
-E1683	SUSPENDRE LE FILTRAGE
-E1684	30 secondes
-E1685	1 minute
-E1686	Jusqu’à demain
+E1683	SIGNÉ
+E1684	La signature du projet ShareOS a été vérifiée lors de l’installation de cette version.
+E1685	Porte la signature du projet ShareOS. Elle est vérifiée après le téléchargement.
+E1686	Installé à partir d’un fichier sans signature
+E1687	SUSPENDRE LE FILTRAGE
+E1688	30 secondes
+E1689	1 minute
+E1690	Jusqu’à demain
 P373	En pause – le filtrage reprend dans $1
-E1687	Le filtrage est désactivé jusqu’à ce que vous le réactiviez.
-E1688	Reprendre le filtrage
-E1689	Filtrage suspendu.
-E1690	Le filtrage est de nouveau actif.
-E1691	RÉSOLUTION DE NOMS
+E1691	Le filtrage est désactivé jusqu’à ce que vous le réactiviez.
+E1692	Reprendre le filtrage
+E1693	Filtrage suspendu.
+E1694	Le filtrage est de nouveau actif.
+E1695	RÉSOLUTION DE NOMS

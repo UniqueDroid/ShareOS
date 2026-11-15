@@ -145,6 +145,8 @@ kbd{font:inherit;font-size:11px;color:var(--muted);border:1px solid var(--line);
 .sos a.btn.danger,.sos a.btn.danger:hover{color:var(--red)}
 .tag{display:inline-block;font-size:11px;letter-spacing:.08em;color:var(--soft);border:1px solid var(--line);border-radius:5px;padding:2px 7px;white-space:nowrap}
 .tag.ok{color:var(--ok);border-color:color-mix(in srgb,var(--ok) 40%,transparent)}
+.tag.seal{display:inline-flex;align-items:center;gap:4px;margin-left:8px;vertical-align:middle;cursor:help}.tag.seal svg{width:12px;height:12px;flex:none}
+.seal-s{display:inline-block;margin-left:6px;vertical-align:-2px;color:var(--ok);cursor:help}.seal-s svg{width:14px;height:14px}
 .tag.warn{color:var(--amber);border-color:color-mix(in srgb,var(--amber) 45%,transparent)}
 .tag.err{color:var(--red);border-color:color-mix(in srgb,var(--red) 45%,transparent)}
 .tag.new{color:var(--bg);background:var(--amber);border-color:var(--amber);font-weight:600}

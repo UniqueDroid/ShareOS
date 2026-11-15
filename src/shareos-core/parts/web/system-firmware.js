@@ -67,6 +67,14 @@ async function refreshUpdateStatus() {
 	}
 }
 
+// the seal of a signed firmware: on the installed version when its signature
+// was checked at installation, on a release when it carries a signature
+// small: only the shield (in the list of versions)
+function fwSeal(title, small = false) {
+	return small ? html`<span class="seal-s" title="${title}" aria-label="${title}">${svg(I.shield)}</span>`
+		: html`<span class="tag ok seal" title="${title}">${svg(I.shield)}SIGNED</span>`;
+}
+
 /* --- the pages --- */
 
 Object.assign(SYS, {
@@ -87,10 +95,10 @@ Object.assign(SYS, {
 				<div class="panel">
 					<div class="ph"><span class="pt">FIRMWARE UPDATE</span><span class="tag ml">Source: GitHub releases · ${c?.repo || 'UniqueDroid/ShareOS'}</span></div>
 					<div class="ver">
-						<div class="tile"><div class="k">Installed</div><div class="v">${cur}</div><div class="s">Kernel, initramfs and system</div></div>
+						<div class="tile"><div class="k"><span>Installed</span>${u.installed_signature === 'valid' ? fwSeal('The signature of the ShareOS project was checked when this version was installed.') : ''}</div><div class="v">${cur}</div><div class="s">${u.installed_signature === 'none' ? 'Installed from a file without signature' : 'Kernel, initramfs and system'}</div></div>
 						<span class="arrow" aria-hidden="true">→</span>
 						<div class="tile"${c?.update_available ? raw(' style="border-color:color-mix(in srgb,var(--amber) 45%,transparent)"') : ''}>
-							<div class="k">Latest · ${c ? (c.channel === 'beta' ? 'Beta' : 'Stable') : '–'}</div>
+							<div class="k"><span>Latest · ${c ? (c.channel === 'beta' ? 'Beta' : 'Stable') : '–'}</span>${u.signing && latest?.sig_url ? fwSeal('Carries the signature of the ShareOS project. It is checked after the download.') : ''}</div>
 							<div class="v ${c?.update_available ? 'warn' : ''}">${latest ? latest.version : c ? 'none' : '?'}</div>
 							<div class="s">${c ? (c.update_available ? 'Update available' : latest ? 'up to date' : 'no release for this device yet') : 'not checked yet'}</div></div>
 					</div>
@@ -117,7 +125,7 @@ Object.assign(SYS, {
 					<div class="tw"><table class="t" style="min-width:600px">
 						<thead><tr><th>VERSION</th><th>DATE</th><th>CHANNEL</th><th>SIZE</th><th></th></tr></thead>
 						<tbody>${(S.relAll ? c.releases : c.releases.slice(0, 3)).map((r) => html`<tr>
-							<td><b>${r.version}</b></td><td>${fmtDate(r.date)}</td>
+							<td><b>${r.version}</b>${u.signing && r.sig_url ? fwSeal('Carries the signature of the ShareOS project. It is checked after the download.', true) : ''}</td><td>${fmtDate(r.date)}</td>
 							<td><span class="tag">${r.prerelease ? 'BETA' : 'STABLE'}</span></td><td class="mut">${fmtBytes(r.size)}</td>
 							<td>${r.version === cur ? html`<span class="tag ok">installed</span>`
 								: html`<button class="btn sm${r.tag === latest?.tag ? '' : ' ghost'}" type="button" data-act="download" data-tag="${r.tag}" ${busy || !bootOk ? 'disabled' : ''}>Download</button>`}

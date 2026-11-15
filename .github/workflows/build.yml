@@ -166,6 +166,10 @@ jobs:
       - name: ARM emulator tests (the built system with qemu-user)
         run: |
           sudo apt-get install -y --no-install-recommends qemu-user-static binfmt-support
+          # the fake Tuya device of test-sysperms (without it those checks are
+          # skipped); fixed version, only for this step – the images are uploaded
+          sudo pip3 install --break-system-packages -q tinytuya==1.21.1 ||
+            echo "::warning::tinytuya not installed – the Tuya checks of test-sysperms are skipped"
           O=output/${{ matrix.board }}
           v=$(sed -n 's/^VERSION=${SHAREOS_RCLONE_VERSION:-\(.*\)}$/\1/p' src/shareos-core/usr/sbin/shareos-cloud)
           mkdir -p "rclone-dl/v$v"

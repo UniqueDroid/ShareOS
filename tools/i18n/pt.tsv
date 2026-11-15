@@ -2098,13 +2098,17 @@ E1679	ASSINATURA (.SIG, OPCIONAL)
 E1680	Instalar firmware não assinado?
 E1681	Este ficheiro não tem a assinatura do projeto ShareOS. Instale-o apenas se o compilou ou se confia na sua origem.
 E1682	Instalar mesmo assim
-E1683	PAUSAR A FILTRAGEM
-E1684	30 segundos
-E1685	1 minuto
-E1686	Até amanhã
+E1683	ASSINADO
+E1684	A assinatura do projeto ShareOS foi verificada quando esta versão foi instalada.
+E1685	Tem a assinatura do projeto ShareOS. É verificada após a transferência.
+E1686	Instalado a partir de um ficheiro sem assinatura
+E1687	PAUSAR A FILTRAGEM
+E1688	30 segundos
+E1689	1 minuto
+E1690	Até amanhã
 P373	Em pausa – volta a filtrar em $1
-E1687	A filtragem está desligada até a voltar a ligar.
-E1688	Voltar a filtrar agora
-E1689	Filtragem em pausa.
-E1690	A filtragem está novamente ativa.
-E1691	RESOLUÇÃO DE NOMES
+E1691	A filtragem está desligada até a voltar a ligar.
+E1692	Voltar a filtrar agora
+E1693	Filtragem em pausa.
+E1694	A filtragem está novamente ativa.
+E1695	RESOLUÇÃO DE NOMES
