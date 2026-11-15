@@ -39,7 +39,8 @@ das System im Flash.
    trennen.
 4. Die Box startet neu. ShareOS merkt, dass noch kein System im Flash ist, und
    installiert es – zuerst vom USB-Stick, sonst von GitHub; die Prüfsummen
-   werden kontrolliert. Die **orange USB-LED blinkt schnell**, das dauert
+   werden kontrolliert, und ein Download von GitHub muss die Signatur des
+   Projekts tragen. Die **orange USB-LED blinkt schnell**, das dauert
    einige Minuten. Die Zusatzpakete von Alt-F im Flash werden dabei ersetzt.
 5. Danach startet die Box von selbst noch einmal neu – jetzt mit ShareOS.
 6. Im Browser `http://<IP-der-Box>/` öffnen (oder `http://<Gerätename>.local/`).

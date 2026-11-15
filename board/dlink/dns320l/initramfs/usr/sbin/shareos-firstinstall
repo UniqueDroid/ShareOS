@@ -11,7 +11,12 @@
 #      (<model> = BOARD_FWNAME, e.g. DNS-320L-rev-Ax)
 #      (top folder or folder "shareos"; FAT, exFAT or ext4)
 #   2. GitHub: the release of this version (or the newest one for development
-#      builds), downloaded over HTTPS and checked against its .sha256
+#      builds), downloaded over HTTPS; its signature (<package>.sig) must fit
+#      the public key of the project in /etc/shareos/release.pub, and it is
+#      checked against its .sha256. Without a valid signature nothing from
+#      the network is installed. (No key file: this check is off.)
+#      A package on a USB stick or disk (1.) was put there by hand and is
+#      installed without a signature, like a file uploaded in the interface.
 # The package is checked (SHA256SUMS, device, U-Boot headers, squashfs).
 # Kernel and initramfs are written again when the package has other ones, so
 # kernel and system always match. Exit 0 = installed, the caller reboots.
@@ -25,6 +30,7 @@ API=${FI_API:-https://api.github.com/repos/$REPO/releases}
 # test hooks: FI_SRC_DIR = folder to search instead of USB sticks/disks,
 # FI_API = release list (file:// works), FI_NO_NET = skip the network checks
 CA=/etc/ssl/certs/ca-certificates.crt
+PUBKEY=/etc/shareos/release.pub
 W=/tmp/firstinstall
 SRC=/mnt/src
 UBOOT_MAX=3145728
@@ -117,6 +123,14 @@ download() {
 	[ -n "$url" ] || fail "no ShareOS package for $FWNAME on GitHub"
 	log "download ${url##*/}"
 	fetch --max-time 1800 -o $W/pkg.tar "$url" || fail "download failed"
+	if grep -q 'BEGIN PUBLIC KEY' $PUBKEY 2>/dev/null; then
+		# signed by the release build; pk_verify (mbedtls) reads <file>.sig
+		fetch --max-time 30 -o $W/pkg.tar.sig "$url.sig" 2>/dev/null \
+			|| fail "this release is not signed – not installed (put the package on a USB stick instead)"
+		pk_verify $PUBKEY $W/pkg.tar >/dev/null 2>&1 \
+			|| fail "the signature of the download is not valid – not installed"
+		log "signature of the ShareOS project: valid"
+	fi
 	sum=$(fetch --max-time 30 "$url.sha256" | cut -c1-64)
 	[ -n "$sum" ] || fail "checksum file missing on GitHub"
 	[ "$(sha256sum $W/pkg.tar | cut -c1-64)" = "$sum" ] || fail "checksum of the download is wrong"

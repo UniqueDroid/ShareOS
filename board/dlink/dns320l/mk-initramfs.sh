@@ -19,12 +19,14 @@ usr/sbin/ubiupdatevol usr/sbin/ubiformat usr/sbin/ubiblock usr/sbin/ubinfo
 usr/sbin/nanddump usr/sbin/nandwrite usr/sbin/flash_erase usr/sbin/mtdinfo
 usr/sbin/dns323-fw
 usr/bin/curl
+usr/bin/pk_verify
 "
 FILES="
 etc/passwd etc/group etc/shadow etc/shells etc/shareos-release
 usr/lib/shareos/board.sh
 usr/share/udhcpc/default.script
 etc/ssl/certs/ca-certificates.crt
+etc/shareos/release.pub
 "
 
 copy() { # copy a path from the target, keeping symlinks

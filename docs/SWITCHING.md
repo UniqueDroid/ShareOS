@@ -36,7 +36,7 @@ flash change.
    writes the kernel and the boot system. Do not cut the power while flashing.
 4. The box restarts. ShareOS sees that there is no system in the flash yet and
    installs it – from the USB stick first, otherwise from GitHub; checksums are
-   verified. The **orange USB LED blinks fast**, this takes a few minutes. The
+   verified, and a download from GitHub must carry the project's signature. The **orange USB LED blinks fast**, this takes a few minutes. The
    Alt-F add-on packages in the flash are replaced.
 5. Then the box restarts once more on its own – now with ShareOS.
 6. Open `http://<box-IP>/` in the browser (or `http://<device-name>.local/`).
