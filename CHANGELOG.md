@@ -4,6 +4,11 @@ Changes per release (newest first). The section of a version is added to its
 GitHub release automatically when the release is built. Test versions are
 pre-releases for test devices only.
 
+## 0.3.0-beta.12
+
+- **DNS filter: pause the filtering for a while** – 30 seconds, 1 minute, 10 minutes, 1 hour or until tomorrow, like "Disable protection" in AdGuard Home. The page shows how long the pause still runs and has *Filter again now*; when the time is over the filtering comes back by itself. Saving other settings during a pause no longer touches it.
+- **The DNS filter page is tidier:** status with the four numbers in one row, settings and name resolution (upstream servers, local names) side by side, the forms for local entries and block lists as one row under their table – everything in the full width.
+
 ## 0.3.0-beta.11
 
 - **DNS-320 rev A: the temperature was never read** ([#163](https://github.com/UniqueDroid/ShareOS/issues/163), found and traced on a rev A1). The fan control asked the MCU on `ttyS1` and opened the port a second time to read – the answer comes within milliseconds and was lost in between, every time. Result: no temperature, fan at full, "board control not running" in the overview. Asking and reading now use one open port; an answer without its header is read from its checksum, as Alt-F does.

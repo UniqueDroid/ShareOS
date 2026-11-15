@@ -181,6 +181,12 @@ check "local entry removed" "ub rewrite_remove '{\"domain\":\"*.web.test.lan\",\
 check "invalid upstream refused" "ub set '{\"upstream\":[\"rm -rf /\"]}' | grep -q 'invalid upstream'"
 check "port of the box refused" "ub set '{\"web_port\":443}' | grep -q 'not a port of the box'"
 check "filtering paused and on again" "ub set '{\"protection\":false}' | js \"d['protection']==False\" && ub set '{\"protection\":true}' | js \"d['protection']==True\""
+# a pause with an end, as AdGuard Home offers it on its overview
+check "pause for 30 seconds: filtering off, the time left is reported" "ub set '{\"pause\":30}' | js \"d['protection']==False and 1<=d['pause_left']<=30\""
+check "pause: switched on again before the time is over" "ub set '{\"protection\":true}' | js \"d['protection']==True and d['pause_left']==0\""
+check "pause until tomorrow: at most a day" "ub set '{\"pause\":-1}' | js \"d['protection']==False and 1<=d['pause_left']<=86400\" && ub set '{\"protection\":true}' | js \"d['protection']==True\""
+check "pause for 2 seconds: the filtering comes back by itself" "ub set '{\"pause\":2}' | js \"d['protection']==False\" && sleep 4 && ub status | js \"d['protection']==True and d['pause_left']==0\""
+check "pause: 0 seconds and more than a day refused" "ub set '{\"pause\":100000}' | grep -q 'between 1 second' && ub status | js \"d['protection']==True\""
 check "web port changed: restarted on the new ports (HTTPS one above)" "ub set '{\"web_port\":8063}' | js \"d['ready'] and d['web_port']==8063 and d['https_port']==8064\" && curl -s -o /dev/null -w '%{http_code}' -u admin:$PW http://127.0.0.1:8063/control/status | grep -q 307 && curl -sk -o /dev/null -w '%{http_code}' -u admin:$PW https://127.0.0.1:8064/control/status | grep -q 200"
 o=$(df restart); echo "$o" | js "d['ready']" 2>/dev/null || echo "      restart: $(echo "$o" | tr '\n' ' ' | cut -c1-500)"
 check "settings kept over a restart" "echo '$o' | js \"d.get('ready') and d['upstream'][0]=='https://dns.quad9.net/dns-query'\""

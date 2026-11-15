@@ -2082,3 +2082,13 @@ E1679	SIGNATUR (.SIG, OPTIONAL)
 E1680	Unsignierte Firmware installieren?
 E1681	Diese Datei trägt keine Signatur des ShareOS-Projekts. Nur installieren, wenn du sie selbst gebaut hast oder ihrer Herkunft vertraust.
 E1682	Trotzdem installieren
+E1683	FILTERUNG PAUSIEREN
+E1684	30 Sekunden
+E1685	1 Minute
+E1686	Bis morgen
+P373	Pausiert – filtert wieder in $1
+E1687	Die Filterung ist aus, bis du sie wieder einschaltest.
+E1688	Jetzt wieder filtern
+E1689	Filterung pausiert.
+E1690	Die Filterung ist wieder an.
+E1691	NAMENSAUFLÖSUNG

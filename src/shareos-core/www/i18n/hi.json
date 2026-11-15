@@ -1665,7 +1665,16 @@
 		"SIGNATURE (.SIG, OPTIONAL)": "हस्ताक्षर (.SIG, वैकल्पिक)",
 		"Install unsigned firmware?": "अहस्ताक्षरित फ़र्मवेयर इंस्टॉल करें?",
 		"This file carries no signature of the ShareOS project. Install it only if you built it yourself or trust where it comes from.": "इस फ़ाइल पर ShareOS प्रोजेक्ट का हस्ताक्षर नहीं है। इसे तभी इंस्टॉल करें जब आपने इसे स्वयं बनाया हो या इसके स्रोत पर भरोसा हो।",
-		"Install anyway": "फिर भी इंस्टॉल करें"
+		"Install anyway": "फिर भी इंस्टॉल करें",
+		"PAUSE FILTERING": "फ़िल्टरिंग रोकें",
+		"30 seconds": "30 सेकंड",
+		"1 minute": "1 मिनट",
+		"Until tomorrow": "कल तक",
+		"Filtering is off until you switch it on again.": "जब तक आप फिर चालू नहीं करते, फ़िल्टरिंग बंद है।",
+		"Filter again now": "अभी फिर फ़िल्टर करें",
+		"Filtering paused.": "फ़िल्टरिंग रोकी गई।",
+		"Filtering is on again.": "फ़िल्टरिंग फिर चालू है।",
+		"NAME RESOLUTION": "नाम रिज़ॉल्यूशन"
 	},
 	"patterns": [
 		[
@@ -1959,6 +1968,10 @@
 		[
 			"^Share: (\\d+) file\\(s\\) not saved – (.*)$",
 			"साझा करें: $1 फ़ाइल(लें) सहेजी नहीं गईं – $2"
+		],
+		[
+			"^Paused – filtering again in (.*)$",
+			"रुका हुआ – $1 में फिर फ़िल्टर होगा"
 		],
 		[
 			"^([\\d.,  ]+) sectors could not be read\\.$",

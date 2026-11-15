@@ -4,7 +4,8 @@
 //
 //   shareos-dnsfilter status           settings and state (JSON)
 //   shareos-dnsfilter set              stdin JSON, all optional: {enabled,
-//                                      web_port, upstream: [..], protection}
+//                                      web_port, upstream: [..], protection,
+//                                      pause: seconds (-1 = until tomorrow)}
 //   shareos-dnsfilter filters          the block lists with their rules (JSON)
 //   shareos-dnsfilter filter-add       stdin {name, url}
 //   shareos-dnsfilter filter-remove    stdin {url}
@@ -412,6 +413,9 @@ function status() {
 	st.drive = work_dir() != null;
 	st.version = up?.data?.version ?? null;
 	st.protection = up?.data?.protection_enabled ?? null;
+	// a pause with an end ("set" with "pause"): seconds until the filtering is on again
+	let left = +(up?.data?.protection_disabled_duration ?? 0);
+	st.pause_left = st.protection === false && left > 0 ? int((left + 999) / 1000) : 0;
 	st.rss_mb = p ? rss_mb(p) : null;
 	if (st.ready) {
 		let f = filters();
@@ -503,6 +507,16 @@ function cmd_set() {
 		need_up();
 		let r = api('POST', 'protection', { enabled: !!a.protection });
 		if (!r.ok) die('protection: ' + trim(r.text));
+	}
+	// pause: the filtering is off for that many seconds and comes back by
+	// itself (AdGuard's "Disable protection for …"); -1 = until midnight
+	if (a.pause != null) {
+		need_up();
+		let s = +a.pause;
+		if (s == -1) { let t = localtime(); s = 86400 - (t.hour * 3600 + t.min * 60 + t.sec); }
+		if (!(s >= 1 && s <= 86400)) die('pause: between 1 second and 24 hours');
+		let r = api('POST', 'protection', { enabled: false, duration: int(s) * 1000 });
+		if (!r.ok) die('pause: ' + trim(r.text));
 	}
 	out(status());
 }

@@ -1665,7 +1665,16 @@
 		"SIGNATURE (.SIG, OPTIONAL)": "التوقيع (‎.SIG‏، اختياري)",
 		"Install unsigned firmware?": "تثبيت برنامج ثابت غير موقّع؟",
 		"This file carries no signature of the ShareOS project. Install it only if you built it yourself or trust where it comes from.": "هذا الملف لا يحمل توقيع مشروع ShareOS. ثبّته فقط إذا بنيته بنفسك أو كنت تثق بمصدره.",
-		"Install anyway": "التثبيت على أي حال"
+		"Install anyway": "التثبيت على أي حال",
+		"PAUSE FILTERING": "إيقاف التصفية مؤقتًا",
+		"30 seconds": "30 ثانية",
+		"1 minute": "دقيقة واحدة",
+		"Until tomorrow": "حتى الغد",
+		"Filtering is off until you switch it on again.": "التصفية متوقفة إلى أن تعيد تشغيلها.",
+		"Filter again now": "التصفية الآن من جديد",
+		"Filtering paused.": "تم إيقاف التصفية مؤقتًا.",
+		"Filtering is on again.": "عادت التصفية إلى العمل.",
+		"NAME RESOLUTION": "تحليل الأسماء"
 	},
 	"patterns": [
 		[
@@ -1959,6 +1968,10 @@
 		[
 			"^Share: (\\d+) file\\(s\\) not saved – (.*)$",
 			"مشاركة: لم يُحفظ $1 ملف – $2"
+		],
+		[
+			"^Paused – filtering again in (.*)$",
+			"متوقف مؤقتًا – تعود التصفية خلال $1"
 		],
 		[
 			"^([\\d.,  ]+) sectors could not be read\\.$",

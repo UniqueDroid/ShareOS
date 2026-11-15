@@ -1665,7 +1665,16 @@
 		"SIGNATURE (.SIG, OPTIONAL)": "SIGNATUR (.SIG, OPTIONAL)",
 		"Install unsigned firmware?": "Unsignierte Firmware installieren?",
 		"This file carries no signature of the ShareOS project. Install it only if you built it yourself or trust where it comes from.": "Diese Datei trägt keine Signatur des ShareOS-Projekts. Nur installieren, wenn du sie selbst gebaut hast oder ihrer Herkunft vertraust.",
-		"Install anyway": "Trotzdem installieren"
+		"Install anyway": "Trotzdem installieren",
+		"PAUSE FILTERING": "FILTERUNG PAUSIEREN",
+		"30 seconds": "30 Sekunden",
+		"1 minute": "1 Minute",
+		"Until tomorrow": "Bis morgen",
+		"Filtering is off until you switch it on again.": "Die Filterung ist aus, bis du sie wieder einschaltest.",
+		"Filter again now": "Jetzt wieder filtern",
+		"Filtering paused.": "Filterung pausiert.",
+		"Filtering is on again.": "Die Filterung ist wieder an.",
+		"NAME RESOLUTION": "NAMENSAUFLÖSUNG"
 	},
 	"patterns": [
 		[
@@ -1959,6 +1968,10 @@
 		[
 			"^Share: (\\d+) file\\(s\\) not saved – (.*)$",
 			"Teilen: $1 Datei(en) nicht gespeichert – $2"
+		],
+		[
+			"^Paused – filtering again in (.*)$",
+			"Pausiert – filtert wieder in $1"
 		],
 		[
 			"^([\\d.,  ]+) sectors could not be read\\.$",
