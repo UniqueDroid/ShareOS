@@ -1669,7 +1669,16 @@
 		"SIGNED": "已签名",
 		"The signature of the ShareOS project was checked when this version was installed.": "安装此版本时已校验 ShareOS 项目的签名。",
 		"Carries the signature of the ShareOS project. It is checked after the download.": "带有 ShareOS 项目的签名，下载后会进行校验。",
-		"Installed from a file without signature": "由未签名的文件安装"
+		"Installed from a file without signature": "由未签名的文件安装",
+		"PAUSE FILTERING": "暂停过滤",
+		"30 seconds": "30 秒",
+		"1 minute": "1 分钟",
+		"Until tomorrow": "到明天",
+		"Filtering is off until you switch it on again.": "过滤已关闭，直到您重新开启。",
+		"Filter again now": "立即恢复过滤",
+		"Filtering paused.": "过滤已暂停。",
+		"Filtering is on again.": "过滤已重新开启。",
+		"NAME RESOLUTION": "名称解析"
 	},
 	"patterns": [
 		[
@@ -1963,6 +1972,10 @@
 		[
 			"^Share: (\\d+) file\\(s\\) not saved – (.*)$",
 			"分享：$1 个文件未保存 – $2"
+		],
+		[
+			"^Paused – filtering again in (.*)$",
+			"已暂停 – $1 后恢复过滤"
 		],
 		[
 			"^([\\d.,  ]+) sectors could not be read\\.$",

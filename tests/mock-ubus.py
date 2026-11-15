@@ -849,6 +849,10 @@ def call(obj, method, args):
             'filters': [{'name': 'AdGuard DNS filter', 'url': 'https://adguardteam.github.io/HostlistsRegistry/assets/filter_1.txt', 'enabled': True, 'rules': 188364, 'updated': None},
                         {'name': 'AdAway Default Blocklist', 'url': 'https://adguardteam.github.io/HostlistsRegistry/assets/filter_2.txt', 'enabled': False, 'rules': 6540, 'updated': None}]})
         fl = d['filters']
+        # a timed pause of the filtering runs out by itself
+        d['pause_left'] = max(0, int(d.get('_pause_end', 0) - time.time()))
+        if d.get('_pause_end') and not d['pause_left']:
+            d['protection'] = True; d['_pause_end'] = 0
         if d.get('_start'):
             t = time.time() - d['_start']
             d.update({'running': t > 2, 'starting': 2 < t <= 8, 'dns': t > 8, 'ready': t > 8})
@@ -873,6 +877,10 @@ def call(obj, method, args):
             if args.get('enabled') is False: d.update({'enabled': False, 'running': False, 'ready': False, 'rss_mb': None})
             for k in ('web_port', 'https_port', 'upstream', 'protection'):
                 if k in args: d[k] = args[k]
+            if args.get('protection') is True: d['_pause_end'] = 0
+            if args.get('pause'):
+                d['protection'] = False
+                d['_pause_end'] = time.time() + (6 * 3600 if args['pause'] == -1 else args['pause'])
         if method == 'filter_add':
             fl.append({'name': args.get('name') or args['url'], 'url': args['url'], 'enabled': True, 'rules': 250000, 'updated': None})
         if method == 'filter_remove':

@@ -1669,7 +1669,16 @@
 		"SIGNED": "ПОДПИСАНО",
 		"The signature of the ShareOS project was checked when this version was installed.": "Подпись проекта ShareOS была проверена при установке этой версии.",
 		"Carries the signature of the ShareOS project. It is checked after the download.": "Содержит подпись проекта ShareOS. Она проверяется после загрузки.",
-		"Installed from a file without signature": "Установлено из файла без подписи"
+		"Installed from a file without signature": "Установлено из файла без подписи",
+		"PAUSE FILTERING": "ПРИОСТАНОВИТЬ ФИЛЬТРАЦИЮ",
+		"30 seconds": "30 секунд",
+		"1 minute": "1 минута",
+		"Until tomorrow": "До завтра",
+		"Filtering is off until you switch it on again.": "Фильтрация выключена, пока вы не включите её снова.",
+		"Filter again now": "Возобновить фильтрацию",
+		"Filtering paused.": "Фильтрация приостановлена.",
+		"Filtering is on again.": "Фильтрация снова включена.",
+		"NAME RESOLUTION": "РАЗРЕШЕНИЕ ИМЁН"
 	},
 	"patterns": [
 		[
@@ -1963,6 +1972,10 @@
 		[
 			"^Share: (\\d+) file\\(s\\) not saved – (.*)$",
 			"Поделиться: $1 файл(ов) не сохранено – $2"
+		],
+		[
+			"^Paused – filtering again in (.*)$",
+			"Пауза – фильтрация возобновится через $1"
 		],
 		[
 			"^([\\d.,  ]+) sectors could not be read\\.$",

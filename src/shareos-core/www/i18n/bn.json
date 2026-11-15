@@ -1669,7 +1669,16 @@
 		"SIGNED": "স্বাক্ষরিত",
 		"The signature of the ShareOS project was checked when this version was installed.": "এই সংস্করণ ইনস্টল করার সময় ShareOS প্রকল্পের স্বাক্ষর যাচাই করা হয়েছে।",
 		"Carries the signature of the ShareOS project. It is checked after the download.": "ShareOS প্রকল্পের স্বাক্ষর বহন করে। ডাউনলোডের পর তা যাচাই করা হয়।",
-		"Installed from a file without signature": "স্বাক্ষরহীন ফাইল থেকে ইনস্টল করা"
+		"Installed from a file without signature": "স্বাক্ষরহীন ফাইল থেকে ইনস্টল করা",
+		"PAUSE FILTERING": "ফিল্টারিং বিরতি",
+		"30 seconds": "৩০ সেকেন্ড",
+		"1 minute": "১ মিনিট",
+		"Until tomorrow": "আগামীকাল পর্যন্ত",
+		"Filtering is off until you switch it on again.": "আপনি আবার চালু না করা পর্যন্ত ফিল্টারিং বন্ধ।",
+		"Filter again now": "এখনই আবার ফিল্টার করুন",
+		"Filtering paused.": "ফিল্টারিং বিরতিতে।",
+		"Filtering is on again.": "ফিল্টারিং আবার চালু।",
+		"NAME RESOLUTION": "নাম রেজোলিউশন"
 	},
 	"patterns": [
 		[
@@ -1963,6 +1972,10 @@
 		[
 			"^Share: (\\d+) file\\(s\\) not saved – (.*)$",
 			"শেয়ার: $1টি ফাইল সংরক্ষিত হয়নি – $2"
+		],
+		[
+			"^Paused – filtering again in (.*)$",
+			"বিরতিতে – $1 পরে আবার ফিল্টার হবে"
 		],
 		[
 			"^([\\d.,  ]+) sectors could not be read\\.$",

@@ -1669,7 +1669,16 @@
 		"SIGNED": "ASSINADO",
 		"The signature of the ShareOS project was checked when this version was installed.": "A assinatura do projeto ShareOS foi verificada quando esta versão foi instalada.",
 		"Carries the signature of the ShareOS project. It is checked after the download.": "Tem a assinatura do projeto ShareOS. É verificada após a transferência.",
-		"Installed from a file without signature": "Instalado a partir de um ficheiro sem assinatura"
+		"Installed from a file without signature": "Instalado a partir de um ficheiro sem assinatura",
+		"PAUSE FILTERING": "PAUSAR A FILTRAGEM",
+		"30 seconds": "30 segundos",
+		"1 minute": "1 minuto",
+		"Until tomorrow": "Até amanhã",
+		"Filtering is off until you switch it on again.": "A filtragem está desligada até a voltar a ligar.",
+		"Filter again now": "Voltar a filtrar agora",
+		"Filtering paused.": "Filtragem em pausa.",
+		"Filtering is on again.": "A filtragem está novamente ativa.",
+		"NAME RESOLUTION": "RESOLUÇÃO DE NOMES"
 	},
 	"patterns": [
 		[
@@ -1963,6 +1972,10 @@
 		[
 			"^Share: (\\d+) file\\(s\\) not saved – (.*)$",
 			"Compartilhar: $1 arquivo(s) não salvo(s) – $2"
+		],
+		[
+			"^Paused – filtering again in (.*)$",
+			"Em pausa – volta a filtrar em $1"
 		],
 		[
 			"^([\\d.,  ]+) sectors could not be read\\.$",

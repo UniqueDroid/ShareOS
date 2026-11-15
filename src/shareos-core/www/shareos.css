@@ -98,6 +98,10 @@ kbd{font:inherit;font-size:11px;color:var(--muted);border:1px solid var(--line);
 .ip{color:var(--muted);font-size:12px;margin-top:8px;word-break:break-all}
 .ip::before{content:"› ";color:var(--dim)}
 .tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+.tiles.dft{grid-template-columns:repeat(auto-fit,minmax(110px,1fr))}
+.dfpause{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:14px;padding-top:12px;border-top:1px solid var(--line);font-size:13px}
+.dfpause .k{font-size:11px;letter-spacing:.08em;color:var(--soft);margin-right:4px}
+.fields.dfrow{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}.fields.dfrow .acts{margin:0}
 .tile{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;min-width:0}
 .k{color:var(--muted);font-size:11px;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .v{color:var(--accent);font-size:18px;font-weight:600;margin-top:4px;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}

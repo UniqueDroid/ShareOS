@@ -1669,7 +1669,16 @@
 		"SIGNED": "موقَّع",
 		"The signature of the ShareOS project was checked when this version was installed.": "تم التحقق من توقيع مشروع ShareOS عند تثبيت هذا الإصدار.",
 		"Carries the signature of the ShareOS project. It is checked after the download.": "يحمل توقيع مشروع ShareOS. يُتحقَّق منه بعد التنزيل.",
-		"Installed from a file without signature": "مثبَّت من ملف بلا توقيع"
+		"Installed from a file without signature": "مثبَّت من ملف بلا توقيع",
+		"PAUSE FILTERING": "إيقاف التصفية مؤقتًا",
+		"30 seconds": "30 ثانية",
+		"1 minute": "دقيقة واحدة",
+		"Until tomorrow": "حتى الغد",
+		"Filtering is off until you switch it on again.": "التصفية متوقفة إلى أن تعيد تشغيلها.",
+		"Filter again now": "التصفية الآن من جديد",
+		"Filtering paused.": "تم إيقاف التصفية مؤقتًا.",
+		"Filtering is on again.": "عادت التصفية إلى العمل.",
+		"NAME RESOLUTION": "تحليل الأسماء"
 	},
 	"patterns": [
 		[
@@ -1963,6 +1972,10 @@
 		[
 			"^Share: (\\d+) file\\(s\\) not saved – (.*)$",
 			"مشاركة: لم يُحفظ $1 ملف – $2"
+		],
+		[
+			"^Paused – filtering again in (.*)$",
+			"متوقف مؤقتًا – تعود التصفية خلال $1"
 		],
 		[
 			"^([\\d.,  ]+) sectors could not be read\\.$",

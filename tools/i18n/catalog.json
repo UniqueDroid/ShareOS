@@ -1687,7 +1687,16 @@
 		"SIGNED",
 		"The signature of the ShareOS project was checked when this version was installed.",
 		"Carries the signature of the ShareOS project. It is checked after the download.",
-		"Installed from a file without signature"
+		"Installed from a file without signature",
+		"PAUSE FILTERING",
+		"30 seconds",
+		"1 minute",
+		"Until tomorrow",
+		"Filtering is off until you switch it on again.",
+		"Filter again now",
+		"Filtering paused.",
+		"Filtering is on again.",
+		"NAME RESOLUTION"
 	],
 	"patterns": [
 		[
@@ -3181,6 +3190,10 @@
 		[
 			"^Reboot: (.*)$",
 			"Reboot: $1"
+		],
+		[
+			"^Paused – filtering again in (.*)$",
+			"Paused – filtering again in $1"
 		]
 	],
 	"words": [

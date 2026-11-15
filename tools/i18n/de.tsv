@@ -2086,3 +2086,13 @@ E1683	SIGNIERT
 E1684	Die Signatur des ShareOS-Projekts wurde beim Installieren dieser Version geprüft.
 E1685	Trägt die Signatur des ShareOS-Projekts. Sie wird nach dem Download geprüft.
 E1686	Aus einer Datei ohne Signatur installiert
+E1687	FILTERUNG PAUSIEREN
+E1688	30 Sekunden
+E1689	1 Minute
+E1690	Bis morgen
+P373	Pausiert – filtert wieder in $1
+E1691	Die Filterung ist aus, bis du sie wieder einschaltest.
+E1692	Jetzt wieder filtern
+E1693	Filterung pausiert.
+E1694	Die Filterung ist wieder an.
+E1695	NAMENSAUFLÖSUNG

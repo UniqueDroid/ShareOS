@@ -193,6 +193,8 @@ restart the *PAPERLESS* tab is there, **Apps → Installed** lists "Paperless"
 
 ## 8a. DNS filter (0.3.0-beta.4)
 
+Pause (0.3.0-beta.12): with the filter running, *PAUSE FILTERING → 1 minute* in the *STATUS* box. The box shows "filtering paused" and "Paused – filtering again in …" with *Filter again now*; a blocked name (e.g. `nslookup doubleclick.net <box>`) gets its real address. After the minute the tag is gone by itself and the name is answered with `0.0.0.0` again. *Until tomorrow* ends at midnight. Saving the settings during a pause does not end it and does not make it permanent.
+
 The DNS filter is a **module** (AdGuard Home). It needs the apps drive.
 
 1. **Apps → Store → DNS filter → Install.** The *DNS FILTER* tab appears behind *PAPERLESS*.

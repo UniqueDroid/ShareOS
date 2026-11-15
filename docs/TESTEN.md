@@ -198,6 +198,8 @@ Neustart ist der Reiter *PAPERLESS* da, unter **Apps → Installiert** steht
 
 ## 8a. DNS-Filter (0.3.0-beta.4)
 
+Pause (0.3.0-beta.12): Bei laufendem Filter im Kasten *Status* *Filterung pausieren → 1 Minute*. Der Kasten zeigt „Filterung pausiert“ und „Pausiert – filtert wieder in …“ mit *Jetzt wieder filtern*; ein gesperrter Name (z. B. `nslookup doubleclick.net <Box>`) bekommt seine echte Adresse. Nach der Minute verschwindet die Marke von selbst und der Name wird wieder mit `0.0.0.0` beantwortet. *Bis morgen* endet um Mitternacht. Speichern der Einstellungen während einer Pause beendet sie nicht und macht sie nicht dauerhaft.
+
 Der DNS-Filter ist ein **Modul** (AdGuard Home). Er braucht das Apps-Laufwerk.
 
 1. **Apps → Store → DNS-Filter → Installieren.** Der Reiter *DNS-FILTER* erscheint hinter *PAPERLESS*.
