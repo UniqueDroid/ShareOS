@@ -29,7 +29,7 @@ From the GitHub release you need:
    firmware page and flash it. Alt-F only writes the kernel and boot system.
 3. The box restarts. ShareOS notices that there is no system in flash yet and
    installs it: from the USB stick, otherwise from GitHub (the checksum is
-   verified). The **orange USB LED blinks fast**; this takes a few minutes.
+   verified; a download must carry the project's signature). The **orange USB LED blinks fast**; this takes a few minutes.
    Alt-F's extra packages in flash are replaced.
 4. The box then restarts on its own – now with ShareOS. Continue with
    [4. Web interface](#4-web-interface).

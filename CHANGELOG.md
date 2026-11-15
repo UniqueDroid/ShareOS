@@ -8,6 +8,7 @@ pre-releases for test devices only.
 
 - **DNS-320 rev A: the temperature was never read** ([#163](https://github.com/UniqueDroid/ShareOS/issues/163), found and traced on a rev A1). The fan control asked the MCU on `ttyS1` and opened the port a second time to read – the answer comes within milliseconds and was lost in between, every time. Result: no temperature, fan at full, "board control not running" in the overview. Asking and reading now use one open port; an answer without its header is read from its checksum, as Alt-F does.
 - The SSH/console banner names the model of the box (it said `DNS-320L-rev-Ax` on every model).
+- **First installation: downloads must be signed.** After the ShareOS `.bin` was flashed from Alt-F or the D-Link interface, the box installs the system from a USB stick or, without one, from GitHub. That download was only compared with the `.sha256` next to it; now its signature must fit the project's key (the same check as for updates since beta.10), otherwise nothing is installed. A package on a USB stick is still installed without a signature – it was put there by hand.
 - **DNS filter: a restart failed now and then** with "AdGuard Home stopped" and the last lines of the *old* process, although the new one was starting. The start looked for the process before its PID file was written and took "not there yet" for "stopped". Seen in the emulator tests; a slow box can hit it as well. The start now waits for the PID file.
 
 ## 0.3.0-beta.10

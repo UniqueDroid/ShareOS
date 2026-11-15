@@ -97,6 +97,10 @@ flashed:
 6. board check (`/proc/device-tree/model`) and an explicit `confirm`
 7. every written partition is read back and compared
 
+The first installation (`shareos-firstinstall` in the initramfs) checks a
+download from GitHub the same way (`pk_verify` and the key are in the
+initramfs); a package on a USB stick is installed without a signature.
+
 The private key exists only as the secret `RELEASE_SIGNING_KEY` of the GitHub
 environment `release` (and offline with the owner); the job `release` of
 `build.yml` signs with it, see `docs/RELEASE.md`. `tests/test-signature.sh`
