@@ -86,12 +86,14 @@
     var link = $('[data-rel-link]'); if (link) link.href = rel.url;
     var box = $('[data-rel-files]');
     if (box) {
-      var models = {}, sums = {}, prefix = 'ShareOS-' + ver + '-';
+      var models = {}, sums = {}, sigs = {}, prefix = 'ShareOS-' + ver + '-';
       rel.assets.forEach(function (a) {
         if (a.name.indexOf(prefix) !== 0) return;
-        var m = a.name.slice(prefix.length).match(/^(.+?)\.(bin|sysupgrade\.tar)(\.sha256)?$/);
+        var m = a.name.slice(prefix.length).match(/^(.+?)\.(bin|sysupgrade\.tar)(\.sha256|\.sig)?$/);
         if (!m) return;
-        if (m[3]) sums[a.name.slice(0, -7)] = a.url; else (models[m[1]] = models[m[1]] || []).push(a);
+        if (m[3] === '.sha256') sums[a.name.slice(0, -7)] = a.url;
+        else if (m[3] === '.sig') sigs[a.name.slice(0, -4)] = a.url;
+        else (models[m[1]] = models[m[1]] || []).push(a);
       });
       var order = ['DNS-320L-rev-Ax', 'DNS-325-rev-Ax', 'DNS-320-rev-Bx', 'DNS-320-rev-Ax'];
       var keys = Object.keys(models).sort(function (a, b) { var i = order.indexOf(a), j = order.indexOf(b); return (i < 0 ? 99 : i) - (j < 0 ? 99 : j) || a.localeCompare(b); });
@@ -100,7 +102,8 @@
         return '<div class="model"><h5>' + esc(label[k] || k) + '</h5>' + models[k].sort(function (a, b) { return a.name.localeCompare(b.name); }).map(function (a) {
           var bin = /\.bin$/.test(a.name);
           return '<a href="' + esc(a.url) + '" rel="noopener" title="' + esc(a.name) + '"><b>' + (bin ? 'Firmware (.bin)' : 'System (.sysupgrade.tar)') + '</b><span>' + fmtSize(a.size) + '</span></a>' +
-            (sums[a.name] ? '<a class="sum" href="' + esc(sums[a.name]) + '" rel="noopener">SHA-256</a>' : '');
+            (sums[a.name] ? '<a class="sum" href="' + esc(sums[a.name]) + '" rel="noopener">SHA-256</a>' : '') +
+            (sigs[a.name] ? '<a class="sum" href="' + esc(sigs[a.name]) + '" rel="noopener" title="Signature (ECDSA P-256) – checked by the box">Signature</a>' : '');
         }).join('') + '</div>';
       }).join('');
       box.innerHTML = html || '<p class="muted">The files of this release are still being built (about 45 minutes after publishing). <a href="' + esc(rel.url) + '" rel="noopener">Open the release on GitHub ↗</a></p>';

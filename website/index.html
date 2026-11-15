@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ShareOS – open firmware for D-Link ShareCenter NAS</title>
-<meta name="description" content="ShareOS is a free, open source firmware for the D-Link DNS-320L, DNS-320 and DNS-325 NAS: Linux 6.18 LTS, SMB 3, app store, cloud sync, Paperless-ngx and online updates from GitHub.">
+<meta name="description" content="ShareOS is a free, open source firmware for the D-Link DNS-320L, DNS-320 and DNS-325 NAS: Linux 6.18 LTS, SMB 3, app store, desktop view, DNS filter, cloud sync, Paperless-ngx and signed online updates from GitHub.">
 <meta property="og:title" content="ShareOS – open firmware for D-Link ShareCenter NAS">
-<meta property="og:description" content="A current, maintained system for old D-Link NAS boxes: Linux 6.18 LTS, SMB 3, app store, cloud sync and online updates.">
+<meta property="og:description" content="A current, maintained system for old D-Link NAS boxes: Linux 6.18 LTS, SMB 3, app store, desktop view, cloud sync and signed online updates.">
 <meta property="og:image" content="https://uniquedroid.github.io/ShareOS/assets/icon-512.png">
 <meta property="og:type" content="website">
 <meta name="theme-color" content="#070b12">
@@ -59,7 +59,7 @@
       <a class="pill" href="#releases" data-latest-pill><i></i><span>Latest test version</span> <b data-latest-tag>…</b></a>
       <h1>A modern system for your <span class="grad">D-Link&nbsp;NAS</span></h1>
       <p class="lead">ShareOS is a free, open source firmware for the D-Link ShareCenter boxes DNS-320L, DNS-320 and DNS-325.
-        Current Linux, SMB&nbsp;3, an app store, cloud sync and online updates – for hardware the vendor gave up on.</p>
+        Current Linux, SMB&nbsp;3, an app store, a desktop in the browser, a DNS filter for the whole network and signed online updates – for hardware the vendor gave up on.</p>
       <div class="cta">
         <a class="btn primary" href="#releases" data-dl-btn>
           <svg viewBox="0 0 24 24" width="18" height="18"><path d="M12 3v12m0 0l-5-5m5 5l5-5M4 20h16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -96,7 +96,7 @@
       <li>Your disks and data stay untouched</li>
       <li>Back to Alt-F from the firmware page at any time</li>
       <li>Stock U-Boot, never written</li>
-      <li>Updates itself from GitHub Releases, SHA-256 verified</li>
+      <li>Updates itself from GitHub Releases – signed, checked before anything is written</li>
     </ul>
   </div>
 </section>
@@ -109,23 +109,29 @@
     <p class="intro">The base system stays small. What only some boxes need – media server, torrents, VPN, Paperless – comes from the store.</p>
     <div class="cards">
       <article class="card"><div class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="6" rx="2"/><rect x="3" y="14" width="18" height="6" rx="2"/><path d="M7 7h.01M7 17h.01"/></svg></div>
-        <h4>Storage</h4><p>Setup wizard for one disk, a mirror (RAID 1), RAID 0 or JBOD. ext4, Btrfs, exFAT, NTFS. Take over Alt-F disks as they are, SMART health with self-tests, snapshots of shares.</p></article>
+        <h4>Storage</h4><p>Setup wizard for one disk, a mirror (RAID 1), RAID 0 or JBOD. ext4, Btrfs, exFAT, NTFS. Take over Alt-F disks as they are, snapshots of shares, SMART read by the box itself with self-tests. Sleeping disks stay asleep – also with the storage page open.</p></article>
       <article class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M4 7a3 3 0 013-3h10a3 3 0 013 3v10a3 3 0 01-3 3H7a3 3 0 01-3-3z"/><path d="M8 12h8M12 8v8"/></svg></div>
-        <h4>Shares</h4><p>SMB 2/3 through ksmbd with the SoC's crypto engine, NFS v4. Rights per user and group, also as POSIX ACLs, storage limit per user, personal folders.</p></article>
+        <h4>Shares</h4><p>SMB 2/3 through ksmbd with the SoC's crypto engine, NFS v4. Rights per user and group, also as POSIX ACLs, storage limit per user, personal folders. <b>Vault shares</b>: locked and invisible until a user unlocks them with their password – for them only, for a set time.</p></article>
       <article class="card"><div class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></div>
-        <h4>App store</h4><p>Web apps and native system apps with one click: Transmission, Syncthing, MiniDLNA, FFmpeg, OpenVPN, Tailscale, autobrr, Zabbix agent and more. Apps get only the permissions they declare.</p></article>
+        <h4>App store</h4><p>Web apps and native system apps with one click: Transmission (also for remote programs like Transmission Remote GUI), Syncthing, MiniDLNA, FFmpeg, OpenVPN, Tailscale, autobrr, Zabbix agent and more. Apps get only the permissions they declare.</p></article>
       <article class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M7 18a4.5 4.5 0 01-.6-8.96A6 6 0 0118 8.5a4 4 0 01-.5 9.5z"/><path d="M12 11v6m-2.5-2.5L12 17l2.5-2.5"/></svg></div>
-        <h4>Cloud &amp; Paperless</h4><p>rclone sync with Nextcloud/WebDAV, S3, SFTP, Google Drive and more – for the box and per user. Paperless-ngx inbox folders, e.g. for a scanner, as a module.</p></article>
+        <h4>Cloud &amp; Paperless</h4><p>rclone sync with Nextcloud/WebDAV, S3, SFTP, Google Drive and more – for the box and per user. Paperless-ngx inbox folders, e.g. for a scanner. Both are modules from the store: only installed when you need them.</p></article>
       <article class="card"><div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 010 18M12 3a14 14 0 000 18"/></svg></div>
-        <h4>Network &amp; remote</h4><p>HTTPS with own CA or Let's Encrypt, Dynamic DNS, mDNS name, Tailscale without port forwarding (also behind DS-Lite), VPN client and server, DNS filter for the whole network with AdGuard Home.</p></article>
+        <h4>Network &amp; remote</h4><p>HTTPS with own CA or Let's Encrypt, Dynamic DNS, mDNS name, Tailscale without port forwarding (also behind DS-Lite), VPN client and server.</p></article>
       <article class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.4 8.3-8 9-4.6-.7-8-4-8-9V7z"/><path d="M9 12l2 2 4-4"/></svg></div>
-        <h4>Security</h4><p>Current kernel and libraries, kernel hardening, no known password on a new box (claimed with the USB button), settings backup with optional AES-256.</p></article>
+        <h4>Security</h4><p>Current kernel and libraries, kernel hardening, no known password on a new box (claimed with the USB button), no passwords on command lines, rescue SSH only after a press on the USB button, settings backup with optional AES-256. Static analysis and CodeQL on every change.</p></article>
       <article class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 8v5l3 2"/><circle cx="12" cy="12" r="9"/></svg></div>
-        <h4>Updates</h4><p>Online updates from GitHub Releases, checked every 6 hours, with progress. Or upload the update file – no internet needed.</p></article>
+        <h4>Signed updates</h4><p>Online updates from GitHub Releases, checked every 6 hours, with progress. Every release is signed (ECDSA P-256, with a reserve key kept offline); the box installs nothing from GitHub without a valid signature – also not on the first installation. Or upload the update file – no internet needed.</p></article>
       <article class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M15 17h5l-1.4-1.4A2 2 0 0118 14.2V11a6 6 0 10-12 0v3.2a2 2 0 01-.6 1.4L4 17h5m6 0a3 3 0 01-6 0"/></svg></div>
-        <h4>Monitoring</h4><p>Messages for RAID, SMART, temperature and updates by e-mail, ntfy, Gotify, webhook or Telegram. Zabbix agent with a ready template.</p></article>
+        <h4>Monitoring</h4><p>Messages for RAID, SMART, temperature and updates by e-mail, ntfy, Gotify, webhook or Telegram – also when a sensor stops answering. Zabbix agent with a ready template.</p></article>
       <article class="card"><div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.8-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.1a1.7 1.7 0 00-1.1-1.5 1.7 1.7 0 00-1.8.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.8 1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.1a1.7 1.7 0 001.5-1.1 1.7 1.7 0 00-.3-1.8l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.8.3H9a1.7 1.7 0 001-1.5V3a2 2 0 114 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.8-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.8V9a1.7 1.7 0 001.5 1H21a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z"/></svg></div>
-        <h4>Made for the hardware</h4><p>Fan curve, LEDs, buttons, power schedule with wake-up alarm, browser terminal, light/dark look with accent colours, 10 languages.</p></article>
+        <h4>Made for the hardware</h4><p>Fan curve, LEDs, buttons, power schedule with wake-up alarm, browser terminal, light/dark look with eight accent colours, 10 languages.</p></article>
+      <article class="card"><div class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 15h18M8 21h8M12 18v3"/><rect x="6" y="7" width="5" height="4" rx="1"/></svg></div>
+        <h4>Desktop view</h4><p>The web interface as a desktop in the browser: icons, start menu with search, windows to move, snap and resize, task manager, control panel and your own wallpaper. The classic view stays – choose on the login page.</p></article>
+      <article class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M3 5h18l-7 8v6l-4 2v-8z"/></svg></div>
+        <h4>DNS filter</h4><p>AdGuard Home as a module: blocks ads, trackers and malicious sites for every device in the network, asks the internet encrypted, keeps the box and your local names reachable. Own local entries right on the tab.</p></article>
+      <article class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M4 5h16M4 12h10M4 19h7"/><path d="M15 15l3 3 4-5"/></svg></div>
+        <h4>Shows what is</h4><p>Every state is checked against the real process and hardware: services, cloud and media jobs, sleeping disks, the box's own clock, ONLINE/OFFLINE. Restart and power off are refused while an update writes the flash.</p></article>
     </div>
   </div>
 </section>
@@ -137,13 +143,13 @@
     <h3 class="title">A web interface that feels at home on the box</h3>
     <div class="shots" data-shots>
       <figure data-full="docs/images/gui-en-overview.png"><img loading="lazy" src="docs/images/gui-en-overview.png" alt="Overview page"><figcaption>Overview</figcaption></figure>
+      <figure data-full="docs/images/gui-en-desktop.png"><img loading="lazy" src="docs/images/gui-en-desktop.png" alt="Desktop view with two windows side by side"><figcaption>Desktop view</figcaption></figure>
       <figure data-full="docs/images/gui-apps-store.png"><img loading="lazy" src="docs/images/gui-apps-store.png" alt="App store"><figcaption>App store</figcaption></figure>
       <figure data-full="docs/images/gui-en-files.png"><img loading="lazy" src="docs/images/gui-en-files.png" alt="File browser"><figcaption>File browser</figcaption></figure>
       <figure data-full="docs/images/gui-en-cloud.png"><img loading="lazy" src="docs/images/gui-en-cloud.png" alt="Cloud sync"><figcaption>Cloud sync</figcaption></figure>
-      <figure data-full="docs/images/gui-speicher.png"><img loading="lazy" src="docs/images/gui-speicher.png" alt="Storage"><figcaption>Storage</figcaption></figure>
-      <figure data-full="docs/images/gui-update-progress.png"><img loading="lazy" src="docs/images/gui-update-progress.png" alt="Online update"><figcaption>Online update</figcaption></figure>
-      <figure data-full="docs/images/gui-farben.png"><img loading="lazy" src="docs/images/gui-farben.png" alt="Accent colours, light and dark"><figcaption>Light, dark &amp; accents</figcaption></figure>
-      <figure data-full="docs/images/gui-en-network.png"><img loading="lazy" src="docs/images/gui-en-network.png" alt="Network settings"><figcaption>Network</figcaption></figure>
+      <figure data-full="docs/images/gui-en-storage.png"><img loading="lazy" src="docs/images/gui-en-storage.png" alt="Storage: volumes and drives, one asleep"><figcaption>Storage</figcaption></figure>
+      <figure data-full="docs/images/gui-en-shares.png"><img loading="lazy" src="docs/images/gui-en-shares.png" alt="Shares with a vault share"><figcaption>Shares &amp; vaults</figcaption></figure>
+      <figure data-full="docs/images/gui-en-dnsfilter.png"><img loading="lazy" src="docs/images/gui-en-dnsfilter.png" alt="DNS filter"><figcaption>DNS filter</figcaption></figure>
       <figure data-full="docs/images/gui-en-wizard.png"><img loading="lazy" src="docs/images/gui-en-wizard.png" alt="Setup wizard"><figcaption>Setup wizard</figcaption></figure>
     </div>
   </div>
@@ -158,9 +164,9 @@
       <div class="dev ok"><span class="tag ok">tested</span><h4>DNS-320L <small>rev A1–A3</small></h4><p>The main device, tested on hardware with every release. 256 MB RAM.</p><code>DNS-320L-rev-Ax</code></div>
       <div class="dev ok"><span class="tag ok">tested</span><h4>DNS-320LW <small>rev A2</small></h4><p>The white DNS-320L – same board, uses the DNS-320L files.</p><code>DNS-320L-rev-Ax</code></div>
       <div class="dev part"><span class="tag part">partly tested</span><h4>DNS-325 <small>rev A</small></h4><p>Boots from flash, buttons, LEDs, fan and updates work on rev A1. 256 MB RAM.</p><code>DNS-325-rev-Ax</code></div>
-      <div class="dev want"><span class="tag want">testers wanted</span><h4>DNS-320 <small>rev A / rev B</small></h4><p>Built with every release, not tested on hardware yet. 128 MB RAM.</p><code>DNS-320-rev-Ax · DNS-320-rev-Bx</code></div>
+      <div class="dev part"><span class="tag part">partly tested</span><h4>DNS-320 <small>rev A</small></h4><p>Installs and runs on rev A1; temperature and fan control since 0.3.0-beta.11. More testers welcome. 128 MB RAM.</p><code>DNS-320-rev-Ax</code></div>
+      <div class="dev want"><span class="tag want">testers wanted</span><h4>DNS-320 <small>rev B</small></h4><p>Built with every release, not tested on hardware yet. 128 MB RAM.</p><code>DNS-320-rev-Bx</code></div>
       <div class="dev plan"><span class="tag plan">planned</span><h4>DNR-322L · DNS-327L</h4><p>The DNS-327L (Armada 370) needs its own kernel and flash layout and a tester.</p></div>
-      <div class="dev plan"><span class="tag plan">research</span><h4>ShareOS Lite <small>DNS-323</small></h4><p>A reduced system for the 64 MB Orion boxes – the hardware test is running.</p></div>
     </div>
     <p class="note">Have one of the boxes marked “testers wanted”? See <a href="wiki.html#DEVICES">Devices &amp; testers</a> – no soldering, no serial console needed.</p>
   </div>
@@ -174,13 +180,13 @@
     <ol class="steps">
       <li><b>Download</b> from the <a href="#releases">latest release</a> the two files with your model's name: <code>ShareOS-&lt;version&gt;-&lt;model&gt;.bin</code> and <code>.sysupgrade.tar</code>.</li>
       <li><b>Keep</b> the <code>.bin</code> of your current firmware (e.g. Alt-F) for the way back.</li>
-      <li><b>Copy</b> the <code>.sysupgrade.tar</code> to a USB stick (FAT32, exFAT or ext4) and plug it in. Without a stick the box downloads it from GitHub.</li>
+      <li><b>Copy</b> the <code>.sysupgrade.tar</code> to a USB stick (FAT32, exFAT or ext4) and plug it in. Without a stick the box downloads it from GitHub and installs it only with a valid signature.</li>
       <li><b>Flash</b> the ShareOS <code>.bin</code> on the firmware page of Alt-F or of the D-Link interface. Do not cut the power.</li>
       <li><b>Wait:</b> the box installs the system from the stick (orange USB LED blinks fast, a few minutes) and restarts into ShareOS.</li>
       <li><b>Open</b> <code>http://&lt;box-IP&gt;/</code>, press the <b>USB button</b> on the front to claim the box, choose the root password and follow the setup wizard. Your disks keep their data.</li>
     </ol>
     <div class="callouts">
-      <div class="callout"><h4>Back to Alt-F</h4><p>System → Firmware → <i>Install firmware file</i> → the Alt-F <code>.bin</code>. ShareOS checks the file and reads it back after writing.</p></div>
+      <div class="callout"><h4>Back to Alt-F</h4><p>System → Firmware → <i>Install firmware file</i> → the Alt-F <code>.bin</code>. ShareOS asks once more (the file is not signed by the project), checks it and reads it back after writing.</p></div>
       <div class="callout"><h4>Step by step with pictures</h4><p>Details, troubleshooting and the way back to the D-Link firmware: <a href="wiki.html#SWITCHING">Switching guide</a> · <a href="wiki.html#TESTING">Testing</a>.</p></div>
     </div>
   </div>
@@ -200,7 +206,7 @@
       <details class="rel-notes"><summary>What's new</summary><div class="md" data-rel-notes></div></details>
     </div>
     <div class="rel-older" data-rel-older></div>
-    <p class="note">All versions are test versions (beta) for test devices. System apps, all checksums and older releases: <a href="https://github.com/UniqueDroid/ShareOS/releases" rel="noopener">GitHub Releases</a> · full history in the <a href="wiki.html#CHANGELOG">changelog</a>.</p>
+    <p class="note">All versions are test versions (beta) for test devices. Every file has its <code>.sig</code> (signature) and <code>.sha256</code>. System apps and older releases: <a href="https://github.com/UniqueDroid/ShareOS/releases" rel="noopener">GitHub Releases</a> · full history in the <a href="wiki.html#CHANGELOG">changelog</a>.</p>
   </div>
 </section>
 
@@ -231,8 +237,8 @@
           <tr><th>Linux kernel</th><td>2.6.31</td><td>4.4 / 4.14 (trunk)</td><td class="hl"><b>6.18 LTS</b></td></tr>
           <tr><th>Toolchain</th><td>uClibc</td><td>buildroot 2009.08 fork, GCC 7.4</td><td class="hl">buildroot 2026.08, GCC 15.3, musl</td></tr>
           <tr><th>SMB</th><td>Samba 3.x, SMB1</td><td>Samba 3.6 (SMB1/2)</td><td class="hl">ksmbd: SMB 2.1/3</td></tr>
-          <tr><th>Web interface</th><td>ShareCenter UI</td><td>shell CGIs</td><td class="hl">uhttpd + ubus/rpcd, light/dark, per user</td></tr>
-          <tr><th>Updates</th><td>manual <code>.bin</code></td><td>manual <code>.bin</code></td><td class="hl">online from GitHub, verified</td></tr>
+          <tr><th>Web interface</th><td>ShareCenter UI</td><td>shell CGIs</td><td class="hl">uhttpd + ubus/rpcd, classic or desktop view, light/dark, per user</td></tr>
+          <tr><th>Updates</th><td>manual <code>.bin</code></td><td>manual <code>.bin</code></td><td class="hl">online from GitHub, signed</td></tr>
           <tr><th>Extensions</th><td>add-ons (discontinued)</td><td>ipkg packages</td><td class="hl">app store: web and system apps</td></tr>
           <tr><th>Security</th><td>unpatched RCE (CVE-2024-3273)</td><td>old kernel and Samba</td><td class="hl">current kernel and libraries</td></tr>
         </tbody>
