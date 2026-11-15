@@ -118,6 +118,7 @@ check "lists: the default lists of AdGuard" "ub filters | js \"len(d['filters'])
 # the rewrites are set right after AdGuard answers (the start runs in the background)
 i=0; until [ -s $R/etc/shareos/dnsfilter/local.json ] || [ $i -ge 60 ]; do sleep 1; i=$((i + 1)); done
 check "local names: the box answers for its own names" "[ -n \"$BOXIP\" ] && [ \"\$(dnsq shareos-t.test.lan)\" = $BOXIP ] && [ \"\$(dnsq shareos-t)\" = $BOXIP ]"
+[ "$(dnsq shareos-t.test.lan)" = "$BOXIP" ] || echo "      local names: answer '$(dnsq shareos-t.test.lan)' (expected '$BOXIP') after $i s; local.json: $(tr '\n' ' ' < $R/etc/shareos/dnsfilter/local.json 2>/dev/null | cut -c1-300); status: $(run 'shareos-dnsfilter status' | tr '\n' ' ' | cut -c1-300)"
 check "local names: the local domain goes to the network's DNS server, hidden from the upstream list" "curl -s -u admin:$PW http://127.0.0.1:8053/control/dns_info | js \"'[/test.lan/]10.9.8.7' in d['upstream_dns']\" && ub status | js \"d['local']['names']==['shareos-t','shareos-t.test.lan'] and d['local']['domains']==['test.lan'] and not [u for u in d['upstream'] if u.startswith('[/')]\""
 
 # --- HTTPS of AdGuard's interface: the certificate of the web interface ---------------
@@ -171,7 +172,7 @@ check "port of the box refused" "ub set '{\"web_port\":443}' | grep -q 'not a po
 check "filtering paused and on again" "ub set '{\"protection\":false}' | js \"d['protection']==False\" && ub set '{\"protection\":true}' | js \"d['protection']==True\""
 check "web port changed: restarted on the new ports (HTTPS one above)" "ub set '{\"web_port\":8063}' | js \"d['ready'] and d['web_port']==8063 and d['https_port']==8064\" && curl -s -o /dev/null -w '%{http_code}' -u admin:$PW http://127.0.0.1:8063/control/status | grep -q 307 && curl -sk -o /dev/null -w '%{http_code}' -u admin:$PW https://127.0.0.1:8064/control/status | grep -q 200"
 o=$(df restart); echo "$o" | js "d['ready']" 2>/dev/null || echo "      restart: $(echo "$o" | tr '\n' ' ' | cut -c1-500)"
-check "settings kept over a restart" "echo '$o' | js \"d['ready'] and d['upstream'][0]=='https://dns.quad9.net/dns-query'\""
+check "settings kept over a restart" "echo '$o' | js \"d.get('ready') and d['upstream'][0]=='https://dns.quad9.net/dns-query'\""
 
 # --- switching off, boot, removal -------------------------------------------------------
 check "switched off: stopped" "ub set '{\"enabled\":false}' | js \"not d['running'] and not d['enabled']\" && [ \"\$(dnsq ads.shareos-test.example)\" = timeout ]"
