@@ -191,6 +191,12 @@ ptype() { run sfdisk -d /dev/$1 | sed -n "s/.*$2.*type=\([^,]*\).*/\1/p" | head 
 for f in btrfs exfat ntfs ext3 ext2 vfat; do
 	run shareos-storage setup single "v$f=$B:$f" --swap=0 --yes >/dev/null
 	t=$(run blkid -s TYPE -o value /dev/${B}p1)
+	# what a failure looked like (seen once with vfat, cause unknown so far)
+	if [ "$t" != "$f" ] || { hostfs "$([ $f = ntfs ] && echo ntfs3 || echo $f)" && ! mounted v$f; }; then
+		echo "      v$f: blkid type '$t', mounted: $(mounted v$f && echo yes || echo no), fstype in UCI: '$(run uci -q get storage.v$f.fstype)'"
+		echo "      job: $(run shareos-storage job | tr '\n' ' ' | cut -c1-600)"
+		echo "      partitions: $(run sfdisk -d /dev/$B 2>&1 | tr '\n' ' ' | cut -c1-300)"
+	fi
 	if hostfs "$([ $f = ntfs ] && echo ntfs3 || echo $f)"; then
 		check "volume with $f: created, mounted, fstype in UCI" "[ '$t' = '$f' ] && mounted v$f && run uci get storage.v$f.fstype | grep -qx $f"
 	else

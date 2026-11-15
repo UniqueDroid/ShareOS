@@ -10,6 +10,7 @@ pre-releases for test devices only.
 - The SSH/console banner names the model of the box (it said `DNS-320L-rev-Ax` on every model).
 - **A reserve key for releases.** The firmware knows a second public key (`/etc/shareos/release-reserve.pub`); a release is accepted when its signature fits one of the two. The private part of the reserve is not on GitHub. If the release key is lost or exposed, releases can be signed with the reserve and reach the boxes as normal updates – without it they would need a file upload on every box.
 - **First installation: downloads must be signed.** After the ShareOS `.bin` was flashed from Alt-F or the D-Link interface, the box installs the system from a USB stick or, without one, from GitHub. That download was only compared with the `.sha256` next to it; now its signature must fit the project's key (the same check as for updates since beta.10), otherwise nothing is installed. A package on a USB stick is still installed without a signature – it was put there by hand.
+- **DNS filter: a restart failed now and then** with "AdGuard Home stopped" and the last lines of the *old* process, although the new one was starting. The start looked for the process before its PID file was written and took "not there yet" for "stopped". Seen in the emulator tests; a slow box can hit it as well. The start now waits for the PID file.
 
 ## 0.3.0-beta.10
 
