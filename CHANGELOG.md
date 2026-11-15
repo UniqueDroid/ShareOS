@@ -4,6 +4,10 @@ Changes per release (newest first). The section of a version is added to its
 GitHub release automatically when the release is built. Test versions are
 pre-releases for test devices only.
 
+## 0.3.0-beta.11
+
+- **First installation: downloads must be signed.** After the ShareOS `.bin` was flashed from Alt-F or the D-Link interface, the box installs the system from a USB stick or, without one, from GitHub. That download was only compared with the `.sha256` next to it; now its signature must fit the project's key (the same check as for updates since beta.10), otherwise nothing is installed. A package on a USB stick is still installed without a signature – it was put there by hand.
+
 ## 0.3.0-beta.10
 
 - **Releases are signed.** The release build signs the firmware files with the project's key (ECDSA P-256; the private key is a secret of a protected GitHub environment and not in the repository), and the firmware carries the public key. From this version on a box installs a release from GitHub only when its signature is valid – checked after the download and again right before writing. So far only the checksum published next to the file was compared, which whoever can change a release can change too. A file uploaded by hand can carry its `.sig`; without one it is shown as "Not signed by the ShareOS project." and is only installed after a second confirmation (own builds). Releases from before this version have no signature: to go back to one, download it and install it as a file. The update *to* this version is not checked yet (the running version has no key). Check by hand: `openssl dgst -sha256 -verify release.pub -signature <file>.sig <file>`.

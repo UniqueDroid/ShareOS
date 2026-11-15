@@ -31,7 +31,7 @@ Aus dem GitHub-Release brauchst du:
    dabei nur Kernel und Startsystem.
 3. Die Box startet neu. ShareOS merkt, dass noch kein System im Flash ist, und
    installiert es: zuerst vom USB-Stick, sonst von GitHub (Prüfsumme wird
-   kontrolliert). Die **orange USB-LED blinkt schnell**, das dauert einige
+   kontrolliert; ein Download muss die Signatur des Projekts tragen). Die **orange USB-LED blinkt schnell**, das dauert einige
    Minuten. Die Zusatzpakete von Alt-F im Flash werden dabei ersetzt.
 4. Danach startet die Box von selbst neu – jetzt mit ShareOS. Weiter mit
    [4. Weboberfläche](#4-weboberfläche).

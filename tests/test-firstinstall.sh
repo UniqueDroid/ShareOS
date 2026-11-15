@@ -2,7 +2,8 @@
 #
 # Tests the first installation (shareos-firstinstall) in the built ARM
 # initramfs with qemu-user: package from a "USB stick" folder or from a
-# release list (file:// URLs), checks for damaged/foreign packages. Flash
+# release list (file:// URLs), checks for damaged/foreign packages and the
+# signature of downloads (pk_verify of the initramfs). Flash
 # tools and shareos-install-ubi are stand-ins working on files.
 #
 #   sudo tests/test-firstinstall.sh [output/dns320l]
@@ -85,15 +86,40 @@ sed -i 's/^SHAREOS_FWNAME=.*/SHAREOS_FWNAME="DNS-325-rev-Ax"/' $F/shareos-releas
 rc=$(run FI_SRC_DIR=/usb FI_NO_NET=1 FI_API=file:///rel/none.json)
 check "package for another device rejected" "[ $rc = 1 ] && grep -q 'another device' $R/tmp/firstinstall.err"
 
-# download from a release list
+check "USB: installed without a signature although the box has the release key" "grep -q 'BEGIN PUBLIC KEY' $R/etc/shareos/release.pub && [ -x $R/usr/bin/pk_verify ]"
+
+# download from a release list. Downloads must be signed: the test puts its
+# own public key into the fake box and signs like the release build does.
 rm -f $R/usb/*
+openssl ecparam -name prime256v1 -genkey -noout -out $T/rel.key 2>/dev/null
+openssl ecparam -name prime256v1 -genkey -noout -out $T/other.key 2>/dev/null
+cp $R/etc/shareos/release.pub $T/project.pub
+openssl ec -in $T/rel.key -pubout -out $R/etc/shareos/release.pub 2>/dev/null
 cp "$PKG" $R/rel/$NAME; (cd $R/rel && sha256sum $NAME > $NAME.sha256)
+cat > $R/rel/releases.json <<J
+[ { "tag_name": "v9", "assets": [ { "browser_download_url": "file:///rel/$NAME.sha256" }, { "browser_download_url": "file:///rel/$NAME" } ] } ]
+J
+: > $R/tmp/calls
+rc=$(run FI_SRC_DIR=/usb FI_NO_NET=1 FI_API=file:///rel/releases.json)
+check "download without a signature rejected, nothing written" "[ $rc = 1 ] && grep -q 'not signed' $R/tmp/firstinstall.err && ! grep -q 'install-ubi\|^write' $R/tmp/calls"
+openssl dgst -sha256 -sign $T/other.key -out $R/rel/$NAME.sig $R/rel/$NAME
+rc=$(run FI_SRC_DIR=/usb FI_NO_NET=1 FI_API=file:///rel/releases.json)
+check "download signed with another key rejected" "[ $rc = 1 ] && grep -q 'signature' $R/tmp/firstinstall.err && ! grep -q 'install-ubi' $R/tmp/calls"
+openssl dgst -sha256 -sign $T/rel.key -out $R/rel/$NAME.sig $R/rel/$NAME
+echo tampered >> $R/rel/$NAME; (cd $R/rel && sha256sum $NAME > $NAME.sha256)
+rc=$(run FI_SRC_DIR=/usb FI_NO_NET=1 FI_API=file:///rel/releases.json)
+check "download changed after signing rejected (although its .sha256 fits)" "[ $rc = 1 ] && grep -q 'signature' $R/tmp/firstinstall.err && ! grep -q 'install-ubi' $R/tmp/calls"
+cp "$PKG" $R/rel/$NAME; (cd $R/rel && sha256sum $NAME > $NAME.sha256)
+cp $T/project.pub $R/etc/shareos/release.pub
+rc=$(run FI_SRC_DIR=/usb FI_NO_NET=1 FI_API=file:///rel/releases.json)
+check "the key of the project does not accept a signature of the test key" "[ $rc = 1 ] && grep -q 'signature' $R/tmp/firstinstall.err"
+openssl ec -in $T/rel.key -pubout -out $R/etc/shareos/release.pub 2>/dev/null
 cat > $R/rel/releases.json <<J
 [ { "tag_name": "v9", "assets": [ { "browser_download_url": "file:///rel/$NAME.sha256" }, { "browser_download_url": "file:///rel/$NAME" } ] } ]
 J
 blank $R/dev/mtd1; blank $R/dev/mtd2; : > $R/tmp/calls
 rc=$(run FI_SRC_DIR=/usb FI_NO_NET=1 FI_API=file:///rel/releases.json)
-check "download: newest package for this box, checksum verified, installed" "[ $rc = 0 ] && grep -q 'install-ubi' $R/tmp/calls && grep -q 'download' $T/out"
+check "download: newest package for this box, signature and checksum verified, installed" "[ $rc = 0 ] && grep -q 'install-ubi' $R/tmp/calls && grep -q 'download' $T/out && grep -q 'signature of the ShareOS project: valid' $T/out"
 echo 0000000000000000000000000000000000000000000000000000000000000000 > $R/rel/$NAME.sha256
 : > $R/tmp/calls
 rc=$(run FI_SRC_DIR=/usb FI_NO_NET=1 FI_API=file:///rel/releases.json)
@@ -101,6 +127,10 @@ check "download with a wrong checksum rejected" "[ $rc = 1 ] && grep -q 'checksu
 rc=$(run FI_SRC_DIR=/usb FI_NO_NET=1 FI_API=file:///rel/missing.json)
 check "no package anywhere: clear message" "[ $rc = 1 ] && grep -q 'GitHub not reachable' $R/tmp/firstinstall.err"
 check "initramfs has the USB modules" "ls $R/lib/modules/*/kernel/drivers/usb/storage/usb-storage.ko >/dev/null && ls $R/lib/modules/*/kernel/fs/fat/vfat.ko >/dev/null && ls $R/lib/modules/*/kernel/fs/ext4/ext4.ko >/dev/null"
+mv $R/etc/shareos/release.pub $T/test.pub; rm -f $R/rel/$NAME.sig; (cd $R/rel && sha256sum $NAME > $NAME.sha256)
+blank $R/dev/mtd1; blank $R/dev/mtd2; : > $R/tmp/calls
+rc=$(run FI_SRC_DIR=/usb FI_NO_NET=1 FI_API=file:///rel/releases.json)
+check "no key file in the initramfs: signature check off, checksum still decides" "[ $rc = 0 ] && grep -q 'install-ubi' $R/tmp/calls"
 check "initramfs has curl with CA certificates" "[ -x $R/usr/bin/curl ] && [ -s $R/etc/ssl/certs/ca-certificates.crt ]"
 
 echo; echo "$pass passed, $failed failed"
