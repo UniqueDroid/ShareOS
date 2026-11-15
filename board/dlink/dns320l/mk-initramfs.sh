@@ -27,6 +27,7 @@ usr/lib/shareos/board.sh
 usr/share/udhcpc/default.script
 etc/ssl/certs/ca-certificates.crt
 etc/shareos/release.pub
+etc/shareos/release-reserve.pub
 "
 
 copy() { # copy a path from the target, keeping symlinks

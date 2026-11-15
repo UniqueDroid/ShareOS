@@ -85,7 +85,8 @@ flashed:
 
 1. HTTPS with certificate verification (curl + mbedTLS + CA bundle)
 2. the signature `<bundle>.sig` of the release against the project's public
-   key `/etc/shareos/release.pub` (ECDSA P-256, `pk_verify` of mbedTLS);
+   keys `/etc/shareos/release.pub` and `release-reserve.pub` – one of them
+   must fit (ECDSA P-256, `pk_verify` of mbedTLS);
    checked after the download and again right before writing. Without a valid
    signature nothing from GitHub is installed. A file uploaded by hand may be
    unsigned (own build): it is marked and needs a second confirmation
