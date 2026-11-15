@@ -49,10 +49,28 @@ fi
 # DNS-320 rev A: the MCU on ttyS1 answers "f0 f0 d0 x 02 <°C> … cs cs cs"
 mcu_temp() {
 	stty -F /dev/ttyS1 cs8 -cstopb -crtscts -ixon -ixoff -ignpar cread raw -echo 19200 2>/dev/null || return 1
-	printf '\360\360\020\004\002\000\000\000\000\000\000\000\000\366\366\366' > /dev/ttyS1
-	set -- $(timeout 2 dd if=/dev/ttyS1 bs=1 count=16 2>/dev/null | od -An -tu1)
+	# One open for asking and reading: the MCU answers within milliseconds,
+	# and bytes that arrive while nothing has /dev/ttyS1 open are lost (#163).
+	r=$({ printf '\360\360\020\004\002\000\000\000\000\000\000\000\000\366\366\366' >&3
+		timeout 2 dd bs=1 count=16 <&3 2>/dev/null; } 3<>/dev/ttyS1 | od -An -tu1)
+	# shellcheck disable=SC2086  # the bytes are the arguments
+	mcu_parse $r
+}
+
+# reply bytes (decimal) -> m°C: "f0 f0 d0 x 02 <°C> …", or, when the header
+# was lost, the three equal checksum bytes at the end (0xb6 + °C), as Alt-F's
+# dns320-temp.sh takes it. f6 f6 f6 is the end of the request itself and never
+# counts (it would read as 64 °C).
+mcu_parse() {
+	b="$*"
 	while [ $# -ge 6 ]; do
 		[ "$1" = 240 ] && [ "$2" = 240 ] && [ "$3" = 208 ] && [ "$6" -gt 0 ] && { echo $(($6 * 1000)); return 0; }
+		shift
+	done
+	# shellcheck disable=SC2086
+	set -- $b
+	while [ $# -ge 3 ]; do
+		[ "$1" -gt 182 ] && [ "$1" -le 255 ] && [ "$1" != 246 ] && [ "$1" = "$2" ] && [ "$1" = "$3" ] && { echo $((($1 - 182) * 1000)); return 0; }
 		shift
 	done
 	return 1
