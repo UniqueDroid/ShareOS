@@ -15,6 +15,11 @@ case "$1" in
 		speed=$(cat /sys/class/net/eth0/speed 2>/dev/null)
 		SHAREOS_VERSION=; SHAREOS_FWNAME=
 		[ -r /etc/shareos-release ] && . /etc/shareos-release
+		# the system image is the same for all models: the model of this box
+		# is what S05board found (the release file names the DNS-320L)
+		BOARD_FWNAME=
+		[ -r /tmp/sys/board.env ] && . /tmp/sys/board.env
+		SHAREOS_FWNAME=${BOARD_FWNAME:-$SHAREOS_FWNAME}
 		msg="ShareOS ${SHAREOS_VERSION:-?}${SHAREOS_FWNAME:+ on $SHAREOS_FWNAME}: web interface http://${ip:-<no ip>}/, link ${speed:-?} Mbit/s."
 		echo "$msg"
 		echo "$msg" > /etc/motd
