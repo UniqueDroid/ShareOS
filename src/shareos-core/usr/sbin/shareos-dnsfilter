@@ -362,6 +362,10 @@ function start() {
 	let cmd = sprintf('GOMEMLIMIT=%dMiB exec %s -c %s -w %s --no-check-update --no-permcheck >>%s 2>&1',
 		c.memlimit, shq(BIN), shq(CONF), shq(work), shq(LOG));
 	sh(sprintf('start-stop-daemon -S -b -m -p %s -x /bin/sh -- -c %s', shq(PID), shq(cmd)));
+	// start-stop-daemon -b returns before its child has written the PID file:
+	// without this wait "no PID yet" was taken for "stopped" now and then
+	// (a restart then failed with the last lines of the old process)
+	wait_for(() => pid(), 10);
 	if (!wait_for(() => !pid() || api_up(), 90)) die('AdGuard Home does not answer: ' + trim(sh('tail -n 3 ' + shq(LOG)).out));
 	if (!pid()) die('AdGuard Home stopped: ' + trim(sh('tail -n 3 ' + shq(LOG)).out));
 	// the API waits while the lists load (and times out): the local names
