@@ -14,7 +14,7 @@ temperature sensor, buttons, LEDs, power-off) is described per model in
 | DNS-320LW rev A (A2) | `ShareOS-<ver>-DNS-320L-rev-Ax.*` | 256 MB | **tested** (0.2.0-beta.20) – the white DNS-320L: same board and flash layout, uses the DNS-320L files |
 | DNS-320 rev B | `ShareOS-<ver>-DNS-320-rev-Bx.*` | 128 MB | built, **testers wanted** |
 | DNS-325 rev A | `ShareOS-<ver>-DNS-325-rev-Ax.*` | 256 MB | **partly tested** (rev A1, see below), more testers wanted |
-| DNS-320 rev A | `ShareOS-<ver>-DNS-320-rev-Ax.*` | 128 MB | built, **testers wanted** – up to 0.2.0-beta.16 it restarts in a loop after flashing (initramfs address, [#96](https://github.com/UniqueDroid/ShareOS/issues/96)); use 0.2.0-beta.17 or newer |
+| DNS-320 rev A | `ShareOS-<ver>-DNS-320-rev-Ax.*` | 128 MB | **partly tested** (rev A1 with 0.3.0-beta.9: installed, web interface; temperature and fan control with the fix of 0.3.0-beta.11, [#163](https://github.com/UniqueDroid/ShareOS/issues/163)), more testers wanted – up to 0.2.0-beta.16 it restarts in a loop after flashing (initramfs address, [#96](https://github.com/UniqueDroid/ShareOS/issues/96)); use 0.2.0-beta.17 or newer |
 | DNR-322L | – | 128 MB | planned |
 | DNS-327L | – | 512 MB | planned (own kernel and flash layout) |
 
