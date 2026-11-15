@@ -1665,7 +1665,11 @@
 		"SIGNATURE (.SIG, OPTIONAL)": "স্বাক্ষর (.SIG, ঐচ্ছিক)",
 		"Install unsigned firmware?": "স্বাক্ষরহীন ফার্মওয়্যার ইনস্টল করবেন?",
 		"This file carries no signature of the ShareOS project. Install it only if you built it yourself or trust where it comes from.": "এই ফাইলে ShareOS প্রকল্পের কোনো স্বাক্ষর নেই। নিজে তৈরি করে থাকলে বা উৎসের ওপর আস্থা থাকলে তবেই ইনস্টল করুন।",
-		"Install anyway": "তবুও ইনস্টল করুন"
+		"Install anyway": "তবুও ইনস্টল করুন",
+		"SIGNED": "স্বাক্ষরিত",
+		"The signature of the ShareOS project was checked when this version was installed.": "এই সংস্করণ ইনস্টল করার সময় ShareOS প্রকল্পের স্বাক্ষর যাচাই করা হয়েছে।",
+		"Carries the signature of the ShareOS project. It is checked after the download.": "ShareOS প্রকল্পের স্বাক্ষর বহন করে। ডাউনলোডের পর তা যাচাই করা হয়।",
+		"Installed from a file without signature": "স্বাক্ষরহীন ফাইল থেকে ইনস্টল করা"
 	},
 	"patterns": [
 		[

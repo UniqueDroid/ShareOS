@@ -2098,3 +2098,7 @@ E1679	SIGNATURE (.SIG, FACULTATIF)
 E1680	Installer un micrologiciel non signé ?
 E1681	Ce fichier ne porte pas la signature du projet ShareOS. Ne l’installez que si vous l’avez compilé vous-même ou si vous faites confiance à sa provenance.
 E1682	Installer quand même
+E1683	SIGNÉ
+E1684	La signature du projet ShareOS a été vérifiée lors de l’installation de cette version.
+E1685	Porte la signature du projet ShareOS. Elle est vérifiée après le téléchargement.
+E1686	Installé à partir d’un fichier sans signature

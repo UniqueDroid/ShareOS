@@ -1665,7 +1665,11 @@
 		"SIGNATURE (.SIG, OPTIONAL)": "ASSINATURA (.SIG, OPCIONAL)",
 		"Install unsigned firmware?": "Instalar firmware não assinado?",
 		"This file carries no signature of the ShareOS project. Install it only if you built it yourself or trust where it comes from.": "Este ficheiro não tem a assinatura do projeto ShareOS. Instale-o apenas se o compilou ou se confia na sua origem.",
-		"Install anyway": "Instalar mesmo assim"
+		"Install anyway": "Instalar mesmo assim",
+		"SIGNED": "ASSINADO",
+		"The signature of the ShareOS project was checked when this version was installed.": "A assinatura do projeto ShareOS foi verificada quando esta versão foi instalada.",
+		"Carries the signature of the ShareOS project. It is checked after the download.": "Tem a assinatura do projeto ShareOS. É verificada após a transferência.",
+		"Installed from a file without signature": "Instalado a partir de um ficheiro sem assinatura"
 	},
 	"patterns": [
 		[

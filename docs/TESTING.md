@@ -289,7 +289,8 @@ From the first version with a release key on the box (*System → Firmware* then
 3. The `.tar` without the `.sig`: the note reads "Not signed by the ShareOS project."; **Install** first asks *Install unsigned firmware?*. **Cancel** leaves everything as it is.
 4. The `.tar` with the `.sig` of another release: refused ("the signature does not match this file").
 5. A release from before signing, picked in the list of versions: refused ("this release is not signed – not installed"); it can only be installed as a file (step 3).
-6. On the PC: `openssl dgst -sha256 -verify release.pub -signature ShareOS-<version>-DNS-320L-rev-Ax.sysupgrade.tar.sig ShareOS-<version>-DNS-320L-rev-Ax.sysupgrade.tar` prints `Verified OK` (`release.pub` from the repository, `src/shareos-core/etc/shareos/`).
+6. The seal: *Latest* and the versions from 0.3.0-beta.10 on in the list carry **SIGNED** (a shield in the list), older ones do not. After an update from GitHub and the reboot, *Installed* carries **SIGNED** (from the second update after 0.3.0-beta.12 on – the version that installs has to know the seal). After step 3 and the reboot, *Installed* says "Installed from a file without signature" and has no seal.
+7. On the PC: `openssl dgst -sha256 -verify release.pub -signature ShareOS-<version>-DNS-320L-rev-Ax.sysupgrade.tar.sig ShareOS-<version>-DNS-320L-rev-Ax.sysupgrade.tar` prints `Verified OK` (`release.pub` from the repository, `src/shareos-core/etc/shareos/`).
 
 ## 13. File systems and USB drives
 
