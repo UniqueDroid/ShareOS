@@ -6,7 +6,7 @@ pre-releases for test devices only.
 
 ## 0.3.0-beta.12
 
-- **Setting up a drive that had partitions before failed now and then** with "mkfs … failed": the file system was made while the kernel was still reading the new partition table. ShareOS now waits and tries once more, and a failure names what the tool said. Seen in the emulator tests (ext2, earlier FAT32).
+- **Setting up a drive failed now and then** with "mkfs … failed" or "mounting … failed": the file system was made, or mounted, a moment too early – while the kernel was still reading the new partition table, or before the new file system could be found. ShareOS now waits and tries once more in both places, and a failed mkfs names what the tool said. Seen in the emulator tests (FAT32, ext2, btrfs).
 
 ## 0.3.0-beta.11
 

@@ -337,7 +337,9 @@ add_volume() {   # name dev layout fs
 	uci set storage.$1.layout="$3"
 	uci set storage.$1.enabled=1
 	uci commit storage
-	mount_volume $1 || die "mounting $1 failed"
+	# the file system was made a moment ago: finding it by its UUID or
+	# mounting it can still fail once (seen with btrfs) – try once more
+	mount_volume $1 || { sleep 2; mount_volume $1; } || die "mounting $1 failed"
 }
 
 free_md() {
