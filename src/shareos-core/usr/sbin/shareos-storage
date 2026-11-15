@@ -293,8 +293,7 @@ apps_area() {   # first ext4/btrfs volume becomes the app area unless one is set
 	mkdir -p /mnt/$1/.shareos && chmod 711 /mnt/$1/.shareos
 }
 
-make_fs() {   # dev name fs
-	step "creating file system ($3) on $1"
+mkfs_run() {   # dev name fs; what the tool said goes to $MKFS_ERR
 	case "$3" in
 		ext4) mkfs.ext4 -F -q -L "$2" -m 1 $(quota_supported && echo -O quota) -E lazy_itable_init=1,lazy_journal_init=1 "$1" ;;
 		ext3|ext2) mke2fs -t "$3" -F -q -L "$2" -m 1 -E lazy_itable_init=1 "$1" ;;
@@ -302,7 +301,25 @@ make_fs() {   # dev name fs
 		btrfs) mkfs.btrfs -f -q -L "$2" "$1" >/dev/null ;;
 		exfat) mkfs.exfat -L "$(printf %.15s "$2")" "$1" >/dev/null ;;   # exFAT labels: 15 characters
 		ntfs) mkntfs -Q -F -q -L "$2" "$1" >/dev/null ;;
-	esac || die "mkfs ($3) on $1 failed"
+	esac 2>"$MKFS_ERR"
+}
+
+make_fs() {   # dev name fs
+	local i
+	step "creating file system ($3) on $1"
+	MKFS_ERR=/tmp/shareos-storage.mkfs.$$
+	if ! mkfs_run "$@"; then
+		# On a disk that had partitions before, the kernel may still be reading
+		# the new table: the node of the partition goes and comes back, and a
+		# tool that opens it in between fails. Wait for it and try once more.
+		sleep 2; i=0
+		while [ ! -b "$1" ] && [ $i -lt 20 ]; do sleep 0.5; i=$((i + 1)); done
+		mkfs_run "$@" || {
+			i=$(tail -n 1 "$MKFS_ERR" 2>/dev/null); rm -f "$MKFS_ERR"
+			die "mkfs ($3) on $1 failed${i:+: $i}"
+		}
+	fi
+	rm -f "$MKFS_ERR"
 }
 
 # GPT partition type: Linux, RAID or "Microsoft basic data" (exFAT/NTFS, so
@@ -320,7 +337,9 @@ add_volume() {   # name dev layout fs
 	uci set storage.$1.layout="$3"
 	uci set storage.$1.enabled=1
 	uci commit storage
-	mount_volume $1 || die "mounting $1 failed"
+	# the file system was made a moment ago: finding it by its UUID or
+	# mounting it can still fail once (seen with btrfs) – try once more
+	mount_volume $1 || { sleep 2; mount_volume $1; } || die "mounting $1 failed"
 }
 
 free_md() {

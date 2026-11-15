@@ -10,6 +10,7 @@ pre-releases for test devices only.
 - **A seal for signed firmware** on *System → Firmware*. *Installed* carries **SIGNED** when the signature of the running version was checked at its installation; a version installed from a file without signature says so instead. *Latest* and the list of versions show the seal for releases that carry a signature (it is checked after the download). The box remembers how a version was installed from this version on: after the update *to* this version *Installed* has no seal yet, after the next one it has.
 - **DNS filter: pause the filtering for a while** – 30 seconds, 1 minute, 10 minutes, 1 hour or until tomorrow, like "Disable protection" in AdGuard Home. The page shows how long the pause still runs and has *Filter again now*; when the time is over the filtering comes back by itself. Saving other settings during a pause no longer touches it.
 - **The DNS filter page is tidier:** status with the four numbers in one row, settings and name resolution (upstream servers, local names) side by side, the forms for local entries and block lists as one row under their table – everything in the full width.
+- **Setting up a drive failed now and then** with "mkfs … failed" or "mounting … failed": the file system was made, or mounted, a moment too early – while the kernel was still reading the new partition table, or before the new file system could be found. ShareOS now waits and tries once more in both places, and a failed mkfs names what the tool said. Seen in the emulator tests (FAT32, ext2, btrfs).
 
 ## 0.3.0-beta.11
 
