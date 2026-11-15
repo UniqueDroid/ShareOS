@@ -95,6 +95,17 @@ check "listed as module and service" "run 'shareos-apps modules' | js \"'dnsfilt
 check "off after installing" "ub status | js \"d['installed'] and not d['enabled'] and not d['running']\""
 check "boot does nothing while off" "df boot | js \"d.get('started')==False\""
 
+# AdGuard Home binds port 53 on all addresses. A machine whose own resolver
+# holds that port (seen on GitHub: "dns-resolver" on 127.0.0.100:53, besides
+# systemd-resolved, which the workflow stops) cannot run the rest: say so once
+# instead of failing every check below.
+busy=$(ss -lnup 2>/dev/null | grep -E '[:.]53 ' | tr '\n' ' ' | cut -c1-300)
+if [ -n "$busy" ]; then
+	echo "FAIL  port 53 of this machine is in use – the DNS filter cannot be tested here: $busy"
+	echo; echo "$pass passed, 1 failed (the rest was not run)"
+	exit 1
+fi
+
 # --- first start ----------------------------------------------------------------------
 # local names: host name, search domain and the DNS server from the network
 hostname shareos-t
