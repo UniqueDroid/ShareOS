@@ -2098,3 +2098,7 @@ E1679	FIRMA (.SIG, OPCIONAL)
 E1680	¿Instalar firmware sin firmar?
 E1681	Este archivo no lleva la firma del proyecto ShareOS. Instálelo solo si lo ha compilado usted mismo o confía en su origen.
 E1682	Instalar de todos modos
+E1683	FIRMADO
+E1684	La firma del proyecto ShareOS se comprobó al instalar esta versión.
+E1685	Lleva la firma del proyecto ShareOS. Se comprueba después de la descarga.
+E1686	Instalado desde un archivo sin firma

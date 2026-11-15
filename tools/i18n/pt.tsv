@@ -2098,3 +2098,7 @@ E1679	ASSINATURA (.SIG, OPCIONAL)
 E1680	Instalar firmware não assinado?
 E1681	Este ficheiro não tem a assinatura do projeto ShareOS. Instale-o apenas se o compilou ou se confia na sua origem.
 E1682	Instalar mesmo assim
+E1683	ASSINADO
+E1684	A assinatura do projeto ShareOS foi verificada quando esta versão foi instalada.
+E1685	Tem a assinatura do projeto ShareOS. É verificada após a transferência.
+E1686	Instalado a partir de um ficheiro sem assinatura

@@ -1665,7 +1665,11 @@
 		"SIGNATURE (.SIG, OPTIONAL)": "التوقيع (‎.SIG‏، اختياري)",
 		"Install unsigned firmware?": "تثبيت برنامج ثابت غير موقّع؟",
 		"This file carries no signature of the ShareOS project. Install it only if you built it yourself or trust where it comes from.": "هذا الملف لا يحمل توقيع مشروع ShareOS. ثبّته فقط إذا بنيته بنفسك أو كنت تثق بمصدره.",
-		"Install anyway": "التثبيت على أي حال"
+		"Install anyway": "التثبيت على أي حال",
+		"SIGNED": "موقَّع",
+		"The signature of the ShareOS project was checked when this version was installed.": "تم التحقق من توقيع مشروع ShareOS عند تثبيت هذا الإصدار.",
+		"Carries the signature of the ShareOS project. It is checked after the download.": "يحمل توقيع مشروع ShareOS. يُتحقَّق منه بعد التنزيل.",
+		"Installed from a file without signature": "مثبَّت من ملف بلا توقيع"
 	},
 	"patterns": [
 		[

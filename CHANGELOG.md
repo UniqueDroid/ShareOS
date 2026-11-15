@@ -4,6 +4,10 @@ Changes per release (newest first). The section of a version is added to its
 GitHub release automatically when the release is built. Test versions are
 pre-releases for test devices only.
 
+## 0.3.0-beta.12
+
+- **A seal for signed firmware** on *System → Firmware*. *Installed* carries **SIGNED** when the signature of the running version was checked at its installation; a version installed from a file without signature says so instead. *Latest* and the list of versions show the seal for releases that carry a signature (it is checked after the download). The box remembers how a version was installed from this version on: after the update *to* this version *Installed* has no seal yet, after the next one it has.
+
 ## 0.3.0-beta.11
 
 - **DNS-320 rev A: the temperature was never read** ([#163](https://github.com/UniqueDroid/ShareOS/issues/163), found and traced on a rev A1). The fan control asked the MCU on `ttyS1` and opened the port a second time to read – the answer comes within milliseconds and was lost in between, every time. Result: no temperature, fan at full, "board control not running" in the overview. Asking and reading now use one open port; an answer without its header is read from its checksum, as Alt-F does.

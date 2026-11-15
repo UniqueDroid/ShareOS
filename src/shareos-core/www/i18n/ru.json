@@ -1665,7 +1665,11 @@
 		"SIGNATURE (.SIG, OPTIONAL)": "ПОДПИСЬ (.SIG, НЕОБЯЗАТЕЛЬНО)",
 		"Install unsigned firmware?": "Установить неподписанную прошивку?",
 		"This file carries no signature of the ShareOS project. Install it only if you built it yourself or trust where it comes from.": "Этот файл не имеет подписи проекта ShareOS. Устанавливайте его, только если собрали его сами или доверяете источнику.",
-		"Install anyway": "Всё равно установить"
+		"Install anyway": "Всё равно установить",
+		"SIGNED": "ПОДПИСАНО",
+		"The signature of the ShareOS project was checked when this version was installed.": "Подпись проекта ShareOS была проверена при установке этой версии.",
+		"Carries the signature of the ShareOS project. It is checked after the download.": "Содержит подпись проекта ShareOS. Она проверяется после загрузки.",
+		"Installed from a file without signature": "Установлено из файла без подписи"
 	},
 	"patterns": [
 		[

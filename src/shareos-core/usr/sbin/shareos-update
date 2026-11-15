@@ -59,6 +59,9 @@ const STATE = STATE_DIR + '/state.json';
 // is kept offline only – if the first is lost or exposed, releases signed
 // with the reserve are still accepted. A signature must fit one of them.
 const PUBKEYS = [ ROOT + '/etc/shareos/release.pub', ROOT + '/etc/shareos/release-reserve.pub' ];
+// how the running system was installed (version, signature checked or not):
+// written when an update is installed, kept over the update with the settings
+const INSTALLED = ROOT + '/etc/shareos/installed.json';
 const UBOOT_MAX = 3145728;          // bytes U-Boot copies from uImage/ramdisk
 const CA = '/etc/ssl/certs/ca-certificates.crt';
 const CURL = [ 'curl', '-fsSL', '--retry', '2', '--connect-timeout', '10',
@@ -633,6 +636,13 @@ function cmd_apply(tag, unsigned) {
 	delete s.step;
 	s.state = 'flashed';
 	s.flashed = { tag: s.release.tag, time: time() };
+	// for the seal on the firmware page: this version came with a checked
+	// signature ("valid") or as a file without one ("none")
+	if (signing())
+		writefile(INSTALLED, sprintf('%J\n', { version: s.release.version, tag: s.release.tag,
+			signature: s.release.signature == 'valid' ? 'valid' : 'none', time: time() }));
+	else
+		unlink(INSTALLED);
 	save_state(s);
 	return out(s);
 }
@@ -645,6 +655,12 @@ function cmd_status() {
 	}
 	s.current = release_info().SHAREOS_VERSION;
 	s.signing = signing();
+	// only when it is about the version that runs now (not one still waiting
+	// for the reboot, not a system installed another way since)
+	let inst = null;
+	try { inst = json(readfile(INSTALLED) ?? 'null'); } catch (e) { }
+	if (type(inst) == 'object' && inst.version == s.current && inst.signature in { valid: 1, none: 1 })
+		s.installed_signature = inst.signature;
 	// a check from before an update would still offer the version now running
 	if (s.check)
 		s.check.update_available = !!s.check.releases?.[0] && vcmp(s.check.releases[0].version, s.current) > 0;

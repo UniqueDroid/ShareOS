@@ -2082,3 +2082,7 @@ E1679	SIGNATUR (.SIG, OPTIONAL)
 E1680	Unsignierte Firmware installieren?
 E1681	Diese Datei trägt keine Signatur des ShareOS-Projekts. Nur installieren, wenn du sie selbst gebaut hast oder ihrer Herkunft vertraust.
 E1682	Trotzdem installieren
+E1683	SIGNIERT
+E1684	Die Signatur des ShareOS-Projekts wurde beim Installieren dieser Version geprüft.
+E1685	Trägt die Signatur des ShareOS-Projekts. Sie wird nach dem Download geprüft.
+E1686	Aus einer Datei ohne Signatur installiert
