@@ -7,6 +7,10 @@
  *   shareos-tuya status <ip> <id> <key> <version>    data points (dps) of a device
  *   shareos-tuya set <ip> <id> <key> <version> <dps-json>   e.g. '{"1":true}'
  *
+ * <key> "-": the local key is read from standard input. Callers that act for
+ * someone else use that – an argument is visible to every process on the box
+ * (ps, /proc/<pid>/cmdline) while the program runs.
+ *
  * Frames: 0x000055AA seq cmd len payload (crc32 | hmac-sha256) 0x0000AA55;
  * payload AES-128-ECB with the device's local key (3.3) or a session key
  * negotiated with it (3.4). Protocol 3.5 (0x6699, AES-GCM) is not supported.
@@ -315,7 +319,14 @@ static int device(char **argv, int set)
 {
 	struct dev d = { .seq = 0 };
 	const char *ip = argv[2], *id = argv[3], *key = argv[4], *ver = argv[5];
-	char json[MAXMSG];
+	char json[MAXMSG], kbuf[64];
+	if (!strcmp(key, "-")) {
+		/* the key on standard input, with or without a line end */
+		size_t n = fread(kbuf, 1, sizeof(kbuf) - 1, stdin);
+		while (n > 0 && (kbuf[n - 1] == '\n' || kbuf[n - 1] == '\r')) n--;
+		kbuf[n] = 0;
+		key = kbuf;
+	}
 	if (strlen(key) != 16) return fail("the local key has 16 characters");
 	if (strlen(id) < 6 || strlen(id) > 32 || strspn(id, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789") != strlen(id)) return fail("invalid device id");
 	if (strcmp(ver, "3.3") && strcmp(ver, "3.4")) return fail("protocol version 3.3 or 3.4 (3.1 and 3.5 are not supported)");
@@ -360,6 +371,7 @@ int main(int argc, char **argv)
 	}
 	if (argc == 6 && !strcmp(argv[1], "status")) return device(argv, 0);
 	if (argc == 7 && !strcmp(argv[1], "set")) return device(argv, 1);
-	fprintf(stderr, "usage: shareos-tuya discover [seconds] | status <ip> <id> <key> <version> | set <ip> <id> <key> <version> <dps-json>\n");
+	fprintf(stderr, "usage: shareos-tuya discover [seconds] | status <ip> <id> <key> <version> | set <ip> <id> <key> <version> <dps-json>\n"
+		"       <key> \"-\": read the local key from standard input\n");
 	return 2;
 }

@@ -198,6 +198,8 @@ Neustart ist der Reiter *PAPERLESS* da, unter **Apps → Installiert** steht
 
 ## 8a. DNS-Filter (0.3.0-beta.4)
 
+Pause (0.3.0-beta.12): Bei laufendem Filter im Kasten *Status* *Filterung pausieren → 1 Minute*. Der Kasten zeigt „Filterung pausiert“ und „Pausiert – filtert wieder in …“ mit *Jetzt wieder filtern*; ein gesperrter Name (z. B. `nslookup doubleclick.net <Box>`) bekommt seine echte Adresse. Nach der Minute verschwindet die Marke von selbst und der Name wird wieder mit `0.0.0.0` beantwortet. *Bis morgen* endet um Mitternacht. Speichern der Einstellungen während einer Pause beendet sie nicht und macht sie nicht dauerhaft.
+
 Der DNS-Filter ist ein **Modul** (AdGuard Home). Er braucht das Apps-Laufwerk.
 
 1. **Apps → Store → DNS-Filter → Installieren.** Der Reiter *DNS-FILTER* erscheint hinter *PAPERLESS*.
@@ -294,7 +296,8 @@ Ab der ersten Version mit Release-Schlüssel auf der Box (*System → Firmware* 
 3. Die `.tar` ohne `.sig`: Im Hinweis steht „Nicht vom ShareOS-Projekt signiert.“; **Installieren** fragt zuerst *Unsignierte Firmware installieren?*. **Abbrechen** lässt alles, wie es ist.
 4. Die `.tar` mit der `.sig` eines anderen Releases: abgelehnt („the signature does not match this file“).
 5. Ein Release von vor der Signierung, in der Versionsliste gewählt: abgelehnt („this release is not signed – not installed“); es lässt sich nur als Datei einspielen (Schritt 3).
-6. Am PC: `openssl dgst -sha256 -verify release.pub -signature ShareOS-<version>-DNS-320L-rev-Ax.sysupgrade.tar.sig ShareOS-<version>-DNS-320L-rev-Ax.sysupgrade.tar` gibt `Verified OK` aus (`release.pub` aus dem Repository, `src/shareos-core/etc/shareos/`).
+6. Das Siegel: *Neueste* und die Versionen ab 0.3.0-beta.10 in der Liste tragen **SIGNIERT** (in der Liste ein Schild), ältere nicht. Nach einem Update von GitHub und dem Neustart trägt *Installiert* **SIGNIERT** (ab dem zweiten Update nach 0.3.0-beta.12 – die Version, die installiert, muss das Siegel kennen). Nach Schritt 3 und dem Neustart steht bei *Installiert* „Aus einer Datei ohne Signatur installiert“, ohne Siegel.
+7. Am PC: `openssl dgst -sha256 -verify release.pub -signature ShareOS-<version>-DNS-320L-rev-Ax.sysupgrade.tar.sig ShareOS-<version>-DNS-320L-rev-Ax.sysupgrade.tar` gibt `Verified OK` aus (`release.pub` aus dem Repository, `src/shareos-core/etc/shareos/`).
 
 ## 13. Dateisysteme und USB-Laufwerke
 

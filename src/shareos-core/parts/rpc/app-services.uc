@@ -395,7 +395,8 @@ add_methods({
 		log: { call: function() { return module_on('dnsfilter') ? df_tool([ 'log' ]) : DF_OFF; } },
 		// switching on starts in the background (the first start sets AdGuard up)
 		set: {
-			args: { enabled: false, web_port: 0, https_port: 0, upstream: [], protection: false },
+			// pause: seconds the filtering is off (-1 = until tomorrow)
+			args: { enabled: false, web_port: 0, https_port: 0, upstream: [], protection: false, pause: 0 },
 			call: function(req) {
 				if (!module_on('dnsfilter')) return DF_OFF;
 				let a = req.args, inp = {};
@@ -403,7 +404,7 @@ add_methods({
 					let st = df_tool([ 'status' ]);
 					if (!st.running) return df_tool([ 'start-bg' ]);
 				}
-				for (let k in [ 'enabled', 'web_port', 'https_port', 'upstream', 'protection' ]) if (a[k] != null) inp[k] = a[k];
+				for (let k in [ 'enabled', 'web_port', 'https_port', 'upstream', 'protection', 'pause' ]) if (a[k] != null) inp[k] = a[k];
 				return df_tool([ 'set' ], inp);
 			}
 		},

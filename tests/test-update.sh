@@ -218,6 +218,11 @@ echo x >> "$ROOT/tmp/shareos-update/dl/fw.tar"          # touched in /tmp after 
 o=$(run apply v0.4.0);   check "signed: checked again right before writing" "$o" "d['state']=='error' and 'not valid any more' in d['error']"
 run download v0.4.0 >/dev/null
 o=$(run apply v0.4.0);   check "signed: installed" "$o" "d['state']=='flashed' and d['flashed']['tag']=='v0.4.0'"
+# the seal of the firmware page: how the running version was installed
+check "seal: nothing said about the version that still waits for the reboot" "$(run status)" "'installed_signature' not in d"
+sed -i 's/^SHAREOS_VERSION=.*/SHAREOS_VERSION="0.4.0"/' "$ROOT/etc/shareos-release"
+check "seal: after the restart the running version counts as installed with a checked signature" "$(run status)" "d['installed_signature']=='valid'"
+sed -i 's/^SHAREOS_VERSION=.*/SHAREOS_VERSION="0.0-20261016-test"/' "$ROOT/etc/shareos-release"
 run cancel >/dev/null
 # a file uploaded by hand: with its .sig like a download, without it only on request
 S1=ShareOS-0.4.0-$FWN.sysupgrade.tar
@@ -230,6 +235,11 @@ o=$(run local "$ROOT/tmp/up.tar"); check "signed, local: without .sig the file c
 o=$(run apply local);    check "signed, local: an unsigned file is not installed just so" "$o" "'not signed' in d['error']"
 check "signed, local: it stays ready for the decision" "$(run status)" "d['state']=='ready' and 'error' not in d"
 o=$(run apply local unsigned); check "signed, local: installed when asked for (own build)" "$o" "d['state']=='flashed' and d['flashed']['tag']=='local'"
+V=$(python3 -c "import json;print(json.load(open('$ROOT/etc/shareos/installed.json'))['version'])")
+sed -i "s/^SHAREOS_VERSION=.*/SHAREOS_VERSION=\"$V\"/" "$ROOT/etc/shareos-release"
+check "seal: a file installed without signature counts as unsigned" "$(run status)" "d['installed_signature']=='none'"
+sed -i 's/^SHAREOS_VERSION=.*/SHAREOS_VERSION="0.0-20261016-test"/' "$ROOT/etc/shareos-release"
+check "seal: nothing said about a system installed another way since" "$(run status)" "'installed_signature' not in d"
 run cancel >/dev/null
 # the reserve key: a release signed with it is accepted as well
 openssl ec -in "$T/other.key" -pubout -out "$ROOT/etc/shareos/release-reserve.pub" 2>/dev/null

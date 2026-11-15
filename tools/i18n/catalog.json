@@ -1683,7 +1683,20 @@
 		"SIGNATURE (.SIG, OPTIONAL)",
 		"Install unsigned firmware?",
 		"This file carries no signature of the ShareOS project. Install it only if you built it yourself or trust where it comes from.",
-		"Install anyway"
+		"Install anyway",
+		"SIGNED",
+		"The signature of the ShareOS project was checked when this version was installed.",
+		"Carries the signature of the ShareOS project. It is checked after the download.",
+		"Installed from a file without signature",
+		"PAUSE FILTERING",
+		"30 seconds",
+		"1 minute",
+		"Until tomorrow",
+		"Filtering is off until you switch it on again.",
+		"Filter again now",
+		"Filtering paused.",
+		"Filtering is on again.",
+		"NAME RESOLUTION"
 	],
 	"patterns": [
 		[
@@ -3177,6 +3190,10 @@
 		[
 			"^Reboot: (.*)$",
 			"Reboot: $1"
+		],
+		[
+			"^Paused – filtering again in (.*)$",
+			"Paused – filtering again in $1"
 		]
 	],
 	"words": [

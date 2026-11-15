@@ -132,6 +132,9 @@ RELEASES = [{'tag': 'v0.2.0-beta.%d' % n, 'version': '0.2.0-beta.%d' % n, 'prere
              'url': 'https://github.com/UniqueDroid/ShareOS/releases', 'notes': '- Shares (SMB, NFS)\n- Users and groups\n- Storage wizard'},
             {'tag': 'v0.1.0-beta.1', 'version': '0.1.0-beta.1', 'prerelease': True, 'date': '2026-10-17T16:00:00Z', 'size': 8392704,
              'url': 'https://github.com/UniqueDroid/ShareOS/releases', 'notes': 'First test version'}]
+# signed releases: all but the first one carry a signature
+for _r in RELEASES[:-1]:
+    _r['sig_url'] = 'https://github.com/UniqueDroid/ShareOS/releases/' + _r['tag'] + '.sig'
 
 
 def accounts():
@@ -846,6 +849,10 @@ def call(obj, method, args):
             'filters': [{'name': 'AdGuard DNS filter', 'url': 'https://adguardteam.github.io/HostlistsRegistry/assets/filter_1.txt', 'enabled': True, 'rules': 188364, 'updated': None},
                         {'name': 'AdAway Default Blocklist', 'url': 'https://adguardteam.github.io/HostlistsRegistry/assets/filter_2.txt', 'enabled': False, 'rules': 6540, 'updated': None}]})
         fl = d['filters']
+        # a timed pause of the filtering runs out by itself
+        d['pause_left'] = max(0, int(d.get('_pause_end', 0) - time.time()))
+        if d.get('_pause_end') and not d['pause_left']:
+            d['protection'] = True; d['_pause_end'] = 0
         if d.get('_start'):
             t = time.time() - d['_start']
             d.update({'running': t > 2, 'starting': 2 < t <= 8, 'dns': t > 8, 'ready': t > 8})
@@ -870,6 +877,10 @@ def call(obj, method, args):
             if args.get('enabled') is False: d.update({'enabled': False, 'running': False, 'ready': False, 'rss_mb': None})
             for k in ('web_port', 'https_port', 'upstream', 'protection'):
                 if k in args: d[k] = args[k]
+            if args.get('protection') is True: d['_pause_end'] = 0
+            if args.get('pause'):
+                d['protection'] = False
+                d['_pause_end'] = time.time() + (6 * 3600 if args['pause'] == -1 else args['pause'])
         if method == 'filter_add':
             fl.append({'name': args.get('name') or args['url'], 'url': args['url'], 'enabled': True, 'rules': 250000, 'updated': None})
         if method == 'filter_remove':
@@ -1063,7 +1074,10 @@ def call(obj, method, args):
                  'latest': 'v0.2.0-beta.1', 'update_available': True}
         if method == 'check':
             return {'current': '0.1.0-beta.1', 'fwname': 'DNS-320L-rev-Ax', **check}
-        r = {'state': 'idle', 'current': '0.1.0-beta.1', 'check': check, 'last_upgrade': 'ok 0.1.0-beta.1'}
+        # MOCK_INSTALLED_SIG: valid (default), none or '' – how the running version was installed
+        r = {'state': 'idle', 'current': '0.1.0-beta.1', 'check': check, 'last_upgrade': 'ok 0.1.0-beta.1', 'signing': True}
+        if os.environ.get('MOCK_INSTALLED_SIG', 'valid'):
+            r['installed_signature'] = os.environ.get('MOCK_INSTALLED_SIG', 'valid')
         if STATE.get('acked'):
             del r['last_upgrade']
         return r
