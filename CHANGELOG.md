@@ -4,6 +4,11 @@ Changes per release (newest first). The section of a version is added to its
 GitHub release automatically when the release is built. Test versions are
 pre-releases for test devices only.
 
+## 0.3.0-beta.11
+
+- **DNS-320 rev A: the temperature was never read** ([#163](https://github.com/UniqueDroid/ShareOS/issues/163), found and traced on a rev A1). The fan control asked the MCU on `ttyS1` and opened the port a second time to read – the answer comes within milliseconds and was lost in between, every time. Result: no temperature, fan at full, "board control not running" in the overview. Asking and reading now use one open port; an answer without its header is read from its checksum, as Alt-F does.
+- The SSH/console banner names the model of the box (it said `DNS-320L-rev-Ax` on every model).
+
 ## 0.3.0-beta.10
 
 - **Releases are signed.** The release build signs the firmware files with the project's key (ECDSA P-256; the private key is a secret of a protected GitHub environment and not in the repository), and the firmware carries the public key. From this version on a box installs a release from GitHub only when its signature is valid – checked after the download and again right before writing. So far only the checksum published next to the file was compared, which whoever can change a release can change too. A file uploaded by hand can carry its `.sig`; without one it is shown as "Not signed by the ShareOS project." and is only installed after a second confirmation (own builds). Releases from before this version have no signature: to go back to one, download it and install it as a file. The update *to* this version is not checked yet (the running version has no key). Check by hand: `openssl dgst -sha256 -verify release.pub -signature <file>.sig <file>`.
