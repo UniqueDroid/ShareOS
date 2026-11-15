@@ -238,9 +238,10 @@ jobs:
           for f in artifacts/*.sysupgrade.tar artifacts/*.bin; do
             [ -e "$f" ] || continue
             openssl dgst -sha256 -sign "$key" -out "$f.sig" "$f"
-            # the key must be the one the boxes know
-            openssl dgst -sha256 -verify "$pub" -signature "$f.sig" "$f" >/dev/null || {
-              echo "::error::$f: the signature does not fit $pub – wrong key in the secret?"; exit 1; }
+            # the key must be one the boxes know (release.pub or the reserve)
+            openssl dgst -sha256 -verify "$pub" -signature "$f.sig" "$f" >/dev/null 2>&1 ||
+              openssl dgst -sha256 -verify "${pub%.pub}-reserve.pub" -signature "$f.sig" "$f" >/dev/null || {
+              echo "::error::$f: the signature fits neither $pub nor the reserve key – wrong key in the secret?"; exit 1; }
             echo "signed: $f"
           done
           chmod 644 artifacts/*.sig

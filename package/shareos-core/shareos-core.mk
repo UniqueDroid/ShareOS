@@ -32,6 +32,7 @@ define SHAREOS_CORE_INSTALL_TARGET_CMDS
 	$(INSTALL) -D -m 0755 $(@D)/shareos-crypt $(TARGET_DIR)/usr/sbin/shareos-crypt
 	$(INSTALL) -D -m 0644 $(@D)/etc/config/shareos $(TARGET_DIR)/etc/config/shareos
 	$(INSTALL) -D -m 0644 $(@D)/etc/shareos/release.pub $(TARGET_DIR)/etc/shareos/release.pub
+	$(INSTALL) -D -m 0644 $(@D)/etc/shareos/release-reserve.pub $(TARGET_DIR)/etc/shareos/release-reserve.pub
 	$(INSTALL) -D -m 0600 $(@D)/etc/config/rpcd $(TARGET_DIR)/etc/config/rpcd
 	$(INSTALL) -D -m 0644 $(@D)/etc/config/storage $(TARGET_DIR)/etc/config/storage
 	$(INSTALL) -D -m 0755 $(@D)/etc/init.d/S20storage $(TARGET_DIR)/etc/init.d/S20storage

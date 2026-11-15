@@ -231,7 +231,16 @@ o=$(run apply local);    check "signed, local: an unsigned file is not installed
 check "signed, local: it stays ready for the decision" "$(run status)" "d['state']=='ready' and 'error' not in d"
 o=$(run apply local unsigned); check "signed, local: installed when asked for (own build)" "$o" "d['state']=='flashed' and d['flashed']['tag']=='local'"
 run cancel >/dev/null
+# the reserve key: a release signed with it is accepted as well
+openssl ec -in "$T/other.key" -pubout -out "$ROOT/etc/shareos/release-reserve.pub" 2>/dev/null
+o=$(run download v0.4.1);check "reserve key: a release signed with it is accepted" "$o" "d['state']=='ready' and d['release']['signature']=='valid'"
+o=$(run apply v0.4.1);   check "reserve key: installed" "$o" "d['state']=='flashed' and d['flashed']['tag']=='v0.4.1'"
+run cancel >/dev/null
+o=$(run download v0.4.2);check "reserve key: a changed bundle is still rejected" "$o" "d['state']=='error' and 'not valid' in d['error']"
 rm -f "$ROOT/etc/shareos/release.pub"
+check "only the reserve key on the box: the check stays on" "$(run status)" "d['signing'] is True"
+o=$(run download v0.4.0);check "only the reserve key: a release of the other key is rejected" "$o" "d['state']=='error' and 'not valid' in d['error']"
+rm -f "$ROOT/etc/shareos/release-reserve.pub"
 
 echo; echo "$pass passed, $failed failed"
 [ $failed -eq 0 ]

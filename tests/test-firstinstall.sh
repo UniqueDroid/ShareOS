@@ -86,7 +86,7 @@ sed -i 's/^SHAREOS_FWNAME=.*/SHAREOS_FWNAME="DNS-325-rev-Ax"/' $F/shareos-releas
 rc=$(run FI_SRC_DIR=/usb FI_NO_NET=1 FI_API=file:///rel/none.json)
 check "package for another device rejected" "[ $rc = 1 ] && grep -q 'another device' $R/tmp/firstinstall.err"
 
-check "USB: installed without a signature although the box has the release key" "grep -q 'BEGIN PUBLIC KEY' $R/etc/shareos/release.pub && [ -x $R/usr/bin/pk_verify ]"
+check "USB: installed without a signature although the box has the release keys" "grep -q 'BEGIN PUBLIC KEY' $R/etc/shareos/release.pub && grep -q 'BEGIN PUBLIC KEY' $R/etc/shareos/release-reserve.pub && [ -x $R/usr/bin/pk_verify ]"
 
 # download from a release list. Downloads must be signed: the test puts its
 # own public key into the fake box and signs like the release build does.
@@ -94,6 +94,7 @@ rm -f $R/usb/*
 openssl ecparam -name prime256v1 -genkey -noout -out $T/rel.key 2>/dev/null
 openssl ecparam -name prime256v1 -genkey -noout -out $T/other.key 2>/dev/null
 cp $R/etc/shareos/release.pub $T/project.pub
+mv $R/etc/shareos/release-reserve.pub $T/project-reserve.pub
 openssl ec -in $T/rel.key -pubout -out $R/etc/shareos/release.pub 2>/dev/null
 cp "$PKG" $R/rel/$NAME; (cd $R/rel && sha256sum $NAME > $NAME.sha256)
 cat > $R/rel/releases.json <<J
@@ -113,6 +114,11 @@ cp "$PKG" $R/rel/$NAME; (cd $R/rel && sha256sum $NAME > $NAME.sha256)
 cp $T/project.pub $R/etc/shareos/release.pub
 rc=$(run FI_SRC_DIR=/usb FI_NO_NET=1 FI_API=file:///rel/releases.json)
 check "the key of the project does not accept a signature of the test key" "[ $rc = 1 ] && grep -q 'signature' $R/tmp/firstinstall.err"
+openssl ec -in $T/rel.key -pubout -out $R/etc/shareos/release-reserve.pub 2>/dev/null
+: > $R/tmp/calls
+rc=$(run FI_SRC_DIR=/usb FI_NO_NET=1 FI_API=file:///rel/releases.json)
+check "download signed with the reserve key: installed" "[ $rc = 0 ] && grep -q 'install-ubi' $R/tmp/calls"
+rm -f $R/etc/shareos/release-reserve.pub
 openssl ec -in $T/rel.key -pubout -out $R/etc/shareos/release.pub 2>/dev/null
 cat > $R/rel/releases.json <<J
 [ { "tag_name": "v9", "assets": [ { "browser_download_url": "file:///rel/$NAME.sha256" }, { "browser_download_url": "file:///rel/$NAME" } ] } ]

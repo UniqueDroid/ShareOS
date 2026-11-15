@@ -6,6 +6,7 @@ pre-releases for test devices only.
 
 ## 0.3.0-beta.11
 
+- **A reserve key for releases.** The firmware knows a second public key (`/etc/shareos/release-reserve.pub`); a release is accepted when its signature fits one of the two. The private part of the reserve is not on GitHub. If the release key is lost or exposed, releases can be signed with the reserve and reach the boxes as normal updates – without it they would need a file upload on every box.
 - **First installation: downloads must be signed.** After the ShareOS `.bin` was flashed from Alt-F or the D-Link interface, the box installs the system from a USB stick or, without one, from GitHub. That download was only compared with the `.sha256` next to it; now its signature must fit the project's key (the same check as for updates since beta.10), otherwise nothing is installed. A package on a USB stick is still installed without a signature – it was put there by hand.
 
 ## 0.3.0-beta.10

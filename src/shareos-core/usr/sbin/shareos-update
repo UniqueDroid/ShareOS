@@ -28,7 +28,8 @@
 //
 // Safety checks:
 //   - signature of the bundle (<bundle>.sig of the release) against the public
-//     key of the project in /etc/shareos/release.pub. The key that signs is
+//     keys of the project in /etc/shareos (release.pub, release-reserve.pub;
+//     one of them must fit). The key that signs is
 //     not in the repository and not on the box; without a valid signature
 //     nothing from the internet is installed. A file uploaded by hand may be
 //     unsigned (own builds) – that has to be confirmed.
@@ -54,7 +55,10 @@ const STATE_DIR = ROOT + '/tmp/shareos-update';
 const STATE = STATE_DIR + '/state.json';
 // public key of the releases (PEM, ECDSA P-256); the signature is made with
 // "openssl dgst -sha256 -sign" and checked with pk_verify of mbedtls
-const PUBKEY = ROOT + '/etc/shareos/release.pub';
+// Two keys: the one releases are signed with and a reserve whose private part
+// is kept offline only – if the first is lost or exposed, releases signed
+// with the reserve are still accepted. A signature must fit one of them.
+const PUBKEYS = [ ROOT + '/etc/shareos/release.pub', ROOT + '/etc/shareos/release-reserve.pub' ];
 const UBOOT_MAX = 3145728;          // bytes U-Boot copies from uImage/ramdisk
 const CA = '/etc/ssl/certs/ca-certificates.crt';
 const CURL = [ 'curl', '-fsSL', '--retry', '2', '--connect-timeout', '10',
@@ -162,8 +166,11 @@ function flash_busy() {
 }
 
 // are releases checked against the project's key on this box?
+function pubkeys() {
+	return filter(PUBKEYS, (k) => index(readfile(k) ?? '', 'BEGIN PUBLIC KEY') >= 0);
+}
 function signing() {
-	return index(readfile(PUBKEY) ?? '', 'BEGIN PUBLIC KEY') >= 0;
+	return length(pubkeys()) > 0;
 }
 
 // is <dir>/fw.tar.sig a valid signature of <dir>/fw.tar? (pk_verify reads
@@ -171,8 +178,12 @@ function signing() {
 function signature_ok(dir) {
 	if (!stat(dir + '/fw.tar.sig')) return false;
 	for (let prog in [ 'mbedtls_pk_verify', 'pk_verify' ])
-		if (capture([ 'sh', '-c', 'command -v ' + prog ]).rc == 0)
-			return capture([ prog, PUBKEY, dir + '/fw.tar' ]).rc == 0;
+		if (capture([ 'sh', '-c', 'command -v ' + prog ]).rc == 0) {
+			for (let key in pubkeys())
+				if (capture([ prog, key, dir + '/fw.tar' ]).rc == 0)
+					return true;
+			return false;
+		}
 	return false;
 }
 

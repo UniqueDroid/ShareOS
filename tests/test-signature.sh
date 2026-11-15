@@ -36,6 +36,10 @@ check "the key of the firmware is a P-256 public key" \
 	"openssl pkey -pubin -in '$PUB' -noout -text 2>/dev/null | grep -q 'prime256v1'"
 cp $T/fw.tar $T/z.tar; cp $T/fw.tar.sig $T/z.tar.sig
 check "the key of the firmware does not accept a foreign signature" "! ok '$PUB' $T/z.tar"
+RES="${PUB%.pub}-reserve.pub"
+check "the reserve key is a P-256 public key, another one than the release key" \
+	"openssl pkey -pubin -in '$RES' -noout -text 2>/dev/null | grep -q 'prime256v1' && ! cmp -s '$PUB' '$RES'"
+check "the reserve key does not accept a foreign signature" "! ok '$RES' $T/z.tar"
 
 echo; echo "$pass passed, $failed failed"
 [ $failed -eq 0 ]

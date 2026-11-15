@@ -27,7 +27,13 @@ the public key in the firmware (`src/shareos-core/etc/shareos/release.pub`).
   nothing is published. Fix the secret, then *Re-run failed jobs*.
 - Check a download by hand:
   `openssl dgst -sha256 -verify release.pub -signature <file>.sig <file>`
-- **New key** (lost or exposed): create it, put the public key into
+- **Reserve key:** the firmware also knows `release-reserve.pub`. Its private
+  part is kept offline only (not on GitHub). If the release key is lost or
+  exposed: put the reserve private key into the secret `RELEASE_SIGNING_KEY`
+  – boxes from 0.3.0-beta.11 on accept releases signed with it at once. Then
+  create a new pair, replace the lost key's `.pub` in the repository with it
+  (it becomes the new reserve) and release.
+- **New key without a reserve** (both lost, or boxes before 0.3.0-beta.11): create it, put the public key into
   `release.pub`, and publish that firmware **signed with the old key** – boxes
   only take the new public key from a release they accept. With the old key
   lost, boxes need the file upload (*Install firmware file*, confirmed as
