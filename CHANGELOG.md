@@ -4,6 +4,10 @@ Changes per release (newest first). The section of a version is added to its
 GitHub release automatically when the release is built. Test versions are
 pre-releases for test devices only.
 
+## 0.3.0-beta.12
+
+- **Tuya: the local key of a device was visible on the box while a request ran.** The app service passed it to `shareos-tuya` as an argument, which every process on the box can read (`ps`, `/proc/<pid>/cmdline`). It now goes through a file only root can read, as the program's standard input (`shareos-tuya … - …`). The key in an argument still works for use by hand.
+
 ## 0.3.0-beta.11
 
 - **DNS-320 rev A: the temperature was never read** ([#163](https://github.com/UniqueDroid/ShareOS/issues/163), found and traced on a rev A1). The fan control asked the MCU on `ttyS1` and opened the port a second time to read – the answer comes within milliseconds and was lost in between, every time. Result: no temperature, fan at full, "board control not running" in the overview. Asking and reading now use one open port; an answer without its header is read from its checksum, as Alt-F does.
