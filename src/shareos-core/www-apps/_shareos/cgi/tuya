@@ -9,7 +9,7 @@
 // The app keeps its devices and local keys (in the user's folder); the box
 // only talks to them with /usr/sbin/shareos-tuya. The grant is checked by
 // rpcd (shareos.apptuya), the network work runs here.
-import { stdin, stdout, popen } from 'fs';
+import { stdin, stdout, popen, writefile, unlink } from 'fs';
 import * as ubus from 'ubus';
 
 // JSON text -> value; null when the text is not JSON (never an exception:
@@ -34,8 +34,10 @@ let conn = ubus.connect();
 if (!conn) reply('503 Service Unavailable', { error: 'not ready' });
 if (conn.call('shareos.apptuya', 'allowed', { grant: g[2] })?.ok !== true) reply('403 Forbidden', { error: 'no access' });
 
-function run(args) {
-	let p = popen('/usr/sbin/shareos-tuya ' + join(' ', map(args, shq)) + ' 2>&1', 'r');
+// keyfile: a file whose content goes to the program's standard input (the
+// local key of a device – never an argument, see run_device)
+function run(args, keyfile) {
+	let p = popen('/usr/sbin/shareos-tuya ' + join(' ', map(args, shq)) + (keyfile ? ' < ' + shq(keyfile) : '') + ' 2>&1', 'r');
 	let out = trim(p ? (p.read('all') ?? '') : '');
 	p?.close();
 	let j = null;
@@ -57,7 +59,21 @@ if (type(ip) != 'string' || !match(ip, /^([0-9]{1,3}\.){3}[0-9]{1,3}$/)) reply('
 if (type(id) != 'string' || !match(id, /^[A-Za-z0-9]{6,32}$/)) reply('200 OK', { error: 'invalid device id' });
 if (type(key) != 'string' || length(key) != 16 || match(key, /[[:cntrl:]]/)) reply('200 OK', { error: 'the local key has 16 characters' });
 if (!(ver in { '3.3': 1, '3.4': 1 })) reply('200 OK', { error: 'protocol version 3.3 or 3.4' });
-let args = [ req.op, ip, id, key, ver ];
+// The local key lets anyone in the network switch the device. As an argument
+// it would be readable by every process on the box while the call runs (ps,
+// /proc/<pid>/cmdline): it goes through a file only root can read, as the
+// program's standard input ("-" in place of the key).
+function run_device(args) {
+	let m = popen('umask 077 && mktemp /tmp/.shareos-tuya.XXXXXX', 'r');
+	let f = trim(m ? (m.read('all') ?? '') : '');
+	m?.close();
+	if (!match(f, /^\/tmp\/\.shareos-tuya\.[A-Za-z0-9]{6}$/)) return { ok: false, error: 'cannot hand the key to the device program' };
+	writefile(f, key);
+	let r = run(args, f);
+	unlink(f);
+	return r;
+}
+let args = [ req.op, ip, id, '-', ver ];
 if (req.op == 'set') {
 	if (type(req.dps) != 'object' || !length(req.dps) || length(req.dps) > 16) reply('200 OK', { error: 'invalid dps' });
 	for (let k, v in req.dps)
@@ -65,7 +81,7 @@ if (req.op == 'set') {
 			reply('200 OK', { error: 'invalid dps' });
 	push(args, sprintf('%J', req.dps));
 }
-let r = run(args);
+let r = run_device(args);
 if (!r.ok) reply('200 OK', { error: r.error });
 // 3.3 answers {devId, dps}, 3.4 {protocol, t, data: {dps}}
 let dps = r.data?.dps ?? r.data?.data?.dps ?? null;

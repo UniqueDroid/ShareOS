@@ -165,6 +165,8 @@ if python3 -c 'import tinytuya' 2>/dev/null; then
 	check "tuya 3.4: session key, status and switch" "cgi tuya $GR '{\"op\":\"status\",$D4}' | js \"d['ok'] and d['dps']['20']==2301\" && cgi tuya $GR '{\"op\":\"set\",$D4,\"dps\":{\"1\":true,\"18\":42}}' | js \"d['dps']=={'1':True,'18':42}\""
 	check "tuya 3.4: wrong local key" "cgi tuya $GR '{\"op\":\"status\",\"ip\":\"127.0.0.1\",\"id\":\"$ID4\",\"key\":\"0000000000000000\",\"version\":\"3.4\"}' | grep -q 'wrong local key'"
 	kill $TUYA 2>/dev/null; wait $TUYA 2>/dev/null
+	check "tuya: the local key is not an argument of the device program, no key file left behind" \
+		"grep -q \"req.op, ip, id, '-', ver\" $R/www-apps/_shareos/cgi/tuya && ! ls $R/tmp/.shareos-tuya.* >/dev/null 2>&1"
 	check "tuya: device not reachable" "cgi tuya $GR '{\"op\":\"status\",$D4}' | grep -q 'not reachable'"
 else
 	echo "SKIP  tuya (pip install tinytuya for the fake device)"
