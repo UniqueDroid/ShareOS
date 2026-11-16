@@ -1679,7 +1679,9 @@
 		"Filtering paused.": "Фильтрация приостановлена.",
 		"Filtering is on again.": "Фильтрация снова включена.",
 		"NAME RESOLUTION": "РАЗРЕШЕНИЕ ИМЁН",
-		"live · every 5 s · temperature up to 15 s old": "онлайн · каждые 5 с · температура не старше 15 с"
+		"live · every 5 s · temperature up to 15 s old": "онлайн · каждые 5 с · температура не старше 15 с",
+		"sets the clock, keeps the clock chip in sync": "устанавливает время, синхронизирует микросхему часов",
+		"fan, temperature, buttons": "вентилятор, температура, кнопки"
 	},
 	"patterns": [
 		[
@@ -1867,6 +1869,10 @@
 			"$1 будет полностью стёрт и настроен как том «$2»."
 		],
 		[
+			"^zabbix_agentd, active and passive mode, port ([0-9]+)$",
+			"zabbix_agentd, активный и пассивный режимы, порт $1"
+		],
+		[
 			"^App area on “(.+)” \\(unless there is one already\\)\\.$",
 			"Область приложений на «$1» (если её ещё нет)."
 		],
@@ -1917,6 +1923,10 @@
 		[
 			"^Fan stops below (\\d+) °C, full from (\\d+) °C$",
 			"Вентилятор останавливается ниже $1 °C, полная скорость от $2 °C"
+		],
+		[
+			"^zabbix_agentd, passive mode, port ([0-9]+)$",
+			"zabbix_agentd, пассивный режим, порт $1"
 		],
 		[
 			"^(.+) – can be restored from the trash\\.$",

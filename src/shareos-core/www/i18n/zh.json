@@ -1679,7 +1679,9 @@
 		"Filtering paused.": "过滤已暂停。",
 		"Filtering is on again.": "过滤已重新开启。",
 		"NAME RESOLUTION": "名称解析",
-		"live · every 5 s · temperature up to 15 s old": "实时 · 每 5 秒 · 温度最多滞后 15 秒"
+		"live · every 5 s · temperature up to 15 s old": "实时 · 每 5 秒 · 温度最多滞后 15 秒",
+		"sets the clock, keeps the clock chip in sync": "设置时钟，并保持时钟芯片同步",
+		"fan, temperature, buttons": "风扇、温度、按键"
 	},
 	"patterns": [
 		[
@@ -1867,6 +1869,10 @@
 			"$1 将被完全清除，并设置为驱动器“$2”。"
 		],
 		[
+			"^zabbix_agentd, active and passive mode, port ([0-9]+)$",
+			"zabbix_agentd，主动和被动模式，端口 $1"
+		],
+		[
 			"^App area on “(.+)” \\(unless there is one already\\)\\.$",
 			"应用区位于“$1” (如尚未存在)。"
 		],
@@ -1917,6 +1923,10 @@
 		[
 			"^Fan stops below (\\d+) °C, full from (\\d+) °C$",
 			"低于 $1 °C 时风扇停止，$2 °C 起全速"
+		],
+		[
+			"^zabbix_agentd, passive mode, port ([0-9]+)$",
+			"zabbix_agentd，被动模式，端口 $1"
 		],
 		[
 			"^(.+) – can be restored from the trash\\.$",

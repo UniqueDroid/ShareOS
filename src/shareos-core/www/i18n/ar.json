@@ -1679,7 +1679,9 @@
 		"Filtering paused.": "تم إيقاف التصفية مؤقتًا.",
 		"Filtering is on again.": "عادت التصفية إلى العمل.",
 		"NAME RESOLUTION": "تحليل الأسماء",
-		"live · every 5 s · temperature up to 15 s old": "مباشر · كل 5 ث · الحرارة بعمر حتى 15 ث"
+		"live · every 5 s · temperature up to 15 s old": "مباشر · كل 5 ث · الحرارة بعمر حتى 15 ث",
+		"sets the clock, keeps the clock chip in sync": "يضبط الساعة ويبقي شريحة الساعة متزامنة",
+		"fan, temperature, buttons": "المروحة، الحرارة، الأزرار"
 	},
 	"patterns": [
 		[
@@ -1867,6 +1869,10 @@
 			"سيُمسح $1 بالكامل ويُعد كوحدة تخزين «$2»."
 		],
 		[
+			"^zabbix_agentd, active and passive mode, port ([0-9]+)$",
+			"zabbix_agentd، الوضعان النشط والخامل، المنفذ $1"
+		],
+		[
 			"^App area on “(.+)” \\(unless there is one already\\)\\.$",
 			"منطقة التطبيقات على «$1» (إن لم توجد واحدة)."
 		],
@@ -1917,6 +1923,10 @@
 		[
 			"^Fan stops below (\\d+) °C, full from (\\d+) °C$",
 			"تتوقف المروحة تحت $1 °م، وأقصى سرعة من $2 °م"
+		],
+		[
+			"^zabbix_agentd, passive mode, port ([0-9]+)$",
+			"zabbix_agentd، الوضع الخامل، المنفذ $1"
 		],
 		[
 			"^(.+) – can be restored from the trash\\.$",

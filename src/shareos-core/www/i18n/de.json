@@ -1679,7 +1679,9 @@
 		"Filtering paused.": "Filterung pausiert.",
 		"Filtering is on again.": "Die Filterung ist wieder an.",
 		"NAME RESOLUTION": "NAMENSAUFLÖSUNG",
-		"live · every 5 s · temperature up to 15 s old": "live · alle 5 s · Temperatur bis zu 15 s alt"
+		"live · every 5 s · temperature up to 15 s old": "live · alle 5 s · Temperatur bis zu 15 s alt",
+		"sets the clock, keeps the clock chip in sync": "stellt die Uhr, hält den Uhrenbaustein synchron",
+		"fan, temperature, buttons": "Lüfter, Temperatur, Tasten"
 	},
 	"patterns": [
 		[
@@ -1867,6 +1869,10 @@
 			"$1 wird vollständig gelöscht und als Laufwerk „$2“ neu eingerichtet."
 		],
 		[
+			"^zabbix_agentd, active and passive mode, port ([0-9]+)$",
+			"zabbix_agentd, aktiver und passiver Modus, Port $1"
+		],
+		[
 			"^App area on “(.+)” \\(unless there is one already\\)\\.$",
 			"Apps-Bereich auf „$1“ (falls noch keiner besteht)."
 		],
@@ -1917,6 +1923,10 @@
 		[
 			"^Fan stops below (\\d+) °C, full from (\\d+) °C$",
 			"Lüfter stoppt unter $1 °C, voll ab $2 °C"
+		],
+		[
+			"^zabbix_agentd, passive mode, port ([0-9]+)$",
+			"zabbix_agentd, passiver Modus, Port $1"
 		],
 		[
 			"^(.+) – can be restored from the trash\\.$",

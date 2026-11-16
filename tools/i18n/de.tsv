@@ -2097,3 +2097,7 @@ E1693	Filterung pausiert.
 E1694	Die Filterung ist wieder an.
 E1695	NAMENSAUFLÖSUNG
 E1696	live · alle 5 s · Temperatur bis zu 15 s alt
+E1697	stellt die Uhr, hält den Uhrenbaustein synchron
+E1698	Lüfter, Temperatur, Tasten
+P374	zabbix_agentd, passiver Modus, Port $1
+P375	zabbix_agentd, aktiver und passiver Modus, Port $1

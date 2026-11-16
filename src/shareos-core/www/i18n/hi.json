@@ -1679,7 +1679,9 @@
 		"Filtering paused.": "फ़िल्टरिंग रोकी गई।",
 		"Filtering is on again.": "फ़िल्टरिंग फिर चालू है।",
 		"NAME RESOLUTION": "नाम रिज़ॉल्यूशन",
-		"live · every 5 s · temperature up to 15 s old": "लाइव · हर 5 से. · तापमान अधिकतम 15 से. पुराना"
+		"live · every 5 s · temperature up to 15 s old": "लाइव · हर 5 से. · तापमान अधिकतम 15 से. पुराना",
+		"sets the clock, keeps the clock chip in sync": "घड़ी सेट करता है, घड़ी चिप को सिंक में रखता है",
+		"fan, temperature, buttons": "पंखा, तापमान, बटन"
 	},
 	"patterns": [
 		[
@@ -1867,6 +1869,10 @@
 			"$1 पूरी तरह मिटकर ड्राइव \"$2\" के रूप में सेट होगी।"
 		],
 		[
+			"^zabbix_agentd, active and passive mode, port ([0-9]+)$",
+			"zabbix_agentd, एक्टिव और पैसिव मोड, पोर्ट $1"
+		],
+		[
 			"^App area on “(.+)” \\(unless there is one already\\)\\.$",
 			"ऐप क्षेत्र \"$1\" पर (अगर पहले से कोई न हो)।"
 		],
@@ -1917,6 +1923,10 @@
 		[
 			"^Fan stops below (\\d+) °C, full from (\\d+) °C$",
 			"$1 °C से नीचे पंखा बंद, $2 °C से पूरी गति"
+		],
+		[
+			"^zabbix_agentd, passive mode, port ([0-9]+)$",
+			"zabbix_agentd, पैसिव मोड, पोर्ट $1"
 		],
 		[
 			"^(.+) – can be restored from the trash\\.$",

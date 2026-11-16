@@ -246,8 +246,15 @@ add_methods({
 							? 'uhttpd, ports 80 and 443' : 'uhttpd, port 80';
 					if (name == 'zabbix') {
 						let act = !!c.get('zabbix', 'main', 'server'), pas = c.get('zabbix', 'main', 'passive') == '1';
-						return act && pas ? 'zabbix_agentd, active and passive mode' : pas ? 'zabbix_agentd, passive mode' : 'zabbix_agentd, active mode';
+						// passive: the port the agent listens on
+						let port = pas ? ', port ' + (c.get('zabbix', 'main', 'port') ?? '10050') : '';
+						return (act && pas ? 'zabbix_agentd, active and passive mode' : pas ? 'zabbix_agentd, passive mode' : 'zabbix_agentd, active mode') + port;
 					}
+					// the clock chip is the MCU's only on boxes with that MCU
+					// (DNS-320L, DNS-320 rev B, DNS-327L); the others have the kernel's
+					let mcu_rtc = (board().rtc ?? 'mcu') == 'mcu';
+					if (name == 'ntpd' && !mcu_rtc) return 'sets the clock, keeps the clock chip in sync';
+					if (name == 'board' && !mcu_rtc) return 'fan, temperature, buttons';
 					return d;
 				};
 				for (let name in sort(keys(SERVICES))) {
