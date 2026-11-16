@@ -1678,7 +1678,8 @@
 		"Filter again now": "अभी फिर फ़िल्टर करें",
 		"Filtering paused.": "फ़िल्टरिंग रोकी गई।",
 		"Filtering is on again.": "फ़िल्टरिंग फिर चालू है।",
-		"NAME RESOLUTION": "नाम रिज़ॉल्यूशन"
+		"NAME RESOLUTION": "नाम रिज़ॉल्यूशन",
+		"live · every 5 s · temperature up to 15 s old": "लाइव · हर 5 से. · तापमान अधिकतम 15 से. पुराना"
 	},
 	"patterns": [
 		[

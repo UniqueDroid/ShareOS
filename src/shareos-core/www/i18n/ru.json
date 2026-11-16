@@ -1678,7 +1678,8 @@
 		"Filter again now": "Возобновить фильтрацию",
 		"Filtering paused.": "Фильтрация приостановлена.",
 		"Filtering is on again.": "Фильтрация снова включена.",
-		"NAME RESOLUTION": "РАЗРЕШЕНИЕ ИМЁН"
+		"NAME RESOLUTION": "РАЗРЕШЕНИЕ ИМЁН",
+		"live · every 5 s · temperature up to 15 s old": "онлайн · каждые 5 с · температура не старше 15 с"
 	},
 	"patterns": [
 		[

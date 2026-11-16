@@ -1696,7 +1696,8 @@
 		"Filter again now",
 		"Filtering paused.",
 		"Filtering is on again.",
-		"NAME RESOLUTION"
+		"NAME RESOLUTION",
+		"live · every 5 s · temperature up to 15 s old"
 	],
 	"patterns": [
 		[

@@ -73,7 +73,7 @@ const VIEWS = {
 		const svcUp = S.services ? S.services.filter((x) => x.running).length : null;
 		return html`
 		<section class="sec" data-part="load">
-			<h2 class="gh">SYSTEM <span>live · every 5 s</span></h2>
+			<h2 class="gh">SYSTEM <span>live · every 5 s · temperature up to 15 s old</span></h2>
 			<div class="g2">
 				<div class="panel">
 					<div class="ph"><span class="pt">LOAD</span>${boardTag(i.board_control)}</div>

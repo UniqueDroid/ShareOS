@@ -1678,7 +1678,8 @@
 		"Filter again now": "Voltar a filtrar agora",
 		"Filtering paused.": "Filtragem em pausa.",
 		"Filtering is on again.": "A filtragem está novamente ativa.",
-		"NAME RESOLUTION": "RESOLUÇÃO DE NOMES"
+		"NAME RESOLUTION": "RESOLUÇÃO DE NOMES",
+		"live · every 5 s · temperature up to 15 s old": "ao vivo · a cada 5 s · temperatura com até 15 s"
 	},
 	"patterns": [
 		[

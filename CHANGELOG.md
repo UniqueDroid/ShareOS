@@ -4,6 +4,11 @@ Changes per release (newest first). The section of a version is added to its
 GitHub release automatically when the release is built. Test versions are
 pre-releases for test devices only.
 
+## 0.3.0-beta.13
+
+- **VPN server: switching "home network reachable" off no longer cuts others off.** It switched IP forwarding off for the whole box – also for Tailscale as subnet router or containers. The server now only switches forwarding off when it was the one that switched it on.
+- Overview: the heading said "live · every 5 s", but the temperature is read every 15 seconds; it now says so.
+
 ## 0.3.0-beta.12
 
 - **Tuya: the local key of a device was visible on the box while a request ran.** The app service passed it to `shareos-tuya` as an argument, which every process on the box can read (`ps`, `/proc/<pid>/cmdline`). It now goes through a file only root can read, as the program's standard input (`shareos-tuya … - …`). The key in an argument still works for use by hand.

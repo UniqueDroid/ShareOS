@@ -1678,7 +1678,8 @@
 		"Filter again now": "এখনই আবার ফিল্টার করুন",
 		"Filtering paused.": "ফিল্টারিং বিরতিতে।",
 		"Filtering is on again.": "ফিল্টারিং আবার চালু।",
-		"NAME RESOLUTION": "নাম রেজোলিউশন"
+		"NAME RESOLUTION": "নাম রেজোলিউশন",
+		"live · every 5 s · temperature up to 15 s old": "লাইভ · প্রতি ৫ সে. · তাপমাত্রা সর্বোচ্চ ১৫ সে. পুরোনো"
 	},
 	"patterns": [
 		[
