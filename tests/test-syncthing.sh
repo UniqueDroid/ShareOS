@@ -137,7 +137,11 @@ run "su -s /bin/sh anna -c 'echo hallo > /mnt/daten/home/anna/Sync/notiz.txt'" >
 st $GA '{"method":"POST","path":"/rest/db/scan","query":{"folder":"docs-1"}}' >/dev/null
 for i in $(seq 90); do [ -f $R/mnt/daten/home/bernd/Sync/notiz.txt ] && break; sleep 2; done
 check "anna's file arrives in bernd's folder, owned by bernd" "[ \"\$(cat $R/mnt/daten/home/bernd/Sync/notiz.txt 2>/dev/null)\" = hallo ] && [ \"\$(stat -c %u $R/mnt/daten/home/bernd/Sync/notiz.txt)\" = $UB ]"
-o=$(get $GA /rest/db/completion "{\"folder\":\"docs-1\",\"device\":\"$IDB\"}")
+# the file is there before anna's side has heard that bernd is complete
+for i in $(seq 30); do
+	o=$(get $GA /rest/db/completion "{\"folder\":\"docs-1\",\"device\":\"$IDB\"}")
+	echo "$o" | js "d['data']['completion']==100" && break; sleep 2
+done
 check "status: folder complete on bernd's side" "echo '$o' | js \"d['data']['completion']==100\""
 check "rpcd object not reachable for web sessions" "! grep -q appsyncthing $R/usr/share/rpcd/acl.d/shareos.json"
 
