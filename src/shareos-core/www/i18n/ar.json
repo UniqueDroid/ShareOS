@@ -1678,7 +1678,8 @@
 		"Filter again now": "التصفية الآن من جديد",
 		"Filtering paused.": "تم إيقاف التصفية مؤقتًا.",
 		"Filtering is on again.": "عادت التصفية إلى العمل.",
-		"NAME RESOLUTION": "تحليل الأسماء"
+		"NAME RESOLUTION": "تحليل الأسماء",
+		"live · every 5 s · temperature up to 15 s old": "مباشر · كل 5 ث · الحرارة بعمر حتى 15 ث"
 	},
 	"patterns": [
 		[

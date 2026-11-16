@@ -1678,7 +1678,8 @@
 		"Filter again now": "立即恢复过滤",
 		"Filtering paused.": "过滤已暂停。",
 		"Filtering is on again.": "过滤已重新开启。",
-		"NAME RESOLUTION": "名称解析"
+		"NAME RESOLUTION": "名称解析",
+		"live · every 5 s · temperature up to 15 s old": "实时 · 每 5 秒 · 温度最多滞后 15 秒"
 	},
 	"patterns": [
 		[

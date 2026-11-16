@@ -355,6 +355,21 @@ function srv_stop() {
 	unlink(SRUN + '/pid'); unlink(SMGMT);
 }
 
+// Forwarding between the VPN and the home network. Others on the box use the
+// same switch (Tailscale as subnet router, containers): the VPN server only
+// switches it off again when it was the one that switched it on.
+const FORWARD = '/proc/sys/net/ipv4/ip_forward', FORWARD_OURS = SRUN + '/forward-ours';
+function forward_on() {
+	if (trim(readfile(FORWARD) ?? '') == '1') return;
+	writefile(FORWARD, '1');
+	writefile(FORWARD_OURS, '1\n');
+}
+function forward_release() {
+	if (!stat(FORWARD_OURS)) return;
+	unlink(FORWARD_OURS);
+	writefile(FORWARD, '0');
+}
+
 function srv_start() {
 	if (stat(BIN)?.type != 'file') die('OpenVPN is not installed (system app "openvpn" in the store)');
 	if (stat('/dev/net/tun') == null) die('this firmware has no tunnel support (TUN) – update ShareOS');
@@ -373,7 +388,7 @@ function srv_start() {
 	let lan = lan_of();
 	if (st.lan && lan) {
 		push(args, '--push', 'route ' + lan.net + ' ' + lan.mask);
-		writefile('/proc/sys/net/ipv4/ip_forward', '1');
+		forward_on();
 	}
 	let r = sh(join(' ', map(args, shq)));
 	for (let i = 0; i < 30 && !srv_pid(); i++) sh('sleep 0.2');
@@ -401,7 +416,7 @@ function cmd_server_set() {
 	c.commit('vpn');
 	let st = srv_get();
 	if (st.enabled) srv_start(); else srv_stop();
-	if (!st.lan) writefile('/proc/sys/net/ipv4/ip_forward', '0');
+	if (!st.lan || !st.enabled) forward_release();
 	out(srv_status());
 }
 

@@ -137,6 +137,17 @@ sv() { v "$1" "${2:-{\}}"; }
 check "server: wrong VPN network refused" "sv server_set '{\"net\":\"8.8.8.0\"}' | js \"'invalid VPN network' in d.get('error','')\""
 o=$(sv server_set '{"enabled":true,"port":11195,"proto":"udp","net":"10.77.0.0","host":"127.0.0.1","lan":false}')
 check "server: switched on, own certificates made" "echo '$o' | js \"d['running'] and d['ready'] and d['port']==11195\" && [ -f $R/etc/shareos/vpn/server/ca.crt ] && [ \$(stat -c %a $R/etc/shareos/vpn/server/ca.key) = 600 ]"
+# forwarding belongs to everyone on the box: the server only takes back what it switched on itself
+FW=/proc/sys/net/ipv4/ip_forward; fw0=$(cat $FW)
+echo 1 | sudo tee $FW >/dev/null
+sv server_set '{"lan":true}' >/dev/null; sv server_set '{"lan":false}' >/dev/null
+check "server: forwarding that was on before stays on when 'home network' is switched off" "[ \$(cat $FW) = 1 ] && [ ! -e $R/tmp/shareos-vpn-server/forward-ours ]"
+echo 0 | sudo tee $FW >/dev/null
+sv server_set '{"lan":true}' >/dev/null
+check "server: 'home network' switches forwarding on" "[ \$(cat $FW) = 1 ] && [ -e $R/tmp/shareos-vpn-server/forward-ours ]"
+sv server_set '{"lan":false}' >/dev/null
+check "server: and off again, because the server had switched it on" "[ \$(cat $FW) = 0 ] && [ ! -e $R/tmp/shareos-vpn-server/forward-ours ]"
+echo "$fw0" | sudo tee $FW >/dev/null
 o=$(sv device_add '{"name":"handy"}')
 check "server: device added, profile with everything inline" "echo '$o' | js \"d.get('ok') and 'remote 127.0.0.1 11195' in d['profile'] and '<tls-crypt>' in d['profile'] and '<key>' in d['profile'] and 'verify-x509-name' in d['profile']\""
 echo "$o" | python3 -c "import json,sys; open(sys.argv[1],'w').write(json.load(sys.stdin)['profile'])" $R/tmp/handy.ovpn
