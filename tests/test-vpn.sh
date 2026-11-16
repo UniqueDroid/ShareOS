@@ -137,17 +137,21 @@ sv() { v "$1" "${2:-{\}}"; }
 check "server: wrong VPN network refused" "sv server_set '{\"net\":\"8.8.8.0\"}' | js \"'invalid VPN network' in d.get('error','')\""
 o=$(sv server_set '{"enabled":true,"port":11195,"proto":"udp","net":"10.77.0.0","host":"127.0.0.1","lan":false}')
 check "server: switched on, own certificates made" "echo '$o' | js \"d['running'] and d['ready'] and d['port']==11195\" && [ -f $R/etc/shareos/vpn/server/ca.crt ] && [ \$(stat -c %a $R/etc/shareos/vpn/server/ca.key) = 600 ]"
-# forwarding belongs to everyone on the box: the server only takes back what it switched on itself
+# forwarding belongs to everyone on the box: the server only takes back what it
+# switched on itself. The test runs in its own network name space: it gets an
+# eth0 (the home network the server pushes a route for) for these checks.
 FW=/proc/sys/net/ipv4/ip_forward; fw0=$(cat $FW)
-echo 1 | sudo tee $FW >/dev/null
+ip link add eth0 type dummy && ip addr add 192.168.77.5/24 dev eth0 && ip link set eth0 up
+echo 1 > $FW
 sv server_set '{"lan":true}' >/dev/null; sv server_set '{"lan":false}' >/dev/null
 check "server: forwarding that was on before stays on when 'home network' is switched off" "[ \$(cat $FW) = 1 ] && [ ! -e $R/tmp/shareos-vpn-server/forward-ours ]"
-echo 0 | sudo tee $FW >/dev/null
-sv server_set '{"lan":true}' >/dev/null
+echo 0 > $FW
+o=$(sv server_set '{"lan":true}')
 check "server: 'home network' switches forwarding on" "[ \$(cat $FW) = 1 ] && [ -e $R/tmp/shareos-vpn-server/forward-ours ]"
+[ "$(cat $FW)" = 1 ] || echo "      forwarding $(cat $FW); eth0: $(ip -4 -o addr show dev eth0 2>&1 | cut -c1-80); answer: $(echo "$o" | cut -c1-300)"
 sv server_set '{"lan":false}' >/dev/null
 check "server: and off again, because the server had switched it on" "[ \$(cat $FW) = 0 ] && [ ! -e $R/tmp/shareos-vpn-server/forward-ours ]"
-echo "$fw0" | sudo tee $FW >/dev/null
+echo "$fw0" > $FW; ip link del eth0 2>/dev/null
 o=$(sv device_add '{"name":"handy"}')
 check "server: device added, profile with everything inline" "echo '$o' | js \"d.get('ok') and 'remote 127.0.0.1 11195' in d['profile'] and '<tls-crypt>' in d['profile'] and '<key>' in d['profile'] and 'verify-x509-name' in d['profile']\""
 echo "$o" | python3 -c "import json,sys; open(sys.argv[1],'w').write(json.load(sys.stdin)['profile'])" $R/tmp/handy.ovpn
