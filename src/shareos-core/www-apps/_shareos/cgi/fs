@@ -2,7 +2,7 @@
 // ShareOS app platform: the folders of the account, for apps with the
 // permission "files" (e.g. a file manager, an editor that saves on the box)
 //   POST /_shareos/cgi/fs?g=<grant>   body: {"op": "list", "root": …, …}
-// ops: roots, list, mkdir, rename, move, delete, open (a ticket for
+// ops: roots, list, mkdir, rename, move, delete, job, job_cancel, open (a ticket for
 // /_shareos/cgi/file to read or write one file). The grant comes from the
 // admin interface when the app is opened (rpcd shareos.files.app_grant): one
 // app, one account, 8 hours. Everything is checked and done by the rpcd
@@ -18,6 +18,7 @@ global.APP_CGI = {
 		move: [ 'root', 'path', 'names', 'dest_root', 'dest', 'copy' ],
 		delete: [ 'root', 'path', 'names' ],
 		job: [ 'id' ],
+		job_cancel: [ 'id' ],
 		open: [ 'root', 'path', 'name', 'write', 'create' ],
 		grant_app: [ 'app' ]
 	},

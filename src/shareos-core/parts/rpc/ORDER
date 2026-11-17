@@ -16,6 +16,7 @@ devices.uc
 snapshots.uc
 apps.uc
 files.uc
+files-jobs.uc
 trash.uc
 media.uc
 torrent.uc

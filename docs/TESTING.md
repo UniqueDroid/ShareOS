@@ -523,6 +523,17 @@ Needs a Tailscale account (free), a phone or computer with Tailscale, the file `
 5. An account without a personal folder: sharing shows "no personal folder"; the shared item is dropped and does not come back at the next login.
 6. File dialog of an app for an account **without** *Files* (e.g. Webpad → *Open*): the list of folders shows *App data* first, then *My folder* and the user's shares; read-only shares are marked and are missing when saving. The app still keeps its own files in *App data*.
 
+## 14zu. Progress of a copy in apps (0.3.0-beta.14)
+
+Needs ShareExplorer or ShareFinder 1.1.0 or newer (APPS → Store) and a large file (a few GB) on the box.
+
+1. Open ShareExplorer, copy the large file (Ctrl+C) and paste it into another folder (Ctrl+V). After about 3 seconds a window appears at the bottom right: "Copying 1 item", a bar, "… % · … of …", after a few seconds speed and time left.
+2. Meanwhile by SSH: `ls /tmp/shareos-filejobs/*/` shows `total`, `done`, `pid`; `cat /tmp/shareos-filejobs/*/total /tmp/shareos-filejobs/*/done` (KB) fits the display. `top` shows `cp` and now and then `du` – the interface stays usable.
+3. Wait for the end: the window goes, "Pasted.", the file is there with the same size (`ls -l`). `/tmp/shareos-filejobs` is empty.
+4. Copy again and press **Cancel** in the window: "Stopped. What was copied so far stays." – `ps | grep -E 'cp |du '` shows none of it any more; the target folder holds an incomplete file that can be deleted.
+5. Move into a folder of the **same** drive: done at once, no window. Move to **another** drive (e.g. USB): the window as for a copy, "Moving".
+6. The same once in ShareFinder.
+
 ## 14zt. Wake-up alarm of the MCU (0.3.0-beta.13)
 
 DNS-320L, DNS-320 rev B, DNS-327L only (boxes with the MCU clock). If switching on fails the box stays off and is started with the power button – no data is at risk.

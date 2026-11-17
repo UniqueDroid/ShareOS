@@ -43,8 +43,15 @@
  *                                  (ShareOS 0.2.0-beta.9+; before: fs was null)
  *   .list(root, path, hidden)      {entries: [{name, type, size, mtime}], free, size}
  *   .mkdir(root, path, name)   .rename(root, path, name, to)
- *   .copy(root, path, names, destRoot, dest)   .move(…same…)
+ *   .copy(root, path, names, destRoot, dest, { onProgress })   .move(…same…)
  *   .remove(root, path, names)
+ *                                  onProgress (ShareOS 0.3.0-beta.14+, fs.progress
+ *                                  is true there) is called about every 1.5 s
+ *                                  while the box goes on in the background:
+ *                                  { total, done } in bytes (null while the box
+ *                                  is still counting) and cancel() to stop it –
+ *                                  the promise then resolves to { cancelled: true },
+ *                                  what was copied so far stays
  *   .open(root, path, name, {write, create})   a file like ShareOS.file
  *   .pick({ title, ext: ['.mp3', …], multiple, save, name, folder })
  *                                  file dialog of the box: resolves to
@@ -396,10 +403,17 @@
 	/* copy, move and remove: the box goes on in the background with what takes
 	   longer than a few seconds ({ running, job }) – wait here for the result,
 	   so the promise resolves when the files are where they should be */
-	function fsLong(op, args) {
+	function fsLong(op, args, opts) {
+		var on = opts && typeof opts.onProgress === 'function' ? opts.onProgress : null;
 		return fsCall(op, args).then(function wait(j) {
 			if (!j.running) return j;
 			var id = j.job;
+			if (on) {
+				try {
+					on({ total: j.total_kb != null ? j.total_kb * 1024 : null, done: j.done_kb != null ? j.done_kb * 1024 : null,
+						cancel: function () { return fsCall('job_cancel', { id: id }); } });
+				} catch (e) { /* the app's display must not stop the waiting */ }
+			}
 			return new Promise(function (res) { setTimeout(res, 1500); })
 				.then(function () { return fsCall('job', { id: id }); })
 				.then(function (n) { if (n.running) n.job = id; return wait(n); });
@@ -410,8 +424,9 @@
 		list: function (root, path, hidden) { return fsCall('list', { root: root, path: path || '', hidden: !!hidden }); },
 		mkdir: function (root, path, name) { return fsCall('mkdir', { root: root, path: path || '', name: name }); },
 		rename: function (root, path, name, to) { return fsCall('rename', { root: root, path: path || '', name: name, to: to }); },
-		copy: function (root, path, names, destRoot, dest) { return fsLong('move', { root: root, path: path || '', names: names, dest_root: destRoot || root, dest: dest || '', copy: true }); },
-		move: function (root, path, names, destRoot, dest) { return fsLong('move', { root: root, path: path || '', names: names, dest_root: destRoot || root, dest: dest || '' }); },
+		progress: true,
+		copy: function (root, path, names, destRoot, dest, opts) { return fsLong('move', { root: root, path: path || '', names: names, dest_root: destRoot || root, dest: dest || '', copy: true }, opts); },
+		move: function (root, path, names, destRoot, dest, opts) { return fsLong('move', { root: root, path: path || '', names: names, dest_root: destRoot || root, dest: dest || '' }, opts); },
 		remove: function (root, path, names) { return fsLong('delete', { root: root, path: path || '', names: names }); },
 		open: function (root, path, name, o) {
 			o = o || {};

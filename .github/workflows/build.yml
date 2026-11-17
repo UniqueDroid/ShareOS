@@ -79,6 +79,8 @@ jobs:
         run: tests/test-mcu-temp.sh
       - name: Wake-up alarm of the MCU (year of the alarm, reading does not switch it)
         run: tests/test-mcu-alarm.sh
+      - name: Background file jobs of the plugin (progress of a copy, stopping it)
+        run: LD_LIBRARY_PATH="$HOME/hostroot/lib" tests/test-file-jobs.sh "$HOME/hostroot/bin"
       - name: Dynamic DNS (shareos-ddns, all providers with a fake curl)
         run: LD_LIBRARY_PATH="$HOME/hostroot/lib" tests/test-ddns.sh "$HOME/hostroot/bin"
       - name: Zabbix agent controller (settings, disk/RAID items)

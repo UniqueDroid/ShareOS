@@ -141,44 +141,6 @@ function files_err(r) {
 	return o || 'failed';
 }
 
-/* ---------- long file operations in the background ---------- */
-
-// Copying, moving between drives and deleting can take minutes. rpcd answers
-// one call at a time, so such a command runs in the background: the call
-// waits 3 s for it – most are done by then and answer as before – and
-// otherwise returns { ok, running, job }; "job" (files / appfs) tells later
-// how it ended. Jobs live in FJOBS (in RAM): <id>/user, pid, out, rc.
-const FJOBS = '/tmp/shareos-filejobs';
-function files_job(u, id) {
-	let d = FJOBS + '/' + id;
-	if (type(id) != 'string' || !match(id, /^[0-9a-f]{16}$/) || read_trim(d + '/user') != u) return { error: 'unknown job' };
-	let rc = read_trim(d + '/rc');
-	if (rc == null) {
-		let pid = +(read_trim(d + '/pid') ?? 0);
-		if (pid > 1 && stat('/proc/' + pid)) return { ok: true, running: true, job: id };
-		// the shell is gone without a result: killed
-		system('rm -rf ' + shq(d));
-		return { error: 'the operation was interrupted' };
-	}
-	let r = { rc: +rc, out: readfile(d + '/out') ?? '' };
-	system('rm -rf ' + shq(d));
-	return r.rc == 0 ? { ok: true } : { error: files_err(r) };
-}
-function files_bg(u, cmd, shared) {
-	let id = substr(new_token(), 0, 16), d = FJOBS + '/' + id;
-	// results nobody asked for (a closed tab) are dropped after a day
-	for (let old in lsdir(FJOBS) ?? [])
-		if (match(old, /^[0-9a-f]{16}$/) && time() - (stat(FJOBS + '/' + old)?.mtime ?? 0) > 86400) system('rm -rf ' + shq(FJOBS + '/' + old));
-	system(sprintf('mkdir -p %s && chmod 700 %s && mkdir %s', FJOBS, FJOBS, shq(d)));
-	writefile(d + '/user', u);
-	let full = acc_role(u) == 'admin' ? 'umask 002; ' + cmd
-		: sprintf('su -s /bin/sh %s -c %s', shq(u), shq((shared ? 'umask 002; ' : 'umask 077; ') + cmd));
-	system(sprintf('start-stop-daemon -S -q -b -m -p %s/pid -x /bin/sh -- -c %s',
-		shq(d), shq(sprintf('( %s ) >%s/out 2>&1; echo $? >%s/rc', full, shq(d), shq(d)))));
-	for (let i = 0; i < 30 && !stat(d + '/rc'); i++) sleep(100);
-	return files_job(u, id);
-}
-
 /* ========== methods (joined after the helpers of all parts, see build-parts.sh) ========== */
 
 add_methods({
@@ -245,7 +207,7 @@ add_methods({
 					if (d.abs == src || index(d.abs + '/', src + '/') == 0) return { error: 'a folder cannot be moved into itself' };
 					if (lstat(d.abs + '/' + n)) return { error: 'already exists: ' + n };
 				}
-				return files_bg(u, sprintf('%s -- %s %s', a.copy ? 'cp -a' : 'mv', join(' ', map(a.names, (n) => shq(p.abs + '/' + n))), shq(d.abs + '/')), d.root.share);
+				return files_bg(u, sprintf('%s -- %s %s', a.copy ? 'cp -a' : 'mv', join(' ', map(a.names, (n) => shq(p.abs + '/' + n))), shq(d.abs + '/')), d.root.share, { src: map(a.names, (n) => p.abs + '/' + n), dst: map(a.names, (n) => d.abs + '/' + n) });
 			}
 		},
 
@@ -275,6 +237,16 @@ add_methods({
 				let u = session_user(req);
 				if (!u || !files_allowed(u)) return { error: 'not allowed' };
 				return files_job(u, req.args.id);
+			}
+		},
+
+		// stops a copy, move or delete that goes on in the background
+		job_cancel: {
+			args: { id: '' },
+			call: function(req) {
+				let u = session_user(req);
+				if (!u || !files_allowed(u)) return { error: 'not allowed' };
+				return files_job_cancel(u, req.args.id);
 			}
 		},
 
@@ -511,7 +483,7 @@ add_methods({
 					if (droot == a.root && (d.rel == src || index(d.rel + '/', src + '/') == 0)) return { error: 'a folder cannot be moved into itself' };
 					if (lstat(d.abs + '/' + n)) return { error: 'already exists: ' + n };
 				}
-				return files_bg(g.u, sprintf('%s -- %s %s', a.copy ? 'cp -a' : 'mv', join(' ', map(a.names, (n) => shq(p.abs + '/' + n))), shq(d.abs + '/')), d.root.share);
+				return files_bg(g.u, sprintf('%s -- %s %s', a.copy ? 'cp -a' : 'mv', join(' ', map(a.names, (n) => shq(p.abs + '/' + n))), shq(d.abs + '/')), d.root.share, { src: map(a.names, (n) => p.abs + '/' + n), dst: map(a.names, (n) => d.abs + '/' + n) });
 			}
 		},
 
@@ -535,6 +507,15 @@ add_methods({
 				let g = app_grant_user(req.args.grant, true);
 				if (!g) return { error: 'no access' };
 				return files_job(g.u, req.args.id);
+			}
+		},
+
+		job_cancel: {
+			args: { grant: '', id: '' },
+			call: function(req) {
+				let g = app_grant_user(req.args.grant, true);
+				if (!g) return { error: 'no access' };
+				return files_job_cancel(g.u, req.args.id);
 			}
 		},
 

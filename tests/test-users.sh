@@ -168,6 +168,8 @@ rpc shareos.me bind "{\"username\":\"lisa\",\"password\":\"lisa1234\",\"ubus_rpc
 fs() { rpc shareos.files "$1" "{\"ubus_rpc_session\":\"$SL\"${2:+,$2}}"; }
 check "files: users get the file browser in their ACL" "echo '$L2' | js \"'shareos.files' in d['acls']['ubus'] and 'ticket' in d['acls']['ubus']['shareos.files']\""
 check "files: allowed user sees the flag" "rpc shareos.me get '{\"ubus_rpc_session\":\"$SL\"}' | js \"d['files'] and d['ui']=={'theme':None,'accent':None}\""
+check "files: the box has what a background job measures with (nice, du -sk --)" "run 'nice du -sk -- /etc | awk \"{ s += \\\$1 } END { print s + 0 }\"' | grep -Eq '^[1-9][0-9]*\$'"
+check "files: users may stop their background jobs (an unknown one is refused)" "fs job_cancel '\"id\":\"0123456789abcdef\"' | grep -q 'unknown job'"
 check "files: user without the right is refused" "rpc shareos.files roots '{\"ubus_rpc_session\":\"$SID\"}' | grep -q 'not allowed'"
 check "files: user without shares: the personal folder only" "fs roots '' | js \"d['roots']==[{'name':'home','home':True,'ro':False}]\""
 check "files: user cannot pick a volume" "fs list '\"root\":\"daten\",\"path\":\"\"' | grep -q 'unknown folder'"
