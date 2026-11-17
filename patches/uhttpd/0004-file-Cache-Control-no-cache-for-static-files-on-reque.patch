@@ -1,0 +1,38 @@
+From: ShareOS <noreply@github.com>
+Subject: [PATCH] file: Cache-Control: no-cache for static files on request
+
+A static file is sent with ETag and Last-Modified only, so a browser
+decides by itself how long it uses its copy without asking - a tenth of
+the file's age. For files that are replaced by an update (the pages of
+the apps, the app SDK) that is the old program for hours or days.
+
+With UHTTPD_NO_CACHE in the environment every static file (200 and 304)
+carries "Cache-Control: no-cache": kept, but asked for every time.
+
+diff --git a/file.c b/file.c
+index 6cb8c45..1071e1f 100644
+--- a/file.c
++++ b/file.c
+@@ -336,6 +336,8 @@ static char *uh_file_header(struct client *cl, int idx)
+ 	return (char *) blobmsg_data(cl->dispatch.file.hdr[idx]);
+ }
+ 
++static int no_cache = -1;
++
+ static void uh_file_response_ok_hdrs(struct client *cl, struct stat *s)
+ {
+ 	char buf[128];
+@@ -347,6 +349,13 @@ static void uh_file_response_ok_hdrs(struct client *cl, struct stat *s)
+ 	}
+ 	ustream_printf(cl->us, "Date: %s\r\n",
+ 		       uh_file_unix2date(time(NULL), buf, sizeof(buf)));
++
++	/* UHTTPD_NO_CACHE in the environment: a browser may keep a file but
++	 * asks every time whether it is still current (answered with 304) */
++	if (no_cache < 0)
++		no_cache = getenv("UHTTPD_NO_CACHE") != NULL;
++	if (no_cache)
++		ustream_printf(cl->us, "Cache-Control: no-cache\r\n");
+ }
+ 
+ static void uh_file_response_200(struct client *cl, struct stat *s)

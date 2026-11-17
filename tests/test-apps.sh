@@ -236,6 +236,21 @@ check "rpc: box name cleared again" "rpc shareos.web set '{\"host\":\"\"}' | js 
 run 'killall uhttpd'
 i=0; until curl -s -o /dev/null "http://127.0.0.1:$PORT/" || [ $i -ge 30 ]; do sleep 0.5; i=$((i + 1)); done
 check "apps server comes back after killall uhttpd (supervisor)" "[ \"\$(curl -s http://127.0.0.1:$PORT/hello/index.html)\" = '<!doctype html><title>ok</title>' ]"
+# a browser keeps an app's files by their address: every installation gets a new one,
+# and the files are sent so that the browser asks again (see app_rev() in shareos-apps)
+entry() { run 'shareos-apps list' | python3 -c "import json,sys; print([a['entry'] for a in json.load(sys.stdin)['apps'] if a['id']=='$1'][0])"; }
+REV=$(entry hello)
+check "a web app is opened through the address of its installation" "echo '$REV' | grep -Eq '^r[0-9]+/index.html\$' && [ \"\$(curl -s http://127.0.0.1:$PORT/hello/$REV)\" = '<!doctype html><title>ok</title>' ]"
+HDR=$(curl -sI "http://127.0.0.1:$PORT/hello/$REV" | tr -d '\r')
+check "its files carry the time of the installation, not 1970" "echo '$HDR' | grep -q '^Last-Modified: ' && ! echo '$HDR' | grep -q '^Last-Modified: .* 1970 '"
+check "the apps server lets the browser ask every time (Cache-Control: no-cache)" "echo '$HDR' | grep -qi '^Cache-Control: no-cache'"
+run 'shareos-apps install-file /tmp/pkg/orphan-1.0.0.sapp' >/dev/null
+O1=$(entry orphan); sleep 1; run 'shareos-apps install-file /tmp/pkg/orphan-1.0.0.sapp' >/dev/null; O2=$(entry orphan)
+check "installing again gives a new address, the old one is gone" "[ -n '$O1' ] && [ '$O1' != '$O2' ] && [ \"\$(ls $R/www-apps/orphan | grep -c '^r[0-9]*\$')\" = 1 ] && [ \"\$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:$PORT/orphan/$O1)\" = 404 ]"
+rm -f "$R/www-apps/orphan/${O2%%/*}"; touch -d @0 $R/www-apps/orphan/index.html
+check "an app from an older version gets its address at the next start" "run 'shareos-apps fix-perms' >/dev/null; entry orphan | grep -Eq '^r[0-9]+/index.html\$' && [ \"\$(stat -c %Y $R/www-apps/orphan/index.html)\" -gt 1700000000 ]"
+run 'shareos-apps remove orphan' >/dev/null
+check "system apps keep their plain entry" "run 'shareos-apps list' | js \"all(not a['entry'].startswith('r') or a['type']!='system' for a in d['apps'])\""
 run "uci set shareos.ui=ui; uci set shareos.ui.area_apps=0; uci commit shareos; /etc/init.d/S51apps stop; /etc/init.d/S51apps start" >/dev/null; sleep 2
 check "area Apps off: apps web server does not start" "! curl -s -o /dev/null http://127.0.0.1:$PORT/"
 run "uci set shareos.ui.area_apps=1; uci commit shareos; /etc/init.d/S51apps start" >/dev/null

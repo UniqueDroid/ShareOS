@@ -414,6 +414,27 @@ function app_dir(id) {
 	return null;
 }
 
+// A web app's files are fetched by the browser under the app's address and
+// kept there. The packages are built with the file time 0 (so that they are
+// reproducible), and the web server names that time as "last modified":
+// 1970 – for a browser a file that old has not changed for ages, it used its
+// copy for years without asking again, and an update of the app never
+// arrived (found with ShareExplorer: the new package was installed, the old
+// program ran). So at every installation the files get the time of the
+// installation, and the app gets a new address: a link "r<time>" to its own
+// folder, which the entry is opened through (/<id>/r<time>/index.html).
+// What a browser kept under the old address is not asked for any more.
+function app_rev(dir) {
+	for (let n in lsdir(dir) ?? [])
+		if (match(n, /^r[0-9]+$/) && lstat(dir + '/' + n)?.type == 'link' && readlink(dir + '/' + n) == '.') return n;
+	return null;
+}
+function set_rev(dir) {
+	let old = app_rev(dir);
+	if (old) unlink(dir + '/' + old);
+	capture(sprintf('find %s -exec touch {} + ; ln -s . %s', shq(dir), shq(dir + '/r' + time())));
+}
+
 function installed() {
 	let c = conf().c, list = [], seen = {};
 	for (let base in [ APPS, SYS ])
@@ -422,10 +443,10 @@ function installed() {
 		let a = jparse(readfile(base + '/' + id + '/app.json') ?? 'null');
 		if (type(a) != 'object') continue;
 		seen[id] = true;
-		let s = sect(id);
+		let s = sect(id), rev = app_rev(base + '/' + id);
 		let users = c.get('apps', s, 'users');
 		push(list, { id, name: a.name ?? id, version: a.version, publisher: a.publisher ?? '',
-			description: a.description ?? '', type: a.type ?? 'webapp', entry: a.entry ?? 'index.html',
+			description: a.description ?? '', type: a.type ?? 'webapp', entry: (base == APPS && rev ? rev + '/' : '') + (a.entry ?? 'index.html'),
 			icon: a.icon ?? null, icon_data: icon_data(base, id, a.icon), category: a.category ?? '', homepage: a.homepage ?? '', license: a.license ?? '',
 			permissions: a.permissions ?? [], internet: a.internet === true, jobs: jobs_of(id, a, c),
 			window: type(a.window) == 'object' ? { width: a.window.width ?? null, height: a.window.height ?? null } : null,
@@ -765,6 +786,7 @@ function install_file(file, verified, source) {
 	capture(sprintf('chown -R 0:0 %s; chmod -R u=rwX,go=rX %s', shq(tmp), shq(tmp)));
 	let sys = (a.type ?? 'webapp') == 'system';
 	let base = sys ? SYS : APPS, dst = base + '/' + a.id;
+	if (!sys) set_rev(tmp);   // new file times and a new address, see app_rev()
 	let on_disk = null;
 	if (sys) {
 		opt_dirs();
@@ -1087,6 +1109,11 @@ case 'catalog': cmd_catalog(); break;
 case 'cached': cmd_cached(); break;
 case 'list': out({ apps: installed() }); break;
 case 'fix-perms': {
+	// web apps installed by an older version: file times and address, see app_rev()
+	for (let id in lsdir(APPS) ?? []) {
+		let d = APPS + '/' + id;
+		if (match(id, ID_RE) && lstat(d)?.type == 'directory' && stat(d + '/app.json') && !app_rev(d)) set_rev(d);
+	}
 	if (!stat(ROOT + '/opt/shareos')) { out({ ok: true }); break; }
 	opt_dirs();
 	// large system apps still on the flash (older versions): to the apps drive
