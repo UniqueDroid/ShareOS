@@ -2113,3 +2113,7 @@ E1693	Filtrage suspendu.
 E1694	Le filtrage est de nouveau actif.
 E1695	RÉSOLUTION DE NOMS
 E1696	en direct · toutes les 5 s · température datant de 15 s au plus
+E1697	règle l’horloge et garde la puce d’horloge synchronisée
+E1698	ventilateur, température, boutons
+P374	zabbix_agentd, mode passif, port $1
+P375	zabbix_agentd, modes actif et passif, port $1

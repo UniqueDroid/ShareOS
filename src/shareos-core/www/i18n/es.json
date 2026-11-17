@@ -1679,7 +1679,9 @@
 		"Filtering paused.": "Filtrado en pausa.",
 		"Filtering is on again.": "El filtrado vuelve a estar activo.",
 		"NAME RESOLUTION": "RESOLUCIÓN DE NOMBRES",
-		"live · every 5 s · temperature up to 15 s old": "en vivo · cada 5 s · temperatura de hasta 15 s"
+		"live · every 5 s · temperature up to 15 s old": "en vivo · cada 5 s · temperatura de hasta 15 s",
+		"sets the clock, keeps the clock chip in sync": "ajusta el reloj y mantiene sincronizado el chip de reloj",
+		"fan, temperature, buttons": "ventilador, temperatura, botones"
 	},
 	"patterns": [
 		[
@@ -1867,6 +1869,10 @@
 			"$1 se borrará por completo y se configurará como unidad «$2»."
 		],
 		[
+			"^zabbix_agentd, active and passive mode, port ([0-9]+)$",
+			"zabbix_agentd, modos activo y pasivo, puerto $1"
+		],
+		[
 			"^App area on “(.+)” \\(unless there is one already\\)\\.$",
 			"Área de apps en «$1» (si aún no existe ninguna)."
 		],
@@ -1917,6 +1923,10 @@
 		[
 			"^Fan stops below (\\d+) °C, full from (\\d+) °C$",
 			"El ventilador se detiene por debajo de $1 °C, al máximo desde $2 °C"
+		],
+		[
+			"^zabbix_agentd, passive mode, port ([0-9]+)$",
+			"zabbix_agentd, modo pasivo, puerto $1"
 		],
 		[
 			"^(.+) – can be restored from the trash\\.$",

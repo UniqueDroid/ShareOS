@@ -6,6 +6,7 @@ pre-releases for test devices only.
 
 ## 0.3.0-beta.13
 
+- *Services*: the descriptions fit the box. *Time (NTP)* and *Board control* named the "MCU clock" on every model; the DNS-320 rev A and the DNS-325 have the kernel's clock chip. The Zabbix agent in passive mode shows the port it listens on.
 - **VPN server: switching "home network reachable" off no longer cuts others off.** It switched IP forwarding off for the whole box – also for Tailscale as subnet router or containers. The server now only switches forwarding off when it was the one that switched it on.
 - Overview: the heading said "live · every 5 s", but the temperature is read every 15 seconds; it now says so.
 

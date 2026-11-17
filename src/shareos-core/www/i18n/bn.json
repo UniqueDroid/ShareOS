@@ -1679,7 +1679,9 @@
 		"Filtering paused.": "ফিল্টারিং বিরতিতে।",
 		"Filtering is on again.": "ফিল্টারিং আবার চালু।",
 		"NAME RESOLUTION": "নাম রেজোলিউশন",
-		"live · every 5 s · temperature up to 15 s old": "লাইভ · প্রতি ৫ সে. · তাপমাত্রা সর্বোচ্চ ১৫ সে. পুরোনো"
+		"live · every 5 s · temperature up to 15 s old": "লাইভ · প্রতি ৫ সে. · তাপমাত্রা সর্বোচ্চ ১৫ সে. পুরোনো",
+		"sets the clock, keeps the clock chip in sync": "ঘড়ি ঠিক করে, ঘড়ির চিপ সিঙ্কে রাখে",
+		"fan, temperature, buttons": "ফ্যান, তাপমাত্রা, বোতাম"
 	},
 	"patterns": [
 		[
@@ -1867,6 +1869,10 @@
 			"$1 পুরোপুরি মুছে ড্রাইভ \"$2\" হিসেবে সেট আপ হবে।"
 		],
 		[
+			"^zabbix_agentd, active and passive mode, port ([0-9]+)$",
+			"zabbix_agentd, অ্যাক্টিভ ও প্যাসিভ মোড, পোর্ট $1"
+		],
+		[
 			"^App area on “(.+)” \\(unless there is one already\\)\\.$",
 			"অ্যাপ এলাকা \"$1\"-এ (যদি আগে না থাকে)।"
 		],
@@ -1917,6 +1923,10 @@
 		[
 			"^Fan stops below (\\d+) °C, full from (\\d+) °C$",
 			"$1 °C-এর নিচে ফ্যান বন্ধ, $2 °C থেকে পূর্ণ গতি"
+		],
+		[
+			"^zabbix_agentd, passive mode, port ([0-9]+)$",
+			"zabbix_agentd, প্যাসিভ মোড, পোর্ট $1"
 		],
 		[
 			"^(.+) – can be restored from the trash\\.$",

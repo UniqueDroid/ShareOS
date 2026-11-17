@@ -214,6 +214,14 @@ check "rpc: catalog refresh answers at once and runs in the background" "rpc sha
 for i in $(seq 60); do rpc shareos.apps catalog '{}' | js "d['refreshing']==False" && break; sleep 0.5; done
 check "rpc: refreshed catalog is there afterwards" "rpc shareos.apps catalog '{}' | js \"d['refreshing']==False and d['time']>0 and 'hello' in [a['id'] for a in d['apps']]\""
 check "rpc: installed list follows an install (cached result renewed)" "rpc shareos.apps installed '{}' | js \"[a['version'] for a in d['apps'] if a['id']=='hello']==['1.1.0']\" && run 'shareos-apps install-file /tmp/pkg/hello-1.0.0.sapp' >/dev/null && rpc shareos.apps installed '{}' | js \"[a['version'] for a in d['apps'] if a['id']=='hello']==['1.0.0']\" && run 'shareos-apps install-file /tmp/pkg/hello-1.1.0.sapp' >/dev/null && rpc shareos.apps installed '{}' | js \"[a['version'] for a in d['apps'] if a['id']=='hello']==['1.1.0']\""
+# descriptions of the services come from the box, not from a fixed text
+svc() { rpc shareos.service list '{}' | js "$1"; }
+mkdir -p $R/tmp/sys; [ -e $R/tmp/sys/board.env ] && cp $R/tmp/sys/board.env $T/board.env.orig
+printf 'BOARD_CONTROL="mcu"\nBOARD_RTC="mcu"\n' > $R/tmp/sys/board.env; sleep 1
+check "rpc: service descriptions on a box with the MCU clock" "svc \"{s['name']: s['desc'] for s in d['services']}['ntpd']=='sets the clock, keeps the MCU clock in sync'\""
+printf 'BOARD_CONTROL="hwmon"\nBOARD_RTC="kernel"\n' > $R/tmp/sys/board.env; sleep 1
+check "rpc: service descriptions on a box without it (clock chip of the kernel, no MCU clock)" "svc \"(lambda m: m['ntpd']=='sets the clock, keeps the clock chip in sync' and m.get('board','fan, temperature, buttons')=='fan, temperature, buttons')({s['name']: s['desc'] for s in d['services']})\""
+if [ -e $T/board.env.orig ]; then cp $T/board.env.orig $R/tmp/sys/board.env; else rm -f $R/tmp/sys/board.env; fi; sleep 1
 check "rpc: services report running state" "rpc shareos.service list '{}' | js \"[s['running'] for s in d['services'] if s['name']=='rpcd']==[True]\""
 check "rpc: services of system apps are listed under their control name" "rpc shareos.service list '{}' | js \"[(s['sysapp'],s['label'],s['autostart'],s['essential']) for s in d['services'] if s['name']=='demosvc']==[('demo-svc','Sys demo-svc',True,False)]\""
 rm -f $R/tmp/demosvc.log

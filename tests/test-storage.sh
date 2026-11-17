@@ -24,6 +24,7 @@ QEMU=$(command -v qemu-arm-static) || { echo "install qemu-user-static"; exit 1;
 T=$(mktemp -d /tmp/shareos-storage-test.XXXX)
 R=$T/root
 LOOPS=
+NOWATCH=
 WATCH=
 cleanup() {
 	[ -n "$WATCH" ] && kill $WATCH 2>/dev/null
@@ -31,6 +32,7 @@ cleanup() {
 	[ -d "$R/proc/self" ] && chroot "$R" /bin/sh -c 'for s in $(awk "NR>1 && /loop/ {print \$1}" /proc/swaps); do swapoff $s; done' 2>/dev/null
 	for m in $(grep " $R/" /proc/mounts | awk '{print $2}' | sort -r); do umount -l "$m" 2>/dev/null; done
 	for l in $LOOPS; do losetup -d "$l" 2>/dev/null; done
+	[ -n "$NOWATCH" ] && { rm -f "$NOWATCH"; udevadm control --reload 2>/dev/null; }
 	if grep -q " $R/" /proc/mounts; then echo "still mounted below $R – not removed" >&2; else rm -rf "$T"; fi
 }
 trap cleanup EXIT
@@ -48,11 +50,30 @@ mount --bind /dev "$R/dev"
 mount -t tmpfs tmpfs "$R/tmp"
 mkdir -p "$R/var/run/ubus"
 
+# The udev of this machine watches disks: whenever a program closes one it had
+# open for writing (wipefs, sfdisk, mkfs), udev reads the partition table again
+# and the partitions go and come back – in the middle of the next step
+# ("mkswap: stat of /dev/loop1p1 failed", a file system that cannot be mounted
+# a moment after it was made). The box has no udev (mdev). Switch that watch
+# off for loop devices while the test runs.
+NOWATCH=
+if command -v udevadm >/dev/null 2>&1 && [ -d /run/udev ]; then
+	NOWATCH=/run/udev/rules.d/99-shareos-test-nowatch.rules
+	mkdir -p /run/udev/rules.d
+	printf 'ACTION!="remove", SUBSYSTEM=="block", KERNEL=="loop[0-9]*", OPTIONS+="nowatch"\n' > "$NOWATCH"
+	udevadm control --reload 2>/dev/null
+fi
 for i in 1 2 3; do
 	truncate -s 300M "$T/disk$i.img"
 	l=$(losetup -fP --show "$T/disk$i.img") || { echo "losetup failed"; exit 1; }
 	LOOPS="$LOOPS $l"
 done
+# apply the rule to the new devices and let udev finish what it has started
+if [ -n "$NOWATCH" ]; then
+	# shellcheck disable=SC2086
+	udevadm trigger --action=change $LOOPS 2>/dev/null
+	udevadm settle --timeout=20 2>/dev/null
+fi
 set -- $LOOPS
 A=${1#/dev/} B=${2#/dev/} C=${3#/dev/}
 # qemu-user does not pass BLKRRPART on to the kernel, so the partitions sfdisk

@@ -2113,3 +2113,7 @@ E1693	Filtragem em pausa.
 E1694	A filtragem está novamente ativa.
 E1695	RESOLUÇÃO DE NOMES
 E1696	ao vivo · a cada 5 s · temperatura com até 15 s
+E1697	acerta o relógio e mantém o chip de relógio sincronizado
+E1698	ventoinha, temperatura, botões
+P374	zabbix_agentd, modo passivo, porta $1
+P375	zabbix_agentd, modos ativo e passivo, porta $1

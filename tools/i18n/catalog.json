@@ -1697,7 +1697,9 @@
 		"Filtering paused.",
 		"Filtering is on again.",
 		"NAME RESOLUTION",
-		"live · every 5 s · temperature up to 15 s old"
+		"live · every 5 s · temperature up to 15 s old",
+		"sets the clock, keeps the clock chip in sync",
+		"fan, temperature, buttons"
 	],
 	"patterns": [
 		[
@@ -3195,6 +3197,14 @@
 		[
 			"^Paused – filtering again in (.*)$",
 			"Paused – filtering again in $1"
+		],
+		[
+			"^zabbix_agentd, passive mode, port ([0-9]+)$",
+			"zabbix_agentd, passive mode, port $1"
+		],
+		[
+			"^zabbix_agentd, active and passive mode, port ([0-9]+)$",
+			"zabbix_agentd, active and passive mode, port $1"
 		]
 	],
 	"words": [
