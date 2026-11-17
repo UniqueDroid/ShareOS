@@ -55,6 +55,7 @@
 
 #include "dns320l.h"
 #include "dns320l-daemon.h"
+#include "mcu-alarm.h"
 
 int ls = -1; // socket descriptor
 int fd = -1; // serial descriptor 
@@ -557,38 +558,24 @@ int writealarm( int month, int day, int hour, int min) {
 
 /* MCU alarm date/time is in UTC */
 /* returns 0 on sucess, 1 on error, 2 on elapsed alarm, 3 on disabled alarm */
+/* reading changes nothing in the MCU: writeAlarm_cmd switches the alarm on and off */
 int readAlarm_cmd( char *mcmd, char *retMessage, int retSize) {
-	int ret, year, month=-1, day=-1, hour=-1, min=-1;
+	int ret, month=-1, day=-1, hour=-1, min=-1;
 	char *elapsed = " ";
 
 	if (readalarm( &month, &day,  &hour, &min))
 		goto err;
 	
 	if (day == 0 && month == 0 && hour == 0 && min == 0) {
-		simple_cmd(WAlarmDisableCmd, retMessage, retSize);
 		snprintf(retMessage, retSize, "Wakeup alarm disabled");
 		return 3;
 	}
 	
-	simple_cmd(WAlarmEnableCmd, retMessage, retSize);
-	
-	struct tm tm, *otm;
-	time_t utime, ltime;
+	struct tm *otm;
+	time_t utime, ltime = time(NULL);
 
-	/* get current year */
-	ltime = time(NULL);
-	otm = localtime(&ltime);
-	year = otm->tm_year;
-
-	tm.tm_sec = 0;
-	tm.tm_min = min;
-	tm.tm_hour = hour;
-	tm.tm_mday = day;
-	tm.tm_mon = month - 1;
-	tm.tm_year = year;
-	tm.tm_isdst = -1;
-
-	utime = timegm(&tm);
+	/* the MCU keeps no year: this one, or the next for an alarm after New Year */
+	utime = alarm_when(ltime, month, day, hour, min, 1);
 	if (utime == -1)
 		goto err;
 	
@@ -614,7 +601,7 @@ err:
 /* MCU alarm date/time is in UTC, user specified date/time is in localtime */
 /* retMessage contains command option string on entry */
 int writeAlarm_cmd( char *mcmd, char *retMessage, int retSize) {
-	int i, disable_alarm = 0, ndays = 0, nmonth = 0, year, month=-1, day=-1, hour=-1, min=-1;
+	int i, disable_alarm = 0, ndays = 0, nmonth = 0, month=-1, day=-1, hour=-1, min=-1;
 	char *ptr, *eptr;
 	time_t utime;
 	struct tm *otm, itm = {0, 0, 0, 0, -1, 0, 0, 0, 0}; // default values to disable alarm 
@@ -622,7 +609,6 @@ int writeAlarm_cmd( char *mcmd, char *retMessage, int retSize) {
 	/* get localtime */
 	utime = time(NULL);
 	otm = localtime(&utime);
-	year = otm->tm_year;
 
 	ptr = retMessage;
 	if (strncasecmp(ptr, "now", 3) == 0) {
@@ -664,15 +650,7 @@ int writeAlarm_cmd( char *mcmd, char *retMessage, int retSize) {
 		otm = &itm;
 	} else {
 		/* user input local date/time, convert to UTC */
-		itm.tm_sec = 0;
-		itm.tm_min = min;
-		itm.tm_hour = hour;
-		itm.tm_mday = day;
-		itm.tm_mon = month - 1;
-		itm.tm_year = year;
-		itm.tm_isdst = -1;
-		
-		utime = mktime(&itm); // localtime tm to UTC time_t
+		utime = alarm_when(utime, month, day, hour, min, 0);
 		if ( utime == -1)
 			goto err;
 
@@ -683,6 +661,12 @@ int writeAlarm_cmd( char *mcmd, char *retMessage, int retSize) {
 
 	if (writealarm( otm->tm_mon, otm->tm_mday, otm->tm_hour, otm->tm_min))
 		goto err;
+
+	/* the time alone does not wake the box: the alarm is switched on or off here */
+	if (SendCommand(fd, disable_alarm ? WAlarmDisableCmd : WAlarmEnableCmd, NULL) != SUCCESS) {
+		snprintf(retMessage, retSize, "ERR WriteAlarm: the MCU did not take the alarm switch");
+		return 1;
+	}
 	
 	return readAlarm_cmd(NULL, retMessage, retSize);
 	
