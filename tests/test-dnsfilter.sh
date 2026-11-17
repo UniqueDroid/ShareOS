@@ -24,6 +24,7 @@ T=$(mktemp -d /tmp/shareos-dnsfilter-test.XXXX)
 R=$T/root
 SRV=
 cleanup() {
+	ip link del sostest0 2>/dev/null
 	[ -n "$SRV" ] && kill "$SRV" 2>/dev/null
 	chroot "$R" /bin/sh -c '/usr/sbin/shareos-dnsfilter stop-all; /etc/init.d/S13rpcd stop; /etc/init.d/S12ubus stop' >/dev/null 2>&1
 	for m in $(grep " $R/" /proc/mounts | awk '{print $2}' | sort -r); do umount -l "$m" 2>/dev/null; done
@@ -198,6 +199,24 @@ run "uci set dnsfilter.main.enabled=1; uci commit dnsfilter" >/dev/null
 o=$(df boot)
 check "boot while on: started" "echo \"\$o\" | js \"d.get('ready')\" || { echo \"\$o\"; false; }"
 check "boot while on: ready means DNS answers, local names set" "[ \"\$(dnsq shareos-u.test.lan)\" = $BOXIP ] && echo \"\$o\" | js \"d['dns'] and d['local']['names']\""
+# the box's address goes and comes (a cold start: fallback address, then the one from DHCP;
+# seen on a DNS-320L, where the names were removed in between and never set again).
+# On an interface of the test's own (SHAREOS_NET_IF), so the machine's network stays as it is.
+TIF=sostest0
+dft() { run "SHAREOS_NET_IF=$TIF shareos-dnsfilter $1"; }
+ip link del $TIF 2>/dev/null; ip link add $TIF type dummy && ip link set $TIF up
+check "no address (yet): the box's names stay as they are" "dft local-names | js \"d['ip']=='$BOXIP' and 'shareos-u.test.lan' in d['names'] and d['domains']==['test.lan']\" && [ \"\$(dnsq shareos-u.test.lan)\" = $BOXIP ]"
+check "no address: net-changed changes nothing" "dft net-changed | js \"d['changed']==False\""
+ip addr add 192.0.2.78/24 dev $TIF label $TIF:fb
+check "only the fallback address: the names point to it" "dft net-changed | js \"d['changed']==True\" && [ \"\$(dnsq shareos-u.test.lan)\" = 192.0.2.78 ] && ub status | js \"d['local']['ip']=='192.0.2.78'\""
+ip addr add 192.0.2.77/24 dev $TIF
+check "fallback and the address from DHCP: the one from DHCP" "dft net-changed | js \"d['changed']==True\" && [ \"\$(dnsq shareos-u.test.lan)\" = 192.0.2.77 ]"
+ip addr del 192.0.2.78/24 dev $TIF
+check "fallback gone, nothing new: net-changed does nothing" "dft net-changed | js \"d['changed']==False\" && [ \"\$(dnsq shareos-u.test.lan)\" = 192.0.2.77 ]"
+ip addr flush dev $TIF
+check "the address goes for a moment: the names stay" "dft net-changed | js \"d['changed']==False\" && dft local-names | js \"d['ip']=='192.0.2.77'\" && [ \"\$(dnsq shareos-u.test.lan)\" = 192.0.2.77 ]"
+ip link del $TIF
+check "back on eth0: the names follow" "df net-changed | js \"d['changed']==True\" && [ \"\$(dnsq shareos-u.test.lan)\" = $BOXIP ]"
 svc() { run 'ubus call shareos.service list' | js "[s for s in d['services'] if s['name']=='dnsfilter'][0]['running']==$1"; }
 check "Services page: shown as running (AdGuardHome, the app lists no command)" "svc True"
 

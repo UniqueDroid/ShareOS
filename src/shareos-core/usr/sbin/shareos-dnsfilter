@@ -19,6 +19,7 @@
 //   shareos-dnsfilter log              the last lines of AdGuard Home's log
 //   shareos-dnsfilter reload-cert      the web certificate changed: restart if running
 //   shareos-dnsfilter local-names      set the rewrites for the box and the local domains again
+//   shareos-dnsfilter net-changed      the same, if address or DNS servers changed (udhcpc hook; quiet when off)
 //   shareos-dnsfilter rewrites         the own local entries (name → address), without the box's names
 //   shareos-dnsfilter rewrite-add      stdin {domain, answer}: a local entry (e.g. a printer with a fixed IP)
 //   shareos-dnsfilter rewrite-remove   stdin {domain, answer}
@@ -295,8 +296,15 @@ function first_setup(work) {
 
 /* ---------- local names: rewrites for the box, local domains to the router ---------- */
 
+// the address of eth0; the fallback address (label eth0:fb, while no DHCP
+// server answers) only when there is no other
+//   SHAREOS_NET_IF=<name>   another interface (tests)
+const NET_IF = getenv('SHAREOS_NET_IF') ?? 'eth0';
 function box_ip() {
-	return match(sh("ip -4 -o addr show dev eth0 2>/dev/null | sed -n 's/.*inet \\([0-9.]*\\).*/\\1/p' | head -1").out, /^([0-9.]+)/)?.[1];
+	if (!match(NET_IF, /^[a-z0-9]+$/)) return null;
+	let l = split(trim(sh('ip -4 -o addr show dev ' + NET_IF + ' 2>/dev/null').out), '\n');
+	let pick = (fb) => { for (let a in l) { let m = match(a, /\sinet ([0-9.]+)/); if (m && (index(a, ' ' + NET_IF + ':fb') >= 0) == fb) return m[1]; } return null; };
+	return pick(false) ?? pick(true);
 }
 // the default gateway of eth0 (/proc/net/route, little-endian hex)
 function gateway_ip() {
@@ -328,10 +336,16 @@ function local_wanted() {
 // managed lines of the upstream list: "[/domain/]servers"
 function managed_line(u) { return substr(u, 0, 2) == '[/'; }
 
+// false: nothing was changed (no address yet, or AdGuard does not answer)
 function local_dns() {
 	let w = local_wanted(), old = jparse(readfile(LOCAL_STATE) || '{}') ?? {};
+	// The network is not up (yet): during a start, or while the box leaves its
+	// fallback address for the one from DHCP, eth0 has no address for some
+	// seconds. Taken at its word this removed the box's names and the local
+	// domains – and nothing set them again. What is there stays.
+	if (!w.ip) return false;
 	let rw = api('GET', 'rewrite/list');
-	if (!rw.ok) return;
+	if (!rw.ok) return false;
 	for (let e in rw.data ?? []) {
 		let mine = index(old.names ?? [], e.domain) >= 0 || index(w.names, e.domain) >= 0;
 		if (mine && (index(w.names, e.domain) < 0 || e.answer != w.ip)) api('POST', 'rewrite/delete', { domain: e.domain, answer: e.answer });
@@ -345,6 +359,15 @@ function local_dns() {
 		if (sprintf('%J', want) != sprintf('%J', d.data?.upstream_dns ?? [])) api('POST', 'dns_config', { upstream_dns: want });
 	}
 	writefile(LOCAL_STATE, sprintf('%J', { ip: w.ip, names: w.names, upstream: w.upstream }));
+	return true;
+}
+// the address or the DNS servers of the network changed (udhcpc hook): set
+// the names again if they differ from what was set last
+function local_changed() {
+	if (!pid() || !api_up()) return false;
+	let w = local_wanted(), old = jparse(readfile(LOCAL_STATE) || 'null');
+	if (!w.ip || sprintf('%J', { ip: w.ip, names: w.names, upstream: w.upstream }) == sprintf('%J', old)) return false;
+	return local_dns();
 }
 
 function start() {
@@ -373,6 +396,9 @@ function start() {
 	// are set once DNS answers
 	if (!wait_for(() => !pid() || dns_up(), 300)) die('AdGuard Home does not answer DNS: ' + trim(sh('tail -n 3 ' + shq(LOG)).out));
 	if (!pid()) die('AdGuard Home stopped: ' + trim(sh('tail -n 3 ' + shq(LOG)).out));
+	// the names point to the box's address: wait for it (a cold start can be
+	// on the fallback address, or between it and the one from DHCP)
+	wait_for(() => !pid() || box_ip(), 60);
 	local_dns();
 }
 
@@ -556,6 +582,7 @@ case 'rewrites': need_up(); out(rewrites()); break;
 case 'rewrite-add': cmd_rewrite('add'); break;
 case 'rewrite-remove': cmd_rewrite('remove'); break;
 case 'local-names': need_up(); local_dns(); out(status().local); break;
+case 'net-changed': out({ changed: local_changed() }); break;
 case 'reload-cert': if (pid()) { stop_proc(); if (conf().enabled) start(); } out({ ok: true }); break;
 case 'start': set_conf('enabled', '1'); start(); out(status()); break;
 case 'start-bg':
@@ -572,6 +599,6 @@ case 'module-installed': exit(0);
 // nothing to take over from versions before the module
 case 'module-configured': exit(1);
 default:
-	print('usage: shareos-dnsfilter status|set|filters|filter-add|filter-remove|filter-enable|refresh|password|start|start-bg|boot|stop-all|stop|restart|log|reload-cert|local-names|rewrites|rewrite-add|rewrite-remove\n');
+	print('usage: shareos-dnsfilter status|set|filters|filter-add|filter-remove|filter-enable|refresh|password|start|start-bg|boot|stop-all|stop|restart|log|reload-cert|local-names|net-changed|rewrites|rewrite-add|rewrite-remove\n');
 	exit(2);
 }

@@ -327,8 +327,14 @@ make_fs() {   # dev name fs
 part_type() { case "$1" in R) echo R ;; exfat|ntfs|vfat) echo EBD0A0A2-B9E5-4433-87C0-68B6B72699C7 ;; *) echo L ;; esac; }
 
 add_volume() {   # name dev layout fs
-	local uuid
-	uuid=$(blkid -s UUID -o value "$2")
+	local uuid i=0
+	# right after mkfs the new file system is not always readable at once
+	# (seen in the emulator tests, like the mkfs and the mount before): ask again
+	while :; do
+		uuid=$(blkid -s UUID -o value "$2")
+		[ -n "$uuid" ] || [ $i -ge 5 ] && break
+		i=$((i + 1)); sleep 1
+	done
 	[ -n "$uuid" ] || die "no UUID on $2"
 	uci -q delete storage.$1
 	uci set storage.$1=volume

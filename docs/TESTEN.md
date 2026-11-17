@@ -220,6 +220,8 @@ Der DNS-Filter ist ein **Modul** (AdGuard Home). Er braucht das Apps-Laufwerk.
 11. **Lokaler Name (0.3.0-beta.5):** PC/Chromebook mit der Box als DNS-Server: `https://shareos.skynet.lan` (Name deiner Box) öffnet die Box; `nslookup shareos.skynet.lan <box-ip>` liefert die Adresse der Box; ein anderes lokales Gerät (z. B. der Router per Name) wird weiter aufgelöst. Der Reiter zeigt die Namen unter *Lokale Namen*.
 12. **Lokale Einträge (0.3.0-beta.5):** *DNS-FILTER → Lokale Einträge*: Name `drucker.skynet.lan`, IP `192.168.1.50` → *Eintrag hinzufügen*. `nslookup drucker.skynet.lan <box-ip>` liefert `192.168.1.50`; der Eintrag erscheint auch in AdGuard unter *Filter → DNS-Umschreibungen*. Der eigene Name der Box wird abgelehnt. *Entfernen* nimmt ihn wieder heraus.
 
+**Namen der Box nach einem Kaltstart (0.3.0-beta.13):** Box ausschalten (Netztaste oder *Schedule*), wieder einschalten, 2 Minuten warten. `shareos-dnsfilter status` zeigt unter `local` die Adresse der Box, ihre Namen und die lokale Domain – nicht `"ip": null`. `nslookup <name der box>.<domain> 127.0.0.1` antwortet mit der Adresse der Box. `grep shareos-net /var/log/messages` zeigt, ob die Box beim Start auf der Ersatzadresse war („no answer from a DHCP server“) – gerade dann müssen die Namen stimmen. Von Hand neu setzen: `shareos-dnsfilter local-names`.
+
 ## 9. Cloud-Sync
 
 Cloud ist ein **Modul** (ab 0.3.0-beta.5): Der Reiter *CLOUD* erscheint erst,
