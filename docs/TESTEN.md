@@ -528,6 +528,17 @@ Braucht ein Tailscale-Konto (kostenlos), ein Handy oder einen Rechner mit Tailsc
 5. Konto ohne persönlichen Ordner: Teilen meldet „no personal folder“; das Geteilte wird verworfen und kommt bei der nächsten Anmeldung nicht wieder.
 6. Dateidialog einer App für ein Konto **ohne** *Dateien* (z. B. Webpad → *Öffnen*): Die Ordnerauswahl zeigt zuerst *App-Daten*, dann *Mein Ordner* und die Freigaben des Benutzers; Freigaben nur zum Lesen sind markiert und fehlen beim Speichern. Die App legt ihre eigenen Dateien weiter in *App-Daten* ab.
 
+## 14zt. Weckalarm der MCU (0.3.0-beta.13)
+
+Nur DNS-320L, DNS-320 rev B, DNS-327L (Boxen mit MCU-Uhr). Geht das Einschalten schief, bleibt die Box aus und wird mit der Netztaste gestartet – Daten sind nicht in Gefahr.
+
+1. Per SSH: `shareos-power status` – unter `alarm` steht der Weckalarm oder „Wakeup alarm disabled“.
+2. Dreimal `dns320l-daemon -x ReadAlarm`: jedes Mal dieselbe Zeile. Das Lesen ändert nichts mehr an der MCU.
+3. System → Power & reset → *Schedule*: einschalten, für heute Ausschalten in 5 Minuten und Einschalten 10 Minuten danach eintragen, *Save*.
+4. `dns320l-daemon -x ReadAlarm` zeigt „Wakeup alarm set to: <heute> <Einschaltzeit>“ – ohne „(elapsed)“.
+5. Die Box fährt zur Ausschaltzeit herunter und geht zur Einschaltzeit von selbst an. Danach: `grep shareos-power /var/log/messages` zeigt „scheduled switch-off, back on …“.
+6. Zeitplan wieder ausschalten (oder die eigenen Zeiten eintragen), *Save*: `dns320l-daemon -x ReadAlarm` zeigt „Wakeup alarm disabled“ bzw. das nächste Einschalten.
+
 ## 14zs. Korrekturen aus dem Code-Review (0.3.0-beta.9)
 
 Nichts Neues zu bedienen; die Schritte prüfen, ob die Korrekturen auf einer echten Box wirken. Alle Befehle als root über SSH.

@@ -523,6 +523,17 @@ Needs a Tailscale account (free), a phone or computer with Tailscale, the file `
 5. An account without a personal folder: sharing shows "no personal folder"; the shared item is dropped and does not come back at the next login.
 6. File dialog of an app for an account **without** *Files* (e.g. Webpad → *Open*): the list of folders shows *App data* first, then *My folder* and the user's shares; read-only shares are marked and are missing when saving. The app still keeps its own files in *App data*.
 
+## 14zt. Wake-up alarm of the MCU (0.3.0-beta.13)
+
+DNS-320L, DNS-320 rev B, DNS-327L only (boxes with the MCU clock). If switching on fails the box stays off and is started with the power button – no data is at risk.
+
+1. By SSH: `shareos-power status` – `alarm` holds the wake-up alarm or "Wakeup alarm disabled".
+2. `dns320l-daemon -x ReadAlarm` three times: the same line each time. Reading no longer changes anything in the MCU.
+3. System → Power & reset → *Schedule*: switch it on, set switching off today in 5 minutes and switching on 10 minutes later, *Save*.
+4. `dns320l-daemon -x ReadAlarm` shows "Wakeup alarm set to: <today> <switch-on time>" – without "(elapsed)".
+5. The box shuts down at the switch-off time and comes on by itself at the switch-on time. Afterwards `grep shareos-power /var/log/messages` shows "scheduled switch-off, back on …".
+6. Switch the schedule off again (or enter your own times), *Save*: `dns320l-daemon -x ReadAlarm` shows "Wakeup alarm disabled" or the next switch-on.
+
 ## 14zs. Review fixes (0.3.0-beta.9)
 
 Nothing new to operate; these steps check that the corrections work on a real box. All commands as root over SSH.
