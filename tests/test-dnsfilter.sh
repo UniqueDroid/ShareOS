@@ -24,6 +24,7 @@ T=$(mktemp -d /tmp/shareos-dnsfilter-test.XXXX)
 R=$T/root
 SRV=
 cleanup() {
+	ip link del sostest0 2>/dev/null
 	[ -n "$SRV" ] && kill "$SRV" 2>/dev/null
 	chroot "$R" /bin/sh -c '/usr/sbin/shareos-dnsfilter stop-all; /etc/init.d/S13rpcd stop; /etc/init.d/S12ubus stop' >/dev/null 2>&1
 	for m in $(grep " $R/" /proc/mounts | awk '{print $2}' | sort -r); do umount -l "$m" 2>/dev/null; done
@@ -200,25 +201,22 @@ check "boot while on: started" "echo \"\$o\" | js \"d.get('ready')\" || { echo \
 check "boot while on: ready means DNS answers, local names set" "[ \"\$(dnsq shareos-u.test.lan)\" = $BOXIP ] && echo \"\$o\" | js \"d['dns'] and d['local']['names']\""
 # the box's address goes and comes (a cold start: fallback address, then the one from DHCP;
 # seen on a DNS-320L, where the names were removed in between and never set again).
-# Only with the test's own dummy eth0 – a real one would lose its routes.
-if ip -d link show eth0 2>/dev/null | grep -q dummy; then
-	ADDR=$(ip -4 -o addr show dev eth0 | awk '{print $4; exit}')
-	ip addr del "$ADDR" dev eth0
-	check "no address for a moment: the box's names stay" "df local-names | js \"d['ip']=='$BOXIP' and 'shareos-u.test.lan' in d['names'] and d['domains']==['test.lan']\" && [ \"\$(dnsq shareos-u.test.lan)\" = $BOXIP ]"
-	check "no address: net-changed changes nothing" "df net-changed | js \"d['changed']==False\""
-	ip addr add 192.0.2.77/24 dev eth0
-	check "a new address: net-changed sets the names to it" "df net-changed | js \"d['changed']==True\" && [ \"\$(dnsq shareos-u.test.lan)\" = 192.0.2.77 ] && ub status | js \"d['local']['ip']=='192.0.2.77'\""
-	check "nothing new: net-changed does nothing" "df net-changed | js \"d['changed']==False\""
-	ip addr add 192.0.2.78/24 dev eth0 label eth0:fb
-	ip addr del 192.0.2.77/24 dev eth0
-	check "only the fallback address: the names point to it" "df net-changed | js \"d['changed']==True\" && [ \"\$(dnsq shareos-u.test.lan)\" = 192.0.2.78 ]"
-	ip addr add "$ADDR" dev eth0
-	check "fallback and the real address: the real one" "df net-changed | js \"d['changed']==True\" && [ \"\$(dnsq shareos-u.test.lan)\" = $BOXIP ]"
-	ip addr del 192.0.2.78/24 dev eth0
-	check "fallback gone: nothing to change" "df net-changed | js \"d['changed']==False\" && [ \"\$(dnsq shareos-u.test.lan)\" = $BOXIP ]"
-else
-	echo "SKIP  address changes of eth0 (no dummy eth0 here)"
-fi
+# On an interface of the test's own (SHAREOS_NET_IF), so the machine's network stays as it is.
+TIF=sostest0
+dft() { run "SHAREOS_NET_IF=$TIF shareos-dnsfilter $1"; }
+ip link del $TIF 2>/dev/null; ip link add $TIF type dummy && ip link set $TIF up
+check "no address (yet): the box's names stay as they are" "dft local-names | js \"d['ip']=='$BOXIP' and 'shareos-u.test.lan' in d['names'] and d['domains']==['test.lan']\" && [ \"\$(dnsq shareos-u.test.lan)\" = $BOXIP ]"
+check "no address: net-changed changes nothing" "dft net-changed | js \"d['changed']==False\""
+ip addr add 192.0.2.78/24 dev $TIF label $TIF:fb
+check "only the fallback address: the names point to it" "dft net-changed | js \"d['changed']==True\" && [ \"\$(dnsq shareos-u.test.lan)\" = 192.0.2.78 ] && ub status | js \"d['local']['ip']=='192.0.2.78'\""
+ip addr add 192.0.2.77/24 dev $TIF
+check "fallback and the address from DHCP: the one from DHCP" "dft net-changed | js \"d['changed']==True\" && [ \"\$(dnsq shareos-u.test.lan)\" = 192.0.2.77 ]"
+ip addr del 192.0.2.78/24 dev $TIF
+check "fallback gone, nothing new: net-changed does nothing" "dft net-changed | js \"d['changed']==False\" && [ \"\$(dnsq shareos-u.test.lan)\" = 192.0.2.77 ]"
+ip addr flush dev $TIF
+check "the address goes for a moment: the names stay" "dft net-changed | js \"d['changed']==False\" && dft local-names | js \"d['ip']=='192.0.2.77'\" && [ \"\$(dnsq shareos-u.test.lan)\" = 192.0.2.77 ]"
+ip link del $TIF
+check "back on eth0: the names follow" "df net-changed | js \"d['changed']==True\" && [ \"\$(dnsq shareos-u.test.lan)\" = $BOXIP ]"
 svc() { run 'ubus call shareos.service list' | js "[s for s in d['services'] if s['name']=='dnsfilter'][0]['running']==$1"; }
 check "Services page: shown as running (AdGuardHome, the app lists no command)" "svc True"
 

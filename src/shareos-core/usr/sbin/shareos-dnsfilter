@@ -298,9 +298,12 @@ function first_setup(work) {
 
 // the address of eth0; the fallback address (label eth0:fb, while no DHCP
 // server answers) only when there is no other
+//   SHAREOS_NET_IF=<name>   another interface (tests)
+const NET_IF = getenv('SHAREOS_NET_IF') ?? 'eth0';
 function box_ip() {
-	let l = split(trim(sh("ip -4 -o addr show dev eth0 2>/dev/null").out), '\n');
-	let pick = (fb) => { for (let a in l) { let m = match(a, /\sinet ([0-9.]+)/); if (m && (index(a, ' eth0:fb') >= 0) == fb) return m[1]; } return null; };
+	if (!match(NET_IF, /^[a-z0-9]+$/)) return null;
+	let l = split(trim(sh('ip -4 -o addr show dev ' + NET_IF + ' 2>/dev/null').out), '\n');
+	let pick = (fb) => { for (let a in l) { let m = match(a, /\sinet ([0-9.]+)/); if (m && (index(a, ' ' + NET_IF + ':fb') >= 0) == fb) return m[1]; } return null; };
 	return pick(false) ?? pick(true);
 }
 // the default gateway of eth0 (/proc/net/route, little-endian hex)
