@@ -114,6 +114,8 @@ start() {
 	rc=$?
 	write_resolv
 	if [ "$(get proto)" != static ] && ! has_ip; then fallback_up; rc=0; fi
+	# the DNS filter's names for the box follow its address (quiet when it is off)
+	[ -n "$ROOT" ] || [ ! -x /usr/sbin/shareos-dnsfilter ] || ( /usr/sbin/shareos-dnsfilter net-changed >/dev/null 2>&1 & )
 	return $rc
 }
 
