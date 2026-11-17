@@ -7,6 +7,7 @@ pre-releases for test devices only.
 ## 0.3.0-beta.14
 
 - **Apps can show how far a copy is, and stop it** ([discussion #88](https://github.com/UniqueDroid/ShareOS/discussions/88)). A copy, or a move to another drive, that takes longer goes on in the background of the box; it now tells what the sources take and how much is copied so far, and it can be cancelled (what was copied stays). App SDK: `ShareOS.fs.copy(…, { onProgress })` and `.move(…)` – `{ total, done }` in bytes and `cancel()`; `ShareOS.fs.progress` is `true` where this is there. ShareExplorer and ShareFinder 1.1.0 use it for a window with speed and time left. The amounts are measured with `du` on the targets every few seconds, with low priority – they are close, not exact to the byte.
+- **Apps can upload files of any size, with progress.** `ShareOS.fs.upload(root, path, name, blob, { onProgress })` – the file is written beside its target and moved into place; `cancel()` stops it and the part is removed. Until now apps could only save through the ticket for documents, which stops at 64 MB – and a larger file ended in "Failed to fetch", because the box refused it before reading it. `save()` now says "file too large (at most 64 MB)" itself. ShareExplorer and ShareFinder 1.1.0 upload this way.
 
 ## 0.3.0-beta.13
 

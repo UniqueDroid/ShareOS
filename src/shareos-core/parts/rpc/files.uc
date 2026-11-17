@@ -521,9 +521,12 @@ add_methods({
 
 		// a file ticket for /_shareos/cgi/file: read, or write (create: also a new file)
 		open: {
-			args: { grant: '', root: '', path: '', name: '', write: false, create: false },
+			// upload: a new file of any size from the computer (ticket mode "put":
+			// no size limit, written beside the target and moved over it)
+			args: { grant: '', root: '', path: '', name: '', write: false, create: false, upload: false },
 			call: function(req) {
 				let g = app_grant_user(req.args.grant, true), a = req.args;
+				if (a.upload && !(a.write && a.create)) return { error: 'upload needs write and create' };
 				if (!g) return { error: 'no access' };
 				if (!name_ok(a.name)) return { error: 'invalid name' };
 				let p = a.write ? files_wpath(g, a.root, a.path, 'dir') : files_path(g, a.root, a.path, 'dir');
@@ -532,7 +535,7 @@ add_methods({
 				if (st ? st.type != 'file' : !(a.write && a.create)) return { error: st ? 'not a file' : 'not found' };
 				system('mkdir -p ' + APP_TICKETS + ' && chmod 700 ' + APP_TICKETS);
 				system('find ' + APP_TICKETS + ' -type f -mmin +480 -delete 2>/dev/null');
-				let t = new_token(), mode = a.write ? 'edit' : 'view';
+				let t = new_token(), mode = a.upload ? 'put' : a.write ? 'edit' : 'view';
 				writefile(APP_TICKETS + '/' + t, sprintf('%s\n%s\n%s\n%d\n%s\n%s\n', mode, acc_role(g.u) == 'admin' ? 'root' : g.u, target, time() + 8 * 3600, g.app.id, pct_enc(a.name)));
 				return { ticket: t, mode, name: a.name, size: st ? st.size : 0, exists: !!st };
 			}

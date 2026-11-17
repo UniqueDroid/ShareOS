@@ -19,7 +19,7 @@ global.APP_CGI = {
 		delete: [ 'root', 'path', 'names' ],
 		job: [ 'id' ],
 		job_cancel: [ 'id' ],
-		open: [ 'root', 'path', 'name', 'write', 'create' ],
+		open: [ 'root', 'path', 'name', 'write', 'create', 'upload' ],
 		grant_app: [ 'app' ]
 	},
 	max: 65536

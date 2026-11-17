@@ -535,6 +535,8 @@ Needs ShareExplorer or ShareFinder 1.1.0 or newer (APPS → Store) and a large f
 4. Copy again and press **Cancel** in the window: "Stopped. What was copied so far stays." – `ps | grep -E 'cp |du '` shows none of it any more; the target folder holds an incomplete file that can be deleted.
 5. Move into a folder of the **same** drive: done at once, no window. Move to **another** drive (e.g. USB): the window as for a copy, "Moving".
 6. The same once in ShareFinder.
+7. **Upload:** drag a file of more than 64 MB (a few GB at best) from the computer into ShareExplorer. The window shows "Uploading 1 item" with amount, speed and time left; at the end "Uploaded.", the file is there with the same size. Again and **Cancel**: nothing stays in the folder (`ls -la` shows no `.….part`).
+8. **Tree:** create a folder in ShareExplorer (Ctrl+Shift+N) – it is in the tree on the left at once; the same for renaming and deleting.
 
 ## 14zt. Wake-up alarm of the MCU (0.3.0-beta.13)
 

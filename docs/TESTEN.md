@@ -540,6 +540,8 @@ Braucht ShareExplorer oder ShareFinder ab 1.1.0 (APPS → Store) und eine große
 4. Noch einmal kopieren und im Fenster **Abbrechen**: „Abgebrochen. Was schon kopiert war, bleibt.“ – `ps | grep -E 'cp |du '` zeigt nichts mehr davon; im Zielordner liegt eine unvollständige Datei, die man löschen kann.
 5. Verschieben in einen Ordner **desselben** Laufwerks: sofort fertig, kein Fenster. Verschieben auf ein **anderes** Laufwerk (z. B. USB): Fenster wie beim Kopieren, „wird verschoben“.
 6. Dasselbe einmal in ShareFinder.
+7. **Hochladen:** eine Datei von mehr als 64 MB (am besten einige GB) vom Computer in ShareExplorer ziehen. Das Fenster zeigt „1 Element wird hochgeladen“ mit Menge, Geschwindigkeit und Restzeit; am Ende „Hochgeladen.“, die Datei ist da und gleich groß. Noch einmal und **Abbrechen**: im Ordner bleibt nichts zurück (`ls -la` zeigt keine `.….part`).
+8. **Baum:** in ShareExplorer einen Ordner anlegen (Strg+Umschalt+N) – er steht sofort links im Baum; umbenennen und löschen ebenso.
 
 ## 14zt. Weckalarm der MCU (0.3.0-beta.13)
 
