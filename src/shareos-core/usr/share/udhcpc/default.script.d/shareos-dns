@@ -5,14 +5,24 @@
 # (updates, the store, time). musl asks all servers at once and takes the
 # first answer. Called by udhcpc's default.script with the action; the lease
 # is in the environment ($ip, $router, $dns).
+#
+# And: the DNS filter answers for the box's names with the box's address and
+# sends the local domains to the network's DNS servers. With a new lease both
+# can have changed – the filter sets them again (in the background, quiet
+# when it is off).
 RESOLV_CONF=${SHAREOS_ROOT:-}/etc/resolv.conf
 case "$1" in
 	renew|bound) ;;
 	*) exit 0 ;;
 esac
-[ -n "$ip" ] && [ -n "$router" ] || exit 0
-for d in $dns; do [ "$d" = "$ip" ] || exit 0; done
-[ -n "$dns" ] || exit 0
-set -- $router
-[ "$1" = "$ip" ] && exit 0
-grep -q "^nameserver $1\$" "$RESOLV_CONF" || echo "nameserver $1" >> "$RESOLV_CONF"
+add_router() {
+	[ -n "$ip" ] && [ -n "$router" ] || return 0
+	for d in $dns; do [ "$d" = "$ip" ] || return 0; done
+	[ -n "$dns" ] || return 0
+	set -- $router
+	[ "$1" = "$ip" ] && return 0
+	grep -q "^nameserver $1\$" "$RESOLV_CONF" || echo "nameserver $1" >> "$RESOLV_CONF"
+}
+add_router
+[ -n "${SHAREOS_ROOT:-}" ] || [ ! -x /usr/sbin/shareos-dnsfilter ] || ( /usr/sbin/shareos-dnsfilter net-changed >/dev/null 2>&1 & )
+exit 0

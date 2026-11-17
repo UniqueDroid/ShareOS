@@ -215,6 +215,8 @@ The DNS filter is a **module** (AdGuard Home). It needs the apps drive.
 11. **Local name (0.3.0-beta.5):** PC/Chromebook with the box as DNS server: `https://shareos.skynet.lan` (your box name) opens the box; `nslookup shareos.skynet.lan <box-ip>` answers the box's address; another local device (e.g. the router by name) still resolves. The tab lists the names under *Local names*.
 12. **Local entries (0.3.0-beta.5):** *DNS FILTER → LOCAL ENTRIES*: name `printer.skynet.lan`, IP `192.168.1.50` → *Add entry*. `nslookup printer.skynet.lan <box-ip>` answers `192.168.1.50`; the entry also appears in AdGuard under *Filter → DNS rewrites*. The box's own name is refused. *Remove* removes it again.
 
+**The box's names after a cold start (0.3.0-beta.13):** switch the box off (power button or *Schedule*), on again, wait 2 minutes. `shareos-dnsfilter status` shows the box's address, its names and the local domain under `local` – not `"ip": null`. `nslookup <name of the box>.<domain> 127.0.0.1` answers with the box's address. `grep shareos-net /var/log/messages` tells whether the box started on its fallback address ("no answer from a DHCP server") – the names must be right then of all times. Set them again by hand: `shareos-dnsfilter local-names`.
+
 ## 9. Cloud sync
 
 Cloud is a **module** (0.3.0-beta.5+): the *CLOUD* tab appears once the system
