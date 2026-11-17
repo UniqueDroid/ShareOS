@@ -49,22 +49,26 @@ function files_job(u, id) {
 // nothing else, so every process of that group is stopped. What was copied
 // so far stays. The next "job" reports { cancelled }.
 function proc_group(pid) { return +(proc_stat(pid)?.[2] ?? 0); }
-function job_procs(pid) {
-	let pg = proc_group(pid);
-	if (pg <= 1 || pg == proc_group('self')) return [ pid ];
-	return filter(lsdir('/proc') ?? [], (p) => match(p, /^[0-9]+$/) && proc_group(p) == pg);
-}
 function files_job_cancel(u, id) {
 	let d = files_job_dir(u, id);
 	if (!d) return { error: 'unknown job' };
 	let pid = files_job_alive(d);
 	if (!pid || read_trim(d + '/rc') != null) return { ok: true };
 	writefile(d + '/cancelled', '1\n');
-	system('kill -TERM ' + join(' ', job_procs(pid)) + ' 2>/dev/null');
-	for (let i = 0; i < 20 && files_job_alive(d); i++) sleep(100);
-	// what is left (a stopped process, one that ignores the signal)
-	let rest = files_job_alive(d) ? job_procs(pid) : [];
-	if (length(rest)) system('kill -KILL ' + join(' ', rest) + ' 2>/dev/null');
+	let pg = proc_group(pid), own = pg > 1 && pg != proc_group('self');
+	// what still runs of the job; asked again and again, because the measuring
+	// starts new processes between the look and the signal
+	let left = () => !own ? (files_job_alive(d) ? [ pid ] : []) : filter(lsdir('/proc') ?? [], (p) => {
+		let st = match(p, /^[0-9]+$/) ? proc_stat(p) : null;
+		return st && st[0] != 'Z' && +st[2] == pg;
+	});
+	for (let i = 0; i < 30; i++) {
+		let l = left();
+		if (!length(l)) break;
+		// after 2 s: what is stopped or ignores the signal
+		system(sprintf('kill -%s %s 2>/dev/null', i < 20 ? 'TERM' : 'KILL', join(' ', l)));
+		sleep(100);
+	}
 	return { ok: true };
 }
 // prog: { src: [paths], dst: [paths] } – the job counts what the sources take
