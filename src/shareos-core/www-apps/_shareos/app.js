@@ -30,6 +30,13 @@
  *                             their own translations (0.2.0-beta.6+)
  * ShareOS.user                the account the app was opened by ('guest' when
  *                             opened without ShareOS)
+ * ShareOS.appInfo()           promise of what the app's app.json says: {id, name,
+ *                             version, publisher} – the version in one place
+ *                             only (0.3.0-beta.14+). And without a line of
+ *                             script: an element with the attribute
+ *                             data-sos-version gets the version as its text
+ *                             (what it holds before stays if app.json cannot
+ *                             be read):  <span data-sos-version></span>
  * ShareOS.embedded            true when shown inside the ShareOS interface
  * ShareOS.fs                  folders of the user, for apps with the permission
  *                             "files" (null otherwise); all calls return promises:
@@ -800,7 +807,8 @@
 		if (adminOrigin) p.set('origin', adminOrigin);
 		var w = Math.max(400, Math.min(+size.width || 1000, screen.availWidth || 4000));
 		var h = Math.max(300, Math.min(+size.height || 700, screen.availHeight || 4000));
-		var url = function () { return '/' + id + '/index.html?' + p.toString(); };
+		var entry = 'index.html';
+		var url = function () { return '/' + id + '/' + entry + '?' + p.toString(); };
 		var feat = 'popup,width=' + w + ',height=' + h;
 		// with "files": the other app gets the user's folders too (its own grant,
 		// ShareOS 0.2.0-beta.13+). The window opens at once – a pop-up opened
@@ -808,13 +816,30 @@
 		if (!fs) return window.open(url(), 'sosapp-' + id, feat);
 		var win = window.open('', 'sosapp-' + id, feat);
 		if (!win) return null;
-		fsCall('grant_app', { app: id }).then(function (j) { p.set('fs', j.grant); }, function () { })
+		// the box also names the entry of the app's current installation, so the
+		// browser does not take files it kept from an older one
+		fsCall('grant_app', { app: id }).then(function (j) { p.set('fs', j.grant); if (/^[A-Za-z0-9._/-]+$/.test(j.entry || '') && !/\.\./.test(j.entry)) entry = j.entry; }, function () { })
 			.then(function () { try { win.location.href = url(); } catch (e) { } });
 		return win;
 	}
 
+	// what the app's own app.json says (read once)
+	var infoP = null;
+	function appInfo() {
+		if (!infoP) infoP = fetch('/' + appId + '/app.json', { cache: 'no-store' })
+			.then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+			.then(function (a) { return { id: appId, name: String(a.name || appId), version: String(a.version || ''), publisher: String(a.publisher || '') }; });
+		return infoP;
+	}
+	function fillVersion() {
+		var els = document.querySelectorAll('[data-sos-version]');
+		if (els.length) appInfo().then(function (a) { if (a.version) els.forEach(function (e) { e.textContent = a.version; }); }, function () { });
+	}
+	if (document.readyState === 'loading') addEventListener('DOMContentLoaded', fillVersion); else fillVersion();
+
 	var api = {
 		app: appId,
+		appInfo: appInfo,
 		openApp: openApp,
 		user: user,
 		lang: (q.get('lang') || '').toLowerCase().replace(/[^a-z-]/g, '').slice(0, 8),

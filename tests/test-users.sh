@@ -122,6 +122,15 @@ check "path escaping the volume rejected" "rpc shareos.shares set '{\"name\":\"x
 S2=$(rpc shareos.shares set '{"name":"medien","volume":"daten","smb":true,"guest":true,"nfs":true,"nfs_rw":false,"nfs_hosts":["10.0.0.0/24"]}')
 check "guest share" "grep -A8 '^\[medien\]' $R/etc/ksmbd/ksmbd.conf | grep -q 'guest ok = yes'"
 check "NFS export" "grep -q '^/mnt/daten/medien 10.0.0.0/24(ro,sync,no_subtree_check,all_squash,anonuid=65534,anongid=100)' $R/etc/exports"
+# a share on a personal folder: nobody never gets in there (0700) – exported as its owner (#178)
+JUID=$(grep '^jan:' $R/etc/passwd | cut -d: -f3)
+rpc shareos.shares set '{"name":"janhome","volume":"daten","path":"home/jan","smb":false,"nfs":true,"nfs_rw":true,"nfs_hosts":["10.0.0.0/24"]}' >/dev/null
+check "NFS export of a personal folder acts as its owner" "grep -q '^/mnt/daten/home/jan 10.0.0.0/24(rw,sync,no_subtree_check,all_squash,anonuid='$JUID',anongid=100)' $R/etc/exports && [ \"\$(stat -c %a $R/mnt/daten/home/jan)\" = 700 ]"
+rpc shareos.shares set '{"name":"janhome","volume":"daten","path":"home/jan/Musik","smb":false,"nfs":true,"nfs_rw":false,"nfs_hosts":["10.0.0.0/24"]}' >/dev/null
+check "… also of a folder in it" "grep -q '^/mnt/daten/home/jan/Musik 10.0.0.0/24(ro,sync,no_subtree_check,all_squash,anonuid='$JUID',anongid=100)' $R/etc/exports"
+rpc shareos.shares set '{"name":"janhome","volume":"daten","path":"home/nobody","smb":false,"nfs":true,"nfs_rw":false,"nfs_hosts":["10.0.0.0/24"]}' >/dev/null
+check "a folder under home that is no account's stays with nobody" "grep -q '^/mnt/daten/home/nobody 10.0.0.0/24(ro,sync,no_subtree_check,all_squash,anonuid=65534,anongid=100)' $R/etc/exports"
+rpc shareos.shares del '{"name":"janhome"}' >/dev/null
 check "user sees own shares" "rpc shareos.me get '{\"ubus_rpc_session\":\"$SID\"}' | js \"sorted((s['name'],s['access']) for s in d['shares'])==[('fotos','ro'),('medien','ro')]\""
 check "share removed, folder kept" "rpc shareos.shares del '{\"name\":\"medien\"}' | js \"[s['name'] for s in d['shares']]==['fotos']\" && [ -d $R/mnt/daten/medien ] && ! grep -q medien $R/etc/exports"
 

@@ -530,6 +530,16 @@ Braucht ein Tailscale-Konto (kostenlos), ein Handy oder einen Rechner mit Tailsc
 5. Konto ohne persönlichen Ordner: Teilen meldet „no personal folder“; das Geteilte wird verworfen und kommt bei der nächsten Anmeldung nicht wieder.
 6. Dateidialog einer App für ein Konto **ohne** *Dateien* (z. B. Webpad → *Öffnen*): Die Ordnerauswahl zeigt zuerst *App-Daten*, dann *Mein Ordner* und die Freigaben des Benutzers; Freigaben nur zum Lesen sind markiert und fehlen beim Speichern. Die App legt ihre eigenen Dateien weiter in *App-Daten* ab.
 
+## 14zv. NFS-Freigabe auf einen persönlichen Ordner (0.3.0-beta.14, #178)
+
+Braucht einen Linux-Rechner im Netz als NFS-Client und ein Konto mit persönlichem Ordner (hier `jan` auf dem Laufwerk `daten`; die Box ist 10.242.1.20).
+
+1. *Shares → New share*: Name `janhome`, Laufwerk `daten`, Ordner `home/jan`, *Share via NFS* und *NFS clients may write*, unter *NFS CLIENTS* die Adresse oder das Netz des Clients, *Save*.
+2. Auf der Box: `cat /etc/exports` – die Zeile von `/mnt/daten/home/jan` enthält `anonuid=<uid von jan>` (`id -u jan`), jede andere Freigabe `anonuid=65534`. `ls -ld /mnt/daten/home/jan` zeigt weiter `drwx------ jan users`.
+3. Auf dem Client: `sudo mount 10.242.1.20:/mnt/daten/home/jan /mnt/test && ls /mnt/test && touch /mnt/test/von-nfs` – Lesen und Schreiben gehen.
+4. Auf der Box: `ls -l /mnt/daten/home/jan/von-nfs` – die Datei gehört `jan:users`; jan sieht sie über SMB und unter *My ShareOS*.
+5. Die Freigabe wieder löschen (der Ordner bleibt): die Zeile ist aus `/etc/exports` verschwunden.
+
 ## 14zu. Fortschritt beim Kopieren in Apps (0.3.0-beta.14)
 
 Braucht ShareExplorer oder ShareFinder ab 1.1.0 (APPS → Store) und eine große Datei (einige GB) auf der Box.

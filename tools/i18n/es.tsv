@@ -2117,3 +2117,4 @@ E1697	ajusta el reloj y mantiene sincronizado el chip de reloj
 E1698	ventilador, temperatura, botones
 P374	zabbix_agentd, modo pasivo, puerto $1
 P375	zabbix_agentd, modos activo y pasivo, puerto $1
+E1699	Un recurso sobre la carpeta personal de una cuenta es la excepción: allí cada equipo de la lista actúa como esa cuenta, sin contraseña.

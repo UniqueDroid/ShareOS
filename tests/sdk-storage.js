@@ -85,6 +85,21 @@ function check(name, ok) { console.log((ok ? 'PASS  ' : 'FAIL  ') + name); ok ? 
 	check('openApp: the other app sees the same account', await win.evaluate(() => ShareOS.user) === 'jan');
 	check('openApp refuses invalid ids', await opener.evaluate(() => ShareOS.openApp('../x')) === null);
 
+	// the app's own version: from its app.json, also without script
+	fs.mkdirSync(path.join(dir, 'vers'), { recursive: true });
+	fs.writeFileSync(path.join(dir, 'vers/app.json'), JSON.stringify({ id: 'vers', name: 'Versions', version: '2.5.1', publisher: 'Test' }));
+	fs.writeFileSync(path.join(dir, 'vers/index.html'), '<!doctype html><script src="/_shareos/app.js"></script><title>v</title><span id="a" data-sos-version>old</span><span id="b">plain</span>');
+	const pv = await ctx.newPage(); await pv.goto(`http://127.0.0.1:${PORT}/vers/index.html`);
+	check('appInfo: what app.json says', JSON.stringify(await pv.evaluate(() => ShareOS.appInfo())) === JSON.stringify({ id: 'vers', name: 'Versions', version: '2.5.1', publisher: 'Test' }));
+	await pv.waitForFunction(() => document.getElementById('a').textContent !== 'old', null, { timeout: 3000 }).catch(() => {});
+	check('data-sos-version: the element shows the version, others stay', await pv.evaluate(() => document.getElementById('a').textContent + '|' + document.getElementById('b').textContent) === '2.5.1|plain');
+	check('no app.json: appInfo rejects, the element keeps its text', await (async () => {
+		fs.writeFileSync(path.join(dir, 'probe/v.html'), '<!doctype html><script src="/_shareos/app.js"></script><span id="a" data-sos-version>1.0</span>');
+		const p2 = await ctx.newPage(); await p2.goto(`http://127.0.0.1:${PORT}/probe/v.html`);
+		const rej = await p2.evaluate(() => ShareOS.appInfo().then(() => false, () => true));
+		return rej && await p2.evaluate(() => document.getElementById('a').textContent) === '1.0';
+	})());
+
 	await b.close();
 	srv.kill();
 	fs.rmSync(dir, { recursive: true, force: true });

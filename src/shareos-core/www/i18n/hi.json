@@ -1681,7 +1681,8 @@
 		"NAME RESOLUTION": "नाम रिज़ॉल्यूशन",
 		"live · every 5 s · temperature up to 15 s old": "लाइव · हर 5 से. · तापमान अधिकतम 15 से. पुराना",
 		"sets the clock, keeps the clock chip in sync": "घड़ी सेट करता है, घड़ी चिप को सिंक में रखता है",
-		"fan, temperature, buttons": "पंखा, तापमान, बटन"
+		"fan, temperature, buttons": "पंखा, तापमान, बटन",
+		"A share on the personal folder of an account is the exception: there every listed computer acts as that account, without a password.": "किसी खाते के निजी फ़ोल्डर पर साझा अपवाद है: वहाँ सूची का हर कंप्यूटर बिना पासवर्ड के उसी खाते के रूप में काम करता है।"
 	},
 	"patterns": [
 		[

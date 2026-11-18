@@ -1681,7 +1681,8 @@
 		"NAME RESOLUTION": "РАЗРЕШЕНИЕ ИМЁН",
 		"live · every 5 s · temperature up to 15 s old": "онлайн · каждые 5 с · температура не старше 15 с",
 		"sets the clock, keeps the clock chip in sync": "устанавливает время, синхронизирует микросхему часов",
-		"fan, temperature, buttons": "вентилятор, температура, кнопки"
+		"fan, temperature, buttons": "вентилятор, температура, кнопки",
+		"A share on the personal folder of an account is the exception: there every listed computer acts as that account, without a password.": "Общий ресурс на личной папке учётной записи — исключение: там каждый компьютер из списка действует от имени этой учётной записи, без пароля."
 	},
 	"patterns": [
 		[

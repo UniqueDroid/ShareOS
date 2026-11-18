@@ -415,7 +415,8 @@ add_methods({
 				let mine = g.app.permissions ?? [];
 				for (let p in app.permissions ?? [])
 					if (p != 'embed' && p != 'cron' && index(mine, p) < 0) return { error: 'the app needs more permissions than the opening app' };
-				return { grant: app_grant_new(g.u, app) };
+				// entry: the address of this installation (see app_rev() in shareos-apps)
+				return { grant: app_grant_new(g.u, app), entry: app.entry };
 			}
 		},
 

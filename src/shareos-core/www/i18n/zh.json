@@ -1681,7 +1681,8 @@
 		"NAME RESOLUTION": "名称解析",
 		"live · every 5 s · temperature up to 15 s old": "实时 · 每 5 秒 · 温度最多滞后 15 秒",
 		"sets the clock, keeps the clock chip in sync": "设置时钟，并保持时钟芯片同步",
-		"fan, temperature, buttons": "风扇、温度、按键"
+		"fan, temperature, buttons": "风扇、温度、按键",
+		"A share on the personal folder of an account is the exception: there every listed computer acts as that account, without a password.": "账户个人文件夹上的共享是例外：列出的每台计算机在那里都以该账户的身份操作，无需密码。"
 	},
 	"patterns": [
 		[
