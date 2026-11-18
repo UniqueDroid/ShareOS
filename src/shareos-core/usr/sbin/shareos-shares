@@ -88,7 +88,23 @@ vault_gate() {   # share path
 }
 
 ensure_folder() {   # path
+	local base rest d uid
 	[ -d "$1" ] && return 0
+	case "$1" in
+		# the folder for personal folders and a personal folder itself are
+		# made by shareos-users, never here (a folder made here would belong
+		# to root and be open to the group "users")
+		/mnt/*/home|/mnt/*/home/*)
+			uid=$(nfs_anon "$1"); [ "$uid" != 65534 ] || return 1
+			rest=${1#/mnt/*/home/*/}; [ "$rest" != "$1" ] || return 1
+			base=${1%"/$rest"}; d=$base
+			# a folder in a personal folder: the account's, private like the rest
+			for x in $(echo "$rest" | tr '/ ' '\n\037'); do
+				d="$d/$(echo "$x" | tr '\037' ' ')"
+				[ -d "$d" ] || { mkdir "$d" && chown "$uid":users "$d" && chmod 0700 "$d" || return 1; }
+			done
+			return 0 ;;
+	esac
 	mkdir -p "$1" && chown root:users "$1" && chmod 2775 "$1"
 }
 
@@ -155,19 +171,28 @@ write_smb() {
 		# of AES-CMAC: about twice as fast on the 800 MHz Kirkwood (#94)
 		[ "$(global smb_compat)" = 1 ] && echo "	server max protocol = SMB2_10"
 		echo "	smb2 leases = yes"
-		# home folders: \\box\<user> for the logged-in user only
-		if uci -q show accounts | grep -q "\.home='[^']\+'"; then
+		# personal folders: \\box\<account>, one section per account with a
+		# personal folder, for that account only. ksmbd has no [homes] and no
+		# %H (that is Samba): such a section is a share named "homes" on the
+		# path "%H", and \\box\<account> was never found (#183). Not in the
+		# list of shares: ksmbd cannot show a share to one account only. A
+		# share of the same name wins.
+		for u in $(uci -q show accounts | sed -n "s/^accounts\.\([^.=]*\)=user$/\1/p"); do
+			v=$(uci -q get accounts."$u".home) && [ -n "$v" ] || continue
+			volume_mounted "$v" && [ -d "/mnt/$v/home/$u" ] || continue
+			[ "$(uci -q get shares."$u")" = share ] && continue
 			echo
-			echo "[homes]"
+			echo "[$u]"
 			echo "	comment = personal folder"
-			echo "	path = %H"
+			echo "	path = /mnt/$v/home/$u"
 			echo "	read only = no"
 			echo "	browseable = no"
 			echo "	guest ok = no"
+			echo "	valid users = $u"
 			echo "	create mask = 0600"
 			echo "	directory mask = 0700"
 			echo "	vfs objects = streams_xattr"
-		fi
+		done
 		for s in $(shares); do
 			on "$s" smb || continue
 			p=$(share_path "$s") || continue
@@ -197,8 +222,10 @@ write_smb() {
 			[ -n "$rw" ] && echo "	write list = $rw"
 			[ -n "$ro" ] && echo "	read list = $ro"
 			echo "	force group = users"
-			echo "	create mask = 0664"
-			echo "	directory mask = 2775"
+			case "$p" in
+				/mnt/*/home/*) echo "	create mask = 0600"; echo "	directory mask = 0700" ;;
+				*) echo "	create mask = 0664"; echo "	directory mask = 2775" ;;
+			esac
 			# named streams (kept as xattrs): without them the Files app of
 			# iOS 18 and newer shows the share read-only (#112); not on file
 			# systems without user xattrs (FAT, exFAT, NTFS volumes)
@@ -240,7 +267,7 @@ write_nfs() {
 	} > $EXPORTS.new && mv $EXPORTS.new $EXPORTS
 }
 
-smb_wanted() { [ "$(global smb || echo 1)" = 1 ] && grep -q '^\[' $SMBCONF 2>/dev/null && [ "$(grep -c '^\[' $SMBCONF)" -gt 1 -o -n "$(grep '^\[homes\]' $SMBCONF)" ]; }
+smb_wanted() { [ "$(global smb || echo 1)" = 1 ] && grep -q '^\[' $SMBCONF 2>/dev/null && [ "$(grep -c '^\[' $SMBCONF)" -gt 1 ]; }
 nfs_wanted() { [ "$(global nfs || echo 1)" = 1 ] && grep -q '^/' $EXPORTS 2>/dev/null; }
 
 smb_start() {

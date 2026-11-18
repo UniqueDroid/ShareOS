@@ -30,7 +30,7 @@ log() { logger -t shareos-users "$*"; echo "$*"; }
 
 valid_name() { echo "$1" | grep -qE "$NAME_RE"; }
 system_name() {    # names that belong to the system (uid/gid below 1000 or reserved)
-	case "$1" in root|admin|users|nobody|shareos|guest) return 0 ;; esac
+	case "$1" in root|admin|users|nobody|shareos|guest|ids) return 0 ;; esac
 	awk -F: -v n="$1" -v f=$FIRST_ID '$1 == n && $3 < f {found = 1} END {exit !found}' /etc/passwd /etc/group
 }
 user_exists() { [ "$(uci -q get accounts."$1")" = user ]; }
@@ -41,6 +41,33 @@ linux_group() { grep -q "^$1:" /etc/group; }
 next_id() {   # first free id >= 1000 in passwd ($1=/etc/passwd) or group
 	awk -F: -v f=$FIRST_ID '{used[$3] = 1} END {for (i = f; i < 60000; i++) if (!(i in used)) {print i; exit}}' "$1"
 }
+
+# A user id is never given out twice: files and the personal folder of a
+# deleted account stay behind (the folder is kept by default), and the next
+# account with that id would own them. The highest id ever used is kept in
+# accounts.ids.last_uid.
+next_uid() {
+	local free last
+	free=$(next_id /etc/passwd); last=$(uci -q get accounts.ids.last_uid)
+	case "$last" in ''|*[!0-9]*) last=0 ;; esac
+	# accounts made before this was kept: nothing below the highest id in use
+	last=$(awk -F: -v f=$FIRST_ID -v l="$last" '$3 >= f && $3 < 60000 && $3 > l {l = $3} END {print l}' /etc/passwd)
+	[ "$free" -gt "$last" ] && echo "$free" || echo $((last + 1))
+}
+
+# may this account get its personal folder on this volume? Not when a folder
+# of that name is already there and belongs to someone else (a deleted
+# account, a folder made by hand): the account could not open it, or would
+# get data that is not its own.
+home_free() {   # name volume uid
+	local d=/mnt/$2/home/$1 o
+	[ -d "$d" ] || return 0
+	o=$(stat -c %u "$d" 2>/dev/null)
+	[ "$o" = "$3" ] || die "a folder home/$1 is already on $2 and belongs to ${o:+$(awk -F: -v u="$o" '$3 == u {print $1; f = 1} END {if (!f) print "a deleted account"}' /etc/passwd)} – move or remove it first"
+}
+
+# \\box\<name> is the personal folder; a share of that name would be opened instead
+share_named() { [ "$(uci -q get shares."$1")" = share ]; }
 
 read_password() {
 	IFS= read -r PASS || true
@@ -193,11 +220,21 @@ home_dir() {   # name -> path or nothing
 
 sync_homes() {
 	for u in $(uci -q show accounts | sed -n "s/^accounts\.\([^.=]*\)=user$/\1/p"); do
-		h=$(home_dir "$u") || continue
-		[ -n "$h" ] || continue
+		h=$(home_dir "$u")
+		if [ -z "$h" ]; then
+			# no personal folder (any more): the account has no home directory
+			grep -q "^$u:[^:]*:[^:]*:[^:]*:[^:]*:/:" /etc/passwd || {
+				awk -F: -v OFS=: -v n="$u" '$1 == n {$6 = "/"} {print}' /etc/passwd > /etc/passwd.new \
+					&& replace_file /etc/passwd.new /etc/passwd
+			}
+			continue
+		fi
 		grep -q " ${h%/home/*} " /proc/mounts || continue      # volume not mounted
 		if [ ! -d "$h" ]; then
-			mkdir -p "$h" && chmod 0755 "${h%/*}" && chown "$u":users "$h" && chmod 0700 "$h" || log "cannot create $h"
+			mkdir -p "$h" && chown root:root "${h%/*}" && chmod 0755 "${h%/*}" && chown "$u":users "$h" && chmod 0700 "$h" || log "cannot create $h"
+		elif [ "$(stat -c %u "$h" 2>/dev/null)" != "$(id -u "$u" 2>/dev/null)" ]; then
+			# left as it is – see home_free; the account cannot use it
+			log "personal folder $h does not belong to $u"
 		fi
 		awk -F: -v OFS=: -v n="$u" -v h="$h" '$1 == n {$6 = h} {print}' /etc/passwd > /etc/passwd.new \
 			&& replace_file /etc/passwd.new /etc/passwd
@@ -224,11 +261,16 @@ cmd_add() {
 	case "$role" in admin|user|share) ;; *) die "invalid role" ;; esac
 	parse_opts "$@"
 	read_password
-	uid=$(next_id /etc/passwd)
+	uid=$(next_uid)
+	if [ -n "$O_HOME" ]; then
+		share_named "$n" && die "there is a share named $n – \\\\box\\$n is the address of the personal folder; rename the share or choose another name"
+		home_free "$n" "$O_HOME" "$uid"
+	fi
 	adduser -D -H -h / -s /bin/false -G users -u "$uid" "$n" >/dev/null || die "cannot create the account"
 	uci set accounts."$n"=user
 	uci set accounts."$n".role="$role"
 	uci set accounts."$n".uid="$uid"
+	uci set accounts.ids=ids; uci set accounts.ids.last_uid="$uid"
 	S_ROLE=0 apply_opts "$n"
 	set_linux_password "$n" "$PASS"
 	set_smb_password "$n" "$PASS"
@@ -240,6 +282,12 @@ cmd_set() {
 	n=$1; shift || die "usage: set <name> [options]"
 	user_exists "$n" || die "unknown user $n"
 	parse_opts "$@"
+	# a personal folder that is new for this account, or moves to another volume
+	if [ $S_HOME = 1 ] && [ -n "$O_HOME" ] && [ "$O_HOME" != "$(uci -q get accounts."$n".home)" ]; then
+		[ -n "$(uci -q get accounts."$n".home)" ] || ! share_named "$n" \
+			|| die "there is a share named $n – \\\\box\\$n is the address of the personal folder; rename the share first"
+		home_free "$n" "$O_HOME" "$(id -u "$n")"
+	fi
 	apply_opts "$n"
 	cmd_sync
 	log "user $n changed"

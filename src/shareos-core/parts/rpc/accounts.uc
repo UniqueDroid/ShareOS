@@ -350,6 +350,17 @@ add_methods({
 				let path = a.path ?? a.name;
 				if (path == '' || !match(path, /^[A-Za-z0-9 ._-]+(\/[A-Za-z0-9 ._-]+)*$/) || match(path, /(^|\/)\.\.?(\/|$)/))
 					return { error: 'invalid folder (letters, digits, space . _ - and /)' };
+				// \\box\<account> is the personal folder of an account: a new share
+				// must not take that name (one that exists keeps it and is opened instead)
+				if (c.get('shares', a.name) != 'share' && c.get('accounts', a.name) == 'user' && c.get('accounts', a.name, 'home'))
+					return { error: 'this is the name of an account with a personal folder – choose another name' };
+				// "home" holds the personal folders, ".shareos" the apps: no share on
+				// them or in them – but for the personal folder of an account (or a
+				// folder in it), which is shared as that account's
+				if (match(path, /^\.shareos(\/|$)/)) return { error: 'this folder belongs to the apps and cannot be shared' };
+				let hm = match(path, /^home(\/([^\/]+))?(\/|$)/);
+				if (hm && !(hm[2] && c.get('accounts', hm[2]) == 'user' && c.get('accounts', hm[2], 'home') == a.volume))
+					return { error: 'the folder "home" holds the personal folders – only the personal folder of an account (home/<account>) or a folder in it can be shared' };
 				if (match(a.comment ?? '', /[\n\r\[\]]/)) return { error: 'invalid description' };
 				let accs = accounts(), known = {};
 				for (let u in accs.users) known[u.name] = true;
