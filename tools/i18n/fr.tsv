@@ -2117,8 +2117,61 @@ E1697	règle l’horloge et garde la puce d’horloge synchronisée
 E1698	ventilateur, température, boutons
 P374	zabbix_agentd, mode passif, port $1
 P375	zabbix_agentd, modes actif et passif, port $1
+P376	SHA256SUMS ne couvre pas $1
+P377	impossible de décompresser le paquet : $1
+P378	le paquet est endommagé (SHA256SUMS) : $1
+P379	occupé : $1
+P380	impossible de récupérer les versions depuis $1 ($2) : $3
+P381	impossible de préparer le système dans /overlay (plein ?) : $1
+P382	partition flash « $1 » introuvable
+P383	écriture refusée : carte inattendue « $1 »
+P384	la mise à jour a été interrompue ($1)
+P385	version inconnue $1 – lancez d'abord une vérification
+P386	la version $1 n'est pas téléchargée et vérifiée
+P387	échec ($1) : l'image préparée est endommagée
+P388	échec ($1) : le système n'a pas pu être écrit (ubiupdatevol)
+P389	$1 n'est pas relu correctement
+P390	l'effacement de $1 a échoué
+P391	l'écriture de $1 a échoué
+P392	la relecture de $1 a échoué
+P393	partition $1 introuvable
+P394	le fichier est destiné à un autre appareil ($1, ce boîtier : $2)
+P395	ce boîtier n'est pas pris en charge ($1)
 E1699	Un partage sur le dossier personnel d’un compte fait exception : chaque ordinateur de la liste y agit en tant que ce compte, sans mot de passe.
 E1700	Vérifié : SHA-256, sommes de toutes les parties, fait pour cet appareil.
 E1701	Fichier téléversé – vérifié : SHA-256 du fichier .sha256, sommes de toutes les parties, adapté à cet appareil.
 E1702	Fichier téléversé – vérifié : sommes de toutes les parties, adapté à cet appareil (sans fichier .sha256).
 E1703	Les réglages et paquets sont conservés.
+E1704	SHA-256 différent – le téléchargement est corrompu ou a été modifié
+E1705	SHA-256 différent – le fichier ne correspond pas à son .sha256
+E1706	annulation impossible pendant l'écriture
+E1707	impossible de déplacer le fichier téléversé
+E1708	impossible de déplacer la signature téléversée
+E1709	impossible de lire le fichier téléversé
+E1710	le fichier de somme de contrôle est invalide
+E1711	le fichier de signature est invalide
+E1712	le téléchargement de la somme de contrôle a échoué
+E1713	le téléchargement du firmware a échoué
+E1714	le téléchargement de la signature a échoué
+E1715	aucun fichier téléversé
+E1716	le boîtier ne tourne pas depuis la flash (pas d'UBIFS sur /overlay) – utiliser shareos-install-ubi
+E1717	rootfs.squashfs n'est pas une image squashfs
+E1718	la signature ne correspond pas à ce fichier
+E1719	la signature n'est plus valide – non installé
+E1720	la signature de cette version n'est pas valide – non installé
+E1721	cette version n'est pas signée – non installé
+E1722	nom de firmware inconnu pour ce boîtier (/tmp/sys/board.env, /etc/shareos-release)
+E1723	non signé par le projet ShareOS
+E1724	réponse inattendue de GitHub
+E1725	canal invalide
+E1726	la version n'est pas téléchargée et vérifiée
+E1727	une mise à jour du firmware est en cours
+E1728	une autre écriture de firmware est en cours
+E1729	l'initramfs du fichier est endommagé
+E1730	l'initramfs n'est pas une image U-Boot
+E1731	l'initramfs dépasse les 3 Mo que charge le chargeur d'amorçage
+E1732	le noyau du fichier est endommagé
+E1733	le noyau n'est pas une image U-Boot
+E1734	le noyau dépasse les 3 Mo que charge le chargeur d'amorçage
+E1735	ce n'est pas un fichier firmware D-Link
+E1736	le fichier est endommagé (somme de contrôle)

@@ -1704,7 +1704,40 @@
 		"Verified: SHA-256, checksums of all parts, made for this device.",
 		"Uploaded file – verified: SHA-256 of the .sha256 file, checksums of all parts, made for this device.",
 		"Uploaded file – verified: checksums of all parts, made for this device (without .sha256 file).",
-		"Settings and packages are kept."
+		"Settings and packages are kept.",
+		"SHA-256 mismatch – download is corrupt or was tampered with",
+		"SHA-256 mismatch – the file does not match its .sha256",
+		"cannot cancel while flashing",
+		"cannot move the uploaded file",
+		"cannot move the uploaded signature",
+		"cannot read the uploaded file",
+		"checksum file is invalid",
+		"signature file is invalid",
+		"download of the checksum failed",
+		"download of the firmware failed",
+		"download of the signature failed",
+		"no uploaded file",
+		"not running from flash (no UBIFS on /overlay) – use shareos-install-ubi",
+		"rootfs.squashfs is not a squashfs image",
+		"the signature does not match this file",
+		"the signature is not valid any more – not installed",
+		"the signature of this release is not valid – not installed",
+		"this release is not signed – not installed",
+		"unknown firmware name for this box (/tmp/sys/board.env, /etc/shareos-release)",
+		"not signed by the ShareOS project",
+		"unexpected answer from GitHub",
+		"invalid channel",
+		"release not downloaded and verified",
+		"a firmware update is running",
+		"another firmware write is running",
+		"initramfs in the file is damaged",
+		"initramfs is not a U-Boot image",
+		"initramfs larger than the 3 MB the boot loader loads",
+		"kernel in the file is damaged",
+		"kernel is not a U-Boot image",
+		"kernel larger than the 3 MB the boot loader loads",
+		"not a D-Link firmware file",
+		"the file is damaged (checksum)"
 	],
 	"patterns": [
 		[
@@ -3210,6 +3243,86 @@
 		[
 			"^zabbix_agentd, active and passive mode, port ([0-9]+)$",
 			"zabbix_agentd, active and passive mode, port $1"
+		],
+		[
+			"^SHA256SUMS does not cover (.+)$",
+			"SHA256SUMS does not cover $1"
+		],
+		[
+			"^bundle cannot be unpacked: (.*)$",
+			"bundle cannot be unpacked: $1"
+		],
+		[
+			"^bundle is damaged \\(SHA256SUMS\\): (.*)$",
+			"bundle is damaged (SHA256SUMS): $1"
+		],
+		[
+			"^busy: (\\w+)$",
+			"busy: $1"
+		],
+		[
+			"^cannot fetch releases from (\\S+) \\((.+)\\): (.*)$",
+			"cannot fetch releases from $1 ($2): $3"
+		],
+		[
+			"^cannot stage the system in /overlay \\(full\\?\\): (.*)$",
+			"cannot stage the system in /overlay (full?): $1"
+		],
+		[
+			"^flash partition \\\"(.+)\\\" not found$",
+			"flash partition \"$1\" not found"
+		],
+		[
+			"^refusing to flash: unexpected board \\\"(.*)\\\"$",
+			"refusing to flash: unexpected board \"$1\""
+		],
+		[
+			"^the update was interrupted \\((.+)\\)$",
+			"the update was interrupted ($1)"
+		],
+		[
+			"^unknown release (.+) – run check first$",
+			"unknown release $1 – run check first"
+		],
+		[
+			"^release (.+) is not downloaded and verified$",
+			"release $1 is not downloaded and verified"
+		],
+		[
+			"^failed (\\S+): staged image damaged$",
+			"failed $1: staged image damaged"
+		],
+		[
+			"^failed (\\S+): ubiupdatevol$",
+			"failed $1: ubiupdatevol"
+		],
+		[
+			"^(\\S+) does not read back correctly$",
+			"$1 does not read back correctly"
+		],
+		[
+			"^erasing (\\S+) failed$",
+			"erasing $1 failed"
+		],
+		[
+			"^writing (\\S+) failed$",
+			"writing $1 failed"
+		],
+		[
+			"^reading (\\S+) back failed$",
+			"reading $1 back failed"
+		],
+		[
+			"^partition (\\S+) not found$",
+			"partition $1 not found"
+		],
+		[
+			"^the file is for another device \\((.+), this box: (.+)\\)$",
+			"the file is for another device ($1, this box: $2)"
+		],
+		[
+			"^this box is not supported \\((.*)\\)$",
+			"this box is not supported ($1)"
 		]
 	],
 	"words": [

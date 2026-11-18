@@ -1686,7 +1686,40 @@
 		"Verified: SHA-256, checksums of all parts, made for this device.": "已校验：SHA-256、所有部分的校验和、适用于此设备。",
 		"Uploaded file – verified: SHA-256 of the .sha256 file, checksums of all parts, made for this device.": "已上传的文件 – 已检查：.sha256 文件的 SHA-256、所有部分的校验和、适用于此设备。",
 		"Uploaded file – verified: checksums of all parts, made for this device (without .sha256 file).": "已上传的文件 – 已检查：所有部分的校验和、适用于此设备（无 .sha256 文件）。",
-		"Settings and packages are kept.": "设置和软件包将保留。"
+		"Settings and packages are kept.": "设置和软件包将保留。",
+		"SHA-256 mismatch – download is corrupt or was tampered with": "SHA-256 不匹配 – 下载已损坏或被篡改",
+		"SHA-256 mismatch – the file does not match its .sha256": "SHA-256 不匹配 – 文件与其 .sha256 不符",
+		"cannot cancel while flashing": "写入期间无法取消",
+		"cannot move the uploaded file": "无法移动已上传的文件",
+		"cannot move the uploaded signature": "无法移动已上传的签名",
+		"cannot read the uploaded file": "无法读取已上传的文件",
+		"checksum file is invalid": "校验和文件无效",
+		"signature file is invalid": "签名文件无效",
+		"download of the checksum failed": "校验和下载失败",
+		"download of the firmware failed": "固件下载失败",
+		"download of the signature failed": "签名下载失败",
+		"no uploaded file": "没有已上传的文件",
+		"not running from flash (no UBIFS on /overlay) – use shareos-install-ubi": "设备不是从闪存运行（/overlay 上没有 UBIFS）– 请使用 shareos-install-ubi",
+		"rootfs.squashfs is not a squashfs image": "rootfs.squashfs 不是 squashfs 映像",
+		"the signature does not match this file": "签名与此文件不符",
+		"the signature is not valid any more – not installed": "签名已不再有效 – 未安装",
+		"the signature of this release is not valid – not installed": "此版本的签名无效 – 未安装",
+		"this release is not signed – not installed": "此版本未签名 – 未安装",
+		"unknown firmware name for this box (/tmp/sys/board.env, /etc/shareos-release)": "此设备的固件名称未知（/tmp/sys/board.env、/etc/shareos-release）",
+		"not signed by the ShareOS project": "未经 ShareOS 项目签名",
+		"unexpected answer from GitHub": "GitHub 返回了意外的应答",
+		"invalid channel": "无效的通道",
+		"release not downloaded and verified": "该版本尚未下载并校验",
+		"a firmware update is running": "固件更新正在进行",
+		"another firmware write is running": "另一个固件写入正在进行",
+		"initramfs in the file is damaged": "文件中的 initramfs 已损坏",
+		"initramfs is not a U-Boot image": "initramfs 不是 U-Boot 映像",
+		"initramfs larger than the 3 MB the boot loader loads": "initramfs 超过引导加载程序可加载的 3 MB",
+		"kernel in the file is damaged": "文件中的内核已损坏",
+		"kernel is not a U-Boot image": "内核不是 U-Boot 映像",
+		"kernel larger than the 3 MB the boot loader loads": "内核超过引导加载程序可加载的 3 MB",
+		"not a D-Link firmware file": "不是 D-Link 固件文件",
+		"the file is damaged (checksum)": "文件已损坏（校验和）"
 	},
 	"patterns": [
 		[
@@ -1894,6 +1927,14 @@
 			"ShareOS 关机，设备断电。$1"
 		],
 		[
+			"^cannot stage the system in /overlay \\(full\\?\\): (.*)$",
+			"无法将系统暂存到 /overlay（已满？）：$1"
+		],
+		[
+			"^the file is for another device \\((.+), this box: (.+)\\)$",
+			"该文件适用于另一台设备（$1，本设备：$2）"
+		],
+		[
 			"^No swap, app area on \"(.+)\" \\(unless one exists\\)\\.$",
 			"无交换分区，应用区位于“$1” (如尚未存在)。"
 		],
@@ -1914,8 +1955,16 @@
 			"连接正常 – Paperless 中有 $1 个文档。"
 		],
 		[
+			"^release (.+) is not downloaded and verified$",
+			"版本 $1 尚未下载并校验"
+		],
+		[
 			"^Value (\\S+) was below the threshold earlier$",
 			"数值 $1 曾低于阈值"
+		],
+		[
+			"^refusing to flash: unexpected board \\\"(.*)\\\"$",
+			"拒绝写入：意外的主板“$1”"
 		],
 		[
 			"^Clicking \"Set up\" erases (.+) completely\\.$",
@@ -1938,6 +1987,10 @@
 			"$1——可从回收站恢复。"
 		],
 		[
+			"^unknown release (.+) – run check first$",
+			"未知版本 $1 – 请先检查更新"
+		],
+		[
 			"^([\\d.,  ]+) entries in the disk's error log\\.$",
 			"硬盘错误日志中有 $1 条记录。"
 		],
@@ -1958,6 +2011,14 @@
 			"撤销“$1”的远程访问密码？"
 		],
 		[
+			"^bundle is damaged \\(SHA256SUMS\\): (.*)$",
+			"软件包已损坏（SHA256SUMS）：$1"
+		],
+		[
+			"^cannot fetch releases from (\\S+) \\((.+)\\): (.*)$",
+			"无法从 $1（$2）获取版本：$3"
+		],
+		[
 			"^(.+): no longer starts at power-on$",
 			"$1：开机时不再启动"
 		],
@@ -1974,6 +2035,14 @@
 			"已撤销“$1”的密码。"
 		],
 		[
+			"^failed (\\S+): staged image damaged$",
+			"失败（$1）：暂存的映像已损坏"
+		],
+		[
+			"^(\\S+) does not read back correctly$",
+			"$1 回读不正确"
+		],
+		[
 			"^The name “(.+)” is already taken\\.$",
 			"名称“$1”已被使用。"
 		],
@@ -1982,8 +2051,16 @@
 			"$1 的个人收件箱 · 无令牌"
 		],
 		[
+			"^the update was interrupted \\((.+)\\)$",
+			"更新被中断（$1）"
+		],
+		[
 			"^Fan always on, full from (\\d+) °C$",
 			"风扇始终运转，$1 °C 起全速"
+		],
+		[
+			"^flash partition \\\"(.+)\\\" not found$",
+			"未找到闪存分区“$1”"
 		],
 		[
 			"^Share: (\\d+) file\\(s\\) not saved – (.*)$",
@@ -1992,6 +2069,10 @@
 		[
 			"^Paused – filtering again in (.*)$",
 			"已暂停 – $1 后恢复过滤"
+		],
+		[
+			"^this box is not supported \\((.*)\\)$",
+			"不支持此设备（$1）"
 		],
 		[
 			"^([\\d.,  ]+) sectors could not be read\\.$",
@@ -2010,6 +2091,10 @@
 			"$1 的个人收件箱 · 令牌 $2"
 		],
 		[
+			"^bundle cannot be unpacked: (.*)$",
+			"无法解包：$1"
+		],
+		[
 			"^personal inbox of (.+) · token (.+)$",
 			"$1 的个人收件夹 · 令牌 $2"
 		],
@@ -2024,6 +2109,10 @@
 		[
 			"^(.+) is in flash\\. Restart now\\?$",
 			"$1 已写入闪存。立即重启？"
+		],
+		[
+			"^SHA256SUMS does not cover (.+)$",
+			"SHA256SUMS 不包含 $1"
 		],
 		[
 			"^Delete (\\d+) item\\(s\\) for good\\?$",
@@ -2090,6 +2179,10 @@
 			"$1 的密码已修改。"
 		],
 		[
+			"^failed (\\S+): ubiupdatevol$",
+			"失败（$1）：无法写入系统（ubiupdatevol）"
+		],
+		[
 			"^shared inbox · token (.+)$",
 			"共享收件箱 · 令牌 $1"
 		],
@@ -2100,6 +2193,14 @@
 		[
 			"^(\\S+): one disk missing \\((.+)\\)$",
 			"$1：缺少一块硬盘 ($2)"
+		],
+		[
+			"^reading (\\S+) back failed$",
+			"回读 $1 失败"
+		],
+		[
+			"^partition (\\S+) not found$",
+			"未找到分区 $1"
 		],
 		[
 			"^(.+): starts at power-on$",
@@ -2296,6 +2397,14 @@
 		[
 			"^Very warm: (\\d+) °C\\.$",
 			"温度很高：$1 °C。"
+		],
+		[
+			"^erasing (\\S+) failed$",
+			"擦除 $1 失败"
+		],
+		[
+			"^writing (\\S+) failed$",
+			"写入 $1 失败"
 		],
 		[
 			"^Permission for (.+)$",
@@ -3000,6 +3109,10 @@
 		[
 			"^([0-9.,]+) years$",
 			"$1 年"
+		],
+		[
+			"^busy: (\\w+)$",
+			"忙碌：$1"
 		],
 		[
 			"^Group (\\S+)$",
