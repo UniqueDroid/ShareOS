@@ -253,6 +253,14 @@ part_open() {   # partitions -> 0 when each is a block device that can be opened
 	return 0
 }
 
+wait_parts() {   # partitions -> 0 when all of them can be opened within 10 s (see partition)
+	local i=0
+	until part_open "$@"; do
+		i=$((i + 1)); [ $i -lt 20 ] || return 1
+		sleep 0.5
+	done
+}
+
 partition() {   # disk type(L|R) -> [swap partition] + data partition; prints the data partition
 	local disk=$1 sw p i
 	# still claimed by something (RAID, device mapper)? say what instead of failing blindly
@@ -323,6 +331,7 @@ mkfs_run() {   # dev name fs; what the tool said goes to $MKFS_ERR
 make_fs() {   # dev name fs
 	local i
 	step "creating file system ($3) on $1"
+	wait_parts "$1" || die "$1 is not there"
 	MKFS_ERR=/tmp/shareos-storage.mkfs.$$
 	if ! mkfs_run "$@"; then
 		# On a disk that had partitions before, the kernel may still be reading
@@ -400,6 +409,8 @@ cmd_setup() {
 		release_disk $d1; release_disk $d2
 		step "partitioning $d1"; partition $d1 R; p1=$DATA
 		step "partitioning $d2"; partition $d2 R; p2=$DATA
+		# the first disk's partitions can be gone again for a moment by now
+		wait_parts $p1 $p2 || die "the new partitions $p1 and $p2 are not there"
 		md=$(free_md)
 		step "creating $what $md"
 		case "$layout" in
@@ -474,6 +485,7 @@ cmd_repair() {
 	mdadm --manage $md --remove failed >/dev/null 2>&1
 	mdadm --manage $md --remove detached >/dev/null 2>&1
 	step "adding $disk to $name"
+	wait_parts $p || die "the new partition $p is not there"
 	mdadm --manage $md --add $p || die "mdadm --add failed"
 	write_mdconf
 	swap_on
