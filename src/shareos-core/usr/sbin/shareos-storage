@@ -245,6 +245,14 @@ release_disk() {
 	done
 }
 
+part_open() {   # partitions -> 0 when each is a block device that can be opened
+	local q
+	for q in "$@"; do
+		[ -b "$q" ] && dd if="$q" of=/dev/null bs=512 count=1 2>/dev/null || return 1
+	done
+	return 0
+}
+
 partition() {   # disk type(L|R) -> [swap partition] + data partition; prints the data partition
 	local disk=$1 sw p i
 	# still claimed by something (RAID, device mapper)? say what instead of failing blindly
@@ -263,15 +271,23 @@ partition() {   # disk type(L|R) -> [swap partition] + data partition; prints th
 	fi | sfdisk -q --wipe always --wipe-partitions always /dev/$disk >/dev/null \
 		|| die "partitioning $disk failed"
 	if [ "$SWAP_MB" -gt 0 ]; then sw=$(partn $disk 1); p=$(partn $disk 2); else sw=; p=$(partn $disk 1); fi
+	# The partitions must be there and stay: where something reads the table
+	# again after sfdisk has closed the disk (udev on a PC; the box has none),
+	# a partition is gone for a moment and comes back – its node exists, but
+	# opening it fails. Wait until every new partition can be opened.
 	i=0
-	while [ ! -b $p ] && [ $i -lt 20 ]; do
+	while ! part_open $p $sw && [ $i -lt 20 ]; do
 		[ $i = 4 ] && blockdev --rereadpt /dev/$disk 2>/dev/null
 		sleep 0.5; i=$((i + 1))
 	done
-	[ -b $p ] || die "partition $p did not appear"
+	part_open $p $sw || die "partition $p did not appear"
 	wipefs -q -a $p
 	if [ -n "$sw" ]; then
-		mkswap -L shareos-swap $sw >/dev/null || die "mkswap on $sw failed"
+		i=0
+		until mkswap -L shareos-swap $sw >/dev/null 2>&1; do
+			i=$((i + 1)); [ $i -lt 5 ] || die "mkswap on $sw failed"
+			sleep 1
+		done
 		swapon -p 10 $sw 2>/dev/null
 	fi
 	DATA=$p
