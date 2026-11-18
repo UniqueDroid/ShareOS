@@ -4,7 +4,8 @@
 #                                              range: "Range: bytes=a-b", so
 #                                              players can seek in large files)
 #   GET  /_shareos/cgi/file?t=<ticket>&info=1  {"name","size","mode","app"}
-#   PUT  /_shareos/cgi/file?t=<ticket>         save (only with mode "edit")
+#   PUT  /_shareos/cgi/file?t=<ticket>         save (mode "edit", at most 64 MB) or
+#                                              upload (mode "put", any size)
 # Tickets come from the rpcd method shareos.files.app_ticket (logged-in
 # session in the admin interface). A ticket names one file, one app and the
 # account whose rights apply; it can be used repeatedly until it expires
@@ -79,16 +80,23 @@ case "$REQUEST_METHOD" in
 		else as_user "dd if=$P bs=65536 iflag=skip_bytes,count_bytes skip=$from count=$len 2>/dev/null"; fi
 		;;
 	PUT|POST)
-		[ "$mode" = edit ] || reply '403 Forbidden' '{"error":"opened read-only"}'
+		[ "$mode" = edit ] || [ "$mode" = put ] || reply '403 Forbidden' '{"error":"opened read-only"}'
 		len=${CONTENT_LENGTH:-0}
 		case "$len" in *[!0-9]*|'') reply '411 Length Required' '{"error":"length required"}' ;; esac
-		[ "$len" -le $MAX ] || reply '413 Payload Too Large' '{"error":"file too large"}'
+		# "edit" is an app saving a document (limit); "put" an upload of any size
+		[ "$mode" = put ] || [ "$len" -le $MAX ] || reply '413 Payload Too Large' '{"error":"file too large (at most 64 MB)"}'
 		part=$(q "${path%/*}/.${path##*/}.part")
 		# write next to the file first, then copy over it: owner and rights stay
 		um=002; case "$path" in /mnt/*/home/"$user"/*) um=077 ;; esac
+		# stopped from outside (the web server ends a request that was cancelled
+		# or takes too long): the part does not stay
+		trap 'as_user "rm -f -- $part"; exit 1' TERM HUP INT
 		if head -c "$len" | as_user "umask $um; cat > $part"; then
 			got=$(as_user "stat -c %s -- $part" 2>/dev/null)
-			if [ "$got" = "$len" ] && as_user "cat -- $part > $P && rm -f -- $part"; then
+			# an upload is moved into place (no second copy of a large file);
+			# a saved document is copied over the old one: owner and rights stay
+			if [ "$mode" = put ]; then fin="mv -f -- $part $P"; else fin="cat -- $part > $P && rm -f -- $part"; fi
+			if [ "$got" = "$len" ] && as_user "$fin"; then
 				reply '200 OK' "{\"ok\":true,\"size\":$len}"
 			fi
 		fi

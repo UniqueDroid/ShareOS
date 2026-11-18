@@ -33,7 +33,7 @@ while :; do
 		fi
 	fi
 	if [ "$MODE" = apps ]; then
-		/usr/bin/uhttpd -f -h /www-apps -r ShareOS-Apps -p "$(uci -q get apps.store.port || echo 8081)" $tls \
+		UHTTPD_NO_CACHE=1 /usr/bin/uhttpd -f -h /www-apps -r ShareOS-Apps -p "$(uci -q get apps.store.port || echo 8081)" $tls \
 			-x /_shareos/cgi -S -D -t 300 -T 30 -k 20 -n 3 -N 50 &
 	elif [ "$MODE" = tremote ]; then
 		/usr/bin/uhttpd -f -h /www-tremote -r ShareOS -p "$(uci -q get shareos.tremote.port || echo 9091)" $tls \

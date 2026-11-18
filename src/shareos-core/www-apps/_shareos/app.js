@@ -43,8 +43,20 @@
  *                                  (ShareOS 0.2.0-beta.9+; before: fs was null)
  *   .list(root, path, hidden)      {entries: [{name, type, size, mtime}], free, size}
  *   .mkdir(root, path, name)   .rename(root, path, name, to)
- *   .copy(root, path, names, destRoot, dest)   .move(…same…)
+ *   .copy(root, path, names, destRoot, dest, { onProgress })   .move(…same…)
  *   .remove(root, path, names)
+ *   .upload(root, path, name, blob, { onProgress })
+ *                                  a file from the computer into a folder, of any
+ *                                  size (0.3.0-beta.14+; .save() of an opened file
+ *                                  stops at 64 MB). onProgress as above; cancelled:
+ *                                  { cancelled: true }, the part sent is removed
+ *                                  onProgress (ShareOS 0.3.0-beta.14+, fs.progress
+ *                                  is true there) is called about every 1.5 s
+ *                                  while the box goes on in the background:
+ *                                  { total, done } in bytes (null while the box
+ *                                  is still counting) and cancel() to stop it –
+ *                                  the promise then resolves to { cancelled: true },
+ *                                  what was copied so far stays
  *   .open(root, path, name, {write, create})   a file like ShareOS.file
  *   .pick({ title, ext: ['.mp3', …], multiple, save, name, folder })
  *                                  file dialog of the box: resolves to
@@ -370,6 +382,8 @@
 		text: function () { return fetch(fileUrl, { cache: 'no-store' }).then(check).then(function (r) { return r.text(); }); },
 		blob: function () { return fetch(fileUrl, { cache: 'no-store' }).then(check).then(function (r) { return r.blob(); }); },
 		save: function (data) {
+			// the box refuses more before it reads it – the browser would only see a cut connection
+			if (data && data.size > 64 * 1048576) return Promise.reject(new Error('file too large (at most 64 MB)'));
 			return fetch(fileUrl, { method: 'PUT', body: data }).then(check).then(function (r) { return r.json(); }).then(function (j) {
 				toAdmin({ sos: 'file-saved', app: appId, name: file.name });
 				return j;
@@ -396,13 +410,42 @@
 	/* copy, move and remove: the box goes on in the background with what takes
 	   longer than a few seconds ({ running, job }) – wait here for the result,
 	   so the promise resolves when the files are where they should be */
-	function fsLong(op, args) {
+	function fsLong(op, args, opts) {
+		var on = opts && typeof opts.onProgress === 'function' ? opts.onProgress : null;
 		return fsCall(op, args).then(function wait(j) {
 			if (!j.running) return j;
 			var id = j.job;
+			if (on) {
+				try {
+					on({ total: j.total_kb != null ? j.total_kb * 1024 : null, done: j.done_kb != null ? j.done_kb * 1024 : null,
+						cancel: function () { return fsCall('job_cancel', { id: id }); } });
+				} catch (e) { /* the app's display must not stop the waiting */ }
+			}
 			return new Promise(function (res) { setTimeout(res, 1500); })
 				.then(function () { return fsCall('job', { id: id }); })
 				.then(function (n) { if (n.running) n.job = id; return wait(n); });
+		});
+	}
+	// a file from the computer into a folder, of any size, with progress
+	function fsUpload(root, path, name, data, opts) {
+		var on = opts && typeof opts.onProgress === 'function' ? opts.onProgress : null;
+		return fsCall('open', { root: root, path: path || '', name: name, write: true, create: true, upload: true }).then(function (t) {
+			return new Promise(function (resolve, reject) {
+				var x = new XMLHttpRequest(), total = data.size != null ? data.size : null;
+				var cancel = function () { x.abort(); return Promise.resolve(); };
+				var tell = function (done) { if (on) try { on({ total: total, done: done, cancel: cancel }); } catch (e) { /* display only */ } };
+				x.open('PUT', '/_shareos/cgi/file?t=' + t.ticket);
+				x.upload.onprogress = function (ev) { tell(ev.loaded); };
+				x.onload = function () {
+					var j = {};
+					try { j = JSON.parse(x.responseText); } catch (e) { /* no JSON */ }
+					if (x.status === 200 && j.ok) resolve(j); else reject(new Error(j.error || 'HTTP ' + x.status));
+				};
+				x.onerror = function () { reject(new Error('connection lost')); };
+				x.onabort = function () { resolve({ ok: true, cancelled: true }); };
+				tell(0);
+				x.send(data);
+			});
 		});
 	}
 	var fs = grant && /^[0-9a-f]{32}$/.test(grant) ? {
@@ -410,8 +453,10 @@
 		list: function (root, path, hidden) { return fsCall('list', { root: root, path: path || '', hidden: !!hidden }); },
 		mkdir: function (root, path, name) { return fsCall('mkdir', { root: root, path: path || '', name: name }); },
 		rename: function (root, path, name, to) { return fsCall('rename', { root: root, path: path || '', name: name, to: to }); },
-		copy: function (root, path, names, destRoot, dest) { return fsLong('move', { root: root, path: path || '', names: names, dest_root: destRoot || root, dest: dest || '', copy: true }); },
-		move: function (root, path, names, destRoot, dest) { return fsLong('move', { root: root, path: path || '', names: names, dest_root: destRoot || root, dest: dest || '' }); },
+		progress: true,
+		upload: fsUpload,
+		copy: function (root, path, names, destRoot, dest, opts) { return fsLong('move', { root: root, path: path || '', names: names, dest_root: destRoot || root, dest: dest || '', copy: true }, opts); },
+		move: function (root, path, names, destRoot, dest, opts) { return fsLong('move', { root: root, path: path || '', names: names, dest_root: destRoot || root, dest: dest || '' }, opts); },
 		remove: function (root, path, names) { return fsLong('delete', { root: root, path: path || '', names: names }); },
 		open: function (root, path, name, o) {
 			o = o || {};

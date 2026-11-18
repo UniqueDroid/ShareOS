@@ -69,7 +69,8 @@ all helpers first (in the order of `ORDER`) and all methods after them.
 | `devices.uc` | shareos.printer, ups | 106 |
 | `snapshots.uc` | shareos.snapshots | 156 |
 | `apps.uc` | shareos.apps, appstatus | 278 |
-| `files.uc` | shareos.files, appfs, background file jobs | 560 |
+| `files.uc` | shareos.files, appfs | 541 |
+| `files-jobs.uc` | copy, move and delete in the background: result, progress, stop | 78 |
 | `trash.uc` | trash of the file browser | 133 |
 | `media.uc` | shareos.dlna, appmedia, media jobs | 356 |
 | `torrent.uc` | shareos.apptorrent, tremote | 288 |

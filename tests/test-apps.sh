@@ -236,6 +236,21 @@ check "rpc: box name cleared again" "rpc shareos.web set '{\"host\":\"\"}' | js 
 run 'killall uhttpd'
 i=0; until curl -s -o /dev/null "http://127.0.0.1:$PORT/" || [ $i -ge 30 ]; do sleep 0.5; i=$((i + 1)); done
 check "apps server comes back after killall uhttpd (supervisor)" "[ \"\$(curl -s http://127.0.0.1:$PORT/hello/index.html)\" = '<!doctype html><title>ok</title>' ]"
+# a browser keeps an app's files by their address: every installation gets a new one,
+# and the files are sent so that the browser asks again (see app_rev() in shareos-apps)
+entry() { run 'shareos-apps list' | python3 -c "import json,sys; print([a['entry'] for a in json.load(sys.stdin)['apps'] if a['id']=='$1'][0])"; }
+REV=$(entry hello)
+check "a web app is opened through the address of its installation" "echo '$REV' | grep -Eq '^r[0-9]+/index.html\$' && [ \"\$(curl -s http://127.0.0.1:$PORT/hello/$REV)\" = '<!doctype html><title>ok</title>' ]"
+HDR=$(curl -sI "http://127.0.0.1:$PORT/hello/$REV" | tr -d '\r')
+check "its files carry the time of the installation, not 1970" "echo '$HDR' | grep -q '^Last-Modified: ' && ! echo '$HDR' | grep -q '^Last-Modified: .* 1970 '"
+check "the apps server lets the browser ask every time (Cache-Control: no-cache)" "echo '$HDR' | grep -qi '^Cache-Control: no-cache'"
+run 'shareos-apps install-file /tmp/pkg/orphan-1.0.0.sapp' >/dev/null
+O1=$(entry orphan); sleep 1; run 'shareos-apps install-file /tmp/pkg/orphan-1.0.0.sapp' >/dev/null; O2=$(entry orphan)
+check "installing again gives a new address, the old one is gone" "[ -n '$O1' ] && [ '$O1' != '$O2' ] && [ \"\$(ls $R/www-apps/orphan | grep -c '^r[0-9]*\$')\" = 1 ] && [ \"\$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:$PORT/orphan/$O1)\" = 404 ]"
+rm -f "$R/www-apps/orphan/${O2%%/*}"; touch -d @0 $R/www-apps/orphan/index.html
+check "an app from an older version gets its address at the next start" "run 'shareos-apps fix-perms' >/dev/null; entry orphan | grep -Eq '^r[0-9]+/index.html\$' && [ \"\$(stat -c %Y $R/www-apps/orphan/index.html)\" -gt 1700000000 ]"
+run 'shareos-apps remove orphan' >/dev/null
+check "system apps keep their plain entry" "run 'shareos-apps list' | js \"all(not a['entry'].startswith('r') or a['type']!='system' for a in d['apps'])\""
 run "uci set shareos.ui=ui; uci set shareos.ui.area_apps=0; uci commit shareos; /etc/init.d/S51apps stop; /etc/init.d/S51apps start" >/dev/null; sleep 2
 check "area Apps off: apps web server does not start" "! curl -s -o /dev/null http://127.0.0.1:$PORT/"
 run "uci set shareos.ui.area_apps=1; uci commit shareos; /etc/init.d/S51apps start" >/dev/null
@@ -356,6 +371,14 @@ check "fs: folder not moved into itself, no overwrite" "fs '{\"op\":\"move\",\"r
 check "fs: no way out of the folders" "fs '{\"op\":\"list\",\"root\":\"daten\",\"path\":\"../../etc\"}' | grep -q 'invalid path' && fs '{\"op\":\"list\",\"root\":\"etc\",\"path\":\"\"}' | grep -q 'unknown folder'"
 TN=$(fs '{"op":"open","root":"daten","path":"ablage","name":"neu.txt","write":true,"create":true}' | python3 -c 'import json,sys; print(json.load(sys.stdin).get("ticket",""))')
 check "fs: open a new file for writing, save it with the ticket" "[ \${#TN} -eq 32 ] && curl -s -X PUT --data-binary 'aus der App' '$F?t=$TN' | js \"d['ok']\" && [ \"\$(cat $R/mnt/daten/ablage/neu.txt)\" = 'aus der App' ]"
+# an upload from the computer: any size (a document saved by an app stops at 64 MB)
+dd if=/dev/zero of=$T/gross.bin bs=1M count=70 2>/dev/null
+TU=$(fs '{"op":"open","root":"daten","path":"ablage","name":"gross.bin","write":true,"create":true,"upload":true}' | python3 -c 'import json,sys; d=json.load(sys.stdin); print(d.get("ticket","") if d.get("mode")=="put" else "")')
+check "fs: upload of 70 MB with an upload ticket, moved into place" "[ \${#TU} -eq 32 ] && curl -s -X PUT -T $T/gross.bin '$F?t=$TU' | js \"d['ok'] and d['size']==73400320\" && [ \"\$(stat -c %s $R/mnt/daten/ablage/gross.bin)\" = 73400320 ] && ! ls -a $R/mnt/daten/ablage | grep -q '\.part\$'"
+TE=$(fs '{"op":"open","root":"daten","path":"ablage","name":"gross2.bin","write":true,"create":true}' | python3 -c 'import json,sys; print(json.load(sys.stdin).get("ticket",""))')
+check "fs: the same through a save ticket is refused with a reason" "curl -s -X PUT -T $T/gross.bin '$F?t=$TE' | grep -q 'too large' && [ ! -e $R/mnt/daten/ablage/gross2.bin ]"
+check "fs: upload needs write and create" "fs '{\"op\":\"open\",\"root\":\"daten\",\"path\":\"ablage\",\"name\":\"x.bin\",\"upload\":true}' | grep -q 'upload needs write and create'"
+rm -f $T/gross.bin $R/mnt/daten/ablage/gross.bin
 check "fs: open read-only cannot save, missing file needs create" "T2=\$(fs '{\"op\":\"open\",\"root\":\"daten\",\"path\":\"ablage\",\"name\":\"neu.txt\"}' | python3 -c 'import json,sys; print(json.load(sys.stdin)[\"ticket\"])') && curl -s -X PUT --data-binary x \"$F?t=\$T2\" | grep -q 'read-only' && fs '{\"op\":\"open\",\"root\":\"daten\",\"path\":\"\",\"name\":\"fehlt.txt\",\"write\":true}' | grep -q 'not found'"
 check "fs: delete" "fs '{\"op\":\"delete\",\"root\":\"daten\",\"path\":\"\",\"names\":[\"ablage\"]}' | js \"d['ok']\" && [ ! -e $R/mnt/daten/ablage ]"
 check "fs: unknown op, wrong grant, GET refused" "fs '{\"op\":\"exec\"}' | grep -q 'invalid request' && fs '{\"op\":\"roots\"}' 'http://127.0.0.1:$PORT/_shareos/cgi/fs?g=ffffffffffffffffffffffffffffffff' | grep -q 'no access' && curl -s '$FS' | grep -q 'not allowed'"

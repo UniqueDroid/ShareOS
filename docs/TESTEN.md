@@ -530,6 +530,19 @@ Braucht ein Tailscale-Konto (kostenlos), ein Handy oder einen Rechner mit Tailsc
 5. Konto ohne persönlichen Ordner: Teilen meldet „no personal folder“; das Geteilte wird verworfen und kommt bei der nächsten Anmeldung nicht wieder.
 6. Dateidialog einer App für ein Konto **ohne** *Dateien* (z. B. Webpad → *Öffnen*): Die Ordnerauswahl zeigt zuerst *App-Daten*, dann *Mein Ordner* und die Freigaben des Benutzers; Freigaben nur zum Lesen sind markiert und fehlen beim Speichern. Die App legt ihre eigenen Dateien weiter in *App-Daten* ab.
 
+## 14zu. Fortschritt beim Kopieren in Apps (0.3.0-beta.14)
+
+Braucht ShareExplorer oder ShareFinder ab 1.1.0 (APPS → Store) und eine große Datei (einige GB) auf der Box.
+
+1. ShareExplorer öffnen, die große Datei kopieren (Strg+C) und in einen anderen Ordner einfügen (Strg+V). Nach etwa 3 Sekunden erscheint unten rechts ein Fenster: „1 Element wird kopiert“, Balken, „… % · … von …“, nach einigen Sekunden Geschwindigkeit und Restzeit.
+2. Währenddessen per SSH: `ls /tmp/shareos-filejobs/*/` zeigt `total`, `done`, `pid`; `cat /tmp/shareos-filejobs/*/total /tmp/shareos-filejobs/*/done` (KB) passt zur Anzeige. `top` zeigt `cp` und ab und zu `du` – die Oberfläche bleibt bedienbar.
+3. Warten bis zum Ende: Das Fenster verschwindet, „Eingefügt.“, die Datei ist da und gleich groß (`ls -l`). `/tmp/shareos-filejobs` ist leer.
+4. Noch einmal kopieren und im Fenster **Abbrechen**: „Abgebrochen. Was schon kopiert war, bleibt.“ – `ps | grep -E 'cp |du '` zeigt nichts mehr davon; im Zielordner liegt eine unvollständige Datei, die man löschen kann.
+5. Verschieben in einen Ordner **desselben** Laufwerks: sofort fertig, kein Fenster. Verschieben auf ein **anderes** Laufwerk (z. B. USB): Fenster wie beim Kopieren, „wird verschoben“.
+6. Dasselbe einmal in ShareFinder.
+7. **Hochladen:** eine Datei von mehr als 64 MB (am besten einige GB) vom Computer in ShareExplorer ziehen. Das Fenster zeigt „1 Element wird hochgeladen“ mit Menge, Geschwindigkeit und Restzeit; am Ende „Hochgeladen.“, die Datei ist da und gleich groß. Noch einmal und **Abbrechen**: im Ordner bleibt nichts zurück (`ls -la` zeigt keine `.….part`).
+8. **Baum:** in ShareExplorer einen Ordner anlegen (Strg+Umschalt+N) – er steht sofort links im Baum; umbenennen und löschen ebenso.
+
 ## 14zt. Weckalarm der MCU (0.3.0-beta.13)
 
 Nur DNS-320L, DNS-320 rev B, DNS-327L (Boxen mit MCU-Uhr). Geht das Einschalten schief, bleibt die Box aus und wird mit der Netztaste gestartet – Daten sind nicht in Gefahr.

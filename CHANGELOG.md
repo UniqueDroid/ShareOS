@@ -4,6 +4,12 @@ Changes per release (newest first). The section of a version is added to its
 GitHub release automatically when the release is built. Test versions are
 pre-releases for test devices only.
 
+## 0.3.0-beta.14
+
+- **Apps can show how far a copy is, and stop it** ([discussion #88](https://github.com/UniqueDroid/ShareOS/discussions/88)). A copy, or a move to another drive, that takes longer goes on in the background of the box; it now tells what the sources take and how much is copied so far, and it can be cancelled (what was copied stays). App SDK: `ShareOS.fs.copy(…, { onProgress })` and `.move(…)` – `{ total, done }` in bytes and `cancel()`; `ShareOS.fs.progress` is `true` where this is there. ShareExplorer and ShareFinder 1.1.0 use it for a window with speed and time left. The amounts are measured with `du` on the targets every few seconds, with low priority – they are close, not exact to the byte.
+- **An update of a web app could keep running as the old version in the browser – for years.** The packages are built with the file time 0, the web server named 1970 as "last modified", and a browser takes a file that old for unchanged: it used its copy without asking again. Found with ShareExplorer – the new package was installed, the old program ran. Every installation now sets the file times and gives the app a new address (`/<id>/r<time>/…`, a link to its own folder that the entry is opened through), so what a browser kept is not asked for any more; apps that are installed get both at the next start. And the apps web server sends `Cache-Control: no-cache` with every file (uhttpd patch 0004): kept, but asked for every time – that also covers the app SDK after a firmware update.
+- **Apps can upload files of any size, with progress.** `ShareOS.fs.upload(root, path, name, blob, { onProgress })` – the file is written beside its target and moved into place; `cancel()` stops it and the part is removed. Until now apps could only save through the ticket for documents, which stops at 64 MB – and a larger file ended in "Failed to fetch", because the box refused it before reading it. `save()` now says "file too large (at most 64 MB)" itself. ShareExplorer and ShareFinder 1.1.0 upload this way.
+
 ## 0.3.0-beta.13
 
 - *Services*: the descriptions fit the box. *Time (NTP)* and *Board control* named the "MCU clock" on every model; the DNS-320 rev A and the DNS-325 have the kernel's clock chip. The Zabbix agent in passive mode shows the port it listens on.
