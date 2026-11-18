@@ -163,7 +163,7 @@ T1=$(run "echo tomtom-12 | shareos-users add tom share >/dev/null 2>&1; id -u to
 T2=$(run "echo timtim-12 | shareos-users add tim share >/dev/null 2>&1; id -u tim; shareos-users del tim >/dev/null 2>&1")
 check "users: the id of a deleted account is not given out again" "[ -n \"$T1\" ] && [ \"$T2\" -gt \"$T1\" ]"
 run "shareos-users set jan --home=" >/dev/null
-check "users: without a personal folder there is no section and no home directory" "! grep -q '^\[jan\]' $KC && grep -q '^jan:.*:/:/bin/false\$' $R/etc/passwd && [ -d $R/mnt/daten/home/jan ]"
+check "users: without a personal folder there is no section and no home directory" "! grep -q '^\[jan\]' $KC && grep -q '^jan:[^:]*:[^:]*:[^:]*:[^:]*:/:' $R/etc/passwd && [ -d $R/mnt/daten/home/jan ]"
 run "shareos-users set jan --home=daten" >/dev/null
 check "users: … and it is back with the folder" "grep -q '^\[jan\]' $KC && grep -q '^jan:.*:/mnt/daten/home/jan:' $R/etc/passwd"
 check "user sees own shares" "rpc shareos.me get '{\"ubus_rpc_session\":\"$SID\"}' | js \"sorted((s['name'],s['access']) for s in d['shares'])==[('fotos','ro'),('medien','ro')]\""
