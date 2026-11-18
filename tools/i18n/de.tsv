@@ -2121,6 +2121,8 @@ P392	Zurücklesen von $1 fehlgeschlagen
 P393	Partition $1 nicht gefunden
 P394	die Datei ist für ein anderes Gerät ($1, diese Box: $2)
 P395	diese Box wird nicht unterstützt ($1)
+P396	Der Ordner $1 bleibt mit allem darin liegen, wo er ist. Auf $2 beginnt das Konto mit einem leeren persönlichen Ordner; was seine Apps dort ablegen (Cloud-Konten, Downloads, Sync-Einstellungen), fehlt dann ebenfalls. Um die Dateien mitzunehmen, kopiere sie danach unter „Dateien“ hinüber.
+P397	Der Ordner $1 bleibt erhalten, das Konto kann ihn aber nicht mehr öffnen – weder über SMB noch in der Weboberfläche. Cloud-Sync, der Paperless-Eingang und Apps, die ihre Einstellungen dort ablegen, funktionieren für dieses Konto nicht mehr.
 E1699	Eine Freigabe auf den persönlichen Ordner eines Kontos ist die Ausnahme: Dort handelt jeder eingetragene Rechner als dieses Konto, ohne Passwort.
 E1700	Geprüft: SHA-256, Prüfsummen aller Teile, passend für dieses Gerät.
 E1701	Hochgeladene Datei – geprüft: SHA-256 laut .sha256-Datei, Prüfsummen aller Teile, passend für dieses Gerät.
@@ -2159,3 +2161,7 @@ E1733	der Kernel ist kein U-Boot-Image
 E1734	der Kernel ist größer als die 3 MB, die der Bootloader lädt
 E1735	keine Firmware-Datei im D-Link-Format
 E1736	die Datei ist beschädigt (Prüfsumme)
+E1737	Persönlicher Ordner auf ein anderes Laufwerk?
+E1738	Neues Laufwerk verwenden
+E1739	Persönlichen Ordner abschalten?
+E1740	Laufwerk nicht vorhanden

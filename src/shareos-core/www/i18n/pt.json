@@ -1719,9 +1719,17 @@
 		"kernel is not a U-Boot image": "o kernel não é uma imagem U-Boot",
 		"kernel larger than the 3 MB the boot loader loads": "o kernel é maior que os 3 MB que o carregador de inicialização lê",
 		"not a D-Link firmware file": "não é um arquivo de firmware D-Link",
-		"the file is damaged (checksum)": "o arquivo está danificado (soma de verificação)"
+		"the file is damaged (checksum)": "o arquivo está danificado (soma de verificação)",
+		"Personal folder on another drive?": "Pasta pessoal em outra unidade?",
+		"Use the new drive": "Usar a nova unidade",
+		"Switch the personal folder off?": "Desativar a pasta pessoal?",
+		"drive not present": "unidade ausente"
 	},
 	"patterns": [
+		[
+			"^The folder (\\S+) stays where it is, with everything in it\\. On (\\S+) the account starts with an empty personal folder; what its apps keep there \\(cloud accounts, downloads, sync settings\\) is missing too\\. To take the files along, copy them over in Files afterwards\\.$",
+			"A pasta $1 fica onde está, com tudo o que contém. Em $2 a conta começa com uma pasta pessoal vazia; o que os aplicativos guardam nela (contas de nuvem, downloads, ajustes de sincronização) também fica faltando. Para levar os arquivos, copie-os depois em Arquivos."
+		],
 		[
 			"^Web apps run on their own port \\((\\d+) / (\\d+) for HTTPS\\) – apart from this interface, so an app cannot use your login\\. Anyone who knows the address can open a web app on the network; “visible to” decides who sees it in “My ShareOS”\\.$",
 			"Apps web rodam em porta própria ($1 / $2 para HTTPS) – separados desta interface, assim um app não pode usar seu login. Quem conhece o endereço pode abrir um app web na rede; \"visível para\" decide quem o vê em \"Meu ShareOS\"."
@@ -1733,6 +1741,10 @@
 		[
 			"^Web apps run on their own port \\((\\d+)\\) – apart from this interface, so an app cannot use your login\\. Anyone who knows the address can open a web app on the network; “visible to” decides who sees it in “My ShareOS”\\.$",
 			"Apps web rodam em porta própria ($1) – separados desta interface, assim um app não pode usar seu login. Quem conhece o endereço pode abrir um app web na rede; \"visível para\" decide quem o vê em \"Meu ShareOS\"."
+		],
+		[
+			"^The folder (\\S+) is kept, but the account cannot open it any more – not over SMB and not in the web interface\\. Cloud sync, the Paperless inbox and apps that keep their settings there stop working for this account\\.$",
+			"A pasta $1 é mantida, mas a conta não pode mais abri-la – nem por SMB nem na interface web. A sincronização com a nuvem, a caixa de entrada do Paperless e os aplicativos que guardam nela seus ajustes deixam de funcionar para esta conta."
 		],
 		[
 			"^Afterwards (.+) starts\\. Alt-F's extra packages are missing then – flash the same file once more in Alt-F's firmware page\\. Back to ShareOS: flash the ShareOS \\.bin in Alt-F, system and settings are still there\\.$",

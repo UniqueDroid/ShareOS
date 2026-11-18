@@ -1719,9 +1719,17 @@
 		"kernel is not a U-Boot image": "der Kernel ist kein U-Boot-Image",
 		"kernel larger than the 3 MB the boot loader loads": "der Kernel ist größer als die 3 MB, die der Bootloader lädt",
 		"not a D-Link firmware file": "keine Firmware-Datei im D-Link-Format",
-		"the file is damaged (checksum)": "die Datei ist beschädigt (Prüfsumme)"
+		"the file is damaged (checksum)": "die Datei ist beschädigt (Prüfsumme)",
+		"Personal folder on another drive?": "Persönlicher Ordner auf ein anderes Laufwerk?",
+		"Use the new drive": "Neues Laufwerk verwenden",
+		"Switch the personal folder off?": "Persönlichen Ordner abschalten?",
+		"drive not present": "Laufwerk nicht vorhanden"
 	},
 	"patterns": [
+		[
+			"^The folder (\\S+) stays where it is, with everything in it\\. On (\\S+) the account starts with an empty personal folder; what its apps keep there \\(cloud accounts, downloads, sync settings\\) is missing too\\. To take the files along, copy them over in Files afterwards\\.$",
+			"Der Ordner $1 bleibt mit allem darin liegen, wo er ist. Auf $2 beginnt das Konto mit einem leeren persönlichen Ordner; was seine Apps dort ablegen (Cloud-Konten, Downloads, Sync-Einstellungen), fehlt dann ebenfalls. Um die Dateien mitzunehmen, kopiere sie danach unter „Dateien“ hinüber."
+		],
 		[
 			"^Web apps run on their own port \\((\\d+) / (\\d+) for HTTPS\\) – apart from this interface, so an app cannot use your login\\. Anyone who knows the address can open a web app on the network; “visible to” decides who sees it in “My ShareOS”\\.$",
 			"Web-Apps laufen auf einem eigenen Port ($1 / $2 für HTTPS) – getrennt von dieser Oberfläche, damit eine App deine Anmeldung nicht benutzen kann. Wer die Adresse kennt, kann eine Web-App im Netzwerk öffnen; „sichtbar für“ steuert, wem sie in „Mein ShareOS“ angezeigt wird."
@@ -1733,6 +1741,10 @@
 		[
 			"^Web apps run on their own port \\((\\d+)\\) – apart from this interface, so an app cannot use your login\\. Anyone who knows the address can open a web app on the network; “visible to” decides who sees it in “My ShareOS”\\.$",
 			"Web-Apps laufen auf einem eigenen Port ($1) – getrennt von dieser Oberfläche, damit eine App deine Anmeldung nicht benutzen kann. Wer die Adresse kennt, kann eine Web-App im Netzwerk öffnen; „sichtbar für“ steuert, wem sie in „Mein ShareOS“ angezeigt wird."
+		],
+		[
+			"^The folder (\\S+) is kept, but the account cannot open it any more – not over SMB and not in the web interface\\. Cloud sync, the Paperless inbox and apps that keep their settings there stop working for this account\\.$",
+			"Der Ordner $1 bleibt erhalten, das Konto kann ihn aber nicht mehr öffnen – weder über SMB noch in der Weboberfläche. Cloud-Sync, der Paperless-Eingang und Apps, die ihre Einstellungen dort ablegen, funktionieren für dieses Konto nicht mehr."
 		],
 		[
 			"^Afterwards (.+) starts\\. Alt-F's extra packages are missing then – flash the same file once more in Alt-F's firmware page\\. Back to ShareOS: flash the ShareOS \\.bin in Alt-F, system and settings are still there\\.$",

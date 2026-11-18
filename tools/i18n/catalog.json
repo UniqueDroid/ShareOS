@@ -1737,7 +1737,11 @@
 		"kernel is not a U-Boot image",
 		"kernel larger than the 3 MB the boot loader loads",
 		"not a D-Link firmware file",
-		"the file is damaged (checksum)"
+		"the file is damaged (checksum)",
+		"Personal folder on another drive?",
+		"Use the new drive",
+		"Switch the personal folder off?",
+		"drive not present"
 	],
 	"patterns": [
 		[
@@ -3323,6 +3327,14 @@
 		[
 			"^this box is not supported \\((.*)\\)$",
 			"this box is not supported ($1)"
+		],
+		[
+			"^The folder (\\S+) stays where it is, with everything in it\\. On (\\S+) the account starts with an empty personal folder; what its apps keep there \\(cloud accounts, downloads, sync settings\\) is missing too\\. To take the files along, copy them over in Files afterwards\\.$",
+			"The folder $1 stays where it is, with everything in it. On $2 the account starts with an empty personal folder; what its apps keep there (cloud accounts, downloads, sync settings) is missing too. To take the files along, copy them over in Files afterwards."
+		],
+		[
+			"^The folder (\\S+) is kept, but the account cannot open it any more – not over SMB and not in the web interface\\. Cloud sync, the Paperless inbox and apps that keep their settings there stop working for this account\\.$",
+			"The folder $1 is kept, but the account cannot open it any more – not over SMB and not in the web interface. Cloud sync, the Paperless inbox and apps that keep their settings there stop working for this account."
 		]
 	],
 	"words": [
