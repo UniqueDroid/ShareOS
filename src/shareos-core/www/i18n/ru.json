@@ -1682,7 +1682,11 @@
 		"live · every 5 s · temperature up to 15 s old": "онлайн · каждые 5 с · температура не старше 15 с",
 		"sets the clock, keeps the clock chip in sync": "устанавливает время, синхронизирует микросхему часов",
 		"fan, temperature, buttons": "вентилятор, температура, кнопки",
-		"A share on the personal folder of an account is the exception: there every listed computer acts as that account, without a password.": "Общий ресурс на личной папке учётной записи — исключение: там каждый компьютер из списка действует от имени этой учётной записи, без пароля."
+		"A share on the personal folder of an account is the exception: there every listed computer acts as that account, without a password.": "Общий ресурс на личной папке учётной записи — исключение: там каждый компьютер из списка действует от имени этой учётной записи, без пароля.",
+		"Verified: SHA-256, checksums of all parts, made for this device.": "Проверено: SHA-256, контрольные суммы всех частей, сделано для этого устройства.",
+		"Uploaded file – verified: SHA-256 of the .sha256 file, checksums of all parts, made for this device.": "Загруженный файл – проверено: SHA-256 по файлу .sha256, контрольные суммы всех частей, подходит для этого устройства.",
+		"Uploaded file – verified: checksums of all parts, made for this device (without .sha256 file).": "Загруженный файл – проверено: контрольные суммы всех частей, подходит для этого устройства (без файла .sha256).",
+		"Settings and packages are kept.": "Настройки и пакеты сохраняются."
 	},
 	"patterns": [
 		[

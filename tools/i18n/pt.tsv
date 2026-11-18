@@ -2118,3 +2118,7 @@ E1698	ventoinha, temperatura, botões
 P374	zabbix_agentd, modo passivo, porta $1
 P375	zabbix_agentd, modos ativo e passivo, porta $1
 E1699	Uma partilha na pasta pessoal de uma conta é a exceção: aí cada computador da lista age como essa conta, sem palavra-passe.
+E1700	Verificado: SHA-256, somas de todas as partes, feito para este aparelho.
+E1701	Arquivo enviado – verificado: SHA-256 do arquivo .sha256, somas de todas as partes, adequado para este dispositivo.
+E1702	Arquivo enviado – verificado: somas de todas as partes, adequado para este dispositivo (sem arquivo .sha256).
+E1703	Configurações e pacotes são mantidos.

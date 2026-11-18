@@ -1682,7 +1682,11 @@
 		"live · every 5 s · temperature up to 15 s old": "লাইভ · প্রতি ৫ সে. · তাপমাত্রা সর্বোচ্চ ১৫ সে. পুরোনো",
 		"sets the clock, keeps the clock chip in sync": "ঘড়ি ঠিক করে, ঘড়ির চিপ সিঙ্কে রাখে",
 		"fan, temperature, buttons": "ফ্যান, তাপমাত্রা, বোতাম",
-		"A share on the personal folder of an account is the exception: there every listed computer acts as that account, without a password.": "কোনো অ্যাকাউন্টের ব্যক্তিগত ফোল্ডারের শেয়ার ব্যতিক্রম: সেখানে তালিকাভুক্ত প্রতিটি কম্পিউটার পাসওয়ার্ড ছাড়াই সেই অ্যাকাউন্ট হিসেবে কাজ করে।"
+		"A share on the personal folder of an account is the exception: there every listed computer acts as that account, without a password.": "কোনো অ্যাকাউন্টের ব্যক্তিগত ফোল্ডারের শেয়ার ব্যতিক্রম: সেখানে তালিকাভুক্ত প্রতিটি কম্পিউটার পাসওয়ার্ড ছাড়াই সেই অ্যাকাউন্ট হিসেবে কাজ করে।",
+		"Verified: SHA-256, checksums of all parts, made for this device.": "যাচাই করা হয়েছে: SHA-256, সব অংশের চেকসাম, এই ডিভাইসের জন্য তৈরি।",
+		"Uploaded file – verified: SHA-256 of the .sha256 file, checksums of all parts, made for this device.": "আপলোড করা ফাইল – যাচাই হয়েছে: .sha256 ফাইল অনুযায়ী SHA-256, সব অংশের চেকসাম, এই ডিভাইসের উপযোগী।",
+		"Uploaded file – verified: checksums of all parts, made for this device (without .sha256 file).": "আপলোড করা ফাইল – যাচাই হয়েছে: সব অংশের চেকসাম, এই ডিভাইসের উপযোগী (.sha256 ফাইল ছাড়া)।",
+		"Settings and packages are kept.": "সেটিংস ও প্যাকেজ থেকে যায়।"
 	},
 	"patterns": [
 		[

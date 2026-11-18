@@ -2118,3 +2118,7 @@ E1698	ventilador, temperatura, botones
 P374	zabbix_agentd, modo pasivo, puerto $1
 P375	zabbix_agentd, modos activo y pasivo, puerto $1
 E1699	Un recurso sobre la carpeta personal de una cuenta es la excepción: allí cada equipo de la lista actúa como esa cuenta, sin contraseña.
+E1700	Comprobado: SHA-256, sumas de todas las partes, hecho para este dispositivo.
+E1701	Archivo subido – comprobado: SHA-256 del archivo .sha256, sumas de todas las partes, apto para este dispositivo.
+E1702	Archivo subido – comprobado: sumas de todas las partes, apto para este dispositivo (sin archivo .sha256).
+E1703	Los ajustes y paquetes se conservan.

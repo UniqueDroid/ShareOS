@@ -2118,3 +2118,7 @@ E1698	ventilateur, température, boutons
 P374	zabbix_agentd, mode passif, port $1
 P375	zabbix_agentd, modes actif et passif, port $1
 E1699	Un partage sur le dossier personnel d’un compte fait exception : chaque ordinateur de la liste y agit en tant que ce compte, sans mot de passe.
+E1700	Vérifié : SHA-256, sommes de toutes les parties, fait pour cet appareil.
+E1701	Fichier téléversé – vérifié : SHA-256 du fichier .sha256, sommes de toutes les parties, adapté à cet appareil.
+E1702	Fichier téléversé – vérifié : sommes de toutes les parties, adapté à cet appareil (sans fichier .sha256).
+E1703	Les réglages et paquets sont conservés.

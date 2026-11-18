@@ -2102,3 +2102,7 @@ E1698	Lüfter, Temperatur, Tasten
 P374	zabbix_agentd, passiver Modus, Port $1
 P375	zabbix_agentd, aktiver und passiver Modus, Port $1
 E1699	Eine Freigabe auf den persönlichen Ordner eines Kontos ist die Ausnahme: Dort handelt jeder eingetragene Rechner als dieses Konto, ohne Passwort.
+E1700	Geprüft: SHA-256, Prüfsummen aller Teile, passend für dieses Gerät.
+E1701	Hochgeladene Datei – geprüft: SHA-256 laut .sha256-Datei, Prüfsummen aller Teile, passend für dieses Gerät.
+E1702	Hochgeladene Datei – geprüft: Prüfsummen aller Teile, passend für dieses Gerät (ohne .sha256-Datei).
+E1703	Einstellungen und Pakete bleiben erhalten.

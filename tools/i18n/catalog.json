@@ -1700,7 +1700,11 @@
 		"live · every 5 s · temperature up to 15 s old",
 		"sets the clock, keeps the clock chip in sync",
 		"fan, temperature, buttons",
-		"A share on the personal folder of an account is the exception: there every listed computer acts as that account, without a password."
+		"A share on the personal folder of an account is the exception: there every listed computer acts as that account, without a password.",
+		"Verified: SHA-256, checksums of all parts, made for this device.",
+		"Uploaded file – verified: SHA-256 of the .sha256 file, checksums of all parts, made for this device.",
+		"Uploaded file – verified: checksums of all parts, made for this device (without .sha256 file).",
+		"Settings and packages are kept."
 	],
 	"patterns": [
 		[

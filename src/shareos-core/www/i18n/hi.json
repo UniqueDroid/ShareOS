@@ -1682,7 +1682,11 @@
 		"live · every 5 s · temperature up to 15 s old": "लाइव · हर 5 से. · तापमान अधिकतम 15 से. पुराना",
 		"sets the clock, keeps the clock chip in sync": "घड़ी सेट करता है, घड़ी चिप को सिंक में रखता है",
 		"fan, temperature, buttons": "पंखा, तापमान, बटन",
-		"A share on the personal folder of an account is the exception: there every listed computer acts as that account, without a password.": "किसी खाते के निजी फ़ोल्डर पर साझा अपवाद है: वहाँ सूची का हर कंप्यूटर बिना पासवर्ड के उसी खाते के रूप में काम करता है।"
+		"A share on the personal folder of an account is the exception: there every listed computer acts as that account, without a password.": "किसी खाते के निजी फ़ोल्डर पर साझा अपवाद है: वहाँ सूची का हर कंप्यूटर बिना पासवर्ड के उसी खाते के रूप में काम करता है।",
+		"Verified: SHA-256, checksums of all parts, made for this device.": "जाँचा गया: SHA-256, सभी हिस्सों के चेकसम, इसी डिवाइस के लिए बना।",
+		"Uploaded file – verified: SHA-256 of the .sha256 file, checksums of all parts, made for this device.": "अपलोड की गई फ़ाइल – जाँची गई: .sha256 फ़ाइल के अनुसार SHA-256, सभी भागों के चेकसम, इस डिवाइस के लिए उपयुक्त।",
+		"Uploaded file – verified: checksums of all parts, made for this device (without .sha256 file).": "अपलोड की गई फ़ाइल – जाँची गई: सभी भागों के चेकसम, इस डिवाइस के लिए उपयुक्त (.sha256 फ़ाइल के बिना)।",
+		"Settings and packages are kept.": "सेटिंग्स और पैकेज बने रहते हैं।"
 	},
 	"patterns": [
 		[

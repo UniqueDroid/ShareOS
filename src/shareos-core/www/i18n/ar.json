@@ -1682,7 +1682,11 @@
 		"live · every 5 s · temperature up to 15 s old": "مباشر · كل 5 ث · الحرارة بعمر حتى 15 ث",
 		"sets the clock, keeps the clock chip in sync": "يضبط الساعة ويبقي شريحة الساعة متزامنة",
 		"fan, temperature, buttons": "المروحة، الحرارة، الأزرار",
-		"A share on the personal folder of an account is the exception: there every listed computer acts as that account, without a password.": "المشاركة على المجلد الشخصي لحساب هي الاستثناء: هناك يتصرف كل حاسوب مُدرج بصفته ذلك الحساب، دون كلمة مرور."
+		"A share on the personal folder of an account is the exception: there every listed computer acts as that account, without a password.": "المشاركة على المجلد الشخصي لحساب هي الاستثناء: هناك يتصرف كل حاسوب مُدرج بصفته ذلك الحساب، دون كلمة مرور.",
+		"Verified: SHA-256, checksums of all parts, made for this device.": "تم التحقق: SHA-256، مجاميع جميع الأجزاء، مصنوع لهذا الجهاز.",
+		"Uploaded file – verified: SHA-256 of the .sha256 file, checksums of all parts, made for this device.": "ملف مرفوع – تم الفحص: SHA-256 حسب ملف ‎.sha256‎، والمجاميع الاختبارية لكل الأجزاء، ومناسب لهذا الجهاز.",
+		"Uploaded file – verified: checksums of all parts, made for this device (without .sha256 file).": "ملف مرفوع – تم الفحص: المجاميع الاختبارية لكل الأجزاء، ومناسب لهذا الجهاز (بدون ملف ‎.sha256‎).",
+		"Settings and packages are kept.": "تبقى الإعدادات والحزم."
 	},
 	"patterns": [
 		[

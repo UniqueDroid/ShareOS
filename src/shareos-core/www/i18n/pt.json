@@ -1682,7 +1682,11 @@
 		"live · every 5 s · temperature up to 15 s old": "ao vivo · a cada 5 s · temperatura com até 15 s",
 		"sets the clock, keeps the clock chip in sync": "acerta o relógio e mantém o chip de relógio sincronizado",
 		"fan, temperature, buttons": "ventoinha, temperatura, botões",
-		"A share on the personal folder of an account is the exception: there every listed computer acts as that account, without a password.": "Uma partilha na pasta pessoal de uma conta é a exceção: aí cada computador da lista age como essa conta, sem palavra-passe."
+		"A share on the personal folder of an account is the exception: there every listed computer acts as that account, without a password.": "Uma partilha na pasta pessoal de uma conta é a exceção: aí cada computador da lista age como essa conta, sem palavra-passe.",
+		"Verified: SHA-256, checksums of all parts, made for this device.": "Verificado: SHA-256, somas de todas as partes, feito para este aparelho.",
+		"Uploaded file – verified: SHA-256 of the .sha256 file, checksums of all parts, made for this device.": "Arquivo enviado – verificado: SHA-256 do arquivo .sha256, somas de todas as partes, adequado para este dispositivo.",
+		"Uploaded file – verified: checksums of all parts, made for this device (without .sha256 file).": "Arquivo enviado – verificado: somas de todas as partes, adequado para este dispositivo (sem arquivo .sha256).",
+		"Settings and packages are kept.": "Configurações e pacotes são mantidos."
 	},
 	"patterns": [
 		[

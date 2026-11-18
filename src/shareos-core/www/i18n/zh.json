@@ -1682,7 +1682,11 @@
 		"live · every 5 s · temperature up to 15 s old": "实时 · 每 5 秒 · 温度最多滞后 15 秒",
 		"sets the clock, keeps the clock chip in sync": "设置时钟，并保持时钟芯片同步",
 		"fan, temperature, buttons": "风扇、温度、按键",
-		"A share on the personal folder of an account is the exception: there every listed computer acts as that account, without a password.": "账户个人文件夹上的共享是例外：列出的每台计算机在那里都以该账户的身份操作，无需密码。"
+		"A share on the personal folder of an account is the exception: there every listed computer acts as that account, without a password.": "账户个人文件夹上的共享是例外：列出的每台计算机在那里都以该账户的身份操作，无需密码。",
+		"Verified: SHA-256, checksums of all parts, made for this device.": "已校验：SHA-256、所有部分的校验和、适用于此设备。",
+		"Uploaded file – verified: SHA-256 of the .sha256 file, checksums of all parts, made for this device.": "已上传的文件 – 已检查：.sha256 文件的 SHA-256、所有部分的校验和、适用于此设备。",
+		"Uploaded file – verified: checksums of all parts, made for this device (without .sha256 file).": "已上传的文件 – 已检查：所有部分的校验和、适用于此设备（无 .sha256 文件）。",
+		"Settings and packages are kept.": "设置和软件包将保留。"
 	},
 	"patterns": [
 		[
