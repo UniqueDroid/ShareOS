@@ -1681,7 +1681,8 @@
 		"NAME RESOLUTION": "تحليل الأسماء",
 		"live · every 5 s · temperature up to 15 s old": "مباشر · كل 5 ث · الحرارة بعمر حتى 15 ث",
 		"sets the clock, keeps the clock chip in sync": "يضبط الساعة ويبقي شريحة الساعة متزامنة",
-		"fan, temperature, buttons": "المروحة، الحرارة، الأزرار"
+		"fan, temperature, buttons": "المروحة، الحرارة، الأزرار",
+		"A share on the personal folder of an account is the exception: there every listed computer acts as that account, without a password.": "المشاركة على المجلد الشخصي لحساب هي الاستثناء: هناك يتصرف كل حاسوب مُدرج بصفته ذلك الحساب، دون كلمة مرور."
 	},
 	"patterns": [
 		[

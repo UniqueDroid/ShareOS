@@ -207,6 +207,21 @@ write_smb() {
 	} > $SMBCONF.new && mv $SMBCONF.new $SMBCONF
 }
 
+# NFS has no accounts: every client acts as one user of the box (all_squash).
+# That is nobody, who gets the rights on a share's folder by its ACL. A
+# personal folder keeps its own rights (0700, the account's) – nobody never
+# gets in there (#178). A share that is such a folder, or lies in one, is
+# exported as the account the folder belongs to.
+nfs_anon() {   # path -> uid
+	local rest u uid
+	case "$1" in /mnt/*/home/*)
+		rest=${1#/mnt/*/home/}; u=${rest%%/*}
+		uid=$(id -u "$u" 2>/dev/null) && [ "$uid" -ge 1000 ] && [ "$uid" != 65534 ] &&
+			[ "$(stat -c %u "${1%"$rest"}$u" 2>/dev/null)" = "$uid" ] && { echo "$uid"; return; } ;;
+	esac
+	echo 65534
+}
+
 write_nfs() {
 	{
 		echo "# written by shareos-shares from /etc/config/shares – edit there"
@@ -218,8 +233,8 @@ write_nfs() {
 			mode=ro; on "$s" nfs_rw && mode=rw
 			hosts=$(get "$s" nfs_hosts)
 			[ -n "$hosts" ] || continue
-			line="$p"
-			for h in $hosts; do line="$line $h($mode,sync,no_subtree_check,all_squash,anonuid=65534,anongid=100)"; done
+			line="$p" anon=$(nfs_anon "$p")
+			for h in $hosts; do line="$line $h($mode,sync,no_subtree_check,all_squash,anonuid=$anon,anongid=100)"; done
 			echo "$line"
 		done
 	} > $EXPORTS.new && mv $EXPORTS.new $EXPORTS

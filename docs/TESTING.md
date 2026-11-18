@@ -525,6 +525,16 @@ Needs a Tailscale account (free), a phone or computer with Tailscale, the file `
 5. An account without a personal folder: sharing shows "no personal folder"; the shared item is dropped and does not come back at the next login.
 6. File dialog of an app for an account **without** *Files* (e.g. Webpad → *Open*): the list of folders shows *App data* first, then *My folder* and the user's shares; read-only shares are marked and are missing when saving. The app still keeps its own files in *App data*.
 
+## 14zv. NFS share on a personal folder (0.3.0-beta.14, #178)
+
+Needs a Linux computer in the network as NFS client and an account with a personal folder (here `jan` on the drive `daten`; the box is 10.242.1.20).
+
+1. *Shares → New share*: name `janhome`, drive `daten`, folder `home/jan`, *Share via NFS* and *NFS clients may write*, the client's address or network under *NFS CLIENTS*, *Save*.
+2. On the box: `cat /etc/exports` – the line of `/mnt/daten/home/jan` holds `anonuid=<uid of jan>` (`id -u jan`), every other share `anonuid=65534`. `ls -ld /mnt/daten/home/jan` still shows `drwx------ jan users`.
+3. On the client: `sudo mount 10.242.1.20:/mnt/daten/home/jan /mnt/test && ls /mnt/test && touch /mnt/test/from-nfs` – reading and writing work.
+4. On the box: `ls -l /mnt/daten/home/jan/from-nfs` – the file belongs to `jan:users`; jan sees it over SMB and under *My ShareOS*.
+5. Delete the share again (the folder stays): the line is gone from `/etc/exports`.
+
 ## 14zu. Progress of a copy in apps (0.3.0-beta.14)
 
 Needs ShareExplorer or ShareFinder 1.1.0 or newer (APPS → Store) and a large file (a few GB) on the box.

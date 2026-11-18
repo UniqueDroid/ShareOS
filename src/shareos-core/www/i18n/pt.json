@@ -1681,7 +1681,8 @@
 		"NAME RESOLUTION": "RESOLUÇÃO DE NOMES",
 		"live · every 5 s · temperature up to 15 s old": "ao vivo · a cada 5 s · temperatura com até 15 s",
 		"sets the clock, keeps the clock chip in sync": "acerta o relógio e mantém o chip de relógio sincronizado",
-		"fan, temperature, buttons": "ventoinha, temperatura, botões"
+		"fan, temperature, buttons": "ventoinha, temperatura, botões",
+		"A share on the personal folder of an account is the exception: there every listed computer acts as that account, without a password.": "Uma partilha na pasta pessoal de uma conta é a exceção: aí cada computador da lista age como essa conta, sem palavra-passe."
 	},
 	"patterns": [
 		[

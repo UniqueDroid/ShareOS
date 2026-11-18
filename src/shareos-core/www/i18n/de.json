@@ -1681,7 +1681,8 @@
 		"NAME RESOLUTION": "NAMENSAUFLÖSUNG",
 		"live · every 5 s · temperature up to 15 s old": "live · alle 5 s · Temperatur bis zu 15 s alt",
 		"sets the clock, keeps the clock chip in sync": "stellt die Uhr, hält den Uhrenbaustein synchron",
-		"fan, temperature, buttons": "Lüfter, Temperatur, Tasten"
+		"fan, temperature, buttons": "Lüfter, Temperatur, Tasten",
+		"A share on the personal folder of an account is the exception: there every listed computer acts as that account, without a password.": "Eine Freigabe auf den persönlichen Ordner eines Kontos ist die Ausnahme: Dort handelt jeder eingetragene Rechner als dieses Konto, ohne Passwort."
 	},
 	"patterns": [
 		[

@@ -70,6 +70,7 @@ function sharesView() {
 				<div class="ph"><span class="pt">NFS (LINUX, PROXMOX)</span><span class="tag ml ${d.nfs_running ? 'ok' : ''}">${d.nfs_running ? 'running' : 'off'}</span></div>
 				<label class="chk"><input type="checkbox" id="opt-nfs"${d.nfs_enabled ? raw(' checked') : ''}>Offer NFS shares</label>
 				<p class="note">NFS has no user accounts: the listed computers or networks get access. Files are stored as <code>nobody:users</code> . Mount e.g. with <code>mount ${ip}:/mnt/&lt;drive&gt;/&lt;folder&gt; /target</code>.</p>
+				<p class="note">A share on the personal folder of an account is the exception: there every listed computer acts as that account, without a password.</p>
 			</div>
 		</div>
 	</section>`;
