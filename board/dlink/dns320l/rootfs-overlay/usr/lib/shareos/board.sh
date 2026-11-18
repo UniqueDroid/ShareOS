@@ -55,6 +55,15 @@ board_detect() {
 		BOARD_LED_STATUS=dns325:white:usb BOARD_LED_USB=dns325:red:usb
 		BOARD_LED_DISK1=dns325:red:l_hdd BOARD_LED_DISK2=dns325:red:r_hdd
 		BOARD_LED_POWER=dns325:white:power ;;
+	*DNR-322L*)
+		# the board of the DNS-320 rev A as a video recorder: 256 MB RAM, a
+		# smaller system partition, a partition for the NUUO software
+		BOARD_ID=dnr322l BOARD_NAME="D-Link DNR-322L rev A" BOARD_FWNAME=DNR-322L-rev-Ax
+		BOARD_SIG=DNR-322 BOARD_MODEL=DNR-322L BOARD_CONTROL=mcu-temp BOARD_RTC=kernel
+		BOARD_POWER_BACK=gpiochip1:5
+		BOARD_LED_STATUS=dns320:blue:usb BOARD_LED_USB=dns320:orange:usb
+		BOARD_LED_DISK1=dns320:orange:l_hdd BOARD_LED_DISK2=dns320:orange:r_hdd
+		BOARD_LED_POWER=dns320:blue:power ;;
 	*DNS-320*)
 		BOARD_ID=dns320a BOARD_NAME="D-Link DNS-320 rev A" BOARD_FWNAME=DNS-320-rev-Ax
 		BOARD_SIG=DNS323D1 BOARD_MODEL=DNS-320 BOARD_CONTROL=mcu-temp BOARD_RTC=kernel

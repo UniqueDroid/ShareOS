@@ -38,10 +38,11 @@ N=${MTD#mtd}
 SIZE=$(sed -n "s/^$MTD: \([0-9a-f]*\) .*/\1/p" ${SHAREOS_PROC_MTD:-/proc/mtd})
 # 0x06400000: DNS-320L, DNS-320 rev B (100 MB, my-dlink follows); 0x06600000: DNS-325
 # (102 MB, seen on a rev A1) and, from Alt-F's device trees (kirkwood-dnskw.dtsi),
-# DNS-320 rev A (not seen on hardware yet).
+# DNS-320 rev A (not seen on hardware yet). 0x04600000: DNR-322L (70 MB, the NUUO
+# partition follows; /proc/mtd of a DNR-322L A2, #180).
 case "$SIZE" in
-	06400000|06600000) ;;
-	*) die "unexpected size 0x$SIZE of 'image' (expected 0x06400000 or 0x06600000), refusing" ;;
+	06400000|06600000|04600000) ;;
+	*) die "unexpected size 0x$SIZE of 'image' (expected 0x06400000, 0x06600000 or 0x04600000), refusing" ;;
 esac
 
 # get the image
@@ -60,8 +61,11 @@ esac
 LEN=$(wc -c < "$FILE")
 echo "rootfs image: $LEN bytes"
 
-# rootfs volume size: image + room for growth, 48 MiB minimum
+# rootfs volume size: image + room for growth, 48 MiB minimum – 32 MiB on the
+# 70 MB partition of the DNR-322L, so that about as much is left for
+# rootfs_data (settings, web apps)
 VOL=$((48 * 1024 * 1024))
+[ "$SIZE" != 04600000 ] || VOL=$((32 * 1024 * 1024))
 [ $LEN -lt $VOL ] || VOL=$(( (LEN / 1048576 + 8) * 1048576 ))
 
 # the running system must not use the partition

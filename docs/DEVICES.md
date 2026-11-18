@@ -15,7 +15,7 @@ temperature sensor, buttons, LEDs, power-off) is described per model in
 | DNS-320 rev B | `ShareOS-<ver>-DNS-320-rev-Bx.*` | 128 MB | built, **testers wanted** |
 | DNS-325 rev A | `ShareOS-<ver>-DNS-325-rev-Ax.*` | 256 MB | **partly tested** (rev A1, see below), more testers wanted |
 | DNS-320 rev A | `ShareOS-<ver>-DNS-320-rev-Ax.*` | 128 MB | **partly tested** (rev A1 with 0.3.0-beta.9: installed, web interface; temperature and fan control with the fix of 0.3.0-beta.11, [#163](https://github.com/UniqueDroid/ShareOS/issues/163)), more testers wanted – up to 0.2.0-beta.16 it restarts in a loop after flashing (initramfs address, [#96](https://github.com/UniqueDroid/ShareOS/issues/96)); use 0.2.0-beta.17 or newer |
-| DNR-322L | – | 128 MB | planned |
+| DNR-322L rev A | `ShareOS-<ver>-DNR-322L-rev-Ax.*` | 256 MB | built from 0.3.0-beta.14, **not tried on hardware** ([#180](https://github.com/UniqueDroid/ShareOS/issues/180)) – the board of the DNS-320 rev A as a video recorder; system partition 70 MB, the NUUO partition is left alone. A first test needs a serial console at hand (see below) |
 | DNS-327L | – | 512 MB | planned (own kernel and flash layout) |
 
 Not possible: DNS-323, DNS-321, DNS-343 (64 MB RAM, 8 MB flash).
@@ -48,7 +48,21 @@ of the fix for 0.2.0-beta.9).
 | LEDs | `dns320l:*` | `dns325:*` | `dns320:*` |
 | D-Link signature | `DNS320L` / `DNS320B` | `DNS-325` | `DNS323D1` |
 
-One kernel serves all four: post-image appends the model's device tree to the
+The DNR-322L rev A is the DNS-320 rev A in every row; its signature is
+`DNR-322`, and its flash is laid out differently (`image` 70 MB, then
+`nuuo package` 30 MB, `mini firmware`, `config`, `my-dlink` where the
+DNS-320L has them).
+
+**A model nobody has started yet:** if the kernel starts but cannot find its
+initramfs (the address the stock U-Boot copies it to, last column of `MODELS`
+in `post-image.sh`), it panics and restarts in a loop – U-Boot only falls
+back to the D-Link rescue system when the kernel *image* is damaged, not
+when the kernel fails later. Such a loop is ended through a serial console
+(start from RAM, flash again). So the first test of a model wants a serial
+console at hand; that is how the DNS-325 and the DNS-320 rev A were sorted
+out ([#96](https://github.com/UniqueDroid/ShareOS/issues/96)).
+
+One kernel serves all of them: post-image appends the model's device tree to the
 kernel (the stock U-Boot passes none) and writes a `.bin` with the model's
 signature. Initramfs and system are the same; the box finds its model in the
 device tree at boot (`shareos-boardinfo`).

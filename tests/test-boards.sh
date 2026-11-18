@@ -32,6 +32,7 @@ for x in "D-Link DNS-320L-rev-Ax NAS:dns320l:DNS-320L-rev-Ax:DNS320L:mcu" \
 	"D-Link DNS-320-rev-Bx NAS:dns320b:DNS-320-rev-Bx:DNS320B:mcu" \
 	"D-Link DNS-320 NAS (Rev A1):dns320a:DNS-320-rev-Ax:DNS323D1:mcu-temp" \
 	"D-Link DNS-325 NAS (Rev A1):dns325:DNS-325-rev-Ax:DNS-325:hwmon" \
+	"D-Link DNR-322L-rev-Ax NAS:dnr322l:DNR-322L-rev-Ax:DNR-322:mcu-temp" \
 	"D-Link DNS-327L:dns327l:DNS-327L-rev-Ax:DNS327L:mcu"; do
 	IFS=: read -r model id fw sig ctl <<< "$x"
 	box "$model"

@@ -32,6 +32,7 @@ DNS-320L-rev-Ax   kirkwood-dns320l   0 8 11 1 1 6   0x00800000
 DNS-320-rev-Bx    kirkwood-dns320b   0 8 12 1 1 5   0x00800000
 DNS-320-rev-Ax    kirkwood-dns320    0 8  7 2 0 4   0x01000000
 DNS-325-rev-Ax    kirkwood-dns325    0 8  5 2 0 3   0x01000000
+DNR-322L-rev-Ax   kirkwood-dnr322l   1 8  2 1 1 8   0x01000000
 "
 
 KVER=$(sed -n 's/^BR2_LINUX_KERNEL_CUSTOM_VERSION_VALUE="\(.*\)"/\1/p' "$BR2_CONFIG")

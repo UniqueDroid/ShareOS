@@ -47,7 +47,7 @@ BR2_LINUX_KERNEL_XZ=y
 BR2_LINUX_KERNEL_DTS_SUPPORT=y
 # one kernel for the Kirkwood models, a zImage with appended DTB per model
 # (post-image.sh makes a .bin per model)
-BR2_LINUX_KERNEL_CUSTOM_DTS_PATH="$(BR2_EXTERNAL_SHAREOS_PATH)/board/dlink/dns320l/dts/kirkwood-dns320l.dts $(BR2_EXTERNAL_SHAREOS_PATH)/board/dlink/dns320l/dts/kirkwood-dns320b.dts"
+BR2_LINUX_KERNEL_CUSTOM_DTS_PATH="$(BR2_EXTERNAL_SHAREOS_PATH)/board/dlink/dns320l/dts/kirkwood-dns320l.dts $(BR2_EXTERNAL_SHAREOS_PATH)/board/dlink/dns320l/dts/kirkwood-dns320b.dts $(BR2_EXTERNAL_SHAREOS_PATH)/board/dlink/dns320l/dts/kirkwood-dnr322l.dts"
 BR2_LINUX_KERNEL_INTREE_DTS_NAME="marvell/kirkwood-dns320 marvell/kirkwood-dns325"
 BR2_LINUX_KERNEL_NEEDS_HOST_OPENSSL=y
 
