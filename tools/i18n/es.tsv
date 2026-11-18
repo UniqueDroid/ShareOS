@@ -2117,4 +2117,61 @@ E1697	ajusta el reloj y mantiene sincronizado el chip de reloj
 E1698	ventilador, temperatura, botones
 P374	zabbix_agentd, modo pasivo, puerto $1
 P375	zabbix_agentd, modos activo y pasivo, puerto $1
+P376	SHA256SUMS no incluye $1
+P377	no se puede descomprimir el paquete: $1
+P378	el paquete está dañado (SHA256SUMS): $1
+P379	ocupado: $1
+P380	no se pueden obtener las versiones de $1 ($2): $3
+P381	no se puede preparar el sistema en /overlay (¿lleno?): $1
+P382	no se encontró la partición flash «$1»
+P383	no se escribe: placa inesperada «$1»
+P384	la actualización se interrumpió ($1)
+P385	versión desconocida $1 – primero busca actualizaciones
+P386	la versión $1 no está descargada y comprobada
+P387	falló ($1): la imagen preparada está dañada
+P388	falló ($1): no se pudo escribir el sistema (ubiupdatevol)
+P389	$1 no se relee correctamente
+P390	falló el borrado de $1
+P391	falló la escritura de $1
+P392	falló la relectura de $1
+P393	no se encontró la partición $1
+P394	el archivo es para otro dispositivo ($1, este equipo: $2)
+P395	este equipo no es compatible ($1)
 E1699	Un recurso sobre la carpeta personal de una cuenta es la excepción: allí cada equipo de la lista actúa como esa cuenta, sin contraseña.
+E1700	Comprobado: SHA-256, sumas de todas las partes, hecho para este dispositivo.
+E1701	Archivo subido – comprobado: SHA-256 del archivo .sha256, sumas de todas las partes, apto para este dispositivo.
+E1702	Archivo subido – comprobado: sumas de todas las partes, apto para este dispositivo (sin archivo .sha256).
+E1703	Los ajustes y paquetes se conservan.
+E1704	SHA-256 no coincide – la descarga está dañada o fue alterada
+E1705	SHA-256 no coincide – el archivo no corresponde a su .sha256
+E1706	no se puede cancelar durante la escritura
+E1707	no se puede mover el archivo subido
+E1708	no se puede mover la firma subida
+E1709	no se puede leer el archivo subido
+E1710	el archivo de suma de comprobación no es válido
+E1711	el archivo de firma no es válido
+E1712	falló la descarga de la suma de comprobación
+E1713	falló la descarga del firmware
+E1714	falló la descarga de la firma
+E1715	no hay ningún archivo subido
+E1716	el equipo no funciona desde la flash (sin UBIFS en /overlay) – usa shareos-install-ubi
+E1717	rootfs.squashfs no es una imagen squashfs
+E1718	la firma no corresponde a este archivo
+E1719	la firma ya no es válida – no instalado
+E1720	la firma de esta versión no es válida – no instalado
+E1721	esta versión no está firmada – no instalado
+E1722	nombre de firmware desconocido para este equipo (/tmp/sys/board.env, /etc/shareos-release)
+E1723	no firmado por el proyecto ShareOS
+E1724	respuesta inesperada de GitHub
+E1725	canal no válido
+E1726	la versión no está descargada y comprobada
+E1727	hay una actualización de firmware en curso
+E1728	hay otra escritura de firmware en curso
+E1729	el initramfs del archivo está dañado
+E1730	el initramfs no es una imagen U-Boot
+E1731	el initramfs supera los 3 MB que carga el gestor de arranque
+E1732	el kernel del archivo está dañado
+E1733	el kernel no es una imagen U-Boot
+E1734	el kernel supera los 3 MB que carga el gestor de arranque
+E1735	no es un archivo de firmware D-Link
+E1736	el archivo está dañado (suma de comprobación)

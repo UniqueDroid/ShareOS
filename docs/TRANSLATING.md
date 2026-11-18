@@ -53,6 +53,12 @@ an entry in `tools/i18n/catalog.json` (at the end of `exact` or `patterns`,
 so the numbers of the existing entries stay the same) and a line with the new
 number in every `tools/i18n/<code>.tsv`; then `build-lang.py --all`.
 
+A value inside a pattern (`$1` in `Download: $1`) is translated too when it is
+a text of its own – several words that are in `exact` or match a pattern. That
+is how messages of the box (`the signature does not match this file`) are
+translated wherever the interface shows them behind a prefix. Names and
+numbers stay as they are.
+
 Checks (also in CI):
 - `python3 tests/check-i18n.py` – every language built from the current
   catalog, placeholders kept, regular expressions valid, no pattern hidden by
