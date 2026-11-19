@@ -273,7 +273,7 @@ The desktop view is a **module**. The classic view stays next to it.
 - **APPS → Store → Refresh now** loads the catalog from the [ShareOS-Apps](https://github.com/UniqueDroid/ShareOS-Apps) repository. **Install** next to **Webpad**: the box downloads the package, checks its SHA-256 and installs it.
 - **APPS → Installed → Open ↗** starts the app in a new tab on port **8081** (8444 with HTTPS) – deliberately another address than the admin interface.
 - **Users** decides who sees the app in "My ShareOS" (everyone, single users, groups).
-- **Own app:** upload a `.sapp` file under Store → *Install package* (built with `tools/build.py` from the app repository). It is marked "own / not verified".
+- **Uploaded app:** upload a `.sapp` file under Store → *Install package* (built with `tools/build.py` from the app repository). It is marked "uploaded – not checked".
 - **More sources** (own catalogs) under APPS → Sources.
 - **Scheduled tasks** (from beta.7, for apps with the permission `cron`): the install dialog lists the permissions. **APPS → Installed → Tasks** shows schedule, on/off and the last run; *Run now*, then *Log* shows the output. A changed schedule stays after an app update. Check with `crontab -l` (line `shareos-apps run-job`) and `ps` (the job runs as user `app-<id>`).
 

@@ -6,6 +6,7 @@ pre-releases for test devices only.
 
 ## 0.3.0-beta.15
 
+- *Apps*: an app installed from an uploaded package is marked "uploaded" (in the cards "uploaded – not checked") instead of "own" – it read as if one had written the app oneself, but it only says where the package came from.
 - App SDK (`/_shareos/theme.css`): an element with the `hidden` attribute is hidden even when a class gives it a `display` – a `.sos-btn` with `hidden` stayed visible, because the class's `display: inline-flex` beats the browser's own rule. Found in the Transmission app ([ShareOS-Apps #57](https://github.com/UniqueDroid/ShareOS-Apps/pull/57)).
 
 ## 0.3.0-beta.14
