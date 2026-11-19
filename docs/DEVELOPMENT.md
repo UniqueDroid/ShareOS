@@ -304,6 +304,16 @@ the box for why the web server was not running.
 | 08:00 | 0.3.0-beta.9 released by Jan (review fixes, #158). The night before the ARM emulator tests ran on GitHub for the first time – six runs until they were green; `test-dnsfilter` stays a warning because AdGuard Home starts too irregularly under the emulator. |
 | 08:48 | **Source by area.** Jan had asked for this for a long time: two files of more than 6000 lines are hard to read for people. `app.js` and `shareos.uc` become one file per area (`parts/web`, `parts/rpc`), joined by the build. First a pure cut whose result is byte-identical, then pages, set-up and clicks of each area moved into its file; every page of the old and the new interface compared in the browser. |
 
+### 17.–19.11.2026
+
+| Time | What happened |
+|---|---|
+| 17.11. 14:14 | Jan publishes `v0.3.0-beta.13` (MCU wake-up alarm, the box's names after a cold start). |
+| 17.11. | **Progress for copies** (discussion #88, Rambooka): the box tells what a background copy takes and how far it is, and can stop it; ShareExplorer and ShareFinder 1.1.0 show speed and time left. Jan's test turns up uploads that end in "Failed to fetch" above 64 MB (now any size, with progress) and an old app running from the browser cache after an update – the packages carry the file time 1970. |
+| 18.11. | NFS on personal folders (#178), then **personal folders over SMB** (#183, Rambooka): ksmbd knows no `[homes]`. Going through everything that touches personal folders turns up reused user ids – a new account owned the files of a deleted one. The firmware page in other languages was half English. A storage test that failed now and then on GitHub: the partitions vanish for a moment while udev reads the table again. |
+| 18.11. | A tester with two **DNR-322L** comes forward (#180); a first build is ready. On 19.11. Jan finds why the earlier models looped: the 9.3 MB kernel covers 0x800000, where Alt-F puts its initramfs. |
+| 19.11. 16:15 | Everything for `v0.3.0-beta.14` is on `main`; the DNR-322L follows once it has booted. |
+
 ### Friday, 13.11.2026
 
 | Time | What happened |
