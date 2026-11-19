@@ -305,6 +305,16 @@ direkt auf der Box nachgesehen, warum der Webserver nicht lief.
 | 08:00 | 0.3.0-beta.9 von Jan veröffentlicht (Korrekturen aus dem Review, #158). In der Nacht davor liefen die ARM-Emulator-Tests zum ersten Mal auf GitHub – sechs Läufe, bis sie grün waren; `test-dnsfilter` bleibt eine Warnung, weil AdGuard Home unter dem Emulator zu unregelmäßig startet. |
 | 08:48 | **Quelltext nach Bereichen.** Jan hatte das lange gefordert: Zwei Dateien mit über 6000 Zeilen sind für Menschen schwer zu lesen. `app.js` und `shareos.uc` werden zu einer Datei je Bereich (`parts/web`, `parts/rpc`), der Bau fügt sie zusammen. Zuerst ein reiner Schnitt, dessen Ergebnis byte-gleich ist, dann wandern Seiten, Setup und Klicks jedes Bereichs in seine Datei; jede Seite der alten und der neuen Oberfläche im Browser verglichen. |
 
+### 17.–19.11.2026
+
+| Zeit | Was passiert ist |
+|---|---|
+| 17.11. 14:14 | Jan veröffentlicht `v0.3.0-beta.13` (Weckalarm der MCU, Namen der Box nach einem Kaltstart). |
+| 17.11. | **Fortschritt beim Kopieren** (Diskussion #88, Rambooka): Die Box sagt, wie viel eine Kopie im Hintergrund umfasst und wie weit sie ist, und kann sie abbrechen; ShareExplorer und ShareFinder 1.1.0 zeigen Tempo und Restzeit. Jans Test findet Uploads über 64 MB, die mit „Failed to fetch“ enden (jetzt jede Größe, mit Fortschritt), und eine alte App aus dem Browser-Cache nach einem Update – die Pakete tragen die Dateizeit 1970. |
+| 18.11. | NFS auf persönlichen Ordnern (#178), dann **persönliche Ordner über SMB** (#183, Rambooka): ksmbd kennt kein `[homes]`. Die Durchsicht aller Stellen rund um persönliche Ordner findet wiederverwendete Benutzernummern – ein neues Konto besaß die Dateien eines gelöschten. Die Firmware-Seite war in anderen Sprachen zur Hälfte englisch. Ein Speichertest, der auf GitHub ab und zu scheiterte: Die Partitionen verschwinden kurz, während udev die Tabelle neu liest. |
+| 18.11. | Ein Tester mit zwei **DNR-322L** meldet sich (#180); ein erster Build steht. Am 19.11. findet Jan, warum die früheren Modelle in der Schleife hingen: Der 9,3-MB-Kernel reicht über 0x800000, wo Alt-F sein Initramfs ablegt. |
+| 19.11. 16:15 | Alles für `v0.3.0-beta.14` ist auf `main`; der DNR-322L folgt, sobald er gestartet ist. |
+
 ### Freitag, 13.11.2026
 
 | Zeit | Was passiert ist |

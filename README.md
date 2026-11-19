@@ -27,7 +27,7 @@ years of work goes to the Alt-F project — see [LICENSE](LICENSE) and
 ## Status: public test versions (beta)
 
 **DNS-320L:** the main device, tested on hardware with every release; the white **DNS-320LW** (rev A2) is the same box and uses the DNS-320L files (tested with 0.2.0-beta.20).
-**More models** from 0.2.0-beta.3: DNS-320 rev B, DNS-325 rev A, DNS-320 rev A – built; the DNS-325 rev A1 boots from flash (from 0.2.0-beta.9) and its buttons work (from 0.2.0-beta.10), the DNS-320 rev A/B are not tested yet; testers wanted: [docs/DEVICES.md](docs/DEVICES.md).
+**More models** from 0.2.0-beta.3: DNS-320 rev B, DNS-325 rev A, DNS-320 rev A – built; the DNS-325 rev A1 boots from flash (from 0.2.0-beta.9) and its buttons work (from 0.2.0-beta.10), the DNS-320 rev A1 runs and has a first test report ([#185](https://github.com/UniqueDroid/ShareOS/issues/185)), the DNS-320 rev B is not tested yet; testers wanted: [docs/DEVICES.md](docs/DEVICES.md).
 
 ShareOS runs from flash on the DNS-320L (kernel, initramfs and the system in
 UBI with a persistent overlay for settings and packages). Test releases
@@ -81,7 +81,7 @@ Version in brackets = first release with the feature.
 **Shares, users, files**
 - USB printers in the network: current printers without a driver (IPP over USB: AirPrint, Mopria, Windows), scanning over the network (eSCL), older printers over port 9100 (system app "printer", 0.2.0-beta.18)
 - UPS over USB: charge and runtime, messages on a power failure, clean shutdown on battery (low battery, a percentage or minutes), other computers over the network (system app "nut", 0.2.0-beta.18)
-- SMB 2/3 (ksmbd) and NFS v4 shares with read/write permissions per user and group, guest access optional; the crypto engine of the SoC computes the SMB 3 signatures (about three times as fast, 0.2.0-beta.17); compatibility mode up to SMB 2.1 for difficult clients (0.2.0-beta.17); named streams, so the iOS Files app can write (0.2.0-beta.19)
+- SMB 2/3 (ksmbd) and NFS v4 shares with read/write permissions per user and group, guest access optional; the crypto engine of the SoC computes the SMB 3 signatures (about three times as fast, 0.2.0-beta.17); compatibility mode up to SMB 2.1 for difficult clients (0.2.0-beta.17); named streams, so the iOS Files app can write (0.2.0-beta.19); every personal folder is its own share `\\box\<account>`, for that account only (0.3.0-beta.14); an NFS share on a personal folder acts as its account (0.3.0-beta.14)
 - Vault shares: locked and invisible in the network, unlocked by a user with their password for some minutes – only for them – and locked again automatically; protects confidential folders from ransomware on mapped PCs (0.3.0-beta.5)
 - Users and groups; one account for shares, web interface and apps; storage limit per user (ext4); import of Alt-F users with their passwords
 - "My ShareOS": users with web access manage their own password, look, shares, storage, cloud and Paperless
@@ -109,6 +109,7 @@ Version in brackets = first release with the feature.
 - App permissions `sysinfo`, `netcheck`, `docker` and `tuya` (admins only): SysMon, HomePing, DockerDeck and TuyaPulse show real data – the box's values, checks from the box, Docker hosts of the homelab, Tuya devices locally without the cloud (0.2.0-beta.11)
 - App permission `notify`: apps send messages through the box's notifications (web interface, e-mail, push) – from their scheduled tasks with `shareos-app-notify`, from the browser with `ShareOS.notify` (admins); at most 20 an hour per app (0.2.0-beta.12)
 - App permission `vault`: `ShareOS.vault` lists, unlocks and locks the user's vault shares (0.3.0-beta.5)
+- Apps copy and move with progress and can cancel (`onProgress`), upload files of any size (`ShareOS.fs.upload`) and know their own version (`ShareOS.appInfo()`, `data-sos-version`); an app update is never run from an old browser copy (0.3.0-beta.14)
 - File dialog of the apps with the personal folder and the user's shares, also for accounts without file access (0.2.0-beta.11)
 - System apps declare their service in `app.json` (`"service"`), ShareOS starts and stops it through the firmware's controller; how to submit a system app: `sysapps/README.md` (0.2.0-beta.9)
 - Large system apps on the apps drive (link in `/opt`), the flash stays free (0.2.0-beta.7)
