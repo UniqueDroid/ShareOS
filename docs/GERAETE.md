@@ -65,6 +65,13 @@ der Kernel später scheitert. So eine Schleife beendet man über eine serielle
 Konsole (aus dem RAM starten, neu flashen). Der erste Test eines Modells
 braucht deshalb eine serielle Konsole in Reichweite; so wurden der DNS-325 und
 der DNS-320 rev A geklärt ([#96](https://github.com/UniqueDroid/ShareOS/issues/96)).
+Was dort schiefgeht, ist inzwischen bekannt: Der entpackte ShareOS-Kernel ist
+9,3 MB groß und reicht von 0x8000 bis über 0x800000 – die Adresse, an die
+Alt-F sein Initramfs legt (dessen Kernel endet bei 0x4d9200). U-Boot der
+3.4er-Reihe (DNS-325, DNS-320 rev A, DNR-322L) kopiert das Initramfs an die
+Adresse in dessen Kopf, mit 0x800000 also mitten in den Kernel; diese Modelle
+bekommen 0x1000000. Der Start aus dem RAM über TFTP geht denselben Weg wie
+der Start vom Flash und prüft die Adresse, ohne etwas zu schreiben.
 
 Ein Kernel für alle: post-image hängt den Device-Tree des Modells an den
 Kernel (das Original-U-Boot übergibt keinen) und schreibt eine `.bin` mit der

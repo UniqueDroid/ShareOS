@@ -61,6 +61,13 @@ when the kernel fails later. Such a loop is ended through a serial console
 (start from RAM, flash again). So the first test of a model wants a serial
 console at hand; that is how the DNS-325 and the DNS-320 rev A were sorted
 out ([#96](https://github.com/UniqueDroid/ShareOS/issues/96)).
+What goes wrong there is known by now: the unpacked ShareOS kernel is 9.3 MB
+and reaches from 0x8000 past 0x800000, the address Alt-F puts its initramfs
+at (its kernel ends at 0x4d9200). U-Boot of the 3.4 series (DNS-325, DNS-320
+rev A, DNR-322L) copies the initramfs to the address in its header, so
+0x800000 lands inside the kernel; these models get 0x1000000. Starting the
+build from RAM over TFTP takes the same path as starting from flash and tests
+the address without writing anything.
 
 One kernel serves all of them: post-image appends the model's device tree to the
 kernel (the stock U-Boot passes none) and writes a `.bin` with the model's
