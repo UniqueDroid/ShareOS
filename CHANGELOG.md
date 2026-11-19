@@ -4,6 +4,10 @@ Changes per release (newest first). The section of a version is added to its
 GitHub release automatically when the release is built. Test versions are
 pre-releases for test devices only.
 
+## 0.3.0-beta.15
+
+- App SDK (`/_shareos/theme.css`): an element with the `hidden` attribute is hidden even when a class gives it a `display` – a `.sos-btn` with `hidden` stayed visible, because the class's `display: inline-flex` beats the browser's own rule. Found in the Transmission app ([ShareOS-Apps #57](https://github.com/UniqueDroid/ShareOS-Apps/pull/57)).
+
 ## 0.3.0-beta.14
 
 - **Apps can show how far a copy is, and stop it** ([discussion #88](https://github.com/UniqueDroid/ShareOS/discussions/88)). A copy, or a move to another drive, that takes longer goes on in the background of the box; it now tells what the sources take and how much is copied so far, and it can be cancelled (what was copied stays). App SDK: `ShareOS.fs.copy(…, { onProgress })` and `.move(…)` – `{ total, done }` in bytes and `cancel()`; `ShareOS.fs.progress` is `true` where this is there. ShareExplorer and ShareFinder 1.1.0 use it for a window with speed and time left. The amounts are measured with `du` on the targets every few seconds, with low priority – they are close, not exact to the byte.
