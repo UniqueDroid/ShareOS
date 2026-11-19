@@ -2101,4 +2101,61 @@ E1697	stellt die Uhr, hält den Uhrenbaustein synchron
 E1698	Lüfter, Temperatur, Tasten
 P374	zabbix_agentd, passiver Modus, Port $1
 P375	zabbix_agentd, aktiver und passiver Modus, Port $1
+P376	SHA256SUMS enthält $1 nicht
+P377	das Paket lässt sich nicht entpacken: $1
+P378	das Paket ist beschädigt (SHA256SUMS): $1
+P379	beschäftigt: $1
+P380	die Versionen lassen sich nicht von $1 ($2) abrufen: $3
+P381	das System lässt sich nicht in /overlay ablegen (voll?): $1
+P382	Flash-Partition „$1“ nicht gefunden
+P383	es wird nicht geschrieben: unerwartetes Gerät „$1“
+P384	das Update wurde unterbrochen ($1)
+P385	unbekannte Version $1 – zuerst nach Updates suchen
+P386	Version $1 ist nicht heruntergeladen und geprüft
+P387	fehlgeschlagen ($1): das vorbereitete System ist beschädigt
+P388	fehlgeschlagen ($1): das System konnte nicht geschrieben werden (ubiupdatevol)
+P389	$1 wird nicht korrekt zurückgelesen
+P390	Löschen von $1 fehlgeschlagen
+P391	Schreiben von $1 fehlgeschlagen
+P392	Zurücklesen von $1 fehlgeschlagen
+P393	Partition $1 nicht gefunden
+P394	die Datei ist für ein anderes Gerät ($1, diese Box: $2)
+P395	diese Box wird nicht unterstützt ($1)
 E1699	Eine Freigabe auf den persönlichen Ordner eines Kontos ist die Ausnahme: Dort handelt jeder eingetragene Rechner als dieses Konto, ohne Passwort.
+E1700	Geprüft: SHA-256, Prüfsummen aller Teile, passend für dieses Gerät.
+E1701	Hochgeladene Datei – geprüft: SHA-256 laut .sha256-Datei, Prüfsummen aller Teile, passend für dieses Gerät.
+E1702	Hochgeladene Datei – geprüft: Prüfsummen aller Teile, passend für dieses Gerät (ohne .sha256-Datei).
+E1703	Einstellungen und Pakete bleiben erhalten.
+E1704	SHA-256 stimmt nicht – der Download ist beschädigt oder wurde verändert
+E1705	SHA-256 stimmt nicht – die Datei passt nicht zu ihrer .sha256-Datei
+E1706	Abbrechen ist während des Schreibens nicht möglich
+E1707	die hochgeladene Datei lässt sich nicht verschieben
+E1708	die hochgeladene Signatur lässt sich nicht verschieben
+E1709	die hochgeladene Datei lässt sich nicht lesen
+E1710	die Prüfsummendatei ist ungültig
+E1711	die Signaturdatei ist ungültig
+E1712	die Prüfsumme konnte nicht heruntergeladen werden
+E1713	die Firmware konnte nicht heruntergeladen werden
+E1714	die Signatur konnte nicht heruntergeladen werden
+E1715	keine hochgeladene Datei vorhanden
+E1716	die Box läuft nicht vom Flash (kein UBIFS auf /overlay) – shareos-install-ubi verwenden
+E1717	rootfs.squashfs ist kein squashfs-Image
+E1718	die Signatur passt nicht zu dieser Datei
+E1719	die Signatur ist nicht mehr gültig – nicht installiert
+E1720	die Signatur dieser Version ist ungültig – nicht installiert
+E1721	diese Version ist nicht signiert – nicht installiert
+E1722	unbekannter Firmware-Name für diese Box (/tmp/sys/board.env, /etc/shareos-release)
+E1723	nicht vom ShareOS-Projekt signiert
+E1724	unerwartete Antwort von GitHub
+E1725	ungültiger Kanal
+E1726	die Version ist nicht heruntergeladen und geprüft
+E1727	ein Firmware-Update läuft gerade
+E1728	es wird gerade eine andere Firmware geschrieben
+E1729	das Startsystem in der Datei ist beschädigt
+E1730	das Startsystem ist kein U-Boot-Image
+E1731	das Startsystem ist größer als die 3 MB, die der Bootloader lädt
+E1732	der Kernel in der Datei ist beschädigt
+E1733	der Kernel ist kein U-Boot-Image
+E1734	der Kernel ist größer als die 3 MB, die der Bootloader lädt
+E1735	keine Firmware-Datei im D-Link-Format
+E1736	die Datei ist beschädigt (Prüfsumme)

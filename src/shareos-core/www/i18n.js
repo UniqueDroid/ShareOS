@@ -49,14 +49,29 @@ function i18nWords(t) {
 	return r;
 }
 
+// A value inside a composed text ("Download: <message of the box>"): translated
+// when it is a text of its own – several words, known as a whole or as a
+// pattern. Names and numbers stay as they are.
+function i18nValue(v, depth = 0) {
+	if (!/\S\s+\S/.test(v)) return v;
+	if (I18N.exact[v] != null) return I18N.exact[v];
+	if (depth < 2) for (const [re, rep] of I18N.patterns) {
+		const m = re.exec(v);
+		if (m) return rep.replace(/\$(\d)/g, (x, n) => i18nValue(m[+n] ?? '', depth + 1));
+	}
+	return v;
+}
+
 function i18nText(s) {
 	if (!I18N) return s;
 	const t = s.trim();
 	if (!t) return s;
 	const at = s.indexOf(t), pre = s.slice(0, at), post = s.slice(at + t.length);
 	if (I18N.exact[t] != null) return pre + I18N.exact[t] + post;
-	for (const [re, rep] of I18N.patterns)
-		if (re.test(t)) return pre + i18nWords(t.replace(re, rep)) + post;
+	for (const [re, rep] of I18N.patterns) {
+		const m = re.exec(t);
+		if (m) return pre + i18nWords(rep.replace(/\$(\d)/g, (x, n) => i18nValue(m[+n] ?? ''))) + post;
+	}
 	const r = i18nWords(t);
 	return r === t ? s : pre + r + post;
 }

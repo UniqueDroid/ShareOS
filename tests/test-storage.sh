@@ -192,7 +192,7 @@ if [ -e /proc/mdstat ]; then
 	[ $MD_EMU = 1 ] || echo "SKIP  mirror, stripe, span (this emulator does not pass on the md calls of mdadm)"
 	[ $MD_EMU = 1 ] &&
 	check "mirror setup" "run shareos-storage job | grep -q 'state=done' && mounted spiegel && grep -q md /proc/mdstat"
-	[ $MD_EMU = 0 ] || run shareos-storage job | grep -q 'state=done' || { echo "      job: $(run shareos-storage job | tr '\n' ' ')"; echo "      mdstat: $(tr '\n' ' ' < /proc/mdstat)"; echo "      output: $(echo "$o" | tail -n 6 | tr '\n' ' ' | cut -c1-900)"; }
+	[ $MD_EMU = 0 ] || run shareos-storage job | grep -q 'state=done' || { echo "      job: $(run shareos-storage job | tr '\n' ' ')"; echo "      mdstat: $(tr '\n' ' ' < /proc/mdstat)"; echo "      partitions: $(awk '/loop/ {printf "%s ", $4}' /proc/partitions) swaps: $(awk 'NR>1 {printf "%s ", $1}' /proc/swaps) udev: $(udevadm --version 2>/dev/null) watch: $(ls /run/udev/watch 2>/dev/null | wc -l)"; echo "      output: $(echo "$o" | tail -n 6 | tr '\n' ' ' | cut -c1-900)"; }
 	run shareos-storage shutdown >/dev/null
 	for l in stripe span; do
 		[ $MD_EMU = 1 ] || break

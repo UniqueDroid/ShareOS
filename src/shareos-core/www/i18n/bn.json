@@ -1682,7 +1682,44 @@
 		"live · every 5 s · temperature up to 15 s old": "লাইভ · প্রতি ৫ সে. · তাপমাত্রা সর্বোচ্চ ১৫ সে. পুরোনো",
 		"sets the clock, keeps the clock chip in sync": "ঘড়ি ঠিক করে, ঘড়ির চিপ সিঙ্কে রাখে",
 		"fan, temperature, buttons": "ফ্যান, তাপমাত্রা, বোতাম",
-		"A share on the personal folder of an account is the exception: there every listed computer acts as that account, without a password.": "কোনো অ্যাকাউন্টের ব্যক্তিগত ফোল্ডারের শেয়ার ব্যতিক্রম: সেখানে তালিকাভুক্ত প্রতিটি কম্পিউটার পাসওয়ার্ড ছাড়াই সেই অ্যাকাউন্ট হিসেবে কাজ করে।"
+		"A share on the personal folder of an account is the exception: there every listed computer acts as that account, without a password.": "কোনো অ্যাকাউন্টের ব্যক্তিগত ফোল্ডারের শেয়ার ব্যতিক্রম: সেখানে তালিকাভুক্ত প্রতিটি কম্পিউটার পাসওয়ার্ড ছাড়াই সেই অ্যাকাউন্ট হিসেবে কাজ করে।",
+		"Verified: SHA-256, checksums of all parts, made for this device.": "যাচাই করা হয়েছে: SHA-256, সব অংশের চেকসাম, এই ডিভাইসের জন্য তৈরি।",
+		"Uploaded file – verified: SHA-256 of the .sha256 file, checksums of all parts, made for this device.": "আপলোড করা ফাইল – যাচাই হয়েছে: .sha256 ফাইল অনুযায়ী SHA-256, সব অংশের চেকসাম, এই ডিভাইসের উপযোগী।",
+		"Uploaded file – verified: checksums of all parts, made for this device (without .sha256 file).": "আপলোড করা ফাইল – যাচাই হয়েছে: সব অংশের চেকসাম, এই ডিভাইসের উপযোগী (.sha256 ফাইল ছাড়া)।",
+		"Settings and packages are kept.": "সেটিংস ও প্যাকেজ থেকে যায়।",
+		"SHA-256 mismatch – download is corrupt or was tampered with": "SHA-256 মিলছে না – ডাউনলোড নষ্ট অথবা বদলানো হয়েছে",
+		"SHA-256 mismatch – the file does not match its .sha256": "SHA-256 মিলছে না – ফাইলটি তার .sha256-এর সঙ্গে মেলে না",
+		"cannot cancel while flashing": "লেখার সময় বাতিল করা যায় না",
+		"cannot move the uploaded file": "আপলোড করা ফাইল সরানো যাচ্ছে না",
+		"cannot move the uploaded signature": "আপলোড করা স্বাক্ষর সরানো যাচ্ছে না",
+		"cannot read the uploaded file": "আপলোড করা ফাইল পড়া যাচ্ছে না",
+		"checksum file is invalid": "চেকসাম ফাইলটি অবৈধ",
+		"signature file is invalid": "স্বাক্ষর ফাইলটি অবৈধ",
+		"download of the checksum failed": "চেকসাম ডাউনলোড ব্যর্থ হয়েছে",
+		"download of the firmware failed": "ফার্মওয়্যার ডাউনলোড ব্যর্থ হয়েছে",
+		"download of the signature failed": "স্বাক্ষর ডাউনলোড ব্যর্থ হয়েছে",
+		"no uploaded file": "কোনো আপলোড করা ফাইল নেই",
+		"not running from flash (no UBIFS on /overlay) – use shareos-install-ubi": "বক্সটি ফ্ল্যাশ থেকে চলছে না (/overlay-এ UBIFS নেই) – shareos-install-ubi ব্যবহার করুন",
+		"rootfs.squashfs is not a squashfs image": "rootfs.squashfs কোনো squashfs ইমেজ নয়",
+		"the signature does not match this file": "স্বাক্ষরটি এই ফাইলের সঙ্গে মেলে না",
+		"the signature is not valid any more – not installed": "স্বাক্ষরটি আর বৈধ নয় – ইনস্টল করা হয়নি",
+		"the signature of this release is not valid – not installed": "এই রিলিজের স্বাক্ষর বৈধ নয় – ইনস্টল করা হয়নি",
+		"this release is not signed – not installed": "এই রিলিজটি স্বাক্ষরিত নয় – ইনস্টল করা হয়নি",
+		"unknown firmware name for this box (/tmp/sys/board.env, /etc/shareos-release)": "এই বক্সের ফার্মওয়্যারের নাম অজানা (/tmp/sys/board.env, /etc/shareos-release)",
+		"not signed by the ShareOS project": "ShareOS প্রকল্পের স্বাক্ষর নেই",
+		"unexpected answer from GitHub": "GitHub থেকে অপ্রত্যাশিত উত্তর",
+		"invalid channel": "অবৈধ চ্যানেল",
+		"release not downloaded and verified": "রিলিজটি ডাউনলোড ও যাচাই করা হয়নি",
+		"a firmware update is running": "একটি ফার্মওয়্যার আপডেট চলছে",
+		"another firmware write is running": "আরেকটি ফার্মওয়্যার লেখা চলছে",
+		"initramfs in the file is damaged": "ফাইলের initramfs নষ্ট",
+		"initramfs is not a U-Boot image": "initramfs কোনো U-Boot ইমেজ নয়",
+		"initramfs larger than the 3 MB the boot loader loads": "initramfs বুট লোডার যে 3 MB লোড করে তার চেয়ে বড়",
+		"kernel in the file is damaged": "ফাইলের কার্নেল নষ্ট",
+		"kernel is not a U-Boot image": "কার্নেল কোনো U-Boot ইমেজ নয়",
+		"kernel larger than the 3 MB the boot loader loads": "কার্নেল বুট লোডার যে 3 MB লোড করে তার চেয়ে বড়",
+		"not a D-Link firmware file": "এটি D-Link ফার্মওয়্যার ফাইল নয়",
+		"the file is damaged (checksum)": "ফাইলটি নষ্ট (চেকসাম)"
 	},
 	"patterns": [
 		[
@@ -1890,6 +1927,14 @@
 			"ShareOS বন্ধ হয় এবং বক্স বন্ধ হয়ে যায়। $1"
 		],
 		[
+			"^cannot stage the system in /overlay \\(full\\?\\): (.*)$",
+			"সিস্টেম /overlay-এ প্রস্তুত করা যাচ্ছে না (ভর্তি?): $1"
+		],
+		[
+			"^the file is for another device \\((.+), this box: (.+)\\)$",
+			"ফাইলটি অন্য ডিভাইসের জন্য ($1, এই বক্স: $2)"
+		],
+		[
 			"^No swap, app area on \"(.+)\" \\(unless one exists\\)\\.$",
 			"সোয়াপ নেই, অ্যাপ এলাকা \"$1\"-এ (যদি আগে না থাকে)।"
 		],
@@ -1910,8 +1955,16 @@
 			"সংযোগ ঠিক আছে – Paperless-এ $1টি নথি।"
 		],
 		[
+			"^release (.+) is not downloaded and verified$",
+			"রিলিজ $1 ডাউনলোড ও যাচাই করা হয়নি"
+		],
+		[
 			"^Value (\\S+) was below the threshold earlier$",
 			"মান $1 আগে সীমার নিচে ছিল"
+		],
+		[
+			"^refusing to flash: unexpected board \\\"(.*)\\\"$",
+			"লেখা হয়নি: অপ্রত্যাশিত বোর্ড \"$1\""
 		],
 		[
 			"^Clicking \"Set up\" erases (.+) completely\\.$",
@@ -1934,6 +1987,10 @@
 			"$1 – রিসাইকেল বিন থেকে ফেরানো যায়।"
 		],
 		[
+			"^unknown release (.+) – run check first$",
+			"অজানা রিলিজ $1 – আগে পরীক্ষা চালান"
+		],
+		[
 			"^([\\d.,  ]+) entries in the disk's error log\\.$",
 			"ডিস্কের ত্রুটি লগে $1টি এন্ট্রি।"
 		],
@@ -1954,6 +2011,14 @@
 			"“$1”-এর রিমোট পাসওয়ার্ড প্রত্যাহার করবেন?"
 		],
 		[
+			"^bundle is damaged \\(SHA256SUMS\\): (.*)$",
+			"বান্ডলটি নষ্ট (SHA256SUMS): $1"
+		],
+		[
+			"^cannot fetch releases from (\\S+) \\((.+)\\): (.*)$",
+			"$1 ($2) থেকে রিলিজ আনা যাচ্ছে না: $3"
+		],
+		[
 			"^(.+): no longer starts at power-on$",
 			"$1: চালু হলে আর শুরু হবে না"
 		],
@@ -1970,6 +2035,14 @@
 			"“$1”-এর পাসওয়ার্ড প্রত্যাহার করা হয়েছে।"
 		],
 		[
+			"^failed (\\S+): staged image damaged$",
+			"ব্যর্থ ($1): প্রস্তুত ইমেজটি নষ্ট"
+		],
+		[
+			"^(\\S+) does not read back correctly$",
+			"$1 ফিরে পড়লে মিলছে না"
+		],
+		[
 			"^The name “(.+)” is already taken\\.$",
 			"নাম „$1“ আগেই নেওয়া হয়েছে।"
 		],
@@ -1978,8 +2051,16 @@
 			"$1-এর ব্যক্তিগত ইনবক্স · কোনো টোকেন নেই"
 		],
 		[
+			"^the update was interrupted \\((.+)\\)$",
+			"আপডেট মাঝপথে থেমে গেছে ($1)"
+		],
+		[
 			"^Fan always on, full from (\\d+) °C$",
 			"ফ্যান সবসময় চালু, $1 °C থেকে পূর্ণ গতি"
+		],
+		[
+			"^flash partition \\\"(.+)\\\" not found$",
+			"ফ্ল্যাশ পার্টিশন \"$1\" পাওয়া যায়নি"
 		],
 		[
 			"^Share: (\\d+) file\\(s\\) not saved – (.*)$",
@@ -1988,6 +2069,10 @@
 		[
 			"^Paused – filtering again in (.*)$",
 			"বিরতিতে – $1 পরে আবার ফিল্টার হবে"
+		],
+		[
+			"^this box is not supported \\((.*)\\)$",
+			"এই বক্সটি সমর্থিত নয় ($1)"
 		],
 		[
 			"^([\\d.,  ]+) sectors could not be read\\.$",
@@ -2006,6 +2091,10 @@
 			"$1-এর ব্যক্তিগত ইনবক্স · টোকেন $2"
 		],
 		[
+			"^bundle cannot be unpacked: (.*)$",
+			"বান্ডল খোলা যাচ্ছে না: $1"
+		],
+		[
 			"^personal inbox of (.+) · token (.+)$",
 			"$1-এর ব্যক্তিগত ইনবক্স · টোকেন $2"
 		],
@@ -2020,6 +2109,10 @@
 		[
 			"^(.+) is in flash\\. Restart now\\?$",
 			"$1 ফ্ল্যাশে আছে। এখনই রিস্টার্ট করবেন?"
+		],
+		[
+			"^SHA256SUMS does not cover (.+)$",
+			"SHA256SUMS-এ $1 নেই"
 		],
 		[
 			"^Delete (\\d+) item\\(s\\) for good\\?$",
@@ -2086,6 +2179,10 @@
 			"$1-এর পাসওয়ার্ড বদলানো হয়েছে।"
 		],
 		[
+			"^failed (\\S+): ubiupdatevol$",
+			"ব্যর্থ ($1): সিস্টেম লেখা যায়নি (ubiupdatevol)"
+		],
+		[
 			"^shared inbox · token (.+)$",
 			"যৌথ ইনবক্স · টোকেন $1"
 		],
@@ -2096,6 +2193,14 @@
 		[
 			"^(\\S+): one disk missing \\((.+)\\)$",
 			"$1: একটি ডিস্ক নেই ($2)"
+		],
+		[
+			"^reading (\\S+) back failed$",
+			"$1 ফিরে পড়তে ব্যর্থ"
+		],
+		[
+			"^partition (\\S+) not found$",
+			"পার্টিশন $1 পাওয়া যায়নি"
 		],
 		[
 			"^(.+): starts at power-on$",
@@ -2292,6 +2397,14 @@
 		[
 			"^Very warm: (\\d+) °C\\.$",
 			"খুব গরম: $1 °C।"
+		],
+		[
+			"^erasing (\\S+) failed$",
+			"$1 মুছতে ব্যর্থ"
+		],
+		[
+			"^writing (\\S+) failed$",
+			"$1 লিখতে ব্যর্থ"
 		],
 		[
 			"^Permission for (.+)$",
@@ -2996,6 +3109,10 @@
 		[
 			"^([0-9.,]+) years$",
 			"$1 বছর"
+		],
+		[
+			"^busy: (\\w+)$",
+			"ব্যস্ত: $1"
 		],
 		[
 			"^Group (\\S+)$",
