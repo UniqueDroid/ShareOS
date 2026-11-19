@@ -1719,9 +1719,23 @@
 		"kernel is not a U-Boot image": "কার্নেল কোনো U-Boot ইমেজ নয়",
 		"kernel larger than the 3 MB the boot loader loads": "কার্নেল বুট লোডার যে 3 MB লোড করে তার চেয়ে বড়",
 		"not a D-Link firmware file": "এটি D-Link ফার্মওয়্যার ফাইল নয়",
-		"the file is damaged (checksum)": "ফাইলটি নষ্ট (চেকসাম)"
+		"the file is damaged (checksum)": "ফাইলটি নষ্ট (চেকসাম)",
+		"Personal folder on another drive?": "ব্যক্তিগত ফোল্ডার অন্য ড্রাইভে?",
+		"Use the new drive": "নতুন ড্রাইভ ব্যবহার করুন",
+		"Switch the personal folder off?": "ব্যক্তিগত ফোল্ডার বন্ধ করবেন?",
+		"drive not present": "ড্রাইভ নেই",
+		"STATUS LED": "অবস্থা LED",
+		"STATUS LED (WHITE)": "অবস্থা LED (সাদা)",
+		"DISK LEDS": "ডিস্ক LED",
+		"DISK LEDS (ORANGE)": "ডিস্ক LED (কমলা)",
+		"DISK LEDS (AMBER)": "ডিস্ক LED (অ্যাম্বার)",
+		"The red USB LED shows rescue mode and updates during boot and cannot be changed.": "লাল USB LED চালুর সময় রেসকিউ মোড ও আপডেট দেখায় এবং বদলানো যায় না।"
 	},
 	"patterns": [
+		[
+			"^The folder (\\S+) stays where it is, with everything in it\\. On (\\S+) the account starts with an empty personal folder; what its apps keep there \\(cloud accounts, downloads, sync settings\\) is missing too\\. To take the files along, copy them over in Files afterwards\\.$",
+			"ফোল্ডার $1 তার সবকিছুসহ যেখানে আছে সেখানেই থাকে। $2-এ অ্যাকাউন্টটি একটি খালি ব্যক্তিগত ফোল্ডার দিয়ে শুরু করে; এর অ্যাপগুলো সেখানে যা রাখে (ক্লাউড অ্যাকাউন্ট, ডাউনলোড, সিঙ্ক সেটিংস) তাও থাকবে না। ফাইলগুলো সঙ্গে নিতে পরে «ফাইল»-এ কপি করুন।"
+		],
 		[
 			"^Web apps run on their own port \\((\\d+) / (\\d+) for HTTPS\\) – apart from this interface, so an app cannot use your login\\. Anyone who knows the address can open a web app on the network; “visible to” decides who sees it in “My ShareOS”\\.$",
 			"ওয়েব অ্যাপ নিজস্ব পোর্টে ($1 / HTTPS-এর জন্য $2) চলে – এই ইন্টারফেস থেকে আলাদা, তাই কোনো অ্যাপ আপনার লগ ইন ব্যবহার করতে পারে না। যে ঠিকানা জানে সে নেটওয়ার্কে ওয়েব অ্যাপ খুলতে পারে; \"কারা দেখবে\" ঠিক করে \"আমার ShareOS\"-এ এটি কে দেখবে।"
@@ -1733,6 +1747,10 @@
 		[
 			"^Web apps run on their own port \\((\\d+)\\) – apart from this interface, so an app cannot use your login\\. Anyone who knows the address can open a web app on the network; “visible to” decides who sees it in “My ShareOS”\\.$",
 			"ওয়েব অ্যাপ নিজস্ব পোর্টে ($1) চলে – এই ইন্টারফেস থেকে আলাদা, তাই কোনো অ্যাপ আপনার লগ ইন ব্যবহার করতে পারে না। যে ঠিকানা জানে সে নেটওয়ার্কে ওয়েব অ্যাপ খুলতে পারে; \"কারা দেখবে\" ঠিক করে \"আমার ShareOS\"-এ এটি কে দেখবে।"
+		],
+		[
+			"^The folder (\\S+) is kept, but the account cannot open it any more – not over SMB and not in the web interface\\. Cloud sync, the Paperless inbox and apps that keep their settings there stop working for this account\\.$",
+			"ফোল্ডার $1 রাখা হয়, কিন্তু অ্যাকাউন্টটি আর সেটি খুলতে পারে না – SMB দিয়েও না, ওয়েব ইন্টারফেসেও না। ক্লাউড সিঙ্ক, Paperless ইনবক্স এবং যে অ্যাপগুলো সেখানে তাদের সেটিংস রাখে, এই অ্যাকাউন্টের জন্য কাজ করা বন্ধ করে দেয়।"
 		],
 		[
 			"^Afterwards (.+) starts\\. Alt-F's extra packages are missing then – flash the same file once more in Alt-F's firmware page\\. Back to ShareOS: flash the ShareOS \\.bin in Alt-F, system and settings are still there\\.$",

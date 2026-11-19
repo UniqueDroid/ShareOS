@@ -2137,6 +2137,8 @@ P392	falló la relectura de $1
 P393	no se encontró la partición $1
 P394	el archivo es para otro dispositivo ($1, este equipo: $2)
 P395	este equipo no es compatible ($1)
+P396	La carpeta $1 se queda donde está, con todo su contenido. En $2 la cuenta empieza con una carpeta personal vacía; lo que sus aplicaciones guardan allí (cuentas en la nube, descargas, ajustes de sincronización) tampoco estará. Para llevarte los archivos, cópialos después en Archivos.
+P397	La carpeta $1 se conserva, pero la cuenta ya no puede abrirla – ni por SMB ni en la interfaz web. La sincronización en la nube, la bandeja de entrada de Paperless y las aplicaciones que guardan allí sus ajustes dejan de funcionar para esta cuenta.
 E1699	Un recurso sobre la carpeta personal de una cuenta es la excepción: allí cada equipo de la lista actúa como esa cuenta, sin contraseña.
 E1700	Comprobado: SHA-256, sumas de todas las partes, hecho para este dispositivo.
 E1701	Archivo subido – comprobado: SHA-256 del archivo .sha256, sumas de todas las partes, apto para este dispositivo.
@@ -2175,3 +2177,13 @@ E1733	el kernel no es una imagen U-Boot
 E1734	el kernel supera los 3 MB que carga el gestor de arranque
 E1735	no es un archivo de firmware D-Link
 E1736	el archivo está dañado (suma de comprobación)
+E1737	¿Carpeta personal en otra unidad?
+E1738	Usar la nueva unidad
+E1739	¿Desactivar la carpeta personal?
+E1740	unidad no presente
+E1741	LED DE ESTADO
+E1742	LED DE ESTADO (BLANCO)
+E1743	LEDS DE DISCO
+E1744	LEDS DE DISCO (NARANJAS)
+E1745	LEDS DE DISCO (ÁMBAR)
+E1746	El LED USB rojo indica el modo de rescate y las actualizaciones al arrancar y no se puede cambiar.

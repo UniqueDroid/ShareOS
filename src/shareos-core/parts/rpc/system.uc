@@ -22,12 +22,21 @@ function fan_settings() {
 	return { preset, ...v };
 }
 
+// the colour of a LED of this box, from its name in /tmp/sys/board.env
+// ("dns320:orange:l_hdd" -> "orange"); '' when the box has no such LED
+function led_colour(env, key) {
+	let m = match(env, regexp('BOARD_LED_' + key + '="[A-Za-z0-9_.-]*:([a-z]+):[A-Za-z0-9_.-]*"'));
+	return m ? m[1] : '';
+}
+
 function led_settings() {
-	let c = cursor();
+	let c = cursor(), env = readfile('/tmp/sys/board.env') ?? '';
 	return {
 		status: c.get('shareos', 'led', 'status') ?? 'heartbeat',
 		power: c.get('shareos', 'led', 'power') ?? 'on',
-		disks: c.get('shareos', 'led', 'disks') ?? 'off'
+		disks: c.get('shareos', 'led', 'disks') ?? 'off',
+		// what the interface calls them: the colours differ from model to model
+		colours: { status: led_colour(env, 'STATUS'), usb: led_colour(env, 'USB'), disks: led_colour(env, 'DISK1') }
 	};
 }
 

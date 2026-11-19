@@ -1719,9 +1719,23 @@
 		"kernel is not a U-Boot image": "el kernel no es una imagen U-Boot",
 		"kernel larger than the 3 MB the boot loader loads": "el kernel supera los 3 MB que carga el gestor de arranque",
 		"not a D-Link firmware file": "no es un archivo de firmware D-Link",
-		"the file is damaged (checksum)": "el archivo está dañado (suma de comprobación)"
+		"the file is damaged (checksum)": "el archivo está dañado (suma de comprobación)",
+		"Personal folder on another drive?": "¿Carpeta personal en otra unidad?",
+		"Use the new drive": "Usar la nueva unidad",
+		"Switch the personal folder off?": "¿Desactivar la carpeta personal?",
+		"drive not present": "unidad no presente",
+		"STATUS LED": "LED DE ESTADO",
+		"STATUS LED (WHITE)": "LED DE ESTADO (BLANCO)",
+		"DISK LEDS": "LEDS DE DISCO",
+		"DISK LEDS (ORANGE)": "LEDS DE DISCO (NARANJAS)",
+		"DISK LEDS (AMBER)": "LEDS DE DISCO (ÁMBAR)",
+		"The red USB LED shows rescue mode and updates during boot and cannot be changed.": "El LED USB rojo indica el modo de rescate y las actualizaciones al arrancar y no se puede cambiar."
 	},
 	"patterns": [
+		[
+			"^The folder (\\S+) stays where it is, with everything in it\\. On (\\S+) the account starts with an empty personal folder; what its apps keep there \\(cloud accounts, downloads, sync settings\\) is missing too\\. To take the files along, copy them over in Files afterwards\\.$",
+			"La carpeta $1 se queda donde está, con todo su contenido. En $2 la cuenta empieza con una carpeta personal vacía; lo que sus aplicaciones guardan allí (cuentas en la nube, descargas, ajustes de sincronización) tampoco estará. Para llevarte los archivos, cópialos después en Archivos."
+		],
 		[
 			"^Web apps run on their own port \\((\\d+) / (\\d+) for HTTPS\\) – apart from this interface, so an app cannot use your login\\. Anyone who knows the address can open a web app on the network; “visible to” decides who sees it in “My ShareOS”\\.$",
 			"Las apps web funcionan en su propio puerto ($1 / $2 para HTTPS) – separadas de esta interfaz, así una app no puede usar tu inicio de sesión. Quien conozca la dirección puede abrir una app web en la red; «visible para» decide quién la ve en «Mi ShareOS»."
@@ -1733,6 +1747,10 @@
 		[
 			"^Web apps run on their own port \\((\\d+)\\) – apart from this interface, so an app cannot use your login\\. Anyone who knows the address can open a web app on the network; “visible to” decides who sees it in “My ShareOS”\\.$",
 			"Las apps web funcionan en su propio puerto ($1) – separadas de esta interfaz, así una app no puede usar tu inicio de sesión. Quien conozca la dirección puede abrir una app web en la red; «visible para» decide quién la ve en «Mi ShareOS»."
+		],
+		[
+			"^The folder (\\S+) is kept, but the account cannot open it any more – not over SMB and not in the web interface\\. Cloud sync, the Paperless inbox and apps that keep their settings there stop working for this account\\.$",
+			"La carpeta $1 se conserva, pero la cuenta ya no puede abrirla – ni por SMB ni en la interfaz web. La sincronización en la nube, la bandeja de entrada de Paperless y las aplicaciones que guardan allí sus ajustes dejan de funcionar para esta cuenta."
 		],
 		[
 			"^Afterwards (.+) starts\\. Alt-F's extra packages are missing then – flash the same file once more in Alt-F's firmware page\\. Back to ShareOS: flash the ShareOS \\.bin in Alt-F, system and settings are still there\\.$",

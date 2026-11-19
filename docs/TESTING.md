@@ -525,9 +525,20 @@ Needs a Tailscale account (free), a phone or computer with Tailscale, the file `
 5. An account without a personal folder: sharing shows "no personal folder"; the shared item is dropped and does not come back at the next login.
 6. File dialog of an app for an account **without** *Files* (e.g. Webpad → *Open*): the list of folders shows *App data* first, then *My folder* and the user's shares; read-only shares are marked and are missing when saving. The app still keeps its own files in *App data*.
 
+## 14zw. Personal folder over SMB (0.3.0-beta.14, #183)
+
+Needs an account with a personal folder (here `jan` on the drive `daten`; the box is `shareos`, 10.242.1.20) and a Windows or Linux computer. Before this version `\\shareos\jan` answered "The network name cannot be found".
+
+1. On the box: `grep -A9 '^\[jan\]' /etc/ksmbd/ksmbd.conf` – a section `[jan]` with `path = /mnt/daten/home/jan`, `valid users = jan`, `browseable = no`. `grep -c homes /etc/ksmbd/ksmbd.conf` gives 0.
+2. Windows, signed in to the box as jan: `dir \\shareos\jan` (or the address in File Explorer) shows the personal folder. Linux: `smbclient //10.242.1.20/jan -U jan -c 'ls'`.
+3. Create a file there. On the box: `ls -l /mnt/daten/home/jan` – it belongs to `jan`, mode `-rw-------`.
+4. As another account: `smbclient //10.242.1.20/jan -U anna -c 'ls'` – access denied. `smbclient -L 10.242.1.20 -U jan` does not list `jan` (the personal folders are not in the list of shares).
+5. *Shares → New share* with the name `jan`: refused, "this is the name of an account with a personal folder". A share with the folder `home`: refused; with `home/jan`: accepted (that is the personal folder as a normal share).
+6. Delete an account (its folder is kept) and add another one: `id -u <new>` is higher than every id before – the old folder is not the new account's. Adding an account with the name of the deleted one and a personal folder on the same drive is refused until the old folder is moved or removed.
+
 ## 14zv. NFS share on a personal folder (0.3.0-beta.14, #178)
 
-Needs a Linux computer in the network as NFS client and an account with a personal folder (here `jan` on the drive `daten`; the box is 10.242.1.20).
+*Offer NFS shares* in *Shares* must be on. Needs a Linux computer in the network as NFS client and an account with a personal folder (here `jan` on the drive `daten`; the box is 10.242.1.20).
 
 1. *Shares → New share*: name `janhome`, drive `daten`, folder `home/jan`, *Share via NFS* and *NFS clients may write*, the client's address or network under *NFS CLIENTS*, *Save*.
 2. On the box: `cat /etc/exports` – the line of `/mnt/daten/home/jan` holds `anonuid=<uid of jan>` (`id -u jan`), every other share `anonuid=65534`. `ls -ld /mnt/daten/home/jan` still shows `drwx------ jan users`.
@@ -716,7 +727,7 @@ Needs a box you may reset (factory reset deletes the settings, not the data disk
 
 ## 14zg. iPhone/iPad: SMB shares writable (0.2.0-beta.19)
 
-1. `grep -c 'vfs objects = streams_xattr' /etc/ksmbd/ksmbd.conf` counts every share on ext4/Btrfs (and `[homes]`); shares on FAT/exFAT/NTFS don't have it.
+1. `grep -c 'vfs objects = streams_xattr' /etc/ksmbd/ksmbd.conf` counts every share on ext4/Btrfs (and the section of every personal folder); shares on FAT/exFAT/NTFS don't have it.
 2. iPhone/iPad, *Files* app → *Connect to Server* → `smb://<box>`, as a user with write access: create a folder, upload a file, rename, delete – all of it works (read-only before).
 3. Windows and macOS write as before.
 

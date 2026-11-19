@@ -530,9 +530,20 @@ Braucht ein Tailscale-Konto (kostenlos), ein Handy oder einen Rechner mit Tailsc
 5. Konto ohne persönlichen Ordner: Teilen meldet „no personal folder“; das Geteilte wird verworfen und kommt bei der nächsten Anmeldung nicht wieder.
 6. Dateidialog einer App für ein Konto **ohne** *Dateien* (z. B. Webpad → *Öffnen*): Die Ordnerauswahl zeigt zuerst *App-Daten*, dann *Mein Ordner* und die Freigaben des Benutzers; Freigaben nur zum Lesen sind markiert und fehlen beim Speichern. Die App legt ihre eigenen Dateien weiter in *App-Daten* ab.
 
+## 14zw. Persönlicher Ordner über SMB (0.3.0-beta.14, #183)
+
+Braucht ein Konto mit persönlichem Ordner (hier `jan` auf dem Laufwerk `daten`; die Box ist `shareos`, 10.242.1.20) und einen Windows- oder Linux-Rechner. Vor dieser Version antwortete `\\shareos\jan` mit „Der Netzwerkname wurde nicht gefunden“.
+
+1. Auf der Box: `grep -A9 '^\[jan\]' /etc/ksmbd/ksmbd.conf` – ein Abschnitt `[jan]` mit `path = /mnt/daten/home/jan`, `valid users = jan`, `browseable = no`. `grep -c homes /etc/ksmbd/ksmbd.conf` ergibt 0.
+2. Windows, an der Box als jan angemeldet: `dir \\shareos\jan` (oder die Adresse im Explorer) zeigt den persönlichen Ordner. Linux: `smbclient //10.242.1.20/jan -U jan -c 'ls'`.
+3. Dort eine Datei anlegen. Auf der Box: `ls -l /mnt/daten/home/jan` – sie gehört `jan`, Rechte `-rw-------`.
+4. Als anderes Konto: `smbclient //10.242.1.20/jan -U anna -c 'ls'` – Zugriff verweigert. `smbclient -L 10.242.1.20 -U jan` listet `jan` nicht auf (persönliche Ordner stehen nicht in der Freigabeliste).
+5. *Shares → New share* mit dem Namen `jan`: abgelehnt, „this is the name of an account with a personal folder“. Eine Freigabe mit dem Ordner `home`: abgelehnt; mit `home/jan`: angenommen (das ist der persönliche Ordner als normale Freigabe).
+6. Ein Konto löschen (sein Ordner bleibt) und ein anderes anlegen: `id -u <neu>` ist höher als jede Nummer davor – der alte Ordner gehört nicht dem neuen Konto. Ein Konto mit dem Namen des gelöschten und persönlichem Ordner auf demselben Laufwerk wird abgelehnt, bis der alte Ordner verschoben oder entfernt ist.
+
 ## 14zv. NFS-Freigabe auf einen persönlichen Ordner (0.3.0-beta.14, #178)
 
-Braucht einen Linux-Rechner im Netz als NFS-Client und ein Konto mit persönlichem Ordner (hier `jan` auf dem Laufwerk `daten`; die Box ist 10.242.1.20).
+*Offer NFS shares* in *Shares* muss eingeschaltet sein. Braucht einen Linux-Rechner im Netz als NFS-Client und ein Konto mit persönlichem Ordner (hier `jan` auf dem Laufwerk `daten`; die Box ist 10.242.1.20).
 
 1. *Shares → New share*: Name `janhome`, Laufwerk `daten`, Ordner `home/jan`, *Share via NFS* und *NFS clients may write*, unter *NFS CLIENTS* die Adresse oder das Netz des Clients, *Save*.
 2. Auf der Box: `cat /etc/exports` – die Zeile von `/mnt/daten/home/jan` enthält `anonuid=<uid von jan>` (`id -u jan`), jede andere Freigabe `anonuid=65534`. `ls -ld /mnt/daten/home/jan` zeigt weiter `drwx------ jan users`.
@@ -721,7 +732,7 @@ Braucht eine Box, die zurückgesetzt werden darf (Werkseinstellungen löschen di
 
 ## 14zg. iPhone/iPad: SMB-Freigaben beschreibbar (0.2.0-beta.19)
 
-1. `grep -c 'vfs objects = streams_xattr' /etc/ksmbd/ksmbd.conf` zählt jede Freigabe auf ext4/Btrfs (und `[homes]`); Freigaben auf FAT/exFAT/NTFS haben es nicht.
+1. `grep -c 'vfs objects = streams_xattr' /etc/ksmbd/ksmbd.conf` zählt jede Freigabe auf ext4/Btrfs (und den Abschnitt jedes persönlichen Ordners); Freigaben auf FAT/exFAT/NTFS haben es nicht.
 2. iPhone/iPad, App *Dateien* → *Mit Server verbinden* → `smb://<box>`, als Benutzer mit Schreibrecht: Ordner anlegen, Datei hochladen, umbenennen, löschen – alles geht (vorher nur lesen).
 3. Windows und macOS schreiben wie bisher.
 

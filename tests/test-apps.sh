@@ -328,6 +328,7 @@ check "remove: user, data, jobs and cron entries gone" "! grep -q '^app-ticker:'
 
 # --- app platform: theme/SDK, opening files in an app ---------------------------------
 check "SDK and theme served to the apps" "curl -s http://127.0.0.1:$PORT/_shareos/app.js | grep -q 'window.ShareOS' && curl -s http://127.0.0.1:$PORT/_shareos/theme.css | grep -q 'sos-menubar'"
+check "theme: the hidden attribute wins over display of a class" "curl -s http://127.0.0.1:$PORT/_shareos/theme.css | grep -q '^\[hidden\] { display: none !important; }'"
 mkapp $T/ed editor 1.0.0 && python3 -c "import json; f='$T/ed/app.json'; d=json.load(open(f)); d.update(window={'width': 900, 'height': 600}, opens=[{'ext': ['.txt', '.md'], 'mode': 'edit'}, {'ext': ['.png'], 'mode': 'view'}]); json.dump(d,open(f,'w'))" && pack $T/ed $P/editor.sapp
 mkapp $T/eb embedder 1.0.0 && python3 -c "import json; f='$T/eb/app.json'; d=json.load(open(f)); d.update(permissions=['embed'], opens=[{'ext': ['TXT']}]); json.dump(d,open(f,'w'))" && pack $T/eb $P/embedder-bad.sapp
 mkapp $T/ew wide 1.0.0 && python3 -c "import json; f='$T/ew/app.json'; d=json.load(open(f)); d.update(window={'width': 99999}); json.dump(d,open(f,'w'))" && pack $T/ew $P/wide.sapp

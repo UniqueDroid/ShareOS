@@ -1719,9 +1719,23 @@
 		"kernel is not a U-Boot image": "内核不是 U-Boot 映像",
 		"kernel larger than the 3 MB the boot loader loads": "内核超过引导加载程序可加载的 3 MB",
 		"not a D-Link firmware file": "不是 D-Link 固件文件",
-		"the file is damaged (checksum)": "文件已损坏（校验和）"
+		"the file is damaged (checksum)": "文件已损坏（校验和）",
+		"Personal folder on another drive?": "将个人文件夹放到另一个驱动器？",
+		"Use the new drive": "使用新驱动器",
+		"Switch the personal folder off?": "关闭个人文件夹？",
+		"drive not present": "驱动器不存在",
+		"STATUS LED": "状态指示灯",
+		"STATUS LED (WHITE)": "状态指示灯 (白色)",
+		"DISK LEDS": "硬盘指示灯",
+		"DISK LEDS (ORANGE)": "硬盘指示灯 (橙色)",
+		"DISK LEDS (AMBER)": "硬盘指示灯 (琥珀色)",
+		"The red USB LED shows rescue mode and updates during boot and cannot be changed.": "红色 USB 指示灯在启动时显示救援模式和更新，无法调整。"
 	},
 	"patterns": [
+		[
+			"^The folder (\\S+) stays where it is, with everything in it\\. On (\\S+) the account starts with an empty personal folder; what its apps keep there \\(cloud accounts, downloads, sync settings\\) is missing too\\. To take the files along, copy them over in Files afterwards\\.$",
+			"文件夹 $1 及其全部内容保留在原处。在 $2 上，该账户将从一个空的个人文件夹开始；应用保存在其中的内容（云账户、下载、同步设置）也不会在那里。要带上文件，请之后在“文件”中复制过去。"
+		],
 		[
 			"^Web apps run on their own port \\((\\d+) / (\\d+) for HTTPS\\) – apart from this interface, so an app cannot use your login\\. Anyone who knows the address can open a web app on the network; “visible to” decides who sees it in “My ShareOS”\\.$",
 			"网页应用在自己的端口上运行 ($1 / HTTPS 为 $2) – 与本界面分开，因此应用无法使用你的登录。知道地址的人都可以在网络中打开网页应用；“可见范围”决定谁能在“我的 ShareOS”中看到它。"
@@ -1733,6 +1747,10 @@
 		[
 			"^Web apps run on their own port \\((\\d+)\\) – apart from this interface, so an app cannot use your login\\. Anyone who knows the address can open a web app on the network; “visible to” decides who sees it in “My ShareOS”\\.$",
 			"网页应用在自己的端口上运行 ($1) – 与本界面分开，因此应用无法使用你的登录。知道地址的人都可以在网络中打开网页应用；“可见范围”决定谁能在“我的 ShareOS”中看到它。"
+		],
+		[
+			"^The folder (\\S+) is kept, but the account cannot open it any more – not over SMB and not in the web interface\\. Cloud sync, the Paperless inbox and apps that keep their settings there stop working for this account\\.$",
+			"文件夹 $1 会保留，但该账户无法再打开它 – 无论通过 SMB 还是在网页界面中。云同步、Paperless 收件箱以及在其中保存设置的应用对该账户将停止工作。"
 		],
 		[
 			"^Afterwards (.+) starts\\. Alt-F's extra packages are missing then – flash the same file once more in Alt-F's firmware page\\. Back to ShareOS: flash the ShareOS \\.bin in Alt-F, system and settings are still there\\.$",

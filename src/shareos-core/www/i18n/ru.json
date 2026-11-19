@@ -1719,9 +1719,23 @@
 		"kernel is not a U-Boot image": "ядро не является образом U-Boot",
 		"kernel larger than the 3 MB the boot loader loads": "ядро больше 3 МБ, которые загружает загрузчик",
 		"not a D-Link firmware file": "это не файл прошивки D-Link",
-		"the file is damaged (checksum)": "файл повреждён (контрольная сумма)"
+		"the file is damaged (checksum)": "файл повреждён (контрольная сумма)",
+		"Personal folder on another drive?": "Личная папка на другом диске?",
+		"Use the new drive": "Использовать новый диск",
+		"Switch the personal folder off?": "Отключить личную папку?",
+		"drive not present": "диск отсутствует",
+		"STATUS LED": "СВЕТОДИОД СОСТОЯНИЯ",
+		"STATUS LED (WHITE)": "СВЕТОДИОД СОСТОЯНИЯ (БЕЛЫЙ)",
+		"DISK LEDS": "СВЕТОДИОДЫ ДИСКОВ",
+		"DISK LEDS (ORANGE)": "СВЕТОДИОДЫ ДИСКОВ (ОРАНЖЕВЫЕ)",
+		"DISK LEDS (AMBER)": "СВЕТОДИОДЫ ДИСКОВ (ЖЁЛТЫЕ)",
+		"The red USB LED shows rescue mode and updates during boot and cannot be changed.": "Красный USB-светодиод показывает режим восстановления и обновления при загрузке, его нельзя настроить."
 	},
 	"patterns": [
+		[
+			"^The folder (\\S+) stays where it is, with everything in it\\. On (\\S+) the account starts with an empty personal folder; what its apps keep there \\(cloud accounts, downloads, sync settings\\) is missing too\\. To take the files along, copy them over in Files afterwards\\.$",
+			"Папка $1 остаётся на месте со всем содержимым. На $2 учётная запись начинает с пустой личной папки; того, что хранят в ней приложения (облачные учётные записи, загрузки, настройки синхронизации), там тоже не будет. Чтобы перенести файлы, скопируйте их затем в разделе «Файлы»."
+		],
 		[
 			"^Web apps run on their own port \\((\\d+) / (\\d+) for HTTPS\\) – apart from this interface, so an app cannot use your login\\. Anyone who knows the address can open a web app on the network; “visible to” decides who sees it in “My ShareOS”\\.$",
 			"Веб-приложения работают на своём порту ($1 / $2 для HTTPS) – отдельно от этого интерфейса, поэтому приложение не может воспользоваться вашим входом. Кто знает адрес, может открыть веб-приложение в сети; «видно» определяет, кто видит его в «Мой ShareOS»."
@@ -1733,6 +1747,10 @@
 		[
 			"^Web apps run on their own port \\((\\d+)\\) – apart from this interface, so an app cannot use your login\\. Anyone who knows the address can open a web app on the network; “visible to” decides who sees it in “My ShareOS”\\.$",
 			"Веб-приложения работают на своём порту ($1) – отдельно от этого интерфейса, поэтому приложение не может воспользоваться вашим входом. Кто знает адрес, может открыть веб-приложение в сети; «видно» определяет, кто видит его в «Мой ShareOS»."
+		],
+		[
+			"^The folder (\\S+) is kept, but the account cannot open it any more – not over SMB and not in the web interface\\. Cloud sync, the Paperless inbox and apps that keep their settings there stop working for this account\\.$",
+			"Папка $1 сохраняется, но учётная запись больше не может её открыть – ни по SMB, ни в веб-интерфейсе. Облачная синхронизация, входящие Paperless и приложения, хранящие там настройки, перестают работать для этой учётной записи."
 		],
 		[
 			"^Afterwards (.+) starts\\. Alt-F's extra packages are missing then – flash the same file once more in Alt-F's firmware page\\. Back to ShareOS: flash the ShareOS \\.bin in Alt-F, system and settings are still there\\.$",

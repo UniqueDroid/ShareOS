@@ -2137,6 +2137,8 @@ P392	falha ao reler $1
 P393	partição $1 não encontrada
 P394	o arquivo é para outro aparelho ($1, este aparelho: $2)
 P395	este aparelho não é compatível ($1)
+P396	A pasta $1 fica onde está, com tudo o que contém. Em $2 a conta começa com uma pasta pessoal vazia; o que os aplicativos guardam nela (contas de nuvem, downloads, ajustes de sincronização) também fica faltando. Para levar os arquivos, copie-os depois em Arquivos.
+P397	A pasta $1 é mantida, mas a conta não pode mais abri-la – nem por SMB nem na interface web. A sincronização com a nuvem, a caixa de entrada do Paperless e os aplicativos que guardam nela seus ajustes deixam de funcionar para esta conta.
 E1699	Uma partilha na pasta pessoal de uma conta é a exceção: aí cada computador da lista age como essa conta, sem palavra-passe.
 E1700	Verificado: SHA-256, somas de todas as partes, feito para este aparelho.
 E1701	Arquivo enviado – verificado: SHA-256 do arquivo .sha256, somas de todas as partes, adequado para este dispositivo.
@@ -2175,3 +2177,13 @@ E1733	o kernel não é uma imagem U-Boot
 E1734	o kernel é maior que os 3 MB que o carregador de inicialização lê
 E1735	não é um arquivo de firmware D-Link
 E1736	o arquivo está danificado (soma de verificação)
+E1737	Pasta pessoal em outra unidade?
+E1738	Usar a nova unidade
+E1739	Desativar a pasta pessoal?
+E1740	unidade ausente
+E1741	LED DE STATUS
+E1742	LED DE STATUS (BRANCO)
+E1743	LEDS DOS DISCOS
+E1744	LEDS DOS DISCOS (LARANJA)
+E1745	LEDS DOS DISCOS (ÂMBAR)
+E1746	O LED USB vermelho indica o modo de resgate e as atualizações na inicialização e não pode ser ajustado.

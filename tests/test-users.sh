@@ -111,7 +111,23 @@ check "share folder created (owner root)" "[ \"\$(stat -c '%U' $R/mnt/daten/Foto
 check "share folder: rights as ACL (jan rwx, @familie r-x, others nothing)" "run 'getfacl -p /mnt/daten/Fotos' | grep -qx 'user:jan:rwx' && run 'getfacl -p /mnt/daten/Fotos' | grep -qx 'group:familie:r-x' && run 'getfacl -p /mnt/daten/Fotos' | grep -qx 'other::---' && run 'getfacl -p /mnt/daten/Fotos' | grep -qx 'group::---' && run 'getfacl -p /mnt/daten/Fotos' | grep -qx 'default:user:jan:rwx'"
 check "ksmbd share section" "grep -q '^\[fotos\]' $R/etc/ksmbd/ksmbd.conf && grep -q 'path = /mnt/daten/Fotos' $R/etc/ksmbd/ksmbd.conf"
 check "ksmbd access lists" "grep -q 'valid users = jan @familie' $R/etc/ksmbd/ksmbd.conf && grep -q 'write list = jan' $R/etc/ksmbd/ksmbd.conf && grep -q 'read list = @familie' $R/etc/ksmbd/ksmbd.conf"
-check "ksmbd home folders" "grep -q '^\[homes\]' $R/etc/ksmbd/ksmbd.conf"
+# personal folders over SMB: ksmbd has no [homes]/%H – one section per account (#183)
+KC=$R/etc/ksmbd/ksmbd.conf
+check "ksmbd: the personal folder is a section of its own, for its account only" "grep -A8 '^\[jan\]' $KC | grep -q 'path = /mnt/daten/home/jan' && grep -A8 '^\[jan\]' $KC | grep -q 'valid users = jan\$' && grep -A8 '^\[jan\]' $KC | grep -q 'browseable = no'"
+check "ksmbd: no [homes], no %H" "! grep -q '^\[homes\]' $KC && ! grep -q '%H' $KC"
+check "ksmbd: no section for accounts without a personal folder" "! grep -q '^\[anna\]' $KC && ! grep -q '^\[tv\]' $KC"
+check "share: the name of an account with a personal folder is refused" "rpc shareos.shares set '{\"name\":\"jan\",\"volume\":\"daten\"}' | grep -q 'account with a personal folder' && [ \"\$(grep -c '^\[jan\]' $KC)\" = 1 ]"
+# … but a share of that name that is already there is opened instead (and keeps working)
+run "uci set shares.jan=share; uci set shares.jan.volume=daten; uci set shares.jan.path=home/jan; uci set shares.jan.smb=1; uci add_list shares.jan.rw=jan; uci commit shares; shareos-shares apply" >/dev/null
+check "ksmbd: an existing share with the name of an account wins" "[ \"\$(grep -c '^\[jan\]' $KC)\" = 1 ] && grep -A12 '^\[jan\]' $KC | grep -q 'write list = jan'"
+check "ksmbd: a share on a personal folder keeps new files private" "grep -A12 '^\[jan\]' $KC | grep -q 'create mask = 0600' && grep -A12 '^\[jan\]' $KC | grep -q 'directory mask = 0700'"
+run "uci delete shares.jan; uci commit shares; shareos-shares apply" >/dev/null
+check "ksmbd: without that share the personal folder is back" "grep -A8 '^\[jan\]' $KC | grep -q 'comment = personal folder'"
+check "share: the folder for personal folders cannot be shared" "rpc shareos.shares set '{\"name\":\"alle\",\"volume\":\"daten\",\"path\":\"home\"}' | grep -q 'holds the personal folders'"
+check "share: nor a folder in it that is no account's" "rpc shareos.shares set '{\"name\":\"alle\",\"volume\":\"daten\",\"path\":\"home/ghost\"}' | grep -q 'holds the personal folders' && [ ! -e $R/mnt/daten/home/ghost ]"
+check "share: nor the apps area" "rpc shareos.shares set '{\"name\":\"alle\",\"volume\":\"daten\",\"path\":\".shareos/userdata\"}' | grep -q 'belongs to the apps'"
+check "share: a folder that only starts with home is fine" "rpc shareos.shares set '{\"name\":\"hw\",\"volume\":\"daten\",\"path\":\"homework\",\"smb\":true,\"rw\":[\"jan\"]}' | js \"any(x['name']=='hw' for x in d['shares'])\""
+rpc shareos.shares del '{"name":"hw"}' >/dev/null
 check "SMB 3 by default (no max protocol)" "! grep -q 'server max protocol' $R/etc/ksmbd/ksmbd.conf"
 G=$(rpc shareos.shares global '{"smb_compat":true}')
 check "compatibility mode: at most SMB 2.1" "echo '$G' | js \"d['smb_compat']\" && grep -q 'server max protocol = SMB2_10' $R/etc/ksmbd/ksmbd.conf"
@@ -128,9 +144,28 @@ rpc shareos.shares set '{"name":"janhome","volume":"daten","path":"home/jan","sm
 check "NFS export of a personal folder acts as its owner" "grep -q '^/mnt/daten/home/jan 10.0.0.0/24(rw,sync,no_subtree_check,all_squash,anonuid='$JUID',anongid=100)' $R/etc/exports && [ \"\$(stat -c %a $R/mnt/daten/home/jan)\" = 700 ]"
 rpc shareos.shares set '{"name":"janhome","volume":"daten","path":"home/jan/Musik","smb":false,"nfs":true,"nfs_rw":false,"nfs_hosts":["10.0.0.0/24"]}' >/dev/null
 check "… also of a folder in it" "grep -q '^/mnt/daten/home/jan/Musik 10.0.0.0/24(ro,sync,no_subtree_check,all_squash,anonuid='$JUID',anongid=100)' $R/etc/exports"
-rpc shareos.shares set '{"name":"janhome","volume":"daten","path":"home/nobody","smb":false,"nfs":true,"nfs_rw":false,"nfs_hosts":["10.0.0.0/24"]}' >/dev/null
+check "a folder made for a share in a personal folder is the account's, private" "[ \"\$(stat -c '%u %a' $R/mnt/daten/home/jan/Musik)\" = \"$JUID 700\" ]"
+# (such a share can no longer be made in the interface; one from an older version)
+run "uci set shares.janhome.path=home/nobody; uci commit shares; shareos-shares apply" >/dev/null
+check "a share from an older version on a folder under home that is no account's: the folder is not made" "[ ! -e $R/mnt/daten/home/nobody ]"
 check "a folder under home that is no account's stays with nobody" "grep -q '^/mnt/daten/home/nobody 10.0.0.0/24(ro,sync,no_subtree_check,all_squash,anonuid=65534,anongid=100)' $R/etc/exports"
 rpc shareos.shares del '{"name":"janhome"}' >/dev/null
+# accounts and personal folders
+rpc shareos.shares set '{"name":"paul","volume":"daten","smb":true,"rw":["jan"]}' >/dev/null
+o=$(run "echo paulpaul-1 | shareos-users add paul user --home=daten")
+check "users: no personal folder for an account that has the name of a share" "echo \"\$o\" | grep -q 'there is a share named paul' && ! grep -q '^paul:' $R/etc/passwd"
+rpc shareos.shares del '{"name":"paul"}' >/dev/null
+mkdir -p $R/mnt/daten/home/eva
+o=$(run "echo evaeva-12 | shareos-users add eva user --home=daten")
+check "users: a folder of that name that belongs to someone else is not taken over" "echo \"\$o\" | grep -q 'already on daten' && ! grep -q '^eva:' $R/etc/passwd && [ \"\$(stat -c %u $R/mnt/daten/home/eva)\" = 0 ]"
+rmdir $R/mnt/daten/home/eva
+T1=$(run "echo tomtom-12 | shareos-users add tom share >/dev/null 2>&1; id -u tom; shareos-users del tom >/dev/null 2>&1")
+T2=$(run "echo timtim-12 | shareos-users add tim share >/dev/null 2>&1; id -u tim; shareos-users del tim >/dev/null 2>&1")
+check "users: the id of a deleted account is not given out again" "[ -n \"$T1\" ] && [ \"$T2\" -gt \"$T1\" ]"
+run "shareos-users set jan --home=" >/dev/null
+check "users: without a personal folder there is no section and no home directory" "! grep -q '^\[jan\]' $KC && grep -q '^jan:[^:]*:[^:]*:[^:]*:[^:]*:/:' $R/etc/passwd && [ -d $R/mnt/daten/home/jan ]"
+run "shareos-users set jan --home=daten" >/dev/null
+check "users: … and it is back with the folder" "grep -q '^\[jan\]' $KC && grep -q '^jan:.*:/mnt/daten/home/jan:' $R/etc/passwd"
 check "user sees own shares" "rpc shareos.me get '{\"ubus_rpc_session\":\"$SID\"}' | js \"sorted((s['name'],s['access']) for s in d['shares'])==[('fotos','ro'),('medien','ro')]\""
 check "share removed, folder kept" "rpc shareos.shares del '{\"name\":\"medien\"}' | js \"[s['name'] for s in d['shares']]==['fotos']\" && [ -d $R/mnt/daten/medien ] && ! grep -q medien $R/etc/exports"
 
