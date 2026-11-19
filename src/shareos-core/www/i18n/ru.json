@@ -1723,7 +1723,13 @@
 		"Personal folder on another drive?": "Личная папка на другом диске?",
 		"Use the new drive": "Использовать новый диск",
 		"Switch the personal folder off?": "Отключить личную папку?",
-		"drive not present": "диск отсутствует"
+		"drive not present": "диск отсутствует",
+		"STATUS LED": "СВЕТОДИОД СОСТОЯНИЯ",
+		"STATUS LED (WHITE)": "СВЕТОДИОД СОСТОЯНИЯ (БЕЛЫЙ)",
+		"DISK LEDS": "СВЕТОДИОДЫ ДИСКОВ",
+		"DISK LEDS (ORANGE)": "СВЕТОДИОДЫ ДИСКОВ (ОРАНЖЕВЫЕ)",
+		"DISK LEDS (AMBER)": "СВЕТОДИОДЫ ДИСКОВ (ЖЁЛТЫЕ)",
+		"The red USB LED shows rescue mode and updates during boot and cannot be changed.": "Красный USB-светодиод показывает режим восстановления и обновления при загрузке, его нельзя настроить."
 	},
 	"patterns": [
 		[

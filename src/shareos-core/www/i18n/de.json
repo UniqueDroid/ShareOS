@@ -1723,7 +1723,13 @@
 		"Personal folder on another drive?": "Persönlicher Ordner auf ein anderes Laufwerk?",
 		"Use the new drive": "Neues Laufwerk verwenden",
 		"Switch the personal folder off?": "Persönlichen Ordner abschalten?",
-		"drive not present": "Laufwerk nicht vorhanden"
+		"drive not present": "Laufwerk nicht vorhanden",
+		"STATUS LED": "STATUS-LED",
+		"STATUS LED (WHITE)": "STATUS-LED (WEISS)",
+		"DISK LEDS": "PLATTEN-LEDS",
+		"DISK LEDS (ORANGE)": "PLATTEN-LEDS (ORANGE)",
+		"DISK LEDS (AMBER)": "PLATTEN-LEDS (GELB)",
+		"The red USB LED shows rescue mode and updates during boot and cannot be changed.": "Die rote USB-LED zeigt den Rettungsmodus und Updates beim Start an und ist nicht einstellbar."
 	},
 	"patterns": [
 		[

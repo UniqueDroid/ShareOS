@@ -33,7 +33,7 @@ def mock_folder(fid):
         return en[fid]
 
 
-STATE = {'setup_done': False, 'fan': {'preset': 'balanced', 'off_temp': 0, 'full_temp': 50, 'half_temp': 45}, 'led': {'status': 'heartbeat', 'power': 'on', 'disks': 'off'}, 'logo': True, 'lang': 'en', 'channel': 'beta', 'job': None, 'https': True, 'redirect': False, 'theme': 'dark', 'accent': 'blue', 'autostart_off': ['crond'],
+STATE = {'setup_done': False, 'fan': {'preset': 'balanced', 'off_temp': 0, 'full_temp': 50, 'half_temp': 45}, 'led': {'status': 'heartbeat', 'power': 'on', 'disks': 'off', 'colours': {'status': 'blue', 'usb': 'orange', 'disks': 'red'}}, 'logo': True, 'lang': 'en', 'channel': 'beta', 'job': None, 'https': True, 'redirect': False, 'theme': 'dark', 'accent': 'blue', 'autostart_off': ['crond'],
          'users': {'jan': {'role': 'admin', 'fullname': 'Jan', 'groups': ['family'], 'home': 'data', 'quota': 0, 'web': True, 'pw': 'shareos'},
                    'anna': {'role': 'user', 'fullname': 'Anna', 'groups': ['family'], 'home': 'data', 'quota': 200000, 'web': True, 'cloud': True, 'files': True, 'pw': 'anna123'},
                    'tv': {'role': 'share', 'fullname': 'TV', 'groups': ['media'], 'home': '', 'quota': 0, 'web': True, 'pw': 'tv1234'}},

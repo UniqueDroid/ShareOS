@@ -1723,7 +1723,13 @@
 		"Personal folder on another drive?": "व्यक्तिगत फ़ोल्डर किसी दूसरी ड्राइव पर?",
 		"Use the new drive": "नई ड्राइव का उपयोग करें",
 		"Switch the personal folder off?": "व्यक्तिगत फ़ोल्डर बंद करें?",
-		"drive not present": "ड्राइव मौजूद नहीं है"
+		"drive not present": "ड्राइव मौजूद नहीं है",
+		"STATUS LED": "स्थिति LED",
+		"STATUS LED (WHITE)": "स्थिति LED (सफ़ेद)",
+		"DISK LEDS": "डिस्क LED",
+		"DISK LEDS (ORANGE)": "डिस्क LED (नारंगी)",
+		"DISK LEDS (AMBER)": "डिस्क LED (एम्बर)",
+		"The red USB LED shows rescue mode and updates during boot and cannot be changed.": "लाल USB LED शुरुआत में रेस्क्यू मोड और अपडेट दिखाती है और बदली नहीं जा सकती।"
 	},
 	"patterns": [
 		[

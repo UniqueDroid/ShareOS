@@ -48,6 +48,16 @@ async function loadTime() {
 }
 
 // "now: 41 °C · half" of the fan panel: the values of the last tick (every 5 s)
+// what the LEDs are called: their colours differ from model to model (the disk
+// LEDs are red on the DNS-320L and DNS-325, orange on the DNS-320 and
+// DNR-322L). Whole texts, so that the translations know each of them.
+const LED_STATUS_LABEL = { blue: 'STATUS LED (BLUE)', white: 'STATUS LED (WHITE)' };
+const LED_DISKS_LABEL = { red: 'DISK LEDS (RED)', orange: 'DISK LEDS (ORANGE)', amber: 'DISK LEDS (AMBER)' };
+const LED_USB_NOTE = {
+	orange: 'The orange USB LED shows rescue mode and updates during boot and cannot be changed.',
+	red: 'The red USB LED shows rescue mode and updates during boot and cannot be changed.'
+};
+
 function fanNow() {
 	const i = S.info || S.hw || {};
 	return `now: ${i.temperature != null ? (i.temperature / 1000).toFixed(0) + ' °C' : '–'} · ${fanTxt(i.fan_pwm)}`;
@@ -149,6 +159,7 @@ Object.assign(SYS, {
 		const h = S.hw;
 		if (!h) return html`<div class="panel"><div class="empty"><div class="spin" style="margin:0"></div><span>Loading …</span></div></div>`;
 		const f = h.fan, l = h.led;
+		const lc = l.colours || { status: 'blue', usb: 'orange', disks: 'red' };
 		// the temperatures of the presets come from the box (one list for the
 		// fan control and this page)
 		const pd = (id) => { const p = h.presets?.[id]; return !p ? '' : p.off_temp ? `Fan stops below ${p.off_temp} °C, full from ${p.full_temp} °C` : `Fan always on, full from ${p.full_temp} °C`; };
@@ -172,11 +183,11 @@ Object.assign(SYS, {
 			<div class="panel">
 				<div class="ph"><span class="pt">LEDS</span><span class="tag ml">applies at once</span></div>
 				<div class="fields" style="grid-template-columns:1fr">
-					<label class="f"><span>STATUS LED (BLUE)</span>${sel('led-status', l.status, [['heartbeat', 'Heartbeat (ShareOS running)'], ['on', 'on'], ['off', 'off']])}</label>
+					<label class="f"><span>${LED_STATUS_LABEL[lc.status] || 'STATUS LED'}</span>${sel('led-status', l.status, [['heartbeat', 'Heartbeat (ShareOS running)'], ['on', 'on'], ['off', 'off']])}</label>
 					<label class="f"><span>POWER LED</span>${sel('led-power', l.power, [['on', 'on'], ['blink', 'blinking'], ['off', 'off']])}</label>
-					<label class="f"><span>DISK LEDS (RED)</span>${sel('led-disks', l.disks, [['off', 'off'], ['activity', 'Show disk access']])}</label>
+					<label class="f"><span>${LED_DISKS_LABEL[lc.disks] || 'DISK LEDS'}</span>${sel('led-disks', l.disks, [['off', 'off'], ['activity', 'Show disk access']])}</label>
 				</div>
-				<p class="note">The orange USB LED shows rescue mode and updates during boot and cannot be changed.</p>
+				${LED_USB_NOTE[lc.usb] ? html`<p class="note">${LED_USB_NOTE[lc.usb]}</p>` : ''}
 			</div>
 		</div>`;
 	},
