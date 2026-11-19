@@ -1723,7 +1723,13 @@
 		"Personal folder on another drive?": "Dossier personnel sur un autre disque ?",
 		"Use the new drive": "Utiliser le nouveau disque",
 		"Switch the personal folder off?": "Désactiver le dossier personnel ?",
-		"drive not present": "disque absent"
+		"drive not present": "disque absent",
+		"STATUS LED": "LED D'ÉTAT",
+		"STATUS LED (WHITE)": "LED D'ÉTAT (BLANCHE)",
+		"DISK LEDS": "LED DES DISQUES",
+		"DISK LEDS (ORANGE)": "LED DES DISQUES (ORANGE)",
+		"DISK LEDS (AMBER)": "LED DES DISQUES (AMBRE)",
+		"The red USB LED shows rescue mode and updates during boot and cannot be changed.": "La LED USB rouge indique le mode de secours et les mises à jour au démarrage et n'est pas réglable."
 	},
 	"patterns": [
 		[

@@ -1741,7 +1741,13 @@
 		"Personal folder on another drive?",
 		"Use the new drive",
 		"Switch the personal folder off?",
-		"drive not present"
+		"drive not present",
+		"STATUS LED",
+		"STATUS LED (WHITE)",
+		"DISK LEDS",
+		"DISK LEDS (ORANGE)",
+		"DISK LEDS (AMBER)",
+		"The red USB LED shows rescue mode and updates during boot and cannot be changed."
 	],
 	"patterns": [
 		[

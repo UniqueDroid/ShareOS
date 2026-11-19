@@ -1723,7 +1723,13 @@
 		"Personal folder on another drive?": "المجلد الشخصي على قرص آخر؟",
 		"Use the new drive": "استخدام القرص الجديد",
 		"Switch the personal folder off?": "إيقاف المجلد الشخصي؟",
-		"drive not present": "القرص غير موجود"
+		"drive not present": "القرص غير موجود",
+		"STATUS LED": "مصباح الحالة",
+		"STATUS LED (WHITE)": "مصباح الحالة (أبيض)",
+		"DISK LEDS": "مصابيح الأقراص",
+		"DISK LEDS (ORANGE)": "مصابيح الأقراص (برتقالية)",
+		"DISK LEDS (AMBER)": "مصابيح الأقراص (كهرمانية)",
+		"The red USB LED shows rescue mode and updates during boot and cannot be changed.": "يبين مصباح USB الأحمر وضع الإنقاذ والتحديثات عند التشغيل ولا يمكن ضبطه."
 	},
 	"patterns": [
 		[
