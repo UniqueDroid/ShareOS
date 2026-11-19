@@ -130,6 +130,11 @@ function shareEditor(e) {
 	</form></section>`;
 }
 
+// the drive of an account's personal folder is gone or not mounted
+function homeGone(u) {
+	return !!u.home && !(S.vols || []).some((v) => v.name === u.home && v.mounted !== false);
+}
+
 function usageLine(u) {
 	if (!u.usage?.length) return u.quota ? html`Limit ${fmtMB(u.quota)} per drive` : html`<span class="mut">no limit</span>`;
 	return html`${u.usage.map((x) => { const p = x.limit ? pct(x.used, x.limit) : 0; return html`<div style="margin-top:4px"><span class="mut">${x.volume}:</span> ${fmtBytes(x.used)}${x.limit ? html` of ${fmtBytes(x.limit)}` : ''}
@@ -149,7 +154,7 @@ function usersView() {
 			<tbody>${a.users.map((u) => html`<tr>
 				<td><b>${u.name}</b>${u.fullname ? html`<div class="mut" style="font-size:12px">${u.fullname}</div>` : ''}</td>
 				<td>${roleTag(u)}</td><td class="mut">${u.groups.join(', ') || '–'}</td>
-				<td class="mut">${u.home ? '/mnt/' + u.home + '/home/' + u.name : '–'}</td>
+				<td class="mut">${u.home ? '/mnt/' + u.home + '/home/' + u.name : '–'}${homeGone(u) ? html` <span style="color:var(--amber)">drive not present</span>` : ''}</td>
 				<td style="font-size:12px;min-width:160px">${usageLine(u)}</td>
 				<td><div class="acts">${userActions(u)}</div></td></tr>`)}</tbody></table></div>`
 		: html`<div class="grid">${a.users.map((u) => html`<div class="card">
@@ -157,7 +162,7 @@ function usersView() {
 			<div class="info"><div class="name">${u.name} ${roleTag(u)}</div>
 				<div class="desc">${u.fullname || ''}${u.groups.length ? (u.fullname ? ' · ' : '') + u.groups.join(', ') : ''}</div>
 				<div class="desc" style="margin-top:8px;font-size:12px">${usageLine(u)}</div>
-				<div class="ip">${u.home ? '/mnt/' + u.home + '/home/' + u.name : 'no personal folder'}</div>
+				<div class="ip">${u.home ? '/mnt/' + u.home + '/home/' + u.name : 'no personal folder'}${homeGone(u) ? html` <span style="color:var(--amber)">drive not present</span>` : ''}</div>
 				<div class="acts" style="margin-top:12px">${userActions(u)}</div></div></div>`)}</div>`}
 		${a.users.length && !e ? html`<div class="acts" style="margin-top:12px"><button class="btn" type="button" data-act="u-new">New user</button>
 			<button class="btn ghost" type="button" data-act="u-altf">Import from Alt-F</button></div>` : ''}
@@ -253,6 +258,13 @@ Object.assign(VIEWS_AFTER, {
 			if (isNew) {
 				if (f.p1.value !== f.p2.value) { toast('The passwords do not match.', true); return; }
 				args.password = f.p1.value;
+			} else {
+				// the personal folder is not moved: say what happens before it does
+				const was = S.uEdit.data.home || '', dir = '/mnt/' + was + '/home/' + args.name;
+				if (was && args.home && was !== args.home && !await confirmDlg('Personal folder on another drive?',
+					`The folder ${dir} stays where it is, with everything in it. On ${args.home} the account starts with an empty personal folder; what its apps keep there (cloud accounts, downloads, sync settings) is missing too. To take the files along, copy them over in Files afterwards.`, 'Use the new drive')) return;
+				if (was && !args.home && !await confirmDlg('Switch the personal folder off?',
+					`The folder ${dir} is kept, but the account cannot open it any more – not over SMB and not in the web interface. Cloud sync, the Paperless inbox and apps that keep their settings there stop working for this account.`, 'Switch off', true)) return;
 			}
 			try { S.acc = await rpc('shareos.accounts', isNew ? 'add' : 'set', args); S.uEdit = null; toast(isNew ? `User “${args.name}” created.` : `User “${args.name}” saved.`); renderMain(); }
 			catch (err) { toast('User: ' + err.message, true); }

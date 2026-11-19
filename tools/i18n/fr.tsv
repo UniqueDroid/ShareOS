@@ -2137,6 +2137,8 @@ P392	la relecture de $1 a échoué
 P393	partition $1 introuvable
 P394	le fichier est destiné à un autre appareil ($1, ce boîtier : $2)
 P395	ce boîtier n'est pas pris en charge ($1)
+P396	Le dossier $1 reste où il est, avec tout son contenu. Sur $2, le compte commence avec un dossier personnel vide ; ce que ses applications y conservent (comptes cloud, téléchargements, réglages de synchronisation) manque aussi. Pour emporter les fichiers, copiez-les ensuite dans Fichiers.
+P397	Le dossier $1 est conservé, mais le compte ne peut plus l'ouvrir – ni par SMB ni dans l'interface web. La synchronisation cloud, la boîte de réception Paperless et les applications qui y conservent leurs réglages cessent de fonctionner pour ce compte.
 E1699	Un partage sur le dossier personnel d’un compte fait exception : chaque ordinateur de la liste y agit en tant que ce compte, sans mot de passe.
 E1700	Vérifié : SHA-256, sommes de toutes les parties, fait pour cet appareil.
 E1701	Fichier téléversé – vérifié : SHA-256 du fichier .sha256, sommes de toutes les parties, adapté à cet appareil.
@@ -2175,3 +2177,7 @@ E1733	le noyau n'est pas une image U-Boot
 E1734	le noyau dépasse les 3 Mo que charge le chargeur d'amorçage
 E1735	ce n'est pas un fichier firmware D-Link
 E1736	le fichier est endommagé (somme de contrôle)
+E1737	Dossier personnel sur un autre disque ?
+E1738	Utiliser le nouveau disque
+E1739	Désactiver le dossier personnel ?
+E1740	disque absent

@@ -1719,9 +1719,17 @@
 		"kernel is not a U-Boot image": "कर्नेल कोई U-Boot इमेज नहीं है",
 		"kernel larger than the 3 MB the boot loader loads": "कर्नेल उन 3 MB से बड़ा है जो बूट लोडर लोड करता है",
 		"not a D-Link firmware file": "यह D-Link फ़र्मवेयर फ़ाइल नहीं है",
-		"the file is damaged (checksum)": "फ़ाइल क्षतिग्रस्त है (चेकसम)"
+		"the file is damaged (checksum)": "फ़ाइल क्षतिग्रस्त है (चेकसम)",
+		"Personal folder on another drive?": "व्यक्तिगत फ़ोल्डर किसी दूसरी ड्राइव पर?",
+		"Use the new drive": "नई ड्राइव का उपयोग करें",
+		"Switch the personal folder off?": "व्यक्तिगत फ़ोल्डर बंद करें?",
+		"drive not present": "ड्राइव मौजूद नहीं है"
 	},
 	"patterns": [
+		[
+			"^The folder (\\S+) stays where it is, with everything in it\\. On (\\S+) the account starts with an empty personal folder; what its apps keep there \\(cloud accounts, downloads, sync settings\\) is missing too\\. To take the files along, copy them over in Files afterwards\\.$",
+			"फ़ोल्डर $1 अपनी सारी सामग्री के साथ वहीं रहता है। $2 पर खाता एक खाली व्यक्तिगत फ़ोल्डर से शुरू होता है; उसके ऐप वहाँ जो रखते हैं (क्लाउड खाते, डाउनलोड, सिंक सेटिंग्स) वह भी नहीं होगा। फ़ाइलें साथ ले जाने के लिए बाद में उन्हें «फ़ाइलें» में कॉपी करें।"
+		],
 		[
 			"^Web apps run on their own port \\((\\d+) / (\\d+) for HTTPS\\) – apart from this interface, so an app cannot use your login\\. Anyone who knows the address can open a web app on the network; “visible to” decides who sees it in “My ShareOS”\\.$",
 			"वेब ऐप्स अपने पोर्ट ($1 / HTTPS के लिए $2) पर चलते हैं – इस इंटरफ़ेस से अलग, ताकि कोई ऐप आपके लॉग इन का उपयोग न कर सके। जिसे पता मालूम है वह नेटवर्क में वेब ऐप खोल सकता है; \"किसे दिखे\" तय करता है कि \"मेरा ShareOS\" में इसे कौन देखे।"
@@ -1733,6 +1741,10 @@
 		[
 			"^Web apps run on their own port \\((\\d+)\\) – apart from this interface, so an app cannot use your login\\. Anyone who knows the address can open a web app on the network; “visible to” decides who sees it in “My ShareOS”\\.$",
 			"वेब ऐप्स अपने पोर्ट ($1) पर चलते हैं – इस इंटरफ़ेस से अलग, ताकि कोई ऐप आपके लॉग इन का उपयोग न कर सके। जिसे पता मालूम है वह नेटवर्क में वेब ऐप खोल सकता है; \"किसे दिखे\" तय करता है कि \"मेरा ShareOS\" में इसे कौन देखे।"
+		],
+		[
+			"^The folder (\\S+) is kept, but the account cannot open it any more – not over SMB and not in the web interface\\. Cloud sync, the Paperless inbox and apps that keep their settings there stop working for this account\\.$",
+			"फ़ोल्डर $1 रखा जाता है, लेकिन खाता उसे अब नहीं खोल सकता – न SMB से, न वेब इंटरफ़ेस में। क्लाउड सिंक, Paperless इनबॉक्स और वे ऐप जो अपनी सेटिंग्स वहाँ रखते हैं, इस खाते के लिए काम करना बंद कर देते हैं।"
 		],
 		[
 			"^Afterwards (.+) starts\\. Alt-F's extra packages are missing then – flash the same file once more in Alt-F's firmware page\\. Back to ShareOS: flash the ShareOS \\.bin in Alt-F, system and settings are still there\\.$",
