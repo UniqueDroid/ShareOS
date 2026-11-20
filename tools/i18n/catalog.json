@@ -1747,7 +1747,8 @@
 		"DISK LEDS",
 		"DISK LEDS (ORANGE)",
 		"DISK LEDS (AMBER)",
-		"The red USB LED shows rescue mode and updates during boot and cannot be changed."
+		"The red USB LED shows rescue mode and updates during boot and cannot be changed.",
+		"Signed in"
 	],
 	"patterns": [
 		[

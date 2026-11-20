@@ -1729,7 +1729,8 @@
 		"DISK LEDS": "硬盘指示灯",
 		"DISK LEDS (ORANGE)": "硬盘指示灯 (橙色)",
 		"DISK LEDS (AMBER)": "硬盘指示灯 (琥珀色)",
-		"The red USB LED shows rescue mode and updates during boot and cannot be changed.": "红色 USB 指示灯在启动时显示救援模式和更新，无法调整。"
+		"The red USB LED shows rescue mode and updates during boot and cannot be changed.": "红色 USB 指示灯在启动时显示救援模式和更新，无法调整。",
+		"Signed in": "已登录"
 	},
 	"patterns": [
 		[

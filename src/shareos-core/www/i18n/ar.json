@@ -1729,7 +1729,8 @@
 		"DISK LEDS": "مصابيح الأقراص",
 		"DISK LEDS (ORANGE)": "مصابيح الأقراص (برتقالية)",
 		"DISK LEDS (AMBER)": "مصابيح الأقراص (كهرمانية)",
-		"The red USB LED shows rescue mode and updates during boot and cannot be changed.": "يبين مصباح USB الأحمر وضع الإنقاذ والتحديثات عند التشغيل ولا يمكن ضبطه."
+		"The red USB LED shows rescue mode and updates during boot and cannot be changed.": "يبين مصباح USB الأحمر وضع الإنقاذ والتحديثات عند التشغيل ولا يمكن ضبطه.",
+		"Signed in": "تم تسجيل الدخول"
 	},
 	"patterns": [
 		[

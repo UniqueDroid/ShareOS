@@ -1729,7 +1729,8 @@
 		"DISK LEDS": "LEDS DE DISCO",
 		"DISK LEDS (ORANGE)": "LEDS DE DISCO (NARANJAS)",
 		"DISK LEDS (AMBER)": "LEDS DE DISCO (ÁMBAR)",
-		"The red USB LED shows rescue mode and updates during boot and cannot be changed.": "El LED USB rojo indica el modo de rescate y las actualizaciones al arrancar y no se puede cambiar."
+		"The red USB LED shows rescue mode and updates during boot and cannot be changed.": "El LED USB rojo indica el modo de rescate y las actualizaciones al arrancar y no se puede cambiar.",
+		"Signed in": "Sesión iniciada"
 	},
 	"patterns": [
 		[

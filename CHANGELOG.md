@@ -6,6 +6,7 @@ pre-releases for test devices only.
 
 ## 0.3.0-beta.15
 
+- The header shows who is signed in, next to the clock ([#191](https://github.com/UniqueDroid/ShareOS/issues/191), asked for by Rambooka). The view for users without admin rights already had the name in its info line.
 - App SDK (`/_shareos/theme.css`): an element with the `hidden` attribute is hidden even when a class gives it a `display` – a `.sos-btn` with `hidden` stayed visible, because the class's `display: inline-flex` beats the browser's own rule. Found in the Transmission app ([ShareOS-Apps #57](https://github.com/UniqueDroid/ShareOS-Apps/pull/57)).
 
 ## 0.3.0-beta.14

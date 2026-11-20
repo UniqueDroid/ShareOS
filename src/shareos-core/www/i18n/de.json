@@ -1729,7 +1729,8 @@
 		"DISK LEDS": "PLATTEN-LEDS",
 		"DISK LEDS (ORANGE)": "PLATTEN-LEDS (ORANGE)",
 		"DISK LEDS (AMBER)": "PLATTEN-LEDS (GELB)",
-		"The red USB LED shows rescue mode and updates during boot and cannot be changed.": "Die rote USB-LED zeigt den Rettungsmodus und Updates beim Start an und ist nicht einstellbar."
+		"The red USB LED shows rescue mode and updates during boot and cannot be changed.": "Die rote USB-LED zeigt den Rettungsmodus und Updates beim Start an und ist nicht einstellbar.",
+		"Signed in": "Angemeldet"
 	},
 	"patterns": [
 		[

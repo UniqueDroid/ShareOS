@@ -1729,7 +1729,8 @@
 		"DISK LEDS": "ডিস্ক LED",
 		"DISK LEDS (ORANGE)": "ডিস্ক LED (কমলা)",
 		"DISK LEDS (AMBER)": "ডিস্ক LED (অ্যাম্বার)",
-		"The red USB LED shows rescue mode and updates during boot and cannot be changed.": "লাল USB LED চালুর সময় রেসকিউ মোড ও আপডেট দেখায় এবং বদলানো যায় না।"
+		"The red USB LED shows rescue mode and updates during boot and cannot be changed.": "লাল USB LED চালুর সময় রেসকিউ মোড ও আপডেট দেখায় এবং বদলানো যায় না।",
+		"Signed in": "সাইন ইন করা"
 	},
 	"patterns": [
 		[
