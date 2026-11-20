@@ -1729,7 +1729,10 @@
 		"DISK LEDS": "ডিস্ক LED",
 		"DISK LEDS (ORANGE)": "ডিস্ক LED (কমলা)",
 		"DISK LEDS (AMBER)": "ডিস্ক LED (অ্যাম্বার)",
-		"The red USB LED shows rescue mode and updates during boot and cannot be changed.": "লাল USB LED চালুর সময় রেসকিউ মোড ও আপডেট দেখায় এবং বদলানো যায় না।"
+		"The red USB LED shows rescue mode and updates during boot and cannot be changed.": "লাল USB LED চালুর সময় রেসকিউ মোড ও আপডেট দেখায় এবং বদলানো যায় না।",
+		"uploaded": "আপলোড করা",
+		"uploaded – not checked": "আপলোড করা – যাচাই করা হয়নি",
+		"from the app repository). Uploaded packages are marked “uploaded – not checked”: the box cannot compare them with the store.": "দিয়ে তৈরি)। আপলোড করা প্যাকেজ \"আপলোড করা – যাচাই করা হয়নি\" হিসেবে চিহ্নিত: বক্সটি এগুলো স্টোরের সঙ্গে মেলাতে পারে না।"
 	},
 	"patterns": [
 		[
