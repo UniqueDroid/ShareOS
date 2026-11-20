@@ -305,6 +305,15 @@ direkt auf der Box nachgesehen, warum der Webserver nicht lief.
 | 08:00 | 0.3.0-beta.9 von Jan veröffentlicht (Korrekturen aus dem Review, #158). In der Nacht davor liefen die ARM-Emulator-Tests zum ersten Mal auf GitHub – sechs Läufe, bis sie grün waren; `test-dnsfilter` bleibt eine Warnung, weil AdGuard Home unter dem Emulator zu unregelmäßig startet. |
 | 08:48 | **Quelltext nach Bereichen.** Jan hatte das lange gefordert: Zwei Dateien mit über 6000 Zeilen sind für Menschen schwer zu lesen. `app.js` und `shareos.uc` werden zu einer Datei je Bereich (`parts/web`, `parts/rpc`), der Bau fügt sie zusammen. Zuerst ein reiner Schnitt, dessen Ergebnis byte-gleich ist, dann wandern Seiten, Setup und Klicks jedes Bereichs in seine Datei; jede Seite der alten und der neuen Oberfläche im Browser verglichen. |
 
+### 19.–20.11.2026
+
+| Zeit | Was passiert ist |
+|---|---|
+| 19.11. 18:34 | Jan veröffentlicht `v0.3.0-beta.14`. |
+| 19.11. | Aus den Apps: Der Knopf *Revoke password* in Transmission blieb sichtbar – das `display` einer Klasse schlägt die `[hidden]`-Regel des Browsers; das SDK-Theme behebt es für alle Apps. „eigene“ bei hochgeladenen Apps klang nach „selbst geschrieben“ und heißt jetzt „hochgeladen“. ShareFinder 1.1.1: Ein in der Spaltenansicht geöffneter Ordner lässt sich wieder über sein Kontextmenü löschen. |
+| 20.11. | Rambooka möchte sehen, wer angemeldet ist (#191) – Jan wählt aus zwei Entwürfen den Platz neben der Uhr. Die Tailscale-App nannte auf jeder Box den DNS-320L (#190). Der Build für den DNR-322L liegt für seinen Tester bereit; er bleibt aus dem Release, bis er gestartet ist. |
+| 20.11. 22:00 | Alles für `v0.3.0-beta.15` ist auf `main`. |
+
 ### 17.–19.11.2026
 
 | Zeit | Was passiert ist |
