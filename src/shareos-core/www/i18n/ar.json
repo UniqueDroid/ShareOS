@@ -1729,7 +1729,10 @@
 		"DISK LEDS": "مصابيح الأقراص",
 		"DISK LEDS (ORANGE)": "مصابيح الأقراص (برتقالية)",
 		"DISK LEDS (AMBER)": "مصابيح الأقراص (كهرمانية)",
-		"The red USB LED shows rescue mode and updates during boot and cannot be changed.": "يبين مصباح USB الأحمر وضع الإنقاذ والتحديثات عند التشغيل ولا يمكن ضبطه."
+		"The red USB LED shows rescue mode and updates during boot and cannot be changed.": "يبين مصباح USB الأحمر وضع الإنقاذ والتحديثات عند التشغيل ولا يمكن ضبطه.",
+		"uploaded": "مرفوع",
+		"uploaded – not checked": "مرفوع – غير مُتحقَّق منه",
+		"from the app repository). Uploaded packages are marked “uploaded – not checked”: the box cannot compare them with the store.": "من مستودع التطبيقات). تُعلَّم الحزم المرفوعة بـ«مرفوع – غير مُتحقَّق منه»: لا يستطيع الجهاز مقارنتها بالمتجر."
 	},
 	"patterns": [
 		[

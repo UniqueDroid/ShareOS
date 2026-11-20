@@ -2187,3 +2187,6 @@ E1743	LEDS DOS DISCOS
 E1744	LEDS DOS DISCOS (LARANJA)
 E1745	LEDS DOS DISCOS (ÂMBAR)
 E1746	O LED USB vermelho indica o modo de resgate e as atualizações na inicialização e não pode ser ajustado.
+E1747	enviado
+E1748	enviado – não verificado
+E1749	do repositório de apps). Pacotes enviados são marcados como "enviado – não verificado": o aparelho não consegue compará-los com a loja.

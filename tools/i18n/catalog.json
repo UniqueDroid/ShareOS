@@ -1747,7 +1747,10 @@
 		"DISK LEDS",
 		"DISK LEDS (ORANGE)",
 		"DISK LEDS (AMBER)",
-		"The red USB LED shows rescue mode and updates during boot and cannot be changed."
+		"The red USB LED shows rescue mode and updates during boot and cannot be changed.",
+		"uploaded",
+		"uploaded – not checked",
+		"from the app repository). Uploaded packages are marked “uploaded – not checked”: the box cannot compare them with the store."
 	],
 	"patterns": [
 		[

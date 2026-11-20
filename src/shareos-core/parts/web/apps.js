@@ -239,14 +239,14 @@ function appInstalled() {
 	return html`${favBar(list)}${rec}<section class="sec">${secHead('apps', 'INSTALLED APPS', list.length ? `${list.length}` : '')}
 		${!list.length ? html`<div class="panel"><div class="empty">${svg(I.box)}<span>No app installed yet. The <a href="#/apps/store">store</a> has apps to install – or upload your own package (.sapp).</span></div></div>`
 		: t ? html`<div class="tw"><table class="t" style="min-width:720px"><thead><tr><th></th><th>APP</th><th>VERSION</th><th>PUBLISHER</th><th>VISIBLE TO</th><th></th></tr></thead><tbody>
-			${list.map((a) => html`<tr><td style="width:44px">${appIcon(a)}</td><td><b>${a.name}</b> ${favStar(a)}${a.verified ? '' : html` <span class="tag warn">own</span>`}<div class="mut" style="font-size:12px">${txtOf(a.description)}</div></td>
+			${list.map((a) => html`<tr><td style="width:44px">${appIcon(a)}</td><td><b>${a.name}</b> ${favStar(a)}${a.verified ? '' : html` <span class="tag warn">uploaded</span>`}<div class="mut" style="font-size:12px">${txtOf(a.description)}</div></td>
 				<td>${a.version}${upd(a) ? html` <span class="tag warn">→ ${upd(a).latest}</span>` : ''}</td><td class="mut">${a.publisher}</td><td class="mut">${appUsersTxt(a)}</td>
 				<td style="white-space:nowrap">${appActions(a, upd(a))}</td></tr>`)}</tbody></table></div>`
 		: html`<div class="grid">${list.map((a) => html`<div class="card">${favStar(a)}
 			<div class="icon">${appIcon(a)}</div>
 			<div class="info"><div class="name">${a.name} <span class="mut" style="font-size:12px">${a.version}</span></div>
 				<div class="desc">${txtOf(a.description)}</div>
-				<div class="desc" style="margin-top:6px"><span class="tag ${a.verified ? 'ok' : 'warn'}">${a.verified ? 'from the store' : 'own / not verified'}</span> ${upd(a) ? html`<span class="tag warn">Update ${upd(a).latest}</span>` : ''}</div>
+				<div class="desc" style="margin-top:6px"><span class="tag ${a.verified ? 'ok' : 'warn'}">${a.verified ? 'from the store' : 'uploaded – not checked'}</span> ${upd(a) ? html`<span class="tag warn">Update ${upd(a).latest}</span>` : ''}</div>
 				${permTags(appPerms(a))}
 				<div class="ip">${a.publisher} · ${a.module ? html`<span>Module</span>` : a.type === 'system' ? html`<span>Command</span> ${sysCmds(a)}` : 'visible to ' + appUsersTxt(a)}</div>
 				<div class="acts" style="margin-top:10px">${appActions(a, upd(a))}</div></div></div>`)}</div>`}
@@ -374,7 +374,7 @@ function appStore() {
 			<form class="panel" id="f-appupload">
 				<div class="ph"><span class="pt">INSTALL PACKAGE</span><span class="tag ml">.sapp</span></div>
 				<div class="fields" style="grid-template-columns:1fr"><label class="f"><span>PACKAGE FILE</span><input type="file" name="file" accept=".sapp,application/gzip" required></label></div>
-				<p class="note">For your own apps (built with <code>tools/build.py</code> from the app repository). Uploaded packages count as “own / not verified”.</p>
+				<p class="note">For your own apps (built with <code>tools/build.py</code> from the app repository). Uploaded packages are marked “uploaded – not checked”: the box cannot compare them with the store.</p>
 				<div class="acts" style="margin-top:12px"><button class="btn" type="submit" ${busy ? 'disabled' : ''}>${svg(I.ul)}Upload & install</button></div>
 			</form>
 		</div>
