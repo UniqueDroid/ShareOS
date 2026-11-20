@@ -6,7 +6,7 @@
 # sets the BOARD_* variables from the device-tree model. One system image
 # serves all models; everything that differs between them is described here.
 #
-#   BOARD_ID            short name: dns320l, dns320b, dns320a, dns325, dns327l, unknown
+#   BOARD_ID            short name: dns320l, dns320b, dns320a, dnr322l, dns325, dns327l, unknown
 #   BOARD_NAME          for people
 #   BOARD_FWNAME        name in the release files: ShareOS-<version>-<fwname>.bin
 #   BOARD_SIG           signature of D-Link firmware files for this box (dns323-fw)

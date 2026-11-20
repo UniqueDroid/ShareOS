@@ -20,6 +20,8 @@
 		     "dlink,dns-kirkwood", "marvell,kirkwood-88f6281",
 		     "marvell,kirkwood";
 
+	/* "memory", not "memory@0": the node of kirkwood-dns320.dts has that
+	 * name, so this replaces it instead of adding a second one */
 	memory {
 		device_type = "memory";
 		reg = <0x00000000 0x10000000>;	/* 256 MB */
