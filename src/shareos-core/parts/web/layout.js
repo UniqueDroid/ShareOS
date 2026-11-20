@@ -217,7 +217,10 @@ function renderHeader() {
 				<button class="ib" type="button" data-act="theme" aria-label="Toggle light/dark" title="Toggle light/dark">${svg(I.moon)}</button>
 				<button class="ib" type="button" data-act="logout" aria-label="Log out">${svg(I.power)}</button>
 			</div>
-			<div class="clock" title="Time of the box">${now ? now.toLocaleTimeString(LOC, { hour: '2-digit', minute: '2-digit' }) : '–'}</div>
+			<div class="clockline">
+				${S.user ? html`<span class="who" title="Signed in"><span class="sr">Signed in</span>${svg(I.user)}<b data-i18n-skip>${S.user}</b></span>` : ''}
+				<div class="clock" title="Time of the box">${now ? now.toLocaleTimeString(LOC, { hour: '2-digit', minute: '2-digit' }) : '–'}</div>
+			</div>
 			<div class="meta">${now ? now.toLocaleDateString(LOC, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) : ''}</div>
 		</div>`.s;
 	fitChips();

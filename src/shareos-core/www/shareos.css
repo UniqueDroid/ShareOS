@@ -39,6 +39,10 @@
 .chip.more{cursor:pointer;font:inherit;font-size:11px;font-weight:600;color:var(--soft);justify-content:center;min-width:36px}
 .clock{font-size:28px;font-weight:600;color:var(--accent);text-shadow:var(--glow);font-variant-numeric:tabular-nums;line-height:1}
 .meta{color:var(--muted);font-size:12px;text-align:right}
+.clockline{display:flex;align-items:center;justify-content:flex-end;gap:14px;flex-wrap:wrap}
+.who{display:inline-flex;align-items:center;gap:6px;min-height:30px;padding:0 12px;border:1px solid var(--line);border-radius:999px;background:var(--panel);font-size:12px;color:var(--muted)}
+.who svg{width:15px;height:15px}
+.who b{color:var(--text);font-weight:600}
 .chip{display:inline-flex;align-items:center;gap:8px;min-height:36px;font-size:11px;font-weight:600;letter-spacing:.08em;border:1px solid var(--line);border-radius:8px;background:var(--panel);padding:0 12px;color:var(--accent);text-decoration:none}
 .sos a.chip{color:var(--accent)}
 .chip i{width:7px;height:7px;border-radius:50%;background:currentColor;box-shadow:0 0 8px currentColor}
@@ -209,7 +213,7 @@ table.t{width:100%;border-collapse:collapse;font-size:13px;min-width:760px}
 .step.act{border-color:var(--accent);box-shadow:var(--glow)}
 .ft{margin-top:12px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:12px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px}
 .ft b{color:var(--soft);font-weight:600}
-@media(max-width:640px){.sos{padding:24px 16px 56px}.brand{font-size:32px}.side{align-items:flex-start}.meta{text-align:left}.search kbd{display:none}}
+@media(max-width:640px){.sos{padding:24px 16px 56px}.brand{font-size:32px}.side{align-items:flex-start}.clockline{justify-content:flex-start}.meta{text-align:left}.search kbd{display:none}}
 
 /* --- additions for the real interface ------------------------------------ */
 html,body{margin:0;background:#06090d}
