@@ -2187,4 +2187,7 @@ E1743	LEDS DE DISCO
 E1744	LEDS DE DISCO (NARANJAS)
 E1745	LEDS DE DISCO (ÁMBAR)
 E1746	El LED USB rojo indica el modo de rescate y las actualizaciones al arrancar y no se puede cambiar.
-E1747	Sesión iniciada
+E1747	subida
+E1748	subida – sin verificar
+E1749	del repositorio de apps). Los paquetes subidos se marcan como «subida – sin verificar»: el equipo no puede compararlos con la tienda.
+E1750	Sesión iniciada

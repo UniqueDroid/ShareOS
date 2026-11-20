@@ -2187,4 +2187,7 @@ E1743	LED DES DISQUES
 E1744	LED DES DISQUES (ORANGE)
 E1745	LED DES DISQUES (AMBRE)
 E1746	La LED USB rouge indique le mode de secours et les mises à jour au démarrage et n'est pas réglable.
-E1747	Connecté
+E1747	téléversée
+E1748	téléversée – non vérifiée
+E1749	depuis le dépôt d'apps). Les paquets téléversés sont marqués « téléversée – non vérifiée » : la box ne peut pas les comparer au store.
+E1750	Connecté

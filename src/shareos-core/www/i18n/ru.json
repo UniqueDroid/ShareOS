@@ -1730,6 +1730,9 @@
 		"DISK LEDS (ORANGE)": "СВЕТОДИОДЫ ДИСКОВ (ОРАНЖЕВЫЕ)",
 		"DISK LEDS (AMBER)": "СВЕТОДИОДЫ ДИСКОВ (ЖЁЛТЫЕ)",
 		"The red USB LED shows rescue mode and updates during boot and cannot be changed.": "Красный USB-светодиод показывает режим восстановления и обновления при загрузке, его нельзя настроить.",
+		"uploaded": "загружено",
+		"uploaded – not checked": "загружено – не проверено",
+		"from the app repository). Uploaded packages are marked “uploaded – not checked”: the box cannot compare them with the store.": "из репозитория приложений). Загруженные пакеты помечаются «загружено – не проверено»: устройство не может сравнить их с магазином.",
 		"Signed in": "Вход выполнен"
 	},
 	"patterns": [

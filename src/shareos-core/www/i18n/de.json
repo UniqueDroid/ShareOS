@@ -1730,6 +1730,9 @@
 		"DISK LEDS (ORANGE)": "PLATTEN-LEDS (ORANGE)",
 		"DISK LEDS (AMBER)": "PLATTEN-LEDS (GELB)",
 		"The red USB LED shows rescue mode and updates during boot and cannot be changed.": "Die rote USB-LED zeigt den Rettungsmodus und Updates beim Start an und ist nicht einstellbar.",
+		"uploaded": "hochgeladen",
+		"uploaded – not checked": "hochgeladen – nicht geprüft",
+		"from the app repository). Uploaded packages are marked “uploaded – not checked”: the box cannot compare them with the store.": "aus dem App-Repo). Hochgeladene Pakete sind als „hochgeladen – nicht geprüft“ markiert: Die Box kann sie nicht mit dem Store vergleichen.",
 		"Signed in": "Angemeldet"
 	},
 	"patterns": [

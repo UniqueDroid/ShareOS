@@ -1730,6 +1730,9 @@
 		"DISK LEDS (ORANGE)": "LED DES DISQUES (ORANGE)",
 		"DISK LEDS (AMBER)": "LED DES DISQUES (AMBRE)",
 		"The red USB LED shows rescue mode and updates during boot and cannot be changed.": "La LED USB rouge indique le mode de secours et les mises à jour au démarrage et n'est pas réglable.",
+		"uploaded": "téléversée",
+		"uploaded – not checked": "téléversée – non vérifiée",
+		"from the app repository). Uploaded packages are marked “uploaded – not checked”: the box cannot compare them with the store.": "depuis le dépôt d'apps). Les paquets téléversés sont marqués « téléversée – non vérifiée » : la box ne peut pas les comparer au store.",
 		"Signed in": "Connecté"
 	},
 	"patterns": [

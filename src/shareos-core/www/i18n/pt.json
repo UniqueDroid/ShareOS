@@ -1730,6 +1730,9 @@
 		"DISK LEDS (ORANGE)": "LEDS DOS DISCOS (LARANJA)",
 		"DISK LEDS (AMBER)": "LEDS DOS DISCOS (ÂMBAR)",
 		"The red USB LED shows rescue mode and updates during boot and cannot be changed.": "O LED USB vermelho indica o modo de resgate e as atualizações na inicialização e não pode ser ajustado.",
+		"uploaded": "enviado",
+		"uploaded – not checked": "enviado – não verificado",
+		"from the app repository). Uploaded packages are marked “uploaded – not checked”: the box cannot compare them with the store.": "do repositório de apps). Pacotes enviados são marcados como \"enviado – não verificado\": o aparelho não consegue compará-los com a loja.",
 		"Signed in": "Conectado"
 	},
 	"patterns": [
