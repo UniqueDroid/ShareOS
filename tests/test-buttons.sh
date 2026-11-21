@@ -39,6 +39,8 @@ btn() { SHAREOS_BUTTONS_SHADOW=${SHADOW:-$T/shadow} SHAREOS_BUTTONS_CONF=$T/conf
 	"$BIN/ucode" -L "$(dirname "$BIN")/lib/ucode" -S "$TOP/src/shareos-core/usr/sbin/shareos-buttons" 2>&1; }
 
 o=$(btn short);   check "reset < 5 s: nothing" "! echo \"\$o\" | grep -q '^run:'" "$o"
+o=$(SHADOW=$T/shadow-locked btn short); check "new box (root locked): reset < 5 s opens the claim window (boxes without a USB button)" "echo \"\$o\" | grep -qx 'run: mkdir -p /run/shareos && touch /run/shareos/claim-window'" "$o"
+o=$(SHADOW=$T/shadow-locked btn access); check "new box (root locked): reset 5-10 s stays the access reset" "echo \"\$o\" | grep -qx 'run: /usr/sbin/shareos-reset-access --yes'" "$o"
 check "the PID of the dd is written for S05board" "grep -qE '^[0-9]+\$' $T/dd.pid" "$(cat $T/dd.pid 2>&1)"
 o=$(btn access);  check "reset 5-10 s: access reset" "echo \"\$o\" | grep -qx 'run: /usr/sbin/shareos-reset-access --yes'" "$o"
 o=$(btn cancel);  check "reset 10-15 s: cancelled" "! echo \"\$o\" | grep -q '^run:' && echo \"\$o\" | grep -q cancelled" "$o"

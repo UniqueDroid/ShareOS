@@ -1827,8 +1827,8 @@ E1456	Limpar área de transferência
 P327	Colar ($1)
 P328	$1 item(ns) na área de transferência – escolha “Colar” na pasta de destino.
 E1457	Colar
-E1458	Esta caixa ainda não está configurada. Prima brevemente o botão USB na frente da caixa e depois escolha uma palavra-passe para root.
-E1459	A aguardar o botão USB …
+E1458	Esta caixa ainda não está configurada. Prima brevemente o botão USB na frente da caixa ou o botão de reset (menos de 5 segundos) e depois escolha uma palavra-passe para root.
+E1459	A aguardar o botão USB ou de reset …
 E1460	Botão detetado – escolha agora uma palavra-passe (tem 2 minutos).
 E1461	NOVA PALAVRA-PASSE (MÍN. 8 CARACTERES)
 E1462	REPETIR PALAVRA-PASSE
@@ -2074,8 +2074,8 @@ E1659	zabbix_agentd, modo ativo e passivo
 E1660	Valores SMART de um disco deste volume
 P369	(etapa $1 de $2) –
 E1661	não pôde ser ajustado na última sincronização
-E1662	Remove todas as configurações e pacotes instalados da memória flash e reinicia. O sistema e a versão do firmware permanecem. Depois o equipamento fica sem senha: pressione o botão USB na frente e escolha uma nova na interface web.
-E1663	Todas as configurações e pacotes instalados são apagados e o equipamento reinicia. Depois ele fica sem senha: pressione o botão USB na frente e escolha uma nova.
+E1662	Remove todas as configurações e pacotes instalados da memória flash e reinicia. O sistema e a versão do firmware permanecem. Depois o equipamento fica sem senha: pressione o botão USB na frente ou brevemente o botão de reset e escolha uma nova na interface web.
+E1663	Todas as configurações e pacotes instalados são apagados e o equipamento reinicia. Depois ele fica sem senha: pressione o botão USB na frente ou brevemente o botão de reset e escolha uma nova.
 E1664	As credenciais ficam no equipamento, legíveis apenas pelo root (senhas ofuscadas pelo rclone, não criptografadas).
 E1665	Nenhuma mensagem.
 E1666	A cada 10 minutos o equipamento verifica RAID, volumes (montados, ocupação), temperatura, valores SMART (lidos novamente a cada 6 horas; um disco em repouso não é acordado) e atualizações; trabalhos de nuvem, tarefas de apps e trabalhos de armazenamento com falha avisam na hora. Mensagens repetidas são contadas e reenviadas no máximo uma vez por dia.

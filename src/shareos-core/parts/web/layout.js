@@ -69,18 +69,18 @@ function renderLogin(msg = '') {
 		}
 	});
 	setTimeout(() => $('#login-form input[name=pass]')?.focus(), 0);
-	// a new box has no password: claim it with the USB button first
+	// a new box has no password: claim it with the USB or reset button first
 	rpc('shareos.setup', 'claim_state', {}, ZERO_SID).then((r) => { if (r.unclaimed) renderClaim(); }).catch(() => { });
 }
 
-// first access to a new box: USB button, then the first password for root
+// first access to a new box: USB or reset button, then the first password for root
 function renderClaim() {
 	$('#root').innerHTML = html`
 	<div class="login">
 		<form class="panel" id="claim-form" autocomplete="off">
 			${brand()}
-			<p class="prompt">This box is not set up yet. Press the USB button on the front of the box briefly, then choose a password for root.</p>
-			<p class="note" id="claim-wait">Waiting for the USB button …</p>
+			<p class="prompt">This box is not set up yet. Briefly press the USB button on the front of the box or the reset button (less than 5 seconds), then choose a password for root.</p>
+			<p class="note" id="claim-wait">Waiting for the USB or reset button …</p>
 			<label class="f"><span>NEW PASSWORD (MIN. 8 CHARACTERS)</span><input name="p1" type="password" autocomplete="new-password" minlength="8" required></label>
 			<label class="f"><span>REPEAT PASSWORD</span><input name="p2" type="password" autocomplete="new-password" minlength="8" required></label>
 			<p class="err" id="claim-err"></p>
@@ -94,7 +94,7 @@ function renderClaim() {
 		try {
 			const r = await rpc('shareos.setup', 'claim_state', {}, ZERO_SID);
 			if (!r.unclaimed) { renderLogin(); return; }
-			$('#claim-wait').textContent = r.window ? 'Button detected – choose a password now (you have 2 minutes).' : 'Waiting for the USB button …';
+			$('#claim-wait').textContent = r.window ? 'Button detected – choose a password now (you have 2 minutes).' : 'Waiting for the USB or reset button …';
 			btn.disabled = !r.window;
 		} catch (e) { }
 		timer = setTimeout(poll, 2000);

@@ -1439,8 +1439,8 @@ E1454	Ganze Freigaben oben in der Liste wählen.
 E1455	Ausschneiden
 E1456	Zwischenablage leeren
 E1457	Einfügen
-E1458	Diese Box ist noch nicht eingerichtet. Drücke kurz die USB-Taste an der Vorderseite der Box und lege dann ein Passwort für root fest.
-E1459	Warte auf die USB-Taste …
+E1458	Diese Box ist noch nicht eingerichtet. Drücke kurz die USB-Taste an der Vorderseite der Box oder die Reset-Taste (weniger als 5 Sekunden) und lege dann ein Passwort für root fest.
+E1459	Warte auf die USB- oder Reset-Taste …
 E1460	Taste erkannt – jetzt Passwort festlegen (2 Minuten Zeit).
 E1461	NEUES PASSWORT (MIND. 8 ZEICHEN)
 E1462	PASSWORT WIEDERHOLEN
@@ -2058,8 +2058,8 @@ E1659	zabbix_agentd, Aktiv- und Passiv-Modus
 E1660	SMART-Werte einer Platte dieses Laufwerks
 P369	(Schritt $1 von $2) –
 E1661	konnte beim letzten Abgleich nicht gestellt werden
-E1662	Entfernt alle Einstellungen und installierten Pakete aus dem Flash und startet neu. System und Firmware-Version bleiben. Danach hat die Box kein Passwort: die USB-Taste an der Front drücken, dann in der Weboberfläche ein neues wählen.
-E1663	Alle Einstellungen und installierten Pakete werden gelöscht, dann startet die Box neu. Danach hat sie kein Passwort: die USB-Taste an der Front drücken, dann ein neues wählen.
+E1662	Entfernt alle Einstellungen und installierten Pakete aus dem Flash und startet neu. System und Firmware-Version bleiben. Danach hat die Box kein Passwort: die USB-Taste an der Front oder kurz die Reset-Taste drücken, dann in der Weboberfläche ein neues wählen.
+E1663	Alle Einstellungen und installierten Pakete werden gelöscht, dann startet die Box neu. Danach hat sie kein Passwort: die USB-Taste an der Front oder kurz die Reset-Taste drücken, dann ein neues wählen.
 E1664	Zugangsdaten bleiben auf der Box, nur für root lesbar (Passwörter von rclone verschleiert, nicht verschlüsselt).
 E1665	Keine Meldungen.
 E1666	Alle 10 Minuten prüft die Box RAID, Laufwerke (eingehängt, Füllstand), Temperatur, SMART-Werte (alle 6 Stunden neu gelesen; eine schlafende Platte wird nicht geweckt) und Updates; fehlgeschlagene Cloud-Jobs, App-Aufgaben und Speicher-Jobs melden sich sofort. Wiederholte Meldungen werden gezählt und höchstens einmal am Tag erneut gesendet.

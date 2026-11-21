@@ -98,8 +98,22 @@ function feedback_stop() {
 	if (L) system('echo none > ' + L + '/trigger; echo 0 > ' + L + '/brightness');
 }
 
+// a box with a locked root account waits to be claimed: the USB button or a
+// short press of the reset button then opens the claim window for the web
+// interface (the USB button removes no drives then)
+function unclaimed() {
+	let line = filter(split(readfile(getenv('SHAREOS_BUTTONS_SHADOW') ?? '/etc/shadow') ?? '', '\n'), (l) => index(l, 'root:') == 0)[0];
+	let h = line ? split(line, ':')[1] : null;
+	return !!h && (substr(h, 0, 1) == '!' || substr(h, 0, 1) == '*');
+}
+
 function reset_released(secs) {
-	if (secs < ACCESS_MIN) {
+	if (secs < ACCESS_MIN && unclaimed()) {
+		// not every box has a USB button that is known to work: a short press
+		// of the reset button claims as well – it is just as much at the box
+		log(sprintf('reset button %.1f s – box not claimed yet, claim window open for 2 minutes', secs));
+		run('mkdir -p /run/shareos && touch /run/shareos/claim-window');
+	} else if (secs < ACCESS_MIN) {
 		log(sprintf('reset button released after %.1f s – nothing to do', secs));
 	} else if (secs < ACCESS_MAX) {
 		log(sprintf('reset button held %.1f s – access reset', secs));
@@ -132,14 +146,6 @@ function copy_on() {
 	let d = getenv('SHAREOS_BUTTONS_CONF');
 	let c = d ? cursor(d) : cursor();
 	return c?.get('shareos', 'usbcopy', 'enabled') == '1';
-}
-
-// a box with a locked root account waits to be claimed: the USB button then
-// opens the claim window for the web interface instead of removing drives
-function unclaimed() {
-	let line = filter(split(readfile(getenv('SHAREOS_BUTTONS_SHADOW') ?? '/etc/shadow') ?? '', '\n'), (l) => index(l, 'root:') == 0)[0];
-	let h = line ? split(line, ':')[1] : null;
-	return !!h && (substr(h, 0, 1) == '!' || substr(h, 0, 1) == '*');
 }
 
 function usb_released(secs) {

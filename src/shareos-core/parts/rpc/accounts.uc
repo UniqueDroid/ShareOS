@@ -149,7 +149,8 @@ function default_password() {
 }
 
 // A box whose root account is locked ("!" or "*" in /etc/shadow) is not claimed
-// yet (init script S03claim). Claiming needs the USB button: shareos-buttons
+// yet (init script S03claim). Claiming needs the USB button or a short press
+// of the reset button (boxes without a USB button): shareos-buttons
 // touches CLAIM_WINDOW, which is valid for 2 minutes. Someone in the LAN
 // could use that window, but only while a person stands at the box.
 const CLAIM_WINDOW = '/run/shareos/claim-window';

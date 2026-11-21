@@ -8,6 +8,12 @@ pre-releases for test devices only.
 
 - **DNR-322L rev A: first build** ([#180](https://github.com/UniqueDroid/ShareOS/issues/180)) – `ShareOS-<ver>-DNR-322L-rev-Ax.bin` and `.sysupgrade.tar`. The board of the DNS-320 rev A sold as a video recorder: own device tree (flash layout read from a DNR-322L A2: system partition 70 MB, the NUUO partition after it is left alone), own D-Link signature, the installer accepts the 70 MB partition and gives the system 32 MB of it instead of 48. **Not tried on hardware yet** – a first test should have a serial console at hand, see `docs/DEVICES.md`. The front has no USB LED, so installation and rescue mode blink the power LED.
 
+From the first test on a DNR-322L ([#180](https://github.com/UniqueDroid/ShareOS/issues/180), Marco):
+
+- **Claiming with the reset button.** A new box (or one after an access or factory reset) was claimed with the USB button only. On the first DNR-322L the box could not be claimed – the button tried was the power button. On every model a short press of the reset button (under 5 s) now opens the claim window as well, and in rescue mode it opens SSH like the USB button. It is just as much a press at the box; holding it 5–10 s stays the access reset. The setup page and the factory reset name both buttons.
+- **First installation from a partitioned USB stick:** the search now looks again for a few seconds when it finds nothing (a stick's partitions can show up after the stick itself) and logs every drive and partition it tried and why it was skipped. A failure on GitHub says that the stick was searched too.
+- **DHCP waits for the link.** The system asked for DHCP for about 9 s; on the DNR-322L the link comes up about 12 s after boot, so the box ended up on the fallback address 192.168.0.32. It now waits up to 20 s for the link first and logs how long it took.
+
 ## 0.3.0-beta.15
 
 - *Apps → Store*: store sources could not be saved, not even the default catalog, and *Paperless* refused every server address ("invalid source", "invalid URL") – the address checks had `\[\]` inside a bracket expression, which POSIX regular expressions end at the first `]` ([#194](https://github.com/UniqueDroid/ShareOS/issues/194), found by SamuelSilvaG). The share description check had the same mistake and let a line break through. All three are fixed; an IPv6 address in brackets (`https://[fd00::1]:8443/…`) is still accepted.

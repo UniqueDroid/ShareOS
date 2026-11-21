@@ -88,7 +88,8 @@ console.
    (the box refuses files for another model).
 4. The box restarts, installs the system from the stick (USB LED blinks fast,
    a few minutes) and restarts again into ShareOS: `http://<box-IP>/`,
-   press the **USB button** on the front, then choose the password for
+   press the **USB button** on the front (or the reset button
+   briefly, under 5 s), then choose the password for
    **root** (before 0.3.0-beta.2: password **shareos**).
 5. Please check and report (GitHub issue, title "Test <model>"):
    - System → About: device and firmware name right?

@@ -201,7 +201,7 @@ Object.assign(SYS, {
 			</div>
 			<div class="panel">
 				<div class="ph"><span class="pt">FACTORY RESET</span><span class="tag err ml">erases settings</span></div>
-				<p class="mut" style="margin:0 0 12px;font-size:13px">Removes all settings and installed packages from flash and reboots. The system and firmware version stay. Afterwards the box has no password: press the USB button on its front, then choose a new one in the web interface.</p>
+				<p class="mut" style="margin:0 0 12px;font-size:13px">Removes all settings and installed packages from flash and reboots. The system and firmware version stay. Afterwards the box has no password: press the USB button on its front or briefly the reset button, then choose a new one in the web interface.</p>
 				<button class="btn danger" type="button" data-act="factory">Reset to factory settings</button>
 			</div>
 		</div>
@@ -507,7 +507,7 @@ Object.assign(ACTIONS, {
 		cover('Box is powering off', 'You can close this window.');
 	},
 	async factory() {
-		if (!await confirmDlg('Factory reset?', 'All settings and installed packages are erased, then the box reboots. Afterwards it has no password: press the USB button on its front, then choose a new one.', 'Reset', true)) return;
+		if (!await confirmDlg('Factory reset?', 'All settings and installed packages are erased, then the box reboots. Afterwards it has no password: press the USB button on its front or briefly the reset button, then choose a new one.', 'Reset', true)) return;
 		try { await rpc('shareos.system', 'factory_reset', { confirm: true }); } catch (e) { toast(e.message, true); return; }
 		stopPolling();
 		store.del('sid');

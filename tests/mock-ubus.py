@@ -801,7 +801,7 @@ def call(obj, method, args):
             if not cl['unclaimed']:
                 return {'error': 'already claimed'}
             if cl['polls'] < 3:
-                return {'error': 'press the USB button first'}
+                return {'error': 'press the USB or reset button first'}
             if len(args.get('password', '')) < 8:
                 return {'error': 'password too short (min. 8)'}
             cl['unclaimed'] = False
