@@ -627,7 +627,7 @@ Nichts Neues zu bedienen; die Schritte prüfen, ob die Korrekturen auf einer ech
 
 **Rettungsmodus** (nicht absichtlich herbeiführen; nur falls die Box je dort landet – langsam blinkende orange USB-LED)
 
-20. `ssh root@<IP>` wird abgelehnt. USB-Taste drücken: Die LED blinkt schnell, `ssh root@<IP>` (Passwort `shareos`) geht 30 Minuten lang.
+20. `ssh root@<IP>` wird abgelehnt. USB-Taste (oder Reset-Taste) drücken: Die LED blinkt schnell, `ssh root@<IP>` (Passwort `shareos`) geht 30 Minuten lang.
 
 ## 14zr. DNS-Filter: aus- und wieder einschalten (0.3.0-beta.7)
 
@@ -684,7 +684,7 @@ Braucht eine Box, die zurückgesetzt werden darf (Werkseinstellungen löschen di
 1. Eine Box im Betrieb updaten: Sie behält ihr Passwort, SSH geht wie vorher (Updates sperren nie).
 2. *System → Wartung → Werkseinstellungen* (oder Reset-Taste ≥ 15 s). Nach dem Neustart sagt die Anmeldeseite „Diese Box ist noch nicht eingerichtet …“; `ssh root@<box>` wird abgelehnt.
 3. Ein Passwort wählen, ohne die Taste zu drücken: „Passwort festlegen“ bleibt ausgegraut.
-4. Die USB-Taste vorne kurz drücken: Die Seite meldet „Taste erkannt …“. Passwort zweimal eingeben (mind. 8), *Passwort festlegen*: Man ist angemeldet, der Assistent hat keinen Passwort-Schritt. SSH geht mit dem neuen Passwort.
+4. Die USB-Taste vorne kurz drücken: Die Seite meldet „Taste erkannt …“. Genauso mit einem kurzen Druck auf die Reset-Taste (unter 5 s; der DNR-322L hat keine USB-Taste). Passwort zweimal eingeben (mind. 8), *Passwort festlegen*: Man ist angemeldet, der Assistent hat keinen Passwort-Schritt. SSH geht mit dem neuen Passwort.
 5. Nach der Taste mehr als 2 Minuten warten: Das Fenster ist wieder zu („press the USB button first“).
 6. Reset-Taste 5–10 s (Zugang zurücksetzen): Nach dem Neustart will die Box wieder übernommen werden; Daten, Benutzer und Freigaben bleiben.
 7. ShareOS Desktop 0.2.3, *Box einrichten* an so einer Box: Sie fragt nach USB-Taste und Passwort und macht dann mit der Einrichtung weiter.

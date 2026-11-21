@@ -622,7 +622,7 @@ Nothing new to operate; these steps check that the corrections work on a real bo
 
 **Rescue mode** (do not provoke it; only if the box ever ends there – slow blinking orange USB LED)
 
-20. `ssh root@<IP>` is refused. Press the USB button: the LED blinks fast, `ssh root@<IP>` (password `shareos`) works for 30 minutes.
+20. `ssh root@<IP>` is refused. Press the USB button (or the reset button): the LED blinks fast, `ssh root@<IP>` (password `shareos`) works for 30 minutes.
 
 ## 14zr. DNS filter: switching off and on (0.3.0-beta.7)
 
@@ -679,7 +679,7 @@ Needs a box you may reset (factory reset deletes the settings, not the data disk
 1. Update a box that is in use: it keeps its password, SSH works as before (no lock on updates).
 2. *System → Power & reset → Reset to factory settings* (or reset button ≥ 15 s). After the restart the login page says "This box is not set up yet …"; `ssh root@<box>` is refused.
 3. Choose a password without pressing the button: "Set password" stays greyed out.
-4. Press the USB button on the front briefly: the page says "Button detected …". Type a password twice (min. 8), *Set password*: you are logged in, the wizard has no password step. SSH works with the new password.
+4. Press the USB button on the front briefly: the page says "Button detected …". The same with a short press of the reset button (under 5 s; the DNR-322L has no USB button). Type a password twice (min. 8), *Set password*: you are logged in, the wizard has no password step. SSH works with the new password.
 5. Wait more than 2 minutes after the button: the window is closed again ("press the USB button first").
 6. Reset button 5–10 s (access reset): after the restart the box asks to be claimed again; data, users and shares are kept.
 7. ShareOS Desktop 0.2.3, *Set up box* on such a box: it asks for the USB button and the password, then continues with the setup.

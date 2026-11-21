@@ -386,7 +386,7 @@ add_methods({
 			args: { password: '' },
 			call: function(req) {
 				if (!root_locked()) return { error: 'already claimed' };
-				if (!claim_window()) return { error: 'press the USB button first' };
+				if (!claim_window()) return { error: 'press the USB or reset button first' };
 				let pw = req.args.password ?? '';
 				if (length(pw) < ROOT_PW_MIN) return { error: 'password too short (min. ' + ROOT_PW_MIN + ')' };
 				if (lc(pw) == 'shareos') return { error: 'choose your own password' };

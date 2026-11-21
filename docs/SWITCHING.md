@@ -40,8 +40,8 @@ flash change.
    Alt-F add-on packages in the flash are replaced.
 5. Then the box restarts once more on its own – now with ShareOS.
 6. Open `http://<box-IP>/` in the browser (or `http://<device-name>.local/`).
-   A new box has no known password: press the **USB button** on the front,
-   then choose the password for **root** on the page (within 2 minutes).
+   A new box has no known password: press the **USB button** on the front
+   (or the reset button on the back briefly, under 5 s), then choose the password for **root** on the page (within 2 minutes).
    Before 0.3.0-beta.2: sign in as **root** with the password **shareos**.
 7. The setup wizard guides through language, taking over from Alt-F,
    password, name and time, and updates. Then take over the disks with your

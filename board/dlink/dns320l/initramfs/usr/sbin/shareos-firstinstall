@@ -29,6 +29,7 @@ export PATH=/sbin:/bin:/usr/sbin:/usr/bin
 REPO=${SHAREOS_REPO:-UniqueDroid/ShareOS}
 API=${FI_API:-https://api.github.com/repos/$REPO/releases}
 # test hooks: FI_SRC_DIR = folder to search instead of USB sticks/disks,
+# FI_PARTITIONS = file instead of /proc/partitions,
 # FI_API = release list (file:// works), FI_NO_NET = skip the network checks
 CA=/etc/ssl/certs/ca-certificates.crt
 # the key releases are signed with and the reserve key (see shareos-update)
@@ -75,20 +76,49 @@ find_local() {
 		return 1
 	fi
 	mkdir -p $SRC
-	# in the order ls gave before: sda, sda1, sda2, sdb …
-	for dev in $(printf '%s\n' /dev/sd[a-z][0-9]* /dev/sd[a-z] | sort); do
-		[ -b "$dev" ] || continue
+	# a stick's partitions can show up a little after the stick itself: look
+	# again a few times before going to GitHub
+	try=1
+	while :; do
+		scan_devices && return 0
+		[ $try -ge 3 ] && break
+		log "nothing found yet – looking again in 3 s"
+		sleep 3; try=$((try + 1))
+	done
+	log "no package ShareOS-*-$FWNAME.sysupgrade.tar on a USB stick or disk"
+	return 1
+}
+
+# every disk and partition (sda, sda1, sda2, sdb …); each one is logged with
+# what was found, so a stick that is not read shows why
+scan_devices() {
+	devs=$(sed -n 's/^ *[0-9]* *[0-9]* *[0-9]* \(sd[a-z][a-z]*[0-9]*\)$/\1/p' ${FI_PARTITIONS:-/proc/partitions} | sort)
+	if [ -z "$devs" ]; then
+		log "no USB stick or disk found"
+		return 1
+	fi
+	log "drives and partitions: $(echo $devs)"
+	for d in $devs; do
+		dev=/dev/$d
+		if [ ! -b "$dev" ]; then log "$d: no device node"; continue; fi
+		fs=
 		for t in vfat exfat ext4; do
 			mount -t $t -o ro "$dev" $SRC 2>/dev/null || continue
+			fs=$t
 			f=$(ls $SRC/ShareOS-*-"$FWNAME".sysupgrade.tar $SRC/shareos/ShareOS-*-"$FWNAME".sysupgrade.tar 2>/dev/null | sort | tail -1)
 			if [ -n "$f" ]; then
-				log "package on $dev: ${f##*/}"
+				log "package on $dev ($t): ${f##*/}"
 				echo "$f"
 				return 0
 			fi
 			umount $SRC
 			break
 		done
+		if [ -n "$fs" ]; then
+			log "$d: $fs, no ShareOS-*-$FWNAME.sysupgrade.tar (top folder or folder shareos)"
+		else
+			log "$d: no FAT, exFAT or ext4 file system"
+		fi
 	done
 	return 1
 }
@@ -122,7 +152,7 @@ download() {
 		# development build or a version without release: take the newest package for this box
 		url=$(grep -o "\"browser_download_url\": *\"[^\"]*-$FWNAME\.sysupgrade\.tar\"" $W/releases.json | head -1 | sed 's/.*": *"\([^"]*\)"$/\1/')
 	fi
-	[ -n "$url" ] || fail "no ShareOS package for $FWNAME on GitHub"
+	[ -n "$url" ] || fail "no ShareOS package for $FWNAME on GitHub (and none on a USB stick, see above)"
 	log "download ${url##*/}"
 	fetch --max-time 1800 -o $W/pkg.tar "$url" || fail "download failed"
 	# shellcheck disable=SC2086

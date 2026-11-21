@@ -71,7 +71,7 @@ serielle Konsole.
 4. Die Box startet neu, installiert das System vom Stick (USB-LED blinkt
    schnell, einige Minuten) und startet noch einmal – jetzt mit ShareOS:
    `http://<IP-der-Box>/` öffnen, die **USB-Taste** vorne an der Box drücken
-   und das Passwort für **root** festlegen (vor 0.3.0-beta.2: Passwort
+   (ohne USB-Taste, wie beim DNR-322L: kurz die Reset-Taste, unter 5 s) und das Passwort für **root** festlegen (vor 0.3.0-beta.2: Passwort
    **shareos**).
 5. Bitte prüfen und melden (GitHub-Issue, Titel „Test <Modell>“):
    - System → Über: Gerät und Firmware-Name richtig?

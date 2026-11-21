@@ -1827,8 +1827,8 @@ E1456	Vider le presse-papiers
 P327	Coller ($1)
 P328	$1 élément(s) dans le presse-papiers – choisissez « Coller » dans le dossier cible.
 E1457	Coller
-E1458	Cette boîte n’est pas encore configurée. Appuyez brièvement sur le bouton USB à l’avant de la boîte, puis choisissez un mot de passe pour root.
-E1459	En attente du bouton USB …
+E1458	Cette boîte n’est pas encore configurée. Appuyez brièvement sur le bouton USB à l’avant de la boîte ou sur le bouton reset à l’arrière (moins de 5 secondes), puis choisissez un mot de passe pour root.
+E1459	En attente du bouton USB ou reset …
 E1460	Bouton détecté – choisissez maintenant un mot de passe (2 minutes).
 E1461	NOUVEAU MOT DE PASSE (8 CARACTÈRES MIN.)
 E1462	RÉPÉTER LE MOT DE PASSE
@@ -2074,8 +2074,8 @@ E1659	zabbix_agentd, modes actif et passif
 E1660	Valeurs SMART d'un disque de ce volume
 P369	(étape $1 sur $2) –
 E1661	n'a pas pu être réglée lors de la dernière synchronisation
-E1662	Supprime tous les réglages et paquets installés de la mémoire flash, puis redémarre. Le système et la version du firmware restent. Ensuite le boîtier n'a plus de mot de passe : appuyez sur le bouton USB en façade, puis choisissez-en un nouveau dans l'interface web.
-E1663	Tous les réglages et paquets installés sont effacés, puis le boîtier redémarre. Ensuite il n'a plus de mot de passe : appuyez sur le bouton USB en façade, puis choisissez-en un nouveau.
+E1662	Supprime tous les réglages et paquets installés de la mémoire flash, puis redémarre. Le système et la version du firmware restent. Ensuite le boîtier n'a plus de mot de passe : appuyez sur le bouton USB en façade ou brièvement sur le bouton reset, puis choisissez-en un nouveau dans l'interface web.
+E1663	Tous les réglages et paquets installés sont effacés, puis le boîtier redémarre. Ensuite il n'a plus de mot de passe : appuyez sur le bouton USB en façade ou brièvement sur le bouton reset, puis choisissez-en un nouveau.
 E1664	Les identifiants restent sur le boîtier, lisibles uniquement par root (mots de passe masqués par rclone, non chiffrés).
 E1665	Aucun message.
 E1666	Toutes les 10 minutes, le boîtier vérifie le RAID, les volumes (montés, taux de remplissage), la température, les valeurs SMART (relues toutes les 6 heures ; un disque en veille n'est pas réveillé) et les mises à jour ; les tâches cloud, tâches d'applications et tâches de stockage en échec sont signalées immédiatement. Les messages répétés sont comptés et renvoyés au plus une fois par jour.

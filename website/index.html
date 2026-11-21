@@ -119,7 +119,7 @@
       <article class="card"><div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 010 18M12 3a14 14 0 000 18"/></svg></div>
         <h4>Network &amp; remote</h4><p>HTTPS with own CA or Let's Encrypt, Dynamic DNS, mDNS name, Tailscale without port forwarding (also behind DS-Lite), VPN client and server.</p></article>
       <article class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.4 8.3-8 9-4.6-.7-8-4-8-9V7z"/><path d="M9 12l2 2 4-4"/></svg></div>
-        <h4>Security</h4><p>Current kernel and libraries, kernel hardening, no known password on a new box (claimed with the USB button), no passwords on command lines, rescue SSH only after a press on the USB button, settings backup with optional AES-256. Static analysis and CodeQL on every change.</p></article>
+        <h4>Security</h4><p>Current kernel and libraries, kernel hardening, no known password on a new box (claimed with the USB or reset button), no passwords on command lines, rescue SSH only after a press on the USB button, settings backup with optional AES-256. Static analysis and CodeQL on every change.</p></article>
       <article class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 8v5l3 2"/><circle cx="12" cy="12" r="9"/></svg></div>
         <h4>Signed updates</h4><p>Online updates from GitHub Releases, checked every 6 hours, with progress. Every release is signed (ECDSA P-256, with a reserve key kept offline); the box installs nothing from GitHub without a valid signature – also not on the first installation. Or upload the update file – no internet needed.</p></article>
       <article class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M15 17h5l-1.4-1.4A2 2 0 0118 14.2V11a6 6 0 10-12 0v3.2a2 2 0 01-.6 1.4L4 17h5m6 0a3 3 0 01-6 0"/></svg></div>
@@ -183,7 +183,7 @@
       <li><b>Copy</b> the <code>.sysupgrade.tar</code> to a USB stick (FAT32, exFAT or ext4) and plug it in. Without a stick the box downloads it from GitHub and installs it only with a valid signature.</li>
       <li><b>Flash</b> the ShareOS <code>.bin</code> on the firmware page of Alt-F or of the D-Link interface. Do not cut the power.</li>
       <li><b>Wait:</b> the box installs the system from the stick (orange USB LED blinks fast, a few minutes) and restarts into ShareOS.</li>
-      <li><b>Open</b> <code>http://&lt;box-IP&gt;/</code>, press the <b>USB button</b> on the front to claim the box, choose the root password and follow the setup wizard. Your disks keep their data.</li>
+      <li><b>Open</b> <code>http://&lt;box-IP&gt;/</code>, press the <b>USB button</b> on the front (or the reset button briefly) to claim the box, choose the root password and follow the setup wizard. Your disks keep their data.</li>
     </ol>
     <div class="callouts">
       <div class="callout"><h4>Back to Alt-F</h4><p>System → Firmware → <i>Install firmware file</i> → the Alt-F <code>.bin</code>. ShareOS asks once more (the file is not signed by the project), checks it and reads it back after writing.</p></div>

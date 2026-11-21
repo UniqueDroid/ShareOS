@@ -43,7 +43,7 @@ event() {
 gate() { PATH=$T/bin:$PATH SHAREOS_INIT_SYS=$T/sys SHAREOS_INIT_DEV=$T/dev SHAREOS_INIT_RUN=$T/run SHAREOS_INIT_SSH_TIME=${1:-2} sh "$T/gate.sh" & echo $! > "$T/gate.pid"; }
 stop() { kill "$(cat "$T/gate.pid")" 2>/dev/null; wait 2>/dev/null; }
 
-event 1 408      # reset button
+event 1 116      # power button
 gate; sleep 2
 check "the device of the buttons is found (not the first input device)" "grep -q 'SSH is closed: press the USB button' $T/log"
 check "another button does not open SSH" "[ ! -e $T/ssh.log ]"
@@ -60,6 +60,11 @@ stop
 rm -f "$T/ssh.log"; event 1 161   # USB button of DNS-325/DNS-320
 gate 30; i=0; while [ $i -lt 20 ] && [ ! -s "$T/ssh.log" ]; do sleep 0.25; i=$((i+1)); done
 check "USB button of the other models (KEY_EJECTCD)" "[ \"\$(cat $T/ssh.log 2>/dev/null)\" = started ]"
+stop; kill "$(cat "$T/run/dropbear.pid")" 2>/dev/null
+
+rm -f "$T/ssh.log"; event 1 408   # reset button (boxes without a USB button, DNR-322L)
+gate 30; i=0; while [ $i -lt 20 ] && [ ! -s "$T/ssh.log" ]; do sleep 0.25; i=$((i+1)); done
+check "reset button: SSH opens (boxes without a USB button)" "[ \"\$(cat $T/ssh.log 2>/dev/null)\" = started ]"
 stop; kill "$(cat "$T/run/dropbear.pid")" 2>/dev/null
 
 rm -f "$T/ssh.log" "$T/log"; echo other > "$T/sys/class/input/event1/device/name"
