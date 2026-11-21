@@ -105,6 +105,7 @@ check "rpc: unknown group rejected" "rpc shareos.accounts set '{\"name\":\"max\"
 # --- shares -------------------------------------------------------------------
 S1=$(rpc shareos.shares set '{"name":"fotos","volume":"daten","path":"Fotos","comment":"Familienfotos","smb":true,"rw":["jan"],"ro":["@familie"]}')
 check "share created" "echo '$S1' | js \"d['shares'][0]['name']=='fotos' and d['shares'][0]['mounted']\""
+check "share description: a line break or a bracket is refused (#194)" "rpc shareos.shares set '{\"name\":\"fotos\",\"volume\":\"daten\",\"path\":\"Fotos\",\"comment\":\"x\\nguest ok = yes\",\"smb\":true,\"rw\":[\"jan\"]}' | grep -q 'invalid description' && rpc shareos.shares set '{\"name\":\"fotos\",\"volume\":\"daten\",\"path\":\"Fotos\",\"comment\":\"a [b\",\"smb\":true,\"rw\":[\"jan\"]}' | grep -q 'invalid description'"
 aclwait() { local i=0; until run "getfacl -p $1 2>/dev/null" | grep -q "$2" || [ $i -ge 40 ]; do sleep 0.25; i=$((i + 1)); done; }
 aclwait /mnt/daten/Fotos 'group:familie:r-x'
 check "share folder created (owner root)" "[ \"\$(stat -c '%U' $R/mnt/daten/Fotos)\" = root ] && [ -d $R/mnt/daten/Fotos ]"

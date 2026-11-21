@@ -256,6 +256,10 @@ check "area Apps off: apps web server does not start" "! curl -s -o /dev/null ht
 run "uci set shareos.ui.area_apps=1; uci commit shareos; /etc/init.d/S51apps start" >/dev/null
 i=0; until curl -s -o /dev/null "http://127.0.0.1:$PORT/" || [ $i -ge 30 ]; do sleep 0.5; i=$((i + 1)); done
 check "rpc: store sources must be https" "rpc shareos.apps store_set '{\"sources\":[\"http://x/index.json\"]}' | grep -q 'https'"
+SRC0=$(rpc shareos.apps store_get '{}' | python3 -c 'import json,sys; print(json.dumps(json.load(sys.stdin)["sources"]))')
+check "rpc: store sources: a normal https address and an IPv6 address are accepted (#194)" "rpc shareos.apps store_set '{\"sources\":[\"https://github.com/UniqueDroid/ShareOS-Apps/releases/download/catalog/index.json\",\"https://[fd00::1]:8443/index.json\"]}' | js \"'error' not in d\" && rpc shareos.apps store_get '{}' | js \"len(d['sources'])==2\""
+check "rpc: store sources: quotes and spaces are refused" "rpc shareos.apps store_set '{\"sources\":[\"https://evil.com/a b\"]}' | grep -q 'invalid source'"
+rpc shareos.apps store_set "{\"sources\":$SRC0}" >/dev/null
 check "rpc: unknown user in visibility rejected" "rpc shareos.apps set '{\"id\":\"hello\",\"users\":[\"ghost\"]}' | grep -q 'unknown user'"
 mkdir -p "$R/mnt/daten"; run "uci set storage.daten=volume; uci commit storage; echo lisa1234 | shareos-users add lisa user; echo bert1234 | shareos-users add bert user" >/dev/null
 check "rpc: visibility per user" "rpc shareos.apps set '{\"id\":\"hello\",\"users\":[\"lisa\"]}' | js \"d['ok']\""

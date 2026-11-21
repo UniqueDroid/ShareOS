@@ -530,6 +530,12 @@ Braucht ein Tailscale-Konto (kostenlos), ein Handy oder einen Rechner mit Tailsc
 5. Konto ohne persönlichen Ordner: Teilen meldet „no personal folder“; das Geteilte wird verworfen und kommt bei der nächsten Anmeldung nicht wieder.
 6. Dateidialog einer App für ein Konto **ohne** *Dateien* (z. B. Webpad → *Öffnen*): Die Ordnerauswahl zeigt zuerst *App-Daten*, dann *Mein Ordner* und die Freigaben des Benutzers; Freigaben nur zum Lesen sind markiert und fehlen beim Speichern. Die App legt ihre eigenen Dateien weiter in *App-Daten* ab.
 
+## 14zx. Angemeldeter Name, hochgeladene Apps (0.3.0-beta.15, #191)
+
+1. Als Administrator anmelden: Links neben der Uhr zeigt ein Feld mit Personensymbol den Kontonamen; der Tooltip sagt „Angemeldet“. Fenster schmal ziehen: Das Feld rutscht mit der Uhr nach links.
+2. Eine App aus einer `.sapp`-Datei installieren (*APPS → Store → INSTALL PACKAGE*): Die Liste markiert sie als „hochgeladen“, ihre Kachel zeigt „hochgeladen – nicht geprüft“. Eine App aus dem Store hat in der Liste keine Markierung; ihre Kachel zeigt „aus dem Store“.
+3. In einer App, die einen Knopf mit `hidden` versteckt (Transmission 1.4.1, *Remote access* ohne Passwort – ab 1.4.2 versteckt die App ihn selbst): Der Knopf ist nicht zu sehen.
+
 ## 14zw. Persönlicher Ordner über SMB (0.3.0-beta.14, #183)
 
 Braucht ein Konto mit persönlichem Ordner (hier `jan` auf dem Laufwerk `daten`; die Box ist `shareos`, 10.242.1.20) und einen Windows- oder Linux-Rechner. Vor dieser Version antwortete `\\shareos\jan` mit „Der Netzwerkname wurde nicht gefunden“.

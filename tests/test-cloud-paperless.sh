@@ -147,6 +147,9 @@ G=$(run "ubus call shareos.paperless get")
 check "rpc: get hides the token" "echo '$G' | js \"d['inboxes'][0]['token_hint']=='••••aaaa' and 'token' not in d['inboxes'][0] and d['inboxes'][0]['recent'][0]['state'] in ('FAILURE','SUCCESS')\""
 check "rpc: tags" "run \"ubus call shareos.paperless tags '{\\\"inbox\\\":\\\"u_anna\\\"}'\" | js \"[t['name'] for t in d['tags']]==['Rechnung','Scan']\""
 check "rpc: invalid URL rejected" "run \"ubus call shareos.paperless set_global '{\\\"url\\\":\\\"ftp://x\\\"}'\" | grep -q 'invalid URL'"
+U0=$(run "uci -q get paperless.global.url")
+check "rpc: a host name with port is accepted (#194)" "run \"ubus call shareos.paperless set_global '{\\\"url\\\":\\\"http://paperless.lan:8000\\\"}'\" | js \"'error' not in d\" && [ \"\$(run 'uci -q get paperless.global.url')\" = http://paperless.lan:8000 ]"
+run "ubus call shareos.paperless set_global '{\"url\":\"$U0\"}'" >/dev/null
 L=$(run "ubus call session login '{\"username\":\"anna\",\"password\":\"anna1234\"}'")
 SID=$(echo "$L" | python3 -c 'import json,sys; print(json.load(sys.stdin)["ubus_rpc_session"])' 2>/dev/null)
 run "ubus call shareos.me bind '{\"username\":\"anna\",\"password\":\"anna1234\",\"ubus_rpc_session\":\"$SID\"}'" >/dev/null

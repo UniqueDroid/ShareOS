@@ -4,9 +4,13 @@ Changes per release (newest first). The section of a version is added to its
 GitHub release automatically when the release is built. Test versions are
 pre-releases for test devices only.
 
-## 0.3.0-beta.15
+## 0.3.0-beta.16
 
 - **DNR-322L rev A: first build** ([#180](https://github.com/UniqueDroid/ShareOS/issues/180)) – `ShareOS-<ver>-DNR-322L-rev-Ax.bin` and `.sysupgrade.tar`. The board of the DNS-320 rev A sold as a video recorder: own device tree (flash layout read from a DNR-322L A2: system partition 70 MB, the NUUO partition after it is left alone), own D-Link signature, the installer accepts the 70 MB partition and gives the system 32 MB of it instead of 48. **Not tried on hardware yet** – a first test should have a serial console at hand, see `docs/DEVICES.md`.
+
+## 0.3.0-beta.15
+
+- *Apps → Store*: store sources could not be saved, not even the default catalog, and *Paperless* refused every server address ("invalid source", "invalid URL") – the address checks had `\[\]` inside a bracket expression, which POSIX regular expressions end at the first `]` ([#194](https://github.com/UniqueDroid/ShareOS/issues/194), found by SamuelSilvaG). The share description check had the same mistake and let a line break through. All three are fixed; an IPv6 address in brackets (`https://[fd00::1]:8443/…`) is still accepted.
 - The header shows who is signed in, next to the clock ([#191](https://github.com/UniqueDroid/ShareOS/issues/191), asked for by Rambooka). The view for users without admin rights already had the name in its info line.
 - *Apps*: an app installed from an uploaded package is marked "uploaded" (in the cards "uploaded – not checked") instead of "own" – it read as if one had written the app oneself, but it only says where the package came from.
 - App SDK (`/_shareos/theme.css`): an element with the `hidden` attribute is hidden even when a class gives it a `display` – a `.sos-btn` with `hidden` stayed visible, because the class's `display: inline-flex` beats the browser's own rule. Found in the Transmission app ([ShareOS-Apps #57](https://github.com/UniqueDroid/ShareOS-Apps/pull/57)).

@@ -304,6 +304,15 @@ the box for why the web server was not running.
 | 08:00 | 0.3.0-beta.9 released by Jan (review fixes, #158). The night before the ARM emulator tests ran on GitHub for the first time – six runs until they were green; `test-dnsfilter` stays a warning because AdGuard Home starts too irregularly under the emulator. |
 | 08:48 | **Source by area.** Jan had asked for this for a long time: two files of more than 6000 lines are hard to read for people. `app.js` and `shareos.uc` become one file per area (`parts/web`, `parts/rpc`), joined by the build. First a pure cut whose result is byte-identical, then pages, set-up and clicks of each area moved into its file; every page of the old and the new interface compared in the browser. |
 
+### 19.–20.11.2026
+
+| Time | What happened |
+|---|---|
+| 19.11. 18:34 | Jan publishes `v0.3.0-beta.14`. |
+| 19.11. | From the apps: Transmission's *Revoke password* button stayed visible – a class's `display` beats the browser's `[hidden]` rule; the SDK theme fixes it for every app. "own" for uploaded apps read as "written by me" and becomes "uploaded". ShareFinder 1.1.1: a folder open in the column view can be deleted from its context menu again. |
+| 20.11. | Rambooka asks to see who is signed in (#191) – Jan picks the place next to the clock from two mock-ups. The Tailscale app named the DNS-320L on every box (#190). The DNR-322L build is ready for its tester; it stays out of the release until it has booted. |
+| 20.11. 22:00 | Everything for `v0.3.0-beta.15` is on `main`. |
+
 ### 17.–19.11.2026
 
 | Time | What happened |
