@@ -88,7 +88,7 @@ add_methods({
 			call: function(req) {
 				if (!module_on('paperless')) return { error: 'Paperless is not installed (system app paperless)' };
 				let a = req.args, c = cursor();
-				if (a.url != null && a.url != '' && !match(a.url, /^https?:\/\/[A-Za-z0-9.:\[\]_-]+(:[0-9]+)?(\/[^[:space:]]*)?$/)) return { error: 'invalid URL (http://… or https://…)' };
+				if (a.url != null && a.url != '' && !match(a.url, /^https?:\/\/([A-Za-z0-9._-]+|\[[0-9A-Fa-f:.]+\])(:[0-9]{1,5})?(\/[^[:space:]]*)?$/)) return { error: 'invalid URL (http://… or https://…)' };
 				if (a.interval != null && !(+a.interval >= 1 && +a.interval <= 60)) return { error: 'interval 1–60 minutes' };
 				if (a.after && !(a.after in { delete: 1, keep: 1 })) return { error: 'invalid value' };
 				c.set('paperless', 'global', 'global');

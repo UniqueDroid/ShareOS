@@ -80,3 +80,8 @@ all helpers first (in the order of `ORDER`) and all methods after them.
 | `notify.uc` | shareos.notify, status, widget | 110 |
 | `update.uc` | shareos.update | 140 |
 | `end.uc` | returns the method table to rpcd | 3 |
+
+Regular expressions in ucode are POSIX ERE: inside a bracket expression a
+backslash does not escape. `[A-Za-z0-9.:\[\]_-]` ends at the `]` after `\[`
+and matches nothing useful. Put `]` first (`[]...]`), or match brackets apart –
+for an address: `([A-Za-z0-9._-]+|\[[0-9A-Fa-f:.]+\])`.
