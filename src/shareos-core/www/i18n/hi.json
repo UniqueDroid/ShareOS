@@ -1442,7 +1442,7 @@
 		"Cut": "काटें",
 		"Clear clipboard": "क्लिपबोर्ड खाली करें",
 		"Paste": "चिपकाएँ",
-		"This box is not set up yet. Briefly press the USB button on the front of the box or the reset button on the back (less than 5 seconds), then choose a password for root.": "यह बॉक्स अभी सेट अप नहीं है। बॉक्स के आगे वाले USB बटन या पीछे वाले रीसेट बटन को थोड़ा दबाएँ (5 सेकंड से कम), फिर root के लिए पासवर्ड चुनें।",
+		"This box is not set up yet. Briefly press the USB button on the front of the box or the reset button (less than 5 seconds), then choose a password for root.": "यह बॉक्स अभी सेट अप नहीं है। बॉक्स के आगे वाले USB बटन या रीसेट बटन को थोड़ा दबाएँ (5 सेकंड से कम), फिर root के लिए पासवर्ड चुनें।",
 		"Waiting for the USB or reset button …": "USB या रीसेट बटन की प्रतीक्षा …",
 		"Button detected – choose a password now (you have 2 minutes).": "बटन मिल गया – अब पासवर्ड चुनें (आपके पास 2 मिनट हैं)।",
 		"NEW PASSWORD (MIN. 8 CHARACTERS)": "नया पासवर्ड (कम से कम 8 अक्षर)",

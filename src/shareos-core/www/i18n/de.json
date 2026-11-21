@@ -1441,7 +1441,7 @@
 		"Cut": "Ausschneiden",
 		"Clear clipboard": "Zwischenablage leeren",
 		"Paste": "Einfügen",
-		"This box is not set up yet. Briefly press the USB button on the front of the box or the reset button on the back (less than 5 seconds), then choose a password for root.": "Diese Box ist noch nicht eingerichtet. Drücke kurz die USB-Taste an der Vorderseite der Box oder die Reset-Taste auf der Rückseite (weniger als 5 Sekunden) und lege dann ein Passwort für root fest.",
+		"This box is not set up yet. Briefly press the USB button on the front of the box or the reset button (less than 5 seconds), then choose a password for root.": "Diese Box ist noch nicht eingerichtet. Drücke kurz die USB-Taste an der Vorderseite der Box oder die Reset-Taste (weniger als 5 Sekunden) und lege dann ein Passwort für root fest.",
 		"Waiting for the USB or reset button …": "Warte auf die USB- oder Reset-Taste …",
 		"Button detected – choose a password now (you have 2 minutes).": "Taste erkannt – jetzt Passwort festlegen (2 Minuten Zeit).",
 		"NEW PASSWORD (MIN. 8 CHARACTERS)": "NEUES PASSWORT (MIND. 8 ZEICHEN)",

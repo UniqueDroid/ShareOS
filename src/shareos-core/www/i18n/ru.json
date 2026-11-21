@@ -1442,7 +1442,7 @@
 		"Cut": "Вырезать",
 		"Clear clipboard": "Очистить буфер обмена",
 		"Paste": "Вставить",
-		"This box is not set up yet. Briefly press the USB button on the front of the box or the reset button on the back (less than 5 seconds), then choose a password for root.": "Это устройство ещё не настроено. Коротко нажмите кнопку USB на передней панели или кнопку сброса на задней панели (менее 5 секунд), затем задайте пароль для root.",
+		"This box is not set up yet. Briefly press the USB button on the front of the box or the reset button (less than 5 seconds), then choose a password for root.": "Это устройство ещё не настроено. Коротко нажмите кнопку USB на передней панели или кнопку сброса (менее 5 секунд), затем задайте пароль для root.",
 		"Waiting for the USB or reset button …": "Ожидание нажатия кнопки USB или кнопки сброса …",
 		"Button detected – choose a password now (you have 2 minutes).": "Кнопка нажата – задайте пароль (у вас есть 2 минуты).",
 		"NEW PASSWORD (MIN. 8 CHARACTERS)": "НОВЫЙ ПАРОЛЬ (МИН. 8 СИМВОЛОВ)",

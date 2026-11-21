@@ -126,7 +126,7 @@ RESCUE_SSH_TIME=${SHAREOS_INIT_SSH_TIME:-1800}
 RUN=${SHAREOS_INIT_RUN:-/run}
 ssh_gate() {
 	dev=$(button_dev) || { log "no buttons found – SSH is open"; ssh_open; return; }
-	log "SSH is closed: press the USB button (front) or the reset button (back) to open it for $((RESCUE_SSH_TIME / 60)) minutes"
+	log "SSH is closed: press the USB button or the reset button to open it for $((RESCUE_SSH_TIME / 60)) minutes"
 	while :; do
 		# one event of the kernel (16 bytes): seconds, microseconds, type,
 		# code, value – od -d prints them as 16-bit numbers after the offset.
@@ -162,7 +162,7 @@ rescue() {
 		how="ssh root@${ip:-<no ip>}   (password: shareos)"
 	else
 		ssh_gate &
-		how="press the USB button (front) or the reset button (back), then within $((RESCUE_SSH_TIME / 60)) minutes:
+		how="press the USB button or the reset button, then within $((RESCUE_SSH_TIME / 60)) minutes:
 	  ssh root@${ip:-<no ip>}   (password: shareos)"
 	fi
 	cat > /etc/motd <<-EOF

@@ -1442,7 +1442,7 @@
 		"Cut": "কাটুন",
 		"Clear clipboard": "ক্লিপবোর্ড খালি করুন",
 		"Paste": "পেস্ট করুন",
-		"This box is not set up yet. Briefly press the USB button on the front of the box or the reset button on the back (less than 5 seconds), then choose a password for root.": "এই বক্সটি এখনও সেট আপ করা হয়নি। বক্সের সামনের USB বোতাম বা পেছনের রিসেট বোতামটি একটু চাপুন (৫ সেকেন্ডের কম), তারপর root-এর জন্য একটি পাসওয়ার্ড বেছে নিন।",
+		"This box is not set up yet. Briefly press the USB button on the front of the box or the reset button (less than 5 seconds), then choose a password for root.": "এই বক্সটি এখনও সেট আপ করা হয়নি। বক্সের সামনের USB বোতাম বা রিসেট বোতামটি একটু চাপুন (৫ সেকেন্ডের কম), তারপর root-এর জন্য একটি পাসওয়ার্ড বেছে নিন।",
 		"Waiting for the USB or reset button …": "USB বা রিসেট বোতামের জন্য অপেক্ষা …",
 		"Button detected – choose a password now (you have 2 minutes).": "বোতাম শনাক্ত হয়েছে – এখন পাসওয়ার্ড বেছে নিন (আপনার হাতে ২ মিনিট)।",
 		"NEW PASSWORD (MIN. 8 CHARACTERS)": "নতুন পাসওয়ার্ড (কমপক্ষে ৮ অক্ষর)",

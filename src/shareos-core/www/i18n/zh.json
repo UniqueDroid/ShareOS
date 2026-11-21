@@ -1442,7 +1442,7 @@
 		"Cut": "剪切",
 		"Clear clipboard": "清空剪贴板",
 		"Paste": "粘贴",
-		"This box is not set up yet. Briefly press the USB button on the front of the box or the reset button on the back (less than 5 seconds), then choose a password for root.": "此设备尚未设置。请短按设备正面的 USB 按钮或背面的复位按钮（少于 5 秒），然后为 root 设置密码。",
+		"This box is not set up yet. Briefly press the USB button on the front of the box or the reset button (less than 5 seconds), then choose a password for root.": "此设备尚未设置。请短按设备正面的 USB 按钮或复位按钮（少于 5 秒），然后为 root 设置密码。",
 		"Waiting for the USB or reset button …": "正在等待 USB 按钮或复位按钮 …",
 		"Button detected – choose a password now (you have 2 minutes).": "已检测到按钮 – 请现在设置密码（限时 2 分钟）。",
 		"NEW PASSWORD (MIN. 8 CHARACTERS)": "新密码（至少 8 个字符）",

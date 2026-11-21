@@ -1442,7 +1442,7 @@
 		"Cut": "قص",
 		"Clear clipboard": "إفراغ الحافظة",
 		"Paste": "لصق",
-		"This box is not set up yet. Briefly press the USB button on the front of the box or the reset button on the back (less than 5 seconds), then choose a password for root.": "لم يتم إعداد هذا الجهاز بعد. اضغط ضغطة قصيرة على زر USB في مقدمة الجهاز أو على زر إعادة الضبط في الخلف (أقل من 5 ثوانٍ)، ثم اختر كلمة مرور لـ root.",
+		"This box is not set up yet. Briefly press the USB button on the front of the box or the reset button (less than 5 seconds), then choose a password for root.": "لم يتم إعداد هذا الجهاز بعد. اضغط ضغطة قصيرة على زر USB في مقدمة الجهاز أو على زر إعادة الضبط (أقل من 5 ثوانٍ)، ثم اختر كلمة مرور لـ root.",
 		"Waiting for the USB or reset button …": "في انتظار زر USB أو زر إعادة الضبط …",
 		"Button detected – choose a password now (you have 2 minutes).": "تم اكتشاف الزر – اختر كلمة المرور الآن (لديك دقيقتان).",
 		"NEW PASSWORD (MIN. 8 CHARACTERS)": "كلمة المرور الجديدة (8 أحرف على الأقل)",

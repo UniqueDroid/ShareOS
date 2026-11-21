@@ -1442,7 +1442,7 @@
 		"Cut": "Couper",
 		"Clear clipboard": "Vider le presse-papiers",
 		"Paste": "Coller",
-		"This box is not set up yet. Briefly press the USB button on the front of the box or the reset button on the back (less than 5 seconds), then choose a password for root.": "Cette boîte n’est pas encore configurée. Appuyez brièvement sur le bouton USB à l’avant de la boîte ou sur le bouton reset à l’arrière (moins de 5 secondes), puis choisissez un mot de passe pour root.",
+		"This box is not set up yet. Briefly press the USB button on the front of the box or the reset button (less than 5 seconds), then choose a password for root.": "Cette boîte n’est pas encore configurée. Appuyez brièvement sur le bouton USB à l’avant de la boîte ou sur le bouton reset (moins de 5 secondes), puis choisissez un mot de passe pour root.",
 		"Waiting for the USB or reset button …": "En attente du bouton USB ou reset …",
 		"Button detected – choose a password now (you have 2 minutes).": "Bouton détecté – choisissez maintenant un mot de passe (2 minutes).",
 		"NEW PASSWORD (MIN. 8 CHARACTERS)": "NOUVEAU MOT DE PASSE (8 CARACTÈRES MIN.)",

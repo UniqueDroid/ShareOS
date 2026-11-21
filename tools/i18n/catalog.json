@@ -1459,7 +1459,7 @@
 		"Cut",
 		"Clear clipboard",
 		"Paste",
-		"This box is not set up yet. Briefly press the USB button on the front of the box or the reset button on the back (less than 5 seconds), then choose a password for root.",
+		"This box is not set up yet. Briefly press the USB button on the front of the box or the reset button (less than 5 seconds), then choose a password for root.",
 		"Waiting for the USB or reset button …",
 		"Button detected – choose a password now (you have 2 minutes).",
 		"NEW PASSWORD (MIN. 8 CHARACTERS)",

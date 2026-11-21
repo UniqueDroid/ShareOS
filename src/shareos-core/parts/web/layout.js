@@ -79,7 +79,7 @@ function renderClaim() {
 	<div class="login">
 		<form class="panel" id="claim-form" autocomplete="off">
 			${brand()}
-			<p class="prompt">This box is not set up yet. Briefly press the USB button on the front of the box or the reset button on the back (less than 5 seconds), then choose a password for root.</p>
+			<p class="prompt">This box is not set up yet. Briefly press the USB button on the front of the box or the reset button (less than 5 seconds), then choose a password for root.</p>
 			<p class="note" id="claim-wait">Waiting for the USB or reset button …</p>
 			<label class="f"><span>NEW PASSWORD (MIN. 8 CHARACTERS)</span><input name="p1" type="password" autocomplete="new-password" minlength="8" required></label>
 			<label class="f"><span>REPEAT PASSWORD</span><input name="p2" type="password" autocomplete="new-password" minlength="8" required></label>
