@@ -528,8 +528,8 @@ Needs a Tailscale account (free), a phone or computer with Tailscale, the file `
 ## 14zx. Signed-in name, uploaded apps (0.3.0-beta.15, #191)
 
 1. Sign in as an administrator: left of the clock, a field with a person icon shows the account name; hovering it says "Signed in". Make the window narrow: the field moves left with the clock.
-2. Install an app from a `.sapp` file (*APPS → Store → INSTALL PACKAGE*): the list marks it "uploaded", its card says "uploaded – not checked". An app from the store has no mark.
-3. In an app that hides a button with `hidden` (Transmission 1.4.1 and later, *Remote access* without a password): the button is not shown.
+2. Install an app from a `.sapp` file (*APPS → Store → INSTALL PACKAGE*): the list marks it "uploaded", its card says "uploaded – not checked". An app from the store has no mark in the list; its card says "from the store".
+3. In an app that hides a button with `hidden` (Transmission 1.4.1, *Remote access* without a password – 1.4.2 and later hide it themselves): the button is not shown.
 
 ## 14zw. Personal folder over SMB (0.3.0-beta.14, #183)
 

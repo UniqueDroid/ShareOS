@@ -533,8 +533,8 @@ Braucht ein Tailscale-Konto (kostenlos), ein Handy oder einen Rechner mit Tailsc
 ## 14zx. Angemeldeter Name, hochgeladene Apps (0.3.0-beta.15, #191)
 
 1. Als Administrator anmelden: Links neben der Uhr zeigt ein Feld mit Personensymbol den Kontonamen; der Tooltip sagt „Angemeldet“. Fenster schmal ziehen: Das Feld rutscht mit der Uhr nach links.
-2. Eine App aus einer `.sapp`-Datei installieren (*APPS → Store → INSTALL PACKAGE*): Die Liste markiert sie als „hochgeladen“, ihre Kachel zeigt „hochgeladen – nicht geprüft“. Eine App aus dem Store hat keine Markierung.
-3. In einer App, die einen Knopf mit `hidden` versteckt (Transmission ab 1.4.1, *Remote access* ohne Passwort): Der Knopf ist nicht zu sehen.
+2. Eine App aus einer `.sapp`-Datei installieren (*APPS → Store → INSTALL PACKAGE*): Die Liste markiert sie als „hochgeladen“, ihre Kachel zeigt „hochgeladen – nicht geprüft“. Eine App aus dem Store hat in der Liste keine Markierung; ihre Kachel zeigt „aus dem Store“.
+3. In einer App, die einen Knopf mit `hidden` versteckt (Transmission 1.4.1, *Remote access* ohne Passwort – ab 1.4.2 versteckt die App ihn selbst): Der Knopf ist nicht zu sehen.
 
 ## 14zw. Persönlicher Ordner über SMB (0.3.0-beta.14, #183)
 
