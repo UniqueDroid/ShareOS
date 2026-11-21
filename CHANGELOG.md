@@ -6,6 +6,8 @@ pre-releases for test devices only.
 
 ## 0.3.0-beta.16
 
+- **DNR-322L rev A: first build** ([#180](https://github.com/UniqueDroid/ShareOS/issues/180)) – `ShareOS-<ver>-DNR-322L-rev-Ax.bin` and `.sysupgrade.tar`. The board of the DNS-320 rev A sold as a video recorder: own device tree (flash layout read from a DNR-322L A2: system partition 70 MB, the NUUO partition after it is left alone), own D-Link signature, the installer accepts the 70 MB partition and gives the system 32 MB of it instead of 48. **Not tried on hardware yet** – a first test should have a serial console at hand, see `docs/DEVICES.md`. The front has no USB LED, so installation and rescue mode blink the power LED.
+
 From the first test on a DNR-322L ([#180](https://github.com/UniqueDroid/ShareOS/issues/180), Marco):
 
 - **Claiming with the reset button.** A new box (or one after an access or factory reset) was claimed with the USB button only. On the first DNR-322L the box could not be claimed – the button tried was the power button. On every model a short press of the reset button (under 5 s) now opens the claim window as well, and in rescue mode it opens SSH like the USB button. It is just as much a press at the box; holding it 5–10 s stays the access reset. The setup page and the factory reset name both buttons.

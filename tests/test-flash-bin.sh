@@ -119,7 +119,8 @@ if [ -n "$REAL" ]; then
 	# every model's .bin is accepted on its own model only
 	V=${REAL##*/ShareOS-}; V=${V%-DNS-320L-rev-Ax.bin}
 	for x in "DNS-320L-rev-Ax:D-Link DNS-320L-rev-Ax NAS:DNS320L" "DNS-320-rev-Bx:D-Link DNS-320-rev-Bx NAS:DNS320B" \
-		"DNS-320-rev-Ax:D-Link DNS-320 NAS (Rev A1):DNS323D1" "DNS-325-rev-Ax:D-Link DNS-325 NAS (Rev A1):DNS-325"; do
+		"DNS-320-rev-Ax:D-Link DNS-320 NAS (Rev A1):DNS323D1" "DNS-325-rev-Ax:D-Link DNS-325 NAS (Rev A1):DNS-325" \
+		"DNR-322L-rev-Ax:D-Link DNR-322L-rev-Ax NAS:DNR-322"; do
 		IFS=: read -r fw model sig <<< "$x"
 		f="$TOP/output/dns320l/images/ShareOS-$V-$fw.bin"
 		[ -f "$f" ] || continue

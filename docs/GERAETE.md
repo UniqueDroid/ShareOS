@@ -17,7 +17,7 @@ beschrieben.
 | DNS-320 rev B | `ShareOS-<ver>-DNS-320-rev-Bx.*` | 128 MB | gebaut, **Tester gesucht** |
 | DNS-325 rev A | `ShareOS-<ver>-DNS-325-rev-Ax.*` | 256 MB | **teilweise getestet** (rev A1, siehe unten), weitere Tester gesucht |
 | DNS-320 rev A | `ShareOS-<ver>-DNS-320-rev-Ax.*` | 128 MB | **teilweise getestet** (rev A1 mit 0.3.0-beta.9: installiert, Weboberfläche; Temperatur und Lüftersteuerung mit der Korrektur aus 0.3.0-beta.11, [#163](https://github.com/UniqueDroid/ShareOS/issues/163)), weitere Tester gesucht – bis 0.2.0-beta.16 startet sie nach dem Flashen immer wieder neu (Adresse des Initramfs, [#96](https://github.com/UniqueDroid/ShareOS/issues/96)); 0.2.0-beta.17 oder neuer nehmen |
-| DNR-322L | – | 128 MB | geplant |
+| DNR-322L rev A | `ShareOS-<ver>-DNR-322L-rev-Ax.*` | 256 MB | gebaut ab 0.3.0-beta.16, **nicht auf Hardware probiert** ([#180](https://github.com/UniqueDroid/ShareOS/issues/180)) – die Platine des DNS-320 rev A als Videorekorder; Systempartition 70 MB, die NUUO-Partition bleibt unberührt. Vorderseite (D-Link-Handbuch): Ein/Aus-Taste, Power- und Festplatten-LEDs und ein USB-Anschluss für eine USV – **keine USB-Taste**: Eine neue Box wird mit einem kurzen Druck (unter 5 s) auf die Reset-Taste hinten übernommen (ab 0.3.0-beta.16). Eine USB-LED gibt es nicht: Bei der Erstinstallation und im Rettungsmodus blinkt die **Power-LED** (schnell beim Installieren, langsam im Rettungsmodus). Es gibt eine zweite Version, den DNR-322L **rev B** (Gehäuse wie ein DNS-320L, vorne eine Lupen-Taste). Seine Platine ist noch nicht bekannt – vermutlich die des DNS-320L. Dieser Build ist nur für rev A (die Revision steht auf dem Aufkleber unten): **nicht auf einen rev B flashen**. Ein Boot-Log eines rev B (serielle Konsole oder `dmesg` unter Alt-F) würde zeigen, was er braucht. Ein erster Test braucht eine serielle Konsole in Reichweite (siehe unten) |
 | DNS-327L | – | 512 MB | geplant (eigener Kernel und eigenes Flash-Layout) |
 
 Nicht möglich: DNS-323, DNS-321, DNS-343 (64 MB RAM, 8 MB Flash).
@@ -51,7 +51,29 @@ Build der Korrektur für 0.2.0-beta.9).
 | LEDs | `dns320l:*` | `dns325:*` | `dns320:*` |
 | D-Link-Signatur | `DNS320L` / `DNS320B` | `DNS-325` | `DNS323D1` |
 
-Ein Kernel für alle vier: post-image hängt den Device-Tree des Modells an den
+Der DNR-322L rev A ist in jeder Zeile der DNS-320 rev A; seine Signatur ist
+`DNR-322`, und sein Flash ist anders aufgeteilt (`image` 70 MB, dann
+`nuuo package` 30 MB, `mini firmware`, `config`, `my-dlink` dort, wo sie der
+DNS-320L hat).
+
+**Ein Modell, das noch niemand gestartet hat:** Startet der Kernel, findet
+aber sein Initramfs nicht (die Adresse, an die der Original-U-Boot es kopiert,
+letzte Spalte von `MODELS` in `post-image.sh`), bleibt er mit einer Panic
+stehen und startet in einer Schleife neu – U-Boot weicht nur dann auf das
+D-Link-Rettungssystem aus, wenn das Kernel-*Image* beschädigt ist, nicht wenn
+der Kernel später scheitert. So eine Schleife beendet man über eine serielle
+Konsole (aus dem RAM starten, neu flashen). Der erste Test eines Modells
+braucht deshalb eine serielle Konsole in Reichweite; so wurden der DNS-325 und
+der DNS-320 rev A geklärt ([#96](https://github.com/UniqueDroid/ShareOS/issues/96)).
+Was dort schiefgeht, ist inzwischen bekannt: Der entpackte ShareOS-Kernel ist
+9,3 MB groß und reicht von 0x8000 bis über 0x800000 – die Adresse, an die
+Alt-F sein Initramfs legt (dessen Kernel endet bei 0x4d9200). U-Boot der
+3.4er-Reihe (DNS-325, DNS-320 rev A, DNR-322L) kopiert das Initramfs an die
+Adresse in dessen Kopf, mit 0x800000 also mitten in den Kernel; diese Modelle
+bekommen 0x1000000. Der Start aus dem RAM über TFTP geht denselben Weg wie
+der Start vom Flash und prüft die Adresse, ohne etwas zu schreiben.
+
+Ein Kernel für alle: post-image hängt den Device-Tree des Modells an den
 Kernel (das Original-U-Boot übergibt keinen) und schreibt eine `.bin` mit der
 Signatur des Modells. Initramfs und System sind gleich; die Box erkennt ihr
 Modell beim Start am Device-Tree (`shareos-boardinfo`).

@@ -1,0 +1,62 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
+/*
+ * Device Tree file for D-Link DNR-322L rev Ax
+ *
+ * The board of the DNS-320 rev A ("2 Bay NAS REV-A1": same SoC, LEDs,
+ * buttons, fan, temperature through the second serial port) sold as a
+ * network video recorder. What differs is the flash layout: the system
+ * partition "image" is 70 MB instead of 102 MB, a partition for the NUUO
+ * software follows it, and the last partitions are where the DNS-320L has
+ * them. After Alt-F's kirkwood-dnr322l-a.dts; the layout was read from a
+ * DNR-322L A2 (/proc/mtd under Alt-F 1.0.1, issue #180).
+ * The memory size from U-Boot (ATAGs) wins anyway – that box reports 256 MB.
+ */
+
+#include <arm/marvell/kirkwood-dns320.dts>
+
+/ {
+	model = "D-Link DNR-322L-rev-Ax NAS";
+	compatible = "dlink,dnr-322l-a", "dlink,dns-320-a1", "dlink,dns-320",
+		     "dlink,dns-kirkwood", "marvell,kirkwood-88f6281",
+		     "marvell,kirkwood";
+
+	/* "memory", not "memory@0": the node of kirkwood-dns320.dts has that
+	 * name, so this replaces it instead of adding a second one */
+	memory {
+		device_type = "memory";
+		reg = <0x00000000 0x10000000>;	/* 256 MB */
+	};
+};
+
+&nand {
+	/* the layout of kirkwood-dnskw.dtsi from "image" on is not this box's */
+	/delete-node/ partition@b00000;
+	/delete-node/ partition@7100000;
+	/delete-node/ partition@7b00000;
+
+	partition@b00000 {
+		label = "image";
+		reg = <0x0b00000 0x4600000>;
+	};
+
+	partition@6f00000 {
+		label = "mini firmware";
+		reg = <0x6f00000 0xa00000>;
+	};
+
+	partition@7900000 {
+		label = "config";
+		reg = <0x7900000 0x500000>;
+	};
+
+	partition@7e00000 {
+		label = "my-dlink";
+		reg = <0x7e00000 0x200000>;
+	};
+
+	/* last, so that the numbers are those of Alt-F (mtd7) */
+	partition@5100000 {
+		label = "nuuo package";
+		reg = <0x5100000 0x1e00000>;
+	};
+};
