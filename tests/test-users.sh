@@ -408,7 +408,7 @@ run '/etc/init.d/S03claim start'
 check "claim: new box with the factory password: root locked" "grep -q '^root:!:' $R/etc/shadow"
 check "claim: state unclaimed, no button yet" "rpc shareos.setup claim_state '{}' | js \"d['unclaimed'] and not d['window']\""
 check "claim: setup status says no factory password (wizard skips the step)" "rpc shareos.setup status '{}' | js \"d['default_password']==False\""
-check "claim: refused without the USB button" "rpc shareos.setup claim '{\"password\":\"geheim123\"}' | grep -q 'press the USB button'"
+check "claim: refused without the USB or reset button" "rpc shareos.setup claim '{\"password\":\"geheim123\"}' | grep -q 'press the USB or reset button'"
 touch $R/run/shareos/claim-window
 check "claim: short password refused" "rpc shareos.setup claim '{\"password\":\"kurz\"}' | grep -q 'too short'"
 check "claim: window open after the button" "rpc shareos.setup claim_state '{}' | js \"d['window']\""
