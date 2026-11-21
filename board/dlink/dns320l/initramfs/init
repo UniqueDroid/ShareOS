@@ -36,7 +36,7 @@ exec </dev/console >/dev/console 2>&1
 # which box: LED names and release file names (/usr/lib/shareos/board.sh)
 . /usr/lib/shareos/board.sh
 board_detect
-LED=$BOARD_LED_USB
+LED=${BOARD_LED_INSTALL:-$BOARD_LED_USB}
 
 CMDLINE=$(cat /proc/cmdline)
 log() { echo "shareos-init: $*"; }

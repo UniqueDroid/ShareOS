@@ -24,6 +24,8 @@
 #                       power cut (set at boot), empty: the MCU does it / none
 #   BOARD_LED_STATUS    LED for the status setting (heartbeat/on/off)
 #   BOARD_LED_USB       LED for USB activity and the reset/rescue feedback
+#   BOARD_LED_INSTALL   LED that blinks during the first installation and in
+#                       rescue mode; empty: BOARD_LED_USB
 #   BOARD_LED_DISK1, BOARD_LED_DISK2   disk LEDs (left, right)
 #   BOARD_LED_POWER     power LED; empty: driven by the MCU (/tmp/sys/power_led)
 #   BOARD_RAM_SMALL     1 on boxes with 128 MB RAM
@@ -63,7 +65,10 @@ board_detect() {
 		BOARD_POWER_BACK=gpiochip1:5
 		BOARD_LED_STATUS=dns320:blue:usb BOARD_LED_USB=dns320:orange:usb
 		BOARD_LED_DISK1=dns320:orange:l_hdd BOARD_LED_DISK2=dns320:orange:r_hdd
-		BOARD_LED_POWER=dns320:blue:power ;;
+		BOARD_LED_POWER=dns320:blue:power
+		# the front has the power and disk LEDs only (D-Link manual): installation
+		# and rescue mode blink the power LED
+		BOARD_LED_INSTALL=dns320:blue:power ;;
 	*DNS-320*)
 		BOARD_ID=dns320a BOARD_NAME="D-Link DNS-320 rev A" BOARD_FWNAME=DNS-320-rev-Ax
 		BOARD_SIG=DNS323D1 BOARD_MODEL=DNS-320 BOARD_CONTROL=mcu-temp BOARD_RTC=kernel
@@ -87,7 +92,7 @@ board_detect() {
 # all variables as KEY=value lines (for /tmp/sys/board.env and shareos-boardinfo)
 board_env() {
 	for v in ID NAME FWNAME SIG MODEL CONTROL RTC POWER_BUTTON POWER_BACK \
-		LED_STATUS LED_USB LED_DISK1 LED_DISK2 LED_POWER RAM_SMALL TESTED; do
+		LED_STATUS LED_USB LED_INSTALL LED_DISK1 LED_DISK2 LED_POWER RAM_SMALL TESTED; do
 		eval "printf 'BOARD_%s=\"%s\"\n' $v \"\$BOARD_$v\""
 	done
 }

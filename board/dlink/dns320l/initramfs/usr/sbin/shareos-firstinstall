@@ -42,6 +42,8 @@ UBOOT_MAX=3145728
 . /usr/lib/shareos/board.sh
 board_detect
 FWNAME=${BOARD_FWNAME:-$SHAREOS_FWNAME}
+# the LED that blinks while this runs (the power LED on boxes without a USB LED)
+FI_LED=${BOARD_LED_INSTALL:-$BOARD_LED_USB}
 VERSION=$SHAREOS_VERSION
 
 # messages go to stderr (the console): stdout of some functions is a result
@@ -52,8 +54,8 @@ cleanup() { umount $SRC 2>/dev/null; }
 mtd_by_name() { sed -n "s/^\(mtd[0-9]*\):.*\"$1\"\$/\1/p" /proc/mtd; }
 
 led_busy() {
-	L=/sys/class/leds/$BOARD_LED_USB
-	led "$BOARD_LED_USB" timer
+	L=/sys/class/leds/$FI_LED
+	led "$FI_LED" timer
 	[ -e $L/delay_on ] && echo 120 > $L/delay_on && echo 120 > $L/delay_off
 }
 
@@ -187,7 +189,7 @@ main() {
 	shareos-install-ubi rootfs.squashfs --yes || fail "installing the system failed"
 	sync
 	log "ShareOS $newver installed – restarting"
-	led "$BOARD_LED_USB" none
+	led "$FI_LED" none
 	return 0
 }
 
