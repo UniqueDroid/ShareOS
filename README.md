@@ -110,6 +110,7 @@ Version in brackets = first release with the feature.
 - App permission `notify`: apps send messages through the box's notifications (web interface, e-mail, push) – from their scheduled tasks with `shareos-app-notify`, from the browser with `ShareOS.notify` (admins); at most 20 an hour per app (0.2.0-beta.12)
 - App permission `vault`: `ShareOS.vault` lists, unlocks and locks the user's vault shares (0.3.0-beta.5)
 - Apps copy and move with progress and can cancel (`onProgress`), upload files of any size (`ShareOS.fs.upload`) and know their own version (`ShareOS.appInfo()`, `data-sos-version`); an app update is never run from an old browser copy (0.3.0-beta.14)
+- The header shows the signed-in account next to the clock; apps installed from an uploaded package are marked "uploaded" (0.3.0-beta.15)
 - File dialog of the apps with the personal folder and the user's shares, also for accounts without file access (0.2.0-beta.11)
 - System apps declare their service in `app.json` (`"service"`), ShareOS starts and stops it through the firmware's controller; how to submit a system app: `sysapps/README.md` (0.2.0-beta.9)
 - Large system apps on the apps drive (link in `/opt`), the flash stays free (0.2.0-beta.7)
