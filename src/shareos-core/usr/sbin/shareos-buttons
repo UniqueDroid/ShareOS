@@ -109,7 +109,7 @@ function unclaimed() {
 
 function reset_released(secs) {
 	if (secs < ACCESS_MIN && unclaimed()) {
-		// not every box has a USB button (the DNR-322L has none): a short press
+		// not every box has a USB button that is known to work: a short press
 		// of the reset button claims as well – it is just as much at the box
 		log(sprintf('reset button %.1f s – box not claimed yet, claim window open for 2 minutes', secs));
 		run('mkdir -p /run/shareos && touch /run/shareos/claim-window');

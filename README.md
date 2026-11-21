@@ -19,7 +19,7 @@ years of work goes to the Alt-F project — see [LICENSE](LICENSE) and
 > **[docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)** ([Deutsch](docs/ENTWICKLUNG.md)).
 >
 > Testing and installing: [docs/TESTING.md](docs/TESTING.md) ([Deutsch](docs/TESTEN.md)).
-> **First sign-in:** `http://<box-IP>/` – a new box has no known password (0.3.0-beta.2+): press the **USB button** on the front (or the reset button briefly, under 5 s – the DNR-322L has no USB button, its reset button is on the underside), then choose the password for **root** on the page (also for SSH). Older versions: user **root**, password **shareos**.
+> **First sign-in:** `http://<box-IP>/` – a new box has no known password (0.3.0-beta.2+): press the **USB button** on the front (or the reset button briefly, under 5 s), then choose the password for **root** on the page (also for SSH). Older versions: user **root**, password **shareos**.
 > Translating the web interface: [docs/TRANSLATING.md](docs/TRANSLATING.md).
 
 ![ShareOS web interface](docs/images/gui-uebersicht.png)

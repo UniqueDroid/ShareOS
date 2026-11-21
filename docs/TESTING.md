@@ -679,7 +679,7 @@ Needs a box you may reset (factory reset deletes the settings, not the data disk
 1. Update a box that is in use: it keeps its password, SSH works as before (no lock on updates).
 2. *System → Power & reset → Reset to factory settings* (or reset button ≥ 15 s). After the restart the login page says "This box is not set up yet …"; `ssh root@<box>` is refused.
 3. Choose a password without pressing the button: "Set password" stays greyed out.
-4. Press the USB button on the front briefly: the page says "Button detected …". The same with a short press of the reset button (under 5 s; the DNR-322L has no USB button). Type a password twice (min. 8), *Set password*: you are logged in, the wizard has no password step. SSH works with the new password.
+4. Press the USB button on the front briefly: the page says "Button detected …". The same with a short press of the reset button (under 5 s). Type a password twice (min. 8), *Set password*: you are logged in, the wizard has no password step. SSH works with the new password.
 5. Wait more than 2 minutes after the button: the window is closed again ("press the USB button first").
 6. Reset button 5–10 s (access reset): after the restart the box asks to be claimed again; data, users and shares are kept.
 7. ShareOS Desktop 0.2.3, *Set up box* on such a box: it asks for the USB button and the password, then continues with the setup.
@@ -877,7 +877,7 @@ Needs an apps drive, the system apps `autobrr` and `transmission-daemon` and an 
 
 ## 15. Buttons
 
-- **Reset button** (pin hole at the back), hold and let go:
+- **Reset button** (pin hole at the back or underneath, depending on the model), hold and let go:
   - shorter than 5 s: nothing;
   - **5–10 s** (orange USB LED blinks slowly): **access reset** – network back to DHCP (fallback `192.168.0.32`), root password `shareos`, web interface over http again with a new self-signed certificate; users, shares, apps and data stay; the box restarts;
   - 10–15 s (LED off): cancelled;

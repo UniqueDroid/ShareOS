@@ -18,7 +18,8 @@
 #
 # SSH in rescue mode means root with the well-known password "shareos". After a
 # failure it is therefore closed until someone at the box presses the USB
-# button on the front or the reset button (the DNR-322L has no USB button);
+# button on the front or the reset button (a box whose USB button is not
+# known or missing);
 # it then stays open for 30 minutes (the LED blinks fast). With shareos.rescue on the kernel command line – that needs the
 # serial console – it is open at once.
 #

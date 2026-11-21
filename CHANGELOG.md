@@ -8,7 +8,7 @@ pre-releases for test devices only.
 
 From the first test on a DNR-322L ([#180](https://github.com/UniqueDroid/ShareOS/issues/180), Marco):
 
-- **Claiming without a USB button.** A new box (or one after an access or factory reset) is claimed with the USB button – the DNR-322L has none (power and search buttons on the front, the reset button underneath). On every model a short press of the reset button (under 5 s) now opens the claim window as well, and in rescue mode it opens SSH like the USB button. It is just as much a press at the box; holding it 5–10 s stays the access reset. The setup page and the factory reset name both buttons.
+- **Claiming with the reset button.** A new box (or one after an access or factory reset) was claimed with the USB button only. On the first DNR-322L the box could not be claimed – the button tried was the power button. On every model a short press of the reset button (under 5 s) now opens the claim window as well, and in rescue mode it opens SSH like the USB button. It is just as much a press at the box; holding it 5–10 s stays the access reset. The setup page and the factory reset name both buttons.
 - **First installation from a partitioned USB stick:** the search now looks again for a few seconds when it finds nothing (a stick's partitions can show up after the stick itself) and logs every drive and partition it tried and why it was skipped. A failure on GitHub says that the stick was searched too.
 - **DHCP waits for the link.** The system asked for DHCP for about 9 s; on the DNR-322L the link comes up about 12 s after boot, so the box ended up on the fallback address 192.168.0.32. It now waits up to 20 s for the link first and logs how long it took.
 
