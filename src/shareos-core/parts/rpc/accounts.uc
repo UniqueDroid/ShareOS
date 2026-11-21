@@ -361,7 +361,9 @@ add_methods({
 				let hm = match(path, /^home(\/([^\/]+))?(\/|$)/);
 				if (hm && !(hm[2] && c.get('accounts', hm[2]) == 'user' && c.get('accounts', hm[2], 'home') == a.volume))
 					return { error: 'the folder "home" holds the personal folders – only the personal folder of an account (home/<account>) or a folder in it can be shared' };
-				if (match(a.comment ?? '', /[\n\r\[\]]/)) return { error: 'invalid description' };
+				// no "\]" inside a bracket expression: POSIX takes it as the end of the
+				// list ("[\n\r\[\]]" only matched "[]"); the brackets are looked for apart
+				if (match(a.comment ?? '', /[\n\r]/) || index(a.comment ?? '', '[') >= 0 || index(a.comment ?? '', ']') >= 0) return { error: 'invalid description' };
 				let accs = accounts(), known = {};
 				for (let u in accs.users) known[u.name] = true;
 				for (let g in accs.groups) known['@' + g.name] = true;

@@ -236,7 +236,7 @@ add_methods({
 				if (a.sources != null) {
 					if (type(a.sources) != 'array' || length(a.sources) > 10) return { error: 'invalid sources' };
 					for (let u in a.sources)
-						if (!match(u, /^https:\/\/[A-Za-z0-9.:\[\]_-]+(\/[^[:space:]"'<>]*)?$/)) return { error: 'invalid source (https://… only): ' + u };
+						if (!match(u, /^https:\/\/([A-Za-z0-9._-]+|\[[0-9A-Fa-f:.]+\])(:[0-9]{1,5})?(\/[^[:space:]"'<>]*)?$/)) return { error: 'invalid source (https://… only): ' + u };
 				}
 				c.set('apps', 'store', 'store');
 				if (a.channel) c.set('apps', 'store', 'channel', a.channel);
