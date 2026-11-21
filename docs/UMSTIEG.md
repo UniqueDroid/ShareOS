@@ -45,7 +45,7 @@ das System im Flash.
 5. Danach startet die Box von selbst noch einmal neu – jetzt mit ShareOS.
 6. Im Browser `http://<IP-der-Box>/` öffnen (oder `http://<Gerätename>.local/`).
    Eine neue Box hat kein bekanntes Passwort: die **USB-Taste** vorne an der
-   Box drücken, dann auf der Seite das Passwort für **root** festlegen
+   Box drücken (oder kurz die Reset-Taste, unter 5 s), dann auf der Seite das Passwort für **root** festlegen
    (innerhalb von 2 Minuten). Vor 0.3.0-beta.2: Anmelden mit **root** und
    dem Passwort **shareos**.
 7. Der Einrichtungsassistent führt durch Sprache, Übernahme aus Alt-F,

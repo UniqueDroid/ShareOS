@@ -1827,8 +1827,8 @@ E1456	Vaciar el portapapeles
 P327	Pegar ($1)
 P328	$1 elemento(s) en el portapapeles: elige «Pegar» en la carpeta de destino.
 E1457	Pegar
-E1458	Esta caja aún no está configurada. Pulsa brevemente el botón USB de la parte frontal de la caja y elige después una contraseña para root.
-E1459	Esperando el botón USB …
+E1458	Esta caja aún no está configurada. Pulsa brevemente el botón USB de la parte frontal de la caja o el botón de reset (menos de 5 segundos) y elige después una contraseña para root.
+E1459	Esperando el botón USB o de reset …
 E1460	Botón detectado: elige ahora una contraseña (tienes 2 minutos).
 E1461	NUEVA CONTRASEÑA (MÍN. 8 CARACTERES)
 E1462	REPETIR CONTRASEÑA
@@ -2074,8 +2074,8 @@ E1659	zabbix_agentd, modo activo y pasivo
 E1660	Valores SMART de un disco de este volumen
 P369	(paso $1 de $2) –
 E1661	no se pudo ajustar en la última sincronización
-E1662	Elimina todos los ajustes y paquetes instalados de la memoria flash y reinicia. El sistema y la versión del firmware se conservan. Después el equipo no tiene contraseña: pulse el botón USB del frontal y elija una nueva en la interfaz web.
-E1663	Se borran todos los ajustes y paquetes instalados y el equipo se reinicia. Después no tiene contraseña: pulse el botón USB del frontal y elija una nueva.
+E1662	Elimina todos los ajustes y paquetes instalados de la memoria flash y reinicia. El sistema y la versión del firmware se conservan. Después el equipo no tiene contraseña: pulse el botón USB del frontal o brevemente el botón de reset y elija una nueva en la interfaz web.
+E1663	Se borran todos los ajustes y paquetes instalados y el equipo se reinicia. Después no tiene contraseña: pulse el botón USB del frontal o brevemente el botón de reset y elija una nueva.
 E1664	Las credenciales se quedan en el equipo y solo root puede leerlas (contraseñas ofuscadas por rclone, no cifradas).
 E1665	No hay mensajes.
 E1666	Cada 10 minutos el equipo comprueba RAID, volúmenes (montados, ocupación), temperatura, valores SMART (se leen de nuevo cada 6 horas; no se despierta un disco en reposo) y actualizaciones; los trabajos de nube, tareas de apps y trabajos de almacenamiento fallidos avisan al instante. Los mensajes repetidos se cuentan y se reenvían como máximo una vez al día.

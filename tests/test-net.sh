@@ -40,6 +40,17 @@ u set network.lan.fallback=off; u commit network
 sh "$NET" start >/dev/null
 check "fallback can be switched off" "! grep -q 'addr add' $T/calls"
 
+# DHCP waits for the link (DNR-322L: about 12 s after boot)
+mkdir -p $R/sys/class/net/eth0; echo 0 > $R/sys/class/net/eth0/carrier
+: > $T/calls
+( sleep 1.2; echo 1 > $R/sys/class/net/eth0/carrier ) &
+sh "$NET" start >/dev/null; wait
+check "dhcp: waits for the link before ifup" "grep -q 'link on eth0 after' $T/calls && [ \"\$(grep -nE 'link on eth0|^ifup' $T/calls | cut -d: -f1 | tr '\n' ' ')\" = \"\$(grep -n 'link on eth0' $T/calls | cut -d: -f1) \$(grep -n '^ifup' $T/calls | cut -d: -f1) \" ]"
+: > $T/calls
+sh "$NET" start >/dev/null
+check "dhcp: no waiting when the link is up" "! grep -q 'link on eth0' $T/calls && grep -q '^ifup -a' $T/calls"
+rm -rf $R/sys
+
 u set network.lan.proto=static; u set network.lan.ipaddr=192.168.7.20; u set network.lan.netmask=255.255.255.0
 u set network.lan.gateway=192.168.7.1; u set network.lan.dns='192.168.7.2 9.9.9.9'; u commit network
 : > $T/calls

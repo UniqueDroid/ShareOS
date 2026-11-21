@@ -18,8 +18,9 @@
 #
 # SSH in rescue mode means root with the well-known password "shareos". After a
 # failure it is therefore closed until someone at the box presses the USB
-# button on the front; it then stays open for 30 minutes (the LED blinks
-# fast). With shareos.rescue on the kernel command line – that needs the
+# button on the front or the reset button (a box whose USB button is not
+# known or missing);
+# it then stays open for 30 minutes (the LED blinks fast). With shareos.rescue on the kernel command line – that needs the
 # serial console – it is open at once.
 #
 
@@ -119,32 +120,33 @@ ssh_open() {
 	dropbear -R -P "$RUN/dropbear.pid" 2>/dev/null
 }
 
-# Rescue mode after a failure: SSH opens when the USB button is pressed and
+# Rescue mode after a failure: SSH opens when the USB or reset button is pressed and
 # closes again after RESCUE_SSH_TIME seconds (sessions that are open stay).
 # A box without the buttons' device could not be reached at all: open at once.
 RESCUE_SSH_TIME=${SHAREOS_INIT_SSH_TIME:-1800}
 RUN=${SHAREOS_INIT_RUN:-/run}
 ssh_gate() {
 	dev=$(button_dev) || { log "no buttons found – SSH is open"; ssh_open; return; }
-	log "SSH is closed: press the USB button on the front to open it for $((RESCUE_SSH_TIME / 60)) minutes"
+	log "SSH is closed: press the USB button or the reset button to open it for $((RESCUE_SSH_TIME / 60)) minutes"
 	while :; do
 		# one event of the kernel (16 bytes): seconds, microseconds, type,
 		# code, value – od -d prints them as 16-bit numbers after the offset.
-		# type 1 = key; code 133 (KEY_COPY) or 161 (KEY_EJECTCD) = USB button
+		# type 1 = key; code 133 (KEY_COPY) or 161 (KEY_EJECTCD) = USB button,
+		# 408 (KEY_RESTART) = reset button
 		ev=$(dd if="$dev" bs=16 count=1 2>/dev/null | od -d | head -n 1)
 		[ -n "$ev" ] || { sleep 1; continue; }
 		read -r _ _ _ _ _ typ code _ <<-EOF
 		$ev
 		EOF
 		[ "$typ" = 1 ] || continue
-		case "$code" in 133|161) ;; *) continue ;; esac
-		log "USB button: SSH is open for $((RESCUE_SSH_TIME / 60)) minutes"
+		case "$code" in 133|161|408) ;; *) continue ;; esac
+		log "button: SSH is open for $((RESCUE_SSH_TIME / 60)) minutes"
 		ssh_open
 		blink 100
 		sleep "$RESCUE_SSH_TIME"
 		kill "$(cat "$RUN/dropbear.pid" 2>/dev/null)" 2>/dev/null
 		blink 500
-		log "SSH is closed again (USB button: open it once more)"
+		log "SSH is closed again (USB or reset button: open it once more)"
 	done
 }
 
@@ -161,7 +163,7 @@ rescue() {
 		how="ssh root@${ip:-<no ip>}   (password: shareos)"
 	else
 		ssh_gate &
-		how="press the USB button on the front, then within $((RESCUE_SSH_TIME / 60)) minutes:
+		how="press the USB button or the reset button, then within $((RESCUE_SSH_TIME / 60)) minutes:
 	  ssh root@${ip:-<no ip>}   (password: shareos)"
 	fi
 	cat > /etc/motd <<-EOF

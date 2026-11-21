@@ -107,9 +107,26 @@ watch() {
 	done
 }
 
+# DHCP only works once the cable has a link; on some boxes (DNR-322L) the
+# link comes up about 12 s after boot, later than the DHCP client gives up
+wait_link() {
+	c=$ROOT/sys/class/net/$IF/carrier
+	[ -e "$c" ] || return 0
+	ip link set $IF up 2>/dev/null
+	i=0
+	while [ $i -lt 40 ] && [ "$(cat "$c" 2>/dev/null)" != 1 ]; do sleep 0.5; i=$((i + 1)); done
+	if [ "$(cat "$c" 2>/dev/null)" = 1 ]; then
+		[ $i -gt 0 ] && log "link on $IF after $((i / 2)) s"
+	else
+		log "no link on $IF after 20 s – is the cable plugged in?"
+	fi
+	return 0
+}
+
 start() {
 	mkdir -p $ROOT/run/network
 	write_config
+	[ "$(get proto)" = static ] || wait_link
 	ifup -a
 	rc=$?
 	write_resolv
