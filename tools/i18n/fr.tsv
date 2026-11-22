@@ -2191,47 +2191,49 @@ E1747	téléversée
 E1748	téléversée – non vérifiée
 E1749	depuis le dépôt d'apps). Les paquets téléversés sont marqués « téléversée – non vérifiée » : la box ne peut pas les comparer au store.
 E1750	Connecté
-E1751	DÉMÉNAGER VERS UN NOUVEAU DISQUE
-E1752	CHANGEMENT DE DISQUE
-E1753	Copie tout d’un ancien disque vers un nouveau – partages, dossiers personnels et zone des applications – puis bascule, sans rien avoir à reconfigurer.
-E1754	1 · CHOISIR LES DISQUES
-E1755	ANCIEN DISQUE (DEPUIS)
-E1756	NOUVEAU DISQUE (VERS)
-E1757	Le nouveau disque doit être configuré et vide, en ext4 ou Btrfs. Il peut être dans la deuxième baie ou dans un boîtier USB – après le déménagement, il peut aller dans une baie. Configurez-le d’abord sous
-E1758	Un ancien disque dans un boîtier USB y est ajouté sans être effacé (disque avec données).
-E1759	Dossiers personnels
-E1760	Tâches d’instantanés
-E1761	Données
-E1762	déménage aussi
-E1763	Tout ce qui est sur l’ancien disque est copié – y compris les dossiers non partagés – sauf les instantanés. Propriétaires, droits et ACL sont conservés. L’ancien disque n’est pas modifié.
-E1764	Vérifier
-E1765	Lancer la copie
-E1766	2 · COPIE
-E1767	3 · BASCULEMENT EN COURS
-E1768	3 · BASCULER
-E1769	Les services sont arrêtés pour la dernière copie – les partages reviennent dans un instant.
-E1770	La box reste utilisable pendant la copie. Ce qui change d’ici le basculement est copié à ce moment-là.
-E1771	Tout est copié.
-E1772	Le basculement arrête brièvement partages, applications, téléchargements et serveur multimédia, copie ce qui a changé depuis, puis fait pointer partages, dossiers personnels, zone des applications, copie USB et tâches d’instantanés vers le nouveau disque.
-E1773	Basculer maintenant
-E1774	TERMINÉ
-E1775	Les partages, dossiers personnels et la zone des applications sont maintenant sur le nouveau disque.
-E1776	L’ancien disque est inchangé. Quand tout fonctionne, oubliez-le sous
-E1777	et retirez le disque – ou gardez-le comme sauvegarde.
-E1778	La copie a été arrêtée. Reprendre ne copie que ce qui manque.
-E1779	Reprendre la copie
-E1780	Arrêter la copie ?
-E1781	Ce qui est copié reste sur le nouveau disque ; reprendre plus tard ne copie que le reste.
-E1782	Basculer maintenant vers le nouveau disque ?
-E1783	Partages, applications, téléchargements et serveur multimédia s’arrêtent pour la dernière copie et redémarrent sur le nouveau disque. Les fichiers ouverts sur le réseau sont fermés.
-E1784	la source et la cible sont le même disque
-E1785	le nouveau disque doit être en ext4 ou btrfs (propriétaires, dossiers personnels, zone des applications)
-E1786	le nouveau disque n’est pas vide – choisissez un disque vide
-E1787	pas assez d’espace libre sur le nouveau disque
-E1788	échec de la copie – voir le journal ; relancer ne copie que ce qui manque
-E1789	la dernière copie avant le basculement a échoué – rien n’a été basculé
-E1790	copiez d’abord tout
-E1791	un déménagement est déjà en cours
+E1751	En SMB, un partage du même nom s’ouvre à la place de ce dossier personnel – recréez ce partage sous un autre nom.
+E1752	En SMB, ce partage masque le dossier personnel du compte du même nom – recréez-le sous un autre nom pour libérer cette adresse.
+E1753	DÉMÉNAGER VERS UN NOUVEAU DISQUE
+E1754	CHANGEMENT DE DISQUE
+E1755	Copie tout d’un ancien disque vers un nouveau – partages, dossiers personnels et zone des applications – puis bascule, sans rien avoir à reconfigurer.
+E1756	1 · CHOISIR LES DISQUES
+E1757	ANCIEN DISQUE (DEPUIS)
+E1758	NOUVEAU DISQUE (VERS)
+E1759	Le nouveau disque doit être configuré et vide, en ext4 ou Btrfs. Il peut être dans la deuxième baie ou dans un boîtier USB – après le déménagement, il peut aller dans une baie. Configurez-le d’abord sous
+E1760	Un ancien disque dans un boîtier USB y est ajouté sans être effacé (disque avec données).
+E1761	Dossiers personnels
+E1762	Tâches d’instantanés
+E1763	Données
+E1764	déménage aussi
+E1765	Tout ce qui est sur l’ancien disque est copié – y compris les dossiers non partagés – sauf les instantanés. Propriétaires, droits et ACL sont conservés. L’ancien disque n’est pas modifié.
+E1766	Vérifier
+E1767	Lancer la copie
+E1768	2 · COPIE
+E1769	3 · BASCULEMENT EN COURS
+E1770	3 · BASCULER
+E1771	Les services sont arrêtés pour la dernière copie – les partages reviennent dans un instant.
+E1772	La box reste utilisable pendant la copie. Ce qui change d’ici le basculement est copié à ce moment-là.
+E1773	Tout est copié.
+E1774	Le basculement arrête brièvement partages, applications, téléchargements et serveur multimédia, copie ce qui a changé depuis, puis fait pointer partages, dossiers personnels, zone des applications, copie USB et tâches d’instantanés vers le nouveau disque.
+E1775	Basculer maintenant
+E1776	TERMINÉ
+E1777	Les partages, dossiers personnels et la zone des applications sont maintenant sur le nouveau disque.
+E1778	L’ancien disque est inchangé. Quand tout fonctionne, oubliez-le sous
+E1779	et retirez le disque – ou gardez-le comme sauvegarde.
+E1780	La copie a été arrêtée. Reprendre ne copie que ce qui manque.
+E1781	Reprendre la copie
+E1782	Arrêter la copie ?
+E1783	Ce qui est copié reste sur le nouveau disque ; reprendre plus tard ne copie que le reste.
+E1784	Basculer maintenant vers le nouveau disque ?
+E1785	Partages, applications, téléchargements et serveur multimédia s’arrêtent pour la dernière copie et redémarrent sur le nouveau disque. Les fichiers ouverts sur le réseau sont fermés.
+E1786	la source et la cible sont le même disque
+E1787	le nouveau disque doit être en ext4 ou btrfs (propriétaires, dossiers personnels, zone des applications)
+E1788	le nouveau disque n’est pas vide – choisissez un disque vide
+E1789	pas assez d’espace libre sur le nouveau disque
+E1790	échec de la copie – voir le journal ; relancer ne copie que ce qui manque
+E1791	la dernière copie avant le basculement a échoué – rien n’a été basculé
+E1792	copiez d’abord tout
+E1793	un déménagement est déjà en cours
 P398	$1 · libre sur le nouveau disque : $2
 P399	disque inconnu $1
 P400	le disque $1 n’est pas monté

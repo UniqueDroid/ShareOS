@@ -1734,6 +1734,8 @@
 		"uploaded – not checked": "अपलोड किया – जाँचा नहीं गया",
 		"from the app repository). Uploaded packages are marked “uploaded – not checked”: the box cannot compare them with the store.": "से बने)। अपलोड किए पैकेज \"अपलोड किया – जाँचा नहीं गया\" चिह्नित होते हैं: बॉक्स उन्हें स्टोर से मिला नहीं सकता।",
 		"Signed in": "साइन इन",
+		"Over SMB a share of the same name opens instead of this personal folder – create that share again under another name.": "SMB पर इस निजी फ़ोल्डर के बजाय उसी नाम का शेयर खुलता है – उस शेयर को किसी दूसरे नाम से दोबारा बनाएँ।",
+		"Over SMB this share hides the personal folder of the account of the same name – create it again under another name to free that address.": "SMB पर यह शेयर उसी नाम वाले खाते के निजी फ़ोल्डर को छिपा देता है – उस पते को मुक्त करने के लिए इसे किसी दूसरे नाम से दोबारा बनाएँ।",
 		"MOVE TO A NEW DRIVE": "नई ड्राइव पर ले जाएँ",
 		"DISK CHANGE": "डिस्क बदलना",
 		"Copies everything from an old drive to a new one – shares, personal folders and the app area – and then switches over, so that nothing has to be set up again.": "पुरानी ड्राइव से सब कुछ नई ड्राइव पर कॉपी करता है – शेयर, निजी फ़ोल्डर और ऐप क्षेत्र – और फिर उस पर बदल देता है, ताकि कुछ भी दोबारा सेट न करना पड़े।",

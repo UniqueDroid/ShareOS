@@ -1734,6 +1734,8 @@
 		"uploaded – not checked": "hochgeladen – nicht geprüft",
 		"from the app repository). Uploaded packages are marked “uploaded – not checked”: the box cannot compare them with the store.": "aus dem App-Repo). Hochgeladene Pakete sind als „hochgeladen – nicht geprüft“ markiert: Die Box kann sie nicht mit dem Store vergleichen.",
 		"Signed in": "Angemeldet",
+		"Over SMB a share of the same name opens instead of this personal folder – create that share again under another name.": "Über SMB öffnet sich statt dieses persönlichen Ordners eine Freigabe gleichen Namens – lege diese Freigabe unter einem anderen Namen neu an.",
+		"Over SMB this share hides the personal folder of the account of the same name – create it again under another name to free that address.": "Über SMB verdeckt diese Freigabe den persönlichen Ordner des gleichnamigen Kontos – lege sie unter einem anderen Namen neu an, um diese Adresse freizugeben.",
 		"MOVE TO A NEW DRIVE": "UMZUG AUF EIN NEUES LAUFWERK",
 		"DISK CHANGE": "PLATTENWECHSEL",
 		"Copies everything from an old drive to a new one – shares, personal folders and the app area – and then switches over, so that nothing has to be set up again.": "Kopiert alles von einem alten auf ein neues Laufwerk – Freigaben, persönliche Ordner und den App-Bereich – und schaltet dann um, sodass nichts neu eingerichtet werden muss.",

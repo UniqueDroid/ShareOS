@@ -2191,47 +2191,49 @@ E1747	subida
 E1748	subida – sin verificar
 E1749	del repositorio de apps). Los paquetes subidos se marcan como «subida – sin verificar»: el equipo no puede compararlos con la tienda.
 E1750	Sesión iniciada
-E1751	MOVER A UNA UNIDAD NUEVA
-E1752	CAMBIO DE DISCO
-E1753	Copia todo de una unidad antigua a una nueva – recursos compartidos, carpetas personales y el área de apps – y luego cambia, sin tener que configurar nada de nuevo.
-E1754	1 · ELEGIR LAS UNIDADES
-E1755	UNIDAD ANTIGUA (DESDE)
-E1756	UNIDAD NUEVA (HACIA)
-E1757	La unidad nueva debe estar configurada y vacía, con ext4 o Btrfs. Puede estar en la segunda bahía o en una caja USB; tras el traslado puede ir a una bahía. Configúrala primero en
-E1758	Un disco antiguo en una caja USB se añade allí sin borrarlo (disco con datos).
-E1759	Carpetas personales
-E1760	Tareas de instantáneas
-E1761	Datos
-E1762	se mueve también
-E1763	Se copia todo lo de la unidad antigua – también carpetas no compartidas – excepto las instantáneas. Propietarios, permisos y ACL se mantienen. La unidad antigua no se modifica.
-E1764	Comprobar
-E1765	Empezar a copiar
-E1766	2 · COPIANDO
-E1767	3 · CAMBIANDO
-E1768	3 · CAMBIAR
-E1769	Los servicios están detenidos para la última copia; los recursos compartidos vuelven en un momento.
-E1770	La caja se puede usar mientras copia. Lo que cambie hasta el cambio se copia entonces.
-E1771	Todo está copiado.
-E1772	El cambio detiene brevemente recursos compartidos, apps, descargas y el servidor multimedia, copia lo que cambió desde entonces y luego apunta recursos compartidos, carpetas personales, área de apps, copia USB y tareas de instantáneas a la unidad nueva.
-E1773	Cambiar ahora
-E1774	HECHO
-E1775	Los recursos compartidos, las carpetas personales y el área de apps están ahora en la unidad nueva.
-E1776	La unidad antigua no ha cambiado. Cuando todo funcione, olvídala en
-E1777	y saca el disco, o guárdalo como copia de seguridad.
-E1778	La copia se detuvo. Continuar copia solo lo que falta.
-E1779	Seguir copiando
-E1780	¿Detener la copia?
-E1781	Lo copiado se queda en la unidad nueva; continuar más tarde copia solo el resto.
-E1782	¿Cambiar ahora a la unidad nueva?
-E1783	Recursos compartidos, apps, descargas y el servidor multimedia se detienen para la última copia y vuelven a arrancar en la unidad nueva. Los archivos abiertos en la red se cierran.
-E1784	el origen y el destino son la misma unidad
-E1785	la unidad nueva necesita ext4 o btrfs (propietarios, carpetas personales, área de apps)
-E1786	la unidad nueva no está vacía: elige una unidad vacía
-E1787	no hay suficiente espacio libre en la unidad nueva
-E1788	la copia falló: mira el registro; volver a empezar copia solo lo que falta
-E1789	la última copia antes del cambio falló: no se cambió nada
-E1790	copia todo primero
-E1791	ya hay un traslado en curso
+E1751	Por SMB se abre un recurso compartido con el mismo nombre en lugar de esta carpeta personal: vuelve a crear ese recurso con otro nombre.
+E1752	Por SMB este recurso compartido oculta la carpeta personal de la cuenta con el mismo nombre: vuelve a crearlo con otro nombre para liberar esa dirección.
+E1753	MOVER A UNA UNIDAD NUEVA
+E1754	CAMBIO DE DISCO
+E1755	Copia todo de una unidad antigua a una nueva – recursos compartidos, carpetas personales y el área de apps – y luego cambia, sin tener que configurar nada de nuevo.
+E1756	1 · ELEGIR LAS UNIDADES
+E1757	UNIDAD ANTIGUA (DESDE)
+E1758	UNIDAD NUEVA (HACIA)
+E1759	La unidad nueva debe estar configurada y vacía, con ext4 o Btrfs. Puede estar en la segunda bahía o en una caja USB; tras el traslado puede ir a una bahía. Configúrala primero en
+E1760	Un disco antiguo en una caja USB se añade allí sin borrarlo (disco con datos).
+E1761	Carpetas personales
+E1762	Tareas de instantáneas
+E1763	Datos
+E1764	se mueve también
+E1765	Se copia todo lo de la unidad antigua – también carpetas no compartidas – excepto las instantáneas. Propietarios, permisos y ACL se mantienen. La unidad antigua no se modifica.
+E1766	Comprobar
+E1767	Empezar a copiar
+E1768	2 · COPIANDO
+E1769	3 · CAMBIANDO
+E1770	3 · CAMBIAR
+E1771	Los servicios están detenidos para la última copia; los recursos compartidos vuelven en un momento.
+E1772	La caja se puede usar mientras copia. Lo que cambie hasta el cambio se copia entonces.
+E1773	Todo está copiado.
+E1774	El cambio detiene brevemente recursos compartidos, apps, descargas y el servidor multimedia, copia lo que cambió desde entonces y luego apunta recursos compartidos, carpetas personales, área de apps, copia USB y tareas de instantáneas a la unidad nueva.
+E1775	Cambiar ahora
+E1776	HECHO
+E1777	Los recursos compartidos, las carpetas personales y el área de apps están ahora en la unidad nueva.
+E1778	La unidad antigua no ha cambiado. Cuando todo funcione, olvídala en
+E1779	y saca el disco, o guárdalo como copia de seguridad.
+E1780	La copia se detuvo. Continuar copia solo lo que falta.
+E1781	Seguir copiando
+E1782	¿Detener la copia?
+E1783	Lo copiado se queda en la unidad nueva; continuar más tarde copia solo el resto.
+E1784	¿Cambiar ahora a la unidad nueva?
+E1785	Recursos compartidos, apps, descargas y el servidor multimedia se detienen para la última copia y vuelven a arrancar en la unidad nueva. Los archivos abiertos en la red se cierran.
+E1786	el origen y el destino son la misma unidad
+E1787	la unidad nueva necesita ext4 o btrfs (propietarios, carpetas personales, área de apps)
+E1788	la unidad nueva no está vacía: elige una unidad vacía
+E1789	no hay suficiente espacio libre en la unidad nueva
+E1790	la copia falló: mira el registro; volver a empezar copia solo lo que falta
+E1791	la última copia antes del cambio falló: no se cambió nada
+E1792	copia todo primero
+E1793	ya hay un traslado en curso
 P398	$1 · libre en la unidad nueva: $2
 P399	unidad desconocida $1
 P400	la unidad $1 no está montada

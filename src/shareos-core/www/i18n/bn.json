@@ -1734,6 +1734,8 @@
 		"uploaded – not checked": "আপলোড করা – যাচাই করা হয়নি",
 		"from the app repository). Uploaded packages are marked “uploaded – not checked”: the box cannot compare them with the store.": "দিয়ে তৈরি)। আপলোড করা প্যাকেজ \"আপলোড করা – যাচাই করা হয়নি\" হিসেবে চিহ্নিত: বক্সটি এগুলো স্টোরের সঙ্গে মেলাতে পারে না।",
 		"Signed in": "সাইন ইন করা",
+		"Over SMB a share of the same name opens instead of this personal folder – create that share again under another name.": "SMB-তে এই ব্যক্তিগত ফোল্ডারের বদলে একই নামের একটি শেয়ার খোলে – সেই শেয়ারটি অন্য নামে আবার তৈরি করুন।",
+		"Over SMB this share hides the personal folder of the account of the same name – create it again under another name to free that address.": "SMB-তে এই শেয়ারটি একই নামের অ্যাকাউন্টের ব্যক্তিগত ফোল্ডার আড়াল করে – সেই ঠিকানা মুক্ত করতে এটি অন্য নামে আবার তৈরি করুন।",
 		"MOVE TO A NEW DRIVE": "নতুন ড্রাইভে সরান",
 		"DISK CHANGE": "ডিস্ক বদল",
 		"Copies everything from an old drive to a new one – shares, personal folders and the app area – and then switches over, so that nothing has to be set up again.": "পুরোনো ড্রাইভ থেকে সবকিছু নতুন ড্রাইভে কপি করে – শেয়ার, ব্যক্তিগত ফোল্ডার ও অ্যাপ এলাকা – তারপর সেখানে বদলে নেয়, যাতে কিছুই আবার সেট আপ করতে না হয়।",
