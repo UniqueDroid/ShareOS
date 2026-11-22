@@ -2175,3 +2175,5 @@ E1747	hochgeladen
 E1748	hochgeladen – nicht geprüft
 E1749	aus dem App-Repo). Hochgeladene Pakete sind als „hochgeladen – nicht geprüft“ markiert: Die Box kann sie nicht mit dem Store vergleichen.
 E1750	Angemeldet
+E1751	Über SMB öffnet sich statt dieses persönlichen Ordners eine Freigabe gleichen Namens – lege diese Freigabe unter einem anderen Namen neu an.
+E1752	Über SMB verdeckt diese Freigabe den persönlichen Ordner des gleichnamigen Kontos – lege sie unter einem anderen Namen neu an, um diese Adresse freizugeben.

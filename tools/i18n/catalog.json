@@ -1751,7 +1751,9 @@
 		"uploaded",
 		"uploaded – not checked",
 		"from the app repository). Uploaded packages are marked “uploaded – not checked”: the box cannot compare them with the store.",
-		"Signed in"
+		"Signed in",
+		"Over SMB a share of the same name opens instead of this personal folder – create that share again under another name.",
+		"Over SMB this share hides the personal folder of the account of the same name – create it again under another name to free that address."
 	],
 	"patterns": [
 		[

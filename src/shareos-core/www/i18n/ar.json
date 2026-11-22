@@ -1733,7 +1733,9 @@
 		"uploaded": "مرفوع",
 		"uploaded – not checked": "مرفوع – غير مُتحقَّق منه",
 		"from the app repository). Uploaded packages are marked “uploaded – not checked”: the box cannot compare them with the store.": "من مستودع التطبيقات). تُعلَّم الحزم المرفوعة بـ«مرفوع – غير مُتحقَّق منه»: لا يستطيع الجهاز مقارنتها بالمتجر.",
-		"Signed in": "تم تسجيل الدخول"
+		"Signed in": "تم تسجيل الدخول",
+		"Over SMB a share of the same name opens instead of this personal folder – create that share again under another name.": "عبر SMB تُفتح مشاركة بالاسم نفسه بدلاً من هذا المجلد الشخصي – أنشئ تلك المشاركة من جديد باسم آخر.",
+		"Over SMB this share hides the personal folder of the account of the same name – create it again under another name to free that address.": "عبر SMB تُخفي هذه المشاركة المجلد الشخصي للحساب الذي يحمل الاسم نفسه – أنشئها من جديد باسم آخر لتحرير هذا العنوان."
 	},
 	"patterns": [
 		[

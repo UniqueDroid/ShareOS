@@ -2191,3 +2191,5 @@ E1747	téléversée
 E1748	téléversée – non vérifiée
 E1749	depuis le dépôt d'apps). Les paquets téléversés sont marqués « téléversée – non vérifiée » : la box ne peut pas les comparer au store.
 E1750	Connecté
+E1751	En SMB, un partage du même nom s’ouvre à la place de ce dossier personnel – recréez ce partage sous un autre nom.
+E1752	En SMB, ce partage masque le dossier personnel du compte du même nom – recréez-le sous un autre nom pour libérer cette adresse.
