@@ -173,19 +173,25 @@ cmd_format() {
 	# MBR with one partition: readable by every computer, camera and TV
 	printf 'label: dos\n,,%s\n' $t | sfdisk -q --wipe always --wipe-partitions always /dev/$d >/dev/null \
 		|| die "partitioning $d failed"
+	# the node can exist and still go away once more: udev reads the new
+	# partition table again and recreates it – wait until it can be opened
+	# (as shareos-storage does), and give mkfs a second try
 	p=$(partn $d 1); i=0
-	while [ ! -b $p ] && [ $i -lt 20 ]; do
+	until [ -b $p ] && dd if=$p of=/dev/null bs=512 count=1 2>/dev/null; do
+		[ $i -lt 20 ] || die "partition $p did not appear"
 		[ $i = 4 ] && blockdev --rereadpt /dev/$d 2>/dev/null
 		sleep 0.5; i=$((i + 1))
 	done
-	[ -b $p ] || die "partition $p did not appear"
 	step "creating file system ($fs) on $p"
-	case "$fs" in
-		exfat) mkfs.exfat -L "$(printf %.15s "$name")" $p >/dev/null ;;
-		vfat) mkfs.fat -F 32 -n "$(printf %.11s "$name" | tr a-z A-Z)" $p >/dev/null ;;
-		ntfs) mkntfs -Q -F -q -L "$name" $p >/dev/null ;;
-		ext4) mkfs.ext4 -F -q -m 0 -L "$name" $p ;;
-	esac || die "creating the file system failed"
+	mkfs_usb() {
+		case "$fs" in
+			exfat) mkfs.exfat -L "$(printf %.15s "$name")" $p >/dev/null ;;
+			vfat) mkfs.fat -F 32 -n "$(printf %.11s "$name" | tr a-z A-Z)" $p >/dev/null ;;
+			ntfs) mkntfs -Q -F -q -L "$name" $p >/dev/null ;;
+			ext4) mkfs.ext4 -F -q -m 0 -L "$name" $p ;;
+		esac
+	}
+	mkfs_usb || { sleep 2; mkfs_usb; } || die "creating the file system failed"
 	mount_one "${p#/dev/}" || die "mounting $p failed"
 	# ext4: let every user write, like on the other file systems
 	[ "$fs" = ext4 ] && chmod 1777 "$(awk -v p=$p '$1 == p {print $2}' /proc/mounts)"

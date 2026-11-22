@@ -12,6 +12,7 @@ From the first test on a DNR-322L ([#180](https://github.com/UniqueDroid/ShareOS
 - **First installation from a partitioned USB stick:** the search now looks again for a few seconds when it finds nothing (a stick's partitions can show up after the stick itself) and logs every drive and partition it tried and why it was skipped. A failure on GitHub says that the stick was searched too.
 - **DHCP waits for the link.** The system asked for DHCP for about 9 s; on the DNR-322L the link comes up about 12 s after boot, so the box ended up on the fallback address 192.168.0.32. It now waits up to 20 s for the link first and logs how long it took.
 - *Shares* and *Users*: a share named like an account with a personal folder (possible before 0.3.0-beta.14 refused such names) takes the address `\\box\<account>` over SMB, so the personal folder cannot be reached there. Both lists now say so at the share and at the account, with what to do: create the share again under another name.
+- *Storage → Drives*: formatting a USB drive could fail right after partitioning ("creating the file system failed") – the new partition can disappear for a moment while the kernel reads the partition table again. It now waits until the partition can be opened and tries once more, as setting up internal drives already did.
 
 ## 0.3.0-beta.15
 
