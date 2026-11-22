@@ -2193,3 +2193,7 @@ E1749	do repositório de apps). Pacotes enviados são marcados como "enviado –
 E1750	Conectado
 E1751	Por SMB abre-se uma partilha com o mesmo nome em vez desta pasta pessoal – crie essa partilha de novo com outro nome.
 E1752	Por SMB esta partilha oculta a pasta pessoal da conta com o mesmo nome – crie-a de novo com outro nome para libertar esse endereço.
+E1753	Instalar a partir de uma fonte não assinada?
+E1754	Esta app vem de uma fonte da loja sem uma assinatura válida do projeto ShareOS.
+E1755	A sua soma de verificação só mostra que a transferência está completa – não quem a fez.
+E1756	assinatura do catálogo em falta ou inválida – não usado

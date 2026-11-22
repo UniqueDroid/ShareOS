@@ -2177,3 +2177,7 @@ E1749	aus dem App-Repo). Hochgeladene Pakete sind als „hochgeladen – nicht g
 E1750	Angemeldet
 E1751	Über SMB öffnet sich statt dieses persönlichen Ordners eine Freigabe gleichen Namens – lege diese Freigabe unter einem anderen Namen neu an.
 E1752	Über SMB verdeckt diese Freigabe den persönlichen Ordner des gleichnamigen Kontos – lege sie unter einem anderen Namen neu an, um diese Adresse freizugeben.
+E1753	Aus einer nicht signierten Quelle installieren?
+E1754	Diese App stammt aus einer Store-Quelle ohne gültige Signatur des ShareOS-Projekts.
+E1755	Ihre Prüfsumme zeigt nur, dass der Download vollständig ist – nicht, wer sie gemacht hat.
+E1756	Katalog-Signatur fehlt oder ist ungültig – nicht verwendet

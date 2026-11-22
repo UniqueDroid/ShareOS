@@ -2193,3 +2193,7 @@ E1749	depuis le dépôt d'apps). Les paquets téléversés sont marqués « tél
 E1750	Connecté
 E1751	En SMB, un partage du même nom s’ouvre à la place de ce dossier personnel – recréez ce partage sous un autre nom.
 E1752	En SMB, ce partage masque le dossier personnel du compte du même nom – recréez-le sous un autre nom pour libérer cette adresse.
+E1753	Installer depuis une source non signée ?
+E1754	Cette application provient d’une source du store sans signature valide du projet ShareOS.
+E1755	Sa somme de contrôle montre seulement que le téléchargement est complet – pas qui l’a créée.
+E1756	signature du catalogue absente ou invalide – non utilisé

@@ -239,14 +239,14 @@ function appInstalled() {
 	return html`${favBar(list)}${rec}<section class="sec">${secHead('apps', 'INSTALLED APPS', list.length ? `${list.length}` : '')}
 		${!list.length ? html`<div class="panel"><div class="empty">${svg(I.box)}<span>No app installed yet. The <a href="#/apps/store">store</a> has apps to install – or upload your own package (.sapp).</span></div></div>`
 		: t ? html`<div class="tw"><table class="t" style="min-width:720px"><thead><tr><th></th><th>APP</th><th>VERSION</th><th>PUBLISHER</th><th>VISIBLE TO</th><th></th></tr></thead><tbody>
-			${list.map((a) => html`<tr><td style="width:44px">${appIcon(a)}</td><td><b>${a.name}</b> ${favStar(a)}${a.verified ? '' : html` <span class="tag warn">uploaded</span>`}<div class="mut" style="font-size:12px">${txtOf(a.description)}</div></td>
+			${list.map((a) => html`<tr><td style="width:44px">${appIcon(a)}</td><td><b>${a.name}</b> ${favStar(a)}${a.verified ? '' : html` <span class="tag warn">${a.source ? 'not signed by the ShareOS project' : 'uploaded'}</span>`}<div class="mut" style="font-size:12px">${txtOf(a.description)}</div></td>
 				<td>${a.version}${upd(a) ? html` <span class="tag warn">→ ${upd(a).latest}</span>` : ''}</td><td class="mut">${a.publisher}</td><td class="mut">${appUsersTxt(a)}</td>
 				<td style="white-space:nowrap">${appActions(a, upd(a))}</td></tr>`)}</tbody></table></div>`
 		: html`<div class="grid">${list.map((a) => html`<div class="card">${favStar(a)}
 			<div class="icon">${appIcon(a)}</div>
 			<div class="info"><div class="name">${a.name} <span class="mut" style="font-size:12px">${a.version}</span></div>
 				<div class="desc">${txtOf(a.description)}</div>
-				<div class="desc" style="margin-top:6px"><span class="tag ${a.verified ? 'ok' : 'warn'}">${a.verified ? 'from the store' : 'uploaded – not checked'}</span> ${upd(a) ? html`<span class="tag warn">Update ${upd(a).latest}</span>` : ''}</div>
+				<div class="desc" style="margin-top:6px"><span class="tag ${a.verified ? 'ok' : 'warn'}">${a.verified ? 'from the store' : a.source ? 'not signed by the ShareOS project' : 'uploaded – not checked'}</span> ${upd(a) ? html`<span class="tag warn">Update ${upd(a).latest}</span>` : ''}</div>
 				${permTags(appPerms(a))}
 				<div class="ip">${a.publisher} · ${a.module ? html`<span>Module</span>` : a.type === 'system' ? html`<span>Command</span> ${sysCmds(a)}` : 'visible to ' + appUsersTxt(a)}</div>
 				<div class="acts" style="margin-top:10px">${appActions(a, upd(a))}</div></div></div>`)}</div>`}
@@ -351,7 +351,7 @@ function appStore() {
 	for (const a of list) {
 		const v = a.versions[0];
 		rows.push(html`<tr data-cat="${k}" data-q="${(a.name + ' ' + a.id + ' ' + txtOf(a.description) + ' ' + (a.publisher || '')).toLowerCase()}"><td style="width:44px">${appIcon(a)}</td>
-			<td><b>${a.name}</b>${a.category ? html` <span class="tag">${APP_CAT[a.category] || a.category}</span>` : ''}<div class="mut" style="font-size:12px;max-width:420px">${txtOf(a.description)}</div>${permTags(appPerms({ ...v, type: a.type, module: a.module }))}</td>
+			<td><b>${a.name}</b>${a.category ? html` <span class="tag">${APP_CAT[a.category] || a.category}</span>` : ''}${a.signed === false ? html` <span class="tag warn">not signed by the ShareOS project</span>` : ''}<div class="mut" style="font-size:12px;max-width:420px">${txtOf(a.description)}</div>${permTags(appPerms({ ...v, type: a.type, module: a.module }))}</td>
 			<td><b>${v.version}</b>${v.prerelease ? html` <span class="tag">BETA</span>` : ''}</td>
 			<td class="mut">${a.publisher}</td><td class="mut">${fmtDate(v.date)}</td><td class="mut">${fmtBytes(v.size)}</td>
 			<td style="white-space:nowrap">${a.installed && !a.update_available ? html`<span class="tag ok">installed</span>`
@@ -466,6 +466,10 @@ Object.assign(ACTIONS, {
 		const need = (v?.requires || c?.requires || []).filter((r) => !have.has(r));
 		// one text node per sentence, so each is translated
 		const parts = [...perms.map((p) => PERM_TXT[p] || p), ...(need.length ? [`Also installed: ${need.join(', ')}.`] : [])];
+		// a source without a valid signature of the project: the checksum only shows
+		// that the download is complete, not who made the package
+		if (c?.signed === false && !await confirmDlg('Install from an unsigned source?',
+			raw(html`<span>This app comes from a store source without a valid signature of the ShareOS project.</span> <span>Its checksum only shows that the download is complete – not who made it.</span>`.s), 'Install', true)) return;
 		if (parts.length && !await confirmDlg(`${c.name}: permissions`, raw(html`${parts.map((t) => html`<span>${t}</span> `)}`.s), 'Allow & install')) return;
 		try {
 			await rpc('shareos.apps', 'install', { id: el.dataset.id, version: el.dataset.v });

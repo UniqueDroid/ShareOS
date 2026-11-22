@@ -1735,7 +1735,11 @@
 		"from the app repository). Uploaded packages are marked “uploaded – not checked”: the box cannot compare them with the store.": "দিয়ে তৈরি)। আপলোড করা প্যাকেজ \"আপলোড করা – যাচাই করা হয়নি\" হিসেবে চিহ্নিত: বক্সটি এগুলো স্টোরের সঙ্গে মেলাতে পারে না।",
 		"Signed in": "সাইন ইন করা",
 		"Over SMB a share of the same name opens instead of this personal folder – create that share again under another name.": "SMB-তে এই ব্যক্তিগত ফোল্ডারের বদলে একই নামের একটি শেয়ার খোলে – সেই শেয়ারটি অন্য নামে আবার তৈরি করুন।",
-		"Over SMB this share hides the personal folder of the account of the same name – create it again under another name to free that address.": "SMB-তে এই শেয়ারটি একই নামের অ্যাকাউন্টের ব্যক্তিগত ফোল্ডার আড়াল করে – সেই ঠিকানা মুক্ত করতে এটি অন্য নামে আবার তৈরি করুন।"
+		"Over SMB this share hides the personal folder of the account of the same name – create it again under another name to free that address.": "SMB-তে এই শেয়ারটি একই নামের অ্যাকাউন্টের ব্যক্তিগত ফোল্ডার আড়াল করে – সেই ঠিকানা মুক্ত করতে এটি অন্য নামে আবার তৈরি করুন।",
+		"Install from an unsigned source?": "স্বাক্ষরবিহীন উৎস থেকে ইনস্টল করবেন?",
+		"This app comes from a store source without a valid signature of the ShareOS project.": "এই অ্যাপটি এমন একটি স্টোর উৎস থেকে এসেছে যাতে ShareOS প্রকল্পের কোনো বৈধ স্বাক্ষর নেই।",
+		"Its checksum only shows that the download is complete – not who made it.": "এর চেকসাম শুধু দেখায় যে ডাউনলোড সম্পূর্ণ – কে এটি তৈরি করেছে তা নয়।",
+		"catalog signature missing or invalid – not used": "ক্যাটালগের স্বাক্ষর নেই বা অবৈধ – ব্যবহার করা হয়নি"
 	},
 	"patterns": [
 		[
