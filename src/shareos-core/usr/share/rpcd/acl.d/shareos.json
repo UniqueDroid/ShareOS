@@ -126,6 +126,10 @@
 				],
 				"shareos.tremote": [
 					"get"
+				],
+				"shareos.migrate": [
+					"plan",
+					"state"
 				]
 			}
 		},
@@ -333,6 +337,12 @@
 				"shareos.tremote": [
 					"set",
 					"revoke"
+				],
+				"shareos.migrate": [
+					"copy",
+					"cancel",
+					"switch",
+					"clear"
 				]
 			}
 		}

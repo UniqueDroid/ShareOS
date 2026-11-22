@@ -16,6 +16,7 @@ snapshots.js
 devices.js
 me.js
 storage.js
+migrate.js
 smart.js
 system-general.js
 system-network.js

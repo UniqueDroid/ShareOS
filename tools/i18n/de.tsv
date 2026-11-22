@@ -2175,3 +2175,47 @@ E1747	hochgeladen
 E1748	hochgeladen – nicht geprüft
 E1749	aus dem App-Repo). Hochgeladene Pakete sind als „hochgeladen – nicht geprüft“ markiert: Die Box kann sie nicht mit dem Store vergleichen.
 E1750	Angemeldet
+E1751	UMZUG AUF EIN NEUES LAUFWERK
+E1752	PLATTENWECHSEL
+E1753	Kopiert alles von einem alten auf ein neues Laufwerk – Freigaben, persönliche Ordner und den App-Bereich – und schaltet dann um, sodass nichts neu eingerichtet werden muss.
+E1754	1 · LAUFWERKE WÄHLEN
+E1755	ALTES LAUFWERK (VON)
+E1756	NEUES LAUFWERK (NACH)
+E1757	Das neue Laufwerk muss eingerichtet und leer sein, mit ext4 oder Btrfs. Es kann im zweiten Schacht oder in einem USB-Gehäuse stecken – nach dem Umzug kann es in einen Schacht. Zuerst einrichten unter
+E1758	Eine alte Platte im USB-Gehäuse wird dort ohne Löschen hinzugefügt (Platte mit Daten).
+E1759	Persönliche Ordner
+E1760	Snapshot-Aufträge
+E1761	Daten
+E1762	zieht mit um
+E1763	Alles auf dem alten Laufwerk wird kopiert – auch Ordner, die nicht freigegeben sind – außer den Snapshots. Besitzer, Rechte und ACLs bleiben. Das alte Laufwerk wird nicht verändert.
+E1764	Prüfen
+E1765	Kopieren starten
+E1766	2 · KOPIEREN
+E1767	3 · UMSCHALTEN LÄUFT
+E1768	3 · UMSCHALTEN
+E1769	Die Dienste sind für den letzten Abgleich angehalten – die Freigaben sind gleich wieder da.
+E1770	Die Box ist während des Kopierens benutzbar. Was sich bis zum Umschalten ändert, wird dann übernommen.
+E1771	Alles ist kopiert.
+E1772	Beim Umschalten halten Freigaben, Apps, Downloads und der Medienserver kurz an; was sich seitdem geändert hat, wird kopiert, dann zeigen Freigaben, persönliche Ordner, App-Bereich, USB-Kopie und Snapshot-Aufträge auf das neue Laufwerk.
+E1773	Jetzt umschalten
+E1774	FERTIG
+E1775	Freigaben, persönliche Ordner und der App-Bereich liegen jetzt auf dem neuen Laufwerk.
+E1776	Das alte Laufwerk ist unverändert. Wenn alles läuft, unter
+E1777	vergessen und die Platte herausnehmen – oder als Sicherung behalten.
+E1778	Das Kopieren wurde angehalten. Weitermachen kopiert nur, was noch fehlt.
+E1779	Weiter kopieren
+E1780	Kopieren anhalten?
+E1781	Was kopiert ist, bleibt auf dem neuen Laufwerk; später weitermachen kopiert nur den Rest.
+E1782	Jetzt auf das neue Laufwerk umschalten?
+E1783	Freigaben, Apps, Downloads und der Medienserver halten für den letzten Abgleich an und starten auf dem neuen Laufwerk neu. Im Netzwerk geöffnete Dateien werden geschlossen.
+E1784	Quelle und Ziel sind dasselbe Laufwerk
+E1785	das neue Laufwerk braucht ext4 oder Btrfs (Besitzer, persönliche Ordner, App-Bereich)
+E1786	das neue Laufwerk ist nicht leer – wähle ein leeres Laufwerk
+E1787	nicht genug freier Platz auf dem neuen Laufwerk
+E1788	Kopieren fehlgeschlagen – siehe Protokoll; ein neuer Start kopiert nur, was fehlt
+E1789	der letzte Abgleich vor dem Umschalten ist fehlgeschlagen – nichts wurde umgestellt
+E1790	zuerst alles kopieren
+E1791	ein Umzug läuft bereits
+P398	$1 · frei auf dem neuen Laufwerk: $2
+P399	unbekanntes Laufwerk $1
+P400	Laufwerk $1 ist nicht eingehängt

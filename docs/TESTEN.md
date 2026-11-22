@@ -530,6 +530,16 @@ Braucht ein Tailscale-Konto (kostenlos), ein Handy oder einen Rechner mit Tailsc
 5. Konto ohne persönlichen Ordner: Teilen meldet „no personal folder“; das Geteilte wird verworfen und kommt bei der nächsten Anmeldung nicht wieder.
 6. Dateidialog einer App für ein Konto **ohne** *Dateien* (z. B. Webpad → *Öffnen*): Die Ordnerauswahl zeigt zuerst *App-Daten*, dann *Mein Ordner* und die Freigaben des Benutzers; Freigaben nur zum Lesen sind markiert und fehlen beim Speichern. Die App legt ihre eigenen Dateien weiter in *App-Daten* ab.
 
+## 14zy. Plattenwechsel (0.3.0-beta.16)
+
+Braucht eine zweite Platte (Schacht oder USB-Gehäuse), die gelöscht werden darf. **Nicht auf einer Box mit Daten, die du ohne Sicherung nicht verlieren darfst.**
+
+1. *Storage → Drives*: Die zweite Platte als einzelnes Laufwerk mit ext4 einrichten (z. B. `neu`). *Storage → DISK CHANGE*: altes Laufwerk = das mit deinen Daten, neues Laufwerk = `neu`, *Check*: Freigaben, persönliche Ordner, App-Bereich und die Datenmenge werden aufgelistet. Zweimal dasselbe Laufwerk oder ein Laufwerk mit Daten zeigt den Grund, *Start copying* bleibt aus.
+2. *Start copying*: Der Balken läuft; die Freigaben bleiben benutzbar. Zwischendurch *Cancel*, dann *Go on copying*: Es geht weiter und kopiert nur den Rest.
+3. Wenn alles kopiert ist: Eine Datei auf einer Freigabe ändern, dann *Switch now*. Die Freigaben sind kurz weg und kommen wieder; danach zeigt *Shares* bei jeder Freigabe das neue Laufwerk, *Users* das neue Laufwerk der persönlichen Ordner, *Storage* den App-Bereich auf `neu`. Die geänderte Datei ist da, Apps starten, Transmission und der Medienserver laufen.
+4. Über SMB: Eine Freigabe und einen persönlichen Ordner öffnen, ein paar Dateien und ihre Rechte vergleichen (ein Benutzer mit Nur-Lesen darf weiter nicht schreiben). Das alte Laufwerk ist unverändert; *Close* beendet den Assistenten.
+5. Optional: Herunterfahren, die neue Platte in Schacht 1 (die alte heraus), starten: Alles kommt von der neuen Platte.
+
 ## 14zx. Angemeldeter Name, hochgeladene Apps (0.3.0-beta.15, #191)
 
 1. Als Administrator anmelden: Links neben der Uhr zeigt ein Feld mit Personensymbol den Kontonamen; der Tooltip sagt „Angemeldet“. Fenster schmal ziehen: Das Feld rutscht mit der Uhr nach links.

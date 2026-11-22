@@ -1733,7 +1733,48 @@
 		"uploaded": "subida",
 		"uploaded – not checked": "subida – sin verificar",
 		"from the app repository). Uploaded packages are marked “uploaded – not checked”: the box cannot compare them with the store.": "del repositorio de apps). Los paquetes subidos se marcan como «subida – sin verificar»: el equipo no puede compararlos con la tienda.",
-		"Signed in": "Sesión iniciada"
+		"Signed in": "Sesión iniciada",
+		"MOVE TO A NEW DRIVE": "MOVER A UNA UNIDAD NUEVA",
+		"DISK CHANGE": "CAMBIO DE DISCO",
+		"Copies everything from an old drive to a new one – shares, personal folders and the app area – and then switches over, so that nothing has to be set up again.": "Copia todo de una unidad antigua a una nueva – recursos compartidos, carpetas personales y el área de apps – y luego cambia, sin tener que configurar nada de nuevo.",
+		"1 · CHOOSE THE DRIVES": "1 · ELEGIR LAS UNIDADES",
+		"OLD DRIVE (FROM)": "UNIDAD ANTIGUA (DESDE)",
+		"NEW DRIVE (TO)": "UNIDAD NUEVA (HACIA)",
+		"The new drive must be set up and empty, with ext4 or Btrfs. It can be in the second bay or in a USB case – after the move it can go into a bay. Set it up first under": "La unidad nueva debe estar configurada y vacía, con ext4 o Btrfs. Puede estar en la segunda bahía o en una caja USB; tras el traslado puede ir a una bahía. Configúrala primero en",
+		"An old disk in a USB case is added there without erasing it (a disk with data).": "Un disco antiguo en una caja USB se añade allí sin borrarlo (disco con datos).",
+		"Personal folders": "Carpetas personales",
+		"Snapshot jobs": "Tareas de instantáneas",
+		"Data": "Datos",
+		"moves along": "se mueve también",
+		"Everything on the old drive is copied – also folders that are not shared – except the snapshots. Owners, permissions and ACLs stay. The old drive is not changed.": "Se copia todo lo de la unidad antigua – también carpetas no compartidas – excepto las instantáneas. Propietarios, permisos y ACL se mantienen. La unidad antigua no se modifica.",
+		"Check": "Comprobar",
+		"Start copying": "Empezar a copiar",
+		"2 · COPYING": "2 · COPIANDO",
+		"3 · SWITCHING": "3 · CAMBIANDO",
+		"3 · SWITCH": "3 · CAMBIAR",
+		"Services are stopped for the last copy – shares are back in a moment.": "Los servicios están detenidos para la última copia; los recursos compartidos vuelven en un momento.",
+		"The box can be used while it copies. What changes until the switch is copied then.": "La caja se puede usar mientras copia. Lo que cambie hasta el cambio se copia entonces.",
+		"Everything is copied.": "Todo está copiado.",
+		"Switching stops shares, apps, downloads and the media server for a short time, copies what changed since and then points shares, personal folders, the app area, the USB copy and snapshot jobs to the new drive.": "El cambio detiene brevemente recursos compartidos, apps, descargas y el servidor multimedia, copia lo que cambió desde entonces y luego apunta recursos compartidos, carpetas personales, área de apps, copia USB y tareas de instantáneas a la unidad nueva.",
+		"Switch now": "Cambiar ahora",
+		"DONE": "HECHO",
+		"Shares, personal folders and the app area are now on the new drive.": "Los recursos compartidos, las carpetas personales y el área de apps están ahora en la unidad nueva.",
+		"The old drive is unchanged. When everything works, forget it under": "La unidad antigua no ha cambiado. Cuando todo funcione, olvídala en",
+		"and take the disk out – or keep it as a backup.": "y saca el disco, o guárdalo como copia de seguridad.",
+		"The copy was stopped. Going on copies only what is missing.": "La copia se detuvo. Continuar copia solo lo que falta.",
+		"Go on copying": "Seguir copiando",
+		"Stop copying?": "¿Detener la copia?",
+		"What is copied stays on the new drive; going on later copies only the rest.": "Lo copiado se queda en la unidad nueva; continuar más tarde copia solo el resto.",
+		"Switch to the new drive now?": "¿Cambiar ahora a la unidad nueva?",
+		"Shares, apps, downloads and the media server stop for the last copy and start again on the new drive. Open files on the network are closed.": "Recursos compartidos, apps, descargas y el servidor multimedia se detienen para la última copia y vuelven a arrancar en la unidad nueva. Los archivos abiertos en la red se cierran.",
+		"source and target are the same drive": "el origen y el destino son la misma unidad",
+		"the new drive needs ext4 or btrfs (owners, personal folders, app area)": "la unidad nueva necesita ext4 o btrfs (propietarios, carpetas personales, área de apps)",
+		"the new drive is not empty – choose an empty drive": "la unidad nueva no está vacía: elige una unidad vacía",
+		"not enough free space on the new drive": "no hay suficiente espacio libre en la unidad nueva",
+		"copy failed – see the log; starting again copies only what is missing": "la copia falló: mira el registro; volver a empezar copia solo lo que falta",
+		"the last copy before switching failed – nothing was switched": "la última copia antes del cambio falló: no se cambió nada",
+		"copy everything first": "copia todo primero",
+		"a move is already running": "ya hay un traslado en curso"
 	},
 	"patterns": [
 		[
@@ -2121,6 +2162,10 @@
 			"entrada personal de $1 · token $2"
 		],
 		[
+			"^(\\S+ \\S+) · free on the new drive: (\\S+ \\S+)$",
+			"$1 · libre en la unidad nueva: $2"
+		],
+		[
 			"^(\\S+): no longer starts at boot$",
 			"$1: ya no arranca al encender"
 		],
@@ -2203,6 +2248,10 @@
 		[
 			"^failed (\\S+): ubiupdatevol$",
 			"falló ($1): no se pudo escribir el sistema (ubiupdatevol)"
+		],
+		[
+			"^drive (\\S+) is not mounted$",
+			"la unidad $1 no está montada"
 		],
 		[
 			"^shared inbox · token (.+)$",
@@ -2479,6 +2528,10 @@
 		[
 			"^(\\S+) downloading …$",
 			"$1 descargando …"
+		],
+		[
+			"^unknown drive (\\S+)$",
+			"unidad desconocida $1"
 		],
 		[
 			"^User “(.+)” saved\\.$",

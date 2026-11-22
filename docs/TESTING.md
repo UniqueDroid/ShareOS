@@ -525,6 +525,16 @@ Needs a Tailscale account (free), a phone or computer with Tailscale, the file `
 5. An account without a personal folder: sharing shows "no personal folder"; the shared item is dropped and does not come back at the next login.
 6. File dialog of an app for an account **without** *Files* (e.g. Webpad → *Open*): the list of folders shows *App data* first, then *My folder* and the user's shares; read-only shares are marked and are missing when saving. The app still keeps its own files in *App data*.
 
+## 14zy. Disk change (0.3.0-beta.16)
+
+Needs a second disk (bay or USB case) that may be erased. **Not on a box with data you cannot lose without a backup.**
+
+1. *Storage → Drives*: set up the second disk as a single drive with ext4 (e.g. `neu`). *Storage → DISK CHANGE*: old drive = the drive with your data, new drive = `neu`, *Check*: shares, personal folders, app area and the amount of data are listed. Choosing the same drive twice, or a drive with data, shows the reason and *Start copying* stays off.
+2. *Start copying*: the bar moves; shares stay usable. *Cancel* in between, then *Go on copying*: it goes on and copies only the rest.
+3. When everything is copied: change a file on a share, then *Switch now*. Shares are gone for a moment and come back; afterwards *Shares* shows the new drive for every share, *Users* the new drive for personal folders, *Storage* the app area on `neu`. The changed file is there, apps start, Transmission and the media server work.
+4. Over SMB: open a share and a personal folder, compare a few files and their rights (a read-only user still cannot write). The old drive is unchanged; *Close* ends the wizard.
+5. Optional: shut down, put the new disk into bay 1 (the old one out), start: everything comes up from the new disk.
+
 ## 14zx. Signed-in name, uploaded apps (0.3.0-beta.15, #191)
 
 1. Sign in as an administrator: left of the clock, a field with a person icon shows the account name; hovering it says "Signed in". Make the window narrow: the field moves left with the clock.

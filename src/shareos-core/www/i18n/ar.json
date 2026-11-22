@@ -1733,7 +1733,48 @@
 		"uploaded": "مرفوع",
 		"uploaded – not checked": "مرفوع – غير مُتحقَّق منه",
 		"from the app repository). Uploaded packages are marked “uploaded – not checked”: the box cannot compare them with the store.": "من مستودع التطبيقات). تُعلَّم الحزم المرفوعة بـ«مرفوع – غير مُتحقَّق منه»: لا يستطيع الجهاز مقارنتها بالمتجر.",
-		"Signed in": "تم تسجيل الدخول"
+		"Signed in": "تم تسجيل الدخول",
+		"MOVE TO A NEW DRIVE": "النقل إلى محرك جديد",
+		"DISK CHANGE": "تبديل القرص",
+		"Copies everything from an old drive to a new one – shares, personal folders and the app area – and then switches over, so that nothing has to be set up again.": "ينسخ كل شيء من محرك قديم إلى محرك جديد – المشاركات والمجلدات الشخصية ومنطقة التطبيقات – ثم يبدّل إليه، فلا حاجة لإعداد أي شيء من جديد.",
+		"1 · CHOOSE THE DRIVES": "1 · اختيار المحركات",
+		"OLD DRIVE (FROM)": "المحرك القديم (من)",
+		"NEW DRIVE (TO)": "المحرك الجديد (إلى)",
+		"The new drive must be set up and empty, with ext4 or Btrfs. It can be in the second bay or in a USB case – after the move it can go into a bay. Set it up first under": "يجب أن يكون المحرك الجديد مُعدًّا وفارغًا، بنظام ext4 أو Btrfs. يمكن أن يكون في الحجرة الثانية أو في علبة USB – وبعد النقل يمكن وضعه في حجرة. أعدّه أولاً في",
+		"An old disk in a USB case is added there without erasing it (a disk with data).": "يُضاف هناك القرص القديم في علبة USB دون مسحه (قرص يحتوي على بيانات).",
+		"Personal folders": "المجلدات الشخصية",
+		"Snapshot jobs": "مهام اللقطات",
+		"Data": "البيانات",
+		"moves along": "يُنقل أيضًا",
+		"Everything on the old drive is copied – also folders that are not shared – except the snapshots. Owners, permissions and ACLs stay. The old drive is not changed.": "يُنسخ كل ما على المحرك القديم – حتى المجلدات غير المشاركة – عدا اللقطات. يبقى المالكون والأذونات وقوائم ACL. لا يتغير المحرك القديم.",
+		"Check": "تحقق",
+		"Start copying": "بدء النسخ",
+		"2 · COPYING": "2 · النسخ",
+		"3 · SWITCHING": "3 · جارٍ التبديل",
+		"3 · SWITCH": "3 · التبديل",
+		"Services are stopped for the last copy – shares are back in a moment.": "الخدمات متوقفة للنسخة الأخيرة – ستعود المشاركات بعد لحظة.",
+		"The box can be used while it copies. What changes until the switch is copied then.": "يمكن استخدام الجهاز أثناء النسخ. ما يتغير حتى التبديل يُنسخ حينها.",
+		"Everything is copied.": "تم نسخ كل شيء.",
+		"Switching stops shares, apps, downloads and the media server for a short time, copies what changed since and then points shares, personal folders, the app area, the USB copy and snapshot jobs to the new drive.": "يوقف التبديل المشاركات والتطبيقات والتنزيلات وخادم الوسائط لفترة قصيرة، وينسخ ما تغيّر منذ ذلك الحين، ثم يوجّه المشاركات والمجلدات الشخصية ومنطقة التطبيقات ونسخ USB ومهام اللقطات إلى المحرك الجديد.",
+		"Switch now": "بدّل الآن",
+		"DONE": "تم",
+		"Shares, personal folders and the app area are now on the new drive.": "أصبحت المشاركات والمجلدات الشخصية ومنطقة التطبيقات الآن على المحرك الجديد.",
+		"The old drive is unchanged. When everything works, forget it under": "المحرك القديم لم يتغير. عندما يعمل كل شيء، انسَه في",
+		"and take the disk out – or keep it as a backup.": "وأخرج القرص – أو احتفظ به نسخةً احتياطية.",
+		"The copy was stopped. Going on copies only what is missing.": "توقف النسخ. المتابعة تنسخ ما ينقص فقط.",
+		"Go on copying": "متابعة النسخ",
+		"Stop copying?": "إيقاف النسخ؟",
+		"What is copied stays on the new drive; going on later copies only the rest.": "ما نُسخ يبقى على المحرك الجديد؛ المتابعة لاحقًا تنسخ الباقي فقط.",
+		"Switch to the new drive now?": "التبديل إلى المحرك الجديد الآن؟",
+		"Shares, apps, downloads and the media server stop for the last copy and start again on the new drive. Open files on the network are closed.": "تتوقف المشاركات والتطبيقات والتنزيلات وخادم الوسائط للنسخة الأخيرة ثم تعمل من جديد على المحرك الجديد. تُغلق الملفات المفتوحة عبر الشبكة.",
+		"source and target are the same drive": "المصدر والهدف هما المحرك نفسه",
+		"the new drive needs ext4 or btrfs (owners, personal folders, app area)": "يحتاج المحرك الجديد إلى ext4 أو btrfs (المالكون، المجلدات الشخصية، منطقة التطبيقات)",
+		"the new drive is not empty – choose an empty drive": "المحرك الجديد ليس فارغًا – اختر محركًا فارغًا",
+		"not enough free space on the new drive": "لا توجد مساحة حرة كافية على المحرك الجديد",
+		"copy failed – see the log; starting again copies only what is missing": "فشل النسخ – راجع السجل؛ البدء من جديد ينسخ ما ينقص فقط",
+		"the last copy before switching failed – nothing was switched": "فشلت النسخة الأخيرة قبل التبديل – لم يُبدَّل شيء",
+		"copy everything first": "انسخ كل شيء أولاً",
+		"a move is already running": "هناك نقل قيد التشغيل بالفعل"
 	},
 	"patterns": [
 		[
@@ -2121,6 +2162,10 @@
 			"وارد شخصي لـ $1 · رمز $2"
 		],
 		[
+			"^(\\S+ \\S+) · free on the new drive: (\\S+ \\S+)$",
+			"$1 · المساحة الحرة على المحرك الجديد: $2"
+		],
+		[
 			"^(\\S+): no longer starts at boot$",
 			"$1: لم يعد يعمل عند التشغيل"
 		],
@@ -2203,6 +2248,10 @@
 		[
 			"^failed (\\S+): ubiupdatevol$",
 			"فشل ($1): تعذّرت كتابة النظام (ubiupdatevol)"
+		],
+		[
+			"^drive (\\S+) is not mounted$",
+			"المحرك $1 غير موصول"
 		],
 		[
 			"^shared inbox · token (.+)$",
@@ -2479,6 +2528,10 @@
 		[
 			"^(\\S+) downloading …$",
 			"جارٍ تنزيل $1 …"
+		],
+		[
+			"^unknown drive (\\S+)$",
+			"محرك غير معروف $1"
 		],
 		[
 			"^User “(.+)” saved\\.$",

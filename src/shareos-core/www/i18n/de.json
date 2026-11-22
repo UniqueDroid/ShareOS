@@ -1733,7 +1733,48 @@
 		"uploaded": "hochgeladen",
 		"uploaded – not checked": "hochgeladen – nicht geprüft",
 		"from the app repository). Uploaded packages are marked “uploaded – not checked”: the box cannot compare them with the store.": "aus dem App-Repo). Hochgeladene Pakete sind als „hochgeladen – nicht geprüft“ markiert: Die Box kann sie nicht mit dem Store vergleichen.",
-		"Signed in": "Angemeldet"
+		"Signed in": "Angemeldet",
+		"MOVE TO A NEW DRIVE": "UMZUG AUF EIN NEUES LAUFWERK",
+		"DISK CHANGE": "PLATTENWECHSEL",
+		"Copies everything from an old drive to a new one – shares, personal folders and the app area – and then switches over, so that nothing has to be set up again.": "Kopiert alles von einem alten auf ein neues Laufwerk – Freigaben, persönliche Ordner und den App-Bereich – und schaltet dann um, sodass nichts neu eingerichtet werden muss.",
+		"1 · CHOOSE THE DRIVES": "1 · LAUFWERKE WÄHLEN",
+		"OLD DRIVE (FROM)": "ALTES LAUFWERK (VON)",
+		"NEW DRIVE (TO)": "NEUES LAUFWERK (NACH)",
+		"The new drive must be set up and empty, with ext4 or Btrfs. It can be in the second bay or in a USB case – after the move it can go into a bay. Set it up first under": "Das neue Laufwerk muss eingerichtet und leer sein, mit ext4 oder Btrfs. Es kann im zweiten Schacht oder in einem USB-Gehäuse stecken – nach dem Umzug kann es in einen Schacht. Zuerst einrichten unter",
+		"An old disk in a USB case is added there without erasing it (a disk with data).": "Eine alte Platte im USB-Gehäuse wird dort ohne Löschen hinzugefügt (Platte mit Daten).",
+		"Personal folders": "Persönliche Ordner",
+		"Snapshot jobs": "Snapshot-Aufträge",
+		"Data": "Daten",
+		"moves along": "zieht mit um",
+		"Everything on the old drive is copied – also folders that are not shared – except the snapshots. Owners, permissions and ACLs stay. The old drive is not changed.": "Alles auf dem alten Laufwerk wird kopiert – auch Ordner, die nicht freigegeben sind – außer den Snapshots. Besitzer, Rechte und ACLs bleiben. Das alte Laufwerk wird nicht verändert.",
+		"Check": "Prüfen",
+		"Start copying": "Kopieren starten",
+		"2 · COPYING": "2 · KOPIEREN",
+		"3 · SWITCHING": "3 · UMSCHALTEN LÄUFT",
+		"3 · SWITCH": "3 · UMSCHALTEN",
+		"Services are stopped for the last copy – shares are back in a moment.": "Die Dienste sind für den letzten Abgleich angehalten – die Freigaben sind gleich wieder da.",
+		"The box can be used while it copies. What changes until the switch is copied then.": "Die Box ist während des Kopierens benutzbar. Was sich bis zum Umschalten ändert, wird dann übernommen.",
+		"Everything is copied.": "Alles ist kopiert.",
+		"Switching stops shares, apps, downloads and the media server for a short time, copies what changed since and then points shares, personal folders, the app area, the USB copy and snapshot jobs to the new drive.": "Beim Umschalten halten Freigaben, Apps, Downloads und der Medienserver kurz an; was sich seitdem geändert hat, wird kopiert, dann zeigen Freigaben, persönliche Ordner, App-Bereich, USB-Kopie und Snapshot-Aufträge auf das neue Laufwerk.",
+		"Switch now": "Jetzt umschalten",
+		"DONE": "FERTIG",
+		"Shares, personal folders and the app area are now on the new drive.": "Freigaben, persönliche Ordner und der App-Bereich liegen jetzt auf dem neuen Laufwerk.",
+		"The old drive is unchanged. When everything works, forget it under": "Das alte Laufwerk ist unverändert. Wenn alles läuft, unter",
+		"and take the disk out – or keep it as a backup.": "vergessen und die Platte herausnehmen – oder als Sicherung behalten.",
+		"The copy was stopped. Going on copies only what is missing.": "Das Kopieren wurde angehalten. Weitermachen kopiert nur, was noch fehlt.",
+		"Go on copying": "Weiter kopieren",
+		"Stop copying?": "Kopieren anhalten?",
+		"What is copied stays on the new drive; going on later copies only the rest.": "Was kopiert ist, bleibt auf dem neuen Laufwerk; später weitermachen kopiert nur den Rest.",
+		"Switch to the new drive now?": "Jetzt auf das neue Laufwerk umschalten?",
+		"Shares, apps, downloads and the media server stop for the last copy and start again on the new drive. Open files on the network are closed.": "Freigaben, Apps, Downloads und der Medienserver halten für den letzten Abgleich an und starten auf dem neuen Laufwerk neu. Im Netzwerk geöffnete Dateien werden geschlossen.",
+		"source and target are the same drive": "Quelle und Ziel sind dasselbe Laufwerk",
+		"the new drive needs ext4 or btrfs (owners, personal folders, app area)": "das neue Laufwerk braucht ext4 oder Btrfs (Besitzer, persönliche Ordner, App-Bereich)",
+		"the new drive is not empty – choose an empty drive": "das neue Laufwerk ist nicht leer – wähle ein leeres Laufwerk",
+		"not enough free space on the new drive": "nicht genug freier Platz auf dem neuen Laufwerk",
+		"copy failed – see the log; starting again copies only what is missing": "Kopieren fehlgeschlagen – siehe Protokoll; ein neuer Start kopiert nur, was fehlt",
+		"the last copy before switching failed – nothing was switched": "der letzte Abgleich vor dem Umschalten ist fehlgeschlagen – nichts wurde umgestellt",
+		"copy everything first": "zuerst alles kopieren",
+		"a move is already running": "ein Umzug läuft bereits"
 	},
 	"patterns": [
 		[
@@ -2121,6 +2162,10 @@
 			"persönlicher Eingang von $1 · Token $2"
 		],
 		[
+			"^(\\S+ \\S+) · free on the new drive: (\\S+ \\S+)$",
+			"$1 · frei auf dem neuen Laufwerk: $2"
+		],
+		[
 			"^(\\S+): no longer starts at boot$",
 			"$1: startet nicht mehr beim Einschalten"
 		],
@@ -2203,6 +2248,10 @@
 		[
 			"^failed (\\S+): ubiupdatevol$",
 			"fehlgeschlagen ($1): das System konnte nicht geschrieben werden (ubiupdatevol)"
+		],
+		[
+			"^drive (\\S+) is not mounted$",
+			"Laufwerk $1 ist nicht eingehängt"
 		],
 		[
 			"^shared inbox · token (.+)$",
@@ -2479,6 +2528,10 @@
 		[
 			"^(\\S+) downloading …$",
 			"$1 wird geladen …"
+		],
+		[
+			"^unknown drive (\\S+)$",
+			"unbekanntes Laufwerk $1"
 		],
 		[
 			"^User “(.+)” saved\\.$",

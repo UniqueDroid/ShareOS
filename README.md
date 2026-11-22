@@ -75,6 +75,7 @@ Version in brackets = first release with the feature.
 - Share rights are also set as POSIX ACLs on the share folders (ext4, Btrfs), so every program of a user is held to them, not only SMB (0.2.0-beta.6)
 - **Snapshots:** dated states of shares, personal folders or whole drives on another drive (hourly to weekly, hard links like rsnapshot, keep the last N plus days/weeks/months), restore with the file browser (0.2.0-beta.6)
 - SMART values and health, disk standby, RAID status with sync progress, repair a mirror with a new disk (beta.9), mount/unmount/remove volumes
+- **Disk change:** move everything from an old drive to a new one – shares, personal folders, app area – with progress, cancel and resume, then switch over in one step; the new disk can be in the second bay or a USB case (0.3.0-beta.16)
 - Disk health page: rating with reasons, SSD life left, all SMART attributes, short/long self-tests by hand or by schedule (0.2.0-beta.12)
 - **USB sticks and disks:** mounted at `/mnt/usb-<name>` when plugged in (FAT32, exFAT, NTFS, ext4, Btrfs), **Safely remove**, **Format** with exFAT, FAT32, NTFS or ext4 (beta.7)
 

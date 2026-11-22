@@ -124,7 +124,7 @@ const VIEWS = {
 		const sub = S.route.sub;
 		return html`
 		<nav class="subtabs" aria-label="Storage">${STO_SUBS.map(([id, label]) => html`<a class="st${sub === id ? ' on' : ''}" href="#/storage/${id}">${label}</a>`)}</nav>
-		${sub === 'snapshots' ? snapshotsView() : sub === 'health' ? healthView() : storageView()}`;
+		${sub === 'snapshots' ? snapshotsView() : sub === 'health' ? healthView() : sub === 'move' ? migrateView() : storageView()}`;
 	},
 
 	shares() {

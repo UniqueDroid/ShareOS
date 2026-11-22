@@ -316,6 +316,7 @@ async function loadStorage() {
 Object.assign(VIEWS_AFTER, {
 	storage() {
 		if (S.route.sub === 'snapshots') { snapAfter(); return; }
+		if (S.route.sub === 'move') { migrateAfter(); return; }
 		if (!S.stActive) loadStorage();
 		$('#smart-sched')?.addEventListener('change', async (e) => {
 			try { await rpc('shareos.storage', 'smart_schedule', { mode: e.target.value }); S.storage.smart_schedule = e.target.value; toast('Schedule saved.'); }

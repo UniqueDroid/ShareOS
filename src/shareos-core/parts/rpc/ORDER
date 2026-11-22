@@ -14,6 +14,7 @@ paperless.uc
 cloud.uc
 devices.uc
 snapshots.uc
+migrate.uc
 apps.uc
 files.uc
 files-jobs.uc

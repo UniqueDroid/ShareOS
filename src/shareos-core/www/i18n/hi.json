@@ -1733,7 +1733,48 @@
 		"uploaded": "अपलोड किया",
 		"uploaded – not checked": "अपलोड किया – जाँचा नहीं गया",
 		"from the app repository). Uploaded packages are marked “uploaded – not checked”: the box cannot compare them with the store.": "से बने)। अपलोड किए पैकेज \"अपलोड किया – जाँचा नहीं गया\" चिह्नित होते हैं: बॉक्स उन्हें स्टोर से मिला नहीं सकता।",
-		"Signed in": "साइन इन"
+		"Signed in": "साइन इन",
+		"MOVE TO A NEW DRIVE": "नई ड्राइव पर ले जाएँ",
+		"DISK CHANGE": "डिस्क बदलना",
+		"Copies everything from an old drive to a new one – shares, personal folders and the app area – and then switches over, so that nothing has to be set up again.": "पुरानी ड्राइव से सब कुछ नई ड्राइव पर कॉपी करता है – शेयर, निजी फ़ोल्डर और ऐप क्षेत्र – और फिर उस पर बदल देता है, ताकि कुछ भी दोबारा सेट न करना पड़े।",
+		"1 · CHOOSE THE DRIVES": "1 · ड्राइव चुनें",
+		"OLD DRIVE (FROM)": "पुरानी ड्राइव (से)",
+		"NEW DRIVE (TO)": "नई ड्राइव (तक)",
+		"The new drive must be set up and empty, with ext4 or Btrfs. It can be in the second bay or in a USB case – after the move it can go into a bay. Set it up first under": "नई ड्राइव सेट अप और खाली होनी चाहिए, ext4 या Btrfs के साथ। वह दूसरे बे में या USB केस में हो सकती है – ले जाने के बाद उसे बे में लगाया जा सकता है। पहले उसे यहाँ सेट अप करें:",
+		"An old disk in a USB case is added there without erasing it (a disk with data).": "USB केस में पुरानी डिस्क वहाँ बिना मिटाए जोड़ी जाती है (डेटा वाली डिस्क)।",
+		"Personal folders": "निजी फ़ोल्डर",
+		"Snapshot jobs": "स्नैपशॉट कार्य",
+		"Data": "डेटा",
+		"moves along": "साथ में जाता है",
+		"Everything on the old drive is copied – also folders that are not shared – except the snapshots. Owners, permissions and ACLs stay. The old drive is not changed.": "पुरानी ड्राइव पर सब कुछ कॉपी होता है – बिना शेयर वाले फ़ोल्डर भी – स्नैपशॉट को छोड़कर। मालिक, अनुमतियाँ और ACL बने रहते हैं। पुरानी ड्राइव नहीं बदली जाती।",
+		"Check": "जाँचें",
+		"Start copying": "कॉपी करना शुरू करें",
+		"2 · COPYING": "2 · कॉपी हो रहा है",
+		"3 · SWITCHING": "3 · बदला जा रहा है",
+		"3 · SWITCH": "3 · बदलें",
+		"Services are stopped for the last copy – shares are back in a moment.": "आख़िरी कॉपी के लिए सेवाएँ रुकी हैं – शेयर कुछ ही पल में लौट आएँगे।",
+		"The box can be used while it copies. What changes until the switch is copied then.": "कॉपी होते समय बॉक्स का उपयोग किया जा सकता है। बदलने तक जो बदलता है, वह तब कॉपी होता है।",
+		"Everything is copied.": "सब कुछ कॉपी हो गया।",
+		"Switching stops shares, apps, downloads and the media server for a short time, copies what changed since and then points shares, personal folders, the app area, the USB copy and snapshot jobs to the new drive.": "बदलने पर शेयर, ऐप, डाउनलोड और मीडिया सर्वर थोड़ी देर रुकते हैं, तब से जो बदला वह कॉपी होता है, फिर शेयर, निजी फ़ोल्डर, ऐप क्षेत्र, USB कॉपी और स्नैपशॉट कार्य नई ड्राइव की ओर हो जाते हैं।",
+		"Switch now": "अभी बदलें",
+		"DONE": "पूरा",
+		"Shares, personal folders and the app area are now on the new drive.": "शेयर, निजी फ़ोल्डर और ऐप क्षेत्र अब नई ड्राइव पर हैं।",
+		"The old drive is unchanged. When everything works, forget it under": "पुरानी ड्राइव अपरिवर्तित है। सब ठीक चलने पर उसे यहाँ भूल जाएँ:",
+		"and take the disk out – or keep it as a backup.": "और डिस्क निकाल लें – या उसे बैकअप के रूप में रखें।",
+		"The copy was stopped. Going on copies only what is missing.": "कॉपी रोकी गई। जारी रखने पर केवल जो बचा है वही कॉपी होगा।",
+		"Go on copying": "कॉपी जारी रखें",
+		"Stop copying?": "कॉपी रोकें?",
+		"What is copied stays on the new drive; going on later copies only the rest.": "जो कॉपी हो चुका है वह नई ड्राइव पर रहता है; बाद में जारी रखने पर केवल बाकी कॉपी होगा।",
+		"Switch to the new drive now?": "अभी नई ड्राइव पर बदलें?",
+		"Shares, apps, downloads and the media server stop for the last copy and start again on the new drive. Open files on the network are closed.": "आख़िरी कॉपी के लिए शेयर, ऐप, डाउनलोड और मीडिया सर्वर रुकते हैं और नई ड्राइव पर फिर से शुरू होते हैं। नेटवर्क पर खुली फ़ाइलें बंद हो जाती हैं।",
+		"source and target are the same drive": "स्रोत और लक्ष्य एक ही ड्राइव हैं",
+		"the new drive needs ext4 or btrfs (owners, personal folders, app area)": "नई ड्राइव को ext4 या btrfs चाहिए (मालिक, निजी फ़ोल्डर, ऐप क्षेत्र)",
+		"the new drive is not empty – choose an empty drive": "नई ड्राइव खाली नहीं है – कोई खाली ड्राइव चुनें",
+		"not enough free space on the new drive": "नई ड्राइव पर पर्याप्त खाली जगह नहीं है",
+		"copy failed – see the log; starting again copies only what is missing": "कॉपी विफल – लॉग देखें; दोबारा शुरू करने पर केवल बचा हुआ कॉपी होगा",
+		"the last copy before switching failed – nothing was switched": "बदलने से पहले की आख़िरी कॉपी विफल रही – कुछ नहीं बदला गया",
+		"copy everything first": "पहले सब कुछ कॉपी करें",
+		"a move is already running": "एक स्थानांतरण पहले से चल रहा है"
 	},
 	"patterns": [
 		[
@@ -2121,6 +2162,10 @@
 			"$1 का निजी इनबॉक्स · टोकन $2"
 		],
 		[
+			"^(\\S+ \\S+) · free on the new drive: (\\S+ \\S+)$",
+			"$1 · नई ड्राइव पर खाली: $2"
+		],
+		[
 			"^(\\S+): no longer starts at boot$",
 			"$1: शुरुआत पर अब चालू नहीं होती"
 		],
@@ -2203,6 +2248,10 @@
 		[
 			"^failed (\\S+): ubiupdatevol$",
 			"विफल ($1): सिस्टम लिखा नहीं जा सका (ubiupdatevol)"
+		],
+		[
+			"^drive (\\S+) is not mounted$",
+			"ड्राइव $1 माउंट नहीं है"
 		],
 		[
 			"^shared inbox · token (.+)$",
@@ -2479,6 +2528,10 @@
 		[
 			"^(\\S+) downloading …$",
 			"$1 डाउनलोड हो रहा है …"
+		],
+		[
+			"^unknown drive (\\S+)$",
+			"अज्ञात ड्राइव $1"
 		],
 		[
 			"^User “(.+)” saved\\.$",

@@ -1733,7 +1733,48 @@
 		"uploaded": "已上传",
 		"uploaded – not checked": "已上传 – 未校验",
 		"from the app repository). Uploaded packages are marked “uploaded – not checked”: the box cannot compare them with the store.": "构建)。上传的软件包标记为“已上传 – 未校验”：设备无法将其与商店比对。",
-		"Signed in": "已登录"
+		"Signed in": "已登录",
+		"MOVE TO A NEW DRIVE": "迁移到新驱动器",
+		"DISK CHANGE": "更换磁盘",
+		"Copies everything from an old drive to a new one – shares, personal folders and the app area – and then switches over, so that nothing has to be set up again.": "将旧驱动器上的所有内容（共享、个人文件夹和应用区域）复制到新驱动器，然后切换过去，无需重新设置任何内容。",
+		"1 · CHOOSE THE DRIVES": "1 · 选择驱动器",
+		"OLD DRIVE (FROM)": "旧驱动器（源）",
+		"NEW DRIVE (TO)": "新驱动器（目标）",
+		"The new drive must be set up and empty, with ext4 or Btrfs. It can be in the second bay or in a USB case – after the move it can go into a bay. Set it up first under": "新驱动器必须已设置且为空，文件系统为 ext4 或 Btrfs。它可以在第二个盘位或 USB 硬盘盒中——迁移后可放入盘位。请先在以下位置设置：",
+		"An old disk in a USB case is added there without erasing it (a disk with data).": "USB 硬盘盒中的旧磁盘可在那里添加且不会被清除（带数据的磁盘）。",
+		"Personal folders": "个人文件夹",
+		"Snapshot jobs": "快照任务",
+		"Data": "数据",
+		"moves along": "一起迁移",
+		"Everything on the old drive is copied – also folders that are not shared – except the snapshots. Owners, permissions and ACLs stay. The old drive is not changed.": "旧驱动器上的所有内容都会被复制（包括未共享的文件夹），快照除外。所有者、权限和 ACL 保持不变。旧驱动器不会被更改。",
+		"Check": "检查",
+		"Start copying": "开始复制",
+		"2 · COPYING": "2 · 复制中",
+		"3 · SWITCHING": "3 · 切换中",
+		"3 · SWITCH": "3 · 切换",
+		"Services are stopped for the last copy – shares are back in a moment.": "服务已为最后一次复制而停止——共享很快就会恢复。",
+		"The box can be used while it copies. What changes until the switch is copied then.": "复制期间仍可使用设备。切换前发生的更改会在切换时复制。",
+		"Everything is copied.": "全部复制完成。",
+		"Switching stops shares, apps, downloads and the media server for a short time, copies what changed since and then points shares, personal folders, the app area, the USB copy and snapshot jobs to the new drive.": "切换会短暂停止共享、应用、下载和媒体服务器，复制此后的更改，然后将共享、个人文件夹、应用区域、USB 复制和快照任务指向新驱动器。",
+		"Switch now": "立即切换",
+		"DONE": "完成",
+		"Shares, personal folders and the app area are now on the new drive.": "共享、个人文件夹和应用区域现在位于新驱动器上。",
+		"The old drive is unchanged. When everything works, forget it under": "旧驱动器未更改。一切正常后，请在以下位置将其移除：",
+		"and take the disk out – or keep it as a backup.": "然后取出磁盘——或将其保留作为备份。",
+		"The copy was stopped. Going on copies only what is missing.": "复制已停止。继续时只会复制缺少的部分。",
+		"Go on copying": "继续复制",
+		"Stop copying?": "停止复制？",
+		"What is copied stays on the new drive; going on later copies only the rest.": "已复制的内容保留在新驱动器上；稍后继续只会复制剩余部分。",
+		"Switch to the new drive now?": "现在切换到新驱动器？",
+		"Shares, apps, downloads and the media server stop for the last copy and start again on the new drive. Open files on the network are closed.": "共享、应用、下载和媒体服务器会为最后一次复制而停止，并在新驱动器上重新启动。网络上打开的文件会被关闭。",
+		"source and target are the same drive": "源和目标是同一个驱动器",
+		"the new drive needs ext4 or btrfs (owners, personal folders, app area)": "新驱动器需要 ext4 或 btrfs（所有者、个人文件夹、应用区域）",
+		"the new drive is not empty – choose an empty drive": "新驱动器不是空的——请选择一个空驱动器",
+		"not enough free space on the new drive": "新驱动器上的可用空间不足",
+		"copy failed – see the log; starting again copies only what is missing": "复制失败——请查看日志；重新开始只会复制缺少的部分",
+		"the last copy before switching failed – nothing was switched": "切换前的最后一次复制失败——未进行任何切换",
+		"copy everything first": "请先复制全部内容",
+		"a move is already running": "迁移已在进行中"
 	},
 	"patterns": [
 		[
@@ -2121,6 +2162,10 @@
 			"$1 的个人收件夹 · 令牌 $2"
 		],
 		[
+			"^(\\S+ \\S+) · free on the new drive: (\\S+ \\S+)$",
+			"$1 · 新驱动器可用：$2"
+		],
+		[
 			"^(\\S+): no longer starts at boot$",
 			"$1：开机时不再启动"
 		],
@@ -2203,6 +2248,10 @@
 		[
 			"^failed (\\S+): ubiupdatevol$",
 			"失败（$1）：无法写入系统（ubiupdatevol）"
+		],
+		[
+			"^drive (\\S+) is not mounted$",
+			"驱动器 $1 未挂载"
 		],
 		[
 			"^shared inbox · token (.+)$",
@@ -2479,6 +2528,10 @@
 		[
 			"^(\\S+) downloading …$",
 			"$1 下载中 …"
+		],
+		[
+			"^unknown drive (\\S+)$",
+			"未知驱动器 $1"
 		],
 		[
 			"^User “(.+)” saved\\.$",

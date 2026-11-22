@@ -118,7 +118,9 @@ def storage():
                    {'name': 'md0', 'state': 'active', 'level': 'raid1', 'members': ['sdb2', 'sda2'], 'disks': 2, 'active': 2,
                     'health': 'UU', 'sync': {'action': 'recovery' if STATE.get('repair_t') else 'resync', 'percent': pct, 'finish': '412.5min'}}},
         'volumes': [{'name': 'data', 'uuid': '1b4e28ba-2fa1-11d2-883f-0016d3cca427', 'fstype': 'ext4', 'layout': 'mirror', 'enabled': True,
-                     'device': '/dev/md0', 'mountpoint': '/mnt/data', 'mounted': True, 'size': 3936 << 30, 'used': 1210 << 30, 'avail': 2726 << 30}],
+                     'device': '/dev/md0', 'mountpoint': '/mnt/data', 'mounted': True, 'size': 3936 << 30, 'used': 1210 << 30, 'avail': 2726 << 30}]
+                   + ([{'name': 'new', 'uuid': '9c1d', 'fstype': 'ext4', 'layout': 'single', 'enabled': True, 'device': '/dev/sdc2',
+                        'mountpoint': '/mnt/new', 'mounted': True, 'size': 3700 << 30, 'used': 0, 'avail': 3600 << 30}] if os.environ.get('MOCK_NEW_DRIVE') else []),
         'spindown': 20, 'smart_schedule': STATE.get('smart_schedule', ''), 'job': STATE['job'], 'usb_copy': STATE.setdefault('usb_copy', {'enabled': False, 'volume': '', 'path': mock_folder('usb'), 'last': None})}
 
 
@@ -627,6 +629,36 @@ def call(obj, method, args):
         if method == 'rescan':
             d['scanning'] = True
         return d
+    if obj == 'shareos.migrate':
+        # disk change: a copy that advances with every state call, a switch that is done at once
+        mg = STATE.setdefault('mig', {'state': 'none'})
+        if method == 'plan':
+            if args.get('from') == args.get('to'):
+                return {'from': args['from'], 'to': args['to'], 'shares': [], 'homes': [], 'apps': False, 'snapshot_jobs': [],
+                        'used': 0, 'free': 0, 'ok': False, 'problem': 'source and target are the same drive'}
+            return {'from': args['from'], 'to': args['to'], 'shares': ['photos', 'media'], 'homes': ['jan', 'anna'], 'apps': True,
+                    'snapshot_jobs': [], 'used': 1210 << 30, 'free': 3600 << 30, 'ok': True, 'problem': ''}
+        if method == 'copy':
+            STATE['mig'] = {'state': 'copying', 'from': args['from'], 'to': args['to'], 'total': 1210 << 30, 'done': 0, 'percent': 0, 'started': int(time.time()), 'error': ''}
+            return {'ok': True}
+        if method == 'state':
+            if mg['state'] == 'copying':
+                mg['percent'] = min(100, mg['percent'] + 35)
+                mg['done'] = mg['total'] * mg['percent'] // 100
+                if mg['percent'] >= 100:
+                    mg['state'] = 'copied'
+            elif mg['state'] == 'switching':
+                mg['state'] = 'done'
+            return mg
+        if method == 'cancel':
+            mg['state'] = 'cancelled'
+            return {'ok': True}
+        if method == 'switch':
+            mg['state'] = 'switching'
+            return {'started': True}
+        if method == 'clear':
+            STATE['mig'] = {'state': 'none'}
+            return {'ok': True}
     if obj == 'shareos.snapshots':
         sn = STATE.setdefault('snap', {'photos': {
             'name': 'photos', 'source': 'share:photos', 'target': 'usb', 'every': 'day', 'time': '03:15', 'exclude': ['*.tmp'], 'enabled': True,
