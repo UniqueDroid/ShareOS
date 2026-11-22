@@ -1733,7 +1733,9 @@
 		"uploaded": "enviado",
 		"uploaded – not checked": "enviado – não verificado",
 		"from the app repository). Uploaded packages are marked “uploaded – not checked”: the box cannot compare them with the store.": "do repositório de apps). Pacotes enviados são marcados como \"enviado – não verificado\": o aparelho não consegue compará-los com a loja.",
-		"Signed in": "Conectado"
+		"Signed in": "Conectado",
+		"Over SMB a share of the same name opens instead of this personal folder – create that share again under another name.": "Por SMB abre-se uma partilha com o mesmo nome em vez desta pasta pessoal – crie essa partilha de novo com outro nome.",
+		"Over SMB this share hides the personal folder of the account of the same name – create it again under another name to free that address.": "Por SMB esta partilha oculta a pasta pessoal da conta com o mesmo nome – crie-a de novo com outro nome para libertar esse endereço."
 	},
 	"patterns": [
 		[

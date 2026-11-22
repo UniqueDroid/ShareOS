@@ -1733,7 +1733,9 @@
 		"uploaded": "subida",
 		"uploaded – not checked": "subida – sin verificar",
 		"from the app repository). Uploaded packages are marked “uploaded – not checked”: the box cannot compare them with the store.": "del repositorio de apps). Los paquetes subidos se marcan como «subida – sin verificar»: el equipo no puede compararlos con la tienda.",
-		"Signed in": "Sesión iniciada"
+		"Signed in": "Sesión iniciada",
+		"Over SMB a share of the same name opens instead of this personal folder – create that share again under another name.": "Por SMB se abre un recurso compartido con el mismo nombre en lugar de esta carpeta personal: vuelve a crear ese recurso con otro nombre.",
+		"Over SMB this share hides the personal folder of the account of the same name – create it again under another name to free that address.": "Por SMB este recurso compartido oculta la carpeta personal de la cuenta con el mismo nombre: vuelve a crearlo con otro nombre para liberar esa dirección."
 	},
 	"patterns": [
 		[

@@ -2191,3 +2191,5 @@ E1747	subida
 E1748	subida – sin verificar
 E1749	del repositorio de apps). Los paquetes subidos se marcan como «subida – sin verificar»: el equipo no puede compararlos con la tienda.
 E1750	Sesión iniciada
+E1751	Por SMB se abre un recurso compartido con el mismo nombre en lugar de esta carpeta personal: vuelve a crear ese recurso con otro nombre.
+E1752	Por SMB este recurso compartido oculta la carpeta personal de la cuenta con el mismo nombre: vuelve a crearlo con otro nombre para liberar esa dirección.
