@@ -2191,3 +2191,7 @@ E1747	enviado
 E1748	enviado – não verificado
 E1749	do repositório de apps). Pacotes enviados são marcados como "enviado – não verificado": o aparelho não consegue compará-los com a loja.
 E1750	Conectado
+E1751	Instalar a partir de uma fonte não assinada?
+E1752	Esta app vem de uma fonte da loja sem uma assinatura válida do projeto ShareOS.
+E1753	A sua soma de verificação só mostra que a transferência está completa – não quem a fez.
+E1754	assinatura do catálogo em falta ou inválida – não usado

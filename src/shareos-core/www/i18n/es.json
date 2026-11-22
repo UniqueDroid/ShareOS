@@ -1733,7 +1733,11 @@
 		"uploaded": "subida",
 		"uploaded – not checked": "subida – sin verificar",
 		"from the app repository). Uploaded packages are marked “uploaded – not checked”: the box cannot compare them with the store.": "del repositorio de apps). Los paquetes subidos se marcan como «subida – sin verificar»: el equipo no puede compararlos con la tienda.",
-		"Signed in": "Sesión iniciada"
+		"Signed in": "Sesión iniciada",
+		"Install from an unsigned source?": "¿Instalar desde una fuente sin firmar?",
+		"This app comes from a store source without a valid signature of the ShareOS project.": "Esta app procede de una fuente de la tienda sin una firma válida del proyecto ShareOS.",
+		"Its checksum only shows that the download is complete – not who made it.": "Su suma de comprobación solo muestra que la descarga está completa, no quién la hizo.",
+		"catalog signature missing or invalid – not used": "falta la firma del catálogo o no es válida – no se usa"
 	},
 	"patterns": [
 		[

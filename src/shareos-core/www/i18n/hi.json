@@ -1733,7 +1733,11 @@
 		"uploaded": "अपलोड किया",
 		"uploaded – not checked": "अपलोड किया – जाँचा नहीं गया",
 		"from the app repository). Uploaded packages are marked “uploaded – not checked”: the box cannot compare them with the store.": "से बने)। अपलोड किए पैकेज \"अपलोड किया – जाँचा नहीं गया\" चिह्नित होते हैं: बॉक्स उन्हें स्टोर से मिला नहीं सकता।",
-		"Signed in": "साइन इन"
+		"Signed in": "साइन इन",
+		"Install from an unsigned source?": "बिना हस्ताक्षर वाले स्रोत से इंस्टॉल करें?",
+		"This app comes from a store source without a valid signature of the ShareOS project.": "यह ऐप ऐसे स्टोर स्रोत से है जिस पर ShareOS प्रोजेक्ट का कोई मान्य हस्ताक्षर नहीं है।",
+		"Its checksum only shows that the download is complete – not who made it.": "इसका चेकसम केवल यह दिखाता है कि डाउनलोड पूरा है – यह नहीं कि इसे किसने बनाया।",
+		"catalog signature missing or invalid – not used": "कैटलॉग हस्ताक्षर नहीं है या अमान्य है – उपयोग नहीं किया गया"
 	},
 	"patterns": [
 		[

@@ -1751,7 +1751,11 @@
 		"uploaded",
 		"uploaded – not checked",
 		"from the app repository). Uploaded packages are marked “uploaded – not checked”: the box cannot compare them with the store.",
-		"Signed in"
+		"Signed in",
+		"Install from an unsigned source?",
+		"This app comes from a store source without a valid signature of the ShareOS project.",
+		"Its checksum only shows that the download is complete – not who made it.",
+		"catalog signature missing or invalid – not used"
 	],
 	"patterns": [
 		[

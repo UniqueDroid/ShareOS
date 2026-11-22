@@ -1733,7 +1733,11 @@
 		"uploaded": "enviado",
 		"uploaded – not checked": "enviado – não verificado",
 		"from the app repository). Uploaded packages are marked “uploaded – not checked”: the box cannot compare them with the store.": "do repositório de apps). Pacotes enviados são marcados como \"enviado – não verificado\": o aparelho não consegue compará-los com a loja.",
-		"Signed in": "Conectado"
+		"Signed in": "Conectado",
+		"Install from an unsigned source?": "Instalar a partir de uma fonte não assinada?",
+		"This app comes from a store source without a valid signature of the ShareOS project.": "Esta app vem de uma fonte da loja sem uma assinatura válida do projeto ShareOS.",
+		"Its checksum only shows that the download is complete – not who made it.": "A sua soma de verificação só mostra que a transferência está completa – não quem a fez.",
+		"catalog signature missing or invalid – not used": "assinatura do catálogo em falta ou inválida – não usado"
 	},
 	"patterns": [
 		[

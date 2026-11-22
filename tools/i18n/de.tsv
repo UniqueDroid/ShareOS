@@ -2175,3 +2175,7 @@ E1747	hochgeladen
 E1748	hochgeladen – nicht geprüft
 E1749	aus dem App-Repo). Hochgeladene Pakete sind als „hochgeladen – nicht geprüft“ markiert: Die Box kann sie nicht mit dem Store vergleichen.
 E1750	Angemeldet
+E1751	Aus einer nicht signierten Quelle installieren?
+E1752	Diese App stammt aus einer Store-Quelle ohne gültige Signatur des ShareOS-Projekts.
+E1753	Ihre Prüfsumme zeigt nur, dass der Download vollständig ist – nicht, wer sie gemacht hat.
+E1754	Katalog-Signatur fehlt oder ist ungültig – nicht verwendet

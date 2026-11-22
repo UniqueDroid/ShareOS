@@ -2191,3 +2191,7 @@ E1747	subida
 E1748	subida – sin verificar
 E1749	del repositorio de apps). Los paquetes subidos se marcan como «subida – sin verificar»: el equipo no puede compararlos con la tienda.
 E1750	Sesión iniciada
+E1751	¿Instalar desde una fuente sin firmar?
+E1752	Esta app procede de una fuente de la tienda sin una firma válida del proyecto ShareOS.
+E1753	Su suma de comprobación solo muestra que la descarga está completa, no quién la hizo.
+E1754	falta la firma del catálogo o no es válida – no se usa
