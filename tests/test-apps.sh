@@ -381,7 +381,11 @@ dd if=/dev/zero of=$T/gross.bin bs=1M count=70 2>/dev/null
 TU=$(fs '{"op":"open","root":"daten","path":"ablage","name":"gross.bin","write":true,"create":true,"upload":true}' | python3 -c 'import json,sys; d=json.load(sys.stdin); print(d.get("ticket","") if d.get("mode")=="put" else "")')
 check "fs: upload of 70 MB with an upload ticket, moved into place" "[ \${#TU} -eq 32 ] && curl -s -X PUT -T $T/gross.bin '$F?t=$TU' | js \"d['ok'] and d['size']==73400320\" && [ \"\$(stat -c %s $R/mnt/daten/ablage/gross.bin)\" = 73400320 ] && ! ls -a $R/mnt/daten/ablage | grep -q '\.part\$'"
 TE=$(fs '{"op":"open","root":"daten","path":"ablage","name":"gross2.bin","write":true,"create":true}' | python3 -c 'import json,sys; print(json.load(sys.stdin).get("ticket",""))')
-check "fs: the same through a save ticket is refused with a reason" "curl -s -X PUT -T $T/gross.bin '$F?t=$TE' | grep -q 'too large' && [ ! -e $R/mnt/daten/ablage/gross2.bin ]"
+# only the announced size counts: the box answers before reading the body and
+# closes. With the 70 MB still being sent, that answer could be lost in the
+# reset of the connection (the check failed now and then) – so announce the
+# size and send nothing
+check "fs: the same through a save ticket is refused with a reason" "curl -s -X PUT -H 'Content-Length: 73400320' --data-binary '' '$F?t=$TE' | grep -q 'too large' && [ ! -e $R/mnt/daten/ablage/gross2.bin ]"
 check "fs: upload needs write and create" "fs '{\"op\":\"open\",\"root\":\"daten\",\"path\":\"ablage\",\"name\":\"x.bin\",\"upload\":true}' | grep -q 'upload needs write and create'"
 rm -f $T/gross.bin $R/mnt/daten/ablage/gross.bin
 check "fs: open read-only cannot save, missing file needs create" "T2=\$(fs '{\"op\":\"open\",\"root\":\"daten\",\"path\":\"ablage\",\"name\":\"neu.txt\"}' | python3 -c 'import json,sys; print(json.load(sys.stdin)[\"ticket\"])') && curl -s -X PUT --data-binary x \"$F?t=\$T2\" | grep -q 'read-only' && fs '{\"op\":\"open\",\"root\":\"daten\",\"path\":\"\",\"name\":\"fehlt.txt\",\"write\":true}' | grep -q 'not found'"
