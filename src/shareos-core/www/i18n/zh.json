@@ -1733,7 +1733,9 @@
 		"uploaded": "已上传",
 		"uploaded – not checked": "已上传 – 未校验",
 		"from the app repository). Uploaded packages are marked “uploaded – not checked”: the box cannot compare them with the store.": "构建)。上传的软件包标记为“已上传 – 未校验”：设备无法将其与商店比对。",
-		"Signed in": "已登录"
+		"Signed in": "已登录",
+		"Over SMB a share of the same name opens instead of this personal folder – create that share again under another name.": "通过 SMB 打开的是同名共享，而不是此个人文件夹——请用其他名称重新创建该共享。",
+		"Over SMB this share hides the personal folder of the account of the same name – create it again under another name to free that address.": "通过 SMB，此共享会遮住同名账户的个人文件夹——请用其他名称重新创建它，以释放该地址。"
 	},
 	"patterns": [
 		[

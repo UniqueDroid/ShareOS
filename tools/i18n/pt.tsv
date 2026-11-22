@@ -2191,3 +2191,5 @@ E1747	enviado
 E1748	enviado – não verificado
 E1749	do repositório de apps). Pacotes enviados são marcados como "enviado – não verificado": o aparelho não consegue compará-los com a loja.
 E1750	Conectado
+E1751	Por SMB abre-se uma partilha com o mesmo nome em vez desta pasta pessoal – crie essa partilha de novo com outro nome.
+E1752	Por SMB esta partilha oculta a pasta pessoal da conta com o mesmo nome – crie-a de novo com outro nome para libertar esse endereço.
