@@ -95,6 +95,13 @@
 // 8081) from /www-apps/<id>/ – another origin than the admin interface, so an
 // app cannot use the admin's login.
 //
+// Signature of a catalog: <url>.sig next to index.json, ECDSA P-256 over the
+// file (openssl dgst -sha256 -sign), checked with pk_verify of mbedtls against
+// /etc/shareos/catalog.pub (the key of the app repository) or the reserve key
+// of the firmware releases. The official source must carry a valid one – a
+// catalog lists the checksums of the packages, so whoever can change it can
+// swap a package. Other sources still work; their apps count as not checked.
+//
 // Catalog (index.json, one URL per source in apps.store.source):
 //   { "schema": 1, "apps": [ { "id", "name", "publisher", "description",
 //     "category", "icon_url", "homepage", "type",
@@ -130,6 +137,9 @@ const MAX_REQUIRES = 5;
 const MAX_LOG = 65536;
 // the test suite serves catalogs and packages from files
 const URL_RE = getenv('SHAREOS_APPS_ALLOW_FILE') ? /^(https|file):\/\// : /^https:\/\//;
+const CAT_KEYS = [ ROOT + '/etc/shareos/catalog.pub', ROOT + '/etc/shareos/release-reserve.pub' ];
+// the source that must be signed (the test suite names its own)
+const OFFICIAL = getenv('SHAREOS_APPS_OFFICIAL') ?? 'https://github.com/UniqueDroid/ShareOS-Apps/releases/download/catalog/index.json';
 
 function shq(s) { return "'" + replace(s, "'", "'\\''") + "'"; }
 
@@ -461,14 +471,45 @@ function installed() {
 
 /* ---------- catalog ---------- */
 
-function fetch_catalog(url) {
-	let r = capture(join(' ', map([ ...CURL, '--max-time', '20', url ], shq)));
+// the keys a catalog can be signed with (none: firmware without catalog key)
+function cat_keys() {
+	return filter(CAT_KEYS, (k) => index(readfile(k) ?? '', 'BEGIN PUBLIC KEY') >= 0);
+}
+
+// is <file>.sig a valid signature of <file>? (pk_verify reads "<file>.sig")
+function cat_signed(file) {
+	if (!stat(file + '.sig')) return false;
+	for (let prog in [ 'mbedtls_pk_verify', 'pk_verify' ])
+		if (capture('command -v ' + prog).rc == 0) {
+			for (let key in cat_keys())
+				if (capture(join(' ', map([ prog, key, file ], shq))).rc == 0)
+					return true;
+			return false;
+		}
+	return false;
+}
+
+function fetch_catalog(url, n) {
+	mkdir(ST);
+	let f = ST + '/cat-' + n + '.json';
+	unlink(f); unlink(f + '.sig');
+	let r = capture(join(' ', map([ ...CURL, '--max-time', '20', '-o', f, url ], shq)));
 	if (r.rc != 0) {
+		unlink(f);
 		let m = match(r.out, /curl: \([0-9]+\)[^\n]*/);
 		return { error: m ? m[0] : 'curl exit ' + r.rc };
 	}
-	let d = jparse(r.out);
-	if (type(d) != 'object' || type(d.apps) != 'array') return { error: 'not a ShareOS app catalog' };
+	let d = jparse(readfile(f) ?? '');
+	if (type(d) != 'object' || type(d.apps) != 'array') { unlink(f); return { error: 'not a ShareOS app catalog' }; }
+	// the signature checks the file as downloaded, before anything of it is used
+	if (capture(join(' ', map([ ...CURL, '--max-time', '20', '-o', f + '.sig', url + '.sig' ], shq))).rc != 0)
+		unlink(f + '.sig');
+	let signed = cat_signed(f);
+	unlink(f); unlink(f + '.sig');
+	// enforced once the firmware carries the key of the app repository
+	if (!signed && url == OFFICIAL && index(readfile(CAT_KEYS[0]) ?? '', 'BEGIN PUBLIC KEY') >= 0)
+		return { error: 'catalog signature missing or invalid – not used' };
+	d.signed = signed;
 	return d;
 }
 
@@ -485,7 +526,7 @@ function merge(catalogs, channel) {
 			let i = inst[a.id];
 			push(apps, { id: a.id, name: a.name ?? a.id, publisher: a.publisher ?? '', description: a.description ?? '',
 				category: a.category ?? '', icon_url: a.icon_url ?? null, homepage: a.homepage ?? '',
-				type: a.type ?? 'webapp', module: a.type == 'system' && a.module == a.id ? a.id : null, source: cat.url, versions: vs, latest: vs[0].version, requires: vs[0].requires ?? [],
+				type: a.type ?? 'webapp', module: a.type == 'system' && a.module == a.id ? a.id : null, source: cat.url, signed: cat.signed === true, versions: vs, latest: vs[0].version, requires: vs[0].requires ?? [],
 				installed: i?.version ?? null,
 				update_available: !!i && vcmp(vs[0].version, i.version) > 0,
 				compatible: !too_old(vs[0].min_shareos) });
@@ -497,8 +538,9 @@ function merge(catalogs, channel) {
 function cmd_catalog() {
 	let K = conf(), channel = K.channel, sources = K.sources;
 	let cats = [], errors = [];
+	let n = 0;
 	for (let u in sources) {
-		let d = fetch_catalog(u);
+		let d = fetch_catalog(u, n++);
 		if (d.error) push(errors, { source: u, error: d.error });
 		else push(cats, { ...d, url: u });
 	}
@@ -866,7 +908,8 @@ function install_catalog(id, version, depth) {
 	let sum = split(trim(capture('sha256sum ' + shq(f)).out), ' ')[0];
 	if (sum != v.sha256) { unlink(f); return { error: 'checksum mismatch – package not installed' }; }
 	job({ state: 'installing', id, version: v.version });
-	let res = install_file(f, true, app.source);
+	// an app from a source without a valid signature is not checked either
+	let res = install_file(f, app.signed, app.source);
 	unlink(f);
 	if (res.error) return res;
 	if (res.id != id) return { error: 'package contains another app (' + res.id + ')' };

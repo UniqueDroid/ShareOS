@@ -42,6 +42,26 @@ the public key in the firmware (`src/shareos-core/etc/shareos/release.pub`).
       openssl ecparam -name prime256v1 -genkey -noout -out shareos-release.key
       openssl ec -in shareos-release.key -pubout -out shareos-release.pub
 
+### App catalog
+
+The store reads `index.json` from the release `catalog` of
+[ShareOS-Apps](https://github.com/UniqueDroid/ShareOS-Apps). It lists the
+checksum of every package, so it is signed too: the apps workflow writes
+`index.json.sig` with its own key (secret `CATALOG_SIGNING_KEY` of the
+environment `catalog` in the apps repository; offline copy with Jan). Boxes
+check it against `src/shareos-core/etc/shareos/catalog.pub` or, in an
+emergency, the release reserve key.
+
+- From 0.3.0-beta.16 a box refuses the official catalog without a valid
+  signature (the store shows the error at the source). Other sources a user
+  adds still work; their apps are marked *not signed by the ShareOS project*
+  and install as not checked, after a confirmation.
+- Catalog key lost or exposed: sign with the release reserve key (boxes accept
+  it at once), then put a new `catalog.pub` into the firmware and release it.
+
+      openssl ecparam -name prime256v1 -genkey -noout -out shareos-catalog.key
+      openssl ec -in shareos-catalog.key -pubout -out shareos-catalog.pub
+
 The website ([uniquedroid.github.io/ShareOS](https://uniquedroid.github.io/ShareOS/),
 built from `website/` and the docs) rebuilds itself when the release build has finished;
 nothing to do by hand.
