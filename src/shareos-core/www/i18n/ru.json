@@ -1734,6 +1734,8 @@
 		"uploaded – not checked": "загружено – не проверено",
 		"from the app repository). Uploaded packages are marked “uploaded – not checked”: the box cannot compare them with the store.": "из репозитория приложений). Загруженные пакеты помечаются «загружено – не проверено»: устройство не может сравнить их с магазином.",
 		"Signed in": "Вход выполнен",
+		"Over SMB a share of the same name opens instead of this personal folder – create that share again under another name.": "По SMB вместо этой личной папки открывается общая папка с тем же именем – создайте эту общую папку заново под другим именем.",
+		"Over SMB this share hides the personal folder of the account of the same name – create it again under another name to free that address.": "По SMB эта общая папка скрывает личную папку учётной записи с тем же именем – создайте её заново под другим именем, чтобы освободить этот адрес.",
 		"Install from an unsigned source?": "Установить из неподписанного источника?",
 		"This app comes from a store source without a valid signature of the ShareOS project.": "Это приложение получено из источника магазина без действительной подписи проекта ShareOS.",
 		"Its checksum only shows that the download is complete – not who made it.": "Его контрольная сумма показывает лишь, что загрузка завершена, но не то, кто его создал.",

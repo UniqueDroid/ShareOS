@@ -37,7 +37,7 @@ function sharesView() {
 				<div class="acts" style="margin-top:12px">${e ? '' : html`<button class="btn primary" type="button" data-act="sh-new">Create a share</button>`}</div></div></div></div>`
 			: isTable('shares') ? html`<div class="tw"><table class="t" style="min-width:820px"><thead><tr><th>SHARE</th><th>FOLDER</th><th>LOGS</th><th>ACCESS</th><th></th></tr></thead>
 				<tbody>${list.map((x) => html`<tr>
-					<td><b>${x.name}</b>${x.comment ? html`<div class="mut" style="font-size:12px">${x.comment}</div>` : ''}</td>
+					<td><b>${x.name}</b>${x.comment ? html`<div class="mut" style="font-size:12px">${x.comment}</div>` : ''}${shareTakesHome(x) ? SHARE_TAKES_HOME_NOTE() : ''}</td>
 					<td><code>${x.fullpath || x.volume + '/' + x.path}</code>${x.mounted ? '' : html` <span class="tag err">drive missing</span>`}</td>
 					<td>${shareTags(x)}</td><td class="mut" style="font-size:12px">${shareAccessSummary(x)}</td>
 					<td><div class="acts">${shareActions(x)}</div></td></tr>`)}</tbody></table></div>`
@@ -47,7 +47,7 @@ function sharesView() {
 					<div class="desc">${x.comment || (x.fullpath || x.volume + '/' + x.path)}</div>
 					<div class="desc" style="margin-top:8px">${shareTags(x)}</div>
 					<div class="desc" style="margin-top:6px">${shareAccessSummary(x)}</div>
-					<div class="ip">${x.smb ? '\\\\' + host + '\\' + x.name : x.fullpath || ''}</div>
+					<div class="ip">${x.smb ? '\\\\' + host + '\\' + x.name : x.fullpath || ''}</div>${shareTakesHome(x) ? SHARE_TAKES_HOME_NOTE() : ''}
 					<div class="acts" style="margin-top:12px">${shareActions(x)}</div></div></div>`)}</div>`}
 		${list.length && !e ? html`<div class="acts" style="margin-top:12px"><button class="btn" type="button" data-act="sh-new">New share</button></div>` : ''}
 	</section>
@@ -130,6 +130,17 @@ function shareEditor(e) {
 	</form></section>`;
 }
 
+// \\box\<account> is the personal folder of an account – a share of the same
+// name (made before such names were refused) takes that address over SMB
+function shareTakesHome(x) {
+	return !!x.smb && (S.acc?.users || []).some((u) => u.name === x.name && u.home);
+}
+function homeTakenByShare(u) {
+	return !!u.home && (S.shares?.shares || []).some((x) => x.name === u.name && x.smb);
+}
+const HOME_TAKEN_NOTE = () => html`<div style="color:var(--amber);font-size:12px;margin-top:4px">Over SMB a share of the same name opens instead of this personal folder – create that share again under another name.</div>`;
+const SHARE_TAKES_HOME_NOTE = () => html`<div style="color:var(--amber);font-size:12px;margin-top:4px">Over SMB this share hides the personal folder of the account of the same name – create it again under another name to free that address.</div>`;
+
 // the drive of an account's personal folder is gone or not mounted
 function homeGone(u) {
 	return !!u.home && !(S.vols || []).some((v) => v.name === u.home && v.mounted !== false);
@@ -154,7 +165,7 @@ function usersView() {
 			<tbody>${a.users.map((u) => html`<tr>
 				<td><b>${u.name}</b>${u.fullname ? html`<div class="mut" style="font-size:12px">${u.fullname}</div>` : ''}</td>
 				<td>${roleTag(u)}</td><td class="mut">${u.groups.join(', ') || '–'}</td>
-				<td class="mut">${u.home ? '/mnt/' + u.home + '/home/' + u.name : '–'}${homeGone(u) ? html` <span style="color:var(--amber)">drive not present</span>` : ''}</td>
+				<td class="mut">${u.home ? '/mnt/' + u.home + '/home/' + u.name : '–'}${homeGone(u) ? html` <span style="color:var(--amber)">drive not present</span>` : ''}${homeTakenByShare(u) ? HOME_TAKEN_NOTE() : ''}</td>
 				<td style="font-size:12px;min-width:160px">${usageLine(u)}</td>
 				<td><div class="acts">${userActions(u)}</div></td></tr>`)}</tbody></table></div>`
 		: html`<div class="grid">${a.users.map((u) => html`<div class="card">
@@ -162,7 +173,7 @@ function usersView() {
 			<div class="info"><div class="name">${u.name} ${roleTag(u)}</div>
 				<div class="desc">${u.fullname || ''}${u.groups.length ? (u.fullname ? ' · ' : '') + u.groups.join(', ') : ''}</div>
 				<div class="desc" style="margin-top:8px;font-size:12px">${usageLine(u)}</div>
-				<div class="ip">${u.home ? '/mnt/' + u.home + '/home/' + u.name : 'no personal folder'}${homeGone(u) ? html` <span style="color:var(--amber)">drive not present</span>` : ''}</div>
+				<div class="ip">${u.home ? '/mnt/' + u.home + '/home/' + u.name : 'no personal folder'}${homeGone(u) ? html` <span style="color:var(--amber)">drive not present</span>` : ''}</div>${homeTakenByShare(u) ? HOME_TAKEN_NOTE() : ''}
 				<div class="acts" style="margin-top:12px">${userActions(u)}</div></div></div>`)}</div>`}
 		${a.users.length && !e ? html`<div class="acts" style="margin-top:12px"><button class="btn" type="button" data-act="u-new">New user</button>
 			<button class="btn ghost" type="button" data-act="u-altf">Import from Alt-F</button></div>` : ''}

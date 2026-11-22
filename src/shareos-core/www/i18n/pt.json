@@ -1734,6 +1734,8 @@
 		"uploaded – not checked": "enviado – não verificado",
 		"from the app repository). Uploaded packages are marked “uploaded – not checked”: the box cannot compare them with the store.": "do repositório de apps). Pacotes enviados são marcados como \"enviado – não verificado\": o aparelho não consegue compará-los com a loja.",
 		"Signed in": "Conectado",
+		"Over SMB a share of the same name opens instead of this personal folder – create that share again under another name.": "Por SMB abre-se uma partilha com o mesmo nome em vez desta pasta pessoal – crie essa partilha de novo com outro nome.",
+		"Over SMB this share hides the personal folder of the account of the same name – create it again under another name to free that address.": "Por SMB esta partilha oculta a pasta pessoal da conta com o mesmo nome – crie-a de novo com outro nome para libertar esse endereço.",
 		"Install from an unsigned source?": "Instalar a partir de uma fonte não assinada?",
 		"This app comes from a store source without a valid signature of the ShareOS project.": "Esta app vem de uma fonte da loja sem uma assinatura válida do projeto ShareOS.",
 		"Its checksum only shows that the download is complete – not who made it.": "A sua soma de verificação só mostra que a transferência está completa – não quem a fez.",
