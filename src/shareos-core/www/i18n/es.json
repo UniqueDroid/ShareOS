@@ -1761,7 +1761,7 @@
 		"Services are stopped for the last copy – shares are back in a moment.": "Los servicios están detenidos para la última copia; los recursos compartidos vuelven en un momento.",
 		"The box can be used while it copies. What changes until the switch is copied then.": "La caja se puede usar mientras copia. Lo que cambie hasta el cambio se copia entonces.",
 		"Everything is copied.": "Todo está copiado.",
-		"Switching stops shares, apps, downloads and the media server for a short time, copies what changed since and then points shares, personal folders, the app area, the USB copy and snapshot jobs to the new drive.": "El cambio detiene brevemente recursos compartidos, apps, descargas y el servidor multimedia, copia lo que cambió desde entonces y luego apunta recursos compartidos, carpetas personales, área de apps, copia USB y tareas de instantáneas a la unidad nueva.",
+		"Switching stops shares, apps, downloads, the media server and scheduled jobs for a short time, copies what changed since and then points shares, personal folders, the app area, the USB copy, snapshot jobs and the folders of Transmission and Syncthing to the new drive.": "El cambio detiene brevemente recursos compartidos, apps, descargas, el servidor multimedia y las tareas programadas, copia lo que cambió desde entonces y luego apunta recursos compartidos, carpetas personales, área de apps, copia USB, tareas de instantáneas y las carpetas de Transmission y Syncthing a la unidad nueva.",
 		"Switch now": "Cambiar ahora",
 		"DONE": "HECHO",
 		"Shares, personal folders and the app area are now on the new drive.": "Los recursos compartidos, las carpetas personales y el área de apps están ahora en la unidad nueva.",
@@ -1780,7 +1780,10 @@
 		"copy failed – see the log; starting again copies only what is missing": "la copia falló: mira el registro; volver a empezar copia solo lo que falta",
 		"the last copy before switching failed – nothing was switched": "la última copia antes del cambio falló: no se cambió nada",
 		"copy everything first": "copia todo primero",
-		"a move is already running": "ya hay un traslado en curso"
+		"a move is already running": "ya hay un traslado en curso",
+		"a copy in Files, a cloud job, a snapshot or Paperless is still running – wait until it is done": "todavía se está ejecutando una copia en Files, una tarea en la nube, una instantánea o Paperless – espera a que termine",
+		"switching stopped before it was done – start it again, or restart the box": "el cambio se detuvo antes de terminar – inícialo de nuevo o reinicia el equipo",
+		"autobrr: filters with the action Watch dir still name the hand-over folder on the old drive – change it in autobrr to the folder on the new drive.": "autobrr: los filtros con la acción Watch dir aún indican la carpeta de entrega en la unidad antigua – cámbiala en autobrr por la carpeta de la unidad nueva."
 	},
 	"patterns": [
 		[

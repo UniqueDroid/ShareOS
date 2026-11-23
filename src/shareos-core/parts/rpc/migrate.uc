@@ -54,6 +54,11 @@ add_methods({
 				if (flash_busy()) return { error: FLASH_BUSY };
 				let s = migrate_tool([ 'state' ]);
 				if (s.state != 'copied') return { error: 'copy everything first' };
+				if (storage_job()?.state == 'running') return { error: 'a storage job is already running' };
+				// file jobs, cloud jobs, snapshots, Paperless: what they write
+				// during the last copy would stay on the old drive
+				let b = migrate_tool([ 'busy' ]);
+				if (b.busy) return { error: b.problem };
 				system(sprintf('start-stop-daemon -S -b -x %s -- switch', MIGRATE));
 				return { started: true };
 			}

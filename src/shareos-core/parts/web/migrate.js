@@ -53,7 +53,7 @@ function migrateView() {
 	else if (st.state === 'copied') body = html`<div class="panel">
 		<div class="ph"><span class="pt">3 · SWITCH</span><span class="mut">${st.from} → ${st.to}</span></div>
 		<p style="margin:0 0 8px">Everything is copied.</p>
-		<p class="note">Switching stops shares, apps, downloads and the media server for a short time, copies what changed since and then points shares, personal folders, the app area, the USB copy and snapshot jobs to the new drive.</p>
+		<p class="note">Switching stops shares, apps, downloads, the media server and scheduled jobs for a short time, copies what changed since and then points shares, personal folders, the app area, the USB copy, snapshot jobs and the folders of Transmission and Syncthing to the new drive.</p>
 		${st.error ? html`<div class="banner" style="margin-top:10px">${svg(I.warn)}<span>${st.error}</span></div>` : ''}
 		<div class="acts" style="margin-top:12px"><button class="btn primary" type="button" data-act="mig-switch">Switch now</button>
 		<button class="btn ghost" type="button" data-act="mig-clear">Discard</button></div></div>`;
@@ -61,6 +61,7 @@ function migrateView() {
 		<div class="ph"><span class="pt">DONE</span><span class="mut">${st.from} → ${st.to}</span></div>
 		<p style="margin:0 0 8px">Shares, personal folders and the app area are now on the new drive.</p>
 		<p class="note">The old drive is unchanged. When everything works, forget it under <a href="#/storage/volumes">Drives</a> and take the disk out – or keep it as a backup.</p>
+		${(st.notes || []).includes('autobrr') ? html`<div class="banner" style="margin-top:10px">${svg(I.warn)}<span>autobrr: filters with the action Watch dir still name the hand-over folder on the old drive – change it in autobrr to the folder on the new drive.</span></div>` : ''}
 		<div class="acts" style="margin-top:12px"><button class="btn" type="button" data-act="mig-clear">Close</button></div></div>`;
 	else if (st.state === 'cancelled' || st.state === 'error') body = html`<div class="panel">
 		<div class="ph"><span class="pt">2 · COPYING</span><span class="mut">${st.from} → ${st.to}</span></div>

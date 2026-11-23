@@ -1779,7 +1779,7 @@
 		"Services are stopped for the last copy – shares are back in a moment.",
 		"The box can be used while it copies. What changes until the switch is copied then.",
 		"Everything is copied.",
-		"Switching stops shares, apps, downloads and the media server for a short time, copies what changed since and then points shares, personal folders, the app area, the USB copy and snapshot jobs to the new drive.",
+		"Switching stops shares, apps, downloads, the media server and scheduled jobs for a short time, copies what changed since and then points shares, personal folders, the app area, the USB copy, snapshot jobs and the folders of Transmission and Syncthing to the new drive.",
 		"Switch now",
 		"DONE",
 		"Shares, personal folders and the app area are now on the new drive.",
@@ -1798,7 +1798,10 @@
 		"copy failed – see the log; starting again copies only what is missing",
 		"the last copy before switching failed – nothing was switched",
 		"copy everything first",
-		"a move is already running"
+		"a move is already running",
+		"a copy in Files, a cloud job, a snapshot or Paperless is still running – wait until it is done",
+		"switching stopped before it was done – start it again, or restart the box",
+		"autobrr: filters with the action Watch dir still name the hand-over folder on the old drive – change it in autobrr to the folder on the new drive."
 	],
 	"patterns": [
 		[

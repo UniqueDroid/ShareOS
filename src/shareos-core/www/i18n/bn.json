@@ -1761,7 +1761,7 @@
 		"Services are stopped for the last copy – shares are back in a moment.": "শেষ কপির জন্য সেবাগুলো থেমে আছে – শেয়ার একটু পরেই ফিরে আসবে।",
 		"The box can be used while it copies. What changes until the switch is copied then.": "কপি চলার সময় বক্স ব্যবহার করা যায়। বদলের আগে যা বদলায়, তা তখন কপি হয়।",
 		"Everything is copied.": "সবকিছু কপি হয়েছে।",
-		"Switching stops shares, apps, downloads and the media server for a short time, copies what changed since and then points shares, personal folders, the app area, the USB copy and snapshot jobs to the new drive.": "বদলের সময় শেয়ার, অ্যাপ, ডাউনলোড ও মিডিয়া সার্ভার অল্প সময় থামে, তারপর থেকে যা বদলেছে তা কপি হয়, তারপর শেয়ার, ব্যক্তিগত ফোল্ডার, অ্যাপ এলাকা, USB কপি ও স্ন্যাপশট কাজ নতুন ড্রাইভে নির্দেশ করে।",
+		"Switching stops shares, apps, downloads, the media server and scheduled jobs for a short time, copies what changed since and then points shares, personal folders, the app area, the USB copy, snapshot jobs and the folders of Transmission and Syncthing to the new drive.": "বদলের সময় শেয়ার, অ্যাপ, ডাউনলোড, মিডিয়া সার্ভার ও নির্ধারিত কাজ অল্প সময় থামে, তারপর থেকে যা বদলেছে তা কপি হয়, তারপর শেয়ার, ব্যক্তিগত ফোল্ডার, অ্যাপ এলাকা, USB কপি, স্ন্যাপশট কাজ এবং Transmission ও Syncthing-এর ফোল্ডার নতুন ড্রাইভে নির্দেশ করে।",
 		"Switch now": "এখনই বদলান",
 		"DONE": "সম্পন্ন",
 		"Shares, personal folders and the app area are now on the new drive.": "শেয়ার, ব্যক্তিগত ফোল্ডার ও অ্যাপ এলাকা এখন নতুন ড্রাইভে।",
@@ -1780,7 +1780,10 @@
 		"copy failed – see the log; starting again copies only what is missing": "কপি ব্যর্থ – লগ দেখুন; আবার শুরু করলে শুধু বাকিটা কপি হবে",
 		"the last copy before switching failed – nothing was switched": "বদলের আগের শেষ কপি ব্যর্থ – কিছুই বদলানো হয়নি",
 		"copy everything first": "প্রথমে সবকিছু কপি করুন",
-		"a move is already running": "একটি সরানো ইতিমধ্যে চলছে"
+		"a move is already running": "একটি সরানো ইতিমধ্যে চলছে",
+		"a copy in Files, a cloud job, a snapshot or Paperless is still running – wait until it is done": "Files-এ কপি, ক্লাউড কাজ, স্ন্যাপশট বা Paperless এখনও চলছে – শেষ হওয়া পর্যন্ত অপেক্ষা করুন",
+		"switching stopped before it was done – start it again, or restart the box": "বদল শেষ হওয়ার আগেই থেমে গেছে – আবার শুরু করুন বা বক্স আবার চালু করুন",
+		"autobrr: filters with the action Watch dir still name the hand-over folder on the old drive – change it in autobrr to the folder on the new drive.": "autobrr: Watch dir কাজের ফিল্টার এখনও পুরনো ড্রাইভের হস্তান্তর ফোল্ডার দেখায় – autobrr-এ এটিকে নতুন ড্রাইভের ফোল্ডারে বদলান।"
 	},
 	"patterns": [
 		[

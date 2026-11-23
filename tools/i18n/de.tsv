@@ -2202,7 +2202,7 @@ E1774	3 · UMSCHALTEN
 E1775	Die Dienste sind für den letzten Abgleich angehalten – die Freigaben sind gleich wieder da.
 E1776	Die Box ist während des Kopierens benutzbar. Was sich bis zum Umschalten ändert, wird dann übernommen.
 E1777	Alles ist kopiert.
-E1778	Beim Umschalten halten Freigaben, Apps, Downloads und der Medienserver kurz an; was sich seitdem geändert hat, wird kopiert, dann zeigen Freigaben, persönliche Ordner, App-Bereich, USB-Kopie und Snapshot-Aufträge auf das neue Laufwerk.
+E1778	Beim Umschalten halten Freigaben, Apps, Downloads, der Medienserver und geplante Aufträge kurz an; was sich seitdem geändert hat, wird kopiert, dann zeigen Freigaben, persönliche Ordner, App-Bereich, USB-Kopie, Snapshot-Aufträge und die Ordner von Transmission und Syncthing auf das neue Laufwerk.
 E1779	Jetzt umschalten
 E1780	FERTIG
 E1781	Freigaben, persönliche Ordner und der App-Bereich liegen jetzt auf dem neuen Laufwerk.
@@ -2225,3 +2225,6 @@ E1797	ein Umzug läuft bereits
 P398	$1 · frei auf dem neuen Laufwerk: $2
 P399	unbekanntes Laufwerk $1
 P400	Laufwerk $1 ist nicht eingehängt
+E1798	eine Kopie in Files, ein Cloud-Auftrag, ein Snapshot oder Paperless läuft noch – warte, bis er fertig ist
+E1799	das Umschalten hat vor dem Ende aufgehört – starte es noch einmal oder starte die Box neu
+E1800	autobrr: Filter mit der Aktion Watch dir nennen noch den Übergabeordner auf dem alten Laufwerk – ändere ihn in autobrr auf den Ordner auf dem neuen Laufwerk.

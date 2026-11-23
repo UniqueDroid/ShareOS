@@ -1761,7 +1761,7 @@
 		"Services are stopped for the last copy – shares are back in a moment.": "Службы остановлены для последнего копирования – общие папки сейчас вернутся.",
 		"The box can be used while it copies. What changes until the switch is copied then.": "Устройством можно пользоваться во время копирования. Изменения до переключения скопируются тогда.",
 		"Everything is copied.": "Всё скопировано.",
-		"Switching stops shares, apps, downloads and the media server for a short time, copies what changed since and then points shares, personal folders, the app area, the USB copy and snapshot jobs to the new drive.": "Переключение ненадолго останавливает общие папки, приложения, загрузки и медиасервер, копирует изменения и затем направляет общие папки, личные папки, область приложений, USB-копирование и задания снимков на новый диск.",
+		"Switching stops shares, apps, downloads, the media server and scheduled jobs for a short time, copies what changed since and then points shares, personal folders, the app area, the USB copy, snapshot jobs and the folders of Transmission and Syncthing to the new drive.": "Переключение ненадолго останавливает общие папки, приложения, загрузки, медиасервер и задания по расписанию, копирует изменения и затем направляет общие папки, личные папки, область приложений, USB-копирование, задания снимков и папки Transmission и Syncthing на новый диск.",
 		"Switch now": "Переключить сейчас",
 		"DONE": "ГОТОВО",
 		"Shares, personal folders and the app area are now on the new drive.": "Общие папки, личные папки и область приложений теперь на новом диске.",
@@ -1780,7 +1780,10 @@
 		"copy failed – see the log; starting again copies only what is missing": "копирование не удалось – см. журнал; повторный запуск скопирует только недостающее",
 		"the last copy before switching failed – nothing was switched": "последнее копирование перед переключением не удалось – ничего не переключено",
 		"copy everything first": "сначала скопируйте всё",
-		"a move is already running": "перенос уже выполняется"
+		"a move is already running": "перенос уже выполняется",
+		"a copy in Files, a cloud job, a snapshot or Paperless is still running – wait until it is done": "ещё выполняется копирование в Files, облачное задание, снимок или Paperless – дождитесь завершения",
+		"switching stopped before it was done – start it again, or restart the box": "переключение прервалось до завершения – запустите его снова или перезагрузите устройство",
+		"autobrr: filters with the action Watch dir still name the hand-over folder on the old drive – change it in autobrr to the folder on the new drive.": "autobrr: фильтры с действием Watch dir всё ещё указывают папку передачи на старом диске – измените её в autobrr на папку на новом диске."
 	},
 	"patterns": [
 		[
