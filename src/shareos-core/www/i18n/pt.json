@@ -1761,7 +1761,7 @@
 		"Services are stopped for the last copy – shares are back in a moment.": "Os serviços estão parados para a última cópia – as partilhas voltam dentro de momentos.",
 		"The box can be used while it copies. What changes until the switch is copied then.": "A caixa pode ser usada enquanto copia. O que mudar até à mudança é copiado nessa altura.",
 		"Everything is copied.": "Tudo está copiado.",
-		"Switching stops shares, apps, downloads and the media server for a short time, copies what changed since and then points shares, personal folders, the app area, the USB copy and snapshot jobs to the new drive.": "A mudança para brevemente partilhas, apps, transferências e o servidor multimédia, copia o que mudou desde então e depois aponta partilhas, pastas pessoais, área de apps, cópia USB e tarefas de instantâneos para a nova unidade.",
+		"Switching stops shares, apps, downloads, the media server and scheduled jobs for a short time, copies what changed since and then points shares, personal folders, the app area, the USB copy, snapshot jobs and the folders of Transmission and Syncthing to the new drive.": "A mudança para brevemente partilhas, apps, transferências, o servidor multimédia e as tarefas agendadas, copia o que mudou desde então e depois aponta partilhas, pastas pessoais, área de apps, cópia USB, tarefas de instantâneos e as pastas do Transmission e do Syncthing para a nova unidade.",
 		"Switch now": "Mudar agora",
 		"DONE": "CONCLUÍDO",
 		"Shares, personal folders and the app area are now on the new drive.": "As partilhas, pastas pessoais e a área de apps estão agora na nova unidade.",
@@ -1780,7 +1780,10 @@
 		"copy failed – see the log; starting again copies only what is missing": "a cópia falhou – veja o registo; recomeçar copia só o que falta",
 		"the last copy before switching failed – nothing was switched": "a última cópia antes da mudança falhou – nada foi mudado",
 		"copy everything first": "copie tudo primeiro",
-		"a move is already running": "já está a decorrer uma mudança"
+		"a move is already running": "já está a decorrer uma mudança",
+		"a copy in Files, a cloud job, a snapshot or Paperless is still running – wait until it is done": "ainda está a decorrer uma cópia em Files, uma tarefa na nuvem, um instantâneo ou o Paperless – aguarde até terminar",
+		"switching stopped before it was done – start it again, or restart the box": "a mudança parou antes de terminar – inicie-a novamente ou reinicie a caixa",
+		"autobrr: filters with the action Watch dir still name the hand-over folder on the old drive – change it in autobrr to the folder on the new drive.": "autobrr: os filtros com a ação Watch dir ainda indicam a pasta de entrega na unidade antiga – altere-a no autobrr para a pasta na nova unidade."
 	},
 	"patterns": [
 		[

@@ -1761,7 +1761,7 @@
 		"Services are stopped for the last copy – shares are back in a moment.": "الخدمات متوقفة للنسخة الأخيرة – ستعود المشاركات بعد لحظة.",
 		"The box can be used while it copies. What changes until the switch is copied then.": "يمكن استخدام الجهاز أثناء النسخ. ما يتغير حتى التبديل يُنسخ حينها.",
 		"Everything is copied.": "تم نسخ كل شيء.",
-		"Switching stops shares, apps, downloads and the media server for a short time, copies what changed since and then points shares, personal folders, the app area, the USB copy and snapshot jobs to the new drive.": "يوقف التبديل المشاركات والتطبيقات والتنزيلات وخادم الوسائط لفترة قصيرة، وينسخ ما تغيّر منذ ذلك الحين، ثم يوجّه المشاركات والمجلدات الشخصية ومنطقة التطبيقات ونسخ USB ومهام اللقطات إلى المحرك الجديد.",
+		"Switching stops shares, apps, downloads, the media server and scheduled jobs for a short time, copies what changed since and then points shares, personal folders, the app area, the USB copy, snapshot jobs and the folders of Transmission and Syncthing to the new drive.": "يوقف التبديل المشاركات والتطبيقات والتنزيلات وخادم الوسائط والمهام المجدولة لفترة قصيرة، وينسخ ما تغيّر منذ ذلك الحين، ثم يوجّه المشاركات والمجلدات الشخصية ومنطقة التطبيقات ونسخ USB ومهام اللقطات ومجلدات Transmission وSyncthing إلى المحرك الجديد.",
 		"Switch now": "بدّل الآن",
 		"DONE": "تم",
 		"Shares, personal folders and the app area are now on the new drive.": "أصبحت المشاركات والمجلدات الشخصية ومنطقة التطبيقات الآن على المحرك الجديد.",
@@ -1780,7 +1780,10 @@
 		"copy failed – see the log; starting again copies only what is missing": "فشل النسخ – راجع السجل؛ البدء من جديد ينسخ ما ينقص فقط",
 		"the last copy before switching failed – nothing was switched": "فشلت النسخة الأخيرة قبل التبديل – لم يُبدَّل شيء",
 		"copy everything first": "انسخ كل شيء أولاً",
-		"a move is already running": "هناك نقل قيد التشغيل بالفعل"
+		"a move is already running": "هناك نقل قيد التشغيل بالفعل",
+		"a copy in Files, a cloud job, a snapshot or Paperless is still running – wait until it is done": "لا يزال نسخ في Files أو مهمة سحابية أو لقطة أو Paperless قيد التشغيل – انتظر حتى ينتهي",
+		"switching stopped before it was done – start it again, or restart the box": "توقف التبديل قبل اكتماله – ابدأه مرة أخرى أو أعد تشغيل الجهاز",
+		"autobrr: filters with the action Watch dir still name the hand-over folder on the old drive – change it in autobrr to the folder on the new drive.": "autobrr: لا تزال المرشحات ذات الإجراء Watch dir تشير إلى مجلد التسليم على المحرك القديم – غيّره في autobrr إلى المجلد على المحرك الجديد."
 	},
 	"patterns": [
 		[

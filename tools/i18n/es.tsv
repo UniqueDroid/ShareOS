@@ -2218,7 +2218,7 @@ E1774	3 · CAMBIAR
 E1775	Los servicios están detenidos para la última copia; los recursos compartidos vuelven en un momento.
 E1776	La caja se puede usar mientras copia. Lo que cambie hasta el cambio se copia entonces.
 E1777	Todo está copiado.
-E1778	El cambio detiene brevemente recursos compartidos, apps, descargas y el servidor multimedia, copia lo que cambió desde entonces y luego apunta recursos compartidos, carpetas personales, área de apps, copia USB y tareas de instantáneas a la unidad nueva.
+E1778	El cambio detiene brevemente recursos compartidos, apps, descargas, el servidor multimedia y las tareas programadas, copia lo que cambió desde entonces y luego apunta recursos compartidos, carpetas personales, área de apps, copia USB, tareas de instantáneas y las carpetas de Transmission y Syncthing a la unidad nueva.
 E1779	Cambiar ahora
 E1780	HECHO
 E1781	Los recursos compartidos, las carpetas personales y el área de apps están ahora en la unidad nueva.
@@ -2241,3 +2241,6 @@ E1797	ya hay un traslado en curso
 P398	$1 · libre en la unidad nueva: $2
 P399	unidad desconocida $1
 P400	la unidad $1 no está montada
+E1798	todavía se está ejecutando una copia en Files, una tarea en la nube, una instantánea o Paperless – espera a que termine
+E1799	el cambio se detuvo antes de terminar – inícialo de nuevo o reinicia el equipo
+E1800	autobrr: los filtros con la acción Watch dir aún indican la carpeta de entrega en la unidad antigua – cámbiala en autobrr por la carpeta de la unidad nueva.

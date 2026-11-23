@@ -1761,7 +1761,7 @@
 		"Services are stopped for the last copy – shares are back in a moment.": "Die Dienste sind für den letzten Abgleich angehalten – die Freigaben sind gleich wieder da.",
 		"The box can be used while it copies. What changes until the switch is copied then.": "Die Box ist während des Kopierens benutzbar. Was sich bis zum Umschalten ändert, wird dann übernommen.",
 		"Everything is copied.": "Alles ist kopiert.",
-		"Switching stops shares, apps, downloads and the media server for a short time, copies what changed since and then points shares, personal folders, the app area, the USB copy and snapshot jobs to the new drive.": "Beim Umschalten halten Freigaben, Apps, Downloads und der Medienserver kurz an; was sich seitdem geändert hat, wird kopiert, dann zeigen Freigaben, persönliche Ordner, App-Bereich, USB-Kopie und Snapshot-Aufträge auf das neue Laufwerk.",
+		"Switching stops shares, apps, downloads, the media server and scheduled jobs for a short time, copies what changed since and then points shares, personal folders, the app area, the USB copy, snapshot jobs and the folders of Transmission and Syncthing to the new drive.": "Beim Umschalten halten Freigaben, Apps, Downloads, der Medienserver und geplante Aufträge kurz an; was sich seitdem geändert hat, wird kopiert, dann zeigen Freigaben, persönliche Ordner, App-Bereich, USB-Kopie, Snapshot-Aufträge und die Ordner von Transmission und Syncthing auf das neue Laufwerk.",
 		"Switch now": "Jetzt umschalten",
 		"DONE": "FERTIG",
 		"Shares, personal folders and the app area are now on the new drive.": "Freigaben, persönliche Ordner und der App-Bereich liegen jetzt auf dem neuen Laufwerk.",
@@ -1780,7 +1780,10 @@
 		"copy failed – see the log; starting again copies only what is missing": "Kopieren fehlgeschlagen – siehe Protokoll; ein neuer Start kopiert nur, was fehlt",
 		"the last copy before switching failed – nothing was switched": "der letzte Abgleich vor dem Umschalten ist fehlgeschlagen – nichts wurde umgestellt",
 		"copy everything first": "zuerst alles kopieren",
-		"a move is already running": "ein Umzug läuft bereits"
+		"a move is already running": "ein Umzug läuft bereits",
+		"a copy in Files, a cloud job, a snapshot or Paperless is still running – wait until it is done": "eine Kopie in Files, ein Cloud-Auftrag, ein Snapshot oder Paperless läuft noch – warte, bis er fertig ist",
+		"switching stopped before it was done – start it again, or restart the box": "das Umschalten hat vor dem Ende aufgehört – starte es noch einmal oder starte die Box neu",
+		"autobrr: filters with the action Watch dir still name the hand-over folder on the old drive – change it in autobrr to the folder on the new drive.": "autobrr: Filter mit der Aktion Watch dir nennen noch den Übergabeordner auf dem alten Laufwerk – ändere ihn in autobrr auf den Ordner auf dem neuen Laufwerk."
 	},
 	"patterns": [
 		[

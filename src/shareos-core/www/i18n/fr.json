@@ -1761,7 +1761,7 @@
 		"Services are stopped for the last copy – shares are back in a moment.": "Les services sont arrêtés pour la dernière copie – les partages reviennent dans un instant.",
 		"The box can be used while it copies. What changes until the switch is copied then.": "La box reste utilisable pendant la copie. Ce qui change d’ici le basculement est copié à ce moment-là.",
 		"Everything is copied.": "Tout est copié.",
-		"Switching stops shares, apps, downloads and the media server for a short time, copies what changed since and then points shares, personal folders, the app area, the USB copy and snapshot jobs to the new drive.": "Le basculement arrête brièvement partages, applications, téléchargements et serveur multimédia, copie ce qui a changé depuis, puis fait pointer partages, dossiers personnels, zone des applications, copie USB et tâches d’instantanés vers le nouveau disque.",
+		"Switching stops shares, apps, downloads, the media server and scheduled jobs for a short time, copies what changed since and then points shares, personal folders, the app area, the USB copy, snapshot jobs and the folders of Transmission and Syncthing to the new drive.": "Le basculement arrête brièvement partages, applications, téléchargements, serveur multimédia et tâches planifiées, copie ce qui a changé depuis, puis fait pointer partages, dossiers personnels, zone des applications, copie USB, tâches d’instantanés et dossiers de Transmission et Syncthing vers le nouveau disque.",
 		"Switch now": "Basculer maintenant",
 		"DONE": "TERMINÉ",
 		"Shares, personal folders and the app area are now on the new drive.": "Les partages, dossiers personnels et la zone des applications sont maintenant sur le nouveau disque.",
@@ -1780,7 +1780,10 @@
 		"copy failed – see the log; starting again copies only what is missing": "échec de la copie – voir le journal ; relancer ne copie que ce qui manque",
 		"the last copy before switching failed – nothing was switched": "la dernière copie avant le basculement a échoué – rien n’a été basculé",
 		"copy everything first": "copiez d’abord tout",
-		"a move is already running": "un déménagement est déjà en cours"
+		"a move is already running": "un déménagement est déjà en cours",
+		"a copy in Files, a cloud job, a snapshot or Paperless is still running – wait until it is done": "une copie dans Files, une tâche cloud, un instantané ou Paperless est encore en cours – attendez qu’elle se termine",
+		"switching stopped before it was done – start it again, or restart the box": "le basculement s’est arrêté avant la fin – relancez-le ou redémarrez le boîtier",
+		"autobrr: filters with the action Watch dir still name the hand-over folder on the old drive – change it in autobrr to the folder on the new drive.": "autobrr : les filtres avec l’action Watch dir indiquent encore le dossier de dépôt sur l’ancien disque – remplacez-le dans autobrr par le dossier du nouveau disque."
 	},
 	"patterns": [
 		[

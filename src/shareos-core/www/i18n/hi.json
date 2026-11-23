@@ -1761,7 +1761,7 @@
 		"Services are stopped for the last copy – shares are back in a moment.": "आख़िरी कॉपी के लिए सेवाएँ रुकी हैं – शेयर कुछ ही पल में लौट आएँगे।",
 		"The box can be used while it copies. What changes until the switch is copied then.": "कॉपी होते समय बॉक्स का उपयोग किया जा सकता है। बदलने तक जो बदलता है, वह तब कॉपी होता है।",
 		"Everything is copied.": "सब कुछ कॉपी हो गया।",
-		"Switching stops shares, apps, downloads and the media server for a short time, copies what changed since and then points shares, personal folders, the app area, the USB copy and snapshot jobs to the new drive.": "बदलने पर शेयर, ऐप, डाउनलोड और मीडिया सर्वर थोड़ी देर रुकते हैं, तब से जो बदला वह कॉपी होता है, फिर शेयर, निजी फ़ोल्डर, ऐप क्षेत्र, USB कॉपी और स्नैपशॉट कार्य नई ड्राइव की ओर हो जाते हैं।",
+		"Switching stops shares, apps, downloads, the media server and scheduled jobs for a short time, copies what changed since and then points shares, personal folders, the app area, the USB copy, snapshot jobs and the folders of Transmission and Syncthing to the new drive.": "बदलने पर शेयर, ऐप, डाउनलोड, मीडिया सर्वर और निर्धारित कार्य थोड़ी देर रुकते हैं, तब से जो बदला वह कॉपी होता है, फिर शेयर, निजी फ़ोल्डर, ऐप क्षेत्र, USB कॉपी, स्नैपशॉट कार्य और Transmission व Syncthing के फ़ोल्डर नई ड्राइव की ओर हो जाते हैं।",
 		"Switch now": "अभी बदलें",
 		"DONE": "पूरा",
 		"Shares, personal folders and the app area are now on the new drive.": "शेयर, निजी फ़ोल्डर और ऐप क्षेत्र अब नई ड्राइव पर हैं।",
@@ -1780,7 +1780,10 @@
 		"copy failed – see the log; starting again copies only what is missing": "कॉपी विफल – लॉग देखें; दोबारा शुरू करने पर केवल बचा हुआ कॉपी होगा",
 		"the last copy before switching failed – nothing was switched": "बदलने से पहले की आख़िरी कॉपी विफल रही – कुछ नहीं बदला गया",
 		"copy everything first": "पहले सब कुछ कॉपी करें",
-		"a move is already running": "एक स्थानांतरण पहले से चल रहा है"
+		"a move is already running": "एक स्थानांतरण पहले से चल रहा है",
+		"a copy in Files, a cloud job, a snapshot or Paperless is still running – wait until it is done": "Files में कॉपी, क्लाउड कार्य, स्नैपशॉट या Paperless अभी चल रहा है – पूरा होने तक रुकें",
+		"switching stopped before it was done – start it again, or restart the box": "बदलना पूरा होने से पहले रुक गया – इसे फिर से शुरू करें या बॉक्स को फिर से चालू करें",
+		"autobrr: filters with the action Watch dir still name the hand-over folder on the old drive – change it in autobrr to the folder on the new drive.": "autobrr: Watch dir क्रिया वाले फ़िल्टर अभी भी पुरानी ड्राइव पर सौंपने वाले फ़ोल्डर को बताते हैं – autobrr में इसे नई ड्राइव के फ़ोल्डर में बदलें।"
 	},
 	"patterns": [
 		[

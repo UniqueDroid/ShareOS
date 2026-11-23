@@ -531,9 +531,10 @@ Needs a second disk (bay or USB case) that may be erased. **Not on a box with da
 
 1. *Storage → Drives*: set up the second disk as a single drive with ext4 (e.g. `neu`). *Storage → DISK CHANGE*: old drive = the drive with your data, new drive = `neu`, *Check*: shares, personal folders, app area and the amount of data are listed. Choosing the same drive twice, or a drive with data, shows the reason and *Start copying* stays off.
 2. *Start copying*: the bar moves; shares stay usable. *Cancel* in between, then *Go on copying*: it goes on and copies only the rest.
-3. When everything is copied: change a file on a share, then *Switch now*. Shares are gone for a moment and come back; afterwards *Shares* shows the new drive for every share, *Users* the new drive for personal folders, *Storage* the app area on `neu`. The changed file is there, apps start, Transmission and the media server work.
-4. Over SMB: open a share and a personal folder, compare a few files and their rights (a read-only user still cannot write). The old drive is unchanged; *Close* ends the wizard.
-5. Optional: shut down, put the new disk into bay 1 (the old one out), start: everything comes up from the new disk.
+3. When everything is copied: start a copy in *Files* that takes a while and press *Switch now* meanwhile – it is refused ("… is still running – wait until it is done"). When the copy is done: change a file on a share, then *Switch now*. Shares are gone for a moment and come back; afterwards *Shares* shows the new drive for every share, *Users* the new drive for personal folders, *Storage* the app area on `neu`, *Snapshots* the new drive for jobs that save the personal folders or the whole drive. The changed file is there, apps start, Transmission and the media server work.
+4. Transmission (if used): its download folder (*Settings* in the app) and the folders of the existing torrents are on `neu`; a new download lands on `neu`. Syncthing (if used): the folders point to `neu` (`grep path= /mnt/neu/home/<account>/.config/syncthing/config.xml`).
+5. Over SMB: open a share and a personal folder, compare a few files and their rights (a read-only user still cannot write). The old drive is unchanged; *Close* ends the wizard.
+6. Optional: shut down, put the new disk into bay 1 (the old one out), start: everything comes up from the new disk.
 
 ## 14zx. Signed-in name, uploaded apps (0.3.0-beta.15, #191)
 

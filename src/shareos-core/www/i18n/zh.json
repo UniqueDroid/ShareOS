@@ -1761,7 +1761,7 @@
 		"Services are stopped for the last copy – shares are back in a moment.": "服务已为最后一次复制而停止——共享很快就会恢复。",
 		"The box can be used while it copies. What changes until the switch is copied then.": "复制期间仍可使用设备。切换前发生的更改会在切换时复制。",
 		"Everything is copied.": "全部复制完成。",
-		"Switching stops shares, apps, downloads and the media server for a short time, copies what changed since and then points shares, personal folders, the app area, the USB copy and snapshot jobs to the new drive.": "切换会短暂停止共享、应用、下载和媒体服务器，复制此后的更改，然后将共享、个人文件夹、应用区域、USB 复制和快照任务指向新驱动器。",
+		"Switching stops shares, apps, downloads, the media server and scheduled jobs for a short time, copies what changed since and then points shares, personal folders, the app area, the USB copy, snapshot jobs and the folders of Transmission and Syncthing to the new drive.": "切换会短暂停止共享、应用、下载、媒体服务器和计划任务，复制此后的更改，然后将共享、个人文件夹、应用区域、USB 复制、快照任务以及 Transmission 和 Syncthing 的文件夹指向新驱动器。",
 		"Switch now": "立即切换",
 		"DONE": "完成",
 		"Shares, personal folders and the app area are now on the new drive.": "共享、个人文件夹和应用区域现在位于新驱动器上。",
@@ -1780,7 +1780,10 @@
 		"copy failed – see the log; starting again copies only what is missing": "复制失败——请查看日志；重新开始只会复制缺少的部分",
 		"the last copy before switching failed – nothing was switched": "切换前的最后一次复制失败——未进行任何切换",
 		"copy everything first": "请先复制全部内容",
-		"a move is already running": "迁移已在进行中"
+		"a move is already running": "迁移已在进行中",
+		"a copy in Files, a cloud job, a snapshot or Paperless is still running – wait until it is done": "Files 中的复制、云任务、快照或 Paperless 仍在运行 – 请等待其完成",
+		"switching stopped before it was done – start it again, or restart the box": "切换在完成前中断 – 请重新开始，或重启设备",
+		"autobrr: filters with the action Watch dir still name the hand-over folder on the old drive – change it in autobrr to the folder on the new drive.": "autobrr：使用 Watch dir 操作的过滤器仍指向旧驱动器上的交接文件夹 – 请在 autobrr 中将其改为新驱动器上的文件夹。"
 	},
 	"patterns": [
 		[
