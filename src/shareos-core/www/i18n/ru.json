@@ -1739,7 +1739,48 @@
 		"Install from an unsigned source?": "Установить из неподписанного источника?",
 		"This app comes from a store source without a valid signature of the ShareOS project.": "Это приложение получено из источника магазина без действительной подписи проекта ShareOS.",
 		"Its checksum only shows that the download is complete – not who made it.": "Его контрольная сумма показывает лишь, что загрузка завершена, но не то, кто его создал.",
-		"catalog signature missing or invalid – not used": "подпись каталога отсутствует или недействительна – не используется"
+		"catalog signature missing or invalid – not used": "подпись каталога отсутствует или недействительна – не используется",
+		"MOVE TO A NEW DRIVE": "ПЕРЕНОС НА НОВЫЙ ДИСК",
+		"DISK CHANGE": "ЗАМЕНА ДИСКА",
+		"Copies everything from an old drive to a new one – shares, personal folders and the app area – and then switches over, so that nothing has to be set up again.": "Копирует всё со старого диска на новый – общие папки, личные папки и область приложений – и затем переключается, так что ничего не нужно настраивать заново.",
+		"1 · CHOOSE THE DRIVES": "1 · ВЫБОР ДИСКОВ",
+		"OLD DRIVE (FROM)": "СТАРЫЙ ДИСК (ОТКУДА)",
+		"NEW DRIVE (TO)": "НОВЫЙ ДИСК (КУДА)",
+		"The new drive must be set up and empty, with ext4 or Btrfs. It can be in the second bay or in a USB case – after the move it can go into a bay. Set it up first under": "Новый диск должен быть настроен и пуст, с ext4 или Btrfs. Он может стоять во втором отсеке или в USB-корпусе – после переноса его можно поставить в отсек. Сначала настройте его в разделе",
+		"An old disk in a USB case is added there without erasing it (a disk with data).": "Старый диск в USB-корпусе добавляется там без стирания (диск с данными).",
+		"Personal folders": "Личные папки",
+		"Snapshot jobs": "Задания снимков",
+		"Data": "Данные",
+		"moves along": "переносится тоже",
+		"Everything on the old drive is copied – also folders that are not shared – except the snapshots. Owners, permissions and ACLs stay. The old drive is not changed.": "Копируется всё со старого диска – и папки без общего доступа – кроме снимков. Владельцы, права и ACL сохраняются. Старый диск не изменяется.",
+		"Check": "Проверить",
+		"Start copying": "Начать копирование",
+		"2 · COPYING": "2 · КОПИРОВАНИЕ",
+		"3 · SWITCHING": "3 · ПЕРЕКЛЮЧЕНИЕ",
+		"3 · SWITCH": "3 · ПЕРЕКЛЮЧИТЬ",
+		"Services are stopped for the last copy – shares are back in a moment.": "Службы остановлены для последнего копирования – общие папки сейчас вернутся.",
+		"The box can be used while it copies. What changes until the switch is copied then.": "Устройством можно пользоваться во время копирования. Изменения до переключения скопируются тогда.",
+		"Everything is copied.": "Всё скопировано.",
+		"Switching stops shares, apps, downloads and the media server for a short time, copies what changed since and then points shares, personal folders, the app area, the USB copy and snapshot jobs to the new drive.": "Переключение ненадолго останавливает общие папки, приложения, загрузки и медиасервер, копирует изменения и затем направляет общие папки, личные папки, область приложений, USB-копирование и задания снимков на новый диск.",
+		"Switch now": "Переключить сейчас",
+		"DONE": "ГОТОВО",
+		"Shares, personal folders and the app area are now on the new drive.": "Общие папки, личные папки и область приложений теперь на новом диске.",
+		"The old drive is unchanged. When everything works, forget it under": "Старый диск не изменён. Когда всё работает, забудьте его в разделе",
+		"and take the disk out – or keep it as a backup.": "и извлеките диск – или оставьте его как резервную копию.",
+		"The copy was stopped. Going on copies only what is missing.": "Копирование остановлено. Продолжение скопирует только недостающее.",
+		"Go on copying": "Продолжить копирование",
+		"Stop copying?": "Остановить копирование?",
+		"What is copied stays on the new drive; going on later copies only the rest.": "Скопированное остаётся на новом диске; позже будет скопирован только остаток.",
+		"Switch to the new drive now?": "Переключиться на новый диск сейчас?",
+		"Shares, apps, downloads and the media server stop for the last copy and start again on the new drive. Open files on the network are closed.": "Общие папки, приложения, загрузки и медиасервер остановятся для последнего копирования и снова запустятся на новом диске. Открытые по сети файлы будут закрыты.",
+		"source and target are the same drive": "источник и цель – один и тот же диск",
+		"the new drive needs ext4 or btrfs (owners, personal folders, app area)": "новому диску нужен ext4 или btrfs (владельцы, личные папки, область приложений)",
+		"the new drive is not empty – choose an empty drive": "новый диск не пуст – выберите пустой диск",
+		"not enough free space on the new drive": "недостаточно свободного места на новом диске",
+		"copy failed – see the log; starting again copies only what is missing": "копирование не удалось – см. журнал; повторный запуск скопирует только недостающее",
+		"the last copy before switching failed – nothing was switched": "последнее копирование перед переключением не удалось – ничего не переключено",
+		"copy everything first": "сначала скопируйте всё",
+		"a move is already running": "перенос уже выполняется"
 	},
 	"patterns": [
 		[
@@ -2127,6 +2168,10 @@
 			"личная входящая папка $1 · токен $2"
 		],
 		[
+			"^(\\S+ \\S+) · free on the new drive: (\\S+ \\S+)$",
+			"$1 · свободно на новом диске: $2"
+		],
+		[
 			"^(\\S+): no longer starts at boot$",
 			"$1: больше не запускается при включении"
 		],
@@ -2209,6 +2254,10 @@
 		[
 			"^failed (\\S+): ubiupdatevol$",
 			"сбой ($1): не удалось записать систему (ubiupdatevol)"
+		],
+		[
+			"^drive (\\S+) is not mounted$",
+			"диск $1 не подключён"
 		],
 		[
 			"^shared inbox · token (.+)$",
@@ -2485,6 +2534,10 @@
 		[
 			"^(\\S+) downloading …$",
 			"$1 загружается …"
+		],
+		[
+			"^unknown drive (\\S+)$",
+			"неизвестный диск $1"
 		],
 		[
 			"^User “(.+)” saved\\.$",

@@ -2181,3 +2181,47 @@ E1753	Aus einer nicht signierten Quelle installieren?
 E1754	Diese App stammt aus einer Store-Quelle ohne gültige Signatur des ShareOS-Projekts.
 E1755	Ihre Prüfsumme zeigt nur, dass der Download vollständig ist – nicht, wer sie gemacht hat.
 E1756	Katalog-Signatur fehlt oder ist ungültig – nicht verwendet
+E1757	UMZUG AUF EIN NEUES LAUFWERK
+E1758	PLATTENWECHSEL
+E1759	Kopiert alles von einem alten auf ein neues Laufwerk – Freigaben, persönliche Ordner und den App-Bereich – und schaltet dann um, sodass nichts neu eingerichtet werden muss.
+E1760	1 · LAUFWERKE WÄHLEN
+E1761	ALTES LAUFWERK (VON)
+E1762	NEUES LAUFWERK (NACH)
+E1763	Das neue Laufwerk muss eingerichtet und leer sein, mit ext4 oder Btrfs. Es kann im zweiten Schacht oder in einem USB-Gehäuse stecken – nach dem Umzug kann es in einen Schacht. Zuerst einrichten unter
+E1764	Eine alte Platte im USB-Gehäuse wird dort ohne Löschen hinzugefügt (Platte mit Daten).
+E1765	Persönliche Ordner
+E1766	Snapshot-Aufträge
+E1767	Daten
+E1768	zieht mit um
+E1769	Alles auf dem alten Laufwerk wird kopiert – auch Ordner, die nicht freigegeben sind – außer den Snapshots. Besitzer, Rechte und ACLs bleiben. Das alte Laufwerk wird nicht verändert.
+E1770	Prüfen
+E1771	Kopieren starten
+E1772	2 · KOPIEREN
+E1773	3 · UMSCHALTEN LÄUFT
+E1774	3 · UMSCHALTEN
+E1775	Die Dienste sind für den letzten Abgleich angehalten – die Freigaben sind gleich wieder da.
+E1776	Die Box ist während des Kopierens benutzbar. Was sich bis zum Umschalten ändert, wird dann übernommen.
+E1777	Alles ist kopiert.
+E1778	Beim Umschalten halten Freigaben, Apps, Downloads und der Medienserver kurz an; was sich seitdem geändert hat, wird kopiert, dann zeigen Freigaben, persönliche Ordner, App-Bereich, USB-Kopie und Snapshot-Aufträge auf das neue Laufwerk.
+E1779	Jetzt umschalten
+E1780	FERTIG
+E1781	Freigaben, persönliche Ordner und der App-Bereich liegen jetzt auf dem neuen Laufwerk.
+E1782	Das alte Laufwerk ist unverändert. Wenn alles läuft, unter
+E1783	vergessen und die Platte herausnehmen – oder als Sicherung behalten.
+E1784	Das Kopieren wurde angehalten. Weitermachen kopiert nur, was noch fehlt.
+E1785	Weiter kopieren
+E1786	Kopieren anhalten?
+E1787	Was kopiert ist, bleibt auf dem neuen Laufwerk; später weitermachen kopiert nur den Rest.
+E1788	Jetzt auf das neue Laufwerk umschalten?
+E1789	Freigaben, Apps, Downloads und der Medienserver halten für den letzten Abgleich an und starten auf dem neuen Laufwerk neu. Im Netzwerk geöffnete Dateien werden geschlossen.
+E1790	Quelle und Ziel sind dasselbe Laufwerk
+E1791	das neue Laufwerk braucht ext4 oder Btrfs (Besitzer, persönliche Ordner, App-Bereich)
+E1792	das neue Laufwerk ist nicht leer – wähle ein leeres Laufwerk
+E1793	nicht genug freier Platz auf dem neuen Laufwerk
+E1794	Kopieren fehlgeschlagen – siehe Protokoll; ein neuer Start kopiert nur, was fehlt
+E1795	der letzte Abgleich vor dem Umschalten ist fehlgeschlagen – nichts wurde umgestellt
+E1796	zuerst alles kopieren
+E1797	ein Umzug läuft bereits
+P398	$1 · frei auf dem neuen Laufwerk: $2
+P399	unbekanntes Laufwerk $1
+P400	Laufwerk $1 ist nicht eingehängt

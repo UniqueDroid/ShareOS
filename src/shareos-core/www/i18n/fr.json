@@ -1739,7 +1739,48 @@
 		"Install from an unsigned source?": "Installer depuis une source non signée ?",
 		"This app comes from a store source without a valid signature of the ShareOS project.": "Cette application provient d’une source du store sans signature valide du projet ShareOS.",
 		"Its checksum only shows that the download is complete – not who made it.": "Sa somme de contrôle montre seulement que le téléchargement est complet – pas qui l’a créée.",
-		"catalog signature missing or invalid – not used": "signature du catalogue absente ou invalide – non utilisé"
+		"catalog signature missing or invalid – not used": "signature du catalogue absente ou invalide – non utilisé",
+		"MOVE TO A NEW DRIVE": "DÉMÉNAGER VERS UN NOUVEAU DISQUE",
+		"DISK CHANGE": "CHANGEMENT DE DISQUE",
+		"Copies everything from an old drive to a new one – shares, personal folders and the app area – and then switches over, so that nothing has to be set up again.": "Copie tout d’un ancien disque vers un nouveau – partages, dossiers personnels et zone des applications – puis bascule, sans rien avoir à reconfigurer.",
+		"1 · CHOOSE THE DRIVES": "1 · CHOISIR LES DISQUES",
+		"OLD DRIVE (FROM)": "ANCIEN DISQUE (DEPUIS)",
+		"NEW DRIVE (TO)": "NOUVEAU DISQUE (VERS)",
+		"The new drive must be set up and empty, with ext4 or Btrfs. It can be in the second bay or in a USB case – after the move it can go into a bay. Set it up first under": "Le nouveau disque doit être configuré et vide, en ext4 ou Btrfs. Il peut être dans la deuxième baie ou dans un boîtier USB – après le déménagement, il peut aller dans une baie. Configurez-le d’abord sous",
+		"An old disk in a USB case is added there without erasing it (a disk with data).": "Un ancien disque dans un boîtier USB y est ajouté sans être effacé (disque avec données).",
+		"Personal folders": "Dossiers personnels",
+		"Snapshot jobs": "Tâches d’instantanés",
+		"Data": "Données",
+		"moves along": "déménage aussi",
+		"Everything on the old drive is copied – also folders that are not shared – except the snapshots. Owners, permissions and ACLs stay. The old drive is not changed.": "Tout ce qui est sur l’ancien disque est copié – y compris les dossiers non partagés – sauf les instantanés. Propriétaires, droits et ACL sont conservés. L’ancien disque n’est pas modifié.",
+		"Check": "Vérifier",
+		"Start copying": "Lancer la copie",
+		"2 · COPYING": "2 · COPIE",
+		"3 · SWITCHING": "3 · BASCULEMENT EN COURS",
+		"3 · SWITCH": "3 · BASCULER",
+		"Services are stopped for the last copy – shares are back in a moment.": "Les services sont arrêtés pour la dernière copie – les partages reviennent dans un instant.",
+		"The box can be used while it copies. What changes until the switch is copied then.": "La box reste utilisable pendant la copie. Ce qui change d’ici le basculement est copié à ce moment-là.",
+		"Everything is copied.": "Tout est copié.",
+		"Switching stops shares, apps, downloads and the media server for a short time, copies what changed since and then points shares, personal folders, the app area, the USB copy and snapshot jobs to the new drive.": "Le basculement arrête brièvement partages, applications, téléchargements et serveur multimédia, copie ce qui a changé depuis, puis fait pointer partages, dossiers personnels, zone des applications, copie USB et tâches d’instantanés vers le nouveau disque.",
+		"Switch now": "Basculer maintenant",
+		"DONE": "TERMINÉ",
+		"Shares, personal folders and the app area are now on the new drive.": "Les partages, dossiers personnels et la zone des applications sont maintenant sur le nouveau disque.",
+		"The old drive is unchanged. When everything works, forget it under": "L’ancien disque est inchangé. Quand tout fonctionne, oubliez-le sous",
+		"and take the disk out – or keep it as a backup.": "et retirez le disque – ou gardez-le comme sauvegarde.",
+		"The copy was stopped. Going on copies only what is missing.": "La copie a été arrêtée. Reprendre ne copie que ce qui manque.",
+		"Go on copying": "Reprendre la copie",
+		"Stop copying?": "Arrêter la copie ?",
+		"What is copied stays on the new drive; going on later copies only the rest.": "Ce qui est copié reste sur le nouveau disque ; reprendre plus tard ne copie que le reste.",
+		"Switch to the new drive now?": "Basculer maintenant vers le nouveau disque ?",
+		"Shares, apps, downloads and the media server stop for the last copy and start again on the new drive. Open files on the network are closed.": "Partages, applications, téléchargements et serveur multimédia s’arrêtent pour la dernière copie et redémarrent sur le nouveau disque. Les fichiers ouverts sur le réseau sont fermés.",
+		"source and target are the same drive": "la source et la cible sont le même disque",
+		"the new drive needs ext4 or btrfs (owners, personal folders, app area)": "le nouveau disque doit être en ext4 ou btrfs (propriétaires, dossiers personnels, zone des applications)",
+		"the new drive is not empty – choose an empty drive": "le nouveau disque n’est pas vide – choisissez un disque vide",
+		"not enough free space on the new drive": "pas assez d’espace libre sur le nouveau disque",
+		"copy failed – see the log; starting again copies only what is missing": "échec de la copie – voir le journal ; relancer ne copie que ce qui manque",
+		"the last copy before switching failed – nothing was switched": "la dernière copie avant le basculement a échoué – rien n’a été basculé",
+		"copy everything first": "copiez d’abord tout",
+		"a move is already running": "un déménagement est déjà en cours"
 	},
 	"patterns": [
 		[
@@ -2127,6 +2168,10 @@
 			"dossier d’entrée personnel de $1 · jeton $2"
 		],
 		[
+			"^(\\S+ \\S+) · free on the new drive: (\\S+ \\S+)$",
+			"$1 · libre sur le nouveau disque : $2"
+		],
+		[
 			"^(\\S+): no longer starts at boot$",
 			"$1 : ne démarre plus au lancement"
 		],
@@ -2209,6 +2254,10 @@
 		[
 			"^failed (\\S+): ubiupdatevol$",
 			"échec ($1) : le système n'a pas pu être écrit (ubiupdatevol)"
+		],
+		[
+			"^drive (\\S+) is not mounted$",
+			"le disque $1 n’est pas monté"
 		],
 		[
 			"^shared inbox · token (.+)$",
@@ -2485,6 +2534,10 @@
 		[
 			"^(\\S+) downloading …$",
 			"$1 en téléchargement …"
+		],
+		[
+			"^unknown drive (\\S+)$",
+			"disque inconnu $1"
 		],
 		[
 			"^User “(.+)” saved\\.$",

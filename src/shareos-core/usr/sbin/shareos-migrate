@@ -1,0 +1,230 @@
+#!/bin/sh
+#
+# shareos-migrate – move everything from one drive to another (disk change)
+#
+#   shareos-migrate plan <from> <to>   what moves, used and free space, problems (JSON)
+#   shareos-migrate copy <from> <to>   copy in the background (rsync); a new run
+#                                      copies only what is missing
+#   shareos-migrate state              state of the job (JSON)
+#   shareos-migrate cancel             stop the copy – what is copied stays
+#   shareos-migrate switch             stop the services, copy what changed since,
+#                                      point shares, personal folders, app area,
+#                                      USB copy and snapshot jobs to <to>, start
+#                                      the services again
+#   shareos-migrate clear              forget a finished or failed job
+#
+# Everything on <from> is copied except lost+found and Snapshots/: shares,
+# personal folders (home/), the app area (.shareos/) and folders that are not
+# shared. rsync -aHAX --numeric-ids keeps owners, rights, ACLs and hard links.
+# <from> is not changed; forgetting it is a step of its own (Storage). <to>
+# must be a mounted ext4/btrfs volume that holds nothing yet (lost+found).
+# The disk of <to> may sit in the second bay or in a USB case and go into a
+# bay afterwards – volumes are found by their UUID.
+
+ROOT=${SHAREOS_ROOT:-}
+MNT=$ROOT/mnt
+ST=$ROOT/tmp/shareos-migrate
+INIT=$ROOT/etc/init.d
+
+u() { uci -q ${ROOT:+-c "$ROOT/etc/config"} "$@"; }
+log() { logger -t shareos-migrate "$*" 2>/dev/null; }
+die() { printf '{"error":"%s"}\n' "$*"; exit 1; }
+# JSON string (names and paths here have no quotes or backslashes)
+js() { printf '"%s"' "$(printf '%s' "$1" | sed 's/\\/\\\\/g; s/"/\\"/g')"; }
+
+mounted() {
+	[ -n "$SHAREOS_MIGRATE_TEST" ] && { [ -d "$1" ]; return; }
+	grep -q " $1 " /proc/mounts
+}
+fstype() {
+	[ -n "$SHAREOS_MIGRATE_TEST" ] && { echo "${SHAREOS_MIGRATE_FS:-ext4}"; return; }
+	awk -v m="$1" '$2 == m { print $3; exit }' /proc/mounts
+}
+# used / free bytes of a mounted volume, 0 when it is not there (the test
+# suite counts the files and sets the free space)
+used() {
+	if [ -n "$SHAREOS_MIGRATE_TEST" ]; then v=$(du -sk "$1" 2>/dev/null | awk '{ print $1 * 1024 }')
+	else v=$(df -Pk "$1" 2>/dev/null | awk 'NR == 2 { print $3 * 1024 }'); fi
+	echo "${v:-0}"
+}
+avail() {
+	if [ -n "$SHAREOS_MIGRATE_FREE" ]; then v=$SHAREOS_MIGRATE_FREE
+	else v=$(df -Pk "$1" 2>/dev/null | awk 'NR == 2 { print $4 * 1024 }'); fi
+	echo "${v:-0}"
+}
+# what is on a volume besides lost+found and the snapshots
+content() {
+	for f in "$1"/* "$1"/.[!.]* "$1"/..?*; do
+		[ -e "$f" ] || [ -L "$f" ] || continue
+		case "${f##*/}" in lost+found|Snapshots|.shareos-migrate-from) ;; *) echo "${f##*/}" ;; esac
+	done
+}
+
+check() {   # <from> <to> [resume]: prints the first problem, or nothing
+	case "$1" in *[!a-z0-9_-]*|'') echo "invalid drive"; return ;; esac
+	case "$2" in *[!a-z0-9_-]*|'') echo "invalid drive"; return ;; esac
+	[ "$1" != "$2" ] || { echo "source and target are the same drive"; return; }
+	for v in "$1" "$2"; do
+		[ "$(u get storage."$v")" = volume ] || { echo "unknown drive $v"; return; }
+		mounted "$MNT/$v" || { echo "drive $v is not mounted"; return; }
+	done
+	case "$(fstype "$MNT/$2")" in
+		ext4|ext3|btrfs) ;;
+		*) echo "the new drive needs ext4 or btrfs (owners, personal folders, app area)"; return ;;
+	esac
+	# a copy that was stopped goes on into the same drive: what is there counts
+	if [ "$3" = resume ]; then
+		[ "$(( $(avail "$MNT/$2") + $(used "$MNT/$2") ))" -ge "$(used "$MNT/$1")" ] || { echo "not enough free space on the new drive"; return; }
+	else
+		[ -z "$(content "$MNT/$2")" ] || { echo "the new drive is not empty – choose an empty drive"; return; }
+		[ "$(avail "$MNT/$2")" -ge "$(used "$MNT/$1")" ] || { echo "not enough free space on the new drive"; return; }
+	fi
+}
+
+# shares / accounts / jobs that point to a volume
+shares_on() { u show shares | sed -n "s/^shares\.\([a-z0-9_-]*\)\.volume='\{0,1\}$1'\{0,1\}\$/\1/p"; }
+homes_on() { u show accounts | sed -n "s/^accounts\.\([a-z0-9_-]*\)\.home='\{0,1\}$1'\{0,1\}\$/\1/p"; }
+snaps_on() { u show snapshots 2>/dev/null | sed -n "s/^snapshots\.\([a-z0-9_-]*\)\.target='\{0,1\}$1'\{0,1\}\$/\1/p"; }
+list() { first=1; printf '['; for x in "$@"; do [ $first = 1 ] || printf ','; first=0; js "$x"; done; printf ']'; }
+
+# a copy into <to> was started before (state lost by a restart, or stopped)
+resume_of() { [ "$(cat "$MNT/$2/.shareos-migrate-from" 2>/dev/null)" = "$1" ] && echo resume; }
+
+cmd_plan() {
+	p=$(check "$1" "$2" "$(resume_of "$1" "$2")")
+	# shellcheck disable=SC2046
+	printf '{"from":%s,"to":%s,"shares":%s,"homes":%s,"apps":%s,"snapshot_jobs":%s,"used":%s,"free":%s,"ok":%s,"problem":%s}\n' \
+		"$(js "$1")" "$(js "$2")" "$(list $(shares_on "$1"))" "$(list $(homes_on "$1"))" \
+		"$([ "$(u get storage.global.apps)" = "$1" ] && echo true || echo false)" "$(list $(snaps_on "$1"))" \
+		"$(used "$MNT/$1")" "$(avail "$MNT/$2")" \
+		"$([ -z "$p" ] && echo true || echo false)" "$(js "$p")"
+}
+
+state_set() {   # key=value … into the state file (values: numbers or strings)
+	mkdir -p "$ST"
+	keys=$(for kv in "$@"; do printf '%s|' "${kv%%=*}"; done)
+	{ for kv in "$@"; do echo "$kv"; done
+	  [ -f "$ST/state" ] && grep -v -E "^(${keys%|})=" "$ST/state"; } > "$ST/state.$$"
+	mv "$ST/state.$$" "$ST/state"
+}
+sget() { sed -n "s/^$1=//p" "$ST/state" 2>/dev/null | head -1; }
+num() { v=$(sget "$1"); echo "${v:-0}"; }
+
+# rsync of everything but lost+found and Snapshots; $3: extra options
+# (exit code 24: files vanished while copying – fine for a running box)
+sync_all() {
+	# shellcheck disable=SC2086
+	rsync -aHAX --numeric-ids --exclude=/lost+found --exclude=/Snapshots --exclude=/.shareos-migrate-from $3 "$MNT/$1/" "$MNT/$2/"
+	rc=$?
+	[ $rc = 0 ] || [ $rc = 24 ]
+}
+
+running() { pid=$(cat "$ST/pid" 2>/dev/null) && [ -n "$pid" ] && kill -0 "$pid" 2>/dev/null; }
+
+cmd_copy() {
+	running && die "a move is already running"
+	# a copy that was stopped – also by a restart, which empties /tmp – goes on
+	# into the same drive: the new drive notes where its data comes from
+	p=$(check "$1" "$2" "$(resume_of "$1" "$2")")
+	[ -z "$p" ] || die "$p"
+	mkdir -p "$ST"
+	echo "$1" > "$MNT/$2/.shareos-migrate-from"
+	state_set state=copying from="$1" to="$2" total="$(used "$MNT/$1")" done="$(used "$MNT/$2")" percent=0 started="$(date +%s)" error=
+	log "copy $1 -> $2 started"
+	# setsid: cancel stops rsync with its whole group
+	# shellcheck disable=SC2016
+	setsid sh -c '"$0" _copy "$1" "$2" >"$3/rsync.log" 2>&1' "$0" "$1" "$2" "$ST" </dev/null >/dev/null 2>&1 &
+	echo $! > "$ST/pid"
+	printf '{"ok":true}\n'
+}
+
+# the copy itself (in the background); the progress is how much the new
+# drive holds – right also after a copy that was stopped and goes on
+cmd__copy() {
+	sync_all "$1" "$2" &
+	r=$!
+	while kill -0 $r 2>/dev/null; do
+		sleep "${SHAREOS_MIGRATE_POLL:-3}"
+		d=$(used "$MNT/$2") t=$(num total)
+		state_set done="$d" percent="$(awk -v d="$d" -v t="$t" 'BEGIN { p = t > 0 ? int(d * 100 / t) : 0; print (p > 99 ? 99 : p) }')"
+	done
+	if wait $r && [ "$(sget state)" = copying ]; then
+		state_set state=copied percent=100 finished="$(date +%s)"
+		log "copy $1 -> $2 done"
+	elif [ "$(sget state)" = copying ]; then
+		state_set state=error error="copy failed – see the log; starting again copies only what is missing"
+		log "copy $1 -> $2 failed"
+	fi
+	rm -f "$ST/pid"
+}
+
+cmd_cancel() {
+	running || die "no move is running"
+	kill -TERM -"$pid" 2>/dev/null || kill -TERM "$pid"
+	rm -f "$ST/pid"
+	state_set state=cancelled
+	log "copy cancelled"
+	printf '{"ok":true}\n'
+}
+
+cmd_state() {
+	[ -f "$ST/state" ] || { printf '{"state":"none"}\n'; return; }
+	s=$(sget state)
+	# a copy whose process is gone (reboot, killed) is no longer running
+	if [ "$s" = copying ] && ! running; then s=cancelled; state_set state=cancelled; fi
+	printf '{"state":%s,"from":%s,"to":%s,"total":%s,"done":%s,"percent":%s,"started":%s,"error":%s}\n' \
+		"$(js "$s")" "$(js "$(sget from)")" "$(js "$(sget to)")" "$(num total)" \
+		"$(num 'done')" "$(num percent)" "$(num started)" "$(js "$(sget error)")"
+}
+
+services() {   # stop | start: everything that writes to the drives
+	if [ "$1" = stop ]; then
+		for s in S90services S52tremote S51apps S70shares; do [ -x "$INIT/$s" ] && "$INIT/$s" stop >/dev/null 2>&1; done
+	else
+		for s in S70shares S51apps S52tremote S90services; do [ -x "$INIT/$s" ] && "$INIT/$s" start >/dev/null 2>&1; done
+	fi
+}
+
+cmd_switch() {
+	running && die "the copy is still running"
+	[ "$(sget state)" = copied ] || die "copy everything first"
+	from=$(sget from) to=$(sget to)
+	for v in "$from" "$to"; do mounted "$MNT/$v" || die "drive $v is not mounted"; done
+	state_set state=switching
+	log "switch $from -> $to: services stop"
+	services stop
+	# what changed since the copy, and what was deleted since
+	if ! sync_all "$from" "$to" --delete >"$ST/rsync.log" 2>&1; then
+		services start
+		state_set state=copied error="the last copy before switching failed – nothing was switched"
+		die "the last copy before switching failed – nothing was switched"
+	fi
+	for s in $(shares_on "$from"); do u set shares."$s".volume="$to"; done
+	for a in $(homes_on "$from"); do u set accounts."$a".home="$to"; done
+	for j in $(snaps_on "$from"); do u set snapshots."$j".target="$to"; done
+	[ "$(u get storage.global.apps)" = "$from" ] && u set storage.global.apps="$to"
+	[ "$(u get shareos.usbcopy.volume)" = "$from" ] && u set shareos.usbcopy.volume="$to"
+	u commit
+	rm -f "$MNT/$to/.shareos-migrate-from"
+	services start
+	state_set state=done finished="$(date +%s)" error=
+	log "switch $from -> $to done"
+	printf '{"ok":true}\n'
+}
+
+cmd_clear() {
+	running && die "a move is running"
+	rm -rf "$ST"
+	printf '{"ok":true}\n'
+}
+
+case "$1" in
+	plan) cmd_plan "$2" "$3" ;;
+	copy) cmd_copy "$2" "$3" ;;
+	_copy) cmd__copy "$2" "$3" ;;
+	state) cmd_state ;;
+	cancel) cmd_cancel ;;
+	switch) cmd_switch ;;
+	clear) cmd_clear ;;
+	*) sed -n '3,14p' "$0" | sed 's/^# \{0,1\}//'; exit 1 ;;
+esac
