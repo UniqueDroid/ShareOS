@@ -2237,3 +2237,6 @@ E1806	Hardware-Angaben zum Hinzufügen eines Modells
 E1807	Kopieren ist hier nicht erlaubt – nimm Herunterladen.
 E1808	Modell, Flash-Partitionen, CPU, Speicher, LEDs, Sensoren, Tasten, GPIOs, serielle Schnittstellen, Netzwerk, die U-Boot-Umgebung und das Kernel-Protokoll dieser Box – alles, was ein neues Modell braucht. Es wird nur gelesen, nichts geändert. Hänge die Datei an das Issue des Modells.
 E1809	MAC-Adressen und Seriennummern zeigen (sonst maskiert – nicht in öffentliche Issues)
+E1810	STIL
+E1811	Glas
+E1812	„Glas“ zeigt dieselben Seiten mit durchscheinenden Flächen über einem weichen Hintergrund.

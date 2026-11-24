@@ -212,7 +212,7 @@ SL=$(echo "$L2" | python3 -c 'import json,sys; print(json.load(sys.stdin)["ubus_
 rpc shareos.me bind "{\"username\":\"lisa\",\"password\":\"lisa1234\",\"ubus_rpc_session\":\"$SL\"}" >/dev/null
 fs() { rpc shareos.files "$1" "{\"ubus_rpc_session\":\"$SL\"${2:+,$2}}"; }
 check "files: users get the file browser in their ACL" "echo '$L2' | js \"'shareos.files' in d['acls']['ubus'] and 'ticket' in d['acls']['ubus']['shareos.files']\""
-check "files: allowed user sees the flag" "rpc shareos.me get '{\"ubus_rpc_session\":\"$SL\"}' | js \"d['files'] and d['ui']=={'theme':None,'accent':None}\""
+check "files: allowed user sees the flag" "rpc shareos.me get '{\"ubus_rpc_session\":\"$SL\"}' | js \"d['files'] and d['ui']=={'theme':None,'accent':None,'style':None}\""
 check "files: the box has what a background job measures with (nice, du -sk --)" "run 'nice du -sk -- /etc | awk \"{ s += \\\$1 } END { print s + 0 }\"' | grep -Eq '^[1-9][0-9]*\$'"
 check "files: users may stop their background jobs (an unknown one is refused)" "fs job_cancel '\"id\":\"0123456789abcdef\"' | grep -q 'unknown job'"
 check "files: user without the right is refused" "rpc shareos.files roots '{\"ubus_rpc_session\":\"$SID\"}' | grep -q 'not allowed'"
@@ -309,10 +309,12 @@ rpc shareos.shares set '{"name":"fotos","volume":"daten","path":"Fotos","comment
 aclwait /mnt/daten/Fotos/Neu 'group:familie:r-x'; sleep 1
 check "Linux: a right taken away is gone everywhere" "! run 'getfacl -p -R /mnt/daten/Fotos' | grep -q 'user:lisa' && ! run 'su -s /bin/sh lisa -c \"ls /mnt/daten/Fotos\"' >/dev/null"
 check "files: right can be withdrawn" "run 'shareos-users set lisa --files=0' >/dev/null; fs roots '' | grep -q 'not allowed'"
-check "look: own theme and accent" "rpc shareos.me ui_set '{\"ubus_rpc_session\":\"$SL\",\"theme\":\"light\",\"accent\":\"green\"}' | js \"d=={'theme':'light','accent':'green'}\" && rpc shareos.me get '{\"ubus_rpc_session\":\"$SL\"}' | js \"d['ui']['theme']=='light'\""
+check "look: own theme and accent" "rpc shareos.me ui_set '{\"ubus_rpc_session\":\"$SL\",\"theme\":\"light\",\"accent\":\"green\"}' | js \"d=={'theme':'light','accent':'green','style':None}\" && rpc shareos.me get '{\"ubus_rpc_session\":\"$SL\"}' | js \"d['ui']['theme']=='light'\""
 check "look: invalid accent rejected" "rpc shareos.me ui_set '{\"ubus_rpc_session\":\"$SL\",\"accent\":\"pink\"}' | grep -q 'invalid accent'"
 check "look: the new accents (grey, violet, orange, teal)" "rpc shareos.me ui_set '{\"ubus_rpc_session\":\"$SL\",\"accent\":\"grey\"}' | js \"d['accent']=='grey'\" && rpc shareos.me ui_set '{\"ubus_rpc_session\":\"$SL\",\"accent\":\"violet\"}' | js \"d['accent']=='violet'\" && rpc shareos.me ui_set '{\"ubus_rpc_session\":\"$SL\",\"accent\":\"orange\"}' | js \"d['accent']=='orange'\" && rpc shareos.me ui_set '{\"ubus_rpc_session\":\"$SL\",\"accent\":\"teal\"}' | js \"d['accent']=='teal'\""
-check "look: back to the look for everyone" "rpc shareos.me ui_set '{\"ubus_rpc_session\":\"$SL\",\"theme\":\"\",\"accent\":\"\"}' | js \"d=={'theme':None,'accent':None}\""
+check "look: own style (glass)" "rpc shareos.me ui_set '{\"ubus_rpc_session\":\"$SL\",\"style\":\"glass\"}' | js \"d['style']=='glass'\" && rpc shareos.me get '{\"ubus_rpc_session\":\"$SL\"}' | js \"d['ui']['style']=='glass'\""
+check "look: invalid style rejected" "rpc shareos.me ui_set '{\"ubus_rpc_session\":\"$SL\",\"style\":\"neon\"}' | grep -q 'invalid style'"
+check "look: back to the look for everyone" "rpc shareos.me ui_set '{\"ubus_rpc_session\":\"$SL\",\"theme\":\"\",\"accent\":\"\",\"style\":\"\"}' | js \"d=={'theme':None,'accent':None,'style':None}\""
 check "fav: none at first, bar on" "rpc shareos.me get '{\"ubus_rpc_session\":\"$SL\"}' | js \"d['fav']=={'apps':[],'bar':True,'text':True}\""
 check "fav: own favourites (doubles dropped) and bar off" "rpc shareos.me fav_set '{\"ubus_rpc_session\":\"$SL\",\"apps\":[\"notes\",\"webpad\",\"notes\"],\"bar\":false,\"text\":false}' | js \"d=={'apps':['notes','webpad'],'bar':False,'text':False}\" && rpc shareos.me get '{\"ubus_rpc_session\":\"$SL\"}' | js \"d['fav']['apps']==['notes','webpad'] and not d['fav']['bar']\""
 check "fav: a missing key stays" "rpc shareos.me fav_set '{\"ubus_rpc_session\":\"$SL\",\"bar\":true}' | js \"d=={'apps':['notes','webpad'],'bar':True,'text':False}\""

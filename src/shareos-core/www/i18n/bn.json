@@ -1792,7 +1792,10 @@
 		"hardware facts for adding a model": "মডেল যোগ করার জন্য হার্ডওয়্যারের তথ্য",
 		"Copying is not allowed here – use Download.": "এখানে কপি করার অনুমতি নেই – ডাউনলোড ব্যবহার করুন।",
 		"Model, flash partitions, CPU, memory, LEDs, sensors, buttons, GPIOs, serial ports, network, the U-Boot environment and the kernel log of this box – everything a new model needs. Only read, nothing is changed. Attach the file to the issue of the model.": "এই বক্সের মডেল, ফ্ল্যাশ পার্টিশন, CPU, মেমরি, LED, সেন্সর, বোতাম, GPIO, সিরিয়াল পোর্ট, নেটওয়ার্ক, U-Boot এনভায়রনমেন্ট ও কার্নেল লগ – নতুন মডেলের যা দরকার সব। কেবল পড়া হয়, কিছু বদলায় না। ফাইলটি মডেলের issue-তে সংযুক্ত করুন।",
-		"Show MAC addresses and serial numbers (otherwise masked – keep them out of public issues)": "MAC ঠিকানা ও সিরিয়াল নম্বর দেখান (নইলে লুকানো – সর্বজনীন issue-তে দেবেন না)"
+		"Show MAC addresses and serial numbers (otherwise masked – keep them out of public issues)": "MAC ঠিকানা ও সিরিয়াল নম্বর দেখান (নইলে লুকানো – সর্বজনীন issue-তে দেবেন না)",
+		"STYLE": "স্টাইল",
+		"Glass": "গ্লাস",
+		"Glass shows the same pages with translucent panes over a soft background.": "গ্লাস একই পৃষ্ঠাগুলো নরম পটভূমির উপর স্বচ্ছাভ প্যানেলসহ দেখায়।"
 	},
 	"patterns": [
 		[

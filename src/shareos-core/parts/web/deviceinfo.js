@@ -40,9 +40,9 @@ Object.assign(SYS, {
 					<button class="btn sm ghost" type="button" data-act="di-reload">Read again</button>
 				</div>
 			</div>
-			${!d || d.loading ? html`<div class="panel"><div class="empty"><div class="spin" style="margin:0"></div><span>Reading …</span></div></div>`
-				: d.error ? html`<div class="banner">${svg(I.warn)}<span>${d.error}</span></div>`
-				: html`<pre class="panel" style="white-space:pre-wrap;word-break:break-all;font-size:12px;max-height:60vh;overflow:auto;margin:0">${d.text}</pre>`}
+			${!d || d.loading ? html`<div class="panel" style="margin-top:16px"><div class="empty"><div class="spin" style="margin:0"></div><span>Reading …</span></div></div>`
+				: d.error ? html`<div class="banner" style="margin-top:16px">${svg(I.warn)}<span>${d.error}</span></div>`
+				: html`<pre class="panel" style="white-space:pre-wrap;word-break:break-all;font-size:12px;max-height:60vh;overflow:auto;margin:16px 0 0">${d.text}</pre>`}
 		</section>`;
 	}
 });

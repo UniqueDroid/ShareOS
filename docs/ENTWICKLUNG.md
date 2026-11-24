@@ -336,8 +336,9 @@ Die Chronik umfasst den ersten Monat, vom Start am Freitag, 16.10., bis zum 16.1
 ## Die Oberfläche
 
 Standard ist das dunkelblaue Design mit Logo. Hell, Dunkel oder „wie das
-Betriebssystem“ sowie die Akzentfarben Blau, Grün, Rot und Weiß gelten für alle
-Nutzer. Logo und Browser-Symbol nehmen die Akzentfarbe an, das Logo lässt sich
+Betriebssystem“, der Stil (*Classic* oder *Glass*: dieselben Seiten mit
+durchscheinenden Flächen über einem weichen, mittelhellen Hintergrund) und die
+Akzentfarben gelten für alle Nutzer; Benutzer mit Web-Zugang können eigene wählen. Logo und Browser-Symbol nehmen die Akzentfarbe an, das Logo lässt sich
 abschalten. Jeder Bereich mit Kacheln hat rechts in der Kopfzeile einen
 Schalter für die Tabellenansicht. Die Oberfläche gibt es auf Deutsch und
 Englisch.

@@ -231,12 +231,15 @@ Object.assign(SYS, {
 			<div class="ph"><span class="pt">APPEARANCE</span><span class="tag ml">applies to everyone</span></div>
 			<div class="fields" style="grid-template-columns:1fr"><label class="f"><span>LIGHT OR DARK</span><select id="opt-theme">
 				${[['dark', 'Dark'], ['light', 'Light'], ['system', 'Same as the operating system (automatic)']].map(([v, t]) => html`<option value="${v}"${S.theme === v ? raw(' selected') : ''}>${t}</option>`)}
+			</select></label><label class="f"><span>STYLE</span><select id="opt-style">
+				${Object.entries(STYLE_NAMES).map(([v, t]) => html`<option value="${v}"${S.style === v ? raw(' selected') : ''}>${t}</option>`)}
 			</select></label></div>
 			<div class="pt" style="margin:14px 0 8px">ACCENT COLOUR</div>
 			<div class="row">${Object.keys(names).map((c) => html`<button class="sw c-${c}${S.accent === c ? ' on' : ''}" type="button" data-act="accent" data-c="${c}" aria-label="Accent colour ${names[c]}" aria-pressed="${S.accent === c}" title="${names[c]}"><i></i></button>`)}</div>
 			<p class="note">The logo and the browser icon take on the accent colour. The setting applies to everyone, including the login page.</p>
+			<p class="note">Glass shows the same pages with translucent panes over a soft background.</p>
 			<div style="display:grid;gap:6px;margin-top:14px">
-				<label class="chk"><input type="checkbox" id="opt-scan"${S.scan ? raw(' checked') : ''}>Scanlines (this browser only)</label>
+				${S.style === 'glass' ? '' : html`<label class="chk"><input type="checkbox" id="opt-scan"${S.scan ? raw(' checked') : ''}>Scanlines (this browser only)</label>`}
 			</div>
 		</div>
 		<div class="panel" style="max-width:560px;margin-top:16px">
@@ -436,6 +439,7 @@ afterSystemPage('general', () => {
 
 afterSystemPage('appearance', () => {
 		$('#opt-theme').addEventListener('change', (e) => { S.theme = e.target.value; applyTheme(); renderHeader(); renderMain(); saveLook({ theme: S.theme }); });
+		$('#opt-style').addEventListener('change', (e) => { S.style = e.target.value; applyTheme(); renderHeader(); renderMain(); saveLook({ style: S.style }); });
 		$('#opt-lang').addEventListener('change', async (e) => {
 			try {
 				await rpc('shareos.ui', 'set', { lang: e.target.value });
@@ -450,7 +454,7 @@ afterSystemPage('appearance', () => {
 				S.logo = on; store.set('logo', on ? '1' : '0'); renderHeader(); renderMain();
 			} catch (err) { e.target.checked = !on; toast('Logo: ' + err.message, true); }
 		});
-		$('#opt-scan').addEventListener('change', (e) => { S.scan = e.target.checked; store.set('scan', S.scan ? '1' : '0'); applyTheme(); });
+		$('#opt-scan')?.addEventListener('change', (e) => { S.scan = e.target.checked; store.set('scan', S.scan ? '1' : '0'); applyTheme(); });
 		document.querySelectorAll('.chip-show').forEach((c) => c.addEventListener('change', () => {
 			const h = new Set(chipHidden());
 			if (c.checked) h.delete(c.dataset.id); else h.add(c.dataset.id);
@@ -476,8 +480,8 @@ Object.assign(ACTIONS, {
 	},
 	async 'look-reset'() {
 		try {
-			S.me.ui = await rpc('shareos.me', 'ui_set', { theme: '', accent: '' });
-			applyOwnLook(); store.set('theme', S.theme); store.set('accent', S.accent);
+			S.me.ui = await rpc('shareos.me', 'ui_set', { theme: '', accent: '', style: '' });
+			applyOwnLook(); store.set('theme', S.theme); store.set('accent', S.accent); store.set('style', S.style);
 			renderUserHeader(); renderUserMain(); toast('Look reset to the one for everyone.');
 		} catch (e) { toast('Appearance: ' + e.message, true); }
 	},

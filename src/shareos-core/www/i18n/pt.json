@@ -1792,7 +1792,10 @@
 		"hardware facts for adding a model": "dados de hardware para adicionar um modelo",
 		"Copying is not allowed here – use Download.": "Copiar não é permitido aqui – use Transferir.",
 		"Model, flash partitions, CPU, memory, LEDs, sensors, buttons, GPIOs, serial ports, network, the U-Boot environment and the kernel log of this box – everything a new model needs. Only read, nothing is changed. Attach the file to the issue of the model.": "Modelo, partições flash, CPU, memória, LEDs, sensores, botões, GPIOs, portas série, rede, o ambiente U-Boot e o registo do kernel desta caixa – tudo o que um novo modelo precisa. Só é lido, nada é alterado. Anexe o ficheiro ao issue do modelo.",
-		"Show MAC addresses and serial numbers (otherwise masked – keep them out of public issues)": "Mostrar endereços MAC e números de série (caso contrário ocultos – não os coloque em issues públicos)"
+		"Show MAC addresses and serial numbers (otherwise masked – keep them out of public issues)": "Mostrar endereços MAC e números de série (caso contrário ocultos – não os coloque em issues públicos)",
+		"STYLE": "ESTILO",
+		"Glass": "Vidro",
+		"Glass shows the same pages with translucent panes over a soft background.": "Vidro mostra as mesmas páginas com painéis translúcidos sobre um fundo suave."
 	},
 	"patterns": [
 		[

@@ -335,8 +335,9 @@ The timeline covers the first month, from the start on Friday, 16 Oct to 16 Nov 
 ## The web interface
 
 The default is the dark blue theme with the logo. Light, dark or "same as the
-operating system" and the accent colours blue, green, red and white apply to
-all users. The logo and the browser icon take on the accent colour; the logo
+operating system", the style (*Classic* or *Glass*: the same pages with
+translucent panes over a soft mid-tone background) and the accent colours
+apply to all users; users with web access can choose their own. The logo and the browser icon take on the accent colour; the logo
 can be switched off. Every section with tiles has a switch for a table view at
 the right of its heading. The interface is available in German and English.
 
