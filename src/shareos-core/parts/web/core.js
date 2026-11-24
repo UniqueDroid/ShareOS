@@ -192,10 +192,12 @@ const TABS = [
 	['overview', 'OVERVIEW'], ['storage', 'STORAGE'], ['shares', 'SHARES'], ['services', 'SERVICES'],
 	['apps', 'APPS'], ['cloud', 'CLOUD'], ['paperless', 'PAPERLESS'], ['dnsfilter', 'DNS FILTER'], ['system', 'SYSTEM']
 ];
+// pages of System without a tab in its menu (reached by link)
+const SYS_HIDDEN = ['deviceinfo'];
 const SYS_SUBS = [['general', 'GENERAL'], ['appearance', 'APPEARANCE'], ['network', 'NETWORK'], ['notifications', 'MESSAGES'], ['logs', 'LOGS'], ['terminal', 'TERMINAL'], ['time', 'TIME'], ['power', 'POWER & RESET'], ['firmware', 'FIRMWARE']];
 const SVC_SUBS = [['status', 'STATUS'], ['autostart', 'AUTOSTART'], ['dlna', 'MEDIA SERVER'], ['printer', 'PRINTERS'], ['ups', 'UPS'], ['torrent', 'TORRENTS']];
 const SHR_SUBS = [['shares', 'SHARES'], ['files', 'FILES'], ['users', 'USER'], ['groups', 'GROUPS']];
-const STO_SUBS = [['volumes', 'DRIVES'], ['health', 'HEALTH'], ['snapshots', 'SNAPSHOTS']];
+const STO_SUBS = [['volumes', 'DRIVES'], ['health', 'HEALTH'], ['snapshots', 'SNAPSHOTS'], ['move', 'DISK CHANGE']];
 const ROLE_TXT = { admin: 'Administrator', user: 'User', share: 'Shares only' };
 // pages that moved: old link -> new place
 const SUB_MOVED = { hardware: 'power', https: 'network', about: 'general' };

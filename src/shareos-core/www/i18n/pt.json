@@ -1733,7 +1733,66 @@
 		"uploaded": "enviado",
 		"uploaded – not checked": "enviado – não verificado",
 		"from the app repository). Uploaded packages are marked “uploaded – not checked”: the box cannot compare them with the store.": "do repositório de apps). Pacotes enviados são marcados como \"enviado – não verificado\": o aparelho não consegue compará-los com a loja.",
-		"Signed in": "Conectado"
+		"Signed in": "Conectado",
+		"Over SMB a share of the same name opens instead of this personal folder – create that share again under another name.": "Por SMB abre-se uma partilha com o mesmo nome em vez desta pasta pessoal – crie essa partilha de novo com outro nome.",
+		"Over SMB this share hides the personal folder of the account of the same name – create it again under another name to free that address.": "Por SMB esta partilha oculta a pasta pessoal da conta com o mesmo nome – crie-a de novo com outro nome para libertar esse endereço.",
+		"Install from an unsigned source?": "Instalar a partir de uma fonte não assinada?",
+		"This app comes from a store source without a valid signature of the ShareOS project.": "Esta app vem de uma fonte da loja sem uma assinatura válida do projeto ShareOS.",
+		"Its checksum only shows that the download is complete – not who made it.": "A sua soma de verificação só mostra que a transferência está completa – não quem a fez.",
+		"catalog signature missing or invalid – not used": "assinatura do catálogo em falta ou inválida – não usado",
+		"MOVE TO A NEW DRIVE": "MOVER PARA UMA NOVA UNIDADE",
+		"DISK CHANGE": "TROCA DE DISCO",
+		"Copies everything from an old drive to a new one – shares, personal folders and the app area – and then switches over, so that nothing has to be set up again.": "Copia tudo de uma unidade antiga para uma nova – partilhas, pastas pessoais e a área de apps – e depois muda, sem ter de configurar nada de novo.",
+		"1 · CHOOSE THE DRIVES": "1 · ESCOLHER AS UNIDADES",
+		"OLD DRIVE (FROM)": "UNIDADE ANTIGA (DE)",
+		"NEW DRIVE (TO)": "NOVA UNIDADE (PARA)",
+		"The new drive must be set up and empty, with ext4 or Btrfs. It can be in the second bay or in a USB case – after the move it can go into a bay. Set it up first under": "A nova unidade tem de estar configurada e vazia, com ext4 ou Btrfs. Pode estar no segundo compartimento ou numa caixa USB – depois da mudança pode ir para um compartimento. Configure-a primeiro em",
+		"An old disk in a USB case is added there without erasing it (a disk with data).": "Um disco antigo numa caixa USB é adicionado aí sem ser apagado (disco com dados).",
+		"Personal folders": "Pastas pessoais",
+		"Snapshot jobs": "Tarefas de instantâneos",
+		"Data": "Dados",
+		"moves along": "muda também",
+		"Everything on the old drive is copied – also folders that are not shared – except the snapshots. Owners, permissions and ACLs stay. The old drive is not changed.": "Tudo o que está na unidade antiga é copiado – também pastas não partilhadas – exceto os instantâneos. Donos, permissões e ACL mantêm-se. A unidade antiga não é alterada.",
+		"Check": "Verificar",
+		"Start copying": "Começar a copiar",
+		"2 · COPYING": "2 · A COPIAR",
+		"3 · SWITCHING": "3 · A MUDAR",
+		"3 · SWITCH": "3 · MUDAR",
+		"Services are stopped for the last copy – shares are back in a moment.": "Os serviços estão parados para a última cópia – as partilhas voltam dentro de momentos.",
+		"The box can be used while it copies. What changes until the switch is copied then.": "A caixa pode ser usada enquanto copia. O que mudar até à mudança é copiado nessa altura.",
+		"Everything is copied.": "Tudo está copiado.",
+		"Switching stops shares, apps, downloads, the media server and scheduled jobs for a short time, copies what changed since and then points shares, personal folders, the app area, the USB copy, snapshot jobs and the folders of Transmission and Syncthing to the new drive.": "A mudança para brevemente partilhas, apps, transferências, o servidor multimédia e as tarefas agendadas, copia o que mudou desde então e depois aponta partilhas, pastas pessoais, área de apps, cópia USB, tarefas de instantâneos e as pastas do Transmission e do Syncthing para a nova unidade.",
+		"Switch now": "Mudar agora",
+		"DONE": "CONCLUÍDO",
+		"Shares, personal folders and the app area are now on the new drive.": "As partilhas, pastas pessoais e a área de apps estão agora na nova unidade.",
+		"The old drive is unchanged. When everything works, forget it under": "A unidade antiga está inalterada. Quando tudo funcionar, esqueça-a em",
+		"and take the disk out – or keep it as a backup.": "e retire o disco – ou guarde-o como cópia de segurança.",
+		"The copy was stopped. Going on copies only what is missing.": "A cópia foi parada. Continuar copia apenas o que falta.",
+		"Go on copying": "Continuar a copiar",
+		"Stop copying?": "Parar a cópia?",
+		"What is copied stays on the new drive; going on later copies only the rest.": "O que foi copiado fica na nova unidade; continuar mais tarde copia só o resto.",
+		"Switch to the new drive now?": "Mudar agora para a nova unidade?",
+		"Shares, apps, downloads and the media server stop for the last copy and start again on the new drive. Open files on the network are closed.": "Partilhas, apps, transferências e o servidor multimédia param para a última cópia e arrancam de novo na nova unidade. Os ficheiros abertos na rede são fechados.",
+		"source and target are the same drive": "a origem e o destino são a mesma unidade",
+		"the new drive needs ext4 or btrfs (owners, personal folders, app area)": "a nova unidade precisa de ext4 ou btrfs (donos, pastas pessoais, área de apps)",
+		"the new drive is not empty – choose an empty drive": "a nova unidade não está vazia – escolha uma unidade vazia",
+		"not enough free space on the new drive": "não há espaço livre suficiente na nova unidade",
+		"copy failed – see the log; starting again copies only what is missing": "a cópia falhou – veja o registo; recomeçar copia só o que falta",
+		"the last copy before switching failed – nothing was switched": "a última cópia antes da mudança falhou – nada foi mudado",
+		"copy everything first": "copie tudo primeiro",
+		"a move is already running": "já está a decorrer uma mudança",
+		"a copy in Files, a cloud job, a snapshot or Paperless is still running – wait until it is done": "ainda está a decorrer uma cópia em Files, uma tarefa na nuvem, um instantâneo ou o Paperless – aguarde até terminar",
+		"switching stopped before it was done – start it again, or restart the box": "a mudança parou antes de terminar – inicie-a novamente ou reinicie a caixa",
+		"autobrr: filters with the action Watch dir still name the hand-over folder on the old drive – change it in autobrr to the folder on the new drive.": "autobrr: os filtros com a ação Watch dir ainda indicam a pasta de entrega na unidade antiga – altere-a no autobrr para a pasta na nova unidade.",
+		"Test image for a new model.": "Imagem de teste para um novo modelo.",
+		"root keeps the password shareos – use the box only in your own network. Please send the device info:": "o root mantém a palavra-passe shareos – use a caixa apenas na sua própria rede. Envie as informações do dispositivo:",
+		"Device info": "Informações do dispositivo",
+		"Reading …": "A ler …",
+		"DEVICE INFO": "INFORMAÇÕES DO DISPOSITIVO",
+		"hardware facts for adding a model": "dados de hardware para adicionar um modelo",
+		"Copying is not allowed here – use Download.": "Copiar não é permitido aqui – use Transferir.",
+		"Model, flash partitions, CPU, memory, LEDs, sensors, buttons, GPIOs, serial ports, network, the U-Boot environment and the kernel log of this box – everything a new model needs. Only read, nothing is changed. Attach the file to the issue of the model.": "Modelo, partições flash, CPU, memória, LEDs, sensores, botões, GPIOs, portas série, rede, o ambiente U-Boot e o registo do kernel desta caixa – tudo o que um novo modelo precisa. Só é lido, nada é alterado. Anexe o ficheiro ao issue do modelo.",
+		"Show MAC addresses and serial numbers (otherwise masked – keep them out of public issues)": "Mostrar endereços MAC e números de série (caso contrário ocultos – não os coloque em issues públicos)"
 	},
 	"patterns": [
 		[
@@ -2121,6 +2180,10 @@
 			"entrada pessoal de $1 · token $2"
 		],
 		[
+			"^(\\S+ \\S+) · free on the new drive: (\\S+ \\S+)$",
+			"$1 · livre na nova unidade: $2"
+		],
+		[
 			"^(\\S+): no longer starts at boot$",
 			"$1: não inicia mais ao ligar"
 		],
@@ -2203,6 +2266,10 @@
 		[
 			"^failed (\\S+): ubiupdatevol$",
 			"falhou ($1): não foi possível gravar o sistema (ubiupdatevol)"
+		],
+		[
+			"^drive (\\S+) is not mounted$",
+			"a unidade $1 não está montada"
 		],
 		[
 			"^shared inbox · token (.+)$",
@@ -2479,6 +2546,10 @@
 		[
 			"^(\\S+) downloading …$",
 			"$1 baixando …"
+		],
+		[
+			"^unknown drive (\\S+)$",
+			"unidade desconhecida $1"
 		],
 		[
 			"^User “(.+)” saved\\.$",

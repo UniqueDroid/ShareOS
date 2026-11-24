@@ -30,10 +30,17 @@
 #   BOARD_LED_POWER     power LED; empty: driven by the MCU (/tmp/sys/power_led)
 #   BOARD_RAM_SMALL     1 on boxes with 128 MB RAM
 #   BOARD_TESTED        1 when tested on real hardware
+#   BOARD_DEVTEST       1 on a model that is being added (devtest image): root
+#                       keeps the password "shareos" (no claiming), the web
+#                       interface says so and offers the device info
+#                       (#/deviceinfo); its files are named …-devtest and are
+#                       never part of a release. Only set in the case of
+#                       such a model – an unknown model (no device tree, the
+#                       emulator) is claimed as usual.
 
 board_detect() {
 	model=$( { tr -d '\000' < ${SHAREOS_ROOT:-}/proc/device-tree/model; } 2>/dev/null)
-	BOARD_POWER_BUTTON= BOARD_POWER_BACK= BOARD_LED_POWER= BOARD_RAM_SMALL=0 BOARD_TESTED=0
+	BOARD_POWER_BUTTON= BOARD_POWER_BACK= BOARD_LED_POWER= BOARD_RAM_SMALL=0 BOARD_TESTED=0 BOARD_DEVTEST=0
 	case "$model" in
 	*DNS-320L*)
 		BOARD_ID=dns320l BOARD_NAME="D-Link DNS-320L rev A" BOARD_FWNAME=DNS-320L-rev-Ax
@@ -68,7 +75,9 @@ board_detect() {
 		BOARD_LED_POWER=dns320:blue:power
 		# the front has the power and disk LEDs only (D-Link manual): installation
 		# and rescue mode blink the power LED
-		BOARD_LED_INSTALL=dns320:blue:power ;;
+		BOARD_LED_INSTALL=dns320:blue:power
+		# being added: root / shareos, device info (#180)
+		BOARD_DEVTEST=1 ;;
 	*DNS-320*)
 		BOARD_ID=dns320a BOARD_NAME="D-Link DNS-320 rev A" BOARD_FWNAME=DNS-320-rev-Ax
 		BOARD_SIG=DNS323D1 BOARD_MODEL=DNS-320 BOARD_CONTROL=mcu-temp BOARD_RTC=kernel
@@ -92,7 +101,7 @@ board_detect() {
 # all variables as KEY=value lines (for /tmp/sys/board.env and shareos-boardinfo)
 board_env() {
 	for v in ID NAME FWNAME SIG MODEL CONTROL RTC POWER_BUTTON POWER_BACK \
-		LED_STATUS LED_USB LED_INSTALL LED_DISK1 LED_DISK2 LED_POWER RAM_SMALL TESTED; do
+		LED_STATUS LED_USB LED_INSTALL LED_DISK1 LED_DISK2 LED_POWER RAM_SMALL TESTED DEVTEST; do
 		eval "printf 'BOARD_%s=\"%s\"\n' $v \"\$BOARD_$v\""
 	done
 }

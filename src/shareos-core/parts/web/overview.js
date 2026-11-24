@@ -71,7 +71,7 @@ const VIEWS = {
 		const e = i.network?.eth0 || {};
 		const bootTxt = { flash: 'Flash (UBI)', netroot: 'Network (RAM)', ram: 'RAM' }[i.boot] || i.boot;
 		const svcUp = S.services ? S.services.filter((x) => x.running).length : null;
-		return html`
+		return html`${devtestBanner()}
 		<section class="sec" data-part="load">
 			<h2 class="gh">SYSTEM <span>live · every 5 s · temperature up to 15 s old</span></h2>
 			<div class="g2">
@@ -124,7 +124,7 @@ const VIEWS = {
 		const sub = S.route.sub;
 		return html`
 		<nav class="subtabs" aria-label="Storage">${STO_SUBS.map(([id, label]) => html`<a class="st${sub === id ? ' on' : ''}" href="#/storage/${id}">${label}</a>`)}</nav>
-		${sub === 'snapshots' ? snapshotsView() : sub === 'health' ? healthView() : storageView()}`;
+		${sub === 'snapshots' ? snapshotsView() : sub === 'health' ? healthView() : sub === 'move' ? migrateView() : storageView()}`;
 	},
 
 	shares() {

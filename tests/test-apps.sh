@@ -87,6 +87,23 @@ print(json.dumps({"schema": 1, "apps": [
 PY
 run "uci -q delete apps.store.source; uci add_list apps.store.source=file:///tmp/pkg/index.json; uci set apps.store.port=$PORT; uci set apps.store.https_port=$((PORT+1)); uci set shareos.web.https=0; uci commit apps; uci commit shareos" >/dev/null
 
+# the catalog is signed with a test key, as the app repository signs index.json
+openssl ecparam -name prime256v1 -genkey -noout -out $T/cat.key 2>/dev/null
+mkdir -p $R/etc/shareos; openssl ec -in $T/cat.key -pubout -out $R/etc/shareos/catalog.pub 2>/dev/null
+sign_cat() { openssl dgst -sha256 -sign $T/cat.key -out $P/index.json.sig $P/index.json; }
+sign_cat
+runoff() { chroot "$R" /usr/bin/env SHAREOS_APPS_ALLOW_FILE=1 SHAREOS_APPS_OFFICIAL=file:///tmp/pkg/index.json /bin/sh -c "$*" 2>&1; }
+check "signed catalog: the official source is used, its apps count as signed" "runoff 'shareos-apps catalog' | js \"not d['errors'] and d['apps'] and all(a['signed'] for a in d['apps'])\""
+mv $P/index.json.sig $T/sig.ok
+check "signed catalog: the official source without .sig is refused" "runoff 'shareos-apps catalog' | js \"d['apps']==[] and 'signature' in d['errors'][0]['error']\""
+echo '{"apps":[]}' > $T/other.json; openssl dgst -sha256 -sign $T/cat.key -out $P/index.json.sig $T/other.json
+check "signed catalog: a signature of another file is refused" "runoff 'shareos-apps catalog' | js \"d['apps']==[] and 'signature' in d['errors'][0]['error']\""
+openssl ecparam -name prime256v1 -genkey -noout -out $T/evil.key 2>/dev/null; openssl dgst -sha256 -sign $T/evil.key -out $P/index.json.sig $P/index.json
+check "signed catalog: a signature with another key is refused" "runoff 'shareos-apps catalog' | js \"d['apps']==[] and 'signature' in d['errors'][0]['error']\""
+check "signed catalog: another source without a valid signature still works, its apps not signed" "run 'shareos-apps catalog' | js \"not d['errors'] and d['apps'] and not any(a['signed'] for a in d['apps'])\""
+check "signed catalog: an app from such a source installs as not checked" "run 'shareos-apps install helper' | js \"d['ok'] and not d['verified']\" && run 'shareos-apps remove helper' | js \"d.get('ok')\""
+mv $T/sig.ok $P/index.json.sig
+
 C=$(run "shareos-apps catalog")
 check "catalog: stable channel shows release versions only" "echo '$C' | js \"[(a['id'],a['latest']) for a in d['apps']]==[('broken','1.0.0'),('hello','1.0.0'),('helper','1.0.0'),('nanox','1.0.0'),('needy','1.0.0'),('paperless','1.0.0')]\""
 check "catalog: a module keeps its field, only with its own id" "echo '$C' | js \"{a['id']:a['module'] for a in d['apps'] if a['type']=='system'}=={'paperless':'paperless','nanox':None} and all(a['module'] is None for a in d['apps'] if a['type']!='system')\""
@@ -381,7 +398,11 @@ dd if=/dev/zero of=$T/gross.bin bs=1M count=70 2>/dev/null
 TU=$(fs '{"op":"open","root":"daten","path":"ablage","name":"gross.bin","write":true,"create":true,"upload":true}' | python3 -c 'import json,sys; d=json.load(sys.stdin); print(d.get("ticket","") if d.get("mode")=="put" else "")')
 check "fs: upload of 70 MB with an upload ticket, moved into place" "[ \${#TU} -eq 32 ] && curl -s -X PUT -T $T/gross.bin '$F?t=$TU' | js \"d['ok'] and d['size']==73400320\" && [ \"\$(stat -c %s $R/mnt/daten/ablage/gross.bin)\" = 73400320 ] && ! ls -a $R/mnt/daten/ablage | grep -q '\.part\$'"
 TE=$(fs '{"op":"open","root":"daten","path":"ablage","name":"gross2.bin","write":true,"create":true}' | python3 -c 'import json,sys; print(json.load(sys.stdin).get("ticket",""))')
-check "fs: the same through a save ticket is refused with a reason" "curl -s -X PUT -T $T/gross.bin '$F?t=$TE' | grep -q 'too large' && [ ! -e $R/mnt/daten/ablage/gross2.bin ]"
+# only the announced size counts: the box answers before reading the body and
+# closes. With the 70 MB still being sent, that answer could be lost in the
+# reset of the connection (the check failed now and then) – so announce the
+# size and send nothing
+check "fs: the same through a save ticket is refused with a reason" "curl -s -X PUT -H 'Content-Length: 73400320' --data-binary '' '$F?t=$TE' | grep -q 'too large' && [ ! -e $R/mnt/daten/ablage/gross2.bin ]"
 check "fs: upload needs write and create" "fs '{\"op\":\"open\",\"root\":\"daten\",\"path\":\"ablage\",\"name\":\"x.bin\",\"upload\":true}' | grep -q 'upload needs write and create'"
 rm -f $T/gross.bin $R/mnt/daten/ablage/gross.bin
 check "fs: open read-only cannot save, missing file needs create" "T2=\$(fs '{\"op\":\"open\",\"root\":\"daten\",\"path\":\"ablage\",\"name\":\"neu.txt\"}' | python3 -c 'import json,sys; print(json.load(sys.stdin)[\"ticket\"])') && curl -s -X PUT --data-binary x \"$F?t=\$T2\" | grep -q 'read-only' && fs '{\"op\":\"open\",\"root\":\"daten\",\"path\":\"\",\"name\":\"fehlt.txt\",\"write\":true}' | grep -q 'not found'"

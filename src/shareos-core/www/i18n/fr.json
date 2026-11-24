@@ -1733,7 +1733,66 @@
 		"uploaded": "téléversée",
 		"uploaded – not checked": "téléversée – non vérifiée",
 		"from the app repository). Uploaded packages are marked “uploaded – not checked”: the box cannot compare them with the store.": "depuis le dépôt d'apps). Les paquets téléversés sont marqués « téléversée – non vérifiée » : la box ne peut pas les comparer au store.",
-		"Signed in": "Connecté"
+		"Signed in": "Connecté",
+		"Over SMB a share of the same name opens instead of this personal folder – create that share again under another name.": "En SMB, un partage du même nom s’ouvre à la place de ce dossier personnel – recréez ce partage sous un autre nom.",
+		"Over SMB this share hides the personal folder of the account of the same name – create it again under another name to free that address.": "En SMB, ce partage masque le dossier personnel du compte du même nom – recréez-le sous un autre nom pour libérer cette adresse.",
+		"Install from an unsigned source?": "Installer depuis une source non signée ?",
+		"This app comes from a store source without a valid signature of the ShareOS project.": "Cette application provient d’une source du store sans signature valide du projet ShareOS.",
+		"Its checksum only shows that the download is complete – not who made it.": "Sa somme de contrôle montre seulement que le téléchargement est complet – pas qui l’a créée.",
+		"catalog signature missing or invalid – not used": "signature du catalogue absente ou invalide – non utilisé",
+		"MOVE TO A NEW DRIVE": "DÉMÉNAGER VERS UN NOUVEAU DISQUE",
+		"DISK CHANGE": "CHANGEMENT DE DISQUE",
+		"Copies everything from an old drive to a new one – shares, personal folders and the app area – and then switches over, so that nothing has to be set up again.": "Copie tout d’un ancien disque vers un nouveau – partages, dossiers personnels et zone des applications – puis bascule, sans rien avoir à reconfigurer.",
+		"1 · CHOOSE THE DRIVES": "1 · CHOISIR LES DISQUES",
+		"OLD DRIVE (FROM)": "ANCIEN DISQUE (DEPUIS)",
+		"NEW DRIVE (TO)": "NOUVEAU DISQUE (VERS)",
+		"The new drive must be set up and empty, with ext4 or Btrfs. It can be in the second bay or in a USB case – after the move it can go into a bay. Set it up first under": "Le nouveau disque doit être configuré et vide, en ext4 ou Btrfs. Il peut être dans la deuxième baie ou dans un boîtier USB – après le déménagement, il peut aller dans une baie. Configurez-le d’abord sous",
+		"An old disk in a USB case is added there without erasing it (a disk with data).": "Un ancien disque dans un boîtier USB y est ajouté sans être effacé (disque avec données).",
+		"Personal folders": "Dossiers personnels",
+		"Snapshot jobs": "Tâches d’instantanés",
+		"Data": "Données",
+		"moves along": "déménage aussi",
+		"Everything on the old drive is copied – also folders that are not shared – except the snapshots. Owners, permissions and ACLs stay. The old drive is not changed.": "Tout ce qui est sur l’ancien disque est copié – y compris les dossiers non partagés – sauf les instantanés. Propriétaires, droits et ACL sont conservés. L’ancien disque n’est pas modifié.",
+		"Check": "Vérifier",
+		"Start copying": "Lancer la copie",
+		"2 · COPYING": "2 · COPIE",
+		"3 · SWITCHING": "3 · BASCULEMENT EN COURS",
+		"3 · SWITCH": "3 · BASCULER",
+		"Services are stopped for the last copy – shares are back in a moment.": "Les services sont arrêtés pour la dernière copie – les partages reviennent dans un instant.",
+		"The box can be used while it copies. What changes until the switch is copied then.": "La box reste utilisable pendant la copie. Ce qui change d’ici le basculement est copié à ce moment-là.",
+		"Everything is copied.": "Tout est copié.",
+		"Switching stops shares, apps, downloads, the media server and scheduled jobs for a short time, copies what changed since and then points shares, personal folders, the app area, the USB copy, snapshot jobs and the folders of Transmission and Syncthing to the new drive.": "Le basculement arrête brièvement partages, applications, téléchargements, serveur multimédia et tâches planifiées, copie ce qui a changé depuis, puis fait pointer partages, dossiers personnels, zone des applications, copie USB, tâches d’instantanés et dossiers de Transmission et Syncthing vers le nouveau disque.",
+		"Switch now": "Basculer maintenant",
+		"DONE": "TERMINÉ",
+		"Shares, personal folders and the app area are now on the new drive.": "Les partages, dossiers personnels et la zone des applications sont maintenant sur le nouveau disque.",
+		"The old drive is unchanged. When everything works, forget it under": "L’ancien disque est inchangé. Quand tout fonctionne, oubliez-le sous",
+		"and take the disk out – or keep it as a backup.": "et retirez le disque – ou gardez-le comme sauvegarde.",
+		"The copy was stopped. Going on copies only what is missing.": "La copie a été arrêtée. Reprendre ne copie que ce qui manque.",
+		"Go on copying": "Reprendre la copie",
+		"Stop copying?": "Arrêter la copie ?",
+		"What is copied stays on the new drive; going on later copies only the rest.": "Ce qui est copié reste sur le nouveau disque ; reprendre plus tard ne copie que le reste.",
+		"Switch to the new drive now?": "Basculer maintenant vers le nouveau disque ?",
+		"Shares, apps, downloads and the media server stop for the last copy and start again on the new drive. Open files on the network are closed.": "Partages, applications, téléchargements et serveur multimédia s’arrêtent pour la dernière copie et redémarrent sur le nouveau disque. Les fichiers ouverts sur le réseau sont fermés.",
+		"source and target are the same drive": "la source et la cible sont le même disque",
+		"the new drive needs ext4 or btrfs (owners, personal folders, app area)": "le nouveau disque doit être en ext4 ou btrfs (propriétaires, dossiers personnels, zone des applications)",
+		"the new drive is not empty – choose an empty drive": "le nouveau disque n’est pas vide – choisissez un disque vide",
+		"not enough free space on the new drive": "pas assez d’espace libre sur le nouveau disque",
+		"copy failed – see the log; starting again copies only what is missing": "échec de la copie – voir le journal ; relancer ne copie que ce qui manque",
+		"the last copy before switching failed – nothing was switched": "la dernière copie avant le basculement a échoué – rien n’a été basculé",
+		"copy everything first": "copiez d’abord tout",
+		"a move is already running": "un déménagement est déjà en cours",
+		"a copy in Files, a cloud job, a snapshot or Paperless is still running – wait until it is done": "une copie dans Files, une tâche cloud, un instantané ou Paperless est encore en cours – attendez qu’elle se termine",
+		"switching stopped before it was done – start it again, or restart the box": "le basculement s’est arrêté avant la fin – relancez-le ou redémarrez le boîtier",
+		"autobrr: filters with the action Watch dir still name the hand-over folder on the old drive – change it in autobrr to the folder on the new drive.": "autobrr : les filtres avec l’action Watch dir indiquent encore le dossier de dépôt sur l’ancien disque – remplacez-le dans autobrr par le dossier du nouveau disque.",
+		"Test image for a new model.": "Image de test pour un nouveau modèle.",
+		"root keeps the password shareos – use the box only in your own network. Please send the device info:": "root garde le mot de passe shareos – n’utilisez le boîtier que dans votre propre réseau. Envoyez les infos de l’appareil :",
+		"Device info": "Infos de l’appareil",
+		"Reading …": "Lecture …",
+		"DEVICE INFO": "INFOS DE L’APPAREIL",
+		"hardware facts for adding a model": "données matérielles pour ajouter un modèle",
+		"Copying is not allowed here – use Download.": "La copie n’est pas autorisée ici – utilisez Télécharger.",
+		"Model, flash partitions, CPU, memory, LEDs, sensors, buttons, GPIOs, serial ports, network, the U-Boot environment and the kernel log of this box – everything a new model needs. Only read, nothing is changed. Attach the file to the issue of the model.": "Modèle, partitions flash, CPU, mémoire, LED, capteurs, boutons, GPIO, ports série, réseau, environnement U-Boot et journal du noyau de ce boîtier – tout ce dont un nouveau modèle a besoin. Lecture seule, rien n’est modifié. Joignez le fichier au ticket du modèle.",
+		"Show MAC addresses and serial numbers (otherwise masked – keep them out of public issues)": "Afficher les adresses MAC et numéros de série (sinon masqués – à garder hors des tickets publics)"
 	},
 	"patterns": [
 		[
@@ -2121,6 +2180,10 @@
 			"dossier d’entrée personnel de $1 · jeton $2"
 		],
 		[
+			"^(\\S+ \\S+) · free on the new drive: (\\S+ \\S+)$",
+			"$1 · libre sur le nouveau disque : $2"
+		],
+		[
 			"^(\\S+): no longer starts at boot$",
 			"$1 : ne démarre plus au lancement"
 		],
@@ -2203,6 +2266,10 @@
 		[
 			"^failed (\\S+): ubiupdatevol$",
 			"échec ($1) : le système n'a pas pu être écrit (ubiupdatevol)"
+		],
+		[
+			"^drive (\\S+) is not mounted$",
+			"le disque $1 n’est pas monté"
 		],
 		[
 			"^shared inbox · token (.+)$",
@@ -2479,6 +2546,10 @@
 		[
 			"^(\\S+) downloading …$",
 			"$1 en téléchargement …"
+		],
+		[
+			"^unknown drive (\\S+)$",
+			"disque inconnu $1"
 		],
 		[
 			"^User “(.+)” saved\\.$",

@@ -171,6 +171,7 @@ rescue() {
 	ShareOS rescue system – $*
 	  $how
 	  shareos-install-ubi <rootfs.squashfs>   install the system into flash
+	  shareos-deviceinfo > /tmp/info.txt      hardware facts for a new model (scp)
 	  reboot
 
 	EOF

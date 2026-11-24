@@ -75,6 +75,7 @@ Version in brackets = first release with the feature.
 - Share rights are also set as POSIX ACLs on the share folders (ext4, Btrfs), so every program of a user is held to them, not only SMB (0.2.0-beta.6)
 - **Snapshots:** dated states of shares, personal folders or whole drives on another drive (hourly to weekly, hard links like rsnapshot, keep the last N plus days/weeks/months), restore with the file browser (0.2.0-beta.6)
 - SMART values and health, disk standby, RAID status with sync progress, repair a mirror with a new disk (beta.9), mount/unmount/remove volumes
+- **Disk change:** move everything from an old drive to a new one – shares, personal folders, app area – with progress, cancel and resume, then switch over in one step; the new disk can be in the second bay or a USB case (0.3.0-beta.16)
 - Disk health page: rating with reasons, SSD life left, all SMART attributes, short/long self-tests by hand or by schedule (0.2.0-beta.12)
 - **USB sticks and disks:** mounted at `/mnt/usb-<name>` when plugged in (FAT32, exFAT, NTFS, ext4, Btrfs), **Safely remove**, **Format** with exFAT, FAT32, NTFS or ext4 (beta.7)
 
@@ -88,7 +89,7 @@ Version in brackets = first release with the feature.
 - File browser in the web interface: admins for all drives and USB drives, users for their personal folder and the shares they have rights to (enabled per user; read-only shares stay read-only, also for apps); upload/download with progress, drag and drop, large files; trash per folder with restore and automatic emptying (0.2.0-beta.12); copy/cut and paste, also between drives, shares and the personal folder (0.3.0-beta.2)
 
 **Apps and integrations**
-- APPS area with a store from [ShareOS-Apps](https://github.com/UniqueDroid/ShareOS-Apps) – 43 web apps for files and office, media, network, security, development and everyday life: one-click install/update with SHA-256 check, own `.sapp` packages, more catalogs, visibility per user/group; apps run on their own port (8081/8444) (beta.6)
+- APPS area with a store from [ShareOS-Apps](https://github.com/UniqueDroid/ShareOS-Apps) – 43 web apps for files and office, media, network, security, development and everyday life: one-click install/update with SHA-256 check, the official catalog signed (0.3.0-beta.16), own `.sapp` packages, more catalogs, visibility per user/group; apps run on their own port (8081/8444) (beta.6)
 - App permissions: scheduled tasks (`cron`) as a restricted app user, schedule editable in the interface (beta.7)
 - Open files from the file browser in apps (e.g. Webpad), save back; app SDK and ShareOS look for apps (`/_shareos/theme.css`, `/_shareos/app.js`), apps inside the interface (permission `embed`) (beta.9)
 - App permission `files`: apps work with the folders of the box with the user's rights – ShareCommander (two-pane file manager), Webpad saves on the box; music and videos stream with seeking (beta.11)

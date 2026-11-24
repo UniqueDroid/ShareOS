@@ -17,7 +17,7 @@ beschrieben.
 | DNS-320 rev B | `ShareOS-<ver>-DNS-320-rev-Bx.*` | 128 MB | gebaut, **Tester gesucht** |
 | DNS-325 rev A | `ShareOS-<ver>-DNS-325-rev-Ax.*` | 256 MB | **teilweise getestet** (rev A1, siehe unten), weitere Tester gesucht |
 | DNS-320 rev A | `ShareOS-<ver>-DNS-320-rev-Ax.*` | 128 MB | **teilweise getestet** (rev A1 mit 0.3.0-beta.9: installiert, Weboberfläche; Temperatur und Lüftersteuerung mit der Korrektur aus 0.3.0-beta.11, [#163](https://github.com/UniqueDroid/ShareOS/issues/163)), weitere Tester gesucht – bis 0.2.0-beta.16 startet sie nach dem Flashen immer wieder neu (Adresse des Initramfs, [#96](https://github.com/UniqueDroid/ShareOS/issues/96)); 0.2.0-beta.17 oder neuer nehmen |
-| DNR-322L rev A | `ShareOS-<ver>-DNR-322L-rev-Ax.*` | 256 MB | gebaut ab 0.3.0-beta.16, **nicht auf Hardware probiert** ([#180](https://github.com/UniqueDroid/ShareOS/issues/180)) – die Platine des DNS-320 rev A als Videorekorder; Systempartition 70 MB, die NUUO-Partition bleibt unberührt. Vorderseite (D-Link-Handbuch): Ein/Aus-Taste, Power- und Festplatten-LEDs und ein USB-Anschluss für eine USV – **keine USB-Taste**: Eine neue Box wird mit einem kurzen Druck (unter 5 s) auf die Reset-Taste hinten übernommen (ab 0.3.0-beta.16). Eine USB-LED gibt es nicht: Bei der Erstinstallation und im Rettungsmodus blinkt die **Power-LED** (schnell beim Installieren, langsam im Rettungsmodus). Es gibt eine zweite Version, den DNR-322L **rev B** (Gehäuse wie ein DNS-320L, vorne eine Lupen-Taste). Seine Platine ist noch nicht bekannt – vermutlich die des DNS-320L. Dieser Build ist nur für rev A (die Revision steht auf dem Aufkleber unten): **nicht auf einen rev B flashen**. Ein Boot-Log eines rev B (serielle Konsole oder `dmesg` unter Alt-F) würde zeigen, was er braucht. Ein erster Test braucht eine serielle Konsole in Reichweite (siehe unten) |
+| DNR-322L rev A | `ShareOS-<ver>-DNR-322L-rev-Ax-devtest.*` | 256 MB | **Devtest-Image** (root / shareos, Geräteinfo, siehe unten) aus dem Build des Pull Requests, **nicht auf Hardware probiert** ([#180](https://github.com/UniqueDroid/ShareOS/issues/180)) – die Platine des DNS-320 rev A als Videorekorder; Systempartition 70 MB, die NUUO-Partition bleibt unberührt. Vorderseite (D-Link-Handbuch): Ein/Aus-Taste, Power- und Festplatten-LEDs und ein USB-Anschluss für eine USV – **keine USB-Taste** – sobald es freigegeben ist, wird eine neue Box mit einem kurzen Druck (unter 5 s) auf die Reset-Taste hinten übernommen; das Devtest-Image braucht kein Übernehmen. Eine USB-LED gibt es nicht: Bei der Erstinstallation und im Rettungsmodus blinkt die **Power-LED** (schnell beim Installieren, langsam im Rettungsmodus). Es gibt eine zweite Version, den DNR-322L **rev B** (Gehäuse wie ein DNS-320L, vorne eine Lupen-Taste). Seine Platine ist noch nicht bekannt – vermutlich die des DNS-320L. Dieser Build ist nur für rev A (die Revision steht auf dem Aufkleber unten): **nicht auf einen rev B flashen**. Ein Boot-Log eines rev B (serielle Konsole oder `dmesg` unter Alt-F) würde zeigen, was er braucht. Ein erster Test braucht eine serielle Konsole in Reichweite (siehe unten) |
 | DNS-327L | – | 512 MB | geplant (eigener Kernel und eigenes Flash-Layout) |
 
 Nicht möglich: DNS-323, DNS-321, DNS-343 (64 MB RAM, 8 MB Flash).
@@ -125,3 +125,33 @@ kann. Die Daten auf den Platten werden nie angefasst.
    (Firmware-Name, Device-Tree, D-Link-Signatur aus `legacy/alt-f/mkfw.sh`).
 3. Ein Fall in `board_detect` von `board.sh` (Modelltext, LEDs, Steuerung,
    Tasten) und in `tests/test-boards.sh`.
+
+### Devtest-Image: das erste Image für ein neues Modell
+
+Ein Modell, das hinzukommt, wird bis zum Test als **Devtest-Image** gebaut:
+Status `devtest` in seiner `MODELS`-Zeile (Dateien
+`ShareOS-<version>-<name>-devtest.bin` / `.sysupgrade.tar`) und
+`BOARD_DEVTEST=1` in seinem Fall von `board.sh`. Seine Tester bekommen die
+Dateien aus dem Build des Pull Requests (Actions → Artefakt), nie aus einem
+Release – der Release-Job lehnt Devtest-Dateien ab.
+
+Auf so einer Box:
+
+- root behält das Passwort **shareos** – kein Beanspruchen per Taste (die
+  Tasten eines neuen Modells sind noch nicht bekannt). Weboberfläche und SSH:
+  `root` / `shareos`. Nur im eigenen Netz benutzen.
+- Übersicht und Nachrichten sagen, dass es ein Testimage ist, und verlinken die
+  **Geräteinfo**: `http://<box>/deviceinfo` (für Admins auch auf jedem anderen
+  Modell offen). Sie sammelt, was zum Hinzufügen des Modells gebraucht wird –
+  Flash-Partitionen, CPU, Speicher, Device-Tree, LEDs, Sensoren, Tasten
+  (Eingabegeräte), GPIOs, serielle Schnittstellen, I2C, USB, Netzwerk, die
+  U-Boot-Umgebung (aus dem Flash gelesen, nie geschrieben) und das
+  Kernel-Protokoll – und bietet sie als Textdatei an. MAC-Adressen und
+  Seriennummern sind maskiert, solange *Show MAC addresses and serial numbers*
+  nicht angehakt ist: die maskierte Datei ans Issue des Modells hängen.
+- Im Rettungssystem (SSH nach einem TFTP- oder Rescue-Start) derselbe Bericht:
+  `shareos-deviceinfo > /tmp/info.txt`, dann mit `scp` kopieren
+  (`--full`: ohne Maskierung).
+
+Wenn das Modell läuft: Status `release`, `BOARD_DEVTEST=0`, und es kommt mit
+dem normalen Beanspruchen ins nächste Release.

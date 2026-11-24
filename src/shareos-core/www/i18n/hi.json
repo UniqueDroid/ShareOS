@@ -1733,7 +1733,66 @@
 		"uploaded": "अपलोड किया",
 		"uploaded – not checked": "अपलोड किया – जाँचा नहीं गया",
 		"from the app repository). Uploaded packages are marked “uploaded – not checked”: the box cannot compare them with the store.": "से बने)। अपलोड किए पैकेज \"अपलोड किया – जाँचा नहीं गया\" चिह्नित होते हैं: बॉक्स उन्हें स्टोर से मिला नहीं सकता।",
-		"Signed in": "साइन इन"
+		"Signed in": "साइन इन",
+		"Over SMB a share of the same name opens instead of this personal folder – create that share again under another name.": "SMB पर इस निजी फ़ोल्डर के बजाय उसी नाम का शेयर खुलता है – उस शेयर को किसी दूसरे नाम से दोबारा बनाएँ।",
+		"Over SMB this share hides the personal folder of the account of the same name – create it again under another name to free that address.": "SMB पर यह शेयर उसी नाम वाले खाते के निजी फ़ोल्डर को छिपा देता है – उस पते को मुक्त करने के लिए इसे किसी दूसरे नाम से दोबारा बनाएँ।",
+		"Install from an unsigned source?": "बिना हस्ताक्षर वाले स्रोत से इंस्टॉल करें?",
+		"This app comes from a store source without a valid signature of the ShareOS project.": "यह ऐप ऐसे स्टोर स्रोत से है जिस पर ShareOS प्रोजेक्ट का कोई मान्य हस्ताक्षर नहीं है।",
+		"Its checksum only shows that the download is complete – not who made it.": "इसका चेकसम केवल यह दिखाता है कि डाउनलोड पूरा है – यह नहीं कि इसे किसने बनाया।",
+		"catalog signature missing or invalid – not used": "कैटलॉग हस्ताक्षर नहीं है या अमान्य है – उपयोग नहीं किया गया",
+		"MOVE TO A NEW DRIVE": "नई ड्राइव पर ले जाएँ",
+		"DISK CHANGE": "डिस्क बदलना",
+		"Copies everything from an old drive to a new one – shares, personal folders and the app area – and then switches over, so that nothing has to be set up again.": "पुरानी ड्राइव से सब कुछ नई ड्राइव पर कॉपी करता है – शेयर, निजी फ़ोल्डर और ऐप क्षेत्र – और फिर उस पर बदल देता है, ताकि कुछ भी दोबारा सेट न करना पड़े।",
+		"1 · CHOOSE THE DRIVES": "1 · ड्राइव चुनें",
+		"OLD DRIVE (FROM)": "पुरानी ड्राइव (से)",
+		"NEW DRIVE (TO)": "नई ड्राइव (तक)",
+		"The new drive must be set up and empty, with ext4 or Btrfs. It can be in the second bay or in a USB case – after the move it can go into a bay. Set it up first under": "नई ड्राइव सेट अप और खाली होनी चाहिए, ext4 या Btrfs के साथ। वह दूसरे बे में या USB केस में हो सकती है – ले जाने के बाद उसे बे में लगाया जा सकता है। पहले उसे यहाँ सेट अप करें:",
+		"An old disk in a USB case is added there without erasing it (a disk with data).": "USB केस में पुरानी डिस्क वहाँ बिना मिटाए जोड़ी जाती है (डेटा वाली डिस्क)।",
+		"Personal folders": "निजी फ़ोल्डर",
+		"Snapshot jobs": "स्नैपशॉट कार्य",
+		"Data": "डेटा",
+		"moves along": "साथ में जाता है",
+		"Everything on the old drive is copied – also folders that are not shared – except the snapshots. Owners, permissions and ACLs stay. The old drive is not changed.": "पुरानी ड्राइव पर सब कुछ कॉपी होता है – बिना शेयर वाले फ़ोल्डर भी – स्नैपशॉट को छोड़कर। मालिक, अनुमतियाँ और ACL बने रहते हैं। पुरानी ड्राइव नहीं बदली जाती।",
+		"Check": "जाँचें",
+		"Start copying": "कॉपी करना शुरू करें",
+		"2 · COPYING": "2 · कॉपी हो रहा है",
+		"3 · SWITCHING": "3 · बदला जा रहा है",
+		"3 · SWITCH": "3 · बदलें",
+		"Services are stopped for the last copy – shares are back in a moment.": "आख़िरी कॉपी के लिए सेवाएँ रुकी हैं – शेयर कुछ ही पल में लौट आएँगे।",
+		"The box can be used while it copies. What changes until the switch is copied then.": "कॉपी होते समय बॉक्स का उपयोग किया जा सकता है। बदलने तक जो बदलता है, वह तब कॉपी होता है।",
+		"Everything is copied.": "सब कुछ कॉपी हो गया।",
+		"Switching stops shares, apps, downloads, the media server and scheduled jobs for a short time, copies what changed since and then points shares, personal folders, the app area, the USB copy, snapshot jobs and the folders of Transmission and Syncthing to the new drive.": "बदलने पर शेयर, ऐप, डाउनलोड, मीडिया सर्वर और निर्धारित कार्य थोड़ी देर रुकते हैं, तब से जो बदला वह कॉपी होता है, फिर शेयर, निजी फ़ोल्डर, ऐप क्षेत्र, USB कॉपी, स्नैपशॉट कार्य और Transmission व Syncthing के फ़ोल्डर नई ड्राइव की ओर हो जाते हैं।",
+		"Switch now": "अभी बदलें",
+		"DONE": "पूरा",
+		"Shares, personal folders and the app area are now on the new drive.": "शेयर, निजी फ़ोल्डर और ऐप क्षेत्र अब नई ड्राइव पर हैं।",
+		"The old drive is unchanged. When everything works, forget it under": "पुरानी ड्राइव अपरिवर्तित है। सब ठीक चलने पर उसे यहाँ भूल जाएँ:",
+		"and take the disk out – or keep it as a backup.": "और डिस्क निकाल लें – या उसे बैकअप के रूप में रखें।",
+		"The copy was stopped. Going on copies only what is missing.": "कॉपी रोकी गई। जारी रखने पर केवल जो बचा है वही कॉपी होगा।",
+		"Go on copying": "कॉपी जारी रखें",
+		"Stop copying?": "कॉपी रोकें?",
+		"What is copied stays on the new drive; going on later copies only the rest.": "जो कॉपी हो चुका है वह नई ड्राइव पर रहता है; बाद में जारी रखने पर केवल बाकी कॉपी होगा।",
+		"Switch to the new drive now?": "अभी नई ड्राइव पर बदलें?",
+		"Shares, apps, downloads and the media server stop for the last copy and start again on the new drive. Open files on the network are closed.": "आख़िरी कॉपी के लिए शेयर, ऐप, डाउनलोड और मीडिया सर्वर रुकते हैं और नई ड्राइव पर फिर से शुरू होते हैं। नेटवर्क पर खुली फ़ाइलें बंद हो जाती हैं।",
+		"source and target are the same drive": "स्रोत और लक्ष्य एक ही ड्राइव हैं",
+		"the new drive needs ext4 or btrfs (owners, personal folders, app area)": "नई ड्राइव को ext4 या btrfs चाहिए (मालिक, निजी फ़ोल्डर, ऐप क्षेत्र)",
+		"the new drive is not empty – choose an empty drive": "नई ड्राइव खाली नहीं है – कोई खाली ड्राइव चुनें",
+		"not enough free space on the new drive": "नई ड्राइव पर पर्याप्त खाली जगह नहीं है",
+		"copy failed – see the log; starting again copies only what is missing": "कॉपी विफल – लॉग देखें; दोबारा शुरू करने पर केवल बचा हुआ कॉपी होगा",
+		"the last copy before switching failed – nothing was switched": "बदलने से पहले की आख़िरी कॉपी विफल रही – कुछ नहीं बदला गया",
+		"copy everything first": "पहले सब कुछ कॉपी करें",
+		"a move is already running": "एक स्थानांतरण पहले से चल रहा है",
+		"a copy in Files, a cloud job, a snapshot or Paperless is still running – wait until it is done": "Files में कॉपी, क्लाउड कार्य, स्नैपशॉट या Paperless अभी चल रहा है – पूरा होने तक रुकें",
+		"switching stopped before it was done – start it again, or restart the box": "बदलना पूरा होने से पहले रुक गया – इसे फिर से शुरू करें या बॉक्स को फिर से चालू करें",
+		"autobrr: filters with the action Watch dir still name the hand-over folder on the old drive – change it in autobrr to the folder on the new drive.": "autobrr: Watch dir क्रिया वाले फ़िल्टर अभी भी पुरानी ड्राइव पर सौंपने वाले फ़ोल्डर को बताते हैं – autobrr में इसे नई ड्राइव के फ़ोल्डर में बदलें।",
+		"Test image for a new model.": "नए मॉडल के लिए टेस्ट इमेज।",
+		"root keeps the password shareos – use the box only in your own network. Please send the device info:": "root का पासवर्ड shareos ही रहता है – बॉक्स को केवल अपने नेटवर्क में उपयोग करें। कृपया डिवाइस जानकारी भेजें:",
+		"Device info": "डिवाइस जानकारी",
+		"Reading …": "पढ़ा जा रहा है …",
+		"DEVICE INFO": "डिवाइस जानकारी",
+		"hardware facts for adding a model": "मॉडल जोड़ने के लिए हार्डवेयर जानकारी",
+		"Copying is not allowed here – use Download.": "यहाँ कॉपी करने की अनुमति नहीं है – डाउनलोड का उपयोग करें।",
+		"Model, flash partitions, CPU, memory, LEDs, sensors, buttons, GPIOs, serial ports, network, the U-Boot environment and the kernel log of this box – everything a new model needs. Only read, nothing is changed. Attach the file to the issue of the model.": "इस बॉक्स का मॉडल, फ़्लैश पार्टीशन, CPU, मेमोरी, LED, सेंसर, बटन, GPIO, सीरियल पोर्ट, नेटवर्क, U-Boot एनवायरनमेंट और कर्नेल लॉग – नए मॉडल के लिए आवश्यक सब कुछ। केवल पढ़ा जाता है, कुछ नहीं बदलता। फ़ाइल को मॉडल के issue में संलग्न करें।",
+		"Show MAC addresses and serial numbers (otherwise masked – keep them out of public issues)": "MAC पते और सीरियल नंबर दिखाएँ (अन्यथा छिपे हुए – इन्हें सार्वजनिक issue में न डालें)"
 	},
 	"patterns": [
 		[
@@ -2121,6 +2180,10 @@
 			"$1 का निजी इनबॉक्स · टोकन $2"
 		],
 		[
+			"^(\\S+ \\S+) · free on the new drive: (\\S+ \\S+)$",
+			"$1 · नई ड्राइव पर खाली: $2"
+		],
+		[
 			"^(\\S+): no longer starts at boot$",
 			"$1: शुरुआत पर अब चालू नहीं होती"
 		],
@@ -2203,6 +2266,10 @@
 		[
 			"^failed (\\S+): ubiupdatevol$",
 			"विफल ($1): सिस्टम लिखा नहीं जा सका (ubiupdatevol)"
+		],
+		[
+			"^drive (\\S+) is not mounted$",
+			"ड्राइव $1 माउंट नहीं है"
 		],
 		[
 			"^shared inbox · token (.+)$",
@@ -2479,6 +2546,10 @@
 		[
 			"^(\\S+) downloading …$",
 			"$1 डाउनलोड हो रहा है …"
+		],
+		[
+			"^unknown drive (\\S+)$",
+			"अज्ञात ड्राइव $1"
 		],
 		[
 			"^User “(.+)” saved\\.$",

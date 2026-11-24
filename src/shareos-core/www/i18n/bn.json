@@ -1733,7 +1733,66 @@
 		"uploaded": "আপলোড করা",
 		"uploaded – not checked": "আপলোড করা – যাচাই করা হয়নি",
 		"from the app repository). Uploaded packages are marked “uploaded – not checked”: the box cannot compare them with the store.": "দিয়ে তৈরি)। আপলোড করা প্যাকেজ \"আপলোড করা – যাচাই করা হয়নি\" হিসেবে চিহ্নিত: বক্সটি এগুলো স্টোরের সঙ্গে মেলাতে পারে না।",
-		"Signed in": "সাইন ইন করা"
+		"Signed in": "সাইন ইন করা",
+		"Over SMB a share of the same name opens instead of this personal folder – create that share again under another name.": "SMB-তে এই ব্যক্তিগত ফোল্ডারের বদলে একই নামের একটি শেয়ার খোলে – সেই শেয়ারটি অন্য নামে আবার তৈরি করুন।",
+		"Over SMB this share hides the personal folder of the account of the same name – create it again under another name to free that address.": "SMB-তে এই শেয়ারটি একই নামের অ্যাকাউন্টের ব্যক্তিগত ফোল্ডার আড়াল করে – সেই ঠিকানা মুক্ত করতে এটি অন্য নামে আবার তৈরি করুন।",
+		"Install from an unsigned source?": "স্বাক্ষরবিহীন উৎস থেকে ইনস্টল করবেন?",
+		"This app comes from a store source without a valid signature of the ShareOS project.": "এই অ্যাপটি এমন একটি স্টোর উৎস থেকে এসেছে যাতে ShareOS প্রকল্পের কোনো বৈধ স্বাক্ষর নেই।",
+		"Its checksum only shows that the download is complete – not who made it.": "এর চেকসাম শুধু দেখায় যে ডাউনলোড সম্পূর্ণ – কে এটি তৈরি করেছে তা নয়।",
+		"catalog signature missing or invalid – not used": "ক্যাটালগের স্বাক্ষর নেই বা অবৈধ – ব্যবহার করা হয়নি",
+		"MOVE TO A NEW DRIVE": "নতুন ড্রাইভে সরান",
+		"DISK CHANGE": "ডিস্ক বদল",
+		"Copies everything from an old drive to a new one – shares, personal folders and the app area – and then switches over, so that nothing has to be set up again.": "পুরোনো ড্রাইভ থেকে সবকিছু নতুন ড্রাইভে কপি করে – শেয়ার, ব্যক্তিগত ফোল্ডার ও অ্যাপ এলাকা – তারপর সেখানে বদলে নেয়, যাতে কিছুই আবার সেট আপ করতে না হয়।",
+		"1 · CHOOSE THE DRIVES": "1 · ড্রাইভ বেছে নিন",
+		"OLD DRIVE (FROM)": "পুরোনো ড্রাইভ (থেকে)",
+		"NEW DRIVE (TO)": "নতুন ড্রাইভ (তে)",
+		"The new drive must be set up and empty, with ext4 or Btrfs. It can be in the second bay or in a USB case – after the move it can go into a bay. Set it up first under": "নতুন ড্রাইভটি সেট আপ করা ও খালি হতে হবে, ext4 বা Btrfs সহ। এটি দ্বিতীয় বে-তে বা USB কেসে থাকতে পারে – সরানোর পরে এটি বে-তে লাগানো যায়। প্রথমে এখানে সেট আপ করুন:",
+		"An old disk in a USB case is added there without erasing it (a disk with data).": "USB কেসের পুরোনো ডিস্ক সেখানে না মুছে যোগ করা হয় (ডেটাসহ ডিস্ক)।",
+		"Personal folders": "ব্যক্তিগত ফোল্ডার",
+		"Snapshot jobs": "স্ন্যাপশট কাজ",
+		"Data": "ডেটা",
+		"moves along": "সঙ্গে সরে যায়",
+		"Everything on the old drive is copied – also folders that are not shared – except the snapshots. Owners, permissions and ACLs stay. The old drive is not changed.": "পুরোনো ড্রাইভের সবকিছু কপি হয় – শেয়ার না করা ফোল্ডারও – স্ন্যাপশট ছাড়া। মালিক, অনুমতি ও ACL থাকে। পুরোনো ড্রাইভ বদলানো হয় না।",
+		"Check": "যাচাই করুন",
+		"Start copying": "কপি শুরু করুন",
+		"2 · COPYING": "2 · কপি হচ্ছে",
+		"3 · SWITCHING": "3 · বদলানো হচ্ছে",
+		"3 · SWITCH": "3 · বদল",
+		"Services are stopped for the last copy – shares are back in a moment.": "শেষ কপির জন্য সেবাগুলো থেমে আছে – শেয়ার একটু পরেই ফিরে আসবে।",
+		"The box can be used while it copies. What changes until the switch is copied then.": "কপি চলার সময় বক্স ব্যবহার করা যায়। বদলের আগে যা বদলায়, তা তখন কপি হয়।",
+		"Everything is copied.": "সবকিছু কপি হয়েছে।",
+		"Switching stops shares, apps, downloads, the media server and scheduled jobs for a short time, copies what changed since and then points shares, personal folders, the app area, the USB copy, snapshot jobs and the folders of Transmission and Syncthing to the new drive.": "বদলের সময় শেয়ার, অ্যাপ, ডাউনলোড, মিডিয়া সার্ভার ও নির্ধারিত কাজ অল্প সময় থামে, তারপর থেকে যা বদলেছে তা কপি হয়, তারপর শেয়ার, ব্যক্তিগত ফোল্ডার, অ্যাপ এলাকা, USB কপি, স্ন্যাপশট কাজ এবং Transmission ও Syncthing-এর ফোল্ডার নতুন ড্রাইভে নির্দেশ করে।",
+		"Switch now": "এখনই বদলান",
+		"DONE": "সম্পন্ন",
+		"Shares, personal folders and the app area are now on the new drive.": "শেয়ার, ব্যক্তিগত ফোল্ডার ও অ্যাপ এলাকা এখন নতুন ড্রাইভে।",
+		"The old drive is unchanged. When everything works, forget it under": "পুরোনো ড্রাইভ অপরিবর্তিত। সব ঠিক চললে এটি এখানে ভুলে যান:",
+		"and take the disk out – or keep it as a backup.": "এবং ডিস্কটি খুলে নিন – অথবা ব্যাকআপ হিসেবে রাখুন।",
+		"The copy was stopped. Going on copies only what is missing.": "কপি থামানো হয়েছে। চালিয়ে গেলে শুধু যা বাকি তা কপি হবে।",
+		"Go on copying": "কপি চালিয়ে যান",
+		"Stop copying?": "কপি থামাবেন?",
+		"What is copied stays on the new drive; going on later copies only the rest.": "যা কপি হয়েছে তা নতুন ড্রাইভে থাকে; পরে চালালে শুধু বাকিটা কপি হবে।",
+		"Switch to the new drive now?": "এখনই নতুন ড্রাইভে বদলাবেন?",
+		"Shares, apps, downloads and the media server stop for the last copy and start again on the new drive. Open files on the network are closed.": "শেষ কপির জন্য শেয়ার, অ্যাপ, ডাউনলোড ও মিডিয়া সার্ভার থামে এবং নতুন ড্রাইভে আবার চালু হয়। নেটওয়ার্কে খোলা ফাইল বন্ধ হয়ে যায়।",
+		"source and target are the same drive": "উৎস ও লক্ষ্য একই ড্রাইভ",
+		"the new drive needs ext4 or btrfs (owners, personal folders, app area)": "নতুন ড্রাইভে ext4 বা btrfs লাগবে (মালিক, ব্যক্তিগত ফোল্ডার, অ্যাপ এলাকা)",
+		"the new drive is not empty – choose an empty drive": "নতুন ড্রাইভ খালি নয় – একটি খালি ড্রাইভ বেছে নিন",
+		"not enough free space on the new drive": "নতুন ড্রাইভে যথেষ্ট খালি জায়গা নেই",
+		"copy failed – see the log; starting again copies only what is missing": "কপি ব্যর্থ – লগ দেখুন; আবার শুরু করলে শুধু বাকিটা কপি হবে",
+		"the last copy before switching failed – nothing was switched": "বদলের আগের শেষ কপি ব্যর্থ – কিছুই বদলানো হয়নি",
+		"copy everything first": "প্রথমে সবকিছু কপি করুন",
+		"a move is already running": "একটি সরানো ইতিমধ্যে চলছে",
+		"a copy in Files, a cloud job, a snapshot or Paperless is still running – wait until it is done": "Files-এ কপি, ক্লাউড কাজ, স্ন্যাপশট বা Paperless এখনও চলছে – শেষ হওয়া পর্যন্ত অপেক্ষা করুন",
+		"switching stopped before it was done – start it again, or restart the box": "বদল শেষ হওয়ার আগেই থেমে গেছে – আবার শুরু করুন বা বক্স আবার চালু করুন",
+		"autobrr: filters with the action Watch dir still name the hand-over folder on the old drive – change it in autobrr to the folder on the new drive.": "autobrr: Watch dir কাজের ফিল্টার এখনও পুরনো ড্রাইভের হস্তান্তর ফোল্ডার দেখায় – autobrr-এ এটিকে নতুন ড্রাইভের ফোল্ডারে বদলান।",
+		"Test image for a new model.": "নতুন মডেলের জন্য টেস্ট ইমেজ।",
+		"root keeps the password shareos – use the box only in your own network. Please send the device info:": "root-এর পাসওয়ার্ড shareos-ই থাকে – বক্সটি কেবল নিজের নেটওয়ার্কে ব্যবহার করুন। অনুগ্রহ করে ডিভাইসের তথ্য পাঠান:",
+		"Device info": "ডিভাইসের তথ্য",
+		"Reading …": "পড়া হচ্ছে …",
+		"DEVICE INFO": "ডিভাইসের তথ্য",
+		"hardware facts for adding a model": "মডেল যোগ করার জন্য হার্ডওয়্যারের তথ্য",
+		"Copying is not allowed here – use Download.": "এখানে কপি করার অনুমতি নেই – ডাউনলোড ব্যবহার করুন।",
+		"Model, flash partitions, CPU, memory, LEDs, sensors, buttons, GPIOs, serial ports, network, the U-Boot environment and the kernel log of this box – everything a new model needs. Only read, nothing is changed. Attach the file to the issue of the model.": "এই বক্সের মডেল, ফ্ল্যাশ পার্টিশন, CPU, মেমরি, LED, সেন্সর, বোতাম, GPIO, সিরিয়াল পোর্ট, নেটওয়ার্ক, U-Boot এনভায়রনমেন্ট ও কার্নেল লগ – নতুন মডেলের যা দরকার সব। কেবল পড়া হয়, কিছু বদলায় না। ফাইলটি মডেলের issue-তে সংযুক্ত করুন।",
+		"Show MAC addresses and serial numbers (otherwise masked – keep them out of public issues)": "MAC ঠিকানা ও সিরিয়াল নম্বর দেখান (নইলে লুকানো – সর্বজনীন issue-তে দেবেন না)"
 	},
 	"patterns": [
 		[
@@ -2121,6 +2180,10 @@
 			"$1-এর ব্যক্তিগত ইনবক্স · টোকেন $2"
 		],
 		[
+			"^(\\S+ \\S+) · free on the new drive: (\\S+ \\S+)$",
+			"$1 · নতুন ড্রাইভে খালি: $2"
+		],
+		[
 			"^(\\S+): no longer starts at boot$",
 			"$1: চালুর সময় আর শুরু হয় না"
 		],
@@ -2203,6 +2266,10 @@
 		[
 			"^failed (\\S+): ubiupdatevol$",
 			"ব্যর্থ ($1): সিস্টেম লেখা যায়নি (ubiupdatevol)"
+		],
+		[
+			"^drive (\\S+) is not mounted$",
+			"ড্রাইভ $1 মাউন্ট করা নেই"
 		],
 		[
 			"^shared inbox · token (.+)$",
@@ -2479,6 +2546,10 @@
 		[
 			"^(\\S+) downloading …$",
 			"$1 ডাউনলোড হচ্ছে …"
+		],
+		[
+			"^unknown drive (\\S+)$",
+			"অজানা ড্রাইভ $1"
 		],
 		[
 			"^User “(.+)” saved\\.$",

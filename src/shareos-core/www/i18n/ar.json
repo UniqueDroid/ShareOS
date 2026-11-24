@@ -1733,7 +1733,66 @@
 		"uploaded": "مرفوع",
 		"uploaded – not checked": "مرفوع – غير مُتحقَّق منه",
 		"from the app repository). Uploaded packages are marked “uploaded – not checked”: the box cannot compare them with the store.": "من مستودع التطبيقات). تُعلَّم الحزم المرفوعة بـ«مرفوع – غير مُتحقَّق منه»: لا يستطيع الجهاز مقارنتها بالمتجر.",
-		"Signed in": "تم تسجيل الدخول"
+		"Signed in": "تم تسجيل الدخول",
+		"Over SMB a share of the same name opens instead of this personal folder – create that share again under another name.": "عبر SMB تُفتح مشاركة بالاسم نفسه بدلاً من هذا المجلد الشخصي – أنشئ تلك المشاركة من جديد باسم آخر.",
+		"Over SMB this share hides the personal folder of the account of the same name – create it again under another name to free that address.": "عبر SMB تُخفي هذه المشاركة المجلد الشخصي للحساب الذي يحمل الاسم نفسه – أنشئها من جديد باسم آخر لتحرير هذا العنوان.",
+		"Install from an unsigned source?": "التثبيت من مصدر غير موقَّع؟",
+		"This app comes from a store source without a valid signature of the ShareOS project.": "يأتي هذا التطبيق من مصدر متجر بلا توقيع صالح من مشروع ShareOS.",
+		"Its checksum only shows that the download is complete – not who made it.": "مجموع التحقق يبيّن فقط أن التنزيل مكتمل – لا من صنعه.",
+		"catalog signature missing or invalid – not used": "توقيع الكتالوج مفقود أو غير صالح – لم يُستخدم",
+		"MOVE TO A NEW DRIVE": "النقل إلى محرك جديد",
+		"DISK CHANGE": "تبديل القرص",
+		"Copies everything from an old drive to a new one – shares, personal folders and the app area – and then switches over, so that nothing has to be set up again.": "ينسخ كل شيء من محرك قديم إلى محرك جديد – المشاركات والمجلدات الشخصية ومنطقة التطبيقات – ثم يبدّل إليه، فلا حاجة لإعداد أي شيء من جديد.",
+		"1 · CHOOSE THE DRIVES": "1 · اختيار المحركات",
+		"OLD DRIVE (FROM)": "المحرك القديم (من)",
+		"NEW DRIVE (TO)": "المحرك الجديد (إلى)",
+		"The new drive must be set up and empty, with ext4 or Btrfs. It can be in the second bay or in a USB case – after the move it can go into a bay. Set it up first under": "يجب أن يكون المحرك الجديد مُعدًّا وفارغًا، بنظام ext4 أو Btrfs. يمكن أن يكون في الحجرة الثانية أو في علبة USB – وبعد النقل يمكن وضعه في حجرة. أعدّه أولاً في",
+		"An old disk in a USB case is added there without erasing it (a disk with data).": "يُضاف هناك القرص القديم في علبة USB دون مسحه (قرص يحتوي على بيانات).",
+		"Personal folders": "المجلدات الشخصية",
+		"Snapshot jobs": "مهام اللقطات",
+		"Data": "البيانات",
+		"moves along": "يُنقل أيضًا",
+		"Everything on the old drive is copied – also folders that are not shared – except the snapshots. Owners, permissions and ACLs stay. The old drive is not changed.": "يُنسخ كل ما على المحرك القديم – حتى المجلدات غير المشاركة – عدا اللقطات. يبقى المالكون والأذونات وقوائم ACL. لا يتغير المحرك القديم.",
+		"Check": "تحقق",
+		"Start copying": "بدء النسخ",
+		"2 · COPYING": "2 · النسخ",
+		"3 · SWITCHING": "3 · جارٍ التبديل",
+		"3 · SWITCH": "3 · التبديل",
+		"Services are stopped for the last copy – shares are back in a moment.": "الخدمات متوقفة للنسخة الأخيرة – ستعود المشاركات بعد لحظة.",
+		"The box can be used while it copies. What changes until the switch is copied then.": "يمكن استخدام الجهاز أثناء النسخ. ما يتغير حتى التبديل يُنسخ حينها.",
+		"Everything is copied.": "تم نسخ كل شيء.",
+		"Switching stops shares, apps, downloads, the media server and scheduled jobs for a short time, copies what changed since and then points shares, personal folders, the app area, the USB copy, snapshot jobs and the folders of Transmission and Syncthing to the new drive.": "يوقف التبديل المشاركات والتطبيقات والتنزيلات وخادم الوسائط والمهام المجدولة لفترة قصيرة، وينسخ ما تغيّر منذ ذلك الحين، ثم يوجّه المشاركات والمجلدات الشخصية ومنطقة التطبيقات ونسخ USB ومهام اللقطات ومجلدات Transmission وSyncthing إلى المحرك الجديد.",
+		"Switch now": "بدّل الآن",
+		"DONE": "تم",
+		"Shares, personal folders and the app area are now on the new drive.": "أصبحت المشاركات والمجلدات الشخصية ومنطقة التطبيقات الآن على المحرك الجديد.",
+		"The old drive is unchanged. When everything works, forget it under": "المحرك القديم لم يتغير. عندما يعمل كل شيء، انسَه في",
+		"and take the disk out – or keep it as a backup.": "وأخرج القرص – أو احتفظ به نسخةً احتياطية.",
+		"The copy was stopped. Going on copies only what is missing.": "توقف النسخ. المتابعة تنسخ ما ينقص فقط.",
+		"Go on copying": "متابعة النسخ",
+		"Stop copying?": "إيقاف النسخ؟",
+		"What is copied stays on the new drive; going on later copies only the rest.": "ما نُسخ يبقى على المحرك الجديد؛ المتابعة لاحقًا تنسخ الباقي فقط.",
+		"Switch to the new drive now?": "التبديل إلى المحرك الجديد الآن؟",
+		"Shares, apps, downloads and the media server stop for the last copy and start again on the new drive. Open files on the network are closed.": "تتوقف المشاركات والتطبيقات والتنزيلات وخادم الوسائط للنسخة الأخيرة ثم تعمل من جديد على المحرك الجديد. تُغلق الملفات المفتوحة عبر الشبكة.",
+		"source and target are the same drive": "المصدر والهدف هما المحرك نفسه",
+		"the new drive needs ext4 or btrfs (owners, personal folders, app area)": "يحتاج المحرك الجديد إلى ext4 أو btrfs (المالكون، المجلدات الشخصية، منطقة التطبيقات)",
+		"the new drive is not empty – choose an empty drive": "المحرك الجديد ليس فارغًا – اختر محركًا فارغًا",
+		"not enough free space on the new drive": "لا توجد مساحة حرة كافية على المحرك الجديد",
+		"copy failed – see the log; starting again copies only what is missing": "فشل النسخ – راجع السجل؛ البدء من جديد ينسخ ما ينقص فقط",
+		"the last copy before switching failed – nothing was switched": "فشلت النسخة الأخيرة قبل التبديل – لم يُبدَّل شيء",
+		"copy everything first": "انسخ كل شيء أولاً",
+		"a move is already running": "هناك نقل قيد التشغيل بالفعل",
+		"a copy in Files, a cloud job, a snapshot or Paperless is still running – wait until it is done": "لا يزال نسخ في Files أو مهمة سحابية أو لقطة أو Paperless قيد التشغيل – انتظر حتى ينتهي",
+		"switching stopped before it was done – start it again, or restart the box": "توقف التبديل قبل اكتماله – ابدأه مرة أخرى أو أعد تشغيل الجهاز",
+		"autobrr: filters with the action Watch dir still name the hand-over folder on the old drive – change it in autobrr to the folder on the new drive.": "autobrr: لا تزال المرشحات ذات الإجراء Watch dir تشير إلى مجلد التسليم على المحرك القديم – غيّره في autobrr إلى المجلد على المحرك الجديد.",
+		"Test image for a new model.": "صورة اختبار لطراز جديد.",
+		"root keeps the password shareos – use the box only in your own network. Please send the device info:": "يحتفظ root بكلمة المرور shareos – استخدم الجهاز في شبكتك فقط. يرجى إرسال معلومات الجهاز:",
+		"Device info": "معلومات الجهاز",
+		"Reading …": "جارٍ القراءة …",
+		"DEVICE INFO": "معلومات الجهاز",
+		"hardware facts for adding a model": "بيانات العتاد لإضافة طراز",
+		"Copying is not allowed here – use Download.": "النسخ غير مسموح هنا – استخدم التنزيل.",
+		"Model, flash partitions, CPU, memory, LEDs, sensors, buttons, GPIOs, serial ports, network, the U-Boot environment and the kernel log of this box – everything a new model needs. Only read, nothing is changed. Attach the file to the issue of the model.": "الطراز وأقسام الذاكرة الوميضية والمعالج والذاكرة والمصابيح والمستشعرات والأزرار ومنافذ GPIO والمنافذ التسلسلية والشبكة وبيئة U-Boot وسجل النواة لهذا الجهاز – كل ما يحتاجه طراز جديد. قراءة فقط، لا يتغير شيء. أرفق الملف بتذكرة الطراز.",
+		"Show MAC addresses and serial numbers (otherwise masked – keep them out of public issues)": "إظهار عناوين MAC والأرقام التسلسلية (وإلا فهي مخفية – لا تضعها في التذاكر العامة)"
 	},
 	"patterns": [
 		[
@@ -2121,6 +2180,10 @@
 			"وارد شخصي لـ $1 · رمز $2"
 		],
 		[
+			"^(\\S+ \\S+) · free on the new drive: (\\S+ \\S+)$",
+			"$1 · المساحة الحرة على المحرك الجديد: $2"
+		],
+		[
 			"^(\\S+): no longer starts at boot$",
 			"$1: لم يعد يعمل عند التشغيل"
 		],
@@ -2203,6 +2266,10 @@
 		[
 			"^failed (\\S+): ubiupdatevol$",
 			"فشل ($1): تعذّرت كتابة النظام (ubiupdatevol)"
+		],
+		[
+			"^drive (\\S+) is not mounted$",
+			"المحرك $1 غير موصول"
 		],
 		[
 			"^shared inbox · token (.+)$",
@@ -2479,6 +2546,10 @@
 		[
 			"^(\\S+) downloading …$",
 			"جارٍ تنزيل $1 …"
+		],
+		[
+			"^unknown drive (\\S+)$",
+			"محرك غير معروف $1"
 		],
 		[
 			"^User “(.+)” saved\\.$",

@@ -32,6 +32,8 @@ the box for why the web server was not running.
 
 ## Timeline
 
+The timeline covers the first month, from the start on Friday, 16 Oct to 16 Nov 2026. What came later is in the [CHANGELOG](../CHANGELOG.md).
+
 ### Friday, 16 Oct 2026 – from concept to a new base
 
 | Time | Event |
@@ -123,16 +125,11 @@ the box for why the web server was not running.
 | 08:30 | So the player can seek in large files: a small uhttpd patch (Range header to CGI scripts) and byte ranges in the file CGI. |
 | 08:34 | Jan: ShareCommander and Webpad should access the box. Claude builds the app permission `files` (`ShareOS.fs`): one grant per app and account, every check in rpcd with the user's rights. ShareCommander now shows folders of the box, Webpad saves there. |
 | 08:52 | Jan's next list: internet for apps, Webpad crash on close, switching guide, soldering correction, translations, web terminal, switchable areas, year in dates, cloud services, Telegram. Claude works through it: Telegram bot, Google sign-in through the box (rclone authorize, the address from the browser bar is handed back), areas, ttyd as terminal, about 90 translations with a new check. Found on the way: inside ucode regex classes `\s` is not whitespace but the letter "s" – ntfy addresses were refused. |
-
 | 10:00 | Jan: "nano, htop – I want to see the implementation first. It's an app type of its own." Claude builds the app type `system`: native programs, built with the firmware's toolchain in a second buildroot (external toolchain = the firmware's), packed with their own libraries (ncurses) and terminal descriptions; on the box under `/opt/shareos/sysapps`, a starter per command in `PATH`. nano and htop run in the emulator; a test drives htop in a pseudo terminal. |
-
 | 13:13 | Jan tested beta.12: the terminal shows "Press ↵ to Reconnect" at once; app data of the admin (Webpad) is visible to every user; apps should open files of the box. Claude finds the terminal cause over HTTPS (HTTP/2 without Host header against ttyd's origin check; it worked over HTTP in the emulator), builds per-account browser storage into the app SDK and a file dialog of the box; WinWeb Player plays music from the box. On the way: ShareOS-Apps PR #4 had landed in a side branch instead of `main`. |
-
 | 15:08 | Jan tested the new firmware and apps: terminal, nano, htop, Webpad and WebTerm work. Only: WebTerm opens a closed Webpad in a tab instead of a window. Claude adds `ShareOS.openApp` to the SDK. Jan picks the next version: **0.2.0-beta.1**. |
-
 | 16:06 | Jan: Telegram works on the box. |
 | 16:12 | Jan: "Feature lock – clean up, optimize." Claude measures first: in the emulator every page load waited 1.1 s on requests, a store refresh blocked the interface for 8 s (rpcd answers one request at a time), the 5-second status started three programs each time. Results of expensive steps are now kept between calls, the store refreshes in the background. The system loses OpenSSL (ttyd on mbedtls), unused GLib/libevent/libnl parts and tools – 16.2 → 11.6 MB; strace and iperf3 become system apps. |
-
 | 18:48 | Jan: "first the device control per model, then the common Kirkwood build" – and he looks for testers. Claude replaces the DNS-320L wiring with model descriptions (`board.sh`: MCU or kernel sensors, polled or interrupt buttons, LED names, power-off, RTC, firmware name/signature) and builds one kernel with four device trees: a `.bin` and a bundle each for DNS-320L, DNS-320 rev B, DNS-320 rev A and DNS-325. Tester guide: DEVICES.md. |
 | 22:47 | `v0.2.0-beta.3` with the common Kirkwood build: the same firmware for DNS-320L, DNS-320 rev A/B and DNS-325. |
 
@@ -277,6 +274,13 @@ the box for why the web server was not running.
 | evening | Discussion #88 (lgustavod) turns into a **folder browser** for shares, media server and cloud jobs, plus copy/paste in the file browser (#127). |
 | night | A technical audit brings kernel hardening (#128; `FORTIFY_SOURCE` fails in the ARM decompressor) and **claim mode** (#129): a new box no longer has a known password, it is claimed with the USB button – updates never lock. Desktop 0.2.3 does it too. |
 
+### Monday, 09.11.2026
+
+| Time | What happened |
+|---|---|
+| 17:00 | Feasibility study DNS filter: Pi-hole runs on ARMv5 (3eca/pihole-armv5), Jan chooses **AdGuard Home** (official ARMv5 build, nothing to build ourselves) – to install only when wanted. With it the wish: everything modular, depending on what the NAS is for. |
+| 17:30 | **Modules:** a system app can switch on an area of the firmware; tab, "My ShareOS" part and background work exist only while it is installed. The code stays in the reviewed firmware – an uploaded package brings no code that runs as root. **Paperless** becomes the first module, boxes that use it get it by themselves on the update. DNS filter and cloud follow. |
+
 ### Tuesday, 10.11.2026
 
 | Time | What happened |
@@ -284,50 +288,18 @@ the box for why the web server was not running.
 | 06:50 | **0.3.0-beta.3** is out (Paperless as a module). Measurement of AdGuard Home v0.107.80 (official ARMv5 build) in the ShareOS userland: default list (188,000 rules) 45 MB of Go memory, 30 MB with `GOMEMLIMIT=32MiB`; 696,000 rules 107 and 77 MB – plus the program code. Much more than Pi-hole (lists in SQLite). Jan decides: AdGuard Home with guard rails. |
 | 07:30 | **DNS filter as the second module:** system app "DNS filter", controller `shareos-dnsfilter`, tab DNS FILTER. Set up through AdGuard's own setup API, memory limit, query log and statistics in RAM only, warning from 300,000 rules on. AdGuard's user switch drops root too early (port 53 fails) – it runs as root. `test-dnsfilter` with 34 checks, blocking over port 53 included. |
 | 10:17 | **Project website** on GitHub Pages: [uniquedroid.github.io/ShareOS](https://uniquedroid.github.io/ShareOS/) – features, downloads per model, the app catalog, discussions and these docs as a wiki. It builds itself from the repository on every push, release and once a day. |
-| 15:30 | **DNS filter:** AdGuard's interface over HTTPS with the box's certificate (redirect only with a trusted certificate – HSTS), and the box keeps its local name when the filter is the network's DNS server (rewrites for its names, local domain to the router). Reported by Jan: the Chromebook could no longer reach the box. Plus own local entries (name → IP) on the tab, so AdGuard's interface is only needed for fine-tuning. |
-| 13:00 | **Cloud as the third module:** system app "Cloud", CLOUD tab and "My ShareOS" part only while it is installed. Boxes with jobs, accounts or rclone get it by themselves on the update. All three planned modules are done; *Areas* now only switches Apps. |
 | 11:30 | Docs for **0.3.0-beta.4** (DNS filter, website). |
+| 13:00 | **Cloud as the third module:** system app "Cloud", CLOUD tab and "My ShareOS" part only while it is installed. Boxes with jobs, accounts or rclone get it by themselves on the update. All three planned modules are done; *Areas* now only switches Apps. |
 | 14:30 | **Vault shares** (discussion #88, idea of SamuelSilvaG): a share stays locked and invisible until a user unlocks it with the password for some minutes – then only for that user, and it locks itself again (cron). While locked the top folder's ACL shuts out open connections and apps too. App permission `vault` with `ShareOS.vault`, so Samuel can build the companion app. For 0.3.0-beta.5. |
-| 23:30 | **Desktop view: windows are apps.** Jan's first look: the windows felt like small browsers in the browser (the page in a frame, the terminal a window in a window), and web apps still opened browser windows. Rebuilt: `app.js` draws an area straight into a window (`VIEW`), the window in front is "the page", parts of an area are a bar, terminal and task manager are tools of their own, every web app is a desktop window. The frame mode (`?frame=1`) is gone; the classic view is unchanged. |
+| 15:30 | **DNS filter:** AdGuard's interface over HTTPS with the box's certificate (redirect only with a trusted certificate – HSTS), and the box keeps its local name when the filter is the network's DNS server (rewrites for its names, local domain to the router). Reported by Jan: the Chromebook could no longer reach the box. Plus own local entries (name → IP) on the tab, so AdGuard's interface is only needed for fine-tuning. |
 | 16:00 | **Desktop view as the fourth module:** Jan wants the interface as a desktop like other NAS systems have (icons, start menu, windows, control panel). First a clickable design, then the code: a small `desktop.js` without a framework, the windows show the existing pages (`?frame=1`), layout and wallpaper per account on the box. Both views stay, the login page asks. `tests/ui-desktop.js` checks it all in Chromium (47 checks). |
+| 23:30 | **Desktop view: windows are apps.** Jan's first look: the windows felt like small browsers in the browser (the page in a frame, the terminal a window in a window), and web apps still opened browser windows. Rebuilt: `app.js` draws an area straight into a window (`VIEW`), the window in front is "the page", parts of an area are a bar, terminal and task manager are tools of their own, every web app is a desktop window. The frame mode (`?frame=1`) is gone; the classic view is unchanged. |
 
 ### Wednesday, 11.11.2026
 
 | Time | What happened |
 |---|---|
 | 13:00 | **Static analysis** (Jan: "AI projects are criticised for this – where do we stand?"). There were already project-specific checks (ucode compile, forward references, ACL, i18n) and the weekly CVE overview; new: ShellCheck over all shell scripts, ESLint for the web interface and the app SDK, a check for unused top-level code, a complexity report (`tests/static-analysis.sh`, CI job `static-analysis`) and CodeQL for JavaScript and Python (taint analysis, `codeql.yml`). Findings fixed: three loops over `ls` output, one unused function, two needless escapes. The monthly audit now looks at the report. |
-
-### Saturday, 14.11.2026
-
-| Time | What happened |
-|---|---|
-| 08:00 | 0.3.0-beta.9 released by Jan (review fixes, #158). The night before the ARM emulator tests ran on GitHub for the first time – six runs until they were green; `test-dnsfilter` stays a warning because AdGuard Home starts too irregularly under the emulator. |
-| 08:48 | **Source by area.** Jan had asked for this for a long time: two files of more than 6000 lines are hard to read for people. `app.js` and `shareos.uc` become one file per area (`parts/web`, `parts/rpc`), joined by the build. First a pure cut whose result is byte-identical, then pages, set-up and clicks of each area moved into its file; every page of the old and the new interface compared in the browser. |
-
-### 19.–20.11.2026
-
-| Time | What happened |
-|---|---|
-| 19.11. 18:34 | Jan publishes `v0.3.0-beta.14`. |
-| 19.11. | From the apps: Transmission's *Revoke password* button stayed visible – a class's `display` beats the browser's `[hidden]` rule; the SDK theme fixes it for every app. "own" for uploaded apps read as "written by me" and becomes "uploaded". ShareFinder 1.1.1: a folder open in the column view can be deleted from its context menu again. |
-| 20.11. | Rambooka asks to see who is signed in (#191) – Jan picks the place next to the clock from two mock-ups. The Tailscale app named the DNS-320L on every box (#190). The DNR-322L build is ready for its tester; it stays out of the release until it has booted. |
-| 20.11. 22:00 | Everything for `v0.3.0-beta.15` is on `main`. |
-
-### 17.–19.11.2026
-
-| Time | What happened |
-|---|---|
-| 17.11. 14:14 | Jan publishes `v0.3.0-beta.13` (MCU wake-up alarm, the box's names after a cold start). |
-| 17.11. | **Progress for copies** (discussion #88, Rambooka): the box tells what a background copy takes and how far it is, and can stop it; ShareExplorer and ShareFinder 1.1.0 show speed and time left. Jan's test turns up uploads that end in "Failed to fetch" above 64 MB (now any size, with progress) and an old app running from the browser cache after an update – the packages carry the file time 1970. |
-| 18.11. | NFS on personal folders (#178), then **personal folders over SMB** (#183, Rambooka): ksmbd knows no `[homes]`. Going through everything that touches personal folders turns up reused user ids – a new account owned the files of a deleted one. The firmware page in other languages was half English. A storage test that failed now and then on GitHub: the partitions vanish for a moment while udev reads the table again. |
-| 18.11. | A tester with two **DNR-322L** comes forward (#180); a first build is ready. On 19.11. Jan finds why the earlier models looped: the 9.3 MB kernel covers 0x800000, where Alt-F puts its initramfs. |
-| 19.11. 16:15 | Everything for `v0.3.0-beta.14` is on `main`; the DNR-322L follows once it has booted. |
-
-### Friday, 13.11.2026
-
-| Time | What happened |
-|---|---|
-| 19:40 | **Review of the whole firmware** by a second AI (Claude Fable 5.2), asked for by Jan: "real values, standards, speed" – backend, interface, tools, board scripts and C sources read line by line, 85 findings. Jan decides point by point; the corrections come as one pull request (#158) in six packages: data and hardware safety (SMART read by the box itself, stale temperature, no switching off while flashing, supervised `rpcd`), displays that show what is, speed and the browser cache, robustness, secrets off the command line, rescue mode with the USB button. Found on the way: the ARM emulator tests never ran on GitHub – they do now. Signed releases are noted as a must-have of their own; splitting `app.js` and `shareos.uc` by areas follows as the next pull request. |
 
 ### Thursday, 12.11.2026
 
@@ -338,12 +310,18 @@ the box for why the web server was not running.
 | 18:15 | Jan logs switching the DNS filter off and on on his box (script from the session). Found: "ready" came about 40 s before AdGuard answered DNS (it loads the lists first), the local names were never set (the API did not answer while the lists loaded), the box was its own only DNS server (handed out by the network) and could not resolve anything while the filter was off, and *Services* always showed it as not started. Once the filter went off again after switching on: Jan had saved again because nothing visible happened – each status call waited up to 30 s for AdGuard while the lists loaded and held up the whole interface. Now "starting …" shows at once, *Save* is locked while it starts, and the status does not wait for AdGuard. |
 | 20:20 | #152 merged – everything for `v0.3.0-beta.7` (DNS filter fixes) is on `main`; Jan releases it right after beta.6. |
 
-### Monday, 09.11.2026
+### Friday, 13.11.2026
 
 | Time | What happened |
 |---|---|
-| 17:00 | Feasibility study DNS filter: Pi-hole runs on ARMv5 (3eca/pihole-armv5), Jan chooses **AdGuard Home** (official ARMv5 build, nothing to build ourselves) – to install only when wanted. With it the wish: everything modular, depending on what the NAS is for. |
-| 17:30 | **Modules:** a system app can switch on an area of the firmware; tab, "My ShareOS" part and background work exist only while it is installed. The code stays in the reviewed firmware – an uploaded package brings no code that runs as root. **Paperless** becomes the first module, boxes that use it get it by themselves on the update. DNS filter and cloud follow. |
+| 19:40 | **Review of the whole firmware** by a second AI (Claude Fable 5.2), asked for by Jan: "real values, standards, speed" – backend, interface, tools, board scripts and C sources read line by line, 85 findings. Jan decides point by point; the corrections come as one pull request (#158) in six packages: data and hardware safety (SMART read by the box itself, stale temperature, no switching off while flashing, supervised `rpcd`), displays that show what is, speed and the browser cache, robustness, secrets off the command line, rescue mode with the USB button. Found on the way: the ARM emulator tests never ran on GitHub – they do now. Signed releases are noted as a must-have of their own; splitting `app.js` and `shareos.uc` by areas follows as the next pull request. |
+
+### Saturday, 14.11.2026
+
+| Time | What happened |
+|---|---|
+| 08:00 | 0.3.0-beta.9 released by Jan (review fixes, #158). The night before the ARM emulator tests ran on GitHub for the first time – six runs until they were green; `test-dnsfilter` stays a warning because AdGuard Home starts too irregularly under the emulator. |
+| 08:48 | **Source by area.** Jan had asked for this for a long time: two files of more than 6000 lines are hard to read for people. `app.js` and `shareos.uc` become one file per area (`parts/web`, `parts/rpc`), joined by the build. First a pure cut whose result is byte-identical, then pages, set-up and clicks of each area moved into its file; every page of the old and the new interface compared in the browser. |
 
 ## Notable problems solved
 
@@ -421,7 +399,44 @@ the right of its heading. The interface is available in German and English.
 *Screenshots with sample data (`tests/mock-ubus.py`): two 4 TB disks as a
 mirror and an update available.*
 
-## Numbers (as of 17 Oct 2026, 16:00)
+## The first month in review (16 Oct – 16 Nov 2026)
+
+**The goals of the start are reached.** Jan began with three wishes besides a
+modern base: updates straight from GitHub releases, cloud storage and a
+Paperless connection. All three worked on the box within the first three days
+(17–18 Oct); since 0.3.0-beta.10 the releases are signed.
+
+**In numbers**
+
+| | |
+|---|---|
+| Releases | 43 test versions, `0.1.0-beta.1` (17 Oct) to `0.3.0-beta.12` (15 Nov) – on average one every 17 hours |
+| Pull requests | 145 merged in ShareOS (3 from outside), 54 in ShareOS-Apps (20 from SamuelSilvaG) |
+| Code | about 41,000 lines of own code (without the Alt-F legacy), almost all of it written by Claude |
+| Tests | 52 test scripts with about 1,170 checks; the ARM emulator tests run on GitHub for every pull request, plus static analysis and CodeQL |
+| Devices | DNS-320L and DNS-320LW tested, DNS-325 and DNS-320 rev A partly tested, DNS-320 rev B built – all from one Kirkwood build |
+| Apps | 45 apps in the store; system apps such as Transmission, Tailscale, Syncthing, autobrr, AdGuard Home, MiniDLNA, FFmpeg and the Zabbix agent |
+| Languages | 10, Arabic with a right-to-left layout |
+| Community | issues and ideas from 8 outside people, outside testers for the DNS-320LW and the DNS-320 rev A |
+| Hardware | 3 solder joints (the serial console), no box lost |
+
+**What came on top of the plan:** an app platform with permissions and its own
+store, system apps and modules (Paperless, DNS filter, cloud), the desktop
+view, vault shares, snapshots, a VPN server, UPS and printers over USB,
+dynamic DNS with Let's Encrypt, recovery-mode backups and claim mode instead
+of a known default password.
+
+**Where the hardware set limits:** Docker containers and Paperless itself on
+the box (ARMv5, 256 MB RAM), kexec to try a kernel without flashing, and
+signed SMB 3 at full speed – here the Marvell crypto engine brought it from
+6–11 to 18–22 MB/s.
+
+**How the work was split:** Jan set the direction, decided and tested on the
+real boxes; analysis, code, tests and documentation came from Claude. An
+external code review and a review of the whole firmware by a second AI
+(Claude Fable 5.2, 85 findings) checked the result from outside.
+
+## The first two days (as of 17 Oct 2026, 16:00)
 
 - Working time: about 6 hours on Friday and 5 hours on Saturday
 - 27 commits, 26 of them by Claude

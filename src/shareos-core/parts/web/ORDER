@@ -16,11 +16,13 @@ snapshots.js
 devices.js
 me.js
 storage.js
+migrate.js
 smart.js
 system-general.js
 system-network.js
 system-firmware.js
 system-messages.js
+deviceinfo.js
 firstrun.js
 pwa.js
 files.js

@@ -65,12 +65,21 @@ function uid_of(u) {
 }
 function small_ram() { return match(readfile(ROOT + '/tmp/sys/board.env') ?? '', /BOARD_RAM_SMALL="?1/) != null; }
 
+// the drive of an admin account's state: the first mounted one that has it,
+// otherwise the first mounted one. A drive that was moved to another one
+// (disk change, storage.<volume>.moved_to) is skipped – its copy is on the new one.
+function admin_volume(c, sub) {
+	let vols = [];
+	c.foreach('storage', 'volume', (x) => { if (!x.moved_to && mounted('/mnt/' + x['.name'])) push(vols, x['.name']); });
+	for (let v in vols) if (stat(ROOT + '/mnt/' + v + sub)?.type == 'directory') return v;
+	return vols[0];
+}
+
 // where the account keeps state and downloads; null when no drive is there
 function places(u) {
 	let c = cursor(), r = role(u);
 	if (r == 'admin') {
-		let vol = null;
-		c.foreach('storage', 'volume', (x) => { if (!vol && mounted('/mnt/' + x['.name'])) vol = x['.name']; });
+		let vol = admin_volume(c, '/.shareos/transmission/' + u);
 		if (!vol) return null;
 		return { state: '/mnt/' + vol + '/.shareos/transmission/' + u, download: '/mnt/' + vol + '/Downloads', run_as: 'root' };
 	}
@@ -277,11 +286,71 @@ function stop(u, quiet) {
 	if (!quiet) out(status(u));
 }
 
+
+// --- disk change -------------------------------------------------------------
+// After shareos-migrate copied a drive, the paths the daemons keep in their
+// own files still name the old one: settings.json (download, incomplete and
+// watch folder), .shareos-watch and the torrents' resume files (bencoded –
+// each string carries its length). relocate <from> <to> rewrites /mnt/<from>/…
+// to /mnt/<to>/… in the state folders on <to>, with the daemons stopped.
+function moved_path(v, from, to) {
+	let a = '/mnt/' + from;
+	if (type(v) != 'string' || (v != a && substr(v, 0, length(a) + 1) != a + '/')) return null;
+	return '/mnt/' + to + substr(v, length(a));
+}
+
+// a bencoded file with its path strings moved; null when it cannot be read
+function bencode_moved(b, from, to) {
+	let out = [], i = 0, n = length(b), changed = false;
+	while (i < n) {
+		let c = substr(b, i, 1);
+		if (c == 'd' || c == 'l' || c == 'e') { push(out, c); i++; continue; }
+		let m = match(substr(b, i, 24), /^(i-?[0-9]+e|([0-9]+):)/);
+		if (!m) return null;
+		if (m[2] == null) { push(out, m[1]); i += length(m[1]); continue; }
+		let len = +m[2], str = substr(b, i + length(m[1]), len);
+		if (length(str) != len) return null;
+		let mv = moved_path(str, from, to);
+		if (mv != null) { str = mv; changed = true; }
+		push(out, length(str) + ':' + str);
+		i += length(m[1]) + len;
+	}
+	return changed ? join('', out) : b;
+}
+
+function relocate_state(dir, from, to) {
+	let n = 0, f = dir + '/settings.json', s = jparse(readfile(f) ?? '');
+	if (type(s) == 'object') {
+		let changed = false;
+		for (let k in keys(s)) { let mv = moved_path(s[k], from, to); if (mv != null) { s[k] = mv; changed = true; } }
+		if (changed) { writefile(f, sprintf('%.J\n', s)); n++; }
+	}
+	let w = trim(readfile(dir + '/.shareos-watch') ?? ''), mw = moved_path(w, from, to);
+	if (mw != null) { writefile(dir + '/.shareos-watch', mw + '\n'); n++; }
+	for (let r in lsdir(dir + '/resume') ?? []) {
+		if (!match(r, /\.resume$/)) continue;
+		let p = dir + '/resume/' + r, b = readfile(p), nb = b != null ? bencode_moved(b, from, to) : null;
+		if (nb != null && nb !== b) { writefile(p, nb); n++; }
+	}
+	return n;
+}
+
+function relocate(from, to) {
+	if (!match(from ?? '', /^[a-z0-9_-]+$/) || !match(to ?? '', /^[a-z0-9_-]+$/)) die('invalid drive');
+	let base = ROOT + '/mnt/' + to, dirs = [];
+	for (let a in lsdir(base + '/.shareos/transmission') ?? []) push(dirs, base + '/.shareos/transmission/' + a);
+	for (let a in lsdir(base + '/home') ?? []) push(dirs, base + '/home/' + a + '/.config/transmission-daemon');
+	let n = 0;
+	for (let d in dirs) if (stat(d)?.type == 'directory') n += relocate_state(d, from, to);
+	out({ ok: true, files: n });
+}
+
 let cmd = ARGV[0], u = ARGV[1];
 switch (cmd) {
 case 'start': start(u); break;
 case 'stop': stop(u); break;
 case 'status': if (!match(u ?? '', NAME_RE)) die('invalid account'); out(status(u)); break;
+case 'relocate': relocate(ARGV[1], ARGV[2]); break;
 // watch <account> <folder|"">: the account's own watch folder (rpcd checked
 // that the folder belongs to the account); autobrr's account keeps autobrr's
 case 'watch': {
@@ -338,5 +407,5 @@ case 'stop-all':
 	out({ ok: true });
 	break;
 default:
-	die('usage: shareos-transmission start|stop|status <account> | watch <account> <folder> | port <account> <port> | boot | stop-all');
+	die('usage: shareos-transmission start|stop|status <account> | watch <account> <folder> | port <account> <port> | boot | stop-all | relocate <from> <to>');
 }

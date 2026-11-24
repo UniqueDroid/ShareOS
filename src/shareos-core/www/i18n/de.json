@@ -1733,7 +1733,66 @@
 		"uploaded": "hochgeladen",
 		"uploaded – not checked": "hochgeladen – nicht geprüft",
 		"from the app repository). Uploaded packages are marked “uploaded – not checked”: the box cannot compare them with the store.": "aus dem App-Repo). Hochgeladene Pakete sind als „hochgeladen – nicht geprüft“ markiert: Die Box kann sie nicht mit dem Store vergleichen.",
-		"Signed in": "Angemeldet"
+		"Signed in": "Angemeldet",
+		"Over SMB a share of the same name opens instead of this personal folder – create that share again under another name.": "Über SMB öffnet sich statt dieses persönlichen Ordners eine Freigabe gleichen Namens – lege diese Freigabe unter einem anderen Namen neu an.",
+		"Over SMB this share hides the personal folder of the account of the same name – create it again under another name to free that address.": "Über SMB verdeckt diese Freigabe den persönlichen Ordner des gleichnamigen Kontos – lege sie unter einem anderen Namen neu an, um diese Adresse freizugeben.",
+		"Install from an unsigned source?": "Aus einer nicht signierten Quelle installieren?",
+		"This app comes from a store source without a valid signature of the ShareOS project.": "Diese App stammt aus einer Store-Quelle ohne gültige Signatur des ShareOS-Projekts.",
+		"Its checksum only shows that the download is complete – not who made it.": "Ihre Prüfsumme zeigt nur, dass der Download vollständig ist – nicht, wer sie gemacht hat.",
+		"catalog signature missing or invalid – not used": "Katalog-Signatur fehlt oder ist ungültig – nicht verwendet",
+		"MOVE TO A NEW DRIVE": "UMZUG AUF EIN NEUES LAUFWERK",
+		"DISK CHANGE": "PLATTENWECHSEL",
+		"Copies everything from an old drive to a new one – shares, personal folders and the app area – and then switches over, so that nothing has to be set up again.": "Kopiert alles von einem alten auf ein neues Laufwerk – Freigaben, persönliche Ordner und den App-Bereich – und schaltet dann um, sodass nichts neu eingerichtet werden muss.",
+		"1 · CHOOSE THE DRIVES": "1 · LAUFWERKE WÄHLEN",
+		"OLD DRIVE (FROM)": "ALTES LAUFWERK (VON)",
+		"NEW DRIVE (TO)": "NEUES LAUFWERK (NACH)",
+		"The new drive must be set up and empty, with ext4 or Btrfs. It can be in the second bay or in a USB case – after the move it can go into a bay. Set it up first under": "Das neue Laufwerk muss eingerichtet und leer sein, mit ext4 oder Btrfs. Es kann im zweiten Schacht oder in einem USB-Gehäuse stecken – nach dem Umzug kann es in einen Schacht. Zuerst einrichten unter",
+		"An old disk in a USB case is added there without erasing it (a disk with data).": "Eine alte Platte im USB-Gehäuse wird dort ohne Löschen hinzugefügt (Platte mit Daten).",
+		"Personal folders": "Persönliche Ordner",
+		"Snapshot jobs": "Snapshot-Aufträge",
+		"Data": "Daten",
+		"moves along": "zieht mit um",
+		"Everything on the old drive is copied – also folders that are not shared – except the snapshots. Owners, permissions and ACLs stay. The old drive is not changed.": "Alles auf dem alten Laufwerk wird kopiert – auch Ordner, die nicht freigegeben sind – außer den Snapshots. Besitzer, Rechte und ACLs bleiben. Das alte Laufwerk wird nicht verändert.",
+		"Check": "Prüfen",
+		"Start copying": "Kopieren starten",
+		"2 · COPYING": "2 · KOPIEREN",
+		"3 · SWITCHING": "3 · UMSCHALTEN LÄUFT",
+		"3 · SWITCH": "3 · UMSCHALTEN",
+		"Services are stopped for the last copy – shares are back in a moment.": "Die Dienste sind für den letzten Abgleich angehalten – die Freigaben sind gleich wieder da.",
+		"The box can be used while it copies. What changes until the switch is copied then.": "Die Box ist während des Kopierens benutzbar. Was sich bis zum Umschalten ändert, wird dann übernommen.",
+		"Everything is copied.": "Alles ist kopiert.",
+		"Switching stops shares, apps, downloads, the media server and scheduled jobs for a short time, copies what changed since and then points shares, personal folders, the app area, the USB copy, snapshot jobs and the folders of Transmission and Syncthing to the new drive.": "Beim Umschalten halten Freigaben, Apps, Downloads, der Medienserver und geplante Aufträge kurz an; was sich seitdem geändert hat, wird kopiert, dann zeigen Freigaben, persönliche Ordner, App-Bereich, USB-Kopie, Snapshot-Aufträge und die Ordner von Transmission und Syncthing auf das neue Laufwerk.",
+		"Switch now": "Jetzt umschalten",
+		"DONE": "FERTIG",
+		"Shares, personal folders and the app area are now on the new drive.": "Freigaben, persönliche Ordner und der App-Bereich liegen jetzt auf dem neuen Laufwerk.",
+		"The old drive is unchanged. When everything works, forget it under": "Das alte Laufwerk ist unverändert. Wenn alles läuft, unter",
+		"and take the disk out – or keep it as a backup.": "vergessen und die Platte herausnehmen – oder als Sicherung behalten.",
+		"The copy was stopped. Going on copies only what is missing.": "Das Kopieren wurde angehalten. Weitermachen kopiert nur, was noch fehlt.",
+		"Go on copying": "Weiter kopieren",
+		"Stop copying?": "Kopieren anhalten?",
+		"What is copied stays on the new drive; going on later copies only the rest.": "Was kopiert ist, bleibt auf dem neuen Laufwerk; später weitermachen kopiert nur den Rest.",
+		"Switch to the new drive now?": "Jetzt auf das neue Laufwerk umschalten?",
+		"Shares, apps, downloads and the media server stop for the last copy and start again on the new drive. Open files on the network are closed.": "Freigaben, Apps, Downloads und der Medienserver halten für den letzten Abgleich an und starten auf dem neuen Laufwerk neu. Im Netzwerk geöffnete Dateien werden geschlossen.",
+		"source and target are the same drive": "Quelle und Ziel sind dasselbe Laufwerk",
+		"the new drive needs ext4 or btrfs (owners, personal folders, app area)": "das neue Laufwerk braucht ext4 oder Btrfs (Besitzer, persönliche Ordner, App-Bereich)",
+		"the new drive is not empty – choose an empty drive": "das neue Laufwerk ist nicht leer – wähle ein leeres Laufwerk",
+		"not enough free space on the new drive": "nicht genug freier Platz auf dem neuen Laufwerk",
+		"copy failed – see the log; starting again copies only what is missing": "Kopieren fehlgeschlagen – siehe Protokoll; ein neuer Start kopiert nur, was fehlt",
+		"the last copy before switching failed – nothing was switched": "der letzte Abgleich vor dem Umschalten ist fehlgeschlagen – nichts wurde umgestellt",
+		"copy everything first": "zuerst alles kopieren",
+		"a move is already running": "ein Umzug läuft bereits",
+		"a copy in Files, a cloud job, a snapshot or Paperless is still running – wait until it is done": "eine Kopie in Files, ein Cloud-Auftrag, ein Snapshot oder Paperless läuft noch – warte, bis er fertig ist",
+		"switching stopped before it was done – start it again, or restart the box": "das Umschalten hat vor dem Ende aufgehört – starte es noch einmal oder starte die Box neu",
+		"autobrr: filters with the action Watch dir still name the hand-over folder on the old drive – change it in autobrr to the folder on the new drive.": "autobrr: Filter mit der Aktion Watch dir nennen noch den Übergabeordner auf dem alten Laufwerk – ändere ihn in autobrr auf den Ordner auf dem neuen Laufwerk.",
+		"Test image for a new model.": "Testimage für ein neues Modell.",
+		"root keeps the password shareos – use the box only in your own network. Please send the device info:": "root behält das Passwort shareos – nutze die Box nur im eigenen Netz. Bitte schicke die Geräteinfo:",
+		"Device info": "Geräteinfo",
+		"Reading …": "Wird gelesen …",
+		"DEVICE INFO": "GERÄTEINFO",
+		"hardware facts for adding a model": "Hardware-Angaben zum Hinzufügen eines Modells",
+		"Copying is not allowed here – use Download.": "Kopieren ist hier nicht erlaubt – nimm Herunterladen.",
+		"Model, flash partitions, CPU, memory, LEDs, sensors, buttons, GPIOs, serial ports, network, the U-Boot environment and the kernel log of this box – everything a new model needs. Only read, nothing is changed. Attach the file to the issue of the model.": "Modell, Flash-Partitionen, CPU, Speicher, LEDs, Sensoren, Tasten, GPIOs, serielle Schnittstellen, Netzwerk, die U-Boot-Umgebung und das Kernel-Protokoll dieser Box – alles, was ein neues Modell braucht. Es wird nur gelesen, nichts geändert. Hänge die Datei an das Issue des Modells.",
+		"Show MAC addresses and serial numbers (otherwise masked – keep them out of public issues)": "MAC-Adressen und Seriennummern zeigen (sonst maskiert – nicht in öffentliche Issues)"
 	},
 	"patterns": [
 		[
@@ -2121,6 +2180,10 @@
 			"persönlicher Eingang von $1 · Token $2"
 		],
 		[
+			"^(\\S+ \\S+) · free on the new drive: (\\S+ \\S+)$",
+			"$1 · frei auf dem neuen Laufwerk: $2"
+		],
+		[
 			"^(\\S+): no longer starts at boot$",
 			"$1: startet nicht mehr beim Einschalten"
 		],
@@ -2203,6 +2266,10 @@
 		[
 			"^failed (\\S+): ubiupdatevol$",
 			"fehlgeschlagen ($1): das System konnte nicht geschrieben werden (ubiupdatevol)"
+		],
+		[
+			"^drive (\\S+) is not mounted$",
+			"Laufwerk $1 ist nicht eingehängt"
 		],
 		[
 			"^shared inbox · token (.+)$",
@@ -2479,6 +2546,10 @@
 		[
 			"^(\\S+) downloading …$",
 			"$1 wird geladen …"
+		],
+		[
+			"^unknown drive (\\S+)$",
+			"unbekanntes Laufwerk $1"
 		],
 		[
 			"^User “(.+)” saved\\.$",

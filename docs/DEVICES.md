@@ -15,7 +15,7 @@ temperature sensor, buttons, LEDs, power-off) is described per model in
 | DNS-320 rev B | `ShareOS-<ver>-DNS-320-rev-Bx.*` | 128 MB | built, **testers wanted** |
 | DNS-325 rev A | `ShareOS-<ver>-DNS-325-rev-Ax.*` | 256 MB | **partly tested** (rev A1, see below), more testers wanted |
 | DNS-320 rev A | `ShareOS-<ver>-DNS-320-rev-Ax.*` | 128 MB | **partly tested** (rev A1 with 0.3.0-beta.9: installed, web interface; temperature and fan control with the fix of 0.3.0-beta.11, [#163](https://github.com/UniqueDroid/ShareOS/issues/163)), more testers wanted – up to 0.2.0-beta.16 it restarts in a loop after flashing (initramfs address, [#96](https://github.com/UniqueDroid/ShareOS/issues/96)); use 0.2.0-beta.17 or newer |
-| DNR-322L rev A | `ShareOS-<ver>-DNR-322L-rev-Ax.*` | 256 MB | built from 0.3.0-beta.16, **not tried on hardware** ([#180](https://github.com/UniqueDroid/ShareOS/issues/180)) – the board of the DNS-320 rev A as a video recorder; system partition 70 MB, the NUUO partition is left alone. Front (D-Link manual): power button, power and disk LEDs and a USB port for a UPS – **no USB button**: a new box is claimed with a short press (under 5 s) of the reset button on the back (from 0.3.0-beta.16). There is no USB LED: the first installation and rescue mode blink the **power LED** (fast while installing, slowly in rescue mode). There is a second version, the DNR-322L **rev B** (case like a DNS-320L, a magnifier button on the front). Its board is not known yet – probably the one of the DNS-320L. This build is for rev A only (the rev is on the label underneath): **do not flash it on a rev B**. A boot log of a rev B (serial console or Alt-F's `dmesg`) would show what it needs. A first test needs a serial console at hand (see below) |
+| DNR-322L rev A | `ShareOS-<ver>-DNR-322L-rev-Ax-devtest.*` | 256 MB | **devtest image** (root / shareos, device info, see below) from the build of the pull request, **not tried on hardware** ([#180](https://github.com/UniqueDroid/ShareOS/issues/180)) – the board of the DNS-320 rev A as a video recorder; system partition 70 MB, the NUUO partition is left alone. Front (D-Link manual): power button, power and disk LEDs and a USB port for a UPS – **no USB button** – once it is released, a new box is claimed with a short press (under 5 s) of the reset button on the back; the devtest image needs no claiming. There is no USB LED: the first installation and rescue mode blink the **power LED** (fast while installing, slowly in rescue mode). There is a second version, the DNR-322L **rev B** (case like a DNS-320L, a magnifier button on the front). Its board is not known yet – probably the one of the DNS-320L. This build is for rev A only (the rev is on the label underneath): **do not flash it on a rev B**. A boot log of a rev B (serial console or Alt-F's `dmesg`) would show what it needs. A first test needs a serial console at hand (see below) |
 | DNS-327L | – | 512 MB | planned (own kernel and flash layout) |
 
 Not possible: DNS-323, DNS-321, DNS-343 (64 MB RAM, 8 MB flash).
@@ -121,3 +121,32 @@ touched.
    device tree, D-Link signature from `legacy/alt-f/mkfw.sh`).
 3. A case in `board_detect` of `board.sh` (model text, LEDs, control,
    buttons) and in `tests/test-boards.sh`.
+
+### Devtest image: the first image for a new model
+
+A model that is being added is built as a **devtest image** until it has been
+tested: status `devtest` in its `MODELS` line (files
+`ShareOS-<version>-<name>-devtest.bin` / `.sysupgrade.tar`) and
+`BOARD_DEVTEST=1` in its case of `board.sh`. Its testers get the files from the
+build of the pull request (Actions → artifact), never from a release – the
+release job refuses devtest files.
+
+On such a box:
+
+- root keeps the password **shareos** – no claiming with a button (the buttons
+  of a new model are not known yet). Web interface and SSH: `root` / `shareos`.
+  Use it only in your own network.
+- The overview and the messages say that it is a test image and link to the
+  **device info**: `http://<box>/deviceinfo` (also open for admins on every
+  other model). It collects what is needed to add the model – flash partitions,
+  CPU, memory, device tree, LEDs, sensors, buttons (input devices), GPIOs,
+  serial ports, I2C, USB, network, the U-Boot environment (read from flash,
+  never written) and the kernel log – and offers it as a text file. MAC
+  addresses and serial numbers are masked unless *Show MAC addresses and serial
+  numbers* is ticked: attach the masked file to the issue of the model.
+- In the rescue system (SSH after a TFTP or rescue boot) the same report:
+  `shareos-deviceinfo > /tmp/info.txt`, then copy it with `scp`
+  (`--full`: without masking).
+
+When the model works: status `release`, `BOARD_DEVTEST=0`, and it goes into
+the next release with the normal claiming.

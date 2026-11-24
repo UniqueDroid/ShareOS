@@ -88,7 +88,7 @@ def info():
     return {
         'model': 'D-Link DNS-320L-rev-Ax NAS', 'hostname': 'skynet-nas', 'kernel': '6.18.58', 'boot': 'flash',
         'release': {'version': '0.1.0-beta.1', 'board': 'dns320l', 'fwname': 'DNS-320L-rev-Ax', 'stage': 'beta'},
-        'board': {'id': 'dns320l', 'name': 'D-Link DNS-320L rev A', 'fwname': 'DNS-320L-rev-Ax', 'tested': True},
+        'board': {'id': 'dns320l', 'name': 'D-Link DNS-320L rev A', 'fwname': 'DNS-320L-rev-Ax', 'tested': True, 'devtest': bool(os.environ.get('MOCK_DEVTEST'))},
         'time': int(time.time()), 'uptime': up, 'load': [0.42, 0.38, 0.35],
         'cpu': {'total': int(up * 100), 'idle': int(up * 85)},
         'memory': {'memtotal': 253092 * 1024, 'memavailable': 160000 * 1024},
@@ -118,7 +118,9 @@ def storage():
                    {'name': 'md0', 'state': 'active', 'level': 'raid1', 'members': ['sdb2', 'sda2'], 'disks': 2, 'active': 2,
                     'health': 'UU', 'sync': {'action': 'recovery' if STATE.get('repair_t') else 'resync', 'percent': pct, 'finish': '412.5min'}}},
         'volumes': [{'name': 'data', 'uuid': '1b4e28ba-2fa1-11d2-883f-0016d3cca427', 'fstype': 'ext4', 'layout': 'mirror', 'enabled': True,
-                     'device': '/dev/md0', 'mountpoint': '/mnt/data', 'mounted': True, 'size': 3936 << 30, 'used': 1210 << 30, 'avail': 2726 << 30}],
+                     'device': '/dev/md0', 'mountpoint': '/mnt/data', 'mounted': True, 'size': 3936 << 30, 'used': 1210 << 30, 'avail': 2726 << 30}]
+                   + ([{'name': 'new', 'uuid': '9c1d', 'fstype': 'ext4', 'layout': 'single', 'enabled': True, 'device': '/dev/sdc2',
+                        'mountpoint': '/mnt/new', 'mounted': True, 'size': 3700 << 30, 'used': 0, 'avail': 3600 << 30}] if os.environ.get('MOCK_NEW_DRIVE') else []),
         'spindown': 20, 'smart_schedule': STATE.get('smart_schedule', ''), 'job': STATE['job'], 'usb_copy': STATE.setdefault('usb_copy', {'enabled': False, 'volume': '', 'path': mock_folder('usb'), 'last': None})}
 
 
@@ -627,6 +629,42 @@ def call(obj, method, args):
         if method == 'rescan':
             d['scanning'] = True
         return d
+    if obj == 'shareos.deviceinfo':
+        # MOCK_DEVTEST=1: a box of a model that is being added (banner on the overview)
+        mac = '00:50:43:12:ab:cd' if args.get('full') else 'xx:xx:xx:xx:ab:cd'
+        return {'full': bool(args.get('full')), 'devtest': bool(os.environ.get('MOCK_DEVTEST')), 'fwname': 'DNS-320L-rev-Ax',
+                'text': 'ShareOS device info\n\n### device-tree model\nD-Link DNS-320L-rev-Ax NAS\n\n### flash partitions (/proc/mtd)\n'
+                        'dev:    size   erasesize  name\nmtd0: 00100000 00020000 "u-boot"\n\n### network interfaces\neth0: address=' + mac + '\n'}
+    if obj == 'shareos.migrate':
+        # disk change: a copy that advances with every state call, a switch that is done at once
+        mg = STATE.setdefault('mig', {'state': 'none'})
+        if method == 'plan':
+            if args.get('from') == args.get('to'):
+                return {'from': args['from'], 'to': args['to'], 'shares': [], 'homes': [], 'apps': False, 'snapshot_jobs': [],
+                        'used': 0, 'free': 0, 'ok': False, 'problem': 'source and target are the same drive'}
+            return {'from': args['from'], 'to': args['to'], 'shares': ['photos', 'media'], 'homes': ['jan', 'anna'], 'apps': True,
+                    'snapshot_jobs': [], 'used': 1210 << 30, 'free': 3600 << 30, 'ok': True, 'problem': ''}
+        if method == 'copy':
+            STATE['mig'] = {'state': 'copying', 'from': args['from'], 'to': args['to'], 'total': 1210 << 30, 'done': 0, 'percent': 0, 'started': int(time.time()), 'error': ''}
+            return {'ok': True}
+        if method == 'state':
+            if mg['state'] == 'copying':
+                mg['percent'] = min(100, mg['percent'] + 35)
+                mg['done'] = mg['total'] * mg['percent'] // 100
+                if mg['percent'] >= 100:
+                    mg['state'] = 'copied'
+            elif mg['state'] == 'switching':
+                mg['state'] = 'done'
+            return mg
+        if method == 'cancel':
+            mg['state'] = 'cancelled'
+            return {'ok': True}
+        if method == 'switch':
+            mg['state'] = 'switching'
+            return {'started': True}
+        if method == 'clear':
+            STATE['mig'] = {'state': 'none'}
+            return {'ok': True}
     if obj == 'shareos.snapshots':
         sn = STATE.setdefault('snap', {'photos': {
             'name': 'photos', 'source': 'share:photos', 'target': 'usb', 'every': 'day', 'time': '03:15', 'exclude': ['*.tmp'], 'enabled': True,

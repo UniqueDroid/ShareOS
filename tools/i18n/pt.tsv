@@ -2191,3 +2191,65 @@ E1747	enviado
 E1748	enviado – não verificado
 E1749	do repositório de apps). Pacotes enviados são marcados como "enviado – não verificado": o aparelho não consegue compará-los com a loja.
 E1750	Conectado
+E1751	Por SMB abre-se uma partilha com o mesmo nome em vez desta pasta pessoal – crie essa partilha de novo com outro nome.
+E1752	Por SMB esta partilha oculta a pasta pessoal da conta com o mesmo nome – crie-a de novo com outro nome para libertar esse endereço.
+E1753	Instalar a partir de uma fonte não assinada?
+E1754	Esta app vem de uma fonte da loja sem uma assinatura válida do projeto ShareOS.
+E1755	A sua soma de verificação só mostra que a transferência está completa – não quem a fez.
+E1756	assinatura do catálogo em falta ou inválida – não usado
+E1757	MOVER PARA UMA NOVA UNIDADE
+E1758	TROCA DE DISCO
+E1759	Copia tudo de uma unidade antiga para uma nova – partilhas, pastas pessoais e a área de apps – e depois muda, sem ter de configurar nada de novo.
+E1760	1 · ESCOLHER AS UNIDADES
+E1761	UNIDADE ANTIGA (DE)
+E1762	NOVA UNIDADE (PARA)
+E1763	A nova unidade tem de estar configurada e vazia, com ext4 ou Btrfs. Pode estar no segundo compartimento ou numa caixa USB – depois da mudança pode ir para um compartimento. Configure-a primeiro em
+E1764	Um disco antigo numa caixa USB é adicionado aí sem ser apagado (disco com dados).
+E1765	Pastas pessoais
+E1766	Tarefas de instantâneos
+E1767	Dados
+E1768	muda também
+E1769	Tudo o que está na unidade antiga é copiado – também pastas não partilhadas – exceto os instantâneos. Donos, permissões e ACL mantêm-se. A unidade antiga não é alterada.
+E1770	Verificar
+E1771	Começar a copiar
+E1772	2 · A COPIAR
+E1773	3 · A MUDAR
+E1774	3 · MUDAR
+E1775	Os serviços estão parados para a última cópia – as partilhas voltam dentro de momentos.
+E1776	A caixa pode ser usada enquanto copia. O que mudar até à mudança é copiado nessa altura.
+E1777	Tudo está copiado.
+E1778	A mudança para brevemente partilhas, apps, transferências, o servidor multimédia e as tarefas agendadas, copia o que mudou desde então e depois aponta partilhas, pastas pessoais, área de apps, cópia USB, tarefas de instantâneos e as pastas do Transmission e do Syncthing para a nova unidade.
+E1779	Mudar agora
+E1780	CONCLUÍDO
+E1781	As partilhas, pastas pessoais e a área de apps estão agora na nova unidade.
+E1782	A unidade antiga está inalterada. Quando tudo funcionar, esqueça-a em
+E1783	e retire o disco – ou guarde-o como cópia de segurança.
+E1784	A cópia foi parada. Continuar copia apenas o que falta.
+E1785	Continuar a copiar
+E1786	Parar a cópia?
+E1787	O que foi copiado fica na nova unidade; continuar mais tarde copia só o resto.
+E1788	Mudar agora para a nova unidade?
+E1789	Partilhas, apps, transferências e o servidor multimédia param para a última cópia e arrancam de novo na nova unidade. Os ficheiros abertos na rede são fechados.
+E1790	a origem e o destino são a mesma unidade
+E1791	a nova unidade precisa de ext4 ou btrfs (donos, pastas pessoais, área de apps)
+E1792	a nova unidade não está vazia – escolha uma unidade vazia
+E1793	não há espaço livre suficiente na nova unidade
+E1794	a cópia falhou – veja o registo; recomeçar copia só o que falta
+E1795	a última cópia antes da mudança falhou – nada foi mudado
+E1796	copie tudo primeiro
+E1797	já está a decorrer uma mudança
+P398	$1 · livre na nova unidade: $2
+P399	unidade desconhecida $1
+P400	a unidade $1 não está montada
+E1798	ainda está a decorrer uma cópia em Files, uma tarefa na nuvem, um instantâneo ou o Paperless – aguarde até terminar
+E1799	a mudança parou antes de terminar – inicie-a novamente ou reinicie a caixa
+E1800	autobrr: os filtros com a ação Watch dir ainda indicam a pasta de entrega na unidade antiga – altere-a no autobrr para a pasta na nova unidade.
+E1801	Imagem de teste para um novo modelo.
+E1802	o root mantém a palavra-passe shareos – use a caixa apenas na sua própria rede. Envie as informações do dispositivo:
+E1803	Informações do dispositivo
+E1804	A ler …
+E1805	INFORMAÇÕES DO DISPOSITIVO
+E1806	dados de hardware para adicionar um modelo
+E1807	Copiar não é permitido aqui – use Transferir.
+E1808	Modelo, partições flash, CPU, memória, LEDs, sensores, botões, GPIOs, portas série, rede, o ambiente U-Boot e o registo do kernel desta caixa – tudo o que um novo modelo precisa. Só é lido, nada é alterado. Anexe o ficheiro ao issue do modelo.
+E1809	Mostrar endereços MAC e números de série (caso contrário ocultos – não os coloque em issues públicos)

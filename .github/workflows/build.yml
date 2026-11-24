@@ -57,6 +57,8 @@ jobs:
         run: LD_LIBRARY_PATH="$HOME/hostroot/lib" tests/test-net.sh "$HOME/hostroot/bin/uci"
       - name: Model descriptions (board.sh, LEDs, fan backends)
         run: tests/test-boards.sh
+      - name: Disk change wizard (shareos-migrate with two folders as drives)
+        run: LD_LIBRARY_PATH="$HOME/hostroot/lib" tests/test-migrate.sh "$HOME/hostroot/bin/uci"
       - name: Rescue mode (SSH only after the USB button)
         run: tests/test-rescue.sh
       - name: Size check of the flash partition in shareos-install-ubi
@@ -230,6 +232,15 @@ jobs:
           pattern: shareos-*
           path: artifacts
           merge-multiple: true
+
+      # a model that is being added (status "devtest" in post-image.sh) keeps
+      # the root password "shareos" – its files never go into a release
+      - name: No devtest images
+        run: |
+          if ls artifacts/*-devtest.* >/dev/null 2>&1; then
+            echo "::error::devtest images in the build: $(cd artifacts && ls *-devtest.* | tr '\n' ' ') – set the model to 'release' in board/dlink/dns320l/post-image.sh and BOARD_DEVTEST=0 in board.sh when it is tested, or take it out"
+            exit 1
+          fi
 
       - name: Sign the images
         env:

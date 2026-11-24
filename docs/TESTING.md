@@ -525,6 +525,25 @@ Needs a Tailscale account (free), a phone or computer with Tailscale, the file `
 5. An account without a personal folder: sharing shows "no personal folder"; the shared item is dropped and does not come back at the next login.
 6. File dialog of an app for an account **without** *Files* (e.g. Webpad → *Open*): the list of folders shows *App data* first, then *My folder* and the user's shares; read-only shares are marked and are missing when saving. The app still keeps its own files in *App data*.
 
+## 14zz. Device info, devtest images (0.3.0-beta.17)
+
+1. On any box, signed in as admin: open `http://<box>/deviceinfo`. The page *DEVICE INFO* opens (classic view: under *System*, no tab; desktop view: in the *Settings* window). It shows the model, `/proc/mtd`, the CPU, LEDs, hwmon sensors, input devices, the U-Boot environment and the kernel log. MAC addresses read `xx:xx:xx:xx:..:..`, serial numbers `(masked)`.
+2. Tick *Show MAC addresses and serial numbers*: the report is read again, complete, with "NOT MASKED" at the top. *Download* saves `shareos-deviceinfo-<model>-<date>-full.txt`, *Copy* puts it on the clipboard (only over HTTPS or on localhost – otherwise the page says to use *Download*).
+3. Over SSH: `shareos-deviceinfo | head -40` and `shareos-deviceinfo --full | grep ethaddr`. Nothing is written: `md5sum /dev/mtd*` before and after is the same.
+4. Rescue system (TFTP boot with `shareos.rescue`): the start message names `shareos-deviceinfo`; `shareos-deviceinfo > /tmp/info.txt` works there too, `scp root@<box>:/tmp/info.txt .` fetches it.
+5. Devtest image (only with a model that has the status `devtest`, e.g. a pull request for a new model): after flashing, `root` / `shareos` works in the browser and over SSH without pressing a button; the overview shows the yellow note *Test image for a new model* with the link, *Messages* the same within 10 minutes.
+
+## 14zy. Disk change (0.3.0-beta.16)
+
+Needs a second disk (bay or USB case) that may be erased. **Not on a box with data you cannot lose without a backup.**
+
+1. *Storage → Drives*: set up the second disk as a single drive with ext4 (e.g. `neu`). *Storage → DISK CHANGE*: old drive = the drive with your data, new drive = `neu`, *Check*: shares, personal folders, app area and the amount of data are listed. Choosing the same drive twice, or a drive with data, shows the reason and *Start copying* stays off.
+2. *Start copying*: the bar moves; shares stay usable. *Cancel* in between, then *Go on copying*: it goes on and copies only the rest.
+3. When everything is copied: start a copy in *Files* that takes a while and press *Switch now* meanwhile – it is refused ("… is still running – wait until it is done"). When the copy is done: change a file on a share, then *Switch now*. Shares are gone for a moment and come back; afterwards *Shares* shows the new drive for every share, *Users* the new drive for personal folders, *Storage* the app area on `neu`, *Snapshots* the new drive for jobs that save the personal folders or the whole drive. The changed file is there, apps start, Transmission and the media server work.
+4. Transmission (if used): its download folder (*Settings* in the app) and the folders of the existing torrents are on `neu`; a new download lands on `neu`. Syncthing (if used): the folders point to `neu` (`grep path= /mnt/neu/home/<account>/.config/syncthing/config.xml`).
+5. Over SMB: open a share and a personal folder, compare a few files and their rights (a read-only user still cannot write). The old drive is unchanged; *Close* ends the wizard.
+6. Optional: shut down, put the new disk into bay 1 (the old one out), start: everything comes up from the new disk.
+
 ## 14zx. Signed-in name, uploaded apps (0.3.0-beta.15, #191)
 
 1. Sign in as an administrator: left of the clock, a field with a person icon shows the account name; hovering it says "Signed in". Make the window narrow: the field moves left with the clock.

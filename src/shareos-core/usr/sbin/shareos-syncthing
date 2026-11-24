@@ -64,12 +64,21 @@ function uid_of(u) {
 }
 function small_ram() { return match(readfile(ROOT + '/tmp/sys/board.env') ?? '', /BOARD_RAM_SMALL="?1/) != null; }
 
+// the drive of an admin account's state: the first mounted one that has it,
+// otherwise the first mounted one. A drive that was moved to another one
+// (disk change, storage.<volume>.moved_to) is skipped – its copy is on the new one.
+function admin_volume(c, sub) {
+	let vols = [];
+	c.foreach('storage', 'volume', (x) => { if (!x.moved_to && mounted('/mnt/' + x['.name'])) push(vols, x['.name']); });
+	for (let v in vols) if (stat(ROOT + '/mnt/' + v + sub)?.type == 'directory') return v;
+	return vols[0];
+}
+
 // where the account keeps Syncthing's state; null when no drive is there
 function places(u) {
 	let c = cursor(), r = role(u);
 	if (r == 'admin') {
-		let vol = null;
-		c.foreach('storage', 'volume', (x) => { if (!vol && mounted('/mnt/' + x['.name'])) vol = x['.name']; });
+		let vol = admin_volume(c, '/.shareos/syncthing/' + u);
 		if (!vol) return null;
 		return { state: '/mnt/' + vol + '/.shareos/syncthing/' + u, home: '/mnt/' + vol, run_as: 'root' };
 	}
@@ -210,12 +219,34 @@ function start(u) {
 }
 
 
+
+// --- disk change -------------------------------------------------------------
+// After shareos-migrate copied a drive, config.xml still names the folders on
+// the old one: relocate <from> <to> rewrites /mnt/<from>/… to /mnt/<to>/… in
+// the state folders on <to>, with the daemons stopped (volume names are
+// [a-z0-9_-], so the plain text replace is exact).
+function relocate(from, to) {
+	if (!match(from ?? '', /^[a-z0-9_-]+$/) || !match(to ?? '', /^[a-z0-9_-]+$/)) die('invalid drive');
+	let base = ROOT + '/mnt/' + to, files = [], n = 0;
+	for (let a in lsdir(base + '/.shareos/syncthing') ?? []) push(files, base + '/.shareos/syncthing/' + a + '/config.xml');
+	for (let a in lsdir(base + '/home') ?? []) push(files, base + '/home/' + a + '/.config/syncthing/config.xml');
+	let re = regexp('/mnt/' + from + '([/"<])', 'g');
+	for (let f in files) {
+		let x = readfile(f);
+		if (x == null) continue;
+		let y = replace(x, re, '/mnt/' + to + '$1');
+		if (y != x) { writefile(f, y); n++; }
+	}
+	out({ ok: true, files: n });
+}
+
 let verb = ARGV[0], u = ARGV[1];
 switch (verb) {
 case 'start': start(u); break;
 case 'stop': stop(u); break;
 case 'restart': stop(u, true); start(u); break;
 case 'status': if (!match(u ?? '', NAME_RE)) die('invalid account'); out(status(u)); break;
+case 'relocate': relocate(ARGV[1], ARGV[2]); break;
 case 'boot':
 	if (stat(BIN)?.type != 'file') { out({ started: [] }); break; }
 	let started = [];
@@ -232,5 +263,5 @@ case 'stop-all':
 	out({ ok: true });
 	break;
 default:
-	die('usage: shareos-syncthing start|stop|restart|status <account> | boot | stop-all');
+	die('usage: shareos-syncthing start|stop|restart|status <account> | boot | stop-all | relocate <from> <to>');
 }

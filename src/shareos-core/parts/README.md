@@ -39,6 +39,7 @@ drawing and its clicks to the tables of `core.js`: `Object.assign(SYS, …)`,
 | `system-network.js` | System: Network, HTTPS, dynamic DNS, own CA | 382 |
 | `system-firmware.js` | System: Firmware, update flow | 245 |
 | `system-messages.js` | System: Messages, Logs | 106 |
+| `deviceinfo.js` | System: device info (hidden page `#/deviceinfo`), devtest banner | 69 |
 | `firstrun.js` | First-run wizard, recovery mode | 243 |
 | `pwa.js` | installed app (PWA) and widget status | 154 |
 | `files.js` | File browser | 432 |
@@ -68,6 +69,7 @@ all helpers first (in the order of `ORDER`) and all methods after them.
 | `cloud.uc` | shareos.cloud | 298 |
 | `devices.uc` | shareos.printer, ups | 106 |
 | `snapshots.uc` | shareos.snapshots | 156 |
+| `deviceinfo.uc` | shareos.deviceinfo (hardware facts of a new model) | 23 |
 | `apps.uc` | shareos.apps, appstatus | 278 |
 | `files.uc` | shareos.files, appfs | 541 |
 | `files-jobs.uc` | copy, move and delete in the background: result, progress, stop | 78 |

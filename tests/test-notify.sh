@@ -62,6 +62,11 @@ check "check: degraded RAID is an error" "echo '$L' | js \"any(x['key']=='raid-m
 check "check: missing volume, temperature, SMART, update" "echo '$L' | js \"{'vol-missing-daten','temp','smart-sdb','update-0.1.0-beta.9'} <= {x['key'] for x in d['items']}\"" "$L"
 N check >/dev/null
 check "check again: no duplicates" "N list | js \"len(d['items'])==5\""
+printf 'BOARD_ID="unknown"\nBOARD_DEVTEST="1"\n' > "$R/tmp/sys/board.env"
+N check >/dev/null
+check "check: a devtest box gets the reminder with the device info" "N list | js \"any(x['key']=='devtest' and x['level']=='info' and 'deviceinfo' in x['text_en'] for x in d['items'])\""
+N delete "$(N list | python3 -c 'import json,sys; print([x["id"] for x in json.load(sys.stdin)["items"] if x["key"]=="devtest"][0])')" >/dev/null; rm "$R/tmp/sys/board.env"
+check "the reminder removed again, the other messages stay" "N list | js \"len(d['items'])==5\""
 printf 'md0 : active raid1 sdb2[1] sda2[0]\n      3906886464 blocks super 1.2 [2/2] [UU]\n' > "$R/proc/mdstat"
 echo 40000 > "$R/tmp/sys/temp1_input"
 N check >/dev/null

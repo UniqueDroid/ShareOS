@@ -148,6 +148,8 @@ async function deskRun() {
 	}
 	S.desk = true;
 	stopPolling();
+	// a page that is only reached by its address (#/deviceinfo) opens as a window
+	const hidden = SYS_HIDDEN.includes(routeParts()[0]) ? location.hash : '';
 	if (location.hash) history.replaceState(null, '', location.pathname + location.search);
 	D.ac?.abort();
 	D.ac = new AbortController();
@@ -193,6 +195,7 @@ async function deskRun() {
 	const [desk] = await Promise.all([rpc('shareos.me', 'desk_get').then((r) => r.desk).catch(() => ({})), dkLoadApps()]);
 	dkRestore(desk || {});
 	D.loaded = true;
+	if (hidden && !isUser()) dkOpenPage(routeOf(hidden));
 	dkTick();
 	D.timers.push(setInterval(dkTick, 5000));
 	D.timers.push(setInterval(dkBehind, 1500));
