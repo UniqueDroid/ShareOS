@@ -6,7 +6,8 @@
  * Colours: --sos-bg, --sos-panel, --sos-bar, --sos-line, --sos-accent,
  * --sos-soft, --sos-dim, --sos-text, --sos-muted, --sos-ok, --sos-warn,
  * --sos-err, --sos-rgb (accent as r,g,b). Light/dark: <html data-theme>,
- * accent: <html data-accent="blue|green|red|white|grey|violet|orange|teal">.
+ * accent: <html data-accent="blue|green|red|white|grey|violet|orange|teal">,
+ * style: <html data-style="classic|glass"> (glass: translucent panes, see the end).
  * Building blocks: .sos-app, .sos-titlebar, .sos-menubar (+ .sos-menu),
  * .sos-toolbar, .sos-statusbar, .sos-btn, .sos-input, .sos-dialog.
  */
@@ -155,3 +156,48 @@
 
 /* shown inside the ShareOS interface (permission "embed") */
 :root[data-embedded] .sos-titlebar { display: none; }
+
+/* style "Glass" (<html data-style="glass">, set by app.js): the same building
+   blocks with translucent panes over a soft mid-tone background. Embedded in a
+   ShareOS window the page is transparent, so the window's pane shows through.
+   Extra variables: --sos-ground (page ground), --sos-blur (backdrop-filter). */
+:root[data-style="glass"] {
+	--sos-ground: #161e2d; --sos-bg: rgba(12, 18, 28, .38); --sos-panel: rgba(42, 56, 80, .55); --sos-bar: rgba(30, 42, 62, .58);
+	--sos-line: rgba(255, 255, 255, .12); --sos-text: #eef3fa; --sos-muted: #b0bfd1; --sos-pop: rgba(46, 62, 88, .8);
+	--sos-ok: #4ee391; --sos-warn: #ecc967; --sos-err: #ff8f8f; --sos-ink: #08131f;
+	--sos-blur: blur(16px) saturate(160%);
+}
+:root[data-style="glass"][data-accent="green"] { --sos-accent: #3dff8a; --sos-soft: #2bcf6c; --sos-dim: #2f8f55; }
+:root[data-style="glass"][data-accent="red"] { --sos-accent: #ff8a95; --sos-soft: #ee949e; --sos-dim: #a8414c; }
+:root[data-style="glass"][data-accent="blue"] { --sos-accent: #5cb3ff; --sos-soft: #77b4e7; --sos-dim: #3a73ad; }
+:root[data-style="glass"][data-accent="white"] { --sos-accent: #f2f4f5; --sos-soft: #c9cdd1; --sos-dim: #7a8087; }
+:root[data-style="glass"][data-accent="grey"] { --sos-accent: #a4aeb9; --sos-soft: #a7adb6; --sos-dim: #69717b; }
+:root[data-style="glass"][data-accent="violet"] { --sos-accent: #b89fff; --sos-soft: #b7a1f9; --sos-dim: #6a4fb0; }
+:root[data-style="glass"][data-accent="orange"] { --sos-accent: #ffa043; --sos-soft: #e29f5d; --sos-dim: #a86a2c; }
+:root[data-style="glass"][data-accent="teal"] { --sos-accent: #38d9cf; --sos-soft: #2ec1b9; --sos-dim: #2a9e98; }
+:root[data-style="glass"][data-theme="light"] {
+	--sos-ground: #cdd7e4; --sos-bg: rgba(196, 208, 223, .55); --sos-panel: rgba(241, 245, 251, .58); --sos-bar: rgba(236, 242, 249, .55);
+	--sos-line: rgba(15, 26, 40, .12); --sos-text: #0f1a28; --sos-muted: #3d4b5d; --sos-pop: rgba(244, 247, 252, .82);
+	--sos-ok: #0b6630; --sos-warn: #654800; --sos-err: #a32020; --sos-ink: #fff;
+}
+:root[data-style="glass"][data-theme="light"][data-accent="green"] { --sos-accent: #0a7336; --sos-soft: #117338; --sos-dim: #7fbf99; }
+:root[data-style="glass"][data-theme="light"][data-accent="red"] { --sos-accent: #be2939; --sos-soft: #b02434; --sos-dim: #d98e96; }
+:root[data-style="glass"][data-theme="light"][data-accent="blue"] { --sos-accent: #1c63bb; --sos-soft: #1a5bab; --sos-dim: #8fb2e0; }
+:root[data-style="glass"][data-theme="light"][data-accent="white"] { --sos-accent: #1d2125; --sos-soft: #3a4046; --sos-dim: #9aa0a6; }
+:root[data-style="glass"][data-theme="light"][data-accent="grey"] { --sos-accent: #56616e; --sos-soft: #3d4651; --sos-dim: #a9b0b8; }
+:root[data-style="glass"][data-theme="light"][data-accent="violet"] { --sos-accent: #6a46d4; --sos-soft: #501ea7; --sos-dim: #b29ae3; }
+:root[data-style="glass"][data-theme="light"][data-accent="orange"] { --sos-accent: #9b4e00; --sos-soft: #955211; --sos-dim: #d9b089; }
+:root[data-style="glass"][data-theme="light"][data-accent="teal"] { --sos-accent: #096e69; --sos-soft: #0b6e69; --sos-dim: #8fd3cf; }
+:root[data-style="glass"] .sos-app {
+	background: radial-gradient(ellipse 55% 60% at 85% 10%, rgba(58, 212, 245, .2), transparent 70%),
+		radial-gradient(ellipse 50% 55% at 8% 95%, rgba(138, 108, 255, .2), transparent 70%), var(--sos-ground);
+	background-attachment: fixed;
+}
+:root[data-style="glass"][data-embedded] .sos-app { background: transparent; }
+:root[data-style="glass"] :is(.sos-titlebar, .sos-menubar, .sos-toolbar, .sos-statusbar) { -webkit-backdrop-filter: var(--sos-blur); backdrop-filter: var(--sos-blur); }
+:root[data-style="glass"] :is(.sos-menu, .sos-dialog) { background: var(--sos-pop); -webkit-backdrop-filter: blur(28px) saturate(160%); backdrop-filter: blur(28px) saturate(160%); }
+:root[data-style="glass"] .sos-btn { -webkit-backdrop-filter: var(--sos-blur); backdrop-filter: var(--sos-blur); }
+:root[data-style="glass"] .sos-btn.primary { color: var(--sos-ink); }
+:root[data-style="glass"] .sos-dialog::backdrop { background: rgba(10, 15, 24, .45); backdrop-filter: blur(6px); }
+:root[data-style="glass"] { scrollbar-color: var(--sos-dim) transparent; }
+@media (prefers-reduced-transparency: reduce) { :root[data-style="glass"] { --sos-panel: var(--sos-pop); --sos-blur: none; } }

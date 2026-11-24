@@ -76,11 +76,12 @@ function check(name, ok) { console.log((ok ? 'PASS  ' : 'FAIL  ') + name); ok ? 
 	// ShareOS.openApp: a window (popup) named like the ShareOS one, with the account
 	fs.mkdirSync(path.join(dir, 'other'), { recursive: true });
 	fs.writeFileSync(path.join(dir, 'other/index.html'), '<!doctype html><script src="/_shareos/app.js"></script><title>other</title>');
-	const opener = await open('?user=jan&theme=light&accent=green');
+	const opener = await open('?user=jan&theme=light&accent=green&style=glass');
+	check('the style is applied to <html> (data-style)', await opener.evaluate(() => document.documentElement.dataset.style + ':' + ShareOS.theme.style) === 'glass:glass');
 	const [win] = await Promise.all([ctx.waitForEvent('page'), opener.evaluate(() => { window.__w = ShareOS.openApp('other', { width: 700, height: 500 }); })]);
 	await win.waitForLoadState();
 	const u = new URL(win.url());
-	check('openApp opens the app with account and look', u.pathname === '/other/index.html' && u.searchParams.get('user') === 'jan' && u.searchParams.get('theme') === 'light' && u.searchParams.get('accent') === 'green');
+	check('openApp opens the app with account and look', u.pathname === '/other/index.html' && u.searchParams.get('user') === 'jan' && u.searchParams.get('theme') === 'light' && u.searchParams.get('accent') === 'green' && u.searchParams.get('style') === 'glass');
 	check('openApp: a window of its own, named sosapp-<id>', await win.evaluate(() => window.name) === 'sosapp-other' && await opener.evaluate(() => !!window.__w));
 	check('openApp: the other app sees the same account', await win.evaluate(() => ShareOS.user) === 'jan');
 	check('openApp refuses invalid ids', await opener.evaluate(() => ShareOS.openApp('../x')) === null);

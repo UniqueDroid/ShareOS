@@ -376,3 +376,57 @@ select.app-display{min-height:28px;padding:0 8px}
 .vbtn svg{width:22px;height:22px}
 .vbtn:hover{border-color:var(--dim);color:var(--text)}
 .vbtn.on{border-color:var(--accent);color:var(--accent);background:var(--ph);box-shadow:var(--glow)}
+
+/* --- style "Glass" (Appearance -> Style; class .glass on #app) ------------------------
+   Same elements, sizes and radii as the classic style – only the material changes:
+   translucent, blurred panes over a soft aurora ground. Both themes are mid-tone
+   (slate dark, misty light). In this style --bg is the sunken "well" inside a pane
+   (inputs, log boxes, icon wells); the page ground is --ground and text on an accent
+   fill is --ink. Design system: "ShareOS Frosted Glass". */
+.sos.glass{--ground:#161e2d;--bg:rgba(12,18,28,.38);--panel:rgba(42,56,80,.55);--ph:rgba(52,68,96,.62);--pop:rgba(46,62,88,.8);--bar:rgba(30,42,62,.58);
+  --line:rgba(255,255,255,.12);--hi:rgba(255,255,255,.14);--text:#eef3fa;--muted:#b0bfd1;--ink:#08131f;
+  --ok:#4ee391;--amber:#ecc967;--red:#ff8f8f;--errt:#ffb3b3;--blur:blur(16px) saturate(160%);--blur2:blur(28px) saturate(160%);
+  --sh:inset 0 1px 0 var(--hi),0 10px 30px rgba(5,9,16,.3);--glow:0 0 0 1px rgba(var(--rgb),.45),0 0 18px rgba(var(--rgb),.32);
+  background:radial-gradient(ellipse 55% 60% at 85% 10%,rgba(58,212,245,.2),transparent 70%),radial-gradient(ellipse 50% 55% at 8% 95%,rgba(138,108,255,.2),transparent 70%),radial-gradient(ellipse 70% 50% at 45% 55%,rgba(var(--rgb),.14),transparent 75%),var(--ground);
+  background-attachment:fixed}
+/* accents, raised so small accent text keeps 4.5:1 on the panes */
+.sos.glass.acc-green{--accent:#3dff8a;--soft:#2bcf6c;--dim:#2f8f55}
+.sos.glass.acc-red{--accent:#ff8a95;--soft:#ee949e;--dim:#a8414c}
+.sos.glass.acc-blue{--accent:#5cb3ff;--soft:#77b4e7;--dim:#3a73ad}
+.sos.glass.acc-white{--accent:#f2f4f5;--soft:#c9cdd1;--dim:#7a8087}
+.sos.glass.acc-grey{--accent:#a4aeb9;--soft:#a7adb6;--dim:#69717b}
+.sos.glass.acc-violet{--accent:#b89fff;--soft:#b7a1f9;--dim:#6a4fb0}
+.sos.glass.acc-orange{--accent:#ffa043;--soft:#e29f5d;--dim:#a86a2c}
+.sos.glass.acc-teal{--accent:#38d9cf;--soft:#2ec1b9;--dim:#2a9e98}
+.sos.glass.light{--ground:#cdd7e4;--bg:rgba(196,208,223,.55);--panel:rgba(241,245,251,.58);--ph:rgba(248,250,253,.78);--pop:rgba(244,247,252,.82);--bar:rgba(236,242,249,.55);
+  --line:rgba(15,26,40,.12);--hi:rgba(255,255,255,.85);--text:#0f1a28;--muted:#3d4b5d;--ink:#fff;
+  --ok:#0b6630;--amber:#654800;--red:#a32020;--errt:#a32020;--sh:inset 0 1px 0 var(--hi),0 10px 30px rgba(30,45,66,.1);
+  --glow:0 0 0 1px rgba(var(--rgb),.4),0 4px 16px rgba(var(--rgb),.2)}
+.sos.glass.light.acc-green{--accent:#0a7336;--soft:#117338;--dim:#7fbf99}
+.sos.glass.light.acc-red{--accent:#be2939;--soft:#b02434;--dim:#d98e96}
+.sos.glass.light.acc-blue{--accent:#1c63bb;--soft:#1a5bab;--dim:#8fb2e0}
+.sos.glass.light.acc-white{--accent:#1d2125;--soft:#3a4046;--dim:#9aa0a6}
+.sos.glass.light.acc-grey{--accent:#56616e;--soft:#3d4651;--dim:#a9b0b8}
+.sos.glass.light.acc-violet{--accent:#6a46d4;--soft:#501ea7;--dim:#b29ae3}
+.sos.glass.light.acc-orange{--accent:#9b4e00;--soft:#955211;--dim:#d9b089}
+.sos.glass.light.acc-teal{--accent:#096e69;--soft:#0b6e69;--dim:#8fd3cf}
+.sos.glass .scan{display:none}
+.sos.glass :is(.card,.tile,.panel,.tw,.chip,.tab,.subtabs,.search,.who,.ib,.btn,.favapp,.savebar,.banner,.step){-webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur)}
+.sos.glass :is(.card,.panel,.tw){box-shadow:var(--sh)}
+.sos.glass :is(.tile,.chip,.btn,.tab){box-shadow:inset 0 1px 0 var(--hi)}
+.sos.glass :is(.panel,.tile,.card) :is(.tile,.card,.panel,.tw){-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:none}
+.sos.glass .card:hover,.sos.glass .card.hi{box-shadow:var(--sh),var(--glow)}
+.sos.glass .btn.ghost{-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:none}
+.sos.glass :is(.chippop,.toast div){background:var(--pop);-webkit-backdrop-filter:var(--blur2);backdrop-filter:var(--blur2)}
+.sos.glass dialog.dlg{background:var(--pop);-webkit-backdrop-filter:var(--blur2);backdrop-filter:var(--blur2);box-shadow:var(--sh),var(--glow)}
+.sos.glass dialog.dlg::backdrop{background:rgba(10,15,24,.45);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.sos.glass.light dialog.dlg::backdrop{background:rgba(40,54,74,.3)}
+.sos.glass .cover{background:color-mix(in srgb,var(--ground) 70%,transparent);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.sos.glass .t th{background:var(--bar)}
+.sos.glass .dot{border-color:var(--ground)}
+.sos.glass .bar{background:var(--bg)}
+/* text on an accent fill: --bg is a well in this style */
+.sos.glass a.tab.on,.sos.glass .btn.primary,.sos.glass a.btn.primary,.sos.glass a.btn.primary:hover,.sos.glass .tag.new{color:var(--ink)}
+.sos.glass .tab.on .nb{border-color:var(--ink);color:var(--ink)}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.sos.glass{--panel:var(--pop)}}
+@media (prefers-reduced-transparency:reduce){.sos.glass{--panel:var(--pop);--blur:none;--blur2:none}}

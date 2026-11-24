@@ -13,7 +13,8 @@ async function loadUiSettings() {
 		S.defaultPw = !!r.default_password;
 		if (r.theme) { S.theme = r.theme; store.set('theme', r.theme); }
 		if (r.accent) { S.accent = r.accent; store.set('accent', r.accent); }
-		S.sysLook = { theme: r.theme || S.theme, accent: r.accent || S.accent };
+		if (r.style) { S.style = r.style; store.set('style', r.style); }
+		S.sysLook = { theme: r.theme || S.theme, accent: r.accent || S.accent, style: r.style || S.style };
 		if (r.lang && r.lang !== LANG) { try { localStorage.setItem('shareos.lang', r.lang); } catch (e) { } return r.lang; }
 	} catch (e) { }
 	return LANG;
