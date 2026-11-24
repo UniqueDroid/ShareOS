@@ -1795,7 +1795,9 @@
 		"Show MAC addresses and serial numbers (otherwise masked – keep them out of public issues)": "Показать MAC-адреса и серийные номера (иначе скрыты – не публикуйте их в открытых issue)",
 		"STYLE": "СТИЛЬ",
 		"Glass": "Стекло",
-		"Glass shows the same pages with translucent panes over a soft background.": "«Стекло» показывает те же страницы с полупрозрачными панелями на мягком фоне."
+		"Glass shows the same pages with translucent panes over a soft background.": "«Стекло» показывает те же страницы с полупрозрачными панелями на мягком фоне.",
+		"SETUP WIZARD": "МАСТЕР НАСТРОЙКИ",
+		"Shows the first-time setup again on the next page load – nothing is deleted. Useful after restoring settings on another box or after a disk change.": "Снова показывает первоначальную настройку при следующей загрузке страницы – ничего не удаляется. Полезно после восстановления настроек на другом устройстве или после замены диска."
 	},
 	"patterns": [
 		[

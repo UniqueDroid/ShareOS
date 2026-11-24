@@ -2240,3 +2240,5 @@ E1809	MAC-Adressen und Seriennummern zeigen (sonst maskiert – nicht in öffent
 E1810	STIL
 E1811	Glas
 E1812	„Glas“ zeigt dieselben Seiten mit durchscheinenden Flächen über einem weichen Hintergrund.
+E1813	EINRICHTUNGSASSISTENT
+E1814	Zeigt die Ersteinrichtung beim nächsten Seitenaufruf noch einmal – es wird nichts gelöscht. Praktisch nach dem Wiederherstellen der Einstellungen auf einer anderen Box oder nach einem Plattenwechsel.

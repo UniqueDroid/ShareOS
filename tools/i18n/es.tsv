@@ -2256,3 +2256,5 @@ E1809	Mostrar direcciones MAC y números de serie (si no, ocultos – no los pon
 E1810	ESTILO
 E1811	Cristal
 E1812	Cristal muestra las mismas páginas con paneles translúcidos sobre un fondo suave.
+E1813	ASISTENTE DE CONFIGURACIÓN
+E1814	Muestra de nuevo la configuración inicial en la próxima carga de la página – no se borra nada. Útil tras restaurar los ajustes en otro equipo o tras cambiar de disco.

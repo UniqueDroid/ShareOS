@@ -1795,7 +1795,9 @@
 		"Show MAC addresses and serial numbers (otherwise masked – keep them out of public issues)": "显示 MAC 地址和序列号（否则已遮盖 – 请勿放入公开 issue）",
 		"STYLE": "风格",
 		"Glass": "玻璃",
-		"Glass shows the same pages with translucent panes over a soft background.": "“玻璃”以半透明面板和柔和背景显示相同的页面。"
+		"Glass shows the same pages with translucent panes over a soft background.": "“玻璃”以半透明面板和柔和背景显示相同的页面。",
+		"SETUP WIZARD": "设置向导",
+		"Shows the first-time setup again on the next page load – nothing is deleted. Useful after restoring settings on another box or after a disk change.": "在下次加载页面时再次显示首次设置 – 不会删除任何内容。适用于在另一台设备上恢复设置后或更换硬盘后。"
 	},
 	"patterns": [
 		[

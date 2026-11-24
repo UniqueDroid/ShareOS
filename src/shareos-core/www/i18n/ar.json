@@ -1795,7 +1795,9 @@
 		"Show MAC addresses and serial numbers (otherwise masked – keep them out of public issues)": "إظهار عناوين MAC والأرقام التسلسلية (وإلا فهي مخفية – لا تضعها في التذاكر العامة)",
 		"STYLE": "النمط",
 		"Glass": "زجاج",
-		"Glass shows the same pages with translucent panes over a soft background.": "يعرض نمط الزجاج الصفحات نفسها بألواح شبه شفافة فوق خلفية ناعمة."
+		"Glass shows the same pages with translucent panes over a soft background.": "يعرض نمط الزجاج الصفحات نفسها بألواح شبه شفافة فوق خلفية ناعمة.",
+		"SETUP WIZARD": "معالج الإعداد",
+		"Shows the first-time setup again on the next page load – nothing is deleted. Useful after restoring settings on another box or after a disk change.": "يعرض الإعداد الأولي مرة أخرى عند تحميل الصفحة التالي – لا يُحذف شيء. مفيد بعد استعادة الإعدادات على جهاز آخر أو بعد تغيير القرص."
 	},
 	"patterns": [
 		[

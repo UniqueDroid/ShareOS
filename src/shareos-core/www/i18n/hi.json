@@ -1795,7 +1795,9 @@
 		"Show MAC addresses and serial numbers (otherwise masked – keep them out of public issues)": "MAC पते और सीरियल नंबर दिखाएँ (अन्यथा छिपे हुए – इन्हें सार्वजनिक issue में न डालें)",
 		"STYLE": "शैली",
 		"Glass": "ग्लास",
-		"Glass shows the same pages with translucent panes over a soft background.": "ग्लास वही पेज नरम पृष्ठभूमि पर पारभासी पैनलों के साथ दिखाता है।"
+		"Glass shows the same pages with translucent panes over a soft background.": "ग्लास वही पेज नरम पृष्ठभूमि पर पारभासी पैनलों के साथ दिखाता है।",
+		"SETUP WIZARD": "सेटअप विज़ार्ड",
+		"Shows the first-time setup again on the next page load – nothing is deleted. Useful after restoring settings on another box or after a disk change.": "अगली बार पेज लोड होने पर पहला सेटअप फिर से दिखाता है – कुछ भी हटाया नहीं जाता। किसी दूसरे बॉक्स पर सेटिंग्स बहाल करने या डिस्क बदलने के बाद उपयोगी।"
 	},
 	"patterns": [
 		[

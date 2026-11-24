@@ -72,8 +72,7 @@ async function loadHw() {
 Object.assign(SYS, {
 	general() {
 		const i = S.info || {};
-		return html`<div class="acts" style="margin-bottom:16px"><button class="btn ghost" type="button" data-act="fr-again">Run first-time setup again</button></div>
-		<h2 class="gh" style="margin-top:22px">BACK UP & RESTORE SETTINGS</h2>
+		return html`<h2 class="gh">BACK UP & RESTORE SETTINGS</h2>
 		<div class="g2">
 			<form class="panel" id="f-backup">
 				<div class="ph"><span class="pt">BACK UP</span><span class="tag ml">JSON file</span></div>
@@ -203,6 +202,11 @@ Object.assign(SYS, {
 				<div class="ph"><span class="pt">FACTORY RESET</span><span class="tag err ml">erases settings</span></div>
 				<p class="mut" style="margin:0 0 12px;font-size:13px">Removes all settings and installed packages from flash and reboots. The system and firmware version stay. Afterwards the box has no password: press the USB button on its front or briefly the reset button, then choose a new one in the web interface.</p>
 				<button class="btn danger" type="button" data-act="factory">Reset to factory settings</button>
+			</div>
+			<div class="panel">
+				<div class="ph"><span class="pt">SETUP WIZARD</span></div>
+				<p class="mut" style="margin:0 0 12px;font-size:13px">Shows the first-time setup again on the next page load – nothing is deleted. Useful after restoring settings on another box or after a disk change.</p>
+				<button class="btn ghost" type="button" data-act="fr-again">Run first-time setup again</button>
 			</div>
 		</div>
 		<h2 class="gh" style="margin-top:22px">SCHEDULE</h2>
