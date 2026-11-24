@@ -2228,3 +2228,12 @@ P400	Laufwerk $1 ist nicht eingehängt
 E1798	eine Kopie in Files, ein Cloud-Auftrag, ein Snapshot oder Paperless läuft noch – warte, bis er fertig ist
 E1799	das Umschalten hat vor dem Ende aufgehört – starte es noch einmal oder starte die Box neu
 E1800	autobrr: Filter mit der Aktion Watch dir nennen noch den Übergabeordner auf dem alten Laufwerk – ändere ihn in autobrr auf den Ordner auf dem neuen Laufwerk.
+E1801	Testimage für ein neues Modell.
+E1802	root behält das Passwort shareos – nutze die Box nur im eigenen Netz. Bitte schicke die Geräteinfo:
+E1803	Geräteinfo
+E1804	Wird gelesen …
+E1805	GERÄTEINFO
+E1806	Hardware-Angaben zum Hinzufügen eines Modells
+E1807	Kopieren ist hier nicht erlaubt – nimm Herunterladen.
+E1808	Modell, Flash-Partitionen, CPU, Speicher, LEDs, Sensoren, Tasten, GPIOs, serielle Schnittstellen, Netzwerk, die U-Boot-Umgebung und das Kernel-Protokoll dieser Box – alles, was ein neues Modell braucht. Es wird nur gelesen, nichts geändert. Hänge die Datei an das Issue des Modells.
+E1809	MAC-Adressen und Seriennummern zeigen (sonst maskiert – nicht in öffentliche Issues)

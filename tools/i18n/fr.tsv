@@ -2244,3 +2244,12 @@ P400	le disque $1 n’est pas monté
 E1798	une copie dans Files, une tâche cloud, un instantané ou Paperless est encore en cours – attendez qu’elle se termine
 E1799	le basculement s’est arrêté avant la fin – relancez-le ou redémarrez le boîtier
 E1800	autobrr : les filtres avec l’action Watch dir indiquent encore le dossier de dépôt sur l’ancien disque – remplacez-le dans autobrr par le dossier du nouveau disque.
+E1801	Image de test pour un nouveau modèle.
+E1802	root garde le mot de passe shareos – n’utilisez le boîtier que dans votre propre réseau. Envoyez les infos de l’appareil :
+E1803	Infos de l’appareil
+E1804	Lecture …
+E1805	INFOS DE L’APPAREIL
+E1806	données matérielles pour ajouter un modèle
+E1807	La copie n’est pas autorisée ici – utilisez Télécharger.
+E1808	Modèle, partitions flash, CPU, mémoire, LED, capteurs, boutons, GPIO, ports série, réseau, environnement U-Boot et journal du noyau de ce boîtier – tout ce dont un nouveau modèle a besoin. Lecture seule, rien n’est modifié. Joignez le fichier au ticket du modèle.
+E1809	Afficher les adresses MAC et numéros de série (sinon masqués – à garder hors des tickets publics)

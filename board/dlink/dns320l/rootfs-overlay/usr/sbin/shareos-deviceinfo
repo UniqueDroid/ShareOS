@@ -1,0 +1,145 @@
+#!/bin/sh
+#
+# shareos-deviceinfo – what a new model needs to be added to ShareOS
+#
+#   shareos-deviceinfo          report as text; MAC addresses and serial
+#                               numbers masked, for a public issue
+#   shareos-deviceinfo --full   the same without masking
+#
+# Runs in the system and in the rescue system (initramfs, BusyBox only), and
+# only reads: /proc, /sys, the kernel log and the U-Boot environment in flash
+# (read with dd, never written). The web interface shows it at #/deviceinfo.
+# Tests: SHAREOS_ROOT=<fake root> for the files; the programs come from PATH.
+#
+R=${SHAREOS_ROOT:-}
+FULL=0
+[ "$1" = --full ] && FULL=1
+
+sec() { printf '\n### %s\n' "$1"; }
+show() { # <title> <file>: the file, or "(not there)"
+	sec "$1"
+	if [ -r "$R$2" ]; then tr -d '\000' < "$R$2"; echo; else echo "(not there)"; fi
+}
+run() { # <title> <command…>: its output, or why there is none
+	t=$1; shift
+	sec "$t"
+	command -v "$1" >/dev/null 2>&1 || { echo "($1 not there)"; return; }
+	"$@" 2>&1
+}
+list() { # <title> <folder>: the names in it
+	sec "$1"
+	if [ -d "$R$2" ]; then ls "$R$2"; else echo "(not there)"; fi
+}
+
+# the U-Boot environment: the partition whose name has "env" in it, read
+# with dd (variables are NUL-separated "name=value" after a 4-byte CRC)
+uboot_env() {
+	sec "U-Boot environment (flash, read only)"
+	n=$(sed -n 's/^mtd\([0-9]*\):.*"[^"]*env[^"]*".*/\1/p' "$R/proc/mtd" 2>/dev/null | head -n 1)
+	if [ -z "$n" ] || [ ! -r "$R/dev/mtd$n" ]; then echo "(no environment partition found)"; return; fi
+	echo "(mtd$n)"
+	dd if="$R/dev/mtd$n" bs=65536 count=2 2>/dev/null | tr '\000' '\n' |
+		grep -a -o '[A-Za-z_][A-Za-z0-9_.-]*=[[:print:]]*' | head -n 200
+}
+
+hwmon() {
+	sec "hwmon sensors"
+	found=0
+	for h in "$R"/sys/class/hwmon/hwmon*; do
+		[ -d "$h" ] || continue
+		found=1
+		echo "${h##*/}: $(cat "$h/name" 2>/dev/null)"
+		for f in "$h"/temp*_input "$h"/fan*_input "$h"/pwm[0-9] "$h"/in*_input; do
+			[ -r "$f" ] && echo "  ${f##*/} = $(cat "$f" 2>/dev/null)"
+		done
+	done
+	[ $found = 1 ] || echo "(none)"
+}
+
+gpio() {
+	sec "GPIO chips"
+	found=0
+	for c in "$R"/sys/class/gpio/gpiochip*; do
+		[ -d "$c" ] || continue
+		found=1
+		echo "${c##*/}: label=$(cat "$c/label" 2>/dev/null) base=$(cat "$c/base" 2>/dev/null) ngpio=$(cat "$c/ngpio" 2>/dev/null)"
+	done
+	[ $found = 1 ] || echo "(none)"
+}
+
+leds() {
+	sec "LEDs (current trigger)"
+	found=0
+	for l in "$R"/sys/class/leds/*; do
+		[ -d "$l" ] || continue
+		found=1
+		t=$(cat "$l/trigger" 2>/dev/null)
+		case "$t" in *\[*\]*) t=${t#*[}; t=${t%%]*} ;; esac
+		echo "${l##*/}: $t"
+	done
+	[ $found = 1 ] || echo "(none)"
+}
+
+usb() {
+	sec "USB devices"
+	found=0
+	for d in "$R"/sys/bus/usb/devices/*; do
+		[ -r "$d/idVendor" ] || continue
+		found=1
+		echo "${d##*/}: $(cat "$d/idVendor"):$(cat "$d/idProduct") $(cat "$d/manufacturer" 2>/dev/null) $(cat "$d/product" 2>/dev/null)"
+	done
+	[ $found = 1 ] || echo "(none)"
+}
+
+net() {
+	sec "network interfaces"
+	for i in "$R"/sys/class/net/*; do
+		[ -d "$i" ] || continue
+		n=${i##*/}
+		[ "$n" = lo ] && continue
+		echo "$n: address=$(cat "$i/address" 2>/dev/null) carrier=$(cat "$i/carrier" 2>/dev/null) speed=$(cat "$i/speed" 2>/dev/null) driver=$(basename "$(readlink "$i/device/driver" 2>/dev/null)" 2>/dev/null)"
+	done
+}
+
+report() {
+	echo "ShareOS device info – $(date -u '+%Y-%m-%d %H:%M UTC' 2>/dev/null)"
+	[ $FULL = 1 ] && echo "NOT MASKED: contains MAC addresses and serial numbers" \
+		|| echo "MAC addresses and serial numbers are masked."
+	show "ShareOS version" /etc/shareos-release
+	run "detected board (board.sh)" shareos-boardinfo
+	show "device-tree model" /proc/device-tree/model
+	show "device-tree compatible" /proc/device-tree/compatible
+	show "kernel command line" /proc/cmdline
+	run "kernel" uname -a
+	show "CPU" /proc/cpuinfo
+	run "memory" free
+	show "flash partitions (/proc/mtd)" /proc/mtd
+	show "partitions" /proc/partitions
+	uboot_env
+	list "LEDs" /sys/class/leds
+	leds
+	list "hwmon" /sys/class/hwmon
+	hwmon
+	gpio
+	show "input devices (buttons)" /proc/bus/input/devices
+	show "interrupts" /proc/interrupts
+	sec "serial ports"; ls "$R"/dev/ttyS* 2>/dev/null || echo "(none)"
+	show "serial ports (driver)" /proc/tty/driver/serial
+	list "I2C devices" /sys/bus/i2c/devices
+	usb
+	net
+	run "eth0" ifconfig eth0
+	run "kernel log" dmesg
+}
+
+# MAC addresses keep their last two bytes; serial numbers, ethaddr lines
+# and the like keep nothing
+mask() {
+	sed -E \
+		-e 's/(([0-9A-Fa-f]{2}[:-]){4})([0-9A-Fa-f]{2}[:-][0-9A-Fa-f]{2})/xx:xx:xx:xx:\3/g' \
+		-e 's/^([A-Za-z0-9_]*([Ss]erial|SERIAL|SN|_sn)[A-Za-z0-9_]*=).*/\1(masked)/' \
+		-e 's/^(sn=).*/\1(masked)/' \
+		-e 's/(Serial[[:space:]]*:[[:space:]]*).*/\1(masked)/'
+}
+
+if [ $FULL = 1 ]; then report; else report | mask; fi

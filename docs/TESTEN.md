@@ -530,6 +530,14 @@ Braucht ein Tailscale-Konto (kostenlos), ein Handy oder einen Rechner mit Tailsc
 5. Konto ohne persönlichen Ordner: Teilen meldet „no personal folder“; das Geteilte wird verworfen und kommt bei der nächsten Anmeldung nicht wieder.
 6. Dateidialog einer App für ein Konto **ohne** *Dateien* (z. B. Webpad → *Öffnen*): Die Ordnerauswahl zeigt zuerst *App-Daten*, dann *Mein Ordner* und die Freigaben des Benutzers; Freigaben nur zum Lesen sind markiert und fehlen beim Speichern. Die App legt ihre eigenen Dateien weiter in *App-Daten* ab.
 
+## 14zz. Geräteinfo, Devtest-Images (0.3.0-beta.17)
+
+1. Auf einer beliebigen Box als Admin angemeldet: `http://<box>/deviceinfo` öffnen. Die Seite *DEVICE INFO* öffnet sich (klassische Ansicht: unter *System*, ohne Reiter; Desktop-Ansicht: im Fenster *Settings*). Sie zeigt Modell, `/proc/mtd`, CPU, LEDs, hwmon-Sensoren, Eingabegeräte, die U-Boot-Umgebung und das Kernel-Protokoll. MAC-Adressen lauten `xx:xx:xx:xx:..:..`, Seriennummern `(masked)`.
+2. *Show MAC addresses and serial numbers* anhaken: Der Bericht wird neu gelesen, vollständig, oben steht „NOT MASKED“. *Download* speichert `shareos-deviceinfo-<modell>-<datum>-full.txt`, *Copy* legt ihn in die Zwischenablage (nur über HTTPS oder auf localhost – sonst sagt die Seite, man soll *Download* nehmen).
+3. Über SSH: `shareos-deviceinfo | head -40` und `shareos-deviceinfo --full | grep ethaddr`. Es wird nichts geschrieben: `md5sum /dev/mtd*` vorher und nachher gleich.
+4. Rettungssystem (TFTP-Start mit `shareos.rescue`): Die Startmeldung nennt `shareos-deviceinfo`; `shareos-deviceinfo > /tmp/info.txt` geht dort auch, `scp root@<box>:/tmp/info.txt .` holt ihn ab.
+5. Devtest-Image (nur mit einem Modell im Status `devtest`, z. B. einem Pull Request für ein neues Modell): nach dem Flashen geht `root` / `shareos` im Browser und über SSH ohne Tastendruck; die Übersicht zeigt den gelben Hinweis *Test image for a new model* mit dem Link, *Messages* dasselbe innerhalb von 10 Minuten.
+
 ## 14zy. Plattenwechsel (0.3.0-beta.16)
 
 Braucht eine zweite Platte (Schacht oder USB-Gehäuse), die gelöscht werden darf. **Nicht auf einer Box mit Daten, die du ohne Sicherung nicht verlieren darfst.**

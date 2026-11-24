@@ -4,6 +4,11 @@ Changes per release (newest first). The section of a version is added to its
 GitHub release automatically when the release is built. Test versions are
 pre-releases for test devices only.
 
+## 0.3.0-beta.17
+
+- **Devtest images for new models.** A model that is being added is built as `ShareOS-<version>-<model>-devtest.*` until it is tested (status `devtest` in `post-image.sh`, `BOARD_DEVTEST` in `board.sh`): root keeps the password `shareos` instead of being claimed with a button – the buttons of a new model are not known yet – and the overview and the messages say so. The release build refuses such files, so they only come from the build of a pull request. See [docs/DEVICES.md](docs/DEVICES.md#devtest-image-the-first-image-for-a-new-model).
+- **Device info** (`http://<box>/deviceinfo`, admins, on every model; not in the menu): everything needed to add a model – flash partitions, CPU, memory, device tree, LEDs, sensors, buttons, GPIOs, serial ports, I2C, USB, network, the U-Boot environment (read only) and the kernel log – as a text file to download or copy. MAC addresses and serial numbers are masked for public issues unless asked for. The same report in the rescue system: `shareos-deviceinfo`.
+
 ## 0.3.0-beta.16
 
 From the first test on a DNR-322L ([#180](https://github.com/UniqueDroid/ShareOS/issues/180), Marco):

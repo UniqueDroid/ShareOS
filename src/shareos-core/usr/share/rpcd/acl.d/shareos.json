@@ -130,6 +130,9 @@
 				"shareos.migrate": [
 					"plan",
 					"state"
+				],
+				"shareos.deviceinfo": [
+					"get"
 				]
 			}
 		},

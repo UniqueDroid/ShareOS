@@ -26,12 +26,16 @@ INITRD_MAX=3145728
 # uImage per model (zImage + its device tree, U-Boot passes none), an initramfs
 # header per model (load address, see below) and a .bin with the D-Link
 # signature of the model (legacy/alt-f/mkfw.sh).
-#   firmware name     device tree        product custom model sub nver type  initramfs address
+# Last column: "release", or "devtest" for a model that is being added – its
+# files are named ShareOS-<version>-<name>-devtest.* (BOARD_DEVTEST=1 in
+# board.sh: root keeps the password "shareos", the web interface offers the
+# device info), and the release job refuses them.
+#   firmware name     device tree        product custom model sub nver type  initramfs address  status
 MODELS="
-DNS-320L-rev-Ax   kirkwood-dns320l   0 8 11 1 1 6   0x00800000
-DNS-320-rev-Bx    kirkwood-dns320b   0 8 12 1 1 5   0x00800000
-DNS-320-rev-Ax    kirkwood-dns320    0 8  7 2 0 4   0x01000000
-DNS-325-rev-Ax    kirkwood-dns325    0 8  5 2 0 3   0x01000000
+DNS-320L-rev-Ax   kirkwood-dns320l   0 8 11 1 1 6   0x00800000   release
+DNS-320-rev-Bx    kirkwood-dns320b   0 8 12 1 1 5   0x00800000   release
+DNS-320-rev-Ax    kirkwood-dns320    0 8  7 2 0 4   0x01000000   release
+DNS-325-rev-Ax    kirkwood-dns325    0 8  5 2 0 3   0x01000000   release
 "
 
 KVER=$(sed -n 's/^BR2_LINUX_KERNEL_CUSTOM_VERSION_VALUE="\(.*\)"/\1/p' "$BR2_CONFIG")
@@ -66,13 +70,18 @@ check_size() {
 T=$(mktemp -d)
 trap 'rm -rf "$T"' EXIT
 
-echo "$MODELS" | while read -r NAME DTB PROD CUST MODEL SUB NVER TYPE INITRD_ADDR; do
+echo "$MODELS" | while read -r NAME DTB PROD CUST MODEL SUB NVER TYPE INITRD_ADDR STATUS; do
 	[ -n "$NAME" ] || continue
+	case "$STATUS" in
+		release) FILE=$NAME ;;
+		devtest) FILE=$NAME-devtest ;;
+		*) echo "post-image: status of $NAME is '$STATUS', not release or devtest" >&2; exit 1 ;;
+	esac
 	ZIMAGE="$B/zImage.$DTB"
 	[ -f "$ZIMAGE" ] || { echo "post-image: $ZIMAGE missing"; exit 1; }
 	UIMAGE="$B/uImage.$NAME"
 	UROOTFS="$B/urootfs.$NAME"
-	OUT="ShareOS-${VERSION}-${NAME}.bin"
+	OUT="ShareOS-${VERSION}-${FILE}.bin"
 
 	"$MKIMAGE" -A arm -O linux -T kernel -C none -a 0x00008000 -e 0x00008000 \
 		-n "ShareOS-${VERSION}, kernel ${KVER}" -d "$ZIMAGE" "$UIMAGE" >/dev/null
@@ -105,7 +114,7 @@ echo "$MODELS" | while read -r NAME DTB PROD CUST MODEL SUB NVER TYPE INITRD_ADD
 	# and for a netboot via TFTP (U-Boot loads uImage + urootfs, the initramfs
 	# fetches rootfs.squashfs). Published in GitHub Releases with its .sha256.
 	# The bundle names its model in shareos-release (SHAREOS_FWNAME).
-	SU="ShareOS-${VERSION}-${NAME}.sysupgrade.tar"
+	SU="ShareOS-${VERSION}-${FILE}.sysupgrade.tar"
 	P="$T/su-$NAME"; mkdir -p "$P"
 	cp "$UIMAGE" "$P/uImage"; cp "$UROOTFS" "$P/urootfs"
 	ln -f "$B/rootfs.squashfs" "$P/rootfs.squashfs" 2>/dev/null || cp "$B/rootfs.squashfs" "$P/rootfs.squashfs"

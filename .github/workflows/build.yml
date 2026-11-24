@@ -233,6 +233,15 @@ jobs:
           path: artifacts
           merge-multiple: true
 
+      # a model that is being added (status "devtest" in post-image.sh) keeps
+      # the root password "shareos" – its files never go into a release
+      - name: No devtest images
+        run: |
+          if ls artifacts/*-devtest.* >/dev/null 2>&1; then
+            echo "::error::devtest images in the build: $(cd artifacts && ls *-devtest.* | tr '\n' ' ') – set the model to 'release' in board/dlink/dns320l/post-image.sh and BOARD_DEVTEST=0 in board.sh when it is tested, or take it out"
+            exit 1
+          fi
+
       - name: Sign the images
         env:
           RELEASE_SIGNING_KEY: ${{ secrets.RELEASE_SIGNING_KEY }}

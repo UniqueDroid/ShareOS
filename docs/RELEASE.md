@@ -1,6 +1,8 @@
 # Releasing ShareOS
 
-1. Everything for the release is merged into `main` (CI green).
+1. Everything for the release is merged into `main` (CI green). Models with
+   the status `devtest` (see [DEVICES.md](DEVICES.md#devtest-image-the-first-image-for-a-new-model))
+   stop the release job – set them to `release` when tested, or take them out.
 2. **Docs are up to date in the same merge:**
    - `CHANGELOG.md`: section `## <version>` with the changes (it is attached to the GitHub release automatically)
    - `README.md`: status and feature list

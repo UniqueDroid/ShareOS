@@ -10,10 +10,13 @@
 # console and the browser terminal stay closed until then.
 #
 # Not touched: boxes with their own root password, the development boot over
-# TFTP (shareos.netroot) and the rescue system (initramfs, has its own root).
+# TFTP (shareos.netroot), the rescue system (initramfs, has its own root) and
+# a model that is being added (BOARD_DEVTEST in board.sh): its testers sign in
+# with root / shareos before the buttons of the box are known.
 #
 [ "$1" = start ] || exit 0
 grep -q 'shareos.netroot' /proc/cmdline 2>/dev/null && exit 0
+[ "$(shareos-boardinfo devtest 2>/dev/null)" = 1 ] && exit 0
 [ -e /overlay/claim ] || exit 0
 [ "$(uci -q get shareos.setup.done)" = 1 ] && { rm -f /overlay/claim; exit 0; }
 
