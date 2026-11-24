@@ -205,18 +205,19 @@ add_methods({
 
 		ui_set: {
 			// own look; null/'' = back to the look for everyone
-			args: { theme: '', accent: '' },
+			args: { theme: '', accent: '', style: '' },
 			call: function(req) {
 				let u = session_user(req), a = req.args, c = cursor();
 				if (!u || u == 'root' || c.get('accounts', u) != 'user') return { error: 'session not bound' };
 				if (a.theme && !(a.theme in { dark: 1, light: 1, system: 1 })) return { error: 'invalid theme' };
 				if (a.accent && !(a.accent in ACCENTS)) return { error: 'invalid accent' };
-				for (let k in [ 'theme', 'accent' ]) {
+				if (a.style && !(a.style in STYLES)) return { error: 'invalid style' };
+				for (let k in [ 'theme', 'accent', 'style' ]) {
 					if (!(k in a)) continue;
 					if (a[k]) c.set('accounts', u, k, a[k]); else c.delete('accounts', u, k);
 				}
 				c.commit('accounts');
-				return { theme: c.get('accounts', u, 'theme') ?? null, accent: c.get('accounts', u, 'accent') ?? null };
+				return { theme: c.get('accounts', u, 'theme') ?? null, accent: c.get('accounts', u, 'accent') ?? null, style: c.get('accounts', u, 'style') ?? null };
 			}
 		},
 

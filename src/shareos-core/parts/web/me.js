@@ -40,15 +40,18 @@ function userLookView() {
 		<div class="fields" style="grid-template-columns:1fr"><label class="f"><span>LIGHT OR DARK</span><select id="opt-utheme">
 			<option value=""${!own.theme ? raw(' selected') : ''}>Same as for everyone (${themeTxt[sys.theme] || '–'})</option>
 			${Object.entries(themeTxt).map(([v, t]) => html`<option value="${v}"${own.theme === v ? raw(' selected') : ''}>${t}</option>`)}
+		</select></label><label class="f"><span>STYLE</span><select id="opt-ustyle">
+			<option value=""${!own.style ? raw(' selected') : ''}>Same as for everyone (${STYLE_NAMES[sys.style] || STYLE_NAMES.classic})</option>
+			${Object.entries(STYLE_NAMES).map(([v, t]) => html`<option value="${v}"${own.style === v ? raw(' selected') : ''}>${t}</option>`)}
 		</select></label></div>
 		<div class="pt" style="margin:14px 0 8px">ACCENT COLOUR</div>
 		<div class="row">${Object.keys(names).map((c) => html`<button class="sw c-${c}${S.accent === c ? ' on' : ''}" type="button" data-act="accent" data-c="${c}" aria-label="Accent colour ${names[c]}" aria-pressed="${S.accent === c}" title="${names[c]}"><i></i></button>`)}</div>
 		<p class="note">Applies only to your login, on every device. Logo and browser icon take on the accent colour.</p>
 		<div style="display:grid;gap:6px;margin-top:14px">
-			<label class="chk"><input type="checkbox" id="opt-uscan"${S.scan ? raw(' checked') : ''}>Scanlines (this browser only)</label>
+			${S.style === 'glass' ? '' : html`<label class="chk"><input type="checkbox" id="opt-uscan"${S.scan ? raw(' checked') : ''}>Scanlines (this browser only)</label>`}
 			${favBarOpt()}
 		</div>
-		${own.theme || own.accent ? html`<div class="acts" style="margin-top:14px"><button class="btn ghost" type="button" data-act="look-reset">Same as for everyone</button></div>` : ''}
+		${own.theme || own.accent || own.style ? html`<div class="acts" style="margin-top:14px"><button class="btn ghost" type="button" data-act="look-reset">Same as for everyone</button></div>` : ''}
 	</div>
 	<form class="panel" id="f-mypass" style="align-self:start">
 		<div class="ph"><span class="pt">CHANGE PASSWORD</span></div>
@@ -136,7 +139,13 @@ function renderUserMain() {
 			S.theme = v || S.sysLook?.theme || 'dark'; applyTheme(); renderUserHeader(); renderUserMain();
 			saveLook({ theme: v });
 		});
-		$('#opt-uscan').addEventListener('change', (e) => { S.scan = e.target.checked; store.set('scan', S.scan ? '1' : '0'); applyTheme(); });
+		$('#opt-ustyle').addEventListener('change', (e) => {
+			const v = e.target.value;
+			S.me.ui = { ...S.me.ui, style: v || null };
+			S.style = v || S.sysLook?.style || 'classic'; applyTheme(); renderUserHeader(); renderUserMain();
+			saveLook({ style: v });
+		});
+		$('#opt-uscan')?.addEventListener('change', (e) => { S.scan = e.target.checked; store.set('scan', S.scan ? '1' : '0'); applyTheme(); });
 		return;
 	}
 	renderUserHome();

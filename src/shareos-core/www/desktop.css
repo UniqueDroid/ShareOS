@@ -135,3 +135,19 @@ dialog.dk-wd{width:min(560px,calc(100vw - 32px));max-width:min(560px,calc(100vw 
 	.dk-menu{right:12px}
 	.dk-sg{grid-template-columns:repeat(3,minmax(0,1fr))}
 }
+
+/* style "Glass" (see shareos.css): the wallpaper is the aurora ground, windows and
+   bars are panes; a wallpaper image replaces the aurora, the panes stay */
+.sos.glass .dk-wall:not(.img){background:radial-gradient(ellipse 55% 60% at 85% 10%,rgba(58,212,245,.2),transparent 70%),radial-gradient(ellipse 50% 55% at 8% 95%,rgba(138,108,255,.2),transparent 70%),radial-gradient(ellipse 70% 50% at 45% 55%,rgba(var(--rgb),.14),transparent 75%),var(--ground)}
+.sos.glass .dk-wall.img{background-color:var(--ground)}
+.sos.glass .dk-bar{background:var(--bar);-webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur)}
+.sos.glass :is(.dk-tb,.dk-tw,.dk-tile){-webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur);box-shadow:inset 0 1px 0 var(--hi)}
+.sos.glass .dk-win{-webkit-backdrop-filter:var(--blur2);backdrop-filter:var(--blur2);box-shadow:inset 0 1px 0 var(--hi),0 18px 50px rgba(5,9,16,.42)}
+.sos.glass.light .dk-win{box-shadow:inset 0 1px 0 var(--hi),0 18px 50px rgba(30,45,66,.2)}
+.sos.glass .dk-wt{background:var(--bar)}
+.sos.glass .dk-wc{background:transparent}
+.sos.glass .dk-wc iframe{background:transparent}
+.sos.glass .dk-view .subtabs{background:var(--bar)}
+.sos.glass .dk-pop{background:var(--pop);-webkit-backdrop-filter:var(--blur2);backdrop-filter:var(--blur2);box-shadow:inset 0 1px 0 var(--hi),0 24px 60px rgba(5,9,16,.45)}
+.sos.glass .dk-av{color:var(--ink)}
+.sos.glass .dk-il{background:var(--bar);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}

@@ -2253,3 +2253,6 @@ E1806	datos de hardware para añadir un modelo
 E1807	Aquí no se permite copiar – usa Descargar.
 E1808	Modelo, particiones flash, CPU, memoria, LED, sensores, botones, GPIO, puertos serie, red, el entorno U-Boot y el registro del kernel de este equipo – todo lo que necesita un modelo nuevo. Solo se lee, no se cambia nada. Adjunta el archivo a la incidencia del modelo.
 E1809	Mostrar direcciones MAC y números de serie (si no, ocultos – no los pongas en incidencias públicas)
+E1810	ESTILO
+E1811	Cristal
+E1812	Cristal muestra las mismas páginas con paneles translúcidos sobre un fondo suave.

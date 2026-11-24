@@ -33,7 +33,7 @@ def mock_folder(fid):
         return en[fid]
 
 
-STATE = {'setup_done': False, 'fan': {'preset': 'balanced', 'off_temp': 0, 'full_temp': 50, 'half_temp': 45}, 'led': {'status': 'heartbeat', 'power': 'on', 'disks': 'off', 'colours': {'status': 'blue', 'usb': 'orange', 'disks': 'red'}}, 'logo': True, 'lang': 'en', 'channel': 'beta', 'job': None, 'https': True, 'redirect': False, 'theme': 'dark', 'accent': 'blue', 'autostart_off': ['crond'],
+STATE = {'setup_done': False, 'fan': {'preset': 'balanced', 'off_temp': 0, 'full_temp': 50, 'half_temp': 45}, 'led': {'status': 'heartbeat', 'power': 'on', 'disks': 'off', 'colours': {'status': 'blue', 'usb': 'orange', 'disks': 'red'}}, 'logo': True, 'lang': 'en', 'channel': 'beta', 'job': None, 'https': True, 'redirect': False, 'theme': 'dark', 'accent': 'blue', 'style': 'classic', 'autostart_off': ['crond'],
          'users': {'jan': {'role': 'admin', 'fullname': 'Jan', 'groups': ['family'], 'home': 'data', 'quota': 0, 'web': True, 'pw': 'shareos'},
                    'anna': {'role': 'user', 'fullname': 'Anna', 'groups': ['family'], 'home': 'data', 'quota': 200000, 'web': True, 'cloud': True, 'files': True, 'pw': 'anna123'},
                    'tv': {'role': 'share', 'fullname': 'TV', 'groups': ['media'], 'home': '', 'quota': 0, 'web': True, 'pw': 'tv1234'}},
@@ -179,7 +179,7 @@ def me(user):
             'usage': [{'volume': 'data', 'used': 61_500_000_000, 'limit': x['quota'] * 1000000}], 'shares': mine, 'host': 'skynet-nas',
             'volumes': [{'name': 'data', 'size': 3_936_000_000_000, 'used': 1_412_000_000_000, 'avail': 2_524_000_000_000}],
             'cloud': x.get('cloud', False), 'paperless': bool(x['home']), 'files': x.get('files', False) and x['role'] == 'user',
-            'ui': x.get('ui', {'theme': None, 'accent': None}),
+            'ui': x.get('ui', {'theme': None, 'accent': None, 'style': None}),
             'apps': [{'id': a['id'], 'name': a['name'], 'entry': a['entry'], 'icon': a['icon'], 'description': a['description']}
                      for a in APPS['installed'].values() if a.get('type') != 'system' and ('*' in a['users'] or user in a['users'])],
             'apps_server': {'port': 8081, 'https_port': 8444, 'https': True},
@@ -513,8 +513,8 @@ def call(obj, method, args):
                     f[k] = bool(args[k])
             return f
         if method == 'ui_set':
-            ui = STATE['users'][u].setdefault('ui', {'theme': None, 'accent': None})
-            for k in ('theme', 'accent'):
+            ui = STATE['users'][u].setdefault('ui', {'theme': None, 'accent': None, 'style': None})
+            for k in ('theme', 'accent', 'style'):
                 if k in args:
                     ui[k] = args[k] or None
             return ui
@@ -796,14 +796,14 @@ def call(obj, method, args):
                 STATE['lang'] = args['lang']
             if 'logo' in args:
                 STATE['logo'] = bool(args['logo'])
-            for k in ('theme', 'accent'):
+            for k in ('theme', 'accent', 'style'):
                 if args.get(k):
                     STATE[k] = args[k]
             for k, v in (args.get('areas') or {}).items():
                 if k == 'apps':
                     STATE.setdefault('areas', {'apps': True})[k] = bool(v)
         # modules (Paperless): on while the system app is installed
-        return {'lang': STATE['lang'], 'logo': STATE['logo'], 'theme': STATE['theme'], 'accent': STATE['accent'],
+        return {'lang': STATE['lang'], 'logo': STATE['logo'], 'theme': STATE['theme'], 'accent': STATE['accent'], 'style': STATE['style'],
                 'areas': {**STATE.get('areas', {'apps': True}), **{m: m in APPS['installed'] for m in ('paperless', 'cloud', 'dnsfilter', 'desktop')}}, 'default_password': True}
     if obj == 'shareos.net':
         if method == 'set':

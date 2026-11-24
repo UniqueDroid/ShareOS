@@ -12,6 +12,9 @@ const THEMES = { dark: 1, light: 1, system: 1 };
 // accent colours – also in www-apps/_shareos/app.js (accepted list) and
 // www/app.js (ACCENT_NAMES, LOGO_FILTER), palettes in shareos.css and theme.css
 const ACCENTS = { blue: 1, green: 1, red: 1, white: 1, grey: 1, violet: 1, orange: 1, teal: 1 };
+// styles (material of the panes) – also in www/app.js (STYLE_NAMES) and
+// www-apps/_shareos/app.js; the glass style is at the end of shareos.css, desktop.css, theme.css
+const STYLES = { classic: 1, glass: 1 };
 
 // modules: system apps with "module" (see shareos-apps) that switch on an
 // area of the firmware – tab, "My ShareOS" part, background work. The code
@@ -35,7 +38,7 @@ function area_on(a) {
 
 function ui_settings() {
 	let c = cursor();
-	let theme = c.get('shareos', 'ui', 'theme'), accent = c.get('shareos', 'ui', 'accent');
+	let theme = c.get('shareos', 'ui', 'theme'), accent = c.get('shareos', 'ui', 'accent'), style = c.get('shareos', 'ui', 'style');
 	let areas = {};
 	for (let a in AREAS) areas[a] = c.get('shareos', 'ui', 'area_' + a) != '0';
 	for (let m in MODULES) areas[m] = module_on(m);
@@ -44,7 +47,8 @@ function ui_settings() {
 		logo: (c.get('shareos', 'ui', 'logo') ?? '1') != '0',
 		areas,
 		theme: THEMES[theme] ? theme : 'dark',
-		accent: ACCENTS[accent] ? accent : 'blue'
+		accent: ACCENTS[accent] ? accent : 'blue',
+		style: STYLES[style] ? style : 'classic'
 	};
 }
 
@@ -58,7 +62,7 @@ add_methods({
 		},
 
 		set: {
-			args: { lang: '', logo: false, theme: '', accent: '', areas: {} },
+			args: { lang: '', logo: false, theme: '', accent: '', style: '', areas: {} },
 			call: function(req) {
 				let c = cursor();
 				c.set('shareos', 'ui', 'ui');   // section may be missing in configs from older versions
@@ -82,6 +86,10 @@ add_methods({
 				if (req.args.accent) {
 					if (!ACCENTS[req.args.accent]) return { error: 'invalid accent' };
 					c.set('shareos', 'ui', 'accent', req.args.accent);
+				}
+				if (req.args.style) {
+					if (!STYLES[req.args.style]) return { error: 'invalid style' };
+					c.set('shareos', 'ui', 'style', req.args.style);
 				}
 				c.commit('shareos');
 				if (length(changed)) {

@@ -4,6 +4,10 @@ Changes per release (newest first). The section of a version is added to its
 GitHub release automatically when the release is built. Test versions are
 pre-releases for test devices only.
 
+## Unreleased
+
+- **Style "Glass".** A third look next to Classic dark and light: *System → Appearance → Style*. The same pages, elements, sizes and corners – only the material changes: translucent, blurred panes over a soft aurora background, in a slate dark and a misty light theme (neither black nor white), with all eight accent colours (raised where needed so small accent text stays readable). It covers the classic and the desktop view and the login page; users with web access can pick their own style. Web apps follow it through the app SDK (`data-style="glass"` on `<html>`, a glass variant of `/_shareos/theme.css`). UCI: `shareos.ui.style` (`classic` | `glass`).
+
 ## 0.3.0-beta.17
 
 - **Devtest images for new models.** A model that is being added is built as `ShareOS-<version>-<model>-devtest.*` until it is tested (status `devtest` in `post-image.sh`, `BOARD_DEVTEST` in `board.sh`): root keeps the password `shareos` instead of being claimed with a button – the buttons of a new model are not known yet – and the overview and the messages say so. The release build refuses such files, so they only come from the build of a pull request. See [docs/DEVICES.md](docs/DEVICES.md#devtest-image-the-first-image-for-a-new-model).

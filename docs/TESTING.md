@@ -266,6 +266,7 @@ The desktop view is a **module**. The classic view stays next to it.
 - **Admins:** Shares → **Files** shows every mounted drive: create folders, upload (also by dragging), download, rename, move, copy, delete.
 - **Users:** enable "Files" in the user account. "My ShareOS" then has a **Files** tab with the own folder and the shares the user has rights to (from 0.2.0-beta.6, see 14m).
 - **Look:** users with web access set light/dark and the accent colour for themselves under **Appearance** (eight colours since 0.3.0-beta.6, among them grey: logo, browser icon and an open app take it on). "Same as for everyone" goes back to the admin's choice.
+- **Style Glass:** System → Appearance → **Style: Glass** – every page (classic and desktop view, login page) shows translucent, blurred panes over a soft background in dark and light, with the same element sizes and corners as Classic; the scanline option is hidden. Change it back to Classic: the old look, unchanged. A user can pick a style of their own; "Same as for everyone" follows the admin again.
 - Test idea: upload a large file (e.g. 1 GB) and download it again. It must not stop after 60 s.
 
 ## 12. Apps (store)
@@ -320,7 +321,7 @@ From the first version with a release key on the box (*System → Firmware* then
 
 - Install **Webpad 1.1** (store). In the file browser a `.txt` file shows **Webpad ↗**; click it (or the file name): Webpad opens in its own window with the file.
 - Change something, **Ctrl+S**: the message says "saved"; the file browser shows the new size and time. Owner and rights of the file stay.
-- Look: switch light/dark or the accent colour in ShareOS – an open app follows.
+- Look: switch light/dark, the accent colour or the style (Classic/Glass) in ShareOS – an open app follows.
 - Users with a personal folder can do the same with their files.
 
 - **Name and icons (beta.10):** open ShareOS by its IP (`https://10.241.1.106`). Under **Apps → Installed** Webpad and WebTerm show their icon. **Open** starts the app under the certificate's name (`https://shareos.skynet.lan:8444/…`) without a certificate warning. **System → Network → Box name for links** shows the name from the certificate as suggestion; a name of your own is saved there, empty = automatic.
