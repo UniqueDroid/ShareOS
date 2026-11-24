@@ -1795,7 +1795,9 @@
 		"Show MAC addresses and serial numbers (otherwise masked – keep them out of public issues)": "Mostrar direcciones MAC y números de serie (si no, ocultos – no los pongas en incidencias públicas)",
 		"STYLE": "ESTILO",
 		"Glass": "Cristal",
-		"Glass shows the same pages with translucent panes over a soft background.": "Cristal muestra las mismas páginas con paneles translúcidos sobre un fondo suave."
+		"Glass shows the same pages with translucent panes over a soft background.": "Cristal muestra las mismas páginas con paneles translúcidos sobre un fondo suave.",
+		"SETUP WIZARD": "ASISTENTE DE CONFIGURACIÓN",
+		"Shows the first-time setup again on the next page load – nothing is deleted. Useful after restoring settings on another box or after a disk change.": "Muestra de nuevo la configuración inicial en la próxima carga de la página – no se borra nada. Útil tras restaurar los ajustes en otro equipo o tras cambiar de disco."
 	},
 	"patterns": [
 		[
