@@ -47,7 +47,11 @@ check "only the DNS-320L counts as tested" "[ \"\$(info tested)\" = 0 ]"
 # --- devtest: a model that is being added, and an unknown one
 check "known models are no devtest" "[ \"\$(info devtest)\" = 0 ] && info | grep -qx 'BOARD_DEVTEST=\"0\"'"
 box "Some other NAS"
-check "an unknown model counts as devtest" "[ \"\$(info devtest)\" = 1 ]"
+check "an unknown model is no devtest either (claimed as usual)" "[ \"\$(info devtest)\" = 0 ]"
+# a model that is being added: its case in board.sh sets BOARD_DEVTEST=1 – here
+# a copy of board.sh with such a case for the unknown model
+sed 's/BOARD_LED_DISK2= ;;/BOARD_LED_DISK2= BOARD_DEVTEST=1 ;;/' $O/usr/lib/shareos/board.sh > $T/board-devtest.sh
+check "a case with BOARD_DEVTEST=1 counts as devtest" "[ \"\$(sh -c '. $T/board-devtest.sh; board_detect; echo \$BOARD_DEVTEST')\" = 1 ]"
 # S03claim leaves root alone on a devtest box
 cl() { # model -> root hash after S03claim (fake /etc, /overlay)
 	box "$1"; mkdir -p $T/c/etc $T/c/overlay; : > $T/c/overlay/claim
@@ -59,7 +63,8 @@ cl() { # model -> root hash after S03claim (fake /etc, /overlay)
 }
 if command -v openssl >/dev/null; then
 	check "S03claim: a new DNS-320L gets root locked" "[ \"\$(cl 'D-Link DNS-320L-rev-Ax NAS')\" = '!' ]"
-	check "S03claim: a devtest box keeps root / shareos" "case \"\$(cl 'Some other NAS')\" in '\$1\$'*) true ;; *) false ;; esac"
+	check "S03claim: an unknown model gets root locked too" "[ \"\$(cl 'Some other NAS')\" = '!' ]"
+	check "S03claim: a devtest box keeps root / shareos" "case \"\$(SHAREOS_BOARD_LIB=$T/board-devtest.sh cl 'Some other NAS')\" in '\$1\$'*) true ;; *) false ;; esac"
 fi
 
 # --- shareos-deviceinfo: masked for public issues, --full on request

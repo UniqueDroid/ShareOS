@@ -32,7 +32,9 @@
 #                       keeps the password "shareos" (no claiming), the web
 #                       interface says so and offers the device info
 #                       (#/deviceinfo); its files are named …-devtest and are
-#                       never part of a release. Also 1 on an unknown model.
+#                       never part of a release. Only set in the case of
+#                       such a model – an unknown model (no device tree, the
+#                       emulator) is claimed as usual.
 
 board_detect() {
 	model=$( { tr -d '\000' < ${SHAREOS_ROOT:-}/proc/device-tree/model; } 2>/dev/null)
@@ -76,7 +78,7 @@ board_detect() {
 	*)
 		BOARD_ID=unknown BOARD_NAME="${model:-unknown}" BOARD_FWNAME= BOARD_SIG= BOARD_MODEL=
 		BOARD_CONTROL=none BOARD_RTC=kernel
-		BOARD_LED_STATUS= BOARD_LED_USB= BOARD_LED_DISK1= BOARD_LED_DISK2= BOARD_DEVTEST=1 ;;
+		BOARD_LED_STATUS= BOARD_LED_USB= BOARD_LED_DISK1= BOARD_LED_DISK2= ;;
 	esac
 }
 
