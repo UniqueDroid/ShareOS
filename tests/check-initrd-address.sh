@@ -12,7 +12,7 @@ DIR=${1:?folder with the ShareOS-*.sysupgrade.tar files}
 pass=0; failed=0
 for tar in "$DIR"/ShareOS-*.sysupgrade.tar; do
 	[ -f "$tar" ] || { echo "no sysupgrade bundle in $DIR"; exit 1; }
-	model=$(basename "$tar" .sysupgrade.tar | sed -E 's/^ShareOS-.*-(DN[SR]-[^-]+-rev-[A-Za-z]+)$/\1/')
+	model=$(basename "$tar" .sysupgrade.tar | sed -E 's/^ShareOS-.*-(DN[SR]-[^-]+-rev-[A-Za-z]+)(-devtest)?$/\1/')
 	case "$model" in
 		DNS-325-*|DNS-320-rev-A*|DNR-322L-*) want=01000000 ;;
 		*) want=00800000 ;;
