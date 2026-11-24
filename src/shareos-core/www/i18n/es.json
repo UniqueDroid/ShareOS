@@ -1792,7 +1792,9 @@
 		"hardware facts for adding a model": "datos de hardware para añadir un modelo",
 		"Copying is not allowed here – use Download.": "Aquí no se permite copiar – usa Descargar.",
 		"Model, flash partitions, CPU, memory, LEDs, sensors, buttons, GPIOs, serial ports, network, the U-Boot environment and the kernel log of this box – everything a new model needs. Only read, nothing is changed. Attach the file to the issue of the model.": "Modelo, particiones flash, CPU, memoria, LED, sensores, botones, GPIO, puertos serie, red, el entorno U-Boot y el registro del kernel de este equipo – todo lo que necesita un modelo nuevo. Solo se lee, no se cambia nada. Adjunta el archivo a la incidencia del modelo.",
-		"Show MAC addresses and serial numbers (otherwise masked – keep them out of public issues)": "Mostrar direcciones MAC y números de serie (si no, ocultos – no los pongas en incidencias públicas)"
+		"Show MAC addresses and serial numbers (otherwise masked – keep them out of public issues)": "Mostrar direcciones MAC y números de serie (si no, ocultos – no los pongas en incidencias públicas)",
+		"SETUP WIZARD": "ASISTENTE DE CONFIGURACIÓN",
+		"Shows the first-time setup again on the next page load – nothing is deleted. Useful after restoring settings on another box or after a disk change.": "Muestra de nuevo la configuración inicial en la próxima carga de la página – no se borra nada. Útil tras restaurar los ajustes en otro equipo o tras cambiar de disco."
 	},
 	"patterns": [
 		[

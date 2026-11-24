@@ -1792,7 +1792,9 @@
 		"hardware facts for adding a model": "मॉडल जोड़ने के लिए हार्डवेयर जानकारी",
 		"Copying is not allowed here – use Download.": "यहाँ कॉपी करने की अनुमति नहीं है – डाउनलोड का उपयोग करें।",
 		"Model, flash partitions, CPU, memory, LEDs, sensors, buttons, GPIOs, serial ports, network, the U-Boot environment and the kernel log of this box – everything a new model needs. Only read, nothing is changed. Attach the file to the issue of the model.": "इस बॉक्स का मॉडल, फ़्लैश पार्टीशन, CPU, मेमोरी, LED, सेंसर, बटन, GPIO, सीरियल पोर्ट, नेटवर्क, U-Boot एनवायरनमेंट और कर्नेल लॉग – नए मॉडल के लिए आवश्यक सब कुछ। केवल पढ़ा जाता है, कुछ नहीं बदलता। फ़ाइल को मॉडल के issue में संलग्न करें।",
-		"Show MAC addresses and serial numbers (otherwise masked – keep them out of public issues)": "MAC पते और सीरियल नंबर दिखाएँ (अन्यथा छिपे हुए – इन्हें सार्वजनिक issue में न डालें)"
+		"Show MAC addresses and serial numbers (otherwise masked – keep them out of public issues)": "MAC पते और सीरियल नंबर दिखाएँ (अन्यथा छिपे हुए – इन्हें सार्वजनिक issue में न डालें)",
+		"SETUP WIZARD": "सेटअप विज़ार्ड",
+		"Shows the first-time setup again on the next page load – nothing is deleted. Useful after restoring settings on another box or after a disk change.": "अगली बार पेज लोड होने पर पहला सेटअप फिर से दिखाता है – कुछ भी हटाया नहीं जाता। किसी दूसरे बॉक्स पर सेटिंग्स बहाल करने या डिस्क बदलने के बाद उपयोगी।"
 	},
 	"patterns": [
 		[

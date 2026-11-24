@@ -2253,3 +2253,5 @@ E1806	dados de hardware para adicionar um modelo
 E1807	Copiar não é permitido aqui – use Transferir.
 E1808	Modelo, partições flash, CPU, memória, LEDs, sensores, botões, GPIOs, portas série, rede, o ambiente U-Boot e o registo do kernel desta caixa – tudo o que um novo modelo precisa. Só é lido, nada é alterado. Anexe o ficheiro ao issue do modelo.
 E1809	Mostrar endereços MAC e números de série (caso contrário ocultos – não os coloque em issues públicos)
+E1810	ASSISTENTE DE CONFIGURAÇÃO
+E1811	Mostra de novo a configuração inicial no próximo carregamento da página – nada é apagado. Útil depois de restaurar as definições noutra caixa ou depois de trocar de disco.

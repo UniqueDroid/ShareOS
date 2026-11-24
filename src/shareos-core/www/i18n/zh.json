@@ -1792,7 +1792,9 @@
 		"hardware facts for adding a model": "用于添加型号的硬件信息",
 		"Copying is not allowed here – use Download.": "此处不允许复制 – 请使用下载。",
 		"Model, flash partitions, CPU, memory, LEDs, sensors, buttons, GPIOs, serial ports, network, the U-Boot environment and the kernel log of this box – everything a new model needs. Only read, nothing is changed. Attach the file to the issue of the model.": "此设备的型号、闪存分区、CPU、内存、LED、传感器、按键、GPIO、串口、网络、U-Boot 环境和内核日志 – 新型号所需的一切。只读取，不做任何更改。请将文件附加到该型号的 issue。",
-		"Show MAC addresses and serial numbers (otherwise masked – keep them out of public issues)": "显示 MAC 地址和序列号（否则已遮盖 – 请勿放入公开 issue）"
+		"Show MAC addresses and serial numbers (otherwise masked – keep them out of public issues)": "显示 MAC 地址和序列号（否则已遮盖 – 请勿放入公开 issue）",
+		"SETUP WIZARD": "设置向导",
+		"Shows the first-time setup again on the next page load – nothing is deleted. Useful after restoring settings on another box or after a disk change.": "在下次加载页面时再次显示首次设置 – 不会删除任何内容。适用于在另一台设备上恢复设置后或更换硬盘后。"
 	},
 	"patterns": [
 		[

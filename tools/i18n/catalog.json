@@ -1810,7 +1810,9 @@
 		"hardware facts for adding a model",
 		"Copying is not allowed here – use Download.",
 		"Model, flash partitions, CPU, memory, LEDs, sensors, buttons, GPIOs, serial ports, network, the U-Boot environment and the kernel log of this box – everything a new model needs. Only read, nothing is changed. Attach the file to the issue of the model.",
-		"Show MAC addresses and serial numbers (otherwise masked – keep them out of public issues)"
+		"Show MAC addresses and serial numbers (otherwise masked – keep them out of public issues)",
+		"SETUP WIZARD",
+		"Shows the first-time setup again on the next page load – nothing is deleted. Useful after restoring settings on another box or after a disk change."
 	],
 	"patterns": [
 		[

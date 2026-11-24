@@ -1792,7 +1792,9 @@
 		"hardware facts for adding a model": "данные оборудования для добавления модели",
 		"Copying is not allowed here – use Download.": "Копирование здесь запрещено – используйте «Скачать».",
 		"Model, flash partitions, CPU, memory, LEDs, sensors, buttons, GPIOs, serial ports, network, the U-Boot environment and the kernel log of this box – everything a new model needs. Only read, nothing is changed. Attach the file to the issue of the model.": "Модель, разделы флеш-памяти, процессор, память, светодиоды, датчики, кнопки, GPIO, последовательные порты, сеть, окружение U-Boot и журнал ядра этого устройства – всё, что нужно для новой модели. Только чтение, ничего не меняется. Приложите файл к issue модели.",
-		"Show MAC addresses and serial numbers (otherwise masked – keep them out of public issues)": "Показать MAC-адреса и серийные номера (иначе скрыты – не публикуйте их в открытых issue)"
+		"Show MAC addresses and serial numbers (otherwise masked – keep them out of public issues)": "Показать MAC-адреса и серийные номера (иначе скрыты – не публикуйте их в открытых issue)",
+		"SETUP WIZARD": "МАСТЕР НАСТРОЙКИ",
+		"Shows the first-time setup again on the next page load – nothing is deleted. Useful after restoring settings on another box or after a disk change.": "Снова показывает первоначальную настройку при следующей загрузке страницы – ничего не удаляется. Полезно после восстановления настроек на другом устройстве или после замены диска."
 	},
 	"patterns": [
 		[
