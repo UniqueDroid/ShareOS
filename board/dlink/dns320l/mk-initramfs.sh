@@ -24,6 +24,8 @@ usr/bin/pk_verify
 FILES="
 etc/passwd etc/group etc/shadow etc/shells etc/shareos-release
 usr/lib/shareos/board.sh
+usr/sbin/shareos-boardinfo
+usr/sbin/shareos-deviceinfo
 usr/share/udhcpc/default.script
 etc/ssl/certs/ca-certificates.crt
 etc/shareos/release.pub

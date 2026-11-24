@@ -100,3 +100,32 @@ touched.
    device tree, D-Link signature from `legacy/alt-f/mkfw.sh`).
 3. A case in `board_detect` of `board.sh` (model text, LEDs, control,
    buttons) and in `tests/test-boards.sh`.
+
+### Devtest image: the first image for a new model
+
+A model that is being added is built as a **devtest image** until it has been
+tested: status `devtest` in its `MODELS` line (files
+`ShareOS-<version>-<name>-devtest.bin` / `.sysupgrade.tar`) and
+`BOARD_DEVTEST=1` in its case of `board.sh`. Its testers get the files from the
+build of the pull request (Actions → artifact), never from a release – the
+release job refuses devtest files.
+
+On such a box:
+
+- root keeps the password **shareos** – no claiming with a button (the buttons
+  of a new model are not known yet). Web interface and SSH: `root` / `shareos`.
+  Use it only in your own network.
+- The overview and the messages say that it is a test image and link to the
+  **device info**: `http://<box>/deviceinfo` (also open for admins on every
+  other model). It collects what is needed to add the model – flash partitions,
+  CPU, memory, device tree, LEDs, sensors, buttons (input devices), GPIOs,
+  serial ports, I2C, USB, network, the U-Boot environment (read from flash,
+  never written) and the kernel log – and offers it as a text file. MAC
+  addresses and serial numbers are masked unless *Show MAC addresses and serial
+  numbers* is ticked: attach the masked file to the issue of the model.
+- In the rescue system (SSH after a TFTP or rescue boot) the same report:
+  `shareos-deviceinfo > /tmp/info.txt`, then copy it with `scp`
+  (`--full`: without masking).
+
+When the model works: status `release`, `BOARD_DEVTEST=0`, and it goes into
+the next release with the normal claiming.

@@ -525,6 +525,14 @@ Needs a Tailscale account (free), a phone or computer with Tailscale, the file `
 5. An account without a personal folder: sharing shows "no personal folder"; the shared item is dropped and does not come back at the next login.
 6. File dialog of an app for an account **without** *Files* (e.g. Webpad → *Open*): the list of folders shows *App data* first, then *My folder* and the user's shares; read-only shares are marked and are missing when saving. The app still keeps its own files in *App data*.
 
+## 14zz. Device info, devtest images (0.3.0-beta.17)
+
+1. On any box, signed in as admin: open `http://<box>/deviceinfo`. The page *DEVICE INFO* opens (classic view: under *System*, no tab; desktop view: in the *Settings* window). It shows the model, `/proc/mtd`, the CPU, LEDs, hwmon sensors, input devices, the U-Boot environment and the kernel log. MAC addresses read `xx:xx:xx:xx:..:..`, serial numbers `(masked)`.
+2. Tick *Show MAC addresses and serial numbers*: the report is read again, complete, with "NOT MASKED" at the top. *Download* saves `shareos-deviceinfo-<model>-<date>-full.txt`, *Copy* puts it on the clipboard (only over HTTPS or on localhost – otherwise the page says to use *Download*).
+3. Over SSH: `shareos-deviceinfo | head -40` and `shareos-deviceinfo --full | grep ethaddr`. Nothing is written: `md5sum /dev/mtd*` before and after is the same.
+4. Rescue system (TFTP boot with `shareos.rescue`): the start message names `shareos-deviceinfo`; `shareos-deviceinfo > /tmp/info.txt` works there too, `scp root@<box>:/tmp/info.txt .` fetches it.
+5. Devtest image (only with a model that has the status `devtest`, e.g. a pull request for a new model): after flashing, `root` / `shareos` works in the browser and over SSH without pressing a button; the overview shows the yellow note *Test image for a new model* with the link, *Messages* the same within 10 minutes.
+
 ## 14zy. Disk change (0.3.0-beta.16)
 
 Needs a second disk (bay or USB case) that may be erased. **Not on a box with data you cannot lose without a backup.**

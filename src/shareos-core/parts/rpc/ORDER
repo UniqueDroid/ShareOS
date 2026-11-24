@@ -15,6 +15,7 @@ cloud.uc
 devices.uc
 snapshots.uc
 migrate.uc
+deviceinfo.uc
 apps.uc
 files.uc
 files-jobs.uc

@@ -82,7 +82,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 	check('window: the area itself, no frame', await p.locator(win('storage') + ' iframe').count() === 0 && await p.locator(win('storage') + ' .dk-view .sec').count() > 0);
 	check('window: no header, tabs or footer of the page', await p.locator('#hd, #tabs, #ft, #main').count() === 0);
 	const bar = await p.$$eval(win('storage') + ' .subtabs a', (l) => l.map((x) => x.getAttribute('href')));
-	check('window: parts of the area as a bar', bar.join() === '#/storage/volumes,#/storage/health,#/storage/snapshots', bar.join());
+	check('window: parts of the area as a bar', bar.join() === '#/storage/volumes,#/storage/health,#/storage/snapshots,#/storage/move', bar.join());
 	check('taskbar: window listed', await p.locator('.dk-tw[data-task="storage"]').count() === 1);
 	// a part of the area: the same window shows it
 	await p.click(win('storage') + ' .subtabs a[href="#/storage/health"]');
@@ -295,7 +295,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 	await p.waitForSelector('#main .subtabs a.on[href="#/storage/volumes"]');
 	await p.click('#main .subtabs a[href="#/storage/health"]');
 	await p.waitForSelector('#main .subtabs a.on[href="#/storage/health"]');
-	check('classic: tabs and parts change the page', await p.evaluate(() => location.hash) === '#/storage/health' && await p.locator('#main .subtabs a').count() === 3);
+	check('classic: tabs and parts change the page', await p.evaluate(() => location.hash) === '#/storage/health' && await p.locator('#main .subtabs a').count() === 4);
 	await p.click('#tabs a[href="#/overview"]');
 	await p.waitForSelector('#main .mbars');
 	check('classic: overview with all its sections', await p.locator('#main .sec[data-part]').count() === 4);

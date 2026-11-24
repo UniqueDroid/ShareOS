@@ -102,7 +102,7 @@ add_methods({
 				let net = '/sys/class/net/eth0/';
 				return {
 					model: read_trim('/proc/device-tree/model'),
-					board: { id: board().id ?? null, name: board().name ?? null, fwname: board().fwname ?? null, tested: board().tested == '1' },
+					board: { id: board().id ?? null, name: board().name ?? null, fwname: board().fwname ?? null, tested: board().tested == '1', devtest: devtest() },
 					release: release(),
 					hostname: read_trim('/proc/sys/kernel/hostname'),
 					kernel: read_trim('/proc/sys/kernel/osrelease'),

@@ -2244,3 +2244,12 @@ P400	la unidad $1 no está montada
 E1798	todavía se está ejecutando una copia en Files, una tarea en la nube, una instantánea o Paperless – espera a que termine
 E1799	el cambio se detuvo antes de terminar – inícialo de nuevo o reinicia el equipo
 E1800	autobrr: los filtros con la acción Watch dir aún indican la carpeta de entrega en la unidad antigua – cámbiala en autobrr por la carpeta de la unidad nueva.
+E1801	Imagen de prueba para un modelo nuevo.
+E1802	root conserva la contraseña shareos – usa el equipo solo en tu propia red. Envía la información del dispositivo:
+E1803	Información del dispositivo
+E1804	Leyendo …
+E1805	INFORMACIÓN DEL DISPOSITIVO
+E1806	datos de hardware para añadir un modelo
+E1807	Aquí no se permite copiar – usa Descargar.
+E1808	Modelo, particiones flash, CPU, memoria, LED, sensores, botones, GPIO, puertos serie, red, el entorno U-Boot y el registro del kernel de este equipo – todo lo que necesita un modelo nuevo. Solo se lee, no se cambia nada. Adjunta el archivo a la incidencia del modelo.
+E1809	Mostrar direcciones MAC y números de serie (si no, ocultos – no los pongas en incidencias públicas)

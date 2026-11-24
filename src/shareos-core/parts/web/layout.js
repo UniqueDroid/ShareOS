@@ -272,9 +272,11 @@ function renderTabs() {
 
 // the page of an address (#/tab/sub); hash: an address other than the current one
 function routeOf(hash) {
-	const [tab, sub, id] = routeParts(hash);
+	let [tab, sub, id] = routeParts(hash);
+	// pages of System that are not in its menu, also under their own address (#/deviceinfo)
+	if (SYS_HIDDEN.includes(tab)) [tab, sub] = ['system', tab];
 	const r = { tab: TABS.some((t) => t[0] === tab) && tabOn(tab) ? tab : 'overview', sub: SUB_MOVED[sub] || sub || '' };
-	if (r.tab === 'system' && !SYS_SUBS.some((x) => x[0] === r.sub)) r.sub = 'general';
+	if (r.tab === 'system' && !SYS_SUBS.some((x) => x[0] === r.sub) && !SYS_HIDDEN.includes(r.sub)) r.sub = 'general';
 	if (r.tab === 'services' && !SVC_SUBS.some((x) => x[0] === r.sub)) r.sub = 'status';
 	if (r.tab === 'shares' && !SHR_SUBS.some((x) => x[0] === r.sub)) r.sub = 'shares';
 	if (r.tab === 'storage' && !STO_SUBS.some((x) => x[0] === r.sub)) r.sub = 'volumes';

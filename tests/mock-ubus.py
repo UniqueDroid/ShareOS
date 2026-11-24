@@ -88,7 +88,7 @@ def info():
     return {
         'model': 'D-Link DNS-320L-rev-Ax NAS', 'hostname': 'skynet-nas', 'kernel': '6.18.58', 'boot': 'flash',
         'release': {'version': '0.1.0-beta.1', 'board': 'dns320l', 'fwname': 'DNS-320L-rev-Ax', 'stage': 'beta'},
-        'board': {'id': 'dns320l', 'name': 'D-Link DNS-320L rev A', 'fwname': 'DNS-320L-rev-Ax', 'tested': True},
+        'board': {'id': 'dns320l', 'name': 'D-Link DNS-320L rev A', 'fwname': 'DNS-320L-rev-Ax', 'tested': True, 'devtest': bool(os.environ.get('MOCK_DEVTEST'))},
         'time': int(time.time()), 'uptime': up, 'load': [0.42, 0.38, 0.35],
         'cpu': {'total': int(up * 100), 'idle': int(up * 85)},
         'memory': {'memtotal': 253092 * 1024, 'memavailable': 160000 * 1024},
@@ -629,6 +629,12 @@ def call(obj, method, args):
         if method == 'rescan':
             d['scanning'] = True
         return d
+    if obj == 'shareos.deviceinfo':
+        # MOCK_DEVTEST=1: a box of a model that is being added (banner on the overview)
+        mac = '00:50:43:12:ab:cd' if args.get('full') else 'xx:xx:xx:xx:ab:cd'
+        return {'full': bool(args.get('full')), 'devtest': bool(os.environ.get('MOCK_DEVTEST')), 'fwname': 'DNS-320L-rev-Ax',
+                'text': 'ShareOS device info\n\n### device-tree model\nD-Link DNS-320L-rev-Ax NAS\n\n### flash partitions (/proc/mtd)\n'
+                        'dev:    size   erasesize  name\nmtd0: 00100000 00020000 "u-boot"\n\n### network interfaces\neth0: address=' + mac + '\n'}
     if obj == 'shareos.migrate':
         # disk change: a copy that advances with every state call, a switch that is done at once
         mg = STATE.setdefault('mig', {'state': 'none'})

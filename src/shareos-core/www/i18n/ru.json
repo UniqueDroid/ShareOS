@@ -1783,7 +1783,16 @@
 		"a move is already running": "перенос уже выполняется",
 		"a copy in Files, a cloud job, a snapshot or Paperless is still running – wait until it is done": "ещё выполняется копирование в Files, облачное задание, снимок или Paperless – дождитесь завершения",
 		"switching stopped before it was done – start it again, or restart the box": "переключение прервалось до завершения – запустите его снова или перезагрузите устройство",
-		"autobrr: filters with the action Watch dir still name the hand-over folder on the old drive – change it in autobrr to the folder on the new drive.": "autobrr: фильтры с действием Watch dir всё ещё указывают папку передачи на старом диске – измените её в autobrr на папку на новом диске."
+		"autobrr: filters with the action Watch dir still name the hand-over folder on the old drive – change it in autobrr to the folder on the new drive.": "autobrr: фильтры с действием Watch dir всё ещё указывают папку передачи на старом диске – измените её в autobrr на папку на новом диске.",
+		"Test image for a new model.": "Тестовый образ для новой модели.",
+		"root keeps the password shareos – use the box only in your own network. Please send the device info:": "root сохраняет пароль shareos – используйте устройство только в своей сети. Пришлите сведения об устройстве:",
+		"Device info": "Сведения об устройстве",
+		"Reading …": "Чтение …",
+		"DEVICE INFO": "СВЕДЕНИЯ ОБ УСТРОЙСТВЕ",
+		"hardware facts for adding a model": "данные оборудования для добавления модели",
+		"Copying is not allowed here – use Download.": "Копирование здесь запрещено – используйте «Скачать».",
+		"Model, flash partitions, CPU, memory, LEDs, sensors, buttons, GPIOs, serial ports, network, the U-Boot environment and the kernel log of this box – everything a new model needs. Only read, nothing is changed. Attach the file to the issue of the model.": "Модель, разделы флеш-памяти, процессор, память, светодиоды, датчики, кнопки, GPIO, последовательные порты, сеть, окружение U-Boot и журнал ядра этого устройства – всё, что нужно для новой модели. Только чтение, ничего не меняется. Приложите файл к issue модели.",
+		"Show MAC addresses and serial numbers (otherwise masked – keep them out of public issues)": "Показать MAC-адреса и серийные номера (иначе скрыты – не публикуйте их в открытых issue)"
 	},
 	"patterns": [
 		[

@@ -22,6 +22,7 @@ system-general.js
 system-network.js
 system-firmware.js
 system-messages.js
+deviceinfo.js
 firstrun.js
 pwa.js
 files.js

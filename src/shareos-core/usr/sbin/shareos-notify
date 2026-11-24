@@ -424,11 +424,21 @@ function check_update() {
 			'Unter System → Firmware installieren.', 'Install it under System → Firmware.');
 }
 
+// a box of a model that is being added (BOARD_DEVTEST, board.sh): a reminder
+// that root keeps "shareos" and where the device info is (also for the desktop
+// view, which has no overview banner)
+function check_devtest() {
+	if (match(readfile(ROOT + '/tmp/sys/board.env') ?? '', /(^|\n)BOARD_DEVTEST="?1"?/))
+		cmd_send('info', 'system', 'devtest', 'Testimage für ein neues Modell', 'Test image for a new model',
+			'root behält das Passwort shareos – die Box nur im eigenen Netz nutzen. Bitte die Geräteinfo schicken: http://<Box>/deviceinfo',
+			'root keeps the password shareos – use the box only in your own network. Please send the device info: http://<box>/deviceinfo');
+}
+
 function cmd_check() {
 	let n = conf().n;
 	// the output of the single sends is not wanted here
 	QUIET = true;
-	check_raid(); check_volumes(n); check_temp(n); check_smart(); check_update();
+	check_raid(); check_volumes(n); check_temp(n); check_smart(); check_update(); check_devtest();
 	QUIET = false;
 	out({ ok: true });
 }

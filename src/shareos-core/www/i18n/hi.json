@@ -1783,7 +1783,16 @@
 		"a move is already running": "एक स्थानांतरण पहले से चल रहा है",
 		"a copy in Files, a cloud job, a snapshot or Paperless is still running – wait until it is done": "Files में कॉपी, क्लाउड कार्य, स्नैपशॉट या Paperless अभी चल रहा है – पूरा होने तक रुकें",
 		"switching stopped before it was done – start it again, or restart the box": "बदलना पूरा होने से पहले रुक गया – इसे फिर से शुरू करें या बॉक्स को फिर से चालू करें",
-		"autobrr: filters with the action Watch dir still name the hand-over folder on the old drive – change it in autobrr to the folder on the new drive.": "autobrr: Watch dir क्रिया वाले फ़िल्टर अभी भी पुरानी ड्राइव पर सौंपने वाले फ़ोल्डर को बताते हैं – autobrr में इसे नई ड्राइव के फ़ोल्डर में बदलें।"
+		"autobrr: filters with the action Watch dir still name the hand-over folder on the old drive – change it in autobrr to the folder on the new drive.": "autobrr: Watch dir क्रिया वाले फ़िल्टर अभी भी पुरानी ड्राइव पर सौंपने वाले फ़ोल्डर को बताते हैं – autobrr में इसे नई ड्राइव के फ़ोल्डर में बदलें।",
+		"Test image for a new model.": "नए मॉडल के लिए टेस्ट इमेज।",
+		"root keeps the password shareos – use the box only in your own network. Please send the device info:": "root का पासवर्ड shareos ही रहता है – बॉक्स को केवल अपने नेटवर्क में उपयोग करें। कृपया डिवाइस जानकारी भेजें:",
+		"Device info": "डिवाइस जानकारी",
+		"Reading …": "पढ़ा जा रहा है …",
+		"DEVICE INFO": "डिवाइस जानकारी",
+		"hardware facts for adding a model": "मॉडल जोड़ने के लिए हार्डवेयर जानकारी",
+		"Copying is not allowed here – use Download.": "यहाँ कॉपी करने की अनुमति नहीं है – डाउनलोड का उपयोग करें।",
+		"Model, flash partitions, CPU, memory, LEDs, sensors, buttons, GPIOs, serial ports, network, the U-Boot environment and the kernel log of this box – everything a new model needs. Only read, nothing is changed. Attach the file to the issue of the model.": "इस बॉक्स का मॉडल, फ़्लैश पार्टीशन, CPU, मेमोरी, LED, सेंसर, बटन, GPIO, सीरियल पोर्ट, नेटवर्क, U-Boot एनवायरनमेंट और कर्नेल लॉग – नए मॉडल के लिए आवश्यक सब कुछ। केवल पढ़ा जाता है, कुछ नहीं बदलता। फ़ाइल को मॉडल के issue में संलग्न करें।",
+		"Show MAC addresses and serial numbers (otherwise masked – keep them out of public issues)": "MAC पते और सीरियल नंबर दिखाएँ (अन्यथा छिपे हुए – इन्हें सार्वजनिक issue में न डालें)"
 	},
 	"patterns": [
 		[

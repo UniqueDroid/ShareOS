@@ -1783,7 +1783,16 @@
 		"a move is already running": "ein Umzug läuft bereits",
 		"a copy in Files, a cloud job, a snapshot or Paperless is still running – wait until it is done": "eine Kopie in Files, ein Cloud-Auftrag, ein Snapshot oder Paperless läuft noch – warte, bis er fertig ist",
 		"switching stopped before it was done – start it again, or restart the box": "das Umschalten hat vor dem Ende aufgehört – starte es noch einmal oder starte die Box neu",
-		"autobrr: filters with the action Watch dir still name the hand-over folder on the old drive – change it in autobrr to the folder on the new drive.": "autobrr: Filter mit der Aktion Watch dir nennen noch den Übergabeordner auf dem alten Laufwerk – ändere ihn in autobrr auf den Ordner auf dem neuen Laufwerk."
+		"autobrr: filters with the action Watch dir still name the hand-over folder on the old drive – change it in autobrr to the folder on the new drive.": "autobrr: Filter mit der Aktion Watch dir nennen noch den Übergabeordner auf dem alten Laufwerk – ändere ihn in autobrr auf den Ordner auf dem neuen Laufwerk.",
+		"Test image for a new model.": "Testimage für ein neues Modell.",
+		"root keeps the password shareos – use the box only in your own network. Please send the device info:": "root behält das Passwort shareos – nutze die Box nur im eigenen Netz. Bitte schicke die Geräteinfo:",
+		"Device info": "Geräteinfo",
+		"Reading …": "Wird gelesen …",
+		"DEVICE INFO": "GERÄTEINFO",
+		"hardware facts for adding a model": "Hardware-Angaben zum Hinzufügen eines Modells",
+		"Copying is not allowed here – use Download.": "Kopieren ist hier nicht erlaubt – nimm Herunterladen.",
+		"Model, flash partitions, CPU, memory, LEDs, sensors, buttons, GPIOs, serial ports, network, the U-Boot environment and the kernel log of this box – everything a new model needs. Only read, nothing is changed. Attach the file to the issue of the model.": "Modell, Flash-Partitionen, CPU, Speicher, LEDs, Sensoren, Tasten, GPIOs, serielle Schnittstellen, Netzwerk, die U-Boot-Umgebung und das Kernel-Protokoll dieser Box – alles, was ein neues Modell braucht. Es wird nur gelesen, nichts geändert. Hänge die Datei an das Issue des Modells.",
+		"Show MAC addresses and serial numbers (otherwise masked – keep them out of public issues)": "MAC-Adressen und Seriennummern zeigen (sonst maskiert – nicht in öffentliche Issues)"
 	},
 	"patterns": [
 		[

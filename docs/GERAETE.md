@@ -103,3 +103,33 @@ kann. Die Daten auf den Platten werden nie angefasst.
    (Firmware-Name, Device-Tree, D-Link-Signatur aus `legacy/alt-f/mkfw.sh`).
 3. Ein Fall in `board_detect` von `board.sh` (Modelltext, LEDs, Steuerung,
    Tasten) und in `tests/test-boards.sh`.
+
+### Devtest-Image: das erste Image für ein neues Modell
+
+Ein Modell, das hinzukommt, wird bis zum Test als **Devtest-Image** gebaut:
+Status `devtest` in seiner `MODELS`-Zeile (Dateien
+`ShareOS-<version>-<name>-devtest.bin` / `.sysupgrade.tar`) und
+`BOARD_DEVTEST=1` in seinem Fall von `board.sh`. Seine Tester bekommen die
+Dateien aus dem Build des Pull Requests (Actions → Artefakt), nie aus einem
+Release – der Release-Job lehnt Devtest-Dateien ab.
+
+Auf so einer Box:
+
+- root behält das Passwort **shareos** – kein Beanspruchen per Taste (die
+  Tasten eines neuen Modells sind noch nicht bekannt). Weboberfläche und SSH:
+  `root` / `shareos`. Nur im eigenen Netz benutzen.
+- Übersicht und Nachrichten sagen, dass es ein Testimage ist, und verlinken die
+  **Geräteinfo**: `http://<box>/deviceinfo` (für Admins auch auf jedem anderen
+  Modell offen). Sie sammelt, was zum Hinzufügen des Modells gebraucht wird –
+  Flash-Partitionen, CPU, Speicher, Device-Tree, LEDs, Sensoren, Tasten
+  (Eingabegeräte), GPIOs, serielle Schnittstellen, I2C, USB, Netzwerk, die
+  U-Boot-Umgebung (aus dem Flash gelesen, nie geschrieben) und das
+  Kernel-Protokoll – und bietet sie als Textdatei an. MAC-Adressen und
+  Seriennummern sind maskiert, solange *Show MAC addresses and serial numbers*
+  nicht angehakt ist: die maskierte Datei ans Issue des Modells hängen.
+- Im Rettungssystem (SSH nach einem TFTP- oder Rescue-Start) derselbe Bericht:
+  `shareos-deviceinfo > /tmp/info.txt`, dann mit `scp` kopieren
+  (`--full`: ohne Maskierung).
+
+Wenn das Modell läuft: Status `release`, `BOARD_DEVTEST=0`, und es kommt mit
+dem normalen Beanspruchen ins nächste Release.
