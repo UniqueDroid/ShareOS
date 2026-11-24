@@ -271,6 +271,7 @@ Die Desktop-Ansicht ist ein **Modul**. Die klassische Ansicht bleibt daneben.
 - **Admins:** Freigaben → **Dateien** zeigt alle eingehängten Laufwerke: Ordner anlegen, hochladen (auch per Ziehen), herunterladen, umbenennen, verschieben, kopieren, löschen.
 - **Benutzer:** Im Benutzerkonto „Dateien“ einschalten. Dann gibt es in „Mein ShareOS“ den Reiter **Dateien** mit dem eigenen Ordner und den Freigaben, für die der Benutzer Rechte hat (ab 0.2.0-beta.6, siehe 14m).
 - **Darstellung:** Benutzer mit Web-Zugang stellen unter **Darstellung** Hell/Dunkel und Akzentfarbe für sich ein (seit 0.3.0-beta.6 acht Farben, darunter Grau: Logo, Browser-Symbol und eine offene App ziehen mit). „Wie für alle“ nimmt wieder die Vorgabe des Admins.
+- **Stil Glass:** System → Appearance → **Style: Glass** – jede Seite (klassische und Desktop-Ansicht, Anmeldeseite) zeigt durchscheinende, unscharf hinterlegte Flächen über einem weichen Hintergrund, in Dunkel und Hell, mit denselben Elementgrößen und Ecken wie Classic; die Scanline-Option ist ausgeblendet. Zurück auf Classic: der alte Look, unverändert. Ein Benutzer kann einen eigenen Stil wählen; „Wie für alle“ folgt wieder dem Admin.
 - Testidee: eine große Datei (z. B. 1 GB) hochladen und wieder herunterladen. Das darf nicht nach 60 s abbrechen.
 
 ## 12. Apps (Store)
@@ -325,7 +326,7 @@ Ab der ersten Version mit Release-Schlüssel auf der Box (*System → Firmware* 
 
 - **Webpad 1.1** installieren (Store). Im Dateibrowser steht bei einer `.txt`-Datei **Webpad ↗**; darauf (oder auf den Dateinamen) klicken: Webpad öffnet sich in einem eigenen Fenster mit der Datei.
 - Etwas ändern, **Ctrl+S**: Meldung „gespeichert“; der Dateibrowser zeigt neue Größe und Zeit. Besitzer und Rechte der Datei bleiben.
-- Aussehen: in ShareOS Hell/Dunkel oder die Akzentfarbe wechseln – eine offene App zieht mit.
+- Aussehen: in ShareOS Hell/Dunkel, die Akzentfarbe oder den Stil (Classic/Glass) wechseln – eine offene App zieht mit.
 - Benutzer mit persönlichem Ordner können das genauso mit ihren Dateien.
 
 - **Name und Symbole (beta.10):** ShareOS über die IP öffnen (`https://10.241.1.106`). Unter **Apps → Installiert** haben Webpad und WebTerm ihr Symbol. **Öffnen** startet die App unter dem Namen des Zertifikats (`https://shareos.skynet.lan:8444/…`), ohne Zertifikatswarnung. **System → Netzwerk → Name der Box für Links** zeigt den Namen aus dem Zertifikat als Vorschlag; ein eigener Name wird dort gespeichert, leer = automatisch.

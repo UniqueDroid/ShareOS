@@ -4,7 +4,8 @@
  *   <script src="/_shareos/app.js"></script>
  *
  * ShareOS.app                 id of this app (first part of the path)
- * ShareOS.theme               { theme: 'dark'|'light', accent } – applied to <html>
+ * ShareOS.theme               { theme: 'dark'|'light', accent, style: 'classic'|'glass' }
+ *                             – applied to <html> (data-theme, data-accent, data-style)
  * ShareOS.onTheme(fn)         called when the user changes the look
  * ShareOS.file                the file the app was opened with, or null:
  *   .name, .mode ('view'|'edit')   (after await ShareOS.file.info())
@@ -260,7 +261,7 @@
  * browser this separates, it does not protect: what must stay private goes
  * to the user's folders on the box (ShareOS.fs), checked by the box.
  *
- * URL parameters set by ShareOS: theme, accent, file (ticket), name, origin,
+ * URL parameters set by ShareOS: theme, accent, style, file (ticket), name, origin,
  * fs (grant for ShareOS.fs), user (account), lang.
  */
 (function () {
@@ -333,13 +334,15 @@
 	// the look is the same for everybody in this browser: plain keys
 	function store(k, v) { try { if (v === undefined) return nativeLS.getItem(k); nativeLS.setItem(k, v); } catch (e) { return null; } }
 
-	function applyTheme(theme, accent) {
+	function applyTheme(theme, accent, style) {
 		if (theme !== 'light' && theme !== 'dark')
 			theme = window.matchMedia && matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
 		if (['blue', 'green', 'red', 'white', 'grey', 'violet', 'orange', 'teal'].indexOf(accent) < 0) accent = 'blue';
+		if (style !== 'glass') style = 'classic';
 		root.setAttribute('data-theme', theme);
 		root.setAttribute('data-accent', accent);
-		api.theme = { theme: theme, accent: accent };
+		root.setAttribute('data-style', style);
+		api.theme = { theme: theme, accent: accent, style: style };
 		themeFns.forEach(function (fn) { try { fn(api.theme); } catch (e) { } });
 	}
 
@@ -356,8 +359,8 @@
 		if (!adminOrigin || ev.origin !== adminOrigin) return;
 		var m = ev.data || {};
 		if (m.sos === 'theme') {
-			store('sos-theme', m.theme); store('sos-accent', m.accent);
-			applyTheme(m.theme, m.accent);
+			store('sos-theme', m.theme); store('sos-accent', m.accent); store('sos-style', m.style || '');
+			applyTheme(m.theme, m.accent, m.style);
 		}
 	});
 	function toAdmin(msg) {
@@ -488,7 +491,7 @@
 		+ '.sos-pick .empty{padding:20px;text-align:center;color:var(--sos-muted,#6f90ad);cursor:default}'
 		+ '.sos-pick select,.sos-pick input{min-height:32px;padding:0 10px;border:1px solid var(--sos-line,#15253b);border-radius:8px;background:var(--sos-bg,#06090d);color:var(--sos-text,#c6dff5);font:inherit}.sos-pick input{flex:1}'
 		+ '.sos-pick button{min-height:32px;padding:0 12px;border:1px solid var(--sos-line,#15253b);border-radius:8px;background:var(--sos-panel,#0b111a);color:var(--sos-text,#c6dff5);font:600 12px inherit;cursor:pointer}'
-		+ '.sos-pick button.primary{background:var(--sos-accent,#3da5ff);border-color:var(--sos-accent,#3da5ff);color:var(--sos-bg,#06090d)}.sos-pick button:disabled{opacity:.5;cursor:default}'
+		+ '.sos-pick button.primary{background:var(--sos-accent,#3da5ff);border-color:var(--sos-accent,#3da5ff);color:var(--sos-ink,var(--sos-bg,#06090d))}.sos-pick button:disabled{opacity:.5;cursor:default}'
 		+ '.sos-pick .err{color:var(--sos-err,#ff5f5f)}';
 	function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
 	function fmtSize(b) { var u = ['B', 'KB', 'MB', 'GB', 'TB'], i = 0; while (b >= 1000 && i < 4) { b /= 1000; i++; } return (i ? b.toFixed(1) : b) + ' ' + u[i]; }
@@ -803,7 +806,7 @@
 	function openApp(id, size) {
 		if (!/^[a-z][a-z0-9-]{1,31}$/.test(id || '')) return null;
 		size = size || {};
-		var p = new URLSearchParams({ theme: (api.theme || {}).theme || '', accent: (api.theme || {}).accent || '', user: user, lang: de ? 'de' : (q.get('lang') || '') });
+		var p = new URLSearchParams({ theme: (api.theme || {}).theme || '', accent: (api.theme || {}).accent || '', style: (api.theme || {}).style || '', user: user, lang: de ? 'de' : (q.get('lang') || '') });
 		if (adminOrigin) p.set('origin', adminOrigin);
 		var w = Math.max(400, Math.min(+size.width || 1000, screen.availWidth || 4000));
 		var h = Math.max(300, Math.min(+size.height || 700, screen.availHeight || 4000));
@@ -869,8 +872,8 @@
 	};
 	window.ShareOS = api;
 
-	if (q.get('theme')) { store('sos-theme', q.get('theme')); store('sos-accent', q.get('accent') || ''); }
-	applyTheme(q.get('theme') || store('sos-theme'), q.get('accent') || store('sos-accent'));
+	if (q.get('theme')) { store('sos-theme', q.get('theme')); store('sos-accent', q.get('accent') || ''); store('sos-style', q.get('style') || ''); }
+	applyTheme(q.get('theme') || store('sos-theme'), q.get('accent') || store('sos-accent'), q.get('style') || store('sos-style'));
 	if (embedded) {
 		root.setAttribute('data-embedded', '');
 		if ('ResizeObserver' in window)

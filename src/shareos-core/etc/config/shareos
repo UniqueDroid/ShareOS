@@ -15,9 +15,11 @@ config ui 'ui'
 	# language of the web interface for everyone: en, de, ... (www/i18n/)
 	option lang 'en'
 	# look for everyone: theme dark | light | system (follows the computer),
-	# accent blue | green | red | white
+	# accent blue | green | red | white | grey | violet | orange | teal,
+	# style classic | glass (translucent panes)
 	option theme 'dark'
 	option accent 'blue'
+	option style 'classic'
 
 config web 'web'
 	# HTTPS on port 443 (a self-signed certificate is created on first boot)

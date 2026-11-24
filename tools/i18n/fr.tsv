@@ -2253,5 +2253,8 @@ E1806	données matérielles pour ajouter un modèle
 E1807	La copie n’est pas autorisée ici – utilisez Télécharger.
 E1808	Modèle, partitions flash, CPU, mémoire, LED, capteurs, boutons, GPIO, ports série, réseau, environnement U-Boot et journal du noyau de ce boîtier – tout ce dont un nouveau modèle a besoin. Lecture seule, rien n’est modifié. Joignez le fichier au ticket du modèle.
 E1809	Afficher les adresses MAC et numéros de série (sinon masqués – à garder hors des tickets publics)
-E1810	ASSISTANT DE CONFIGURATION
-E1811	Affiche à nouveau la première configuration au prochain chargement de la page – rien n’est supprimé. Utile après la restauration des paramètres sur un autre boîtier ou après un changement de disque.
+E1810	STYLE
+E1811	Verre
+E1812	Verre affiche les mêmes pages avec des panneaux translucides sur un fond doux.
+E1813	ASSISTANT DE CONFIGURATION
+E1814	Affiche à nouveau la première configuration au prochain chargement de la page – rien n’est supprimé. Utile après la restauration des paramètres sur un autre boîtier ou après un changement de disque.

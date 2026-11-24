@@ -1793,6 +1793,9 @@
 		"Copying is not allowed here – use Download.": "La copie n’est pas autorisée ici – utilisez Télécharger.",
 		"Model, flash partitions, CPU, memory, LEDs, sensors, buttons, GPIOs, serial ports, network, the U-Boot environment and the kernel log of this box – everything a new model needs. Only read, nothing is changed. Attach the file to the issue of the model.": "Modèle, partitions flash, CPU, mémoire, LED, capteurs, boutons, GPIO, ports série, réseau, environnement U-Boot et journal du noyau de ce boîtier – tout ce dont un nouveau modèle a besoin. Lecture seule, rien n’est modifié. Joignez le fichier au ticket du modèle.",
 		"Show MAC addresses and serial numbers (otherwise masked – keep them out of public issues)": "Afficher les adresses MAC et numéros de série (sinon masqués – à garder hors des tickets publics)",
+		"STYLE": "STYLE",
+		"Glass": "Verre",
+		"Glass shows the same pages with translucent panes over a soft background.": "Verre affiche les mêmes pages avec des panneaux translucides sur un fond doux.",
 		"SETUP WIZARD": "ASSISTANT DE CONFIGURATION",
 		"Shows the first-time setup again on the next page load – nothing is deleted. Useful after restoring settings on another box or after a disk change.": "Affiche à nouveau la première configuration au prochain chargement de la page – rien n’est supprimé. Utile après la restauration des paramètres sur un autre boîtier ou après un changement de disque."
 	},

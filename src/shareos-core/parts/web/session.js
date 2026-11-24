@@ -30,8 +30,8 @@ const isUser = () => !!(S.me && S.me.role !== 'admin');
 
 // plain users may have their own look; otherwise the look for everyone
 function applyOwnLook() {
-	const sys = S.sysLook || { theme: S.theme, accent: S.accent }, own = isUser() ? S.me.ui || {} : {};
-	S.theme = own.theme || sys.theme; S.accent = own.accent || sys.accent;
+	const sys = S.sysLook || { theme: S.theme, accent: S.accent, style: S.style }, own = isUser() ? S.me.ui || {} : {};
+	S.theme = own.theme || sys.theme; S.accent = own.accent || sys.accent; S.style = own.style || sys.style || 'classic';
 	applyTheme();
 }
 

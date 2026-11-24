@@ -171,6 +171,7 @@ const S = {
 	// theme and accent are system-wide (UCI shareos.ui), cached here for the first paint
 	theme: store.get('theme') || 'dark',      // dark | light | system
 	accent: store.get('accent') || 'blue',
+	style: store.get('style') === 'glass' ? 'glass' : 'classic',   // classic | glass (material of the panes)
 	scan: store.get('scan') !== '0',          // only this browser
 	views: (() => { try { return JSON.parse(store.get('views') || '{}'); } catch (e) { return {}; } })(),
 	logo: store.get('logo') !== '0'   // global setting (UCI shareos.ui.logo), cached for the login page
@@ -226,6 +227,8 @@ const LOGO_FILTER = {
 const logoFilter = () => LOGO_FILTER[effTheme() === 'light' && LOGO_FILTER[S.accent + '-light'] != null ? S.accent + '-light' : S.accent] || '';
 // the accent colours to choose from (order of the swatches)
 const ACCENT_NAMES = { blue: 'Blue', teal: 'Teal', green: 'Green', orange: 'Orange', red: 'Red', violet: 'Violet', grey: 'Grey', white: 'White' };
+// the styles: the same interface, other material of the panes
+const STYLE_NAMES = { classic: 'Classic', glass: 'Glass' };
 
 const MQ_DARK = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
 function effTheme() { return S.theme === 'system' ? (MQ_DARK && !MQ_DARK.matches ? 'light' : 'dark') : S.theme; }
@@ -233,9 +236,10 @@ MQ_DARK?.addEventListener?.('change', () => { if (S.theme === 'system') { applyT
 
 function applyTheme() {
 	const app = $('#app');
-	app.className = 'sos acc-' + S.accent + (effTheme() === 'light' ? ' light' : '') + (S.desk ? ' desk' : '');
+	app.className = 'sos acc-' + S.accent + (effTheme() === 'light' ? ' light' : '') + (S.style === 'glass' ? ' glass' : '') + (S.desk ? ' desk' : '');
 	$('.scan', app).hidden = !S.scan;
-	const bg = getComputedStyle(app).getPropertyValue('--bg').trim();
+	// the page ground: --ground in the glass style (there --bg is the well inside a pane)
+	const cs = getComputedStyle(app), bg = (cs.getPropertyValue('--ground') || cs.getPropertyValue('--bg')).trim();
 	document.body.style.background = bg;
 	$('meta[name=theme-color]')?.setAttribute('content', bg || '#1b2433');
 	tintFavicon();
@@ -264,10 +268,10 @@ function tintFavicon() {
 }
 
 async function saveLook(v) {
-	store.set('theme', S.theme); store.set('accent', S.accent);
+	store.set('theme', S.theme); store.set('accent', S.accent); store.set('style', S.style);
 	try {
 		if (isUser()) S.me.ui = await rpc('shareos.me', 'ui_set', v);
-		else { await rpc('shareos.ui', 'set', v); S.sysLook = { theme: S.theme, accent: S.accent }; }
+		else { await rpc('shareos.ui', 'set', v); S.sysLook = { theme: S.theme, accent: S.accent, style: S.style }; }
 	} catch (e) { toast('Appearance: ' + e.message, true); }
 }
 

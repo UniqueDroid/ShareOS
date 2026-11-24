@@ -49,7 +49,7 @@ async function favSave(args) {
 // apps get the look and the address of this interface (for messages) in the URL
 function appParams(extra = {}) {
 	// user: the app SDK keeps the browser storage of the accounts apart
-	return new URLSearchParams({ theme: effTheme(), accent: S.accent, origin: location.origin, user: S.me?.name || S.user || '', lang: LANG, ...extra }).toString();
+	return new URLSearchParams({ theme: effTheme(), accent: S.accent, style: S.style, origin: location.origin, user: S.me?.name || S.user || '', lang: LANG, ...extra }).toString();
 }
 const appLaunchUrl = (a, srv, extra) => `${appUrl(a, srv)}?${appParams(extra)}`;
 const appWins = new Set();
@@ -128,7 +128,7 @@ async function appFrameLoad() {
 
 // tell open app windows and embedded apps about a new look
 function themeToApps() {
-	const msg = { sos: 'theme', theme: effTheme(), accent: S.accent }, origin = appBase(appSrv());
+	const msg = { sos: 'theme', theme: effTheme(), accent: S.accent, style: S.style }, origin = appBase(appSrv());
 	for (const w of appWins) { if (w.closed) appWins.delete(w); else try { w.postMessage(msg, origin); } catch (e) { } }
 	// the app shown in the page and the app windows of the desktop view
 	for (const f of document.querySelectorAll('#appframe, iframe.dk-app')) try { f.contentWindow?.postMessage(msg, origin); } catch (e) { }

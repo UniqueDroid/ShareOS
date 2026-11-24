@@ -175,7 +175,7 @@ function me_info(u) {
 	info.apps = role == 'admin' || !area_on('apps') ? [] : map(apps_for(u), (a) => ({ id: a.id, name: a.name, entry: a.entry, icon: a.icon, icon_data: a.icon_data, description: a.description,
 		permissions: a.permissions ?? [], window: a.window, display: a.display }));
 	info.apps_server = apps_server();
-	info.ui = u == 'root' ? null : { theme: c.get('accounts', u, 'theme') ?? null, accent: c.get('accounts', u, 'accent') ?? null };
+	info.ui = u == 'root' ? null : { theme: c.get('accounts', u, 'theme') ?? null, accent: c.get('accounts', u, 'accent') ?? null, style: c.get('accounts', u, 'style') ?? null };
 	info.fav = fav_of(c, u);
 	info.paperless = area_on('paperless') && !!c.get('paperless', 'global', 'url') && c.get('paperless', 'global', 'enabled') != '0' && !!home;
 	return info;
