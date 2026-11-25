@@ -4,6 +4,9 @@ Changes per release (newest first). The section of a version is added to its
 GitHub release automatically when the release is built. Test versions are
 pre-releases for test devices only.
 
+## 0.3.0-beta.18
+
+- *System → Firmware*: the left column is as high as the right one, the release notes use the space below. In tables, buttons with and without an icon sit on one line (*Open ↗* was a few pixels lower than *User* and *Remove* in the list of apps).
 ## 0.3.0-beta.17
 
 - **Style "Glass".** A third look next to Classic dark and light: *System → Appearance → Style*. The same pages, elements, sizes and corners – only the material changes: translucent, blurred panes over a soft aurora background, in a slate dark and a misty light theme (neither black nor white), with all eight accent colours (raised where needed so small accent text stays readable). It covers the classic and the desktop view and the login page; users with web access can pick their own style. Web apps follow it through the app SDK (`data-style="glass"` on `<html>`, a glass variant of `/_shareos/theme.css`). UCI: `shareos.ui.style` (`classic` | `glass`).

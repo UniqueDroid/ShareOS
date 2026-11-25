@@ -90,7 +90,7 @@ Object.assign(SYS, {
 		${(u.pending_reboot || u.state === 'flashed') && !busy ? html`<div class="banner">${svg(I.reboot)}<span style="flex:1;min-width:240px"><b>Reboot needed</b> – the new system is installed on the next start (about 1 minute, do not switch off the box).</span><button class="btn primary" type="button" data-act="reboot">Reboot now</button></div>` : ''}
 		${u.last_upgrade ? html`<div class="banner" style="${u.last_upgrade.startsWith('ok') ? 'border-color:var(--dim)' : ''}">${svg(u.last_upgrade.startsWith('ok') ? I.ok : I.warn)}<span style="flex:1">Last update: <b>${u.last_upgrade.startsWith('ok') ? 'installed successfully (' + u.last_upgrade.slice(3) + ')' : u.last_upgrade}</b></span>${closeX('upd-ack')}</div>` : ''}
 		${!bootOk && i.boot ? html`<div class="banner">${svg(I.warn)}<span>The box is not running from the flash right now (<b>${i.boot}</b>). Updates on this page only work after a normal start from the flash.</span></div>` : ''}
-		<div class="split">
+		<div class="split fill">
 			<section class="main">
 				<div class="panel">
 					<div class="ph"><span class="pt">FIRMWARE UPDATE</span><span class="tag ml">Source: GitHub releases · ${c?.repo || 'UniqueDroid/ShareOS'}</span></div>
@@ -132,7 +132,7 @@ Object.assign(SYS, {
 								<a class="btn sm ghost" href="${r.url}" target="_blank" rel="noopener">Notes ↗</a></td></tr>`)}
 						</tbody></table></div>
 					${c.releases.length > 3 ? html`<div class="acts" style="margin-top:8px"><button class="btn sm ghost" type="button" data-act="rel-all">${S.relAll ? 'Show fewer' : `Show all (${c.releases.length})`}</button></div>` : ''}</div>` : ''}
-				${latest?.notes ? html`<div class="panel"><div class="ph"><span class="pt">CHANGES IN ${latest.version}</span></div><pre class="notes">${latest.notes}</pre></div>` : ''}
+				${latest?.notes ? html`<div class="panel grow"><div class="ph"><span class="pt">CHANGES IN ${latest.version}</span></div><pre class="notes">${latest.notes}</pre></div>` : ''}
 			</section>
 			<aside class="aside">
 				<div class="panel">
