@@ -27,7 +27,7 @@ years of work goes to the Alt-F project — see [LICENSE](LICENSE) and
 ## Status: public test versions (beta)
 
 **DNS-320L:** the main device, tested on hardware with every release; the white **DNS-320LW** (rev A2) is the same box and uses the DNS-320L files (tested with 0.2.0-beta.20).
-**More models** from 0.2.0-beta.3: DNS-320 rev B, DNS-325 rev A, DNS-320 rev A – built; the DNS-325 rev A1 boots from flash (from 0.2.0-beta.9) and its buttons work (from 0.2.0-beta.10), the DNS-320 rev A1 runs and has a first test report ([#185](https://github.com/UniqueDroid/ShareOS/issues/185)), the DNS-320 rev B is not tested yet; testers wanted: [docs/DEVICES.md](docs/DEVICES.md).
+**More models** from 0.2.0-beta.3: DNS-320 rev B, DNS-325 rev A, DNS-320 rev A – built; the DNS-325 rev A1 boots from flash (from 0.2.0-beta.9) and its buttons work (from 0.2.0-beta.10), the DNS-320 rev A1 runs and has a first test report ([#185](https://github.com/UniqueDroid/ShareOS/issues/185)), the DNS-320 rev B is not tested yet; testers wanted: [docs/DEVICES.md](docs/DEVICES.md). A new model starts with a **devtest image** (root / `shareos`, no claiming) and the **device info** page `http://<box>/deviceinfo`, which collects what is needed to add it (0.3.0-beta.17).
 
 ShareOS runs from flash on the DNS-320L (kernel, initramfs and the system in
 UBI with a persistent overlay for settings and packages). Test releases
@@ -133,7 +133,7 @@ Version in brackets = first release with the feature.
 - Messages: RAID, volumes, temperature, SMART, updates, failed cloud jobs and app tasks – in the interface, by e-mail (SMTP) and push (ntfy, Gotify, webhook) (beta.9), Telegram bot (beta.12)
 - Terminal in the browser (System → Terminal, root shell, beta.12); Apps can be switched off (beta.12); Paperless, Cloud, the DNS filter and the desktop view are modules from the store (0.3.0-beta.3 … beta.5)
 - Services with autostart, fan curve and LEDs, logs, settings backup and restore (JSON, optionally AES-256; recovery mode picks users, shares, services, apps, certificate and own CA), messages that can be closed
-- Look: light/dark/system, eight accent colours (blue, teal, green, orange, red, violet, grey, white; 0.3.0-beta.6), tiles or tables, per user; Appearance page in two columns on wide screens (0.2.0-beta.10)
+- Look: light/dark/system, eight accent colours (blue, teal, green, orange, red, violet, grey, white; 0.3.0-beta.6), style Classic or Glass (translucent panes, also for apps; 0.3.0-beta.17), tiles or tables, per user; Appearance page in two columns on wide screens (0.2.0-beta.10)
 - Desktop view (module from the store, 0.3.0-beta.5): the interface as a desktop in the browser – icons, start menu with search, windows to move, resize and snap, bar with CPU/RAM/network and messages, control panel with categories, own wallpaper from the box; layout per account; the classic view stays
 - FAV APPS: favourite apps per account as an icon bar above the overview status, the installed apps and in *My ShareOS* (with names or icons only, 0.2.0-beta.10)
 - *My ShareOS*: tab *Settings* with look and password, storage as a table per drive with own use, limit and free space (0.2.0-beta.11)
