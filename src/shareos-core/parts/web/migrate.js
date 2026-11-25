@@ -47,6 +47,8 @@ function migProgress(st) {
 
 function migrateView() {
 	const m = S.mig || (S.mig = {}), st = m.st;
+	if (!st && m.err) return html`<div class="banner">${svg(I.warn)}<span>${m.err}</span></div>
+		<div class="acts" style="margin-top:10px"><button class="btn sm ghost" type="button" data-act="mig-reload">Read again</button></div>`;
 	if (!st) return html`<div class="panel"><div class="empty"><div class="spin" style="margin:0"></div><span>Loading …</span></div></div>`;
 	let body;
 	if (migBusy(st)) body = migProgress(st);
@@ -81,12 +83,15 @@ async function loadMigrate() {
 	const m = S.mig || (S.mig = {});
 	try {
 		m.st = await rpc('shareos.migrate', 'state');
+		m.err = null;
 		if (!m.vols) m.vols = (await rpc('shareos.storage', 'volumes')).volumes || [];
 		if (!document.activeElement?.matches('select')) renderMain();
 		if (S.route.tab === 'storage' && S.route.sub === 'move' && (migBusy(m.st) || m.switching)) S.migTimer = setTimeout(loadMigrate, 3000);
 		if (m.st.state !== 'copied') m.switching = false;
 	} catch (e) {
-		if (e.code !== 'auth') toast('Move: ' + e.message, true);
+		if (e.code === 'auth') return;
+		// without a state the page would wait forever: show why instead
+		if (!m.st) { m.err = e.message; renderMain(); } else toast('Move: ' + e.message, true);
 	}
 }
 
@@ -99,6 +104,7 @@ function migrateAfter() {
 }
 
 Object.assign(ACTIONS, {
+	'mig-reload'() { S.mig.err = null; S.mig.t = 0; renderMain(); },
 	async 'mig-plan'() {
 		try { S.mig.plan = await rpc('shareos.migrate', 'plan', { from: S.mig.from, to: S.mig.to }); renderMain(); }
 		catch (e) { toast(e.message, true); }

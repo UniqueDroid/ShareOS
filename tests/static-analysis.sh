@@ -52,6 +52,15 @@ WEB="src/shareos-core/www src/shareos-core/www-apps/_shareos/app.js"
 # shellcheck disable=SC2086
 node_modules/.bin/eslint --max-warnings 0 $WEB || fail=1
 
+echo "== Installed programs"
+# every program of shareos-core is listed in its package (the install lines are
+# explicit – a forgotten one passes the host tests and is missing on the box)
+for f in src/shareos-core/usr/sbin/* src/shareos-core/usr/bin/*; do
+	[ -f "$f" ] || continue
+	grep -q "(@D)/${f#src/shareos-core/} " package/shareos-core/shareos-core.mk ||
+		{ echo "$f is not installed by package/shareos-core/shareos-core.mk"; fail=1; }
+done
+
 echo "== Dead code"
 python3 tests/check-dead-code.py || fail=1
 
