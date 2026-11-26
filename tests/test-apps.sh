@@ -107,7 +107,9 @@ mv $T/sig.ok $P/index.json.sig
 # (0.3.0-beta.16 to beta.18 had no catalog.pub: everything was installed as not checked)
 run 'shareos-apps catalog' >/dev/null
 check "signed catalog: an app installed while the source was unsigned counts as checked afterwards" "run 'shareos-apps list' | js \"[a['verified'] for a in d['apps'] if a['id']=='helper']==[True]\""
-check "signed catalog: ... but not when the signed catalog lacks the installed version" "run \"uci set apps.app_helper.verified=0; uci set apps.app_helper.version=0.9.0; uci commit apps; shareos-apps catalog >/dev/null; shareos-apps list\" | js \"[a['verified'] for a in d['apps'] if a['id']=='helper']==[False]\""
+# ... but only for that source and for a version it lists (the version is read from the installed app.json)
+check "signed catalog: an app from another source stays not checked" "run \"uci set apps.app_helper.verified=0; uci set apps.app_helper.source=file:///tmp/pkg/other.json; uci commit apps; shareos-apps catalog >/dev/null; shareos-apps list\" | js \"[a['verified'] for a in d['apps'] if a['id']=='helper']==[False]\""
+check "signed catalog: a version the signed catalog does not list stays not checked" "run \"uci set apps.app_helper.source=file:///tmp/pkg/index.json; uci commit apps; sed -i 's/1\.0\.0/0.9.0/' /www-apps/helper/app.json; shareos-apps catalog >/dev/null; shareos-apps list\" | js \"[(a['version'],a['verified']) for a in d['apps'] if a['id']=='helper']==[('0.9.0',False)]\""
 check "signed catalog: (cleanup) helper removed" "run 'shareos-apps remove helper' | js \"d.get('ok')\""
 
 C=$(run "shareos-apps catalog")

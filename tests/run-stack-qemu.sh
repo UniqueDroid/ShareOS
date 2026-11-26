@@ -80,6 +80,13 @@ if [ "$CHECK" = "--check" ]; then
 	t "essential service cannot be stopped" "$(rpc $SID shareos.service action '{"name":"rpcd","action":"stop"}')" "'cannot be stopped' in d['result'][1]['error']"
 	t "unknown service rejected" "$(rpc $SID shareos.service action '{"name":"../../bin/sh","action":"start"}')" "d['result'][1]['error']=='unknown service'"
 	t "log readable" "$(rpc $SID shareos.system log '{"lines":5,"source":"kernel"}')" "type(d['result'][1]['lines'])==list"
+	# programs and keys that only the built image can show to be there (shareos-migrate was
+	# missing in 0.3.0-beta.16/17, catalog.pub in beta.16 to beta.18 – the host tests passed)
+	t "disk change: state readable (shareos-migrate is in the image)" "$(rpc $SID shareos.migrate state)" "d['result'][1]['state']=='none'"
+	t "disk change: plan answers for unknown drives" "$(rpc $SID shareos.migrate plan '{"from":"a","to":"b"}')" "d['result'][1]['ok']==False and 'unknown drive' in d['result'][1]['problem']"
+	t "device info: report readable, masked by default" "$(rpc $SID shareos.deviceinfo get)" "'### kernel' in d['result'][1]['text'] and d['result'][1]['full']==False"
+	t "device info: not without signing in" "$(rpc $ZERO shareos.deviceinfo get)" "d['error']['code']==-32002"
+	t "keys in the image: firmware, reserve and app catalog" "$(chroot "$R" /bin/sh -c 'n=0; for k in release release-reserve catalog; do grep -q "BEGIN PUBLIC KEY" /etc/shareos/$k.pub 2>/dev/null && n=$((n+1)); done; echo "{\"n\":$n}"')" "d['n']==3"
 	t "factory reset needs confirm" "$(rpc $SID shareos.system factory_reset)" "'confirm' in d['result'][1]['error']"
 	t "invalid hostname rejected" "$(rpc $SID shareos.system set_hostname '{"hostname":"bad name;x"}')" "d['result'][1]['error']=='invalid hostname'"
 	t "short password rejected" "$(rpc $SID shareos.system set_password '{"password":"abc"}')" "'too short' in d['result'][1]['error']"
