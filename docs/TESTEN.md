@@ -531,6 +531,11 @@ Braucht ein Tailscale-Konto (kostenlos), ein Handy oder einen Rechner mit Tailsc
 5. Konto ohne persönlichen Ordner: Teilen meldet „no personal folder“; das Geteilte wird verworfen und kommt bei der nächsten Anmeldung nicht wieder.
 6. Dateidialog einer App für ein Konto **ohne** *Dateien* (z. B. Webpad → *Öffnen*): Die Ordnerauswahl zeigt zuerst *App-Daten*, dann *Mein Ordner* und die Freigaben des Benutzers; Freigaben nur zum Lesen sind markiert und fehlen beim Speichern. Die App legt ihre eigenen Dateien weiter in *App-Daten* ab.
 
+## 14zz1. Layout (0.3.0-beta.18)
+
+1. *System → Firmware* auf einem breiten Bildschirm: Die linke Spalte (Versionen, *Changes in …*) endet auf derselben Höhe wie die rechte; die Release-Notizen füllen den Platz und scrollen, wenn sie länger sind. Auf einem schmalen Bildschirm (Spalten untereinander) sind die Notizen wie bisher 220 px hoch.
+2. *Apps → Installed* in der Tabellenansicht: *Open ↗*, *User* und *Remove* stehen auf einer Linie; ebenso *Download* und *Notes ↗* unter *System → Firmware*.
+
 ## 14zz. Geräteinfo, Devtest-Images (0.3.0-beta.17)
 
 1. Auf einer beliebigen Box als Admin angemeldet: `http://<box>/deviceinfo` öffnen. Die Seite *DEVICE INFO* öffnet sich (klassische Ansicht: unter *System*, ohne Reiter; Desktop-Ansicht: im Fenster *Settings*). Sie zeigt Modell, `/proc/mtd`, CPU, LEDs, hwmon-Sensoren, Eingabegeräte, die U-Boot-Umgebung und das Kernel-Protokoll. MAC-Adressen lauten `xx:xx:xx:xx:..:..`, Seriennummern `(masked)`.
@@ -539,7 +544,9 @@ Braucht ein Tailscale-Konto (kostenlos), ein Handy oder einen Rechner mit Tailsc
 4. Rettungssystem (TFTP-Start mit `shareos.rescue`): Die Startmeldung nennt `shareos-deviceinfo`; `shareos-deviceinfo > /tmp/info.txt` geht dort auch, `scp root@<box>:/tmp/info.txt .` holt ihn ab.
 5. Devtest-Image (nur mit einem Modell im Status `devtest`, z. B. einem Pull Request für ein neues Modell): nach dem Flashen geht `root` / `shareos` im Browser und über SSH ohne Tastendruck; die Übersicht zeigt den gelben Hinweis *Test image for a new model* mit dem Link, *Messages* dasselbe innerhalb von 10 Minuten.
 
-## 14zy. Plattenwechsel (0.3.0-beta.16)
+## 14zy. Plattenwechsel (0.3.0-beta.16, auf der Box ab 0.3.0-beta.18)
+
+In 0.3.0-beta.16 und beta.17 fehlte das Programm `shareos-migrate` in der Firmware: Die Seite zeigte „shareos-migrate: not found“ und lud endlos. Ab beta.18 zuerst über SSH prüfen: `shareos-migrate state` gibt `{"state":"none"}` aus (oder den Stand eines laufenden Wechsels).
 
 Braucht eine zweite Platte (Schacht oder USB-Gehäuse), die gelöscht werden darf. **Nicht auf einer Box mit Daten, die du ohne Sicherung nicht verlieren darfst.**
 
