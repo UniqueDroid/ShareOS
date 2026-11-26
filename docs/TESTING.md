@@ -526,6 +526,11 @@ Needs a Tailscale account (free), a phone or computer with Tailscale, the file `
 5. An account without a personal folder: sharing shows "no personal folder"; the shared item is dropped and does not come back at the next login.
 6. File dialog of an app for an account **without** *Files* (e.g. Webpad → *Open*): the list of folders shows *App data* first, then *My folder* and the user's shares; read-only shares are marked and are missing when saving. The app still keeps its own files in *App data*.
 
+## 14zz1. Layout (0.3.0-beta.18)
+
+1. *System → Firmware* on a wide screen: the left column (versions, *Changes in …*) ends at the same height as the right one; the release notes fill the space and scroll when they are longer. On a narrow screen (columns below each other) the notes are 220 px high as before.
+2. *Apps → Installed* in the table view: *Open ↗*, *User* and *Remove* sit on one line; the same for *Download* and *Notes ↗* under *System → Firmware*.
+
 ## 14zz. Device info, devtest images (0.3.0-beta.17)
 
 1. On any box, signed in as admin: open `http://<box>/deviceinfo`. The page *DEVICE INFO* opens (classic view: under *System*, no tab; desktop view: in the *Settings* window). It shows the model, `/proc/mtd`, the CPU, LEDs, hwmon sensors, input devices, the U-Boot environment and the kernel log. MAC addresses read `xx:xx:xx:xx:..:..`, serial numbers `(masked)`.
@@ -534,7 +539,9 @@ Needs a Tailscale account (free), a phone or computer with Tailscale, the file `
 4. Rescue system (TFTP boot with `shareos.rescue`): the start message names `shareos-deviceinfo`; `shareos-deviceinfo > /tmp/info.txt` works there too, `scp root@<box>:/tmp/info.txt .` fetches it.
 5. Devtest image (only with a model that has the status `devtest`, e.g. a pull request for a new model): after flashing, `root` / `shareos` works in the browser and over SSH without pressing a button; the overview shows the yellow note *Test image for a new model* with the link, *Messages* the same within 10 minutes.
 
-## 14zy. Disk change (0.3.0-beta.16)
+## 14zy. Disk change (0.3.0-beta.16, on the box from 0.3.0-beta.18)
+
+In 0.3.0-beta.16 and beta.17 the program `shareos-migrate` was missing from the firmware: the page showed "shareos-migrate: not found" and kept loading. From beta.18 first check over SSH: `shareos-migrate state` prints `{"state":"none"}` (or the state of a running change).
 
 Needs a second disk (bay or USB case) that may be erased. **Not on a box with data you cannot lose without a backup.**
 
