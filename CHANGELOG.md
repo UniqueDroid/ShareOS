@@ -7,6 +7,7 @@ pre-releases for test devices only.
 ## 0.3.0-beta.18
 
 - **Disk change: the wizard did not start.** `shareos-migrate` was not installed into the firmware (0.3.0-beta.16 and beta.17), so *Storage → DISK CHANGE* only showed "shareos-migrate: not found" and kept loading. It is installed now; the page shows an error instead of loading forever, and the static analysis checks that every program of `shareos-core` is installed.
+- *System → Firmware*: the left column is as high as the right one, the release notes use the space below. In tables, buttons with and without an icon sit on one line (*Open ↗* was a few pixels lower than *User* and *Remove* in the list of apps).
 
 ## 0.3.0-beta.17
 

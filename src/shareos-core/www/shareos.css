@@ -135,7 +135,7 @@ kbd{font:inherit;font-size:11px;color:var(--muted);border:1px solid var(--line);
 .rx{color:var(--accent)}.tx{color:var(--amber)}
 
 /* Buttons, Tags, Formulare */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:0 16px;font:inherit;font-size:13px;font-weight:600;cursor:pointer;color:var(--accent);background:var(--panel);border:1px solid var(--dim);border-radius:8px;text-decoration:none;white-space:nowrap}
+.btn{display:inline-flex;vertical-align:middle;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:0 16px;font:inherit;font-size:13px;font-weight:600;cursor:pointer;color:var(--accent);background:var(--panel);border:1px solid var(--dim);border-radius:8px;text-decoration:none;white-space:nowrap}
 .btn:hover{background:var(--ph);box-shadow:var(--glow)}
 .btn.primary{color:var(--bg);background:var(--accent);border-color:var(--accent)}
 .btn.ghost{color:var(--muted);border-color:var(--line)}
@@ -199,6 +199,10 @@ table.t{width:100%;border-collapse:collapse;font-size:13px;min-width:760px}
 .split{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start}
 .split>.main{flex:999 1 560px;min-width:0;display:grid;gap:16px}
 .split>.aside{flex:1 1 300px;min-width:0;display:grid;gap:16px}
+/* .fill: both columns as high as the higher one; a .grow panel of the main column takes the rest (Firmware: the notes) */
+.split.fill{align-items:stretch}.split.fill>.main{display:flex;flex-direction:column}
+.split.fill>.main>.grow{flex:1 1 auto;display:flex;flex-direction:column;min-height:0}
+.split.fill>.main>.grow>.notes{flex:1 1 0;max-height:none;min-height:220px}
 .stack{display:grid;gap:16px}
 .kv{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;font-size:13px}
 .kv dt{color:var(--muted)}.kv dd{margin:0;text-align:right;font-variant-numeric:tabular-nums}
