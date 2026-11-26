@@ -535,6 +535,26 @@ function merge(catalogs, channel) {
 	return sort(apps, (x, y) => lc(x.name) < lc(y.name) ? -1 : 1);
 }
 
+// Apps installed from a source while its catalog was not signed (or could not
+// be checked – 0.3.0-beta.16 to beta.18 had no catalog.pub in the firmware)
+// carry verified=0. Once the signed catalog of that same source lists the
+// installed version, it counts as checked: the package came from that source
+// with its SHA-256, and the source now signs that version.
+function trust_installed(cats) {
+	let inst = installed(), c = null;
+	for (let cat in cats) {
+		if (cat.signed !== true) continue;
+		for (let i in inst) {
+			if (i.verified || i.source != cat.url) continue;
+			let a = filter(cat.apps ?? [], (x) => type(x) == 'object' && x.id == i.id)[0];
+			if (!length(filter(a?.versions ?? [], (v) => type(v) == 'object' && v.version == i.version))) continue;
+			c ??= conf().c;
+			c.set('apps', sect(i.id), 'verified', '1');
+		}
+	}
+	if (c) c.commit('apps');
+}
+
 function cmd_catalog() {
 	let K = conf(), channel = K.channel, sources = K.sources;
 	let cats = [], errors = [];
@@ -546,6 +566,7 @@ function cmd_catalog() {
 	}
 	mkdir(ST);
 	writefile(ST + '/catalogs.json', sprintf('%J', cats));
+	trust_installed(cats);
 	let res = { time: time(), channel, sources, errors, apps: merge(cats, channel) };
 	writefile(ST + '/catalog-errors.json', sprintf('%J', errors));
 	writefile(ST + '/catalog-time', '' + res.time);

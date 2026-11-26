@@ -52,14 +52,18 @@ WEB="src/shareos-core/www src/shareos-core/www-apps/_shareos/app.js"
 # shellcheck disable=SC2086
 node_modules/.bin/eslint --max-warnings 0 $WEB || fail=1
 
-echo "== Installed programs"
-# every program of shareos-core is listed in its package (the install lines are
-# explicit – a forgotten one passes the host tests and is missing on the box)
-for f in src/shareos-core/usr/sbin/* src/shareos-core/usr/bin/*; do
-	[ -f "$f" ] || continue
-	grep -q "(@D)/${f#src/shareos-core/} " package/shareos-core/shareos-core.mk ||
+echo "== Installed files"
+# every file of shareos-core is listed in its package (the install lines are
+# explicit – a forgotten one passes the host tests and is missing on the box:
+# shareos-migrate in 0.3.0-beta.16/17, catalog.pub in beta.16 to beta.18).
+# www/ is copied as a whole, parts/ are joined by build-parts.sh.
+while IFS= read -r f; do
+	r=${f#src/shareos-core/}
+	grep -qE "\(@D\)/$r( |\)|$)" package/shareos-core/shareos-core.mk ||
 		{ echo "$f is not installed by package/shareos-core/shareos-core.mk"; fail=1; }
-done
+done <<EOF_FILES
+$(find src/shareos-core -type f -not -path '*/www/*' -not -path '*/parts/*' | sort)
+EOF_FILES
 
 echo "== Dead code"
 python3 tests/check-dead-code.py || fail=1
