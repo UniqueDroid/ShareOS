@@ -1797,7 +1797,11 @@
 		"Glass": "Glas",
 		"Glass shows the same pages with translucent panes over a soft background.": "„Glas“ zeigt dieselben Seiten mit durchscheinenden Flächen über einem weichen Hintergrund.",
 		"SETUP WIZARD": "EINRICHTUNGSASSISTENT",
-		"Shows the first-time setup again on the next page load – nothing is deleted. Useful after restoring settings on another box or after a disk change.": "Zeigt die Ersteinrichtung beim nächsten Seitenaufruf noch einmal – es wird nichts gelöscht. Praktisch nach dem Wiederherstellen der Einstellungen auf einer anderen Box oder nach einem Plattenwechsel."
+		"Shows the first-time setup again on the next page load – nothing is deleted. Useful after restoring settings on another box or after a disk change.": "Zeigt die Ersteinrichtung beim nächsten Seitenaufruf noch einmal – es wird nichts gelöscht. Praktisch nach dem Wiederherstellen der Einstellungen auf einer anderen Box oder nach einem Plattenwechsel.",
+		"invalid drive": "ungültiges Laufwerk",
+		"no move is running": "es läuft kein Umzug",
+		"the copy is still running": "das Kopieren läuft noch",
+		"a move is running": "ein Umzug läuft"
 	},
 	"patterns": [
 		[

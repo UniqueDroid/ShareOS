@@ -1797,7 +1797,11 @@
 		"Glass": "Стекло",
 		"Glass shows the same pages with translucent panes over a soft background.": "«Стекло» показывает те же страницы с полупрозрачными панелями на мягком фоне.",
 		"SETUP WIZARD": "МАСТЕР НАСТРОЙКИ",
-		"Shows the first-time setup again on the next page load – nothing is deleted. Useful after restoring settings on another box or after a disk change.": "Снова показывает первоначальную настройку при следующей загрузке страницы – ничего не удаляется. Полезно после восстановления настроек на другом устройстве или после замены диска."
+		"Shows the first-time setup again on the next page load – nothing is deleted. Useful after restoring settings on another box or after a disk change.": "Снова показывает первоначальную настройку при следующей загрузке страницы – ничего не удаляется. Полезно после восстановления настроек на другом устройстве или после замены диска.",
+		"invalid drive": "недопустимый диск",
+		"no move is running": "перенос не выполняется",
+		"the copy is still running": "копирование ещё выполняется",
+		"a move is running": "выполняется перенос"
 	},
 	"patterns": [
 		[

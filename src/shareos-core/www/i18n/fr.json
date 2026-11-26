@@ -1797,7 +1797,11 @@
 		"Glass": "Verre",
 		"Glass shows the same pages with translucent panes over a soft background.": "Verre affiche les mêmes pages avec des panneaux translucides sur un fond doux.",
 		"SETUP WIZARD": "ASSISTANT DE CONFIGURATION",
-		"Shows the first-time setup again on the next page load – nothing is deleted. Useful after restoring settings on another box or after a disk change.": "Affiche à nouveau la première configuration au prochain chargement de la page – rien n’est supprimé. Utile après la restauration des paramètres sur un autre boîtier ou après un changement de disque."
+		"Shows the first-time setup again on the next page load – nothing is deleted. Useful after restoring settings on another box or after a disk change.": "Affiche à nouveau la première configuration au prochain chargement de la page – rien n’est supprimé. Utile après la restauration des paramètres sur un autre boîtier ou après un changement de disque.",
+		"invalid drive": "disque non valide",
+		"no move is running": "aucun déplacement en cours",
+		"the copy is still running": "la copie est encore en cours",
+		"a move is running": "un déplacement est en cours"
 	},
 	"patterns": [
 		[
