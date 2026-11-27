@@ -36,6 +36,7 @@ DNS-320L-rev-Ax   kirkwood-dns320l   0 8 11 1 1 6   0x00800000   release
 DNS-320-rev-Bx    kirkwood-dns320b   0 8 12 1 1 5   0x00800000   release
 DNS-320-rev-Ax    kirkwood-dns320    0 8  7 2 0 4   0x01000000   release
 DNS-325-rev-Ax    kirkwood-dns325    0 8  5 2 0 3   0x01000000   release
+DNR-322L-rev-Ax   kirkwood-dnr322l   1 8  2 1 1 8   0x01000000   devtest
 "
 
 KVER=$(sed -n 's/^BR2_LINUX_KERNEL_CUSTOM_VERSION_VALUE="\(.*\)"/\1/p' "$BR2_CONFIG")
@@ -45,16 +46,22 @@ KVER=$(sed -n 's/^BR2_LINUX_KERNEL_CUSTOM_VERSION_VALUE="\(.*\)"/\1/p' "$BR2_CON
 [ -s "$B/rootfs.squashfs" ] || { echo "post-image: rootfs.squashfs missing"; exit 1; }
 
 # Load address of the initramfs (last column of MODELS): the stock U-Boot reads
-# the ramdisk partition to 0xf00000 and copies it here before it starts the
-# kernel. 0x800000 is what Alt-F uses and what the DNS-320L has booted with.
-# On the DNS-325 it is inside memory that is in use: the kernel prints
-# "INITRD: ... overlaps in-use memory region - disabling initrd", finds no
-# /init and panics in a reboot loop. 0x1000000 booted from flash on a DNS-325
-# rev A1. The DNS-320 rev A (88F6281 and U-Boot of the DNS-325 family) showed
-# the same reboot loop with 0x800000 (#96), so it gets 0x1000000 too; the
-# DNS-320 rev B (board of the DNS-320L) keeps 0x800000 until tried (a wrong
-# address means a reboot loop that needs a serial console). The kernel is the same everywhere, so what is in
-# use at 0x800000 depends on the board or its U-Boot (not found yet).
+# the ramdisk partition to 0xf00000 ("nand read.e 0xf00000 0x600000 0x300000;
+# bootm 0xa00000 0xf00000") and bootm copies it to the load address of its
+# header before it starts the kernel. 0x800000 is what Alt-F uses on every
+# model – its kernel (4.4) is 4.9 MB unpacked and ends at 0x4d9200. Ours is
+# 9.3 MB unpacked (6.18.58: 0x8000..0x957980, with BSS about 0x9a0000): it
+# covers 0x800000 itself. A ramdisk there is inside the kernel: "INITRD:
+# 0x00800000+... overlaps in-use memory region - disabling initrd", no /init,
+# panic, reboot loop (DNS-325; DNS-320 rev A in #96). 0x1000000 is above the
+# kernel and above the room its decompressor takes behind it (to about
+# 0xc00000) and booted from flash on a DNS-325 rev A1 and a DNS-320 rev A. The
+# DNR-322L (U-Boot 3.4.14, the family of those two) gets it too. Should the
+# unpacked kernel ever grow by about 4 MB more, 0x1000000 is too low as well.
+# The DNS-320L has booted with 0x800000 and this very kernel, so its U-Boot
+# (3.6.0) cannot be putting the ramdisk there – concluded, not measured; it
+# and the DNS-320 rev B (same board) keep 0x800000 until someone has looked
+# (a wrong address means a reboot loop that needs a serial console).
 # Only the header differs: the data of the initramfs is the same for all.
 
 check_size() {

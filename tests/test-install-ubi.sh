@@ -22,6 +22,24 @@ mtd 06400000; run
 check "DNS-320L / 320 rev B (0x06400000): size accepted" "! grep -q 'unexpected size' $T/out && grep -q 'missing' $T/out"
 mtd 06600000; run
 check "DNS-325 / 320 rev A (0x06600000): size accepted" "! grep -q 'unexpected size' $T/out && grep -q 'missing' $T/out"
+mtd 04600000; run
+check "DNR-322L (0x04600000): size accepted" "! grep -q 'unexpected size' $T/out && grep -q 'missing' $T/out"
+
+# the rootfs volume: 48 MiB, 32 MiB on the 70 MB partition of the DNR-322L.
+# Stub flash tools in PATH record what would be written; nothing is written.
+mkdir -p $T/bin
+for t in ubiformat ubiattach ubimkvol ubiupdatevol ubinfo ubidetach ubiblock; do
+	printf '#!/bin/sh\necho "%s $*" >> %s/calls\n' "$t" "$T" > $T/bin/$t; chmod +x $T/bin/$t
+done
+printf 'hsqs' > $T/rootfs.squashfs; head -c 4096 /dev/zero >> $T/rootfs.squashfs
+vol() {   # size of 'image' -> -s of the rootfs volume
+	rm -f $T/calls; mtd "$1"
+	PATH=$T/bin:$PATH SHAREOS_PROC_MTD=$T/mtd sh "$SCRIPT" "$T/rootfs.squashfs" --yes > $T/out 2>&1
+	sed -n 's/^ubimkvol .*-N rootfs -s \([0-9]*\).*/\1/p' $T/calls 2>/dev/null
+}
+check "DNS-320L: rootfs volume 48 MiB" "[ \"\$(vol 06400000)\" = 50331648 ]"
+check "DNR-322L: rootfs volume 32 MiB" "[ \"\$(vol 04600000)\" = 33554432 ]"
+check "DNR-322L: rootfs_data takes the rest, nothing else is touched" "grep -q '^ubimkvol /dev/ubi0 -N rootfs_data -m' $T/calls && grep -q '^ubiformat /dev/mtd3 ' $T/calls"
 mtd 06000000; run
 check "other size refused" "grep -q 'unexpected size 0x06000000' $T/out"
 mtd 00500000; run
