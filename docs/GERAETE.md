@@ -151,9 +151,10 @@ nichts davon.
 | Mikrocontroller | an ttyS1: OLED-Display, Uhr, Lüfter, Ausschalten, Zeitplan – noch nicht angesteuert |
 | Serielle Konsole | Stiftleiste JP3, 115200 8N1, 3,3 V |
 
-**So startet sie.** Das U-Boot 1.1.1 der Box (Cavium-SDK) lädt eine Datei aus
-einem JFFS2 im Flash und startet sie mit `bootoctlinux`; aus dem Netzwerk, von
-USB oder über die serielle Leitung kann es nicht laden. Strg+C direkt nach
+**So startet sie.** Das U-Boot 1.1.1 der Box (Cavium-SDK) liest den Kernel aus
+dem Flash (eine Datei in einem JFFS2 oder eine rohe Partition mit `nand read`)
+und startet ihn mit `bootoctlinux`; aus dem Netzwerk, von USB oder über die
+serielle Leitung kann es nicht laden. Strg+C direkt nach
 `NAND:  256 MiB` hält es am Prompt `Octeon ebh5200#` an. Es übergibt keinen
 Device-Tree: Der Bootloader meldet den Board-Typ EBH5200 (Caviums
 Referenzboard), der Kernel nimmt dafür seinen eingebauten Device-Tree, und
@@ -161,9 +162,11 @@ Referenzboard), der Kernel nimmt dafür seinen eingebauten Device-Tree, und
 
 **Das Image.** `ShareOS-<version>-DNS-1200-05-rev-Ax-devtest.elf` – der Kernel
 mit dem ganzen System als Initramfs: Es wird nichts installiert, und
-Einstellungen sind nach einem Neustart weg – und dieselbe Datei als `.uImage`
-(die Verpackung, die D-Links eigener Start benutzt). Sie kommen aus dem Artefakt
-`devtest-octeon` eines Builds und sind nie Teil eines Releases. Es ist ein
+Einstellungen sind nach einem Neustart weg –, dieselbe Datei als `.uImage`
+(die Verpackung, die D-Links eigener Start benutzt) und `.uRamdisk`, ein leeres
+Initramfs in der Ramdisk-Verpackung, falls `bootoctlinux` eines verlangt. Sie
+kommen aus dem Artefakt `devtest-octeon` eines Builds und sind nie Teil eines
+Releases. Es ist ein
 [Devtest-Image](#devtest-image-das-erste-image-für-ein-neues-modell):
 `root` / `shareos`.
 

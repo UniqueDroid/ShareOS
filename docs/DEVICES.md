@@ -146,9 +146,10 @@ that the first start on the box can be tried – nothing of it has run there yet
 | Microcontroller | on ttyS1: OLED display, clock, fan, power-off, schedule – not driven yet |
 | Serial console | header JP3, 115200 8N1, 3.3 V |
 
-**How it starts.** The box's U-Boot 1.1.1 (Cavium SDK) loads a file from a
-JFFS2 in the flash and starts it with `bootoctlinux`; it cannot load from the
-network, USB or the serial line. Ctrl+C right after `NAND:  256 MiB` stops it
+**How it starts.** The box's U-Boot 1.1.1 (Cavium SDK) reads the kernel from
+the flash (a file in a JFFS2, or a raw partition with `nand read`) and starts
+it with `bootoctlinux`; it cannot load from the network, USB or the serial
+line. Ctrl+C right after `NAND:  256 MiB` stops it
 at the prompt `Octeon ebh5200#`. It passes no device tree: the bootloader
 reports the board type EBH5200 (Cavium's reference board), the kernel takes its
 built-in device tree for that, and `board.sh` knows the box by this
@@ -156,9 +157,10 @@ built-in device tree for that, and `board.sh` knows the box by this
 
 **The image.** `ShareOS-<version>-DNS-1200-05-rev-Ax-devtest.elf` – the kernel
 with the whole system as its initramfs: nothing is installed, and settings are
-gone after a restart – and the same file as `.uImage` (the wrapper D-Link's own
-start uses). They come from the artifact `devtest-octeon` of a build and are
-never part of a release. It is a [devtest image](#devtest-image-the-first-image-for-a-new-model):
+gone after a restart – the same file as `.uImage` (the wrapper D-Link's own
+start uses) and `.uRamdisk`, an empty initramfs in the ramdisk wrapper in case
+`bootoctlinux` asks for one. They come from the artifact `devtest-octeon` of a
+build and are never part of a release. It is a [devtest image](#devtest-image-the-first-image-for-a-new-model):
 `root` / `shareos`.
 
 **Not there yet:** fan control, clock, display and power-off (the

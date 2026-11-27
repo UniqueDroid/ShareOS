@@ -38,7 +38,7 @@ Output in `output/dns320l/images/`:
 | `modules.tar.xz` | kernel modules (not part of the phase-1 image) |
 
 `make octeon` (`configs/shareos_octeon_defconfig`, MIPS64 big endian) writes
-`ShareOS-<ver>-DNS-1200-05-rev-Ax-devtest.elf` and `.uImage` to
+`ShareOS-<ver>-DNS-1200-05-rev-Ax-devtest.elf`, `.uImage` and `.uRamdisk` to
 `output/octeon/images/`: the kernel with the whole system as its initramfs, for
 the `bootoctlinux` of that box's U-Boot – see
 [DEVICES.md](DEVICES.md#cavium-octeon-d-link-dns-1200-05-being-added).
