@@ -539,7 +539,9 @@ function merge(catalogs, channel) {
 // be checked – 0.3.0-beta.16 to beta.18 had no catalog.pub in the firmware)
 // carry verified=0. Once the signed catalog of that same source lists the
 // installed version, it counts as checked: the package came from that source
-// with its SHA-256, and the source now signs that version.
+// with its SHA-256, and the source now signs that version. The SHA-256 kept at
+// the installation must be the one the signed catalog names; apps installed
+// before it was kept (0.3.0-beta.16 to beta.18) are matched by version alone.
 function trust_installed(cats) {
 	let inst = installed(), c = null;
 	for (let cat in cats) {
@@ -547,8 +549,10 @@ function trust_installed(cats) {
 		for (let i in inst) {
 			if (i.verified || i.source != cat.url) continue;
 			let a = filter(cat.apps ?? [], (x) => type(x) == 'object' && x.id == i.id)[0];
-			if (!length(filter(a?.versions ?? [], (v) => type(v) == 'object' && v.version == i.version))) continue;
+			let v = filter(a?.versions ?? [], (x) => type(x) == 'object' && x.version == i.version)[0];
 			c ??= conf().c;
+			let sum = c.get('apps', sect(i.id), 'sha256');
+			if (!v || (sum && sum != v.sha256)) continue;
 			c.set('apps', sect(i.id), 'verified', '1');
 		}
 	}
@@ -832,7 +836,9 @@ function check_app(dir) {
 	return a;
 }
 
-function install_file(file, verified, source) {
+// sha: the SHA-256 the package was checked against (catalog installs), kept
+// for the later re-check against a signed catalog (trust_installed)
+function install_file(file, verified, source, sha) {
 	let err = check_tar(file);
 	if (err) return { error: err };
 	mkdir(APPS);
@@ -894,6 +900,8 @@ function install_file(file, verified, source) {
 	c.set('apps', s, 'version', a.version);
 	c.set('apps', s, 'verified', verified ? '1' : '0');
 	c.set('apps', s, 'source', source ?? 'upload');
+	if (match(sha ?? '', /^[0-9a-f]{64}$/)) c.set('apps', s, 'sha256', sha);
+	else if (c.get('apps', s, 'sha256') != null) c.delete('apps', s, 'sha256');
 	c.set('apps', s, 'installed', '' + time());
 	if (first && !sys) c.set('apps', s, 'users', [ '*' ]);
 	setup_jobs(a, c);
@@ -930,7 +938,7 @@ function install_catalog(id, version, depth) {
 	if (sum != v.sha256) { unlink(f); return { error: 'checksum mismatch – package not installed' }; }
 	job({ state: 'installing', id, version: v.version });
 	// an app from a source without a valid signature is not checked either
-	let res = install_file(f, app.signed, app.source);
+	let res = install_file(f, app.signed, app.source, v.sha256);
 	unlink(f);
 	if (res.error) return res;
 	if (res.id != id) return { error: 'package contains another app (' + res.id + ')' };

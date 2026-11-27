@@ -59,7 +59,9 @@ echo "== Installed files"
 # www/ is copied as a whole, parts/ are joined by build-parts.sh.
 while IFS= read -r f; do
 	r=${f#src/shareos-core/}
-	grep -qE "\(@D\)/$r( |\)|$)" package/shareos-core/shareos-core.mk ||
+	# (the name as fixed text, not as a pattern: "catalog.pub" must not match "catalogXpub";
+	# it ends at a blank, a bracket or the end of the line)
+	sed 's/$/ /' package/shareos-core/shareos-core.mk | grep -qF -e "(@D)/$r " -e "(@D)/$r)" ||
 		{ echo "$f is not installed by package/shareos-core/shareos-core.mk"; fail=1; }
 done <<EOF_FILES
 $(find src/shareos-core -type f -not -path '*/www/*' -not -path '*/parts/*' | sort)
