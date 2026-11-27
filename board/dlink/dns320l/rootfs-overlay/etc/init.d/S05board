@@ -60,6 +60,11 @@ start() {
 		echo "unknown box ($BOARD_NAME), skipped"
 		return 0
 	fi
+	if [ "$BOARD_CONTROL" = none ]; then
+		# a model that is being added: no fan control, buttons or clock yet
+		echo "no device control yet, skipped"
+		return 0
+	fi
 	if [ "$BOARD_CONTROL" = mcu ]; then
 		start-stop-daemon -S -q -b -m -p "$PIDFILE" -x "$DAEMON" -- -f
 	fi

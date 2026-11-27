@@ -1,0 +1,122 @@
+# ShareOS – Cavium OCTEON Plus boxes: D-Link DNS-1200-05 (ShareCenter Pro 1200)
+# Build: make octeon   (see Makefile / docs/BUILD.md)
+#
+# A model that is being added: the image is a devtest image (root keeps the
+# password "shareos", see board.sh) and never part of a release. The whole
+# system is an initramfs inside the kernel – the box's U-Boot loads one ELF
+# file and nothing is written to its flash by ShareOS (docs/DEVICES.md).
+
+# --- Architecture: Cavium OCTEON Plus CN5230, MIPS64r2 big endian, no FPU ---
+BR2_mips64=y
+BR2_mips_64r2=y
+BR2_MIPS_NABI64=y
+BR2_MIPS_SOFT_FLOAT=y
+
+# --- Build options ---
+BR2_GLOBAL_PATCH_DIR="$(BR2_EXTERNAL_SHAREOS_PATH)/patches"
+BR2_DOWNLOAD_FORCE_CHECK_HASHES=y
+BR2_OPTIMIZE_S=y
+BR2_SHARED_LIBS=y
+
+# --- Toolchain: buildroot internal, musl ---
+BR2_TOOLCHAIN_BUILDROOT_MUSL=y
+BR2_TOOLCHAIN_BUILDROOT_CXX=y
+BR2_KERNEL_HEADERS_AS_KERNEL=y
+BR2_PACKAGE_HOST_LINUX_HEADERS_CUSTOM_6_18=y
+
+# --- System ---
+BR2_TARGET_GENERIC_HOSTNAME="shareos"
+BR2_TARGET_GENERIC_ISSUE="ShareOS"
+BR2_TARGET_GENERIC_ROOT_PASSWD="shareos"
+BR2_INIT_BUSYBOX=y
+BR2_PACKAGE_BUSYBOX_CONFIG_FRAGMENT_FILES="$(BR2_EXTERNAL_SHAREOS_PATH)/board/dlink/dns320l/busybox.fragment"
+BR2_ROOTFS_DEVICE_CREATION_DYNAMIC_MDEV=y
+BR2_TARGET_GENERIC_GETTY_PORT="ttyS0"
+BR2_TARGET_GENERIC_GETTY_BAUDRATE_115200=y
+BR2_SYSTEM_DHCP="eth0"
+BR2_TARGET_TZ_INFO=y
+BR2_TARGET_LOCALTIME="Europe/Berlin"
+BR2_ROOTFS_OVERLAY="$(BR2_EXTERNAL_SHAREOS_PATH)/board/dlink/dns320l/rootfs-overlay $(BR2_EXTERNAL_SHAREOS_PATH)/board/dlink/octeon/rootfs-overlay"
+BR2_ROOTFS_POST_BUILD_SCRIPT="$(BR2_EXTERNAL_SHAREOS_PATH)/board/dlink/octeon/post-build.sh"
+BR2_ROOTFS_POST_IMAGE_SCRIPT="$(BR2_EXTERNAL_SHAREOS_PATH)/board/dlink/octeon/post-image.sh"
+
+# --- Kernel: current LTS as an ELF file (bootoctlinux of the box's U-Boot) ---
+BR2_LINUX_KERNEL=y
+BR2_LINUX_KERNEL_CUSTOM_VERSION=y
+BR2_LINUX_KERNEL_CUSTOM_VERSION_VALUE="6.18.58"
+BR2_LINUX_KERNEL_USE_DEFCONFIG=y
+BR2_LINUX_KERNEL_DEFCONFIG="cavium_octeon"
+BR2_LINUX_KERNEL_CONFIG_FRAGMENT_FILES="$(BR2_EXTERNAL_SHAREOS_PATH)/board/dlink/octeon/linux.fragment"
+BR2_LINUX_KERNEL_VMLINUX=y
+BR2_LINUX_KERNEL_NEEDS_HOST_OPENSSL=y
+
+# --- Packages for the test system ---
+BR2_PACKAGE_DROPBEAR=y
+BR2_PACKAGE_ETHTOOL=y
+BR2_PACKAGE_MTD=y
+BR2_PACKAGE_LIBGPIOD2=y
+BR2_PACKAGE_LIBGPIOD2_TOOLS=y
+BR2_PACKAGE_ALT_F_UTILS=y
+
+# --- Core stack (phase 3): UCI config, ubus, rpcd + ucode backend, uhttpd ---
+BR2_PACKAGE_UCI=y
+BR2_PACKAGE_UBUS=y
+BR2_PACKAGE_UCODE=y
+BR2_PACKAGE_RPCD=y
+BR2_PACKAGE_UHTTPD=y
+BR2_PACKAGE_SHAREOS_CORE=y
+BR2_PACKAGE_SHAREOS_TUYA=y
+# HTTPS client with certificate checking for the GitHub updater
+BR2_PACKAGE_MBEDTLS=y
+BR2_PACKAGE_LIBCURL=y
+BR2_PACKAGE_LIBCURL_CURL=y
+BR2_PACKAGE_LIBCURL_MBEDTLS=y
+BR2_PACKAGE_CA_CERTIFICATES=y
+BR2_PACKAGE_UACME=y
+
+# --- Images ---
+# The full system as an initramfs built into the kernel (xz, see
+# linux.fragment); post-image.sh makes the files for the box from vmlinux.
+BR2_TARGET_ROOTFS_CPIO=y
+BR2_TARGET_ROOTFS_INITRAMFS=y
+# BR2_TARGET_ROOTFS_TAR is not set
+
+# --- Host tools: mkimage for the uImage wrapper of the ELF file ---
+BR2_PACKAGE_HOST_UBOOT_TOOLS=y
+BR2_PACKAGE_GESFTPSERVER=y
+# snapshots (rsync with hard links)
+BR2_PACKAGE_RSYNC=y
+# setfacl: the rights of a share also as POSIX ACLs on its folder
+BR2_PACKAGE_ACL=y
+# storage (phase 4): partitioning, ext4, RAID, SMART, spindown
+BR2_PACKAGE_E2FSPROGS=y
+BR2_PACKAGE_BTRFS_PROGS=y
+BR2_PACKAGE_DOSFSTOOLS=y
+BR2_PACKAGE_DOSFSTOOLS_FATLABEL=y
+BR2_PACKAGE_DOSFSTOOLS_FSCK_FAT=y
+BR2_PACKAGE_DOSFSTOOLS_MKFS_FAT=y
+BR2_PACKAGE_EXFATPROGS=y
+BR2_PACKAGE_NTFS_3G=y
+BR2_PACKAGE_NTFS_3G_NTFSPROGS=y
+BR2_PACKAGE_UTIL_LINUX=y
+BR2_PACKAGE_UTIL_LINUX_BINARIES=y
+BR2_PACKAGE_UTIL_LINUX_WIPEFS=y
+BR2_PACKAGE_MDADM=y
+BR2_PACKAGE_SMARTMONTOOLS=y
+# hdparm (spindown): buildroot 2026.08 hides it behind this option
+BR2_PACKAGE_BUSYBOX_SHOW_OTHERS=y
+BR2_PACKAGE_HDPARM=y
+# HTTPS for the web interface (uhttpd TLS via ustream-ssl/mbedtls,
+# mbedtls programs for the self-signed certificate)
+BR2_PACKAGE_USTREAM_SSL=y
+BR2_PACKAGE_MBEDTLS_PROGRAMS=y
+# web terminal (System -> Terminal)
+BR2_PACKAGE_TTYD=y
+
+# shares and users (ksmbd, NFS, quota)
+BR2_PACKAGE_KSMBD_TOOLS_SHAREOS=y
+BR2_PACKAGE_AVAHI=y
+# BR2_PACKAGE_AVAHI_AUTOIPD is not set
+BR2_PACKAGE_AVAHI_DAEMON=y
+BR2_PACKAGE_NFS_UTILS=y
+BR2_PACKAGE_QUOTA=y

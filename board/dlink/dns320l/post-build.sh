@@ -2,6 +2,8 @@
 #
 # ShareOS post-build (DNS-320L), runs before the rootfs images are made.
 # $1 = TARGET_DIR
+# Another platform calls it with SHAREOS_BOARD and SHAREOS_FWNAME set
+# (board/dlink/octeon/post-build.sh).
 #
 set -e
 
@@ -26,8 +28,8 @@ esac
 
 cat > "$TARGET_DIR/etc/shareos-release" <<EOF
 SHAREOS_VERSION="$VERSION"
-SHAREOS_BOARD="dns320l"
-SHAREOS_FWNAME="DNS-320L-rev-Ax"
+SHAREOS_BOARD="${SHAREOS_BOARD:-dns320l}"
+SHAREOS_FWNAME="${SHAREOS_FWNAME:-DNS-320L-rev-Ax}"
 SHAREOS_STAGE="$STAGE"
 EOF
 

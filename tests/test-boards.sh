@@ -39,6 +39,13 @@ for x in "D-Link DNS-320L-rev-Ax NAS:dns320l:DNS-320L-rev-Ax:DNS320L:mcu" \
 done
 box "Some other NAS"
 check "unknown box: id unknown, no firmware name" "[ \"\$(info id)\" = unknown ] && [ -z \"\$(info fwname)\" ]"
+# Cavium OCTEON: no device-tree model, the board type is the "system type" of /proc/cpuinfo
+box ""; rm $SHAREOS_ROOT/proc/device-tree/model
+printf 'system type\t\t: EBH5200 (CN5230p2.0-600-SCP)\nprocessor\t\t: 0\n' > $SHAREOS_ROOT/proc/cpuinfo
+check "dns1200: detected from the system type EBH5200" "[ \"\$(info id)\" = dns1200 ] && [ \"\$(info fwname)\" = DNS-1200-05-rev-Ax ] && [ \"\$(info control)\" = none ]"
+check "dns1200: a model that is being added (devtest)" "[ \"\$(info devtest)\" = 1 ] && [ \"\$(info tested)\" = 0 ]"
+printf 'system type\t\t: UBNT_E100 (CN5020p1.1-500-SCP)\n' > $SHAREOS_ROOT/proc/cpuinfo
+check "another OCTEON board stays unknown and is no devtest" "[ \"\$(info id)\" = unknown ] && [ \"\$(info devtest)\" = 0 ]"
 box "D-Link DNS-320L-rev-Ax NAS"
 check "boardinfo prints all keys" "[ \$(info | grep -c '^BOARD_') -ge 16 ] && info | grep -qx 'BOARD_TESTED=\"1\"'"
 box "D-Link DNS-325 NAS (Rev A1)"

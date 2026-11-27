@@ -129,3 +129,42 @@ On such a box:
 
 When the model works: status `release`, `BOARD_DEVTEST=0`, and it goes into
 the next release with the normal claiming.
+
+## Cavium OCTEON: D-Link DNS-1200-05 (being added)
+
+A second platform next to the Kirkwood boxes: `make octeon`
+(`configs/shareos_octeon_defconfig`, `board/dlink/octeon/`). It is built so
+that the first start on the box can be tried – nothing of it has run there yet.
+
+| | |
+|---|---|
+| CPU | Cavium OCTEON Plus CN5230, 4 cores, MIPS64 big endian, no FPU |
+| RAM | 1 GB (one DDR2 DIMM) |
+| Disks | 5 bays: 2× SiI3132 on PCIe (`sata_sil24`), one port through a SiI5723 |
+| Network | 2× Gigabit (Marvell 88E1112, SGMII) |
+| Flash | NAND 256 MiB with two banks of D-Link's firmware; mainline Linux has no driver for it |
+| Microcontroller | on ttyS1: OLED display, clock, fan, power-off, schedule – not driven yet |
+| Serial console | header JP3, 115200 8N1, 3.3 V |
+
+**How it starts.** The box's U-Boot 1.1.1 (Cavium SDK) loads a file from a
+JFFS2 in the flash and starts it with `bootoctlinux`; it cannot load from the
+network, USB or the serial line. Ctrl+C right after `NAND:  256 MiB` stops it
+at the prompt `Octeon ebh5200#`. It passes no device tree: the bootloader
+reports the board type EBH5200 (Cavium's reference board), the kernel takes its
+built-in device tree for that, and `board.sh` knows the box by this
+`system type` in `/proc/cpuinfo`.
+
+**The image.** `ShareOS-<version>-DNS-1200-05-rev-Ax-devtest.elf` – the kernel
+with the whole system as its initramfs: nothing is installed, and settings are
+gone after a restart – and the same file as `.uImage` (the wrapper D-Link's own
+start uses). They come from the artifact `devtest-octeon` of a build and are
+never part of a release. It is a [devtest image](#devtest-image-the-first-image-for-a-new-model):
+`root` / `shareos`.
+
+**Not there yet:** fan control, clock, display and power-off (the
+microcontroller), LEDs and disk power (D-Link's own GPIO driver), access to the
+flash (settings that survive a restart, updates), system apps for MIPS64.
+
+**Rules for this box:** never `saveenv` or `eraseenv` in U-Boot (its
+environment has never been saved), the firmware of the microcontroller is never
+rewritten, and D-Link's running firmware stays in its bank.

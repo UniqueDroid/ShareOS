@@ -109,7 +109,17 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        board: [dns320l]
+        # dns320l: the Kirkwood boxes, published with a release (artifact
+        #   "shareos-…", the only ones the job "release" takes).
+        # octeon: the Cavium OCTEON boxes (DNS-1200-05) that are being added –
+        #   devtest images, kept as the artifact "devtest-octeon", never released.
+        include:
+          - board: dns320l
+            qemu: qemu-arm-static
+            artifact: shareos-dns320l
+          - board: octeon
+            qemu: qemu-mips64-static
+            artifact: devtest-octeon
     steps:
       - uses: actions/checkout@v5
         with:
@@ -133,6 +143,7 @@ jobs:
         run: make ${{ matrix.board }}
 
       - name: Test writing .bin files (rollback to Alt-F)
+        if: matrix.board == 'dns320l'
         run: tests/test-flash-bin.sh output/${{ matrix.board }}/host/bin
 
       - name: Own certificate authority (shareos-ca with the firmware's mbedtls and uci in qemu)
@@ -140,13 +151,14 @@ jobs:
           T=$PWD/output/${{ matrix.board }}/target W=$(mktemp -d)
           for p in gen_key cert_write cert_app pk_verify uci; do
             f=$T/usr/bin/$p; [ -e "$f" ] || f=$T/sbin/$p
-            printf '#!/bin/sh\nexec qemu-arm-static -L %s %s "$@"\n' "$T" "$f" > $W/$p; chmod 755 $W/$p
+            printf '#!/bin/sh\nexec ${{ matrix.qemu }} -L %s %s "$@"\n' "$T" "$f" > $W/$p; chmod 755 $W/$p
           done
           tests/test-ca.sh $W $W
           # signed releases: the box's pk_verify takes what the release job signs
           tests/test-signature.sh $W/pk_verify
 
       - name: Initramfs load address of every model
+        if: matrix.board == 'dns320l'
         run: tests/check-initrd-address.sh output/${{ matrix.board }}/images
 
       - name: Build system apps (nano, htop … as .sapp, with this toolchain)
@@ -154,15 +166,30 @@ jobs:
         run: make sysapps-pack
 
       - name: Collect images
+        if: matrix.board == 'dns320l'
         run: |
           mkdir -p artifacts
           cp output/${{ matrix.board }}/images/ShareOS-*.bin* output/${{ matrix.board }}/images/ShareOS-*.sha1 output/${{ matrix.board }}/images/ShareOS-*.sysupgrade.tar* artifacts/
           if [ -d output/sysapps/sapp ]; then cp output/sysapps/sapp/*.sapp output/sysapps/sapp/*.sapp.sha256 artifacts/; fi
           ls -l artifacts
 
+      # a platform that is being added: an ELF file for the box's U-Boot and
+      # the same in a uImage wrapper, all named …-devtest (post-image.sh)
+      - name: Collect devtest images
+        if: matrix.board != 'dns320l'
+        run: |
+          mkdir -p artifacts
+          cp output/${{ matrix.board }}/images/ShareOS-*-devtest.* artifacts/
+          (cd artifacts && sha256sum -c ./*.sha256)
+          file artifacts/*.elf
+          if ls artifacts | grep -v -e '-devtest\.' ; then
+            echo "::error::files without -devtest in the name in a devtest artifact"; exit 1
+          fi
+          ls -l artifacts
+
       - uses: actions/upload-artifact@v4
         with:
-          name: shareos-${{ matrix.board }}
+          name: ${{ matrix.artifact }}
           path: artifacts/
 
       # The built system (ARM) in a chroot with qemu-user: rpcd with the ShareOS
@@ -170,6 +197,7 @@ jobs:
       # show. Last step: the images are uploaded (and the job "release"
       # publishes them) also when one of these tests fails.
       - name: ARM emulator tests (the built system with qemu-user)
+        if: matrix.board == 'dns320l'
         run: |
           sudo apt-get install -y --no-install-recommends qemu-user-static binfmt-support
           # the fake Tuya device of test-sysperms (without it those checks are
@@ -227,6 +255,8 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
+      # only "shareos-…": the devtest images of a platform that is being
+      # added ("devtest-…") are not part of a release
       - uses: actions/download-artifact@v4
         with:
           pattern: shareos-*

@@ -133,3 +133,45 @@ Auf so einer Box:
 
 Wenn das Modell läuft: Status `release`, `BOARD_DEVTEST=0`, und es kommt mit
 dem normalen Beanspruchen ins nächste Release.
+
+## Cavium OCTEON: D-Link DNS-1200-05 (kommt hinzu)
+
+Eine zweite Plattform neben den Kirkwood-Boxen: `make octeon`
+(`configs/shareos_octeon_defconfig`, `board/dlink/octeon/`). Sie wird gebaut,
+damit der erste Start auf der Box probiert werden kann – gelaufen ist dort noch
+nichts davon.
+
+| | |
+|---|---|
+| CPU | Cavium OCTEON Plus CN5230, 4 Kerne, MIPS64 Big Endian, keine FPU |
+| RAM | 1 GB (ein DDR2-DIMM) |
+| Platten | 5 Schächte: 2× SiI3132 an PCIe (`sata_sil24`), ein Port über einen SiI5723 |
+| Netzwerk | 2× Gigabit (Marvell 88E1112, SGMII) |
+| Flash | NAND 256 MiB mit zwei Bänken der D-Link-Firmware; Mainline-Linux hat keinen Treiber dafür |
+| Mikrocontroller | an ttyS1: OLED-Display, Uhr, Lüfter, Ausschalten, Zeitplan – noch nicht angesteuert |
+| Serielle Konsole | Stiftleiste JP3, 115200 8N1, 3,3 V |
+
+**So startet sie.** Das U-Boot 1.1.1 der Box (Cavium-SDK) lädt eine Datei aus
+einem JFFS2 im Flash und startet sie mit `bootoctlinux`; aus dem Netzwerk, von
+USB oder über die serielle Leitung kann es nicht laden. Strg+C direkt nach
+`NAND:  256 MiB` hält es am Prompt `Octeon ebh5200#` an. Es übergibt keinen
+Device-Tree: Der Bootloader meldet den Board-Typ EBH5200 (Caviums
+Referenzboard), der Kernel nimmt dafür seinen eingebauten Device-Tree, und
+`board.sh` erkennt die Box an diesem `system type` in `/proc/cpuinfo`.
+
+**Das Image.** `ShareOS-<version>-DNS-1200-05-rev-Ax-devtest.elf` – der Kernel
+mit dem ganzen System als Initramfs: Es wird nichts installiert, und
+Einstellungen sind nach einem Neustart weg – und dieselbe Datei als `.uImage`
+(die Verpackung, die D-Links eigener Start benutzt). Sie kommen aus dem Artefakt
+`devtest-octeon` eines Builds und sind nie Teil eines Releases. Es ist ein
+[Devtest-Image](#devtest-image-das-erste-image-für-ein-neues-modell):
+`root` / `shareos`.
+
+**Noch nicht da:** Lüfterregelung, Uhr, Display und Ausschalten (der
+Mikrocontroller), LEDs und Plattenstrom (D-Links eigener GPIO-Treiber), Zugriff
+auf den Flash (Einstellungen, die einen Neustart überleben, Updates),
+System-Apps für MIPS64.
+
+**Regeln für diese Box:** nie `saveenv` oder `eraseenv` im U-Boot (seine
+Umgebung wurde nie gespeichert), die Firmware des Mikrocontrollers wird nie neu
+geschrieben, und die laufende D-Link-Firmware bleibt in ihrer Bank.

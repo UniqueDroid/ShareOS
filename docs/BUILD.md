@@ -23,6 +23,7 @@ make dns320l-menuconfig         # buildroot options
 make dns320l-linux-menuconfig   # kernel options
 make dns320l-savedefconfig      # write changes back to configs/
 make sysapps-pack               # system apps (nano, htop …) as .sapp – after make dns320l
+make octeon                     # devtest image of the Cavium OCTEON boxes (DNS-1200-05)
 make clean                      # drop output/, keep downloads in dl/
 ```
 
@@ -35,6 +36,12 @@ Output in `output/dns320l/images/`:
 | `uImage`, `urootfs` | the two parts on their own |
 | `zImage.kirkwood-dns320l` | kernel with appended device tree |
 | `modules.tar.xz` | kernel modules (not part of the phase-1 image) |
+
+`make octeon` (`configs/shareos_octeon_defconfig`, MIPS64 big endian) writes
+`ShareOS-<ver>-DNS-1200-05-rev-Ax-devtest.elf` and `.uImage` to
+`output/octeon/images/`: the kernel with the whole system as its initramfs, for
+the `bootoctlinux` of that box's U-Boot – see
+[DEVICES.md](DEVICES.md#cavium-octeon-d-link-dns-1200-05-being-added).
 
 System apps: `make sysapps-pack` runs a second buildroot in `output/sysapps`
 (`configs/shareos_sysapps_defconfig`) that uses the toolchain of

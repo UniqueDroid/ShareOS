@@ -4,6 +4,10 @@ Changes per release (newest first). The section of a version is added to its
 GitHub release automatically when the release is built. Test versions are
 pre-releases for test devices only.
 
+## 0.3.0-beta.20
+
+- **A second platform: Cavium OCTEON (D-Link DNS-1200-05, being added).** `make octeon` builds a devtest image for the five-bay ShareCenter Pro 1200 (OCTEON Plus CN5230, MIPS64 big endian): the kernel with the whole system as its initramfs, as an ELF file for the `bootoctlinux` of the box's U-Boot. It has not run on the box yet; fan, clock, display and power-off (the box's microcontroller) and access to its flash are not there. The files are the artifact `devtest-octeon` of a build and never part of a release. See [docs/DEVICES.md](docs/DEVICES.md#cavium-octeon-d-link-dns-1200-05-being-added).
+
 ## 0.3.0-beta.19
 
 - **App store: every app showed "not signed by the ShareOS project".** The key that checks the signed app catalog (`/etc/shareos/catalog.pub`) was not installed into the firmware (0.3.0-beta.16 to beta.18), so the box could not check the signature and treated the official catalog as unsigned. It is installed now. Apps that were installed or updated meanwhile count as checked again as soon as the signed catalog lists their installed version – after the update, open *Apps → Store* once (or wait for the next catalog refresh). The static analysis now checks that every file of `shareos-core` is installed.
