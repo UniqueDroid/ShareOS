@@ -1797,7 +1797,11 @@
 		"Glass": "玻璃",
 		"Glass shows the same pages with translucent panes over a soft background.": "“玻璃”以半透明面板和柔和背景显示相同的页面。",
 		"SETUP WIZARD": "设置向导",
-		"Shows the first-time setup again on the next page load – nothing is deleted. Useful after restoring settings on another box or after a disk change.": "在下次加载页面时再次显示首次设置 – 不会删除任何内容。适用于在另一台设备上恢复设置后或更换硬盘后。"
+		"Shows the first-time setup again on the next page load – nothing is deleted. Useful after restoring settings on another box or after a disk change.": "在下次加载页面时再次显示首次设置 – 不会删除任何内容。适用于在另一台设备上恢复设置后或更换硬盘后。",
+		"invalid drive": "无效的驱动器",
+		"no move is running": "没有正在进行的迁移",
+		"the copy is still running": "复制仍在进行",
+		"a move is running": "迁移正在进行"
 	},
 	"patterns": [
 		[

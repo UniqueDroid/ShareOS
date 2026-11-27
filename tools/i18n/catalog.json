@@ -1815,7 +1815,11 @@
 		"Glass",
 		"Glass shows the same pages with translucent panes over a soft background.",
 		"SETUP WIZARD",
-		"Shows the first-time setup again on the next page load – nothing is deleted. Useful after restoring settings on another box or after a disk change."
+		"Shows the first-time setup again on the next page load – nothing is deleted. Useful after restoring settings on another box or after a disk change.",
+		"invalid drive",
+		"no move is running",
+		"the copy is still running",
+		"a move is running"
 	],
 	"patterns": [
 		[

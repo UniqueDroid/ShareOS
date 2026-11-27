@@ -9,7 +9,8 @@ set -u
 TOP=$(cd "$(dirname "$0")/.." && pwd)
 MIG=$TOP/src/shareos-core/usr/sbin/shareos-migrate
 UCI=${1:?usage: test-migrate.sh <uci binary>}
-T=$(mktemp -d /tmp/shareos-migrate-test.XXXX)
+# (six X and the check: BusyBox mktemp refuses fewer, and an empty $T would put the test tree into /)
+T=$(mktemp -d /tmp/shareos-migrate-test.XXXXXX) && [ -d "$T" ] || { echo "no temp folder"; exit 1; }
 R=$T/root
 pass=0; failed=0
 check() { if eval "$2"; then echo "PASS  $1"; pass=$((pass + 1)); else echo "FAIL  $1"; failed=$((failed + 1)); fi; }
@@ -128,6 +129,10 @@ check "nothing was switched yet" "[ \"\$($UCI -c $R/etc/config get shares.photos
 echo new > "$R/mnt/old/Photos/after.jpg"; rm "$R/mnt/old/home/jan/doc.txt"
 # something that writes to the drives keeps the switch from starting
 mkdir -p "$R/tmp/shareos-cloud"; sleep 30 & W=$!; echo $W > "$R/tmp/shareos-cloud/job1.pid"
+sleep 30 & A=$!; echo $A > "$R/tmp/shareos-cloud/auth.pid"
+mv "$R/tmp/shareos-cloud/job1.pid" "$T/job1.keep"
+check "busy: a waiting cloud sign-in (auth.pid) does not count" "mig busy | js \"not d['busy']\""
+mv "$T/job1.keep" "$R/tmp/shareos-cloud/job1.pid"; kill $A 2>/dev/null; wait $A 2>/dev/null; rm -f "$R/tmp/shareos-cloud/auth.pid"
 check "busy: a running cloud job is reported" "mig busy | js \"d['busy'] and 'cloud job' in d['problem']\""
 check "switch: refused while a cloud job runs, nothing changed" "mig switch | grep -q 'wait until it is done' && mig state | js \"d['state']=='copied' and 'wait until' in d['error']\" && [ \"\$($UCI -c $R/etc/config get shares.photos.volume)\" = old ]"
 kill $W 2>/dev/null; wait $W 2>/dev/null

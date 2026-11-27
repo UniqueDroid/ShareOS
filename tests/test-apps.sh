@@ -101,8 +101,16 @@ check "signed catalog: a signature of another file is refused" "runoff 'shareos-
 openssl ecparam -name prime256v1 -genkey -noout -out $T/evil.key 2>/dev/null; openssl dgst -sha256 -sign $T/evil.key -out $P/index.json.sig $P/index.json
 check "signed catalog: a signature with another key is refused" "runoff 'shareos-apps catalog' | js \"d['apps']==[] and 'signature' in d['errors'][0]['error']\""
 check "signed catalog: another source without a valid signature still works, its apps not signed" "run 'shareos-apps catalog' | js \"not d['errors'] and d['apps'] and not any(a['signed'] for a in d['apps'])\""
-check "signed catalog: an app from such a source installs as not checked" "run 'shareos-apps install helper' | js \"d['ok'] and not d['verified']\" && run 'shareos-apps remove helper' | js \"d.get('ok')\""
+check "signed catalog: an app from such a source installs as not checked" "run 'shareos-apps install helper' | js \"d['ok'] and not d['verified']\""
 mv $T/sig.ok $P/index.json.sig
+# once the same source is signed and lists the installed version, the app counts as checked
+# (0.3.0-beta.16 to beta.18 had no catalog.pub: everything was installed as not checked)
+run 'shareos-apps catalog' >/dev/null
+check "signed catalog: an app installed while the source was unsigned counts as checked afterwards" "run 'shareos-apps list' | js \"[a['verified'] for a in d['apps'] if a['id']=='helper']==[True]\""
+# ... but only for that source and for a version it lists (the version is read from the installed app.json)
+check "signed catalog: an app from another source stays not checked" "run \"uci set apps.app_helper.verified=0; uci set apps.app_helper.source=file:///tmp/pkg/other.json; uci commit apps; shareos-apps catalog >/dev/null; shareos-apps list\" | js \"[a['verified'] for a in d['apps'] if a['id']=='helper']==[False]\""
+check "signed catalog: a version the signed catalog does not list stays not checked" "run \"uci set apps.app_helper.source=file:///tmp/pkg/index.json; uci commit apps; sed -i 's/1\.0\.0/0.9.0/' /www-apps/helper/app.json; shareos-apps catalog >/dev/null; shareos-apps list\" | js \"[(a['version'],a['verified']) for a in d['apps'] if a['id']=='helper']==[('0.9.0',False)]\""
+check "signed catalog: (cleanup) helper removed" "run 'shareos-apps remove helper' | js \"d.get('ok')\""
 
 C=$(run "shareos-apps catalog")
 check "catalog: stable channel shows release versions only" "echo '$C' | js \"[(a['id'],a['latest']) for a in d['apps']]==[('broken','1.0.0'),('hello','1.0.0'),('helper','1.0.0'),('nanox','1.0.0'),('needy','1.0.0'),('paperless','1.0.0')]\""

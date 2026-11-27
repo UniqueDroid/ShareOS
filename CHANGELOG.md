@@ -4,6 +4,13 @@ Changes per release (newest first). The section of a version is added to its
 GitHub release automatically when the release is built. Test versions are
 pre-releases for test devices only.
 
+## 0.3.0-beta.19
+
+- **App store: every app showed "not signed by the ShareOS project".** The key that checks the signed app catalog (`/etc/shareos/catalog.pub`) was not installed into the firmware (0.3.0-beta.16 to beta.18), so the box could not check the signature and treated the official catalog as unsigned. It is installed now. Apps that were installed or updated meanwhile count as checked again as soon as the signed catalog lists their installed version – after the update, open *Apps → Store* once (or wait for the next catalog refresh). The static analysis now checks that every file of `shareos-core` is installed.
+- Disk change: a cloud sign-in that is still waiting for its code no longer keeps *Switch now* from starting (only running cloud jobs do).
+- Disk change: four rare messages are translated (e.g. "the copy is still running"); a filled button that cannot be used yet (*Start copying* before the check) looks disabled, also in the style Glass.
+- Tests: the emulator smoke test now asks the built image for the disk change state, the device info and the three public keys – it fails on an image that lacks one of them (as 0.3.0-beta.16 to beta.18 did).
+
 ## 0.3.0-beta.18
 
 - **Disk change: the wizard did not start.** `shareos-migrate` was not installed into the firmware (0.3.0-beta.16 and beta.17), so *Storage → DISK CHANGE* only showed "shareos-migrate: not found" and kept loading. It is installed now; the page shows an error instead of loading forever, and the static analysis checks that every program of `shareos-core` is installed.
