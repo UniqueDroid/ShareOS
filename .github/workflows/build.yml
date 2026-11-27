@@ -104,6 +104,8 @@ jobs:
           LD_LIBRARY_PATH="$HOME/hostroot/lib" "$HOME/hostroot/bin/ucode" -c -o /tmp/shareos.ucc src/shareos-core/usr/share/rpcd/ucode/shareos.uc
 
   firmware:
+    # the name of the check as before the matrix had more than the board
+    name: firmware (${{ matrix.board }})
     runs-on: ubuntu-24.04
     timeout-minutes: 300
     strategy:
