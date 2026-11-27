@@ -531,6 +531,16 @@ Braucht ein Tailscale-Konto (kostenlos), ein Handy oder einen Rechner mit Tailsc
 5. Konto ohne persönlichen Ordner: Teilen meldet „no personal folder“; das Geteilte wird verworfen und kommt bei der nächsten Anmeldung nicht wieder.
 6. Dateidialog einer App für ein Konto **ohne** *Dateien* (z. B. Webpad → *Öffnen*): Die Ordnerauswahl zeigt zuerst *App-Daten*, dann *Mein Ordner* und die Freigaben des Benutzers; Freigaben nur zum Lesen sind markiert und fehlen beim Speichern. Die App legt ihre eigenen Dateien weiter in *App-Daten* ab.
 
+## 14zz2. Signierter App-Katalog auf der Box (0.3.0-beta.19)
+
+In 0.3.0-beta.16 bis beta.18 fehlte der Schlüssel `/etc/shareos/catalog.pub` in der Firmware: Jede App im Store und jede daraus installierte App trug den Hinweis *not signed by the ShareOS project*.
+
+1. Über SSH: `ls -l /etc/shareos/*.pub` zeigt drei Schlüssel – `catalog.pub`, `release.pub` und `release-reserve.pub`. `shareos-apps catalog >/dev/null; echo $?` gibt `0` aus.
+2. *Apps → Store* → aktualisieren: Keine App des offiziellen Katalogs trägt *not signed by the ShareOS project*; das Installieren fragt nicht zusätzlich nach.
+3. *Apps → Installed*: Apps, die mit beta.16 bis beta.18 installiert oder aktualisiert wurden, zeigen nach dem Aktualisieren wieder *from the store* (Tabellenansicht: kein Hinweis). Nur eine App aus einem selbst hochgeladenen Paket bleibt *uploaded – not checked*, eine aus einer selbst hinzugefügten Quelle bleibt *not signed by the ShareOS project*.
+4. Eine App aus dem Store installieren, dann `uci get apps.app_<id>.sha256` (ein `-` in der ID wird zu `_`): 64 Hex-Zeichen, dieselben wie `sha256` dieser Version im Katalog; `uci get apps.app_<id>.verified` gibt `1` aus.
+5. Plattenwechsel: Mit einer offenen Cloud-Anmeldung, die noch auf ihren Code wartet (*Add account*, Code noch nicht eingegeben), wird *Switch now* deswegen nicht mehr abgelehnt; ein laufender Cloud-Job hält es weiterhin auf.
+
 ## 14zz1. Layout (0.3.0-beta.18)
 
 1. *System → Firmware* auf einem breiten Bildschirm: Die linke Spalte (Versionen, *Changes in …*) endet auf derselben Höhe wie die rechte; die Release-Notizen füllen den Platz und scrollen, wenn sie länger sind. Auf einem schmalen Bildschirm (Spalten untereinander) sind die Notizen wie bisher 220 px hoch.

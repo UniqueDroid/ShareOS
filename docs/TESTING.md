@@ -526,6 +526,16 @@ Needs a Tailscale account (free), a phone or computer with Tailscale, the file `
 5. An account without a personal folder: sharing shows "no personal folder"; the shared item is dropped and does not come back at the next login.
 6. File dialog of an app for an account **without** *Files* (e.g. Webpad → *Open*): the list of folders shows *App data* first, then *My folder* and the user's shares; read-only shares are marked and are missing when saving. The app still keeps its own files in *App data*.
 
+## 14zz2. Signed app catalog on the box (0.3.0-beta.19)
+
+In 0.3.0-beta.16 to beta.18 the key `/etc/shareos/catalog.pub` was missing from the firmware: every app in the store and every app installed from it was marked *not signed by the ShareOS project*.
+
+1. Over SSH: `ls -l /etc/shareos/*.pub` lists three keys – `catalog.pub`, `release.pub` and `release-reserve.pub`. `shareos-apps catalog >/dev/null; echo $?` prints `0`.
+2. *Apps → Store* → refresh: no app of the official catalog carries *not signed by the ShareOS project*; installing one asks for no extra confirmation.
+3. *Apps → Installed*: apps that were installed or updated with beta.16 to beta.18 read *from the store* again after the refresh (table view: no tag). Only an app from a package you uploaded stays *uploaded – not checked*, and one from a source you added yourself stays *not signed by the ShareOS project*.
+4. Install an app from the store, then `uci get apps.app_<id>.sha256` (a `-` in the id becomes `_`): 64 hex digits, the same as the `sha256` of that version in the catalog; `uci get apps.app_<id>.verified` prints `1`.
+5. Disk change: with a cloud sign-in open that still waits for its code (*Add account*, code not entered yet), *Switch now* is no longer refused because of it; a running cloud job still stops it.
+
 ## 14zz1. Layout (0.3.0-beta.18)
 
 1. *System → Firmware* on a wide screen: the left column (versions, *Changes in …*) ends at the same height as the right one; the release notes fill the space and scroll when they are longer. On a narrow screen (columns below each other) the notes are 220 px high as before.
