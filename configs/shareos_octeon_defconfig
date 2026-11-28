@@ -58,6 +58,7 @@ BR2_PACKAGE_MTD=y
 BR2_PACKAGE_LIBGPIOD2=y
 BR2_PACKAGE_LIBGPIOD2_TOOLS=y
 BR2_PACKAGE_ALT_F_UTILS=y
+BR2_PACKAGE_DNS1200_MCU=y
 
 # --- Core stack (phase 3): UCI config, ubus, rpcd + ucode backend, uhttpd ---
 BR2_PACKAGE_UCI=y

@@ -170,9 +170,23 @@ start uses) and `.uRamdisk`, an empty initramfs in the ramdisk wrapper in case
 build and are never part of a release. It is a [devtest image](#devtest-image-the-first-image-for-a-new-model):
 `root` / `shareos`.
 
-**Not there yet:** fan control, clock, display and power-off (the
-microcontroller), LEDs and disk power (D-Link's own GPIO driver), access to the
-flash (settings that survive a restart, updates), system apps for MIPS64.
+**Bays:** 1 and 2 are `ata1`/`ata2` (first SiI3132), 3 is `ata3` (second
+SiI3132), 4 and 5 are `ata4.01`/`ata4.00` behind the SiI5723 port multiplier;
+hot-plugging works in all five.
+
+**The microcontroller** (display, clock, fans, buttons, power-off) sits on
+`/dev/ttyS1` at 19200 8N1; its frames start with `0xFA` and end with `0xFB`.
+`dns1200-mcu` speaks to it for tests – only commands that read something or can
+be undone: `version`, `time` (its clock runs in UTC), `name <text>` and
+`ip <1|2> <address>` for the display, `fan half|full`, `listen` (buttons). It
+does not switch the box off and nothing starts it at boot yet.
+
+**Not there yet:** fan control by temperature (the two sensors on I²C bus 1 –
+a W83L771 at 0x4c and an LM75-type G751 at 0x49 – have their drivers in the
+kernel but are not bound yet), the display and clock as a service, power-off,
+LEDs and disk power (D-Link's own GPIO driver), access to the flash (settings
+that survive a restart, updates, the real MAC address), system apps for
+MIPS64.
 
 **Rules for this box:** never `saveenv` or `eraseenv` in U-Boot (its
 environment has never been saved), the firmware of the microcontroller is never

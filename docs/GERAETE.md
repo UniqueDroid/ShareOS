@@ -177,10 +177,23 @@ Releases. Es ist ein
 [Devtest-Image](#devtest-image-das-erste-image-für-ein-neues-modell):
 `root` / `shareos`.
 
-**Noch nicht da:** Lüfterregelung, Uhr, Display und Ausschalten (der
-Mikrocontroller), LEDs und Plattenstrom (D-Links eigener GPIO-Treiber), Zugriff
-auf den Flash (Einstellungen, die einen Neustart überleben, Updates),
-System-Apps für MIPS64.
+**Schächte:** 1 und 2 sind `ata1`/`ata2` (erster SiI3132), 3 ist `ata3`
+(zweiter SiI3132), 4 und 5 sind `ata4.01`/`ata4.00` hinter dem
+Port-Multiplier SiI5723; Hotplug funktioniert in allen fünf.
+
+**Der Mikrocontroller** (Display, Uhr, Lüfter, Tasten, Ausschalten) hängt an
+`/dev/ttyS1` mit 19200 8N1; seine Rahmen beginnen mit `0xFA` und enden mit
+`0xFB`. `dns1200-mcu` spricht zum Testen mit ihm – nur Befehle, die etwas lesen
+oder sich rückgängig machen lassen: `version`, `time` (seine Uhr läuft in UTC),
+`name <Text>` und `ip <1|2> <Adresse>` fürs Display, `fan half|full`, `listen`
+(Tasten). Es schaltet die Box nicht aus, und beim Start ruft es noch nichts auf.
+
+**Noch nicht da:** Lüfterregelung nach Temperatur (die beiden Sensoren an
+I²C-Bus 1 – ein W83L771 an 0x4c und ein LM75-artiger G751 an 0x49 – haben ihre
+Treiber im Kernel, sind aber noch nicht angemeldet), Display und Uhr als Dienst,
+Ausschalten, LEDs und Plattenstrom (D-Links eigener GPIO-Treiber), Zugriff auf
+den Flash (Einstellungen, die einen Neustart überleben, Updates, die echte
+MAC-Adresse), System-Apps für MIPS64.
 
 **Regeln für diese Box:** nie `saveenv` oder `eraseenv` im U-Boot (seine
 Umgebung wurde nie gespeichert), die Firmware des Mikrocontrollers wird nie neu

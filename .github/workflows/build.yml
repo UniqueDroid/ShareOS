@@ -81,6 +81,8 @@ jobs:
         run: tests/test-mcu-temp.sh
       - name: Wake-up alarm of the MCU (year of the alarm, reading does not switch it)
         run: tests/test-mcu-alarm.sh
+      - name: DNS-1200-05 microcontroller (dns1200-mcu against a simulated one)
+        run: tests/test-dns1200-mcu.sh
       - name: Background file jobs of the plugin (progress of a copy, stopping it)
         run: LD_LIBRARY_PATH="$HOME/hostroot/lib" tests/test-file-jobs.sh "$HOME/hostroot/bin"
       - name: Dynamic DNS (shareos-ddns, all providers with a fake curl)

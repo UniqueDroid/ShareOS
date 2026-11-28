@@ -1,6 +1,7 @@
 menu "ShareOS"
 
 source "$BR2_EXTERNAL_SHAREOS_PATH/package/alt-f-utils/Config.in"
+source "$BR2_EXTERNAL_SHAREOS_PATH/package/dns1200-mcu/Config.in"
 source "$BR2_EXTERNAL_SHAREOS_PATH/package/ksmbd-tools-shareos/Config.in"
 source "$BR2_EXTERNAL_SHAREOS_PATH/package/uci/Config.in"
 source "$BR2_EXTERNAL_SHAREOS_PATH/package/ucode/Config.in"
