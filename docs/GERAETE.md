@@ -162,9 +162,10 @@ Device-Tree: Der Bootloader meldet den Board-Typ EBH5200 (Caviums
 Referenzboard), der Kernel nimmt dafür seinen eingebauten Device-Tree, und
 `board.sh` erkennt die Box an diesem `system type` in `/proc/cpuinfo`. Der
 Kernel-Patch dieser Plattform korrigiert, was vom Referenzboard abweicht: PHYs
-(Marvell 88E1112) an den MDIO-Adressen 8 und 9 und keine vertauschten
-PCIe-Reset-Leitungen (der Umweg des Referenzboards kommt mit
-`octeon_pcie_swapped_reset` in der Kommandozeile zurück).
+(Marvell 88E1112) an den MDIO-Adressen 8 und 9, keine vertauschten
+PCIe-Reset-Leitungen und kein Lane-Swap an PCIe-Port 1 (wie in D-Links eigenem
+Kernel; das Verhalten des Referenzboards kommt mit `octeon_pcie_swapped_reset`
+in der Kommandozeile zurück).
 
 **Das Image.** `ShareOS-<version>-DNS-1200-05-rev-Ax-devtest.elf` – der Kernel
 mit dem ganzen System als Initramfs: Es wird nichts installiert, und

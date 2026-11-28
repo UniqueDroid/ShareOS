@@ -13,9 +13,11 @@ reference board's wiring, which does not match:
   management ports have no PHY. The LED setup of the 88E1149R
   (marvell,reg-init) is dropped.
 - PCIe: the reference board swapped the PCIe reset lines and brings both
-  ports out of reset together; on the DNS-1200-05 that leaves port 1 (the
-  second SiI3132) in "link timeout". The workaround now needs
-  "octeon_pcie_swapped_reset" on the command line.
+  ports out of reset together, and CN52XX boards get the lanes of port 1
+  swapped. D-Link's SDK turns both off for this box (its cvmx-pcie.c has
+  them under "#if 0"); with the lane swap port 1 (the second SiI3132)
+  stays in "link timeout". Both now need "octeon_pcie_swapped_reset" on
+  the command line when the board reports EBH5200.
 
 Only built into ShareOS's kernel for its OCTEON boxes
 (board/dlink/octeon, BR2_GLOBAL_PATCH_DIR of shareos_octeon_defconfig).
@@ -58,7 +60,7 @@ Only built into ShareOS's kernel for its OCTEON boxes
  		strscpy_pad(new_name, "marvell,88e1145");
 --- a/arch/mips/pci/pcie-octeon.c
 +++ b/arch/mips/pci/pcie-octeon.c
-@@ -25,6 +25,28 @@
+@@ -25,6 +25,30 @@
  #include <asm/octeon/cvmx-helper-errata.h>
  #include <asm/octeon/pci-octeon.h>
  
@@ -67,7 +69,9 @@ Only built into ShareOS's kernel for its OCTEON boxes
 + * needs both ports brought out of reset together. The D-Link DNS-1200-05
 + * reports itself as an EBH5200 but resets its ports separately, so the
 + * workaround is off unless "octeon_pcie_swapped_reset" is on the kernel
-+ * command line.
++ * command line. The same goes for the lane swap of port 1 that CN52XX
++ * reference boards need: D-Link's SDK leaves it off, and with it port 1
++ * (the second SiI3132) never gets a link.
 + */
 +static bool octeon_pcie_swapped_reset;
 +
@@ -87,7 +91,18 @@ Only built into ShareOS's kernel for its OCTEON boxes
  #define MRRS_CN5XXX 0 /* 128 byte Max Read Request Size */
  #define MPS_CN5XXX  0 /* 128 byte Max Packet Size (Limit of most PCs) */
  #define MRRS_CN6XXX 3 /* 1024 byte Max Read Request Size */
-@@ -751,7 +773,7 @@
+@@ -619,7 +643,9 @@
+ 	}
+ 
+ 	/* Lane swap needs to be manually enabled for CN52XX */
+-	if (OCTEON_IS_MODEL(OCTEON_CN52XX) && (pcie_port == 1)) {
++	if (OCTEON_IS_MODEL(OCTEON_CN52XX) && (pcie_port == 1) &&
++	    (cvmx_sysinfo_get()->board_type != CVMX_BOARD_TYPE_EBH5200 ||
++	     octeon_pcie_swapped_reset)) {
+ 		pescx_ctl_status.s.lane_swp = 1;
+ 		cvmx_write_csr(CVMX_PESCX_CTL_STATUS(pcie_port), pescx_ctl_status.u64);
+ 	}
+@@ -751,7 +777,7 @@
  	cvmx_write_csr(CVMX_PEXP_NPEI_CTL_STATUS, npei_ctl_status.u64);
  
  	/* Bring the PCIe out of reset */
@@ -96,7 +111,7 @@ Only built into ShareOS's kernel for its OCTEON boxes
  		/*
  		 * The EBH5200 board swapped the PCIe reset lines on
  		 * the board. As a workaround for this bug, we bring
-@@ -1068,8 +1090,7 @@
+@@ -1068,8 +1094,7 @@
  			 * again. Lots of messages will be displayed,
  			 * but everything should work
  			 */

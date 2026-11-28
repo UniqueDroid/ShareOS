@@ -158,8 +158,9 @@ reports the board type EBH5200 (Cavium's reference board), the kernel takes its
 built-in device tree for that, and `board.sh` knows the box by this
 `system type` in `/proc/cpuinfo`. The kernel patch of this platform corrects
 what differs from Cavium's reference board: PHYs (Marvell 88E1112) at MDIO
-addresses 8 and 9, and no swapped PCIe reset lines (the reference board's
-workaround comes back with `octeon_pcie_swapped_reset` on the command line).
+addresses 8 and 9, no swapped PCIe reset lines and no lane swap on PCIe port 1
+(as in D-Link's own kernel; the reference board's behaviour comes back with
+`octeon_pcie_swapped_reset` on the command line).
 
 **The image.** `ShareOS-<version>-DNS-1200-05-rev-Ax-devtest.elf` – the kernel
 with the whole system as its initramfs: nothing is installed, and settings are
