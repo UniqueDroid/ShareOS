@@ -270,6 +270,9 @@ add_methods({
 					let s = SERVICES[name];
 					if (!init_script(name) || (s.needs && !stat(s.needs)))
 						continue;
+					// a model that is being added has no device control yet: nothing to show
+					if (name == 'board' && board().control == 'none')
+						continue;
 					// the board service is the MCU daemon only on boxes with that MCU
 					let proc = name == 'board' && board().control && board().control != 'mcu' ? 'shareos-board' : s.proc;
 					push(list, { name, label: s.label, desc: desc(name, s.desc), running: running(proc, names), essential: !!ESSENTIAL[name],
