@@ -133,8 +133,11 @@ the next release with the normal claiming.
 ## Cavium OCTEON: D-Link DNS-1200-05 (being added)
 
 A second platform next to the Kirkwood boxes: `make octeon`
-(`configs/shareos_octeon_defconfig`, `board/dlink/octeon/`). It is built so
-that the first start on the box can be tried – nothing of it has run there yet.
+(`configs/shareos_octeon_defconfig`, `board/dlink/octeon/`). The first image
+started on the box up to the login (28 Nov 2026): kernel, four cores, 1 GB,
+the first SATA controller, USB and all services. The network PHYs and the
+second PCIe port did not come up; `board/dlink/octeon/patches/linux/` sets the
+box's wiring for that (still to be tested).
 
 | | |
 |---|---|
@@ -153,7 +156,10 @@ line. Ctrl+C right after `NAND:  256 MiB` stops it
 at the prompt `Octeon ebh5200#`. It passes no device tree: the bootloader
 reports the board type EBH5200 (Cavium's reference board), the kernel takes its
 built-in device tree for that, and `board.sh` knows the box by this
-`system type` in `/proc/cpuinfo`.
+`system type` in `/proc/cpuinfo`. The kernel patch of this platform corrects
+what differs from Cavium's reference board: PHYs (Marvell 88E1112) at MDIO
+addresses 8 and 9, and no swapped PCIe reset lines (the reference board's
+workaround comes back with `octeon_pcie_swapped_reset` on the command line).
 
 **The image.** `ShareOS-<version>-DNS-1200-05-rev-Ax-devtest.elf` – the kernel
 with the whole system as its initramfs: nothing is installed, and settings are

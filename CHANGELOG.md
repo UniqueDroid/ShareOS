@@ -6,7 +6,7 @@ pre-releases for test devices only.
 
 ## 0.3.0-beta.20
 
-- **A second platform: Cavium OCTEON (D-Link DNS-1200-05, being added).** `make octeon` builds a devtest image for the five-bay ShareCenter Pro 1200 (OCTEON Plus CN5230, MIPS64 big endian): the kernel with the whole system as its initramfs, as an ELF file for the `bootoctlinux` of the box's U-Boot. It has not run on the box yet; fan, clock, display and power-off (the box's microcontroller) and access to its flash are not there. The files are the artifact `devtest-octeon` of a build and never part of a release. See [docs/DEVICES.md](docs/DEVICES.md#cavium-octeon-d-link-dns-1200-05-being-added).
+- **A second platform: Cavium OCTEON (D-Link DNS-1200-05, being added).** `make octeon` builds a devtest image for the five-bay ShareCenter Pro 1200 (OCTEON Plus CN5230, MIPS64 big endian): the kernel with the whole system as its initramfs, as an ELF file for the `bootoctlinux` of the box's U-Boot. The first image started on the box up to the login; a kernel patch sets the box's wiring (PHYs at MDIO 8 and 9, PCIe reset without the reference board's workaround) so that the network and the second SATA controller come up. Fan, clock, display and power-off (the box's microcontroller) and access to its flash are not there. The files are the artifact `devtest-octeon` of a build and never part of a release. See [docs/DEVICES.md](docs/DEVICES.md#cavium-octeon-d-link-dns-1200-05-being-added).
 
 ## 0.3.0-beta.19
 

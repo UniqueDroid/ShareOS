@@ -31,6 +31,8 @@ MKIMAGE="$HOST_DIR/bin/mkimage"
 
 VERSION="$("$TOP_DIR/scripts/version.sh")"
 ELF_MAX=50331648
+# a JFFS2 of 30 MiB (kernel1-initrd/kernel2-initrd) minus its own overhead
+JFFS2_MAX=29360128
 
 #   firmware name        status
 MODELS="
@@ -55,6 +57,10 @@ if [ "$size" -gt "$ELF_MAX" ]; then
 	echo "post-image: the kernel with its initramfs has $size bytes, more than $ELF_MAX"
 	exit 1
 fi
+if [ "$size" -gt "$JFFS2_MAX" ]; then
+	echo "post-image: warning: $size bytes do not fit the JFFS2 partitions (kernel1-initrd/kernel2-initrd), only a raw partition (nand read)"
+fi
+
 # an empty cpio archive (xz, the only compression of this kernel) as a ramdisk
 : | cpio -o -H newc 2>/dev/null | xz --check=crc32 > "$B/empty.cpio.xz"
 

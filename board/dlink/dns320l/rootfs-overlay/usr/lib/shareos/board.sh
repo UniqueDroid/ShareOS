@@ -53,6 +53,7 @@ board_detect() {
 		# being added: no LEDs, fan, clock or power-off yet – all of them
 		# belong to the box's microcontroller on ttyS1
 		BOARD_ID=dns1200 BOARD_NAME="D-Link DNS-1200-05 rev A" BOARD_FWNAME=DNS-1200-05-rev-Ax
+		# no /dev/rtc0 yet (the clock is the microcontroller's): the time comes from NTP
 		BOARD_SIG= BOARD_MODEL=DNS-1200-05 BOARD_CONTROL=none BOARD_RTC=kernel
 		BOARD_LED_STATUS= BOARD_LED_USB= BOARD_LED_DISK1= BOARD_LED_DISK2=
 		BOARD_DEVTEST=1 ;;

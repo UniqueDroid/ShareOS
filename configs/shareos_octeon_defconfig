@@ -13,7 +13,8 @@ BR2_MIPS_NABI64=y
 BR2_MIPS_SOFT_FLOAT=y
 
 # --- Build options ---
-BR2_GLOBAL_PATCH_DIR="$(BR2_EXTERNAL_SHAREOS_PATH)/patches"
+# the patches of all boxes, then those of this platform (board wiring)
+BR2_GLOBAL_PATCH_DIR="$(BR2_EXTERNAL_SHAREOS_PATH)/patches $(BR2_EXTERNAL_SHAREOS_PATH)/board/dlink/octeon/patches"
 BR2_DOWNLOAD_FORCE_CHECK_HASHES=y
 BR2_OPTIMIZE_S=y
 BR2_SHARED_LIBS=y
