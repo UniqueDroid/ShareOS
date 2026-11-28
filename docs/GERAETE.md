@@ -133,3 +133,68 @@ Auf so einer Box:
 
 Wenn das Modell läuft: Status `release`, `BOARD_DEVTEST=0`, und es kommt mit
 dem normalen Beanspruchen ins nächste Release.
+
+## Cavium OCTEON: D-Link DNS-1200-05 (kommt hinzu)
+
+Eine zweite Plattform neben den Kirkwood-Boxen: `make octeon`
+(`configs/shareos_octeon_defconfig`, `board/dlink/octeon/`). Das erste Image
+startete auf der Box bis zum Login (28.11.2026): Kernel, vier Kerne, 1 GB, der
+erste SATA-Controller, USB und alle Dienste. Die Netzwerk-PHYs und der zweite
+PCIe-Port kamen nicht hoch; `board/dlink/octeon/patches/linux/` setzt dafür die
+Verdrahtung der Box (noch zu testen).
+
+| | |
+|---|---|
+| CPU | Cavium OCTEON Plus CN5230, 4 Kerne, MIPS64 Big Endian, keine FPU |
+| RAM | 1 GB (ein DDR2-DIMM) |
+| Platten | 5 Schächte: 2× SiI3132 an PCIe (`sata_sil24`), ein Port über einen SiI5723 |
+| Netzwerk | 2× Gigabit (Marvell 88E1112, SGMII) |
+| Flash | NAND 256 MiB mit zwei Bänken der D-Link-Firmware; Mainline-Linux hat keinen Treiber dafür |
+| Mikrocontroller | an ttyS1: OLED-Display, Uhr, Lüfter, Ausschalten, Zeitplan – noch nicht angesteuert |
+| Serielle Konsole | Stiftleiste JP3, 115200 8N1, 3,3 V |
+
+**So startet sie.** Das U-Boot 1.1.1 der Box (Cavium-SDK) liest den Kernel aus
+dem Flash (eine Datei in einem JFFS2 oder eine rohe Partition mit `nand read`)
+und startet ihn mit `bootoctlinux`; aus dem Netzwerk, von USB oder über die
+serielle Leitung kann es nicht laden. Strg+C direkt nach
+`NAND:  256 MiB` hält es am Prompt `Octeon ebh5200#` an. Es übergibt keinen
+Device-Tree: Der Bootloader meldet den Board-Typ EBH5200 (Caviums
+Referenzboard), der Kernel nimmt dafür seinen eingebauten Device-Tree, und
+`board.sh` erkennt die Box an diesem `system type` in `/proc/cpuinfo`. Der
+Kernel-Patch dieser Plattform korrigiert, was vom Referenzboard abweicht: PHYs
+(Marvell 88E1112) an den MDIO-Adressen 8 und 9, keine vertauschten
+PCIe-Reset-Leitungen und kein Lane-Swap an PCIe-Port 1 (wie in D-Links eigenem
+Kernel; das Verhalten des Referenzboards kommt mit `octeon_pcie_swapped_reset`
+in der Kommandozeile zurück).
+
+**Das Image.** `ShareOS-<version>-DNS-1200-05-rev-Ax-devtest.elf` – der Kernel
+mit dem ganzen System als Initramfs: Es wird nichts installiert, und
+Einstellungen sind nach einem Neustart weg –, dieselbe Datei als `.uImage`
+(die Verpackung, die D-Links eigener Start benutzt) und `.uRamdisk`, ein leeres
+Initramfs in der Ramdisk-Verpackung, falls `bootoctlinux` eines verlangt. Sie
+kommen aus dem Artefakt `devtest-octeon` eines Builds und sind nie Teil eines
+Releases. Es ist ein
+[Devtest-Image](#devtest-image-das-erste-image-für-ein-neues-modell):
+`root` / `shareos`.
+
+**Schächte:** 1 und 2 sind `ata1`/`ata2` (erster SiI3132), 3 ist `ata3`
+(zweiter SiI3132), 4 und 5 sind `ata4.01`/`ata4.00` hinter dem
+Port-Multiplier SiI5723; Hotplug funktioniert in allen fünf.
+
+**Der Mikrocontroller** (Display, Uhr, Lüfter, Tasten, Ausschalten) hängt an
+`/dev/ttyS1` mit 19200 8N1; seine Rahmen beginnen mit `0xFA` und enden mit
+`0xFB`. `dns1200-mcu` spricht zum Testen mit ihm – nur Befehle, die etwas lesen
+oder sich rückgängig machen lassen: `version`, `time` (seine Uhr läuft in UTC),
+`name <Text>` und `ip <1|2> <Adresse>` fürs Display, `fan half|full`, `listen`
+(Tasten). Es schaltet die Box nicht aus, und beim Start ruft es noch nichts auf.
+
+**Noch nicht da:** Lüfterregelung nach Temperatur (die beiden Sensoren an
+I²C-Bus 1 – ein W83L771 an 0x4c und ein LM75-artiger G751 an 0x49 – haben ihre
+Treiber im Kernel, sind aber noch nicht angemeldet), Display und Uhr als Dienst,
+Ausschalten, LEDs und Plattenstrom (D-Links eigener GPIO-Treiber), Zugriff auf
+den Flash (Einstellungen, die einen Neustart überleben, Updates, die echte
+MAC-Adresse), System-Apps für MIPS64.
+
+**Regeln für diese Box:** nie `saveenv` oder `eraseenv` im U-Boot (seine
+Umgebung wurde nie gespeichert), die Firmware des Mikrocontrollers wird nie neu
+geschrieben, und die laufende D-Link-Firmware bleibt in ihrer Bank.

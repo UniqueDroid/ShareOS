@@ -1,0 +1,5 @@
+config BR2_PACKAGE_DNS1200_MCU
+	bool "dns1200-mcu"
+	help
+	  Talks to the microcontroller of the D-Link DNS-1200-05
+	  (display, clock, fans, buttons) on /dev/ttyS1.

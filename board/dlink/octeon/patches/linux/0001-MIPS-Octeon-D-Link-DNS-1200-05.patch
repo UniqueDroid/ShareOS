@@ -1,0 +1,123 @@
+From: ShareOS <noreply@github.com>
+Subject: [PATCH] MIPS: Octeon: D-Link DNS-1200-05 (reported as an EBH5200)
+
+The D-Link DNS-1200-05 (ShareCenter Pro 1200) is built on Cavium's
+EBH5200 reference design and its bootloader reports that board type: the
+board descriptor in its EEPROM is missing. The kernel then takes the
+reference board's wiring, which does not match:
+
+- PHYs: two Marvell 88E1112 at MDIO addresses 8 and 9 (seen on the box
+  with D-Link's own kernel, /sys/bus/mdio_bus/devices/0:08 and 0:09), not
+  88E1149R at 2-5. With the wrong addresses of_phy_connect() fails and
+  bringing up eth0 ends in -EPROBE_DEFER. The other SGMII ports and the
+  management ports have no PHY. The LED setup of the 88E1149R
+  (marvell,reg-init) is dropped.
+- PCIe: the reference board swapped the PCIe reset lines and brings both
+  ports out of reset together, and CN52XX boards get the lanes of port 1
+  swapped. D-Link's SDK turns both off for this box (its cvmx-pcie.c has
+  them under "#if 0"); with the lane swap port 1 (the second SiI3132)
+  stays in "link timeout". Both now need "octeon_pcie_swapped_reset" on
+  the command line when the board reports EBH5200.
+
+Only built into ShareOS's kernel for its OCTEON boxes
+(board/dlink/octeon, BR2_GLOBAL_PATCH_DIR of shareos_octeon_defconfig).
+
+--- a/arch/mips/cavium-octeon/executive/cvmx-helper-board.c
++++ b/arch/mips/cavium-octeon/executive/cvmx-helper-board.c
+@@ -103,6 +103,16 @@
+ 		/* Board has dual SPI4 and no PHYs */
+ 		return -1;
+ 	case CVMX_BOARD_TYPE_EBH5200:
++		/*
++		 * ShareOS: the D-Link DNS-1200-05 reports itself as an
++		 * EBH5200 (its bootloader finds no board descriptor). Its
++		 * two SGMII ports have Marvell 88E1112 PHYs at MDIO
++		 * addresses 8 and 9; the other ports and the management
++		 * ports have no PHY.
++		 */
++		if (ipd_port == 0 || ipd_port == 1)
++			return ipd_port + 8;
++		return -1;
+ 	case CVMX_BOARD_TYPE_EBH5201:
+ 	case CVMX_BOARD_TYPE_EBT5200:
+ 		/* Board has 2 management ports */
+--- a/arch/mips/cavium-octeon/octeon-platform.c
++++ b/arch/mips/cavium-octeon/octeon-platform.c
+@@ -537,6 +537,14 @@
+ 
+ 	phy_addr &= 0xff;
+ 
++	/*
++	 * ShareOS: the D-Link DNS-1200-05 (reported as an EBH5200) has
++	 * 88E1112 PHYs, not the 88E1149R of the reference board: drop the
++	 * LED setup written for those.
++	 */
++	if (cvmx_sysinfo_get()->board_type == CVMX_BOARD_TYPE_EBH5200)
++		fdt_nop_property(initial_boot_params, phy, "marvell,reg-init");
++
+ 	if (octeon_has_88e1145()) {
+ 		fdt_nop_property(initial_boot_params, phy, "marvell,reg-init");
+ 		strscpy_pad(new_name, "marvell,88e1145");
+--- a/arch/mips/pci/pcie-octeon.c
++++ b/arch/mips/pci/pcie-octeon.c
+@@ -25,6 +25,30 @@
+ #include <asm/octeon/cvmx-helper-errata.h>
+ #include <asm/octeon/pci-octeon.h>
+ 
++/*
++ * ShareOS: the reference board EBH5200 swapped the PCIe reset lines and
++ * needs both ports brought out of reset together. The D-Link DNS-1200-05
++ * reports itself as an EBH5200 but resets its ports separately, so the
++ * workaround is off unless "octeon_pcie_swapped_reset" is on the kernel
++ * command line. The same goes for the lane swap of port 1 that CN52XX
++ * reference boards need: D-Link's SDK leaves it off, and with it port 1
++ * (the second SiI3132) never gets a link.
++ */
++static bool octeon_pcie_swapped_reset;
++
++static int __init octeon_pcie_swapped_reset_setup(char *str)
++{
++	octeon_pcie_swapped_reset = true;
++	return 0;
++}
++early_param("octeon_pcie_swapped_reset", octeon_pcie_swapped_reset_setup);
++
++static bool octeon_pcie_ebh5200_reset(void)
++{
++	return octeon_pcie_swapped_reset &&
++	       cvmx_sysinfo_get()->board_type == CVMX_BOARD_TYPE_EBH5200;
++}
++
+ #define MRRS_CN5XXX 0 /* 128 byte Max Read Request Size */
+ #define MPS_CN5XXX  0 /* 128 byte Max Packet Size (Limit of most PCs) */
+ #define MRRS_CN6XXX 3 /* 1024 byte Max Read Request Size */
+@@ -619,7 +643,9 @@
+ 	}
+ 
+ 	/* Lane swap needs to be manually enabled for CN52XX */
+-	if (OCTEON_IS_MODEL(OCTEON_CN52XX) && (pcie_port == 1)) {
++	if (OCTEON_IS_MODEL(OCTEON_CN52XX) && (pcie_port == 1) &&
++	    (cvmx_sysinfo_get()->board_type != CVMX_BOARD_TYPE_EBH5200 ||
++	     octeon_pcie_swapped_reset)) {
+ 		pescx_ctl_status.s.lane_swp = 1;
+ 		cvmx_write_csr(CVMX_PESCX_CTL_STATUS(pcie_port), pescx_ctl_status.u64);
+ 	}
+@@ -751,7 +777,7 @@
+ 	cvmx_write_csr(CVMX_PEXP_NPEI_CTL_STATUS, npei_ctl_status.u64);
+ 
+ 	/* Bring the PCIe out of reset */
+-	if (cvmx_sysinfo_get()->board_type == CVMX_BOARD_TYPE_EBH5200) {
++	if (octeon_pcie_ebh5200_reset()) {
+ 		/*
+ 		 * The EBH5200 board swapped the PCIe reset lines on
+ 		 * the board. As a workaround for this bug, we bring
+@@ -1068,8 +1094,7 @@
+ 			 * again. Lots of messages will be displayed,
+ 			 * but everything should work
+ 			 */
+-			if ((cvmx_sysinfo_get()->board_type == CVMX_BOARD_TYPE_EBH5200) &&
+-				(pcie_port == 1))
++			if (octeon_pcie_ebh5200_reset() && (pcie_port == 1))
+ 				cvmx_pcie_rc_initialize(0);
+ 			/* Rety bringing this port up */
+ 			goto retry;

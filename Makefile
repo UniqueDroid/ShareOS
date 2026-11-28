@@ -1,6 +1,7 @@
 # ShareOS – top-level build wrapper around buildroot (BR2_EXTERNAL tree)
 #
 #   make dns320l            build the DNS-320L firmware
+#   make octeon             build the devtest image of the Cavium OCTEON boxes (DNS-1200-05)
 #   make dns320l-menuconfig change buildroot options of that board
 #   make dns320l-linux-menuconfig
 #   make sysapps-pack       build the system apps (nano, htop …) as .sapp
@@ -18,7 +19,7 @@ BR_URL     := https://buildroot.org/downloads/buildroot-$(BR_VERSION).tar.gz
 TOP   := $(CURDIR)
 BR    := $(TOP)/buildroot/buildroot-$(BR_VERSION)
 DL    ?= $(if $(BR2_DL_DIR),$(BR2_DL_DIR),$(TOP)/dl)
-BOARDS := dns320l
+BOARDS := dns320l octeon
 # not a board: native programs packed as system apps (see tools/sysapps)
 EXTRA := sysapps
 

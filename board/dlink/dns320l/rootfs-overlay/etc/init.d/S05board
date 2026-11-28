@@ -48,8 +48,6 @@ start() {
 	mkdir -p /tmp/sys/power_led
 	echo none > /tmp/sys/power_led/trigger
 	echo 1    > /tmp/sys/power_led/brightness
-	echo 100  > /tmp/sys/pwm1          # fan half speed until the first reading
-	echo 0    > /tmp/sys/fan1_input
 
 	board_led "$BOARD_LED_USB" none 0
 	# status LED (heartbeat by default), disk LEDs, power LED: UCI shareos.led
@@ -60,6 +58,14 @@ start() {
 		echo "unknown box ($BOARD_NAME), skipped"
 		return 0
 	fi
+	if [ "$BOARD_CONTROL" = none ]; then
+		# a model that is being added: no fan control, buttons or clock yet
+		echo "no device control yet, skipped"
+		return 0
+	fi
+	# only a box whose fan ShareOS drives gets a fan setting (none: shown as "–")
+	echo 100  > /tmp/sys/pwm1          # fan half speed until the first reading
+	echo 0    > /tmp/sys/fan1_input
 	if [ "$BOARD_CONTROL" = mcu ]; then
 		start-stop-daemon -S -q -b -m -p "$PIDFILE" -x "$DAEMON" -- -f
 	fi

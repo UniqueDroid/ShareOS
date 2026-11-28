@@ -2,6 +2,8 @@
 #
 # ShareOS post-build (DNS-320L), runs before the rootfs images are made.
 # $1 = TARGET_DIR
+# Another platform calls it with SHAREOS_BOARD and SHAREOS_FWNAME set
+# (board/dlink/octeon/post-build.sh).
 #
 set -e
 
@@ -16,6 +18,9 @@ if [ -n "$BB_CONFIG" ] && ! grep -qx 'CONFIG_FEATURE_CROND_DIR="/etc"' "$BB_CONF
 	echo "post-build: busybox crond does not read /etc/crontabs ($(grep CROND_DIR "$BB_CONFIG"))" >&2
 	exit 1
 fi
+# crond ends right away when /etc/crontabs is missing; shareos-cron only
+# creates it later, so a box without saved settings had no scheduler
+mkdir -p "$TARGET_DIR/etc/crontabs"
 
 VERSION="$("$TOP_DIR/scripts/version.sh")"
 case "$VERSION" in
@@ -26,8 +31,8 @@ esac
 
 cat > "$TARGET_DIR/etc/shareos-release" <<EOF
 SHAREOS_VERSION="$VERSION"
-SHAREOS_BOARD="dns320l"
-SHAREOS_FWNAME="DNS-320L-rev-Ax"
+SHAREOS_BOARD="${SHAREOS_BOARD:-dns320l}"
+SHAREOS_FWNAME="${SHAREOS_FWNAME:-DNS-320L-rev-Ax}"
 SHAREOS_STAGE="$STAGE"
 EOF
 

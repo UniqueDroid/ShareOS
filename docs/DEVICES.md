@@ -129,3 +129,65 @@ On such a box:
 
 When the model works: status `release`, `BOARD_DEVTEST=0`, and it goes into
 the next release with the normal claiming.
+
+## Cavium OCTEON: D-Link DNS-1200-05 (being added)
+
+A second platform next to the Kirkwood boxes: `make octeon`
+(`configs/shareos_octeon_defconfig`, `board/dlink/octeon/`). The first image
+started on the box up to the login (28 Nov 2026): kernel, four cores, 1 GB,
+the first SATA controller, USB and all services. The network PHYs and the
+second PCIe port did not come up; `board/dlink/octeon/patches/linux/` sets the
+box's wiring for that (still to be tested).
+
+| | |
+|---|---|
+| CPU | Cavium OCTEON Plus CN5230, 4 cores, MIPS64 big endian, no FPU |
+| RAM | 1 GB (one DDR2 DIMM) |
+| Disks | 5 bays: 2× SiI3132 on PCIe (`sata_sil24`), one port through a SiI5723 |
+| Network | 2× Gigabit (Marvell 88E1112, SGMII) |
+| Flash | NAND 256 MiB with two banks of D-Link's firmware; mainline Linux has no driver for it |
+| Microcontroller | on ttyS1: OLED display, clock, fan, power-off, schedule – not driven yet |
+| Serial console | header JP3, 115200 8N1, 3.3 V |
+
+**How it starts.** The box's U-Boot 1.1.1 (Cavium SDK) reads the kernel from
+the flash (a file in a JFFS2, or a raw partition with `nand read`) and starts
+it with `bootoctlinux`; it cannot load from the network, USB or the serial
+line. Ctrl+C right after `NAND:  256 MiB` stops it
+at the prompt `Octeon ebh5200#`. It passes no device tree: the bootloader
+reports the board type EBH5200 (Cavium's reference board), the kernel takes its
+built-in device tree for that, and `board.sh` knows the box by this
+`system type` in `/proc/cpuinfo`. The kernel patch of this platform corrects
+what differs from Cavium's reference board: PHYs (Marvell 88E1112) at MDIO
+addresses 8 and 9, no swapped PCIe reset lines and no lane swap on PCIe port 1
+(as in D-Link's own kernel; the reference board's behaviour comes back with
+`octeon_pcie_swapped_reset` on the command line).
+
+**The image.** `ShareOS-<version>-DNS-1200-05-rev-Ax-devtest.elf` – the kernel
+with the whole system as its initramfs: nothing is installed, and settings are
+gone after a restart – the same file as `.uImage` (the wrapper D-Link's own
+start uses) and `.uRamdisk`, an empty initramfs in the ramdisk wrapper in case
+`bootoctlinux` asks for one. They come from the artifact `devtest-octeon` of a
+build and are never part of a release. It is a [devtest image](#devtest-image-the-first-image-for-a-new-model):
+`root` / `shareos`.
+
+**Bays:** 1 and 2 are `ata1`/`ata2` (first SiI3132), 3 is `ata3` (second
+SiI3132), 4 and 5 are `ata4.01`/`ata4.00` behind the SiI5723 port multiplier;
+hot-plugging works in all five.
+
+**The microcontroller** (display, clock, fans, buttons, power-off) sits on
+`/dev/ttyS1` at 19200 8N1; its frames start with `0xFA` and end with `0xFB`.
+`dns1200-mcu` speaks to it for tests – only commands that read something or can
+be undone: `version`, `time` (its clock runs in UTC), `name <text>` and
+`ip <1|2> <address>` for the display, `fan half|full`, `listen` (buttons). It
+does not switch the box off and nothing starts it at boot yet.
+
+**Not there yet:** fan control by temperature (the two sensors on I²C bus 1 –
+a W83L771 at 0x4c and an LM75-type G751 at 0x49 – have their drivers in the
+kernel but are not bound yet), the display and clock as a service, power-off,
+LEDs and disk power (D-Link's own GPIO driver), access to the flash (settings
+that survive a restart, updates, the real MAC address), system apps for
+MIPS64.
+
+**Rules for this box:** never `saveenv` or `eraseenv` in U-Boot (its
+environment has never been saved), the firmware of the microcontroller is never
+rewritten, and D-Link's running firmware stays in its bank.

@@ -6,7 +6,7 @@
 # sets the BOARD_* variables from the device-tree model. One system image
 # serves all models; everything that differs between them is described here.
 #
-#   BOARD_ID            short name: dns320l, dns320b, dns320a, dns325, dns327l, unknown
+#   BOARD_ID            short name: dns320l, dns320b, dns320a, dns325, dns327l, dns1200, unknown
 #   BOARD_NAME          for people
 #   BOARD_FWNAME        name in the release files: ShareOS-<version>-<fwname>.bin
 #   BOARD_SIG           signature of D-Link firmware files for this box (dns323-fw)
@@ -17,6 +17,7 @@
 #                         hwmon     kernel: gpio-fan, lm75 temperature, gpio-poweroff
 #                         mcu-temp  kernel gpio-fan and gpio-poweroff, the temperature
 #                                   comes from the MCU on ttyS1 (DNS-320 rev A)
+#                         none      nothing yet (a model that is being added)
 #   BOARD_RTC           mcu (through dns320l-daemon) or kernel (/dev/rtc0)
 #   BOARD_POWER_BUTTON  chip:line of a power button that raises no interrupt
 #                       (polled by shareos-board); empty: gpio-keys (shareos-buttons)
@@ -39,7 +40,23 @@
 board_detect() {
 	model=$( { tr -d '\000' < ${SHAREOS_ROOT:-}/proc/device-tree/model; } 2>/dev/null)
 	BOARD_POWER_BUTTON= BOARD_POWER_BACK= BOARD_LED_POWER= BOARD_RAM_SMALL=0 BOARD_TESTED=0 BOARD_DEVTEST=0
+	# Cavium OCTEON: the bootloader passes no device tree and the kernel's own
+	# names no box; the board type it reports is the "system type" of
+	# /proc/cpuinfo. The DNS-1200-05 says it is Cavium's reference board EBH5200.
+	if [ -z "$model" ]; then
+		case "$(sed -n 's/^system type[[:space:]]*: //p' ${SHAREOS_ROOT:-}/proc/cpuinfo 2>/dev/null)" in
+		EBH5200*) model="D-Link DNS-1200-05" ;;
+		esac
+	fi
 	case "$model" in
+	*DNS-1200-05*)
+		# being added: no LEDs, fan, clock or power-off yet – all of them
+		# belong to the box's microcontroller on ttyS1
+		BOARD_ID=dns1200 BOARD_NAME="D-Link DNS-1200-05 rev A" BOARD_FWNAME=DNS-1200-05-rev-Ax
+		# no /dev/rtc0 yet (the clock is the microcontroller's): the time comes from NTP
+		BOARD_SIG= BOARD_MODEL=DNS-1200-05 BOARD_CONTROL=none BOARD_RTC=kernel
+		BOARD_LED_STATUS= BOARD_LED_USB= BOARD_LED_DISK1= BOARD_LED_DISK2=
+		BOARD_DEVTEST=1 ;;
 	*DNS-320L*)
 		BOARD_ID=dns320l BOARD_NAME="D-Link DNS-320L rev A" BOARD_FWNAME=DNS-320L-rev-Ax
 		BOARD_SIG=DNS320L BOARD_MODEL=DNS-320L BOARD_CONTROL=mcu BOARD_RTC=mcu
